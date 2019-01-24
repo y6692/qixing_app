@@ -432,19 +432,16 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
             setUpMap();
         }
 
-//        aMap.setMapType(AMap.MAP_TYPE_NAVI);
-//        aMap.getUiSettings().setZoomControlsEnabled(false);
-//        aMap.getUiSettings().setMyLocationButtonEnabled(false);
-//        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
-//        aMap.getUiSettings().setLogoBottomMargin(-50);
-//
-//        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
-//        aMap.moveCamera(cameraUpdate);
-//        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
-//        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
+        aMap.setMapType(AMap.MAP_TYPE_NAVI);
+        aMap.getUiSettings().setZoomControlsEnabled(false);
+        aMap.getUiSettings().setMyLocationButtonEnabled(false);
+        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+        aMap.getUiSettings().setLogoBottomMargin(-50);
 
-
-
+        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
+        aMap.moveCamera(cameraUpdate);
+        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
+        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
 
 
         aMap.setOnMapTouchListener(this);
@@ -510,38 +507,38 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
     }
 
     private void setUpMap() {
-//        aMap.setLocationSource(this);// 设置定位监听
-//        aMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
-//        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
-//        aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);// 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
-//        aMap.setLoadOfflineData(true);
+        aMap.setLocationSource(this);// 设置定位监听
+        aMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
+        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+        aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);// 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
+        aMap.setLoadOfflineData(true);
 
-        mUiSettings = aMap.getUiSettings();
-        mUiSettings.setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);
-        //是否显示地图中放大缩小按钮
-        mUiSettings.setZoomControlsEnabled(true);
-        mUiSettings.setMyLocationButtonEnabled(false); // 是否显示默认的定位按钮
-        //mUiSettings.setCompassEnabled(true);// 是否显示指南针
-        mUiSettings.setRotateGesturesEnabled(false);
-        mUiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
-        aMap.setTrafficEnabled(false);// 显示实时交通状况
-        aMap.setMapType(AMap.MAP_TYPE_NORMAL);
-
-//        aMap.setMapType(AMap.MAP_TYPE_NAVI);
-//        aMap.getUiSettings().setZoomControlsEnabled(false);
-//        aMap.getUiSettings().setMyLocationButtonEnabled(false);
-//        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
-//        aMap.getUiSettings().setLogoBottomMargin(-50);
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
-        aMap.moveCamera(cameraUpdate);
-        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
-        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
-
-        MyLocationStyle myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-        myLocationStyle.strokeColor(R.color.transparent);//设置定位蓝点精度圆圈的边框颜色的方法。
-        myLocationStyle.radiusFillColor(0x558291b6);//设置定位蓝点精度圆圈的填充颜色的方法。
-        myLocationStyle.interval(10 * 1000);
+//        mUiSettings = aMap.getUiSettings();
+//        mUiSettings.setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);
+//        //是否显示地图中放大缩小按钮
+//        mUiSettings.setZoomControlsEnabled(true);
+//        mUiSettings.setMyLocationButtonEnabled(false); // 是否显示默认的定位按钮
+//        //mUiSettings.setCompassEnabled(true);// 是否显示指南针
+//        mUiSettings.setRotateGesturesEnabled(false);
+//        mUiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
+//        aMap.setTrafficEnabled(false);// 显示实时交通状况
+//        aMap.setMapType(AMap.MAP_TYPE_NORMAL);
+//
+////        aMap.setMapType(AMap.MAP_TYPE_NAVI);
+////        aMap.getUiSettings().setZoomControlsEnabled(false);
+////        aMap.getUiSettings().setMyLocationButtonEnabled(false);
+////        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+////        aMap.getUiSettings().setLogoBottomMargin(-50);
+//
+//        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
+//        aMap.moveCamera(cameraUpdate);
+//        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
+//        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
+//
+//        MyLocationStyle myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+//        myLocationStyle.strokeColor(R.color.transparent);//设置定位蓝点精度圆圈的边框颜色的方法。
+//        myLocationStyle.radiusFillColor(0x558291b6);//设置定位蓝点精度圆圈的填充颜色的方法。
+//        myLocationStyle.interval(10 * 1000);
 
     }
 
@@ -669,7 +666,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //                            }
 //                        }
 
-//                        getCurrentorder1(uid, access_token);
+                        getCurrentorder1(uid, access_token);
                         break;
                     case 3:
                         authBtn.setEnabled(true);
@@ -773,17 +770,17 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
             mapView.onDestroy();
         }
 
-        if (customDialog != null && customDialog.isShowing()) {
-            customDialog.dismiss();
-        }
-
-        if (loadingDialog != null && loadingDialog.isShowing()) {
-            loadingDialog.dismiss();
-        }
-
-        if (loadingDialog1 != null && loadingDialog1.isShowing()) {
-            loadingDialog1.dismiss();
-        }
+//        if (customDialog != null && customDialog.isShowing()) {
+//            customDialog.dismiss();
+//        }
+//
+//        if (loadingDialog != null && loadingDialog.isShowing()) {
+//            loadingDialog.dismiss();
+//        }
+//
+//        if (loadingDialog1 != null && loadingDialog1.isShowing()) {
+//            loadingDialog1.dismiss();
+//        }
 
 
         ToastUtil.showMessage(context, "main===onDestroy");

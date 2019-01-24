@@ -207,7 +207,7 @@ public class SplashActivity extends BaseActivity {
 //			locationOption = new AMapLocationClientOption();
 //		}
 		initjpush();
-//		registerMessageReceiver();
+		registerMessageReceiver();
 //		initLocation();
 
 		skipLayout.setOnClickListener(new View.OnClickListener() {

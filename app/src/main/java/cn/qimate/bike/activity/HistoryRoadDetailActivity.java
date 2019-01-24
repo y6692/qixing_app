@@ -210,7 +210,8 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
                         st_time.setText(bean.getSt_time());
                         ed_time.setText(bean.getEd_time());
                         total_mintues.setText(bean.getTotal_mintues());
-                        prices.setText(bean.getPrices());
+//                        prices.setText(bean.getPrices());
+                        prices.setText("0");
                     } else {
                         Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
                     }
