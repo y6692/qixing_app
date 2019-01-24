@@ -103,6 +103,7 @@ public class HistoryRoadActivity extends SwipeBackActivity implements View.OnCli
                 getResources().getColor(android.R.color.holo_orange_light), getResources().getColor(android.R.color.holo_red_light));
 
         myList.setOnItemClickListener(this);
+
         if(data.isEmpty()){
             initHttp();
         }

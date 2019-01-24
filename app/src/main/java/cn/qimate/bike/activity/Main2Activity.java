@@ -43,10 +43,12 @@ import cn.qimate.bike.util.ToastUtil;
 
 public class Main2Activity extends BaseFragmentActivity implements
         LocationSource,
-        AMapLocationListener,
+        AMapLocationListener
+        ,
         AMap.OnCameraChangeListener,
         AMap.OnMapTouchListener,
-        OnConnectionListener{
+        OnConnectionListener
+        {
 
     //显示地图需要的变量
     private MapView mapView;//地图控件
@@ -62,6 +64,8 @@ public class Main2Activity extends BaseFragmentActivity implements
     private boolean isFirstLoc = true;
 
     private BitmapDescriptor bikeDescripter;
+
+    private UiSettings mUiSettings;
 
 
 
@@ -80,32 +84,58 @@ public class Main2Activity extends BaseFragmentActivity implements
 
 
         //设置显示定位按钮 并且可以点击
-        UiSettings settings = aMap.getUiSettings();
-        //设置定位监听
-        aMap.setLocationSource(this);
-        // 是否显示定位按钮
-        settings.setMyLocationButtonEnabled(true);
-        // 是否可触发定位并显示定位层
-        aMap.setMyLocationEnabled(true);
+//        UiSettings settings = aMap.getUiSettings();
+//        settings.setMyLocationButtonEnabled(true);
+//        aMap.setLocationSource(this);
+//        aMap.setMyLocationEnabled(true);
+//
+////        aMap.setMapType(AMap.MAP_TYPE_NAVI);
+////        aMap.getUiSettings().setZoomControlsEnabled(false);
+////        aMap.getUiSettings().setMyLocationButtonEnabled(false);
+////        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+////        aMap.getUiSettings().setLogoBottomMargin(-50);
+////
+////        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
+////        aMap.moveCamera(cameraUpdate);
+////        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
+////        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
+//
+//
+//        //定位的小图标 默认是蓝点 这里自定义一团火，其实就是一张图片
+//        MyLocationStyle myLocationStyle = new MyLocationStyle();
+//        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked));
+//        myLocationStyle.radiusFillColor(android.R.color.transparent);
+//        myLocationStyle.strokeColor(android.R.color.transparent);
+//        aMap.setMyLocationStyle(myLocationStyle);
 
-        aMap.setMapType(AMap.MAP_TYPE_NAVI);
-        aMap.getUiSettings().setZoomControlsEnabled(false);
-        aMap.getUiSettings().setMyLocationButtonEnabled(false);
-        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
-        aMap.getUiSettings().setLogoBottomMargin(-50);
+
+        mUiSettings = aMap.getUiSettings();
+        mUiSettings.setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);
+        //是否显示地图中放大缩小按钮
+        mUiSettings.setZoomControlsEnabled(true);
+        mUiSettings.setMyLocationButtonEnabled(false); // 是否显示默认的定位按钮
+        //mUiSettings.setCompassEnabled(true);// 是否显示指南针
+        mUiSettings.setRotateGesturesEnabled(false);
+        mUiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
+        aMap.setTrafficEnabled(false);// 显示实时交通状况
+        aMap.setMapType(AMap.MAP_TYPE_NORMAL);
+
+//        aMap.setMapType(AMap.MAP_TYPE_NAVI);
+//        aMap.getUiSettings().setZoomControlsEnabled(false);
+//        aMap.getUiSettings().setMyLocationButtonEnabled(false);
+//        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+//        aMap.getUiSettings().setLogoBottomMargin(-50);
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
         aMap.moveCamera(cameraUpdate);
         successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
         bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
 
+        MyLocationStyle myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        myLocationStyle.strokeColor(R.color.transparent);//设置定位蓝点精度圆圈的边框颜色的方法。
+        myLocationStyle.radiusFillColor(0x558291b6);//设置定位蓝点精度圆圈的填充颜色的方法。
+        myLocationStyle.interval(10 * 1000);
 
-        //定位的小图标 默认是蓝点 这里自定义一团火，其实就是一张图片
-        MyLocationStyle myLocationStyle = new MyLocationStyle();
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked));
-        myLocationStyle.radiusFillColor(android.R.color.transparent);
-        myLocationStyle.strokeColor(android.R.color.transparent);
-        aMap.setMyLocationStyle(myLocationStyle);
 
         //开始定位
         initLoc();
@@ -240,7 +270,6 @@ public class Main2Activity extends BaseFragmentActivity implements
     @Override
     public void activate(OnLocationChangedListener listener) {
         mListener = listener;
-
     }
 
     //停止定位

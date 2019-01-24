@@ -207,19 +207,21 @@ public class SplashActivity extends BaseActivity {
 //			locationOption = new AMapLocationClientOption();
 //		}
 		initjpush();
-		registerMessageReceiver();
+//		registerMessageReceiver();
 //		initLocation();
 
 		skipLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 
-				try{
-					tz();
+				tz();
 
-				}catch (Exception e){
-
-				}
+//				try{
+//					tz();
+//
+//				}catch (Exception e){
+//
+//				}
 
 
 
@@ -260,12 +262,14 @@ public class SplashActivity extends BaseActivity {
 
 	private void tz(){
 
-		if(!isStop && !isEnd){
+//		synchronized(ss){
 
-			isStop = true;
-			isEnd = true;
+			if(!isStop && !isEnd){
 
-			synchronized(ss){
+				isStop = true;
+				isEnd = true;
+
+
 				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
 					UIHelper.goToAct(context, MainActivity.class);
 				} else {
@@ -273,39 +277,20 @@ public class SplashActivity extends BaseActivity {
 					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
 					UIHelper.goToAct(context, EnterActivity.class);
 				}
+	//
 
-				finishMine();
+//					UIHelper.goToAct(context, MainActivity.class);
+//					finishMine();
+
+
+
+
 			}
 
-		}
-
+//		}
 
 	}
 
-
-//	private synchronized void tz(){
-//
-//		if(!isStop && !isEnd){
-//
-//			isStop = true;
-//			isEnd = true;
-//
-////			handler.removeMessages(0);
-//
-//			if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-//				UIHelper.goToAct(context, MainActivity.class);
-//			} else {
-//				SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-//				SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-//				UIHelper.goToAct(context, EnterActivity.class);
-//			}
-//
-//			finishMine();
-//
-//		}
-//
-//
-//	}
 
 
 
@@ -332,7 +317,7 @@ public class SplashActivity extends BaseActivity {
 
 //		handler.removeCallbacksAndMessages(null);
 
-		unregisterReceiver(mMessageReceiver);
+//		unregisterReceiver(mMessageReceiver);
 
 //		destroyLocation();
 
@@ -340,6 +325,7 @@ public class SplashActivity extends BaseActivity {
 		isEnd = true;
 
 		handler.removeMessages(0);
+//        handler.removeCallbacksAndMessages(null);
 
 //		if (runnable != null) {
 //			handler.removeCallbacks(runnable);
