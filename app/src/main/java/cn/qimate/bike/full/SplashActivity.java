@@ -137,7 +137,7 @@ public class SplashActivity extends BaseActivity {
 	protected void onResume() {
 		isForeground = true;
 		super.onResume();
-		JPushInterface.onResume(this);
+//		JPushInterface.onResume(this);
 
 		Log.e("splash===onResume", "===");
 
@@ -206,20 +206,22 @@ public class SplashActivity extends BaseActivity {
 //		if (null == locationOption) {
 //			locationOption = new AMapLocationClientOption();
 //		}
-		initjpush();
-		registerMessageReceiver();
+//		initjpush();
+//		registerMessageReceiver();
 //		initLocation();
 
 		skipLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 
-				try{
-					tz();
+//				tz();
 
-				}catch (Exception e){
-
-				}
+//				try{
+//					tz();
+//
+//				}catch (Exception e){
+//
+//				}
 
 
 
@@ -265,17 +267,21 @@ public class SplashActivity extends BaseActivity {
 			isStop = true;
 			isEnd = true;
 
-			synchronized(ss){
-				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-					UIHelper.goToAct(context, MainActivity.class);
-				} else {
-					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-					UIHelper.goToAct(context, EnterActivity.class);
-				}
+//			synchronized(ss){
+////				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+////					UIHelper.goToAct(context, MainActivity.class);
+////				} else {
+////					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+////					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+////					UIHelper.goToAct(context, EnterActivity.class);
+////				}
+//
+//				UIHelper.goToAct(context, MainActivity.class);
+//				finishMine();
+//			}
 
-				finishMine();
-			}
+			UIHelper.goToAct(context, MainActivity.class);
+			finishMine();
 
 		}
 
@@ -283,37 +289,13 @@ public class SplashActivity extends BaseActivity {
 	}
 
 
-//	private synchronized void tz(){
-//
-//		if(!isStop && !isEnd){
-//
-//			isStop = true;
-//			isEnd = true;
-//
-////			handler.removeMessages(0);
-//
-//			if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-//				UIHelper.goToAct(context, MainActivity.class);
-//			} else {
-//				SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-//				SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-//				UIHelper.goToAct(context, EnterActivity.class);
-//			}
-//
-//			finishMine();
-//
-//		}
-//
-//
-//	}
-
 
 
 	@Override
 	protected void onPause() {
 		isForeground = false;
 		super.onPause();
-		JPushInterface.onPause(this);
+//		JPushInterface.onPause(this);
 
 //		try {
 //			if (internalReceiver != null) {
@@ -332,7 +314,7 @@ public class SplashActivity extends BaseActivity {
 
 //		handler.removeCallbacksAndMessages(null);
 
-		unregisterReceiver(mMessageReceiver);
+//		unregisterReceiver(mMessageReceiver);
 
 //		destroyLocation();
 
@@ -407,6 +389,7 @@ public class SplashActivity extends BaseActivity {
 		}
 		if (!isEnd && !isStop) {
 //			m_myHandler.sendEmptyMessage(0);
+			handler.removeMessages(0);
 			handler.sendEmptyMessageDelayed(0, 900);
 //			m_myHandler.postDelayed(new Runnable() {
 //				@Override
