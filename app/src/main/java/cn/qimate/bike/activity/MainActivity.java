@@ -140,10 +140,10 @@ import static com.umeng.analytics.AnalyticsConfig.getLocation;
 public class MainActivity extends BaseFragmentActivity implements OnClickListener,
         LocationSource,
 		AMapLocationListener
-//        ,
-//        AMap.OnCameraChangeListener,
-//        AMap.OnMapTouchListener,
-//        OnConnectionListener
+        ,
+        AMap.OnCameraChangeListener,
+        AMap.OnMapTouchListener,
+        OnConnectionListener
 {
 
 	static private final int REQUEST_CODE_ASK_PERMISSIONS = 101;
@@ -272,26 +272,26 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         mapView = (MapView) findViewById(R.id.mainUI_map);
         mapView.onCreate(savedInstanceState);
 
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(Intent.ACTION_SCREEN_ON);
-		filter.addAction(Intent.ACTION_SCREEN_OFF);
-		filter.addAction(Intent.ACTION_USER_PRESENT);
-		registerReceiver(mScreenReceiver, filter);
-
-		//注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
-		filter = new IntentFilter("data.broadcast.action");
-		registerReceiver(broadcastReceiver, filter);
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-                m_myHandler.sendEmptyMessage(1);
-			}
-		}).start();
-
-//        ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getString("userName", "") + "===" + SharedPreferencesUrls.getInstance().getString("uid", "") + "<==>" + SharedPreferencesUrls.getInstance().getString("access_token", ""));
-
-        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+//		IntentFilter filter = new IntentFilter();
+//		filter.addAction(Intent.ACTION_SCREEN_ON);
+//		filter.addAction(Intent.ACTION_SCREEN_OFF);
+//		filter.addAction(Intent.ACTION_USER_PRESENT);
+//		registerReceiver(mScreenReceiver, filter);
+//
+//		//注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
+//		filter = new IntentFilter("data.broadcast.action");
+//		registerReceiver(broadcastReceiver, filter);
+//
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//                m_myHandler.sendEmptyMessage(1);
+//			}
+//		}).start();
+//
+////        ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getString("userName", "") + "===" + SharedPreferencesUrls.getInstance().getString("uid", "") + "<==>" + SharedPreferencesUrls.getInstance().getString("access_token", ""));
+//
+//        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
 
         initView();
 
@@ -340,93 +340,93 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
     private void initView() {
         openGPSSettings();
+//
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+//            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+//                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+//                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
+//                } else {
+//                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
+//                }
+//                return;
+//            }
+//        }
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
-                } else {
-                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
-                }
-                return;
-            }
-        }
-
-        customBuilder = new CustomDialog.Builder(this);
-        customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
-        customDialog = customBuilder.create();
-
-        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog3 = customBuilder.create();
-
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog4 = customBuilder.create();
-
-        loadingDialog = new LoadingDialog(this);
-        loadingDialog.setCancelable(false);
-        loadingDialog.setCanceledOnTouchOutside(false);
-
-        lockLoading = new LoadingDialog(this);
-        lockLoading.setCancelable(false);
-        lockLoading.setCanceledOnTouchOutside(false);
-
-        loadingDialog1 = new LoadingDialog(this);
-        loadingDialog1.setCancelable(false);
-        loadingDialog1.setCanceledOnTouchOutside(false);
-
-        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
-        dialog.setContentView(dialogView);
-        dialog.setCanceledOnTouchOutside(false);
-
-        advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-        View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
-        advDialog.setContentView(advDialogView);
-        advDialog.setCanceledOnTouchOutside(false);
-
-        marqueeLayout = findViewById(R.id.mainUI_marqueeLayout);
-
-        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
-        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
-        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
-        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
-        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
-
-        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
-        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
-
-        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
-        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
-        advImageView.setLayoutParams(params4);
-
-        marquee = (TextView) findViewById(R.id.mainUI_marquee);
-        title = (TextView) findViewById(R.id.mainUI_title);
-        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
-        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
-        myCommissionLayout =  (LinearLayout) findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
-        myLocationLayout =  (LinearLayout) findViewById(R.id.mainUI_myLocationLayout);
-        linkLayout = (LinearLayout) findViewById(R.id.mainUI_linkServiceLayout);
-        myLocationBtn = (ImageView) findViewById(R.id.mainUI_myLocation);
-        scanLock = (LinearLayout) findViewById(R.id.mainUI_scanCode_lock);
-        linkBtn = (ImageView) findViewById(R.id.mainUI_linkService_btn);
-        authBtn = (Button)findViewById(R.id.mainUI_authBtn);
-        cartBtn = (Button)findViewById(R.id.mainUI_cartBtn);
-        rechargeBtn = (Button)findViewById(R.id.mainUI_rechargeBtn);
-        refreshLayout = (LinearLayout) findViewById(R.id.mainUI_refreshLayout);
-        slideLayout = (LinearLayout)findViewById(R.id.mainUI_slideLayout);
+//        customBuilder = new CustomDialog.Builder(this);
+//        customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
+//        customDialog = customBuilder.create();
+//
+//        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog3 = customBuilder.create();
+//
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog4 = customBuilder.create();
+//
+//        loadingDialog = new LoadingDialog(this);
+//        loadingDialog.setCancelable(false);
+//        loadingDialog.setCanceledOnTouchOutside(false);
+//
+//        lockLoading = new LoadingDialog(this);
+//        lockLoading.setCancelable(false);
+//        lockLoading.setCanceledOnTouchOutside(false);
+//
+//        loadingDialog1 = new LoadingDialog(this);
+//        loadingDialog1.setCancelable(false);
+//        loadingDialog1.setCanceledOnTouchOutside(false);
+//
+//        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+//        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
+//        dialog.setContentView(dialogView);
+//        dialog.setCanceledOnTouchOutside(false);
+//
+//        advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+//        View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
+//        advDialog.setContentView(advDialogView);
+//        advDialog.setCanceledOnTouchOutside(false);
+//
+//        marqueeLayout = findViewById(R.id.mainUI_marqueeLayout);
+//
+//        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
+//        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
+//        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
+//        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
+//        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
+//
+//        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
+//        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+//
+//        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
+//        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+//        advImageView.setLayoutParams(params4);
+//
+//        marquee = (TextView) findViewById(R.id.mainUI_marquee);
+//        title = (TextView) findViewById(R.id.mainUI_title);
+//        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
+//        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
+//        myCommissionLayout =  (LinearLayout) findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
+//        myLocationLayout =  (LinearLayout) findViewById(R.id.mainUI_myLocationLayout);
+//        linkLayout = (LinearLayout) findViewById(R.id.mainUI_linkServiceLayout);
+//        myLocationBtn = (ImageView) findViewById(R.id.mainUI_myLocation);
+//        scanLock = (LinearLayout) findViewById(R.id.mainUI_scanCode_lock);
+//        linkBtn = (ImageView) findViewById(R.id.mainUI_linkService_btn);
+//        authBtn = (Button)findViewById(R.id.mainUI_authBtn);
+//        cartBtn = (Button)findViewById(R.id.mainUI_cartBtn);
+//        rechargeBtn = (Button)findViewById(R.id.mainUI_rechargeBtn);
+//        refreshLayout = (LinearLayout) findViewById(R.id.mainUI_refreshLayout);
+//        slideLayout = (LinearLayout)findViewById(R.id.mainUI_slideLayout);
 
         if(aMap==null){
             aMap = mapView.getMap();
@@ -540,9 +540,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         tz = 0;
 
 //        JPushInterface.onResume(this);
-        if(mapView!=null){
-            mapView.onResume();
-        }
+        mapView.onResume();
 
 //        if (aMap != null) {
 //            setUpMap();
@@ -699,13 +697,13 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
         Log.e("main===", "main====onStart");
 
-        if (mlocationClient != null) {
-            mlocationClient.setLocationListener(this);
-            mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-            mLocationOption.setInterval(5 * 1000);
-            mlocationClient.setLocationOption(mLocationOption);
-            mlocationClient.startLocation();
-        }
+//        if (mlocationClient != null) {
+//            mlocationClient.setLocationListener(this);
+//            mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+//            mLocationOption.setInterval(5 * 1000);
+//            mlocationClient.setLocationOption(mLocationOption);
+//            mlocationClient.startLocation();
+//        }
 
 //        if (!"".equals(m_nowMac)) {
 //            mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -726,12 +724,12 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
     @Override
     protected void onPause() {
         isForeground = false;
-        if (loadingDialog != null && loadingDialog.isShowing()) {
-            loadingDialog.dismiss();
-        }
-        if (lockLoading != null && lockLoading.isShowing()) {
-            lockLoading.dismiss();
-        }
+//        if (loadingDialog != null && loadingDialog.isShowing()) {
+//            loadingDialog.dismiss();
+//        }
+//        if (lockLoading != null && lockLoading.isShowing()) {
+//            lockLoading.dismiss();
+//        }
         super.onPause();
 
 //		if(mlocationClient!=null) {
@@ -740,7 +738,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 //        JPushInterface.onPause(this);
 //		if(mapView!=null){
-//            mapView.onPause();
+            mapView.onPause();
 //        }
 
 //		deactivate();
@@ -775,27 +773,38 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
         super.onDestroy();
 
-        if(mapView!=null){
-            mapView.onDestroy();
-        }
+        mapView.onDestroy();
 
+//        if (customDialog != null && customDialog.isShowing()) {
+//            customDialog.dismiss();
+//        }
+//
 //        if (loadingDialog != null && loadingDialog.isShowing()) {
 //            loadingDialog.dismiss();
 //        }
-
-        ToastUtil.showMessage(context, "main===onDestroy");
-
-        deactivate();
-
-        if (null != mlocationClient) {
-            mlocationClient.onDestroy();
-        }
-        if (broadcastReceiver != null) {
-            unregisterReceiver(broadcastReceiver);
-            broadcastReceiver = null;
-        }
-
-        closeBroadcast();
+//
+//        if (loadingDialog1 != null && loadingDialog1.isShowing()) {
+//            loadingDialog1.dismiss();
+//        }
+//
+//
+//        ToastUtil.showMessage(context, "main===onDestroy");
+//
+//        deactivate();
+//
+//        if (null != mlocationClient) {
+//            mlocationClient.onDestroy();
+//        }
+//        if (broadcastReceiver != null) {
+//            unregisterReceiver(broadcastReceiver);
+//            broadcastReceiver = null;
+//        }
+//        if (mScreenReceiver != null) {
+//            unregisterReceiver(mScreenReceiver);
+//            mScreenReceiver = null;
+//        }
+//
+//        closeBroadcast();
 
     }
 

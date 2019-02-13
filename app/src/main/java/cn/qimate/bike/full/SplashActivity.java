@@ -389,7 +389,7 @@ public class SplashActivity extends BaseActivity {
 		}
 		if (!isEnd && !isStop) {
 //			m_myHandler.sendEmptyMessage(0);
-			handler.removeMessages(0);
+//			handler.removeMessages(0);
 			handler.sendEmptyMessageDelayed(0, 900);
 //			m_myHandler.postDelayed(new Runnable() {
 //				@Override

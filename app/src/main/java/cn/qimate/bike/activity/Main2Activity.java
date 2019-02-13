@@ -63,6 +63,9 @@ public class Main2Activity extends BaseFragmentActivity implements
 
     private BitmapDescriptor bikeDescripter;
 
+    private UiSettings mUiSettings;
+    private MyLocationStyle myLocationStyle;
+
 
 
     @Override
@@ -70,45 +73,61 @@ public class Main2Activity extends BaseFragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        WindowManager.LayoutParams winParams = getWindow().getAttributes();
-        winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+//        WindowManager.LayoutParams winParams = getWindow().getAttributes();
+//        winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
         aMap = mapView.getMap();
 
+        mUiSettings = aMap.getUiSettings();
+        mUiSettings.setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);
+        //是否显示地图中放大缩小按钮
+        mUiSettings.setZoomControlsEnabled(true);
+        mUiSettings.setMyLocationButtonEnabled(false); // 是否显示默认的定位按钮
+        //mUiSettings.setCompassEnabled(true);// 是否显示指南针
+        mUiSettings.setRotateGesturesEnabled(false);
+        mUiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
+        aMap.setTrafficEnabled(false);// 显示实时交通状况
+        aMap.setMapType(AMap.MAP_TYPE_NORMAL);
 
-        //设置显示定位按钮 并且可以点击
-        UiSettings settings = aMap.getUiSettings();
-        //设置定位监听
-        aMap.setLocationSource(this);
-        // 是否显示定位按钮
-        settings.setMyLocationButtonEnabled(true);
-        // 是否可触发定位并显示定位层
-        aMap.setMyLocationEnabled(true);
-
-        aMap.setMapType(AMap.MAP_TYPE_NAVI);
-        aMap.getUiSettings().setZoomControlsEnabled(false);
-        aMap.getUiSettings().setMyLocationButtonEnabled(false);
-        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
-        aMap.getUiSettings().setLogoBottomMargin(-50);
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
-        aMap.moveCamera(cameraUpdate);
-        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
-        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
+        myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        myLocationStyle.strokeColor(android.R.color.transparent);//设置定位蓝点精度圆圈的边框颜色的方法。
+        myLocationStyle.radiusFillColor(0x558291b6);//设置定位蓝点精度圆圈的填充颜色的方法。
+        myLocationStyle.interval(10 * 1000);
 
 
-        //定位的小图标 默认是蓝点 这里自定义一团火，其实就是一张图片
-        MyLocationStyle myLocationStyle = new MyLocationStyle();
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked));
-        myLocationStyle.radiusFillColor(android.R.color.transparent);
-        myLocationStyle.strokeColor(android.R.color.transparent);
-        aMap.setMyLocationStyle(myLocationStyle);
-
-        //开始定位
-        initLoc();
+//        //设置显示定位按钮 并且可以点击
+//        UiSettings settings = aMap.getUiSettings();
+//        //设置定位监听
+//        aMap.setLocationSource(this);
+//        // 是否显示定位按钮
+//        settings.setMyLocationButtonEnabled(true);
+//        // 是否可触发定位并显示定位层
+//        aMap.setMyLocationEnabled(true);
+//
+//        aMap.setMapType(AMap.MAP_TYPE_NAVI);
+//        aMap.getUiSettings().setZoomControlsEnabled(false);
+//        aMap.getUiSettings().setMyLocationButtonEnabled(false);
+//        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+//        aMap.getUiSettings().setLogoBottomMargin(-50);
+//
+//        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
+//        aMap.moveCamera(cameraUpdate);
+//        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
+//        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
+//
+//
+//        //定位的小图标 默认是蓝点 这里自定义一团火，其实就是一张图片
+//        MyLocationStyle myLocationStyle = new MyLocationStyle();
+//        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked));
+//        myLocationStyle.radiusFillColor(android.R.color.transparent);
+//        myLocationStyle.strokeColor(android.R.color.transparent);
+//        aMap.setMyLocationStyle(myLocationStyle);
+//
+//        //开始定位
+//        initLoc();
 
     }
 
@@ -120,7 +139,7 @@ public class Main2Activity extends BaseFragmentActivity implements
         super.onResume();
 
         mapView.onResume();
-        JPushInterface.onResume(this);
+//        JPushInterface.onResume(this);
     }
 
     /**
@@ -131,7 +150,49 @@ public class Main2Activity extends BaseFragmentActivity implements
         super.onPause();
 
         mapView.onPause();
-        JPushInterface.onPause(this);
+//        JPushInterface.onPause(this);
+    }
+
+
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    //停止定位
+    @Override
+    public void deactivate() {
+        mListener = null;
+    }
+
+
+
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+
+    }
+
+    @Override
+    public void onCameraChangeFinish(CameraPosition cameraPosition) {
+
+    }
+
+    @Override
+    public void onTouch(MotionEvent motionEvent) {
+
     }
 
 
@@ -243,43 +304,5 @@ public class Main2Activity extends BaseFragmentActivity implements
 
     }
 
-    //停止定位
-    @Override
-    public void deactivate() {
-        mListener = null;
-    }
 
-    /**
-     * 方法必须重写
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
-    }
-
-    /**
-     * 方法必须重写
-     */
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
-
-    @Override
-    public void onCameraChange(CameraPosition cameraPosition) {
-
-    }
-
-    @Override
-    public void onCameraChangeFinish(CameraPosition cameraPosition) {
-
-    }
-
-    @Override
-    public void onTouch(MotionEvent motionEvent) {
-
-    }
 }
