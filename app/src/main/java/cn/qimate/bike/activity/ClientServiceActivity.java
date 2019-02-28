@@ -178,7 +178,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         cancelBtn.setOnClickListener(itemsOnClick);
 
         codeNum = (TextView)findViewById(R.id.ui_client_service_codeNum);
-        codeNum.setText("单车编号："+getIntent().getExtras().getString("bikeCode"));
+        codeNum.setText("车辆编号："+getIntent().getExtras().getString("bikeCode"));
 
         photoMyGridview = (MyGridView)findViewById(R.id.ui_client_service_photoGridView);
         submitBtn = (Button)findViewById(R.id.ui_client_service_submitBtn);

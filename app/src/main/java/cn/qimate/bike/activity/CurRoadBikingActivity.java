@@ -954,7 +954,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("骑行中");
         rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
-        rightBtn.setText("关锁后无法结束");
+        rightBtn.setText("无法结束用车");
         RelativeLayout.LayoutParams params4 = (RelativeLayout.LayoutParams)rightBtn.getLayoutParams();
         params4.setMargins(0,DisplayUtil.dip2px(context,10),0,DisplayUtil.dip2px(context,10));
         rightBtn.setLayoutParams(params4);

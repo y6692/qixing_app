@@ -1137,20 +1137,20 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
             mlocationClient.startLocation();
         }
 
-        if (!"".equals(m_nowMac)) {
-            mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-                @Override
-                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-                    k++;
-                    Log.e("main===LeScan", device + "====" + rssi + "====" + k);
-
-                    if (!macList.contains(""+device)){
-                        macList.add(""+device);
-                    }
-
-                }
-            };
-        }
+//        if (!"".equals(m_nowMac)) {
+//            mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+//                @Override
+//                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+//                    k++;
+//                    Log.e("main===LeScan", device + "====" + rssi + "====" + k);
+//
+//                    if (!macList.contains(""+device)){
+//                        macList.add(""+device);
+//                    }
+//
+//                }
+//            };
+//        }
     }
 
     @Override
