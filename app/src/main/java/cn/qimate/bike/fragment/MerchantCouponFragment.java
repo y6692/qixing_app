@@ -124,25 +124,25 @@ public class MerchantCouponFragment extends BaseFragment implements View.OnClick
 
         initView();
 
-        initHttp();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            while (true){
-
-                try {
-                    Thread.sleep(30*1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                m_myHandler.sendEmptyMessage(1);
-            }
-
-            }
-        }).start();
+//        initHttp();
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            while (true){
+//
+//                try {
+//                    Thread.sleep(30*1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                m_myHandler.sendEmptyMessage(1);
+//            }
+//
+//            }
+//        }).start();
 
     }
 

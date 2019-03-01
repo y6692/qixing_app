@@ -273,8 +273,8 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                 break;
             case R.id.ui_payMonth_cart_submitBtn:
                 CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-//                customBuilder.setTitle("温馨提示").setMessage("使用优惠券，省X元           实付款：X元")
-                customBuilder.setTitle("温馨提示").setMessage("是否确定支付?")
+                customBuilder.setTitle("温馨提示").setMessage("使用优惠券，省X元           实付款：X元")
+//                customBuilder.setTitle("温馨提示").setMessage("是否确定支付?")
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
