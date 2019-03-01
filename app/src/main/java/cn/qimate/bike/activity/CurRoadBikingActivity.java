@@ -1139,7 +1139,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                     if (!isStop){
                                         CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                        customBuilder.setTitle("开锁失败").setMessage("请关闭手机蓝牙后再试")
+                                        customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
                                                 .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         dialog.cancel();
@@ -1174,7 +1174,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                         BaseApplication.getInstance().getIBLE().disconnect();
 
                                         CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                        customBuilder.setTitle("连接失败").setMessage("关锁后，请离车1米内重试或在右上角提交")
+                                        customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
                                                 .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         dialog.cancel();
@@ -1310,7 +1310,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                             if (!isStop){
                                 CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                customBuilder.setTitle("开锁失败").setMessage("请关闭手机蓝牙后再试")
+                                customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
                                         .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.cancel();
@@ -1345,7 +1345,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 BaseApplication.getInstance().getIBLE().disconnect();
 
                                 CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                customBuilder.setTitle("连接失败").setMessage("关锁后，请离车1米内重试或在右上角提交")
+                                customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
                                         .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.cancel();
@@ -1435,7 +1435,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                         if (!isStop){
                                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                            customBuilder.setTitle("开锁失败").setMessage("请关闭手机蓝牙后再试")
+                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
                                                     .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             dialog.cancel();
@@ -1471,7 +1471,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                             BaseApplication.getInstance().getIBLE().disconnect();
 
                                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                            customBuilder.setTitle("连接失败").setMessage("关锁后，请离车1米内重试或在右上角提交")
+                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
                                                     .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             dialog.cancel();
@@ -1586,7 +1586,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                             if(!isStop){
                                 CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                customBuilder.setTitle("连接失败").setMessage("请关闭手机蓝牙后再试")
+                                customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
                                         .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.cancel();
@@ -1622,7 +1622,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                 if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
                                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                    customBuilder.setTitle("连接失败").setMessage("关锁后，请离车1米内重试或在右上角提交")
+                                    customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
                                             .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     dialog.cancel();
@@ -1684,7 +1684,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                     if(!isStop){
                                         CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                        customBuilder.setTitle("连接失败").setMessage("请关闭手机蓝牙后再试")
+                                        customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
                                                 .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         dialog.cancel();
@@ -1720,7 +1720,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                         if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
                                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                            customBuilder.setTitle("连接失败").setMessage("关锁后，请离车1米内重试或在右上角提交")
+                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
                                                     .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             dialog.cancel();
@@ -1780,7 +1780,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                     if(first3){
                                         first3 = false;
                                         CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                        customBuilder.setTitle("连接失败").setMessage("请关闭手机蓝牙后再试")
+                                        customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
                                                 .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         dialog.cancel();
@@ -1863,7 +1863,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                         if(first3){
                                             first3 = false;
                                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                            customBuilder.setTitle("连接失败").setMessage("请关闭手机蓝牙后再试")
+                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
                                                     .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             dialog.cancel();
