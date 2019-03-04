@@ -40,8 +40,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="还车提示：校内地图红色区域手动关锁，并在软件点击结束\n还是无法结束？重启软件试试吧！"
-                            android:textSize="@dimen/sp16"
+                            android:text="还车提示：校内地图红色区域关锁，并点击结束\n还是无法结束？重启软件试试吧！"
+                            android:textSize="@dimen/sp15"
                             android:textColor="@color/tx_black"/>
                     </LinearLayout>
                     <View
@@ -64,118 +64,120 @@
                             android:textSize="@dimen/sp16"/>
                     </LinearLayout>
 
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:paddingLeft="@dimen/dp10"-->
+                        <!--android:paddingRight="@dimen/dp15"-->
+                        <!--android:orientation="vertical">-->
+
+                        <!---->
+
+                    <!--</LinearLayout>-->
+
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingLeft="@dimen/dp10"
-                        android:paddingRight="@dimen/dp15"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="#6a6a6a"
-                                android:textSize="@dimen/sp12"
-                                android:text="请选择问题类型:"
-                                android:paddingTop="@dimen/dp15"
-                                android:paddingBottom="@dimen/dp10"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/feedbackUI_type_Tag1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/shape_feedback"
-                                android:text="锁手动关不上"
-                                android:padding="@dimen/dp10"
-                                android:textColor="@color/tx_black_light"
-                                android:textSize="@dimen/sp12"/>
-                            <TextView
-                                android:id="@+id/feedbackUI_type_Tag2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/shape_feedback"
-                                android:text="已关锁却提示未关"
-                                android:padding="@dimen/dp10"
-                                android:textColor="@color/tx_black_light"
-                                android:textSize="@dimen/sp12"
-                                android:layout_marginLeft="@dimen/dp10"/>
-                            <TextView
-                                android:id="@+id/feedbackUI_type_Tag3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/shape_feedback"
-                                android:text="在还车点却提示不在"
-                                android:padding="@dimen/dp10"
-                                android:textColor="@color/tx_black_light"
-                                android:textSize="@dimen/sp12"
-                                android:layout_marginLeft="@dimen/dp10"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="@dimen/dp10">
-
-                            <TextView
-                                android:id="@+id/feedbackUI_type_Tag4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/shape_feedback"
-                                android:text="蓝牙连接失败"
-                                android:padding="@dimen/dp10"
-                                android:textColor="@color/tx_black_light"
-                                android:textSize="@dimen/sp12"/>
-                            <TextView
-                                android:id="@+id/feedbackUI_type_Tag5"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/shape_feedback"
-                                android:text="一直在加载"
-                                android:padding="@dimen/dp10"
-                                android:textColor="@color/tx_black_light"
-                                android:textSize="@dimen/sp12"
-                                android:layout_marginLeft="@dimen/dp10"/>
-                            <TextView
-                                android:id="@+id/feedbackUI_type_Tag6"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/shape_feedback"
-                                android:text="其他"
-                                android:padding="@dimen/dp10"
-                                android:textColor="@color/tx_black_light"
-                                android:textSize="@dimen/sp12"
-                                android:layout_marginLeft="@dimen/dp10"/>
-                        </LinearLayout>
-
-                        <cn.qimate.bike.core.widget.ClearEditText
-                            android:id="@+id/feedbackUI_restCause"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/dp80"
-                            android:background="@drawable/shape_feedback_edit"
-                            android:paddingLeft="@dimen/dp5"
-                            android:paddingTop="@dimen/dp5"
-                            android:drawableRight="@drawable/delete_selector"
-                            android:hint="请描述您遇到的问题和所在位置"
+                            android:textColor="#6a6a6a"
                             android:textSize="@dimen/sp12"
-                            android:textColor="@color/tx_black_light"
-                            android:textColorHint="@color/tx_black_light"
-                            android:layout_marginTop="@dimen/dp10"
-                            android:gravity="top|left"
-                            android:lineSpacingExtra="2dp"/>
-
+                            android:text="请选择问题类型:"
+                            android:paddingTop="@dimen/dp15"
+                            android:paddingBottom="@dimen/dp10"/>
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_feedback"
+                            android:text="锁关不上"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/tx_black_light"
+                            android:textSize="@dimen/sp12"/>
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_feedback"
+                            android:text="已关锁提示未关"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/tx_black_light"
+                            android:textSize="@dimen/sp12"
+                            android:layout_marginLeft="@dimen/dp10"/>
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_feedback"
+                            android:text="在还车点提示不在"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/tx_black_light"
+                            android:textSize="@dimen/sp12"
+                            android:layout_marginLeft="@dimen/dp10"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/dp10">
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_feedback"
+                            android:text="蓝牙连接失败"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/tx_black_light"
+                            android:textSize="@dimen/sp12"/>
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_feedback"
+                            android:text="一直在加载"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/tx_black_light"
+                            android:textSize="@dimen/sp12"
+                            android:layout_marginLeft="@dimen/dp10"/>
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_feedback"
+                            android:text="其他"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/tx_black_light"
+                            android:textSize="@dimen/sp12"
+                            android:layout_marginLeft="@dimen/dp10"/>
+                    </LinearLayout>
+
+                    <cn.qimate.bike.core.widget.ClearEditText
+                        android:id="@+id/feedbackUI_restCause"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp80"
+                        android:background="@drawable/shape_feedback_edit"
+                        android:paddingLeft="@dimen/dp5"
+                        android:paddingTop="@dimen/dp5"
+                        android:drawableRight="@drawable/delete_selector"
+                        android:hint="请描述您遇到的问题和所在位置"
+                        android:textSize="@dimen/sp12"
+                        android:textColor="@color/tx_black_light"
+                        android:textColorHint="@color/tx_black_light"
+                        android:layout_marginTop="@dimen/dp10"
+                        android:gravity="top|left"
+                        android:lineSpacingExtra="2dp"/>
 
 
 
@@ -216,16 +218,12 @@
                         android:text="请拍摄已关锁照片（锁环、编号须清晰）和周围环境照片："
                         android:textColor="#990000"
                         android:textSize="@dimen/sp12"
-                        android:paddingLeft="@dimen/dp10"
                         android:layout_marginTop="@dimen/dp15"
-                        android:layout_marginBottom="@dimen/dp15"
-                        android:paddingRight="@dimen/dp15"/>
+                        android:layout_marginBottom="@dimen/dp15"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/dp10"
-                        android:paddingRight="@dimen/dp15"
                         android:orientation="horizontal"
                         android:paddingTop="@dimen/dp15">
 

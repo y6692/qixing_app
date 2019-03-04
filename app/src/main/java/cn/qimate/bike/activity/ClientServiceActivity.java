@@ -297,6 +297,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.mainUI_title_backBtn:
+                UIHelper.goToAct(context, CurRoadBikingActivity.class);
                 scrollToFinishActivity();
                 break;
 
@@ -976,7 +977,11 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+
+            UIHelper.goToAct(context, CurRoadBikingActivity.class);
             scrollToFinishActivity();
+
             return true;
         }
         return super.onKeyDown(keyCode, event);
