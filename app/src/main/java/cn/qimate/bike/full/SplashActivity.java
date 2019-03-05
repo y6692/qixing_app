@@ -128,7 +128,7 @@ public class SplashActivity extends BaseActivity {
 		loadingImage = findViewById(R.id.plash_loading_main);
 		skipLayout = findViewById(R.id.plash_loading_skipLayout);
 		skipTime = findViewById(R.id.plash_loading_skipTime);
-		initHttp();
+//		initHttp();
 
 		init();
 	}

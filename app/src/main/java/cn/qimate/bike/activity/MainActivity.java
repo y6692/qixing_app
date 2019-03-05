@@ -279,15 +279,15 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		registerReceiver(mScreenReceiver, filter);
 
 //		注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
-		filter = new IntentFilter("data.broadcast.action");
-		registerReceiver(broadcastReceiver, filter);
+//		filter = new IntentFilter("data.broadcast.action");
+//		registerReceiver(broadcastReceiver, filter);
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-                m_myHandler.sendEmptyMessage(1);
-			}
-		}).start();
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//                m_myHandler.sendEmptyMessage(1);
+//			}
+//		}).start();
 
 		initView();
 
@@ -494,12 +494,12 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         else {
 //            initHttp();
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    m_myHandler.sendEmptyMessage(5);
-                }
-            }).start();
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    m_myHandler.sendEmptyMessage(5);
+//                }
+//            }).start();
         }
         exImage_1.setOnClickListener(myOnClickLister);
         exImage_2.setOnClickListener(myOnClickLister);
@@ -588,7 +588,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //            ToastUtil.showMessage(this, "eee====" + e);
 //        }
 
-        getFeedbackStatus();
+//        getFeedbackStatus();
 
         String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
@@ -610,63 +610,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                         authBtn.setText("您还未认证，点我快速认证");
                         break;
                     case 2:
-//                        if (!"".equals(m_nowMac) && !SharedPreferencesUrls.getInstance().getBoolean("switcher",false)) {
-//                        if (!"".equals(m_nowMac)) {
-//                            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-//                                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-//                                finish();
-//                            }
-//                            //蓝牙锁
-//                            if (mBluetoothAdapter == null) {
-//                                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-//                                mBluetoothAdapter = bluetoothManager.getAdapter();
-//                            }
-//
-//                            if (mBluetoothAdapter == null) {
-//                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
-//                                finish();
-//                                return;
-//                            }
-//
-//                            if (!mBluetoothAdapter.isEnabled()) {
-//                                flag = 1;
-//                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                                startActivityForResult(enableBtIntent, 188);
-//                            } else {
-////                                mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-////                                    @Override
-////                                    public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-////                                        k++;
-////                                        Log.e("main===LeScan", device + "====" + rssi + "====" + k);
-////
-////                                        if (!macList.contains(""+device)){
-////                                            macList.add(""+device);
-////                                            m_myHandler.sendEmptyMessage(3);
-////                                        }
-////
-////                                    }
-////                                };
-////
-////                                startXB();
-////
-////                                if (lockLoading != null && !lockLoading.isShowing()){
-////                                    lockLoading.setTitle("还车点确认中");
-////                                    lockLoading.show();
-////                                }
-////
-////                                m_myHandler.postDelayed(new Runnable() {
-////                                    @Override
-////                                    public void run() {
-////                                        if(macList.size() == 0) {
-////                                            m_myHandler.sendEmptyMessage(3);
-////                                        }
-////                                    }
-////                                }, 6 * 1000);
-//
-//                            }
-//                        }
 
-                        getCurrentorder1(uid, access_token);
+//                        getCurrentorder1(uid, access_token);
                         break;
                     case 3:
                         authBtn.setEnabled(true);
@@ -799,14 +744,14 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
     }
 
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-			getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
-			getFeedbackStatus();
-        }
-    };
+//    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//			getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
+//			getFeedbackStatus();
+//        }
+//    };
 
     private void getFeedbackStatus() {
         RequestParams params = new RequestParams();
@@ -973,7 +918,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
                     if (mFirstFix) {
                         mFirstFix = false;
-                        schoolrangeList();
+//                        schoolrangeList();
                         initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
                         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
                     } else {
@@ -1304,20 +1249,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                 case 5:
                     initHttp();
 
-//                    if (!SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",false)){
-//                        if (imageUrl != null && !"".equals(imageUrl)){
-//                            WindowManager windowManager = getWindowManager();
-//                            Display display = windowManager.getDefaultDisplay();
-//                            WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
-//                            lp.width = (int) (display.getWidth() * 0.8);
-//                            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-//                            advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-//                            advDialog.getWindow().setAttributes(lp);
-//                            advDialog.show();
-//                            // 加载图片
-//                            Glide.with(context).load(imageUrl).into(advImageView);
-//                        }
-//                    }
                     break;
 
                 case 0x99://搜索超时
@@ -1696,7 +1627,51 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							UIHelper.goToAct(context,RealNameAuthActivity.class);
 							break;
 						case 2:
-							getCurrentorder2(uid,access_token);
+//							getCurrentorder2(uid,access_token);
+
+                            if (Build.VERSION.SDK_INT >= 23) {
+                                int checkPermission = MainActivity.this.checkSelfPermission(Manifest.permission.CAMERA);
+                                if (checkPermission != PERMISSION_GRANTED) {
+                                    if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                                        requestPermissions(new String[] { Manifest.permission.CAMERA }, 100);
+                                    } else {
+                                        CustomDialog.Builder customBuilder1 = new CustomDialog.Builder(MainActivity.this);
+                                        customBuilder1.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.cancel();
+                                                    }
+                                                }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                                MainActivity.this.requestPermissions(
+                                                        new String[] { Manifest.permission.CAMERA },
+                                                        100);
+                                            }
+                                        });
+                                        customBuilder1.create().show();
+                                    }
+                                    if (loadingDialog1 != null && loadingDialog1.isShowing()){
+                                        loadingDialog1.dismiss();
+                                    }
+                                    return;
+                                }
+                            }
+                            if (loadingDialog1 != null && loadingDialog1.isShowing()){
+                                loadingDialog1.dismiss();
+                            }
+                            try {
+                                closeBroadcast();
+                                deactivate();
+
+                                intent = new Intent();
+                                intent.setClass(MainActivity.this, ActivityScanerCode.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+                            } catch (Exception e) {
+                                UIHelper.showToastMsg(context, "相机打开失败,请检查相机是否可正常使用", R.drawable.ic_error);
+                            }
+
 							break;
 						case 3:
 							ToastUtil.showMessageApp(context,"认证被驳回，请重新认证");
@@ -1760,39 +1735,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 									break;
 								case 2:
 
-//                                    startXB();
-//
-//                                    if (lockLoading != null && !lockLoading.isShowing()){
-//                                        lockLoading.setTitle("还车点确认中");
-//                                        lockLoading.show();
-//                                    }
-//
-//                                    new Thread(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            try {
-//                                                int n=0;
-//                                                while(macList.size() == 0){
-//
-//                                                    Thread.sleep(1000);
-//                                                    n++;
-//
-//                                                    Log.e("main===", "n====" + n);
-//
-//                                                    if(n>=6) break;
-//
-//                                                }
-//                                            } catch (InterruptedException e) {
-//                                                e.printStackTrace();
-//                                            }
-//
-//                                            m_myHandler.sendEmptyMessage(3);
-//
-//                                        }
-//                                    }).start();
 
-
-									getCurrentorder1(uid, access_token);
+//									getCurrentorder1(uid, access_token);
 									break;
 								case 3:
 									authBtn.setEnabled(true);

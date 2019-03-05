@@ -436,7 +436,51 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     }
     //--------------------------------------打开本地图片识别二维码 start---------------------------------
     private void initDialogResult(Result result) {
-       useBike(result.toString());
+//       useBike(result.toString());
+
+
+//        App.getInstance().getBluetoothLeService().connect("D4:36:39:B5:AC:A5");
+
+//        BaseApplication.getInstance().getIBLE().connect("D4:36:39:B5:AC:A5", ActivityScanerCode.this);
+
+        Log.e("initDialogResult===", "");
+
+//        codenum = jsonObject.getString("codenum");
+//        m_nowMac = "D4:36:39:B5:AC:A5";
+        m_nowMac = "D1:8B:6A:42:33:2C";
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+            scrollToFinishActivity();
+        }
+        //蓝牙锁
+        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+
+        if (mBluetoothAdapter == null) {
+            ToastUtil.showMessageApp(context, "获取蓝牙失败");
+            scrollToFinishActivity();
+            return;
+        }
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 188);
+        }else{
+            if (loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
+
+            if (loadingDialog != null && !loadingDialog.isShowing()) {
+                loadingDialog.setTitle("正在唤醒车锁");
+                loadingDialog.show();
+            }
+
+            if (!TextUtils.isEmpty(m_nowMac)) {
+                connect();
+            }
+        }
+
+
     }
     public void handleDecode(Result result) {
         inactivityTimer.onActivity();
@@ -751,14 +795,22 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     protected void connect() {
         BaseApplication.getInstance().getIBLE().stopScan();
         m_myHandler.sendEmptyMessage(0x99);
+
+        Log.e("connect===1", "====");
+
         BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
             @Override
             public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
-                if (device==null||TextUtils.isEmpty(device.getAddress()))return;
+                if (device==null || TextUtils.isEmpty(device.getAddress()))return;
+
+                Log.e("connect===2", m_nowMac+"===="+device.getAddress());
+
                 if (m_nowMac.equalsIgnoreCase(device.getAddress())){
                     m_myHandler.removeMessages(0x99);
                     BaseApplication.getInstance().getIBLE().stopScan();
                     BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
+
+                    Log.e("connect===3", "====");
                 }
             }
         });
@@ -797,16 +849,17 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             String data = intent.getStringExtra("data");
             switch (action) {
                 case Config.TOKEN_ACTION:
+                    Log.e("onReceive===", "TOKEN_ACTION===="+isOpen);
 
                     if (null != loadingDialog && loadingDialog.isShowing()) {
                         loadingDialog.dismiss();
                     }
 
-                    if(isOpen){
-                        break;
-                    }else{
-                        isOpen=true;
-                    }
+//                    if(isOpen){
+//                        break;
+//                    }else{
+//                        isOpen=true;
+//                    }
 
                     m_myHandler.postDelayed(new Runnable() {
                         @Override
@@ -839,38 +892,66 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                             Log.e("scan===", "scan====1");
 
-                            getCurrentorder2(uid, access_token);
+//                            m_nowMac = "D4:36:39:B5:AC:A5";
+                            m_nowMac = "D1:8B:6A:42:33:2C";
+                            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+                                scrollToFinishActivity();
+                            }
+                            //蓝牙锁
+                            BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 
+                            mBluetoothAdapter = bluetoothManager.getAdapter();
 
-                            if (loadingDialog != null && !loadingDialog.isShowing()) {
-                                loadingDialog.setTitle("开锁中");
-                                loadingDialog.show();
+                            if (mBluetoothAdapter == null) {
+                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                                scrollToFinishActivity();
+                                return;
+                            }
+                            if (!mBluetoothAdapter.isEnabled()) {
+                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                                startActivityForResult(enableBtIntent, 188);
+                            }else{
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
+
+                                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                    loadingDialog.setTitle("开锁中");
+                                    loadingDialog.show();
+                                }
+
+                                if (!TextUtils.isEmpty(m_nowMac)) {
+//                                    connect();
+
+                                    BaseApplication.getInstance().getIBLE().openLock();
+                                }
                             }
 
-                            m_myHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-//                                    ToastUtil.showMessage(context, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus());
-
-                                    if (loadingDialog != null && loadingDialog.isShowing()){
-                                        loadingDialog.dismiss();
-                                    }
-
-                                    String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-                                    String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-
-//                                    Log.e("scan===1", BaseApplication.getInstance().getIBLE().getLockStatus()+"===="+oid+"===="+referLatitude);
-
-//                                    if (BaseApplication.getInstance().getIBLE().getLockStatus()){
-                                        Log.e("scan===2", oid+"===="+referLatitude);
-                                        submit(uid, access_token);
+//                            getCurrentorder2(uid, access_token);
+//
+//
+//                            if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                                loadingDialog.setTitle("开锁中");
+//                                loadingDialog.show();
+//                            }
+//
+//                            m_myHandler.postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    if (loadingDialog != null && loadingDialog.isShowing()){
+//                                        loadingDialog.dismiss();
 //                                    }
-                                }
-                            }, 10 * 1000);
-
-//                          BaseApplication.getInstance().getIBLE().getLockStatus();
-
-                            Log.e("scan===", "scan===="+loadingDialog);
+//
+//                                    String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+//                                    String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+//
+//                                    Log.e("scan===2", oid+"===="+referLatitude);
+//                                    submit(uid, access_token);
+//                                }
+//                            }, 10 * 1000);
+//
+//                            Log.e("scan===", "scan===="+loadingDialog);
 
                         }
                     }).setHint(false);
@@ -878,6 +959,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                     break;
                 case Config.BATTERY_ACTION:
+                    Log.e("onReceive===", "BATTERY_ACTION====");
+
                     if (!TextUtils.isEmpty(data)) {
                         quantity = String.valueOf(Integer.parseInt(data, 16));
                     }else {
@@ -885,6 +968,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     }
                     break;
                 case Config.OPEN_ACTION:
+                    Log.e("onReceive===", "OPEN_ACTION====");
+
                     if (loadingDialog != null && loadingDialog.isShowing()){
                         loadingDialog.dismiss();
                     }
