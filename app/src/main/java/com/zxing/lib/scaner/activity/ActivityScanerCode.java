@@ -436,7 +436,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     }
     //--------------------------------------打开本地图片识别二维码 start---------------------------------
     private void initDialogResult(Result result) {
-//       useBike(result.toString());
+       useBike(result.toString());
 
 
 //        App.getInstance().getBluetoothLeService().connect("D4:36:39:B5:AC:A5");
@@ -445,40 +445,40 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         Log.e("initDialogResult===", "");
 
-//        codenum = jsonObject.getString("codenum");
-//        m_nowMac = "D4:36:39:B5:AC:A5";
-        m_nowMac = "D1:8B:6A:42:33:2C";
-        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-            scrollToFinishActivity();
-        }
-        //蓝牙锁
-        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-
-        mBluetoothAdapter = bluetoothManager.getAdapter();
-
-        if (mBluetoothAdapter == null) {
-            ToastUtil.showMessageApp(context, "获取蓝牙失败");
-            scrollToFinishActivity();
-            return;
-        }
-        if (!mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, 188);
-        }else{
-            if (loadingDialog != null && loadingDialog.isShowing()){
-                loadingDialog.dismiss();
-            }
-
-            if (loadingDialog != null && !loadingDialog.isShowing()) {
-                loadingDialog.setTitle("正在唤醒车锁");
-                loadingDialog.show();
-            }
-
-            if (!TextUtils.isEmpty(m_nowMac)) {
-                connect();
-            }
-        }
+//        codenum = "60008803";
+////        m_nowMac = "D4:36:39:B5:AC:A5";
+//        m_nowMac = "D1:8B:6A:42:33:2C";
+//        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//            ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+//            scrollToFinishActivity();
+//        }
+//        //蓝牙锁
+//        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+//
+//        mBluetoothAdapter = bluetoothManager.getAdapter();
+//
+//        if (mBluetoothAdapter == null) {
+//            ToastUtil.showMessageApp(context, "获取蓝牙失败");
+//            scrollToFinishActivity();
+//            return;
+//        }
+//        if (!mBluetoothAdapter.isEnabled()) {
+//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(enableBtIntent, 188);
+//        }else{
+//            if (loadingDialog != null && loadingDialog.isShowing()){
+//                loadingDialog.dismiss();
+//            }
+//
+//            if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                loadingDialog.setTitle("正在唤醒车锁");
+//                loadingDialog.show();
+//            }
+//
+//            if (!TextUtils.isEmpty(m_nowMac)) {
+//                connect();
+//            }
+//        }
 
 
     }
@@ -627,8 +627,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             loadingDialog.dismiss();
                         }
                     }
-
-
 
                 }
             });
@@ -855,11 +853,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         loadingDialog.dismiss();
                     }
 
-//                    if(isOpen){
-//                        break;
-//                    }else{
-//                        isOpen=true;
-//                    }
+                    if(isOpen){
+                        break;
+                    }else{
+                        isOpen=true;
+                    }
 
                     m_myHandler.postDelayed(new Runnable() {
                         @Override
@@ -893,49 +891,50 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             Log.e("scan===", "scan====1");
 
 //                            m_nowMac = "D4:36:39:B5:AC:A5";
-                            m_nowMac = "D1:8B:6A:42:33:2C";
-                            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-                                scrollToFinishActivity();
-                            }
-                            //蓝牙锁
-                            BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-
-                            mBluetoothAdapter = bluetoothManager.getAdapter();
-
-                            if (mBluetoothAdapter == null) {
-                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                                scrollToFinishActivity();
-                                return;
-                            }
-                            if (!mBluetoothAdapter.isEnabled()) {
-                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                                startActivityForResult(enableBtIntent, 188);
-                            }else{
-                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                    loadingDialog.dismiss();
-                                }
-
-                                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                                    loadingDialog.setTitle("开锁中");
-                                    loadingDialog.show();
-                                }
-
-                                if (!TextUtils.isEmpty(m_nowMac)) {
-//                                    connect();
-
-                                    BaseApplication.getInstance().getIBLE().openLock();
-                                }
-                            }
+//                            m_nowMac = "D1:8B:6A:42:33:2C";
+//                            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//                                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+//                                scrollToFinishActivity();
+//                            }
+//                            //蓝牙锁
+//                            BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+//
+//                            mBluetoothAdapter = bluetoothManager.getAdapter();
+//
+//                            if (mBluetoothAdapter == null) {
+//                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
+//                                scrollToFinishActivity();
+//                                return;
+//                            }
+//                            if (!mBluetoothAdapter.isEnabled()) {
+//                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                                startActivityForResult(enableBtIntent, 188);
+//                            }else{
+//                                if (loadingDialog != null && loadingDialog.isShowing()){
+//                                    loadingDialog.dismiss();
+//                                }
+//
+//                                if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                                    loadingDialog.setTitle("开锁中");
+//                                    loadingDialog.show();
+//                                }
+//
+//                                if (!TextUtils.isEmpty(m_nowMac)) {
+////                                    connect();
+//
+//                                    BaseApplication.getInstance().getIBLE().openLock();
+//                                }
+//                            }
 
 //                            getCurrentorder2(uid, access_token);
-//
-//
-//                            if (loadingDialog != null && !loadingDialog.isShowing()) {
-//                                loadingDialog.setTitle("开锁中");
-//                                loadingDialog.show();
-//                            }
-//
+
+                            BaseApplication.getInstance().getIBLE().openLock();
+
+                            if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                loadingDialog.setTitle("开锁中");
+                                loadingDialog.show();
+                            }
+
 //                            m_myHandler.postDelayed(new Runnable() {
 //                                @Override
 //                                public void run() {
@@ -950,8 +949,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //                                    submit(uid, access_token);
 //                                }
 //                            }, 10 * 1000);
-//
-//                            Log.e("scan===", "scan===="+loadingDialog);
+
+                            Log.e("scan===", "scan===="+loadingDialog);
 
                         }
                     }).setHint(false);
@@ -1037,7 +1036,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
-                        Log.e("scan===", "getCurrentorder===="+result.getData());
+                        Log.e("scan===", "getCurrentorder2===="+result.getData());
 
                         if ("[]".equals(result.getData()) || 0 == result.getData().length()){
                             addOrderbluelock();
