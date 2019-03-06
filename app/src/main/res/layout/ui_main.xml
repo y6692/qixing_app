@@ -41,6 +41,8 @@
             android:padding="@dimen/dp10"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -194,9 +196,9 @@
                 android:id="@+id/mainUI_scanCode_lock"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp60"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="88dp"
+                android:layout_marginRight="88dp"
+                android:layout_marginBottom="70dp"
                 android:orientation="horizontal"
                 android:background="@drawable/btn_bcg_scan"
                 android:gravity="center"
@@ -221,38 +223,6 @@
                     android:layout_centerInParent="true"
                     />
             </LinearLayout>
-
-
-            <!--<ImageButton-->
-                <!--android:id="@+id/mainUI_scanCode_lock2"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="@dimen/dp60"-->
-                <!--android:layout_marginLeft="20dp"-->
-                <!--android:layout_marginBottom="10dp"-->
-                <!--android:background="@drawable/btn_bcg_scan"-->
-                <!--android:textSize="@dimen/sp14"-->
-                <!--android:textColor="@color/white"-->
-                <!--android:text="扫码开锁"-->
-                <!--android:gravity="center"-->
-
-                <!--android:scaleType="centerInside"-->
-                <!--android:layout_alignParentBottom="true"-->
-                <!--android:layout_centerHorizontal="true"-->
-
-                <!--/>-->
-
-
-            <!--<ImageView-->
-                <!--android:id="@+id/mainUI_scanCode_lock2"-->
-                <!--android:layout_width="40dp"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:background="@null"-->
-                <!--android:src="@drawable/scan"-->
-                <!--android:scaleType="centerInside"-->
-                <!--android:layout_marginLeft="100dp"-->
-                <!--android:layout_marginBottom="20dp"-->
-                <!--android:layout_alignParentBottom="true"-->
-                <!--/>-->
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -298,6 +268,7 @@
                     android:layout_below="@id/mainUI_rechargeBtn"
                     android:layout_marginTop="@dimen/dp15"/>
             </RelativeLayout>
+
             <LinearLayout
                 android:id="@+id/mainUI_refreshLayout"
                 android:layout_width="wrap_content"
@@ -325,6 +296,135 @@
                     android:textColor="@color/tx_black"
                     android:text="刷新"/>
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navigation"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="0dp"
+                android:orientation="horizontal"
+                android:background="@color/white"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:id="@+id/ll_bike"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginLeft="0dp"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/iv_bike"
+                        android:layout_width="23dp"
+                        android:layout_height="17dp"
+                        android:src="@drawable/bike"/>
+
+                    <TextView
+                        android:id="@+id/tv_bike"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:textSize="@dimen/sp10"
+                        android:textColor="#999999"
+                        android:text="用车"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_near"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginLeft="0dp"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/iv_near"
+                        android:layout_width="15dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/near"/>
+
+                    <TextView
+                        android:id="@+id/tv_near"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:textSize="@dimen/sp10"
+                        android:textColor="#999999"
+                        android:text="周边"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/ll_purse"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginLeft="0dp"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/iv_purse"
+                        android:layout_width="19dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/purse"/>
+
+                    <TextView
+                        android:id="@+id/tv_purse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:textSize="@dimen/sp10"
+                        android:textColor="#999999"
+                        android:text="钱包"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/ll_mine"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginLeft="0dp"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/iv_mine"
+                        android:layout_width="16dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/mine"/>
+
+                    <TextView
+                        android:id="@+id/tv_mine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:textSize="@dimen/sp10"
+                        android:textColor="#999999"
+                        android:text="我的"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
