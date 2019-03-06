@@ -13,87 +13,247 @@
   <include
       layout="@layout/ui_main_title"/>
 
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:fitsSystemWindows="true"
-      android:clipToPadding="true"
-      android:layout_marginTop="18dp"
-      android:layout_marginLeft="@dimen/dp20"
-      android:layout_marginRight="19dp"
-      >
-
-    <cn.qimate.bike.core.widget.ClearEditText
-        android:id="@+id/changePsdUI_oldPsd"
-        android:layout_weight="3"
-        android:layout_width="0dp"
-        android:layout_height="43dp"
-        android:background="@drawable/shape_feedback_edit"
-        android:paddingLeft="@dimen/dp10"
-        android:drawableRight="@drawable/delete_selector"
-        android:hint="请输入您的优惠码"
-        android:inputType="textPassword"
-        android:textSize="@dimen/sp15"
-        android:gravity="center_vertical"
-        android:textColorHint="#7D7D7D"
-        android:textColor="@color/tx_black_light"/>
-
-    <Button
-        android:layout_weight="1"
-        android:id="@+id/btn_click_one"
-        android:layout_width="0dp"
-        android:layout_height="43dp"
-        android:layout_marginLeft="-3dp"
-        android:background="@color/red"
-        android:text="立即兑换"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp15"
-        android:gravity="center"
-        />
-
-  </LinearLayout>
-
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="36dp"
-      android:layout_marginTop="10dp"
-      android:layout_marginLeft="20dp"
-      android:layout_marginRight="20dp"
-      android:orientation="vertical"
-      android:background="@color/white"
-      >
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        >
-
-      <android.support.design.widget.TabLayout
-          android:id="@+id/tab"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          app:tabGravity="fill"
-          app:tabIndicatorColor="#E60012"
-          app:tabMode="fixed"
-          app:tabSelectedTextColor="#E60012"
-          app:tabTextColor="#333333"
-          app:tabTextAppearance="@style/TabLayoutTextStyle"
-          />
-
-    </RelativeLayout>
-
-    <!--<View style="@style/divider_1px"/>-->
-
-  </LinearLayout>
-
-
-  <android.support.v4.view.ViewPager
-      android:id="@+id/vp"
+  <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      />
+      android:background="@color/ui_backgroud"
+      android:layout_below="@id/mainUI_titleLayout">
+
+    <LinearLayout
+        android:id="@+id/ll_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:fitsSystemWindows="true"
+        android:clipToPadding="true"
+        android:layout_marginTop="18dp"
+        android:layout_marginLeft="@dimen/dp20"
+        android:layout_marginRight="19dp"
+        >
+
+      <cn.qimate.bike.core.widget.ClearEditText
+          android:id="@+id/changePsdUI_oldPsd"
+          android:layout_weight="3"
+          android:layout_width="0dp"
+          android:layout_height="43dp"
+          android:background="@drawable/shape_feedback_edit"
+          android:paddingLeft="@dimen/dp10"
+          android:drawableRight="@drawable/delete_selector"
+          android:hint="请输入您的优惠码"
+          android:inputType="textPassword"
+          android:textSize="@dimen/sp15"
+          android:gravity="center_vertical"
+          android:textColorHint="#7D7D7D"
+          android:textColor="@color/tx_black_light"/>
+
+      <Button
+          android:layout_weight="1"
+          android:id="@+id/btn_click_one"
+          android:layout_width="0dp"
+          android:layout_height="43dp"
+          android:layout_marginLeft="-3dp"
+          android:background="@color/red"
+          android:text="立即兑换"
+          android:textColor="@color/white"
+          android:textSize="@dimen/sp15"
+          android:gravity="center"
+          />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_2"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_below="@id/ll_1"
+        >
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
+          android:layout_weight="1"
+          android:background="@color/white"
+          android:orientation="horizontal"
+          >
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="#E60012"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="#E60012"
+            app:tabTextColor="#333333"
+            app:tabTextAppearance="@style/TabLayoutTextStyle"
+            />
+
+      </RelativeLayout>
+
+      <!--<View style="@style/divider_1px"/>-->
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_below="@id/ll_2"
+        >
+
+      <android.support.v4.view.ViewPager
+          android:id="@+id/vp"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:gravity="center">
+
+      <LinearLayout
+          android:id="@+id/ll_bike"
+          android:layout_width="0dp"
+          android:layout_height="50dp"
+          android:layout_weight="1"
+          android:layout_alignParentBottom="true"
+          android:layout_marginBottom="0dp"
+          android:layout_marginLeft="0dp"
+          android:orientation="vertical"
+          android:gravity="center"
+          android:onClick="btn">
+
+        <ImageView
+            android:id="@+id/iv_bike"
+            android:layout_width="23dp"
+            android:layout_height="17dp"
+            android:src="@drawable/bike"/>
+
+        <TextView
+            android:id="@+id/tv_bike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="@dimen/sp10"
+            android:textColor="#999999"
+            android:text="用车"/>
+
+      </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/ll_near"
+          android:layout_width="0dp"
+          android:layout_height="50dp"
+          android:layout_weight="1"
+          android:layout_alignParentBottom="true"
+          android:layout_marginBottom="0dp"
+          android:layout_marginLeft="0dp"
+          android:orientation="vertical"
+          android:gravity="center"
+          android:onClick="btn">
+
+        <ImageView
+            android:id="@+id/iv_near"
+            android:layout_width="15dp"
+            android:layout_height="18dp"
+            android:src="@drawable/near2"/>
+
+        <TextView
+            android:id="@+id/tv_near"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="@dimen/sp10"
+            android:textColor="#E60012"
+            android:text="周边"/>
+
+      </LinearLayout>
+
+
+      <LinearLayout
+          android:id="@+id/ll_purse"
+          android:layout_width="0dp"
+          android:layout_height="50dp"
+          android:layout_weight="1"
+          android:layout_alignParentBottom="true"
+          android:layout_marginBottom="0dp"
+          android:layout_marginLeft="0dp"
+          android:orientation="vertical"
+          android:gravity="center"
+          android:onClick="btn">
+
+        <ImageView
+            android:id="@+id/iv_purse"
+            android:layout_width="19dp"
+            android:layout_height="18dp"
+            android:src="@drawable/purse"/>
+
+        <TextView
+            android:id="@+id/tv_purse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="@dimen/sp10"
+            android:textColor="#999999"
+            android:text="钱包"/>
+
+      </LinearLayout>
+
+
+      <LinearLayout
+          android:id="@+id/ll_mine"
+          android:layout_width="0dp"
+          android:layout_height="50dp"
+          android:layout_weight="1"
+          android:layout_alignParentBottom="true"
+          android:layout_marginBottom="0dp"
+          android:layout_marginLeft="0dp"
+          android:orientation="vertical"
+          android:gravity="center"
+          android:onClick="btn">
+
+        <ImageView
+            android:id="@+id/iv_mine"
+            android:layout_width="16dp"
+            android:layout_height="18dp"
+            android:src="@drawable/mine"/>
+
+        <TextView
+            android:id="@+id/tv_mine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="@dimen/sp10"
+            android:textColor="#999999"
+            android:text="我的"/>
+
+      </LinearLayout>
+
+    </LinearLayout>
+
+
+  </RelativeLayout>
+
+
+
 </LinearLayout>

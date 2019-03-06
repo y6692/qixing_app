@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.TextView;
 
 
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.qimate.bike.R;
+import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.fragment.CarCouponFragment;
 import cn.qimate.bike.fragment.MerchantCouponFragment;
 import cn.qimate.bike.fragment.MyIntegralRuleFragment;
@@ -113,6 +115,22 @@ public class CouponActivity extends SwipeBackActivity {
       return titles[position];
     }
   }
+
+  public void btn(View view) {
+    int viewId = view.getId();
+    if (viewId == R.id.ll_bike) {
+      UIHelper.goToAct(this, MainActivity.class);
+      scrollToFinishActivity();
+    } else if (viewId == R.id.ll_purse) {
+      UIHelper.goToAct(this, MyPurseActivity.class);
+      scrollToFinishActivity();
+    } else if (viewId == R.id.ll_mine) {
+      UIHelper.goToAct(this, PersonAlterActivity.class);
+      scrollToFinishActivity();
+    }
+  }
+
+
 //
 //  @OnClick({ R.id.ll_back }) public void Onclick(View v) {
 //    switch (v.getId()) {
