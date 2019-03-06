@@ -93,6 +93,7 @@ import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.fragment.BikeFragment;
 import cn.qimate.bike.jpush.ServiceReceiver;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.NearbyBean;
@@ -230,7 +231,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         setContentView(R.layout.ui_cur_road_biking);
         context = this;
 //        instance = this;
-        MainActivity.tz = 0;
+        BikeFragment.tz = 0;
 
         //注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
         IntentFilter filter = new IntentFilter("data.broadcast.action");
@@ -588,7 +589,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     lockLoading.dismiss();
                 }
                 ToastUtil.showMessageApp(context,"恭喜您，您已成功上锁");
-                Log.e("biking===","biking==="+MainActivity.screen);
+                Log.e("biking===","biking==="+BikeFragment.screen);
 
 
 //                //自动还车
@@ -1708,7 +1709,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 return;
             }
 
-            if(MainActivity.screen){
+            if(BikeFragment.screen){
                 if (isContainsList.contains(true)){
                     if ("1".equals(type)){
                         CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
@@ -1943,7 +1944,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 return;
             }
 
-            if(MainActivity.screen){
+            if(BikeFragment.screen){
                 if (isContainsList.contains(true)){
 
                     flag = 2;
@@ -2511,17 +2512,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         if ("1".equals(result.getData())){
                             ToastUtil.showMessageApp(context, result.getMsg());
                             if ("已为您免单,欢迎反馈问题".equals(result.getMsg())){
-                                MainActivity.tz = 1;
+                                BikeFragment.tz = 1;
                                 UIHelper.goToAct(context, FeedbackActivity.class);
                                 scrollToFinishActivity();
                             }else {
-                                MainActivity.tz = 2;
+                                BikeFragment.tz = 2;
                                 Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
                                 intent.putExtra("oid",oid);
                                 startActivity(intent);
                             }
                         }else {
-                            MainActivity.tz = 3;
+                            BikeFragment.tz = 3;
                             ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
                             UIHelper.goToAct(context,CurRoadBikedActivity.class);
                         }
