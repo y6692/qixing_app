@@ -139,8 +139,7 @@ import static com.umeng.analytics.AnalyticsConfig.getLocation;
 @SuppressLint("NewApi")
 public class MainActivity extends BaseFragmentActivity implements OnClickListener,
         LocationSource,
-		AMapLocationListener
-        ,
+		AMapLocationListener,
         AMap.OnCameraChangeListener,
         AMap.OnMapTouchListener
 //        ,
