@@ -1,61 +1,29 @@
 package cn.qimate.bike.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.alibaba.fastjson.JSON;
-import com.amap.api.maps.model.BitmapDescriptor;
-import com.amap.api.maps.model.Circle;
-import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.Marker;
-
-import org.apache.http.Header;
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import cn.loopj.android.http.RequestParams;
-import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
-import cn.qimate.bike.activity.CouponActivity;
-import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.base.BaseFragment;
-import cn.qimate.bike.base.BaseViewAdapter;
-import cn.qimate.bike.base.BaseViewHolder;
-import cn.qimate.bike.core.common.HttpHelper;
-import cn.qimate.bike.core.common.SharedPreferencesUrls;
-import cn.qimate.bike.core.common.UIHelper;
-import cn.qimate.bike.core.common.Urls;
-import cn.qimate.bike.core.widget.LoadingDialog;
-import cn.qimate.bike.model.BadCarBean;
-import cn.qimate.bike.model.GlobalConfig;
-import cn.qimate.bike.model.ResultConsel;
-
-import static android.app.Activity.RESULT_OK;
 
 @SuppressLint("NewApi")
 public class NearFragment extends BaseFragment{
@@ -77,7 +45,13 @@ public class NearFragment extends BaseFragment{
 
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_coupon, null);
+
+
+        v = inflater.inflate(R.layout.fragment_near, null);
+
+
+
+
         unbinder = ButterKnife.bind(this, v);
 
         return v;

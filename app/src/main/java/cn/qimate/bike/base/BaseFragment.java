@@ -1,8 +1,11 @@
 package cn.qimate.bike.base;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.model.BitmapDescriptor;
@@ -11,9 +14,12 @@ import com.sunshine.blelibrary.inter.OnConnectionListener;
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
+import cn.qimate.bike.swipebacklayout.SwipeBackLayout;
+import cn.qimate.bike.swipebacklayout.app.SwipeBackActivityBase;
 
-public class BaseFragment extends Fragment implements OnConnectionListener {
+public class BaseFragment extends Fragment implements OnConnectionListener, SwipeBackActivityBase {
 
 	private static final int MSG_SET_ALIAS = 1001;
 	private static final int MSG_SET_TAGS = 1002;
@@ -38,11 +44,13 @@ public class BaseFragment extends Fragment implements OnConnectionListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		init();
 		uid = SharedPreferencesUrls.getInstance().getString("uid","");	
 		access_token = SharedPreferencesUrls.getInstance().getString("access_token","");		
 		RefreshLogin();
 	}
+
 	private void init() {
 		baseApplication = (BaseApplication) getActivity().getApplication();
 	}
@@ -98,6 +106,24 @@ public class BaseFragment extends Fragment implements OnConnectionListener {
 		}
 	};
 
+	@Override
+	public SwipeBackLayout getSwipeBackLayout() {
+		return null;
+	}
+
+	@Override
+	public void setSwipeBackEnable(boolean enable) {
+
+	}
+
+	@Override
+	public void scrollToFinishActivity() {
+		finishMine();
+	}
+
+	public void finishMine() {
+		AppManager.getAppManager().finishActivity(getActivity());
+	}
 	
 	//用户已经登录过没有退出刷新登录
 	public void RefreshLogin(){

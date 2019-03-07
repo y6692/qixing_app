@@ -3,10 +3,12 @@ package cn.qimate.bike.activity;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -19,11 +21,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.qimate.bike.R;
 import cn.qimate.bike.base.BaseFragmentActivity;
+import cn.qimate.bike.core.common.AppManager;
+import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.fragment.BikeFragment;
 import cn.qimate.bike.fragment.MineFragment;
 import cn.qimate.bike.fragment.NearFragment;
 import cn.qimate.bike.fragment.PurseFragment;
 import cn.qimate.bike.model.TabEntity;
+import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 @SuppressLint("NewApi")
 public class MainActivity extends BaseFragmentActivity {
@@ -125,6 +130,31 @@ public class MainActivity extends BaseFragmentActivity {
 
     @Override protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            try{
+                CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+                customBuilder.setTitle("温馨提示").setMessage("确认退出吗?")
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        AppManager.getAppManager().AppExit(context);
+                    }
+                });
+                customBuilder.create().show();
+                return true;
+            }catch (Exception e){
+
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }
