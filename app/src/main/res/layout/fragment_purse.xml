@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:id="@+id/personUI_bottom_curRouteLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="@dimen/dp45"
+                android:layout_height="@dimen/dp45"
+                android:layout_marginTop="@dimen/dp10"
+                android:src="@drawable/cur_route_icon"
+                android:scaleType="centerInside"
+                android:padding="@dimen/dp10"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="当前行程"
+                android:textColor="@color/tx_black"
+                android:textSize="@dimen/sp14"
+                android:layout_marginTop="@dimen/dp5"
+                android:layout_marginBottom="@dimen/dp10"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="@dimen/line_height"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dp5"
+            android:layout_marginBottom="@dimen/dp5"
+            android:background="#eee"/>
+        <LinearLayout
+            android:id="@+id/personUI_bottom_hisRouteLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="@dimen/dp45"
+                android:layout_height="@dimen/dp45"
+                android:layout_marginTop="@dimen/dp10"
+                android:src="@drawable/his_route_icon"
+                android:scaleType="centerInside"
+                android:padding="@dimen/dp10"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="历史行程"
+                android:textColor="@color/tx_black"
+                android:textSize="@dimen/sp14"
+                android:layout_marginTop="@dimen/dp5"
+                android:layout_marginBottom="@dimen/dp10"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="@dimen/line_height"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dp5"
+            android:layout_marginBottom="@dimen/dp5"
+            android:background="#eee"/>
+        <LinearLayout
+            android:id="@+id/personUI_bottom_myPurseLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="@dimen/dp45"
+                android:layout_height="@dimen/dp45"
+                android:layout_marginTop="@dimen/dp10"
+                android:src="@drawable/purse_icon"
+                android:scaleType="centerInside"
+                android:padding="@dimen/dp10"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我的钱包"
+                android:textColor="@color/tx_black"
+                android:textSize="@dimen/sp14"
+                android:layout_marginTop="@dimen/dp5"
+                android:layout_marginBottom="@dimen/dp10"/>
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:background="@color/line_color"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:background="@color/line_color"
+        android:layout_marginTop="@dimen/dp10"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/block_bcg"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/personUI_bottom_myMsgLayout"
+            android:layout_width="match_parent"
+            android:layout_height="56dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="18dp"
+                android:orientation="horizontal"
+                android:layout_alignParentLeft="true">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="骑行套餐"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/sp18"
+                    android:layout_marginLeft="@dimen/dp5"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingRight="16dp"
+
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="11dp"
+                    android:text="3天"
+                    android:textColor="#7D7D7D"
+                    android:textSize="@dimen/sp16"
+                    android:layout_marginLeft="@dimen/dp5"/>
+
+                <ImageView
+                    android:layout_width="8dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/yjt"
+                    android:scaleType="centerInside"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_height"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="9dp"
+            android:background="#DDDDDD"/>
+
+
+        <RelativeLayout
+            android:id="@+id/personUI_bottom_myMsgLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="56dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="18dp"
+                android:orientation="horizontal"
+                android:layout_alignParentLeft="true">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="骑行余额"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/sp18"
+                    android:layout_marginLeft="@dimen/dp5"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingRight="16dp"
+
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="11dp"
+                    android:text="10元"
+                    android:textColor="#7D7D7D"
+                    android:textSize="@dimen/sp16"
+                    android:layout_marginLeft="@dimen/dp5"/>
+
+                <ImageView
+                    android:layout_width="8dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/yjt"
+                    android:scaleType="centerInside"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_height"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="9dp"
+            android:background="#DDDDDD"/>
+
+        <RelativeLayout
+            android:id="@+id/personUI_bottom_myMsgLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="56dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="18dp"
+                android:orientation="horizontal"
+                android:layout_alignParentLeft="true">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="优惠券"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/sp18"
+                    android:layout_marginLeft="@dimen/dp5"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingRight="16dp"
+
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="11dp"
+                    android:text="1张"
+                    android:textColor="#7D7D7D"
+                    android:textSize="@dimen/sp16"
+                    android:layout_marginLeft="@dimen/dp5"/>
+
+                <ImageView
+                    android:layout_width="8dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/yjt"
+                    android:scaleType="centerInside"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_height"
+            android:background="#F0EFED"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/personUI_logoutLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp40"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/btn_bcg"
+        android:layout_marginRight="@dimen/dp25"
+        android:layout_marginLeft="@dimen/dp25"
+        android:layout_marginTop="@dimen/dp25"
+        android:layout_marginBottom="@dimen/dp100">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp16"
+            android:textColor="@color/white"
+            android:text="退出" />
+    </LinearLayout>
+</LinearLayout>
