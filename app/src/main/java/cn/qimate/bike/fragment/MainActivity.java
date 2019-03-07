@@ -1518,16 +1518,16 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
     }
 
 
-    public void btn(View view) {
-        int viewId = view.getId();
-        if (viewId == R.id.ll_near) {
-            UIHelper.goToAct(MainActivity.this, CouponActivity.class);
-        } else if (viewId == R.id.ll_purse) {
-            UIHelper.goToAct(MainActivity.this, MyPurseActivity.class);
-        } else if (viewId == R.id.ll_mine) {
-            UIHelper.goToAct(MainActivity.this, PersonAlterActivity.class);
-        }
-    }
+//    public void btn(View view) {
+//        int viewId = view.getId();
+//        if (viewId == R.id.ll_near) {
+//            UIHelper.goToAct(MainActivity.this, CouponActivity.class);
+//        } else if (viewId == R.id.ll_purse) {
+//            UIHelper.goToAct(MainActivity.this, MyPurseActivity.class);
+//        } else if (viewId == R.id.ll_mine) {
+//            UIHelper.goToAct(MainActivity.this, PersonAlterActivity.class);
+//        }
+//    }
 
 
 	@Override
@@ -1535,17 +1535,17 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		String uid = SharedPreferencesUrls.getInstance().getString("uid","");
 		String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 		switch (view.getId()){
-            case R.id.ll_near:
-                UIHelper.goToAct(MainActivity.this, CouponActivity.class);
-                break;
-
-            case R.id.ll_purse:
-                UIHelper.goToAct(MainActivity.this, MyPurseActivity.class);
-                break;
-
-            case R.id.ll_mine:
-                UIHelper.goToAct(MainActivity.this, PersonAlterActivity.class);
-                break;
+//            case R.id.ll_near:
+//                UIHelper.goToAct(MainActivity.this, CouponActivity.class);
+//                break;
+//
+//            case R.id.ll_purse:
+//                UIHelper.goToAct(MainActivity.this, MyPurseActivity.class);
+//                break;
+//
+//            case R.id.ll_mine:
+//                UIHelper.goToAct(MainActivity.this, PersonAlterActivity.class);
+//                break;
 
 			case R.id.mainUI_leftBtn:
 //				title.setText(macList.size()+"###"+isContainsList.contains(true)+"###"+type);

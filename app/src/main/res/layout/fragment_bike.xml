@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ui_main"
+
     android:fitsSystemWindows="true"
     android:clipToPadding="true"
     android:orientation="vertical">
@@ -10,6 +10,7 @@
         android:id="@+id/mainUI_titleLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp40"
+        android:background="@drawable/title_gradient"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
@@ -195,12 +196,12 @@
             <LinearLayout
                 android:id="@+id/mainUI_scanCode_lock"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp60"
+                android:layout_height="@dimen/dp50"
                 android:layout_marginLeft="88dp"
                 android:layout_marginRight="88dp"
                 android:layout_marginBottom="70dp"
                 android:orientation="horizontal"
-                android:background="@drawable/btn_bcg_scan"
+                android:background="@drawable/btn_bcg_scan_gradient"
                 android:gravity="center"
                 android:layout_alignParentBottom="true"
                 >
