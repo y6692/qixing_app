@@ -79,8 +79,8 @@ public class NearFragment extends BaseFragment{
 
 
     private void initView(){
-        title = (TextView) getActivity().findViewById(R.id.mainUI_title_titleText);
-        title.setText("优惠券");
+//        title = (TextView) getActivity().findViewById(R.id.mainUI_title_titleText);
+//        title.setText("优惠券");
 
         tab = (TabLayout) getActivity().findViewById(R.id.tab);
         vp = (ViewPager)getActivity().findViewById(R.id.vp);

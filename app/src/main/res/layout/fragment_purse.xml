@@ -2,106 +2,84 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
     android:orientation="vertical"
     android:background="#F5F5F5">
+
+    <!--<include-->
+        <!--layout="@layout/ui_main_title"/>-->
+
+    <RelativeLayout
+        android:id="@+id/mainUI_titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp40"
+        android:background="@drawable/title_gradient"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+
+        <TextView
+            android:id="@+id/mainUI_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="我的钱包"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp18"/>
+    </RelativeLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/white">
+        android:layout_height="@dimen/dp60"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="13dp"
+        android:background="@drawable/block_bcg2"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/personUI_bottom_curRouteLayout"
+        <RelativeLayout
+            android:id="@+id/personUI_bottom_myMsgLayout0"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:layout_width="@dimen/dp45"
-                android:layout_height="@dimen/dp45"
-                android:layout_marginTop="@dimen/dp10"
-                android:src="@drawable/cur_route_icon"
-                android:scaleType="centerInside"
-                android:padding="@dimen/dp10"/>
-
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="当前行程"
-                android:textColor="@color/tx_black"
-                android:textSize="@dimen/sp14"
-                android:layout_marginTop="@dimen/dp5"
-                android:layout_marginBottom="@dimen/dp10"/>
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="18dp"
+                android:orientation="horizontal"
+                android:layout_alignParentLeft="true">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="购买骑行套餐骑行更划算"
+                    android:textColor="#E60012"
+                    android:textSize="@dimen/sp18"
+                    android:layout_marginLeft="@dimen/dp5"/>
+            </LinearLayout>
 
-        <View
-            android:layout_width="@dimen/line_height"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp5"
-            android:layout_marginBottom="@dimen/dp5"
-            android:background="#eee"/>
-        <LinearLayout
-            android:id="@+id/personUI_bottom_hisRouteLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:layout_weight="1">
-
-            <ImageView
-                android:layout_width="@dimen/dp45"
-                android:layout_height="@dimen/dp45"
-                android:layout_marginTop="@dimen/dp10"
-                android:src="@drawable/his_route_icon"
-                android:scaleType="centerInside"
-                android:padding="@dimen/dp10"/>
-
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="历史行程"
-                android:textColor="@color/tx_black"
-                android:textSize="@dimen/sp14"
-                android:layout_marginTop="@dimen/dp5"
-                android:layout_marginBottom="@dimen/dp10"/>
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingRight="16dp"
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true">
 
-        <View
-            android:layout_width="@dimen/line_height"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp5"
-            android:layout_marginBottom="@dimen/dp5"
-            android:background="#eee"/>
-        <LinearLayout
-            android:id="@+id/personUI_bottom_myPurseLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:layout_weight="1">
+                <ImageView
+                    android:layout_width="8dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/yjt"
+                    android:scaleType="centerInside"/>
+            </LinearLayout>
+        </RelativeLayout>
 
-            <ImageView
-                android:layout_width="@dimen/dp45"
-                android:layout_height="@dimen/dp45"
-                android:layout_marginTop="@dimen/dp10"
-                android:src="@drawable/purse_icon"
-                android:scaleType="centerInside"
-                android:padding="@dimen/dp10"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="我的钱包"
-                android:textColor="@color/tx_black"
-                android:textSize="@dimen/sp14"
-                android:layout_marginTop="@dimen/dp5"
-                android:layout_marginBottom="@dimen/dp10"/>
-        </LinearLayout>
     </LinearLayout>
+
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_height"
@@ -278,28 +256,49 @@
         </RelativeLayout>
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/line_height"
-            android:background="#F0EFED"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginLeft="105dp"
+        android:layout_marginRight="105dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="18dp">
+
+        <ImageView
+            android:layout_width="@dimen/dp20"
+            android:layout_height="@dimen/dp20"
+            android:src="@drawable/yes"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textSize="@dimen/sp18"
+            android:textColor="#E60012"
+            android:text="已交押金200元"/>
+    </LinearLayout>
+
+
     <LinearLayout
         android:id="@+id/personUI_logoutLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp40"
         android:gravity="center"
         android:orientation="vertical"
-        android:background="@drawable/btn_bcg"
-        android:layout_marginRight="@dimen/dp25"
-        android:layout_marginLeft="@dimen/dp25"
-        android:layout_marginTop="@dimen/dp25"
-        android:layout_marginBottom="@dimen/dp100">
+        android:background="@drawable/btn_bcg_scan_gradient"
+        android:layout_marginLeft="36dp"
+        android:layout_marginRight="36dp"
+        >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/sp16"
             android:textColor="@color/white"
-            android:text="退出" />
+            android:text="点击退款" />
     </LinearLayout>
 </LinearLayout>

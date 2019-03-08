@@ -52,64 +52,18 @@ import cn.qimate.bike.model.ResultConsel;
 import static android.app.Activity.RESULT_OK;
 
 @SuppressLint("NewApi")
-public class PurseFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
-        AdapterView.OnItemClickListener{
+public class PurseFragment extends BaseFragment implements View.OnClickListener{
 
+    private View v;
     Unbinder unbinder;
 
     private Context context;
 
-//    @BindView(R.id.Layout_swipeListView)
-    ListView listview;
-//    @BindView(R.id.Layout_swipeParentLayout)
-    SwipeRefreshLayout swipeRefreshLayout;
-//    @BindView(R.id.msgText)
-//    TextView msgText;
-
-    private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
-    private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
-    private boolean mFirstFix = true;
-    private LatLng myLocation = null;
-    private Circle mCircle;
-    private BitmapDescriptor successDescripter;
-    private BitmapDescriptor bikeDescripter;
-    private Handler handler = new Handler();
-    private Marker centerMarker;
-    private boolean isMovingMarker = false;
-
-    private List<Marker> bikeMarkerList;
-    private boolean isUp = false;
-
-    private double latitude = 0.0;
-    private double longitude = 0.0;
-    private int isLock = 0;
-    private View v;
-
-    private LoadingDialog loadingDialog;
-    private Dialog dialog;
-    private List<BadCarBean> datas;
-    private MyAdapter myAdapter;
-    private int curPosition = 0;
-    private int showPage = 1;
-    private boolean isRefresh = true;// 是否刷新中
-    private boolean isLast = false;
-
-    private View footerView;
-    private View footerViewType01;
-    private View footerViewType02;
-    private View footerViewType03;
-    private View footerViewType04;
-    private View footerViewType05;
-
-    private View footerLayout;
-
-    String badtime="2115-02-08 20:20";
-    String codenum="";
-    String totalnum="";
+    private TextView title;
 
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_car_coupon, null);
+        v = inflater.inflate(R.layout.fragment_purse, null);
         unbinder = ButterKnife.bind(this, v);
 
         return v;
@@ -119,63 +73,11 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         context = getActivity();
-        datas = new ArrayList<>();
 
         initView();
-
-        initHttp();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            while (true){
-
-                try {
-                    Thread.sleep(30*1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                m_myHandler.sendEmptyMessage(1);
-            }
-
-            }
-        }).start();
-
+//        initHttp();
     }
 
-    protected Handler m_myHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message mes) {
-            switch (mes.what) {
-                case 0:
-                    break;
-                case 1:
-                    resetList();
-
-                    break;
-                default:
-                    break;
-            }
-            return false;
-        }
-    });
-
-    public void resetList(){
-        showPage = 1;
-        badtime="2115-02-08 20:20";
-        if (!isRefresh) {
-            if(datas.size()!=0){
-                myAdapter.getDatas().clear();
-                myAdapter.notifyDataSetChanged();
-            }
-            isRefresh = true;
-            initHttp();
-        } else {
-            swipeRefreshLayout.setRefreshing(false);
-        }
-    }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -184,120 +86,29 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
             //pause
         }else{
             //resume
-            resetList();
         }
     }
 
 
     private void initView(){
-        loadingDialog = new LoadingDialog(context);
-        loadingDialog.setCancelable(false);
-        loadingDialog.setCanceledOnTouchOutside(false);
+//        title = (TextView) getActivity().findViewById(R.id.mainUI_title_titleText);
+//        title.setText("我的钱包");
 
-//        dialog = new Dialog(context, R.style.main_publishdialog_style);
-//        View tagView = LayoutInflater.from(context).inflate(R.layout.dialog_deduct_mark, null);
-//        dialog.setContentView(tagView);
-//        dialog.setCanceledOnTouchOutside(false);
-
-        footerView = LayoutInflater.from(context).inflate(R.layout.footer_item, null);
-        footerViewType01 = footerView.findViewById(R.id.footer_Layout_type01);// 点击加载更多
-        footerViewType02 = footerView.findViewById(R.id.footer_Layout_type02);// 正在加载，请您稍等
-        footerViewType03 = footerView.findViewById(R.id.footer_Layout_type03);// 已无更多
-        footerViewType04 = footerView.findViewById(R.id.footer_Layout_type04);// 刷新失败，请重试
-        footerViewType05 = footerView.findViewById(R.id.footer_Layout_type05);// 暂无数据
-        footerLayout = footerView.findViewById(R.id.footer_Layout);
-
-
-        swipeRefreshLayout = (SwipeRefreshLayout)getActivity().findViewById(R.id.Layout_swipeParentLayout);
-        listview = (ListView)getActivity().findViewById(R.id.Layout_swipeListView);
-        listview.addFooterView(footerView);
-
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(android.R.color.holo_green_dark), getResources().getColor(android.R.color.holo_green_light),
-                getResources().getColor(android.R.color.holo_orange_light), getResources().getColor(android.R.color.holo_red_light));
-
-//        myList.setOnItemClickListener(this);
-
-        myAdapter = new MyAdapter(context);
-        myAdapter.setDatas(datas);
-        listview.setAdapter(myAdapter);
-
-        footerLayout.setOnClickListener(this);
-
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                curPosition = position;
-//                WindowManager.LayoutParams params1 = dialog.getWindow().getAttributes();
-//                params1.width = LinearLayout.LayoutParams.MATCH_PARENT;
-//                params1.height = LinearLayout.LayoutParams.MATCH_PARENT;
-//                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-//                dialog.getWindow().setAttributes(params1);
-//                dialog.show();
-
-                Intent intent = new Intent(context, PayMontCartActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-    @Override
-    public void onRefresh() {
-        showPage = 1;
-        if (!isRefresh) {
-            if(datas.size()!=0){
-                myAdapter.getDatas().clear();
-                myAdapter.notifyDataSetChanged();
-            }
-            isRefresh = true;
-            initHttp();
-        } else {
-            swipeRefreshLayout.setRefreshing(false);
-        }
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//        loadingDialog = new LoadingDialog(context);
+//        loadingDialog.setCancelable(false);
+//        loadingDialog.setCanceledOnTouchOutside(false);
+//
+//        footerView = LayoutInflater.from(context).inflate(R.layout.footer_item, null);
+//        footerViewType01 = footerView.findViewById(R.id.footer_Layout_type01);// 点击加载更多
+//        footerViewType02 = footerView.findViewById(R.id.footer_Layout_type02);// 正在加载，请您稍等
+//        footerViewType03 = footerView.findViewById(R.id.footer_Layout_type03);// 已无更多
+//        footerViewType04 = footerView.findViewById(R.id.footer_Layout_type04);// 刷新失败，请重试
+//        footerViewType05 = footerView.findViewById(R.id.footer_Layout_type05);// 暂无数据
+//        footerLayout = footerView.findViewById(R.id.footer_Layout);
 
     }
 
-    @SuppressLint("NewApi")
-    private class MyAdapter extends BaseViewAdapter<BadCarBean> {
 
-        private LayoutInflater inflater;
-
-        public MyAdapter(Context context){
-            super(context);
-            this.inflater = LayoutInflater.from(context);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (null == convertView) {
-                convertView = inflater.inflate(R.layout.item_car_coupon_record, null);
-            }
-            TextView num = BaseViewHolder.get(convertView,R.id.item_num);
-            TextView status = BaseViewHolder.get(convertView,R.id.item_status);
-//            TextView time = BaseViewHolder.get(convertView,R.id.item_time);
-            final BadCarBean bean = getDatas().get(position);
-
-            num.setText(bean.getCodenum());
-            status.setText(bean.getStatus_name());
-//            time.setText(bean.getBadtime());
-
-            if("即将超时".equals(bean.getStatus_name())){
-                num.setTextColor(getResources().getColor(R.color.red));
-                status.setTextColor(getResources().getColor(R.color.red));
-//                time.setTextColor(getResources().getColor(R.color.red));
-            }else{
-                num.setTextColor(getResources().getColor(R.color.tx_black));
-                status.setTextColor(getResources().getColor(R.color.tx_black));
-//                time.setTextColor(getResources().getColor(R.color.tx_black));
-            }
-
-            return convertView;
-        }
-    }
 
     private void initHttp(){
 
@@ -310,22 +121,17 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
         RequestParams params = new RequestParams();
         params.put("uid",uid);
         params.put("access_token",access_token);
-        params.put("page", showPage);
-        params.put("pagesize", GlobalConfig.PAGE_SIZE);
+//        params.put("page", showPage);
+//        params.put("pagesize", GlobalConfig.PAGE_SIZE);
 
         HttpHelper.get(context, Urls.badcarList, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                setFooterType(1);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 UIHelper.ToastError(context, throwable.toString());
-                swipeRefreshLayout.setRefreshing(false);
-                isRefresh = false;
-                setFooterType(3);
-                setFooterVisibility();
             }
 
             @Override
@@ -334,41 +140,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
                         JSONArray array = new JSONArray(result.getData());
-                        if (array.length() == 0 && showPage == 1) {
-                            footerLayout.setVisibility(View.VISIBLE);
-                            setFooterType(4);
-                            return;
-                        } else if (array.length() < GlobalConfig.PAGE_SIZE && showPage == 1) {
-                            footerLayout.setVisibility(View.GONE);
-                            setFooterType(5);
-                        } else if (array.length() < GlobalConfig.PAGE_SIZE) {
-                            footerLayout.setVisibility(View.VISIBLE);
-                            setFooterType(2);
-                        } else if (array.length() >= 10) {
-                            footerLayout.setVisibility(View.VISIBLE);
-                            setFooterType(0);
-                        }
 
-                        for (int i = 0; i < array.length();i++){
-                            BadCarBean bean = JSON.parseObject(array.getJSONObject(i).toString(), BadCarBean.class);
-
-                            if(i==0 && bean.getBadtime().compareTo(badtime)<0){
-                                badtime = bean.getBadtime();
-                                codenum = bean.getCodenum();
-                                totalnum = bean.getTotalnum();
-                            }
-
-                            datas.add(bean);
-                        }
-
-                        Intent intent = new Intent("data.broadcast.action");
-                        intent.putExtra("codenum", codenum);
-                        intent.putExtra("count", Integer.parseInt(totalnum));
-                        context.sendBroadcast(intent);
-
-//                        View view = LayoutInflater.from(context).inflate(R.layout.fragment_scan, null);
-//                        TextView tvMsg = view.findViewById(R.id.msg);
-//                        tvMsg.setText("456");
 
                     } else {
                         Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
@@ -376,9 +148,6 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-                    swipeRefreshLayout.setRefreshing(false);
-                    isRefresh = false;
-                    setFooterVisibility();
                 }
 //                if (loadingDialog != null && loadingDialog.isShowing()){
 //                    loadingDialog.dismiss();
@@ -388,65 +157,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
     }
 
 
-    private void setFooterType(int type) {
-        switch (type) {
-            case 0:
-                isLast = false;
-                footerViewType01.setVisibility(View.VISIBLE);
-                footerViewType02.setVisibility(View.GONE);
-                footerViewType03.setVisibility(View.GONE);
-                footerViewType04.setVisibility(View.GONE);
-                footerViewType05.setVisibility(View.GONE);
-                break;
-            case 1:
-                isLast = false;
-                footerViewType01.setVisibility(View.GONE);
-                footerViewType02.setVisibility(View.VISIBLE);
-                footerViewType03.setVisibility(View.GONE);
-                footerViewType04.setVisibility(View.GONE);
-                footerViewType05.setVisibility(View.GONE);
-                break;
-            case 2:
-                isLast = true;
-                footerViewType01.setVisibility(View.GONE);
-                footerViewType02.setVisibility(View.GONE);
-                footerViewType03.setVisibility(View.VISIBLE);
-                footerViewType04.setVisibility(View.GONE);
-                footerViewType05.setVisibility(View.GONE);
-                break;
-            case 3:
-                isLast = false;
-                // showPage -= 1;
-                footerViewType01.setVisibility(View.GONE);
-                footerViewType02.setVisibility(View.GONE);
-                footerViewType03.setVisibility(View.GONE);
-                footerViewType04.setVisibility(View.VISIBLE);
-                footerViewType05.setVisibility(View.GONE);
-                break;
-            case 4:
-                isLast = true;
-                footerViewType01.setVisibility(View.GONE);
-                footerViewType02.setVisibility(View.GONE);
-                footerViewType03.setVisibility(View.GONE);
-                footerViewType04.setVisibility(View.GONE);
-                footerViewType05.setVisibility(View.VISIBLE);
-                break;
-            case 5:
-                isLast = true;
-                footerViewType01.setVisibility(View.GONE);
-                footerViewType02.setVisibility(View.GONE);
-                footerViewType03.setVisibility(View.GONE);
-                footerViewType04.setVisibility(View.GONE);
-                footerViewType05.setVisibility(View.GONE);
-                break;
-        }
-    }
 
-    private void setFooterVisibility() {
-        if (footerView.getVisibility() == View.GONE) {
-            footerView.setVisibility(View.VISIBLE);
-        }
-    }
 
 
 
@@ -455,7 +166,6 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public void onResume() {
         super.onResume();
-        isRefresh = true;
     }
 
 
@@ -466,14 +176,6 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         switch (v.getId()){
 
-            case R.id.footer_Layout:
-                if (!isLast) {
-                    showPage += 1;
-                    initHttp();
-                    myAdapter.notifyDataSetChanged();
-                }
-                break;
-
             default:
                 break;
         }
@@ -483,44 +185,17 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
     public void onPause() {
         super.onPause();
     }
-    /**
-     * 方法必须重写
-     */
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 
-    /**
-     * 方法必须重写
-     */
     @Override
     public void onDestroy() {
         super.onDestroy();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        Log.e("requestCode===", "==="+requestCode);
-
-        switch (requestCode) {
-
-            case 1:
-                if (resultCode == RESULT_OK) {
-                    String result = data.getStringExtra("QR_CODE");
-                } else {
-					Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();
-                }
-
-                Log.e("requestCode===1", "==="+resultCode);
-                break;
-
-            default:
-                break;
-
-        }
-    }
 
 
 }
