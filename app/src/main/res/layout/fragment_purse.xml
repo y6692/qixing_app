@@ -141,8 +141,7 @@
                 <ImageView
                     android:layout_width="8dp"
                     android:layout_height="14dp"
-                    android:src="@drawable/yjt"
-                    android:scaleType="centerInside"/>
+                    android:src="@drawable/yjt"/>
             </LinearLayout>
         </RelativeLayout>
 
@@ -196,8 +195,7 @@
                 <ImageView
                     android:layout_width="8dp"
                     android:layout_height="14dp"
-                    android:src="@drawable/yjt"
-                    android:scaleType="centerInside"/>
+                    android:src="@drawable/yjt"/>
             </LinearLayout>
         </RelativeLayout>
 
@@ -250,8 +248,7 @@
                 <ImageView
                     android:layout_width="8dp"
                     android:layout_height="14dp"
-                    android:src="@drawable/yjt"
-                    android:scaleType="centerInside"/>
+                    android:src="@drawable/yjt"/>
             </LinearLayout>
         </RelativeLayout>
 

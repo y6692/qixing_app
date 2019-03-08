@@ -16,6 +16,7 @@
         android:layout_alignParentStart="true">
 
         <ImageView
+            android:visibility="gone"
             android:id="@+id/mainUI_leftBtn"
             android:layout_width="@dimen/dp45"
             android:layout_height="match_parent"
@@ -31,16 +32,16 @@
             android:layout_centerInParent="true"
             android:text="7MA出行"
             android:textColor="@color/white"
-            android:textSize="@dimen/sp16"/>
+            android:textSize="@dimen/sp18"/>
 
         <ImageView
             android:id="@+id/mainUI_rightBtn"
-            android:layout_width="@dimen/dp45"
+            android:layout_width="23dp"
             android:layout_height="match_parent"
-            android:background="@null"
             android:src="@drawable/main_right_icon"
-            android:padding="@dimen/dp10"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="19dp"
+            android:gravity="center"/>
     </RelativeLayout>
 
 
@@ -89,106 +90,77 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="300dp"
+                android:paddingBottom="256dp"
+                android:layout_marginRight="29dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:gravity="center">
 
                 <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:background="@null"
+                    android:layout_width="32dp"
+                    android:layout_height="33dp"
                     android:src="@drawable/vip_center_icon"
                     android:layout_alignParentLeft="true"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp12"
-                    android:textColor="@color/red"
-                    android:text="限时优惠"/>
             </LinearLayout>
 
 
             <LinearLayout
                 android:id="@+id/mainUI_myLocationLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp40"
+                android:layout_height="@dimen/dp40"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="80dp"
-                android:layout_marginLeft="@dimen/dp10"
+                android:layout_marginBottom="19dp"
+                android:layout_marginLeft="@dimen/dp25"
                 android:orientation="vertical"
-                android:background="@drawable/back_bd"
+                android:background="@drawable/back_bd2"
                 android:gravity="center">
 
                 <ImageView
                     android:id="@+id/mainUI_myLocation"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:background="@null"
-                    android:src="@drawable/btn_location"
-                    android:layout_alignParentLeft="true"/>
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/btn_location"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp12"
-                    android:textColor="@color/tx_black"
-                    android:text="定位"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="80dp"
+                android:paddingBottom="19dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginRight="@dimen/dp10"
+                android:layout_marginRight="@dimen/dp25"
                 android:gravity="center">
                 <LinearLayout
                     android:id="@+id/mainUI_slideLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:background="@drawable/back_bd"
-                    android:layout_marginBottom="@dimen/dp10">
+                    android:background="@drawable/back_bd2"
+                    android:layout_marginBottom="21dp">
                     <ImageView
-                        android:layout_width="@dimen/dp35"
-                        android:layout_height="@dimen/dp35"
-                        android:background="@null"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
                         android:src="@drawable/slide_icon"
-                        android:layout_alignParentRight="true"
-                        android:scaleType="centerInside"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/sp12"
-                        android:textColor="@color/tx_black"
-                        android:text="还车点"/>
+                        android:layout_alignParentRight="true"/>
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/mainUI_linkServiceLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/back_bd"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
+                    android:background="@drawable/back_bd2"
                     android:gravity="center"
                     android:orientation="vertical">
                     <ImageView
                         android:id="@+id/mainUI_linkService_btn"
-                        android:layout_width="@dimen/dp35"
-                        android:layout_height="@dimen/dp35"
-                        android:background="@null"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
                         android:src="@drawable/link_service_icon"
-                        android:layout_alignParentRight="true"
-                        android:scaleType="centerInside"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/sp12"
-                        android:textColor="@color/tx_black"
-                        android:text="客服"/>
+                        android:layout_alignParentRight="true"/>
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -199,7 +171,7 @@
                 android:layout_height="@dimen/dp50"
                 android:layout_marginLeft="88dp"
                 android:layout_marginRight="88dp"
-                android:layout_marginBottom="70dp"
+                android:layout_marginBottom="20dp"
                 android:orientation="horizontal"
                 android:background="@drawable/btn_bcg_scan_gradient"
                 android:gravity="center"
@@ -207,42 +179,89 @@
                 >
                 <ImageView
                     android:id="@+id/ib"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="17dp"
+                    android:layout_height="18dp"
                     android:src="@drawable/scan"
                     android:background="#00000000"
-                    android:layout_centerInParent="true"
                     />
                 <TextView
                     android:id="@+id/tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="7dp"
                     android:text="扫码开锁"
-                    android:textSize="@dimen/sp20"
+                    android:textSize="@dimen/sp18"
                     android:textColor="@color/white"
                     android:layout_centerInParent="true"
                     />
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_authBtn"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/dp20"
-                android:paddingRight="@dimen/dp20"
-                android:paddingTop="@dimen/dp15">
+                android:layout_height="29dp"
+                android:layout_marginLeft="13dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/block_bcg"
+                >
 
-                <Button
-                    android:id="@+id/mainUI_authBtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp40"
-                    android:background="@drawable/btn_bcg"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="@color/white"
-                    android:text="您还未认证，点我快速认证"
-                    android:gravity="center"
-                    android:visibility="gone"
-                    android:layout_marginBottom="@dimen/dp15"/>
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/mainUI_authBtn"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="@drawable/block_bcg"-->
+                    <!--&gt;-->
+
+                    <!--<Button-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="@dimen/dp40"-->
+                        <!--android:textSize="@dimen/sp14"-->
+                        <!--android:textColor="@color/white"-->
+                        <!--android:text="您还未认证，点我快速认证"-->
+                        <!--android:gravity="center"-->
+                        <!--android:layout_marginBottom="@dimen/dp15"/>-->
+
+
+                <!--</LinearLayout>-->
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="13dp"
+                    android:orientation="horizontal"
+                    android:layout_alignParentLeft="true">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="13dp"
+                        android:src="@drawable/horn"/>
+
+                    <TextView
+                        android:id="@+id/tv_authBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="消息"
+                        android:textColor="#E60012"
+                        android:textSize="@dimen/sp13"
+                        android:layout_marginLeft="7dp"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="9dp"
+                    android:orientation="horizontal"
+                    android:layout_alignParentRight="true">
+
+                    <ImageView
+                        android:layout_width="7dp"
+                        android:layout_height="11dp"
+                        android:src="@drawable/yjt"/>
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/mainUI_rechargeBtn"
@@ -253,8 +272,7 @@
                     android:textColor="@color/white"
                     android:text="您的余额不足，点我快速充值"
                     android:gravity="center"
-                    android:visibility="gone"
-                    android:layout_below="@id/mainUI_authBtn"/>
+                    android:visibility="gone"/>
 
                 <Button
                     android:id="@+id/mainUI_cartBtn"
@@ -266,36 +284,28 @@
                     android:text="还剩XX天免费，每次前一个小时免费"
                     android:gravity="center"
                     android:visibility="gone"
-                    android:layout_below="@id/mainUI_rechargeBtn"
                     android:layout_marginTop="@dimen/dp15"/>
             </RelativeLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/mainUI_refreshLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp40"
+                android:layout_height="@dimen/dp40"
                 android:orientation="vertical"
-                android:layout_marginBottom="@dimen/dp10"
+                android:layout_marginBottom="21dp"
                 android:layout_alignParentLeft="true"
                 android:layout_above="@id/mainUI_myLocationLayout"
-                android:layout_marginLeft="@dimen/dp10"
+                android:layout_marginLeft="@dimen/dp25"
                 android:gravity="center"
-                android:background="@drawable/back_bd"
-                android:visibility="gone"
+                android:background="@drawable/back_bd2"
                 >
 
                 <ImageView
-                    android:layout_width="@dimen/dp35"
-                    android:layout_height="@dimen/dp35"
-                    android:src="@drawable/refresh_icon"
-                    android:scaleType="centerInside"/>
+                    android:layout_width="@dimen/dp25"
+                    android:layout_height="23dp"
+                    android:src="@drawable/refresh_icon"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp12"
-                    android:textColor="@color/tx_black"
-                    android:text="刷新"/>
             </LinearLayout>
 
 
