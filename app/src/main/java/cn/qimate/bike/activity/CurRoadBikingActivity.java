@@ -975,17 +975,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         mainLayout = (LinearLayout)findViewById(R.id.mainUI_title_mainLayout);
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
-        title = (TextView) findViewById(R.id.mainUI_title_titleText);
-        title.setText("骑行中");
-        rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
-        rightBtn.setText("无法结束用车?");
-        RelativeLayout.LayoutParams params4 = (RelativeLayout.LayoutParams)rightBtn.getLayoutParams();
-        params4.setMargins(0,DisplayUtil.dip2px(context,8),DisplayUtil.dip2px(context,10),DisplayUtil.dip2px(context,8));
-        rightBtn.setLayoutParams(params4);
-        rightBtn.setBackgroundColor(getResources().getColor(R.color.white));
-        rightBtn.setTextColor(getResources().getColor(R.color.ui_main));
-        rightBtn.setOnClickListener(this);
-        rightBtn.setTextSize(16);
+//        title = (TextView) findViewById(R.id.mainUI_title_titleText);
+//        title.setText("骑行中");
+//        rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
+//        rightBtn.setText("无法结束用车?");
+//        RelativeLayout.LayoutParams params4 = (RelativeLayout.LayoutParams)rightBtn.getLayoutParams();
+//        params4.setMargins(0,DisplayUtil.dip2px(context,8),DisplayUtil.dip2px(context,10),DisplayUtil.dip2px(context,8));
+//        rightBtn.setLayoutParams(params4);
+//        rightBtn.setBackgroundColor(getResources().getColor(R.color.white));
+//        rightBtn.setTextColor(getResources().getColor(R.color.ui_main));
+//        rightBtn.setOnClickListener(this);
+//        rightBtn.setTextSize(16);
 
         switcher = (Switch) findViewById(R.id.switcher);
 
