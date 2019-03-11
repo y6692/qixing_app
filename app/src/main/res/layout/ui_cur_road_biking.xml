@@ -212,113 +212,89 @@
                 </com.amap.api.maps.MapView>
             </FrameLayout>
 
+
             <LinearLayout
                 android:id="@+id/curRoadUI_biking_myLocationLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp40"
+                android:layout_height="@dimen/dp40"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/dp35"
-                android:layout_marginLeft="@dimen/dp10"
-                android:gravity="center"
-                android:background="@drawable/back_bd"
-                android:orientation="vertical">
+                android:layout_marginBottom="24dp"
+                android:layout_marginLeft="@dimen/dp25"
+                android:orientation="vertical"
+                android:background="@drawable/back_bd2"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/curRoadUI_biking_myLocation"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentLeft="true"
-                    android:background="@null"
-                    android:src="@drawable/btn_location" />
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/btn_location"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="定位"
-                    android:textColor="@color/tx_black"
-                    android:textSize="@dimen/sp12" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_alignParentBottom="true"
+                android:paddingBottom="24dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginBottom="@dimen/dp35"
-                android:layout_marginRight="@dimen/dp10"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="@dimen/dp25"
                 android:gravity="center">
                 <LinearLayout
                     android:id="@+id/curRoadUI_biking_slideLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:background="@drawable/back_bd"
-                    android:layout_marginBottom="@dimen/dp10">
+                    android:background="@drawable/back_bd2"
+                    android:layout_marginBottom="21dp">
                     <ImageView
-                        android:layout_width="@dimen/dp35"
-                        android:layout_height="@dimen/dp35"
-                        android:background="@null"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
                         android:src="@drawable/slide_icon"
-                        android:layout_alignParentRight="true"
-                        android:scaleType="centerInside"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/sp12"
-                        android:textColor="@color/tx_black"
-                        android:text="还车点"/>
+                        android:layout_alignParentRight="true"/>
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/curRoadUI_biking_linkServiceLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
+                    android:background="@drawable/back_bd2"
                     android:gravity="center"
-                    android:background="@drawable/back_bd"
                     android:orientation="vertical">
-
                     <ImageView
                         android:id="@+id/curRoadUI_biking_linkService_btn"
-                        android:layout_width="@dimen/dp35"
-                        android:layout_height="@dimen/dp35"
-                        android:background="@null"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/link_service_icon" />
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:src="@drawable/link_service_icon"
+                        android:layout_alignParentRight="true"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="客服"
-                        android:textColor="@color/tx_black"
-                        android:textSize="@dimen/sp12" />
                 </LinearLayout>
             </LinearLayout>
+
+
             <LinearLayout
                 android:id="@+id/curRoadUI_biking_refreshLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp40"
+                android:layout_height="@dimen/dp40"
                 android:orientation="vertical"
-                android:layout_marginBottom="@dimen/dp10"
+                android:layout_marginBottom="21dp"
                 android:layout_alignParentLeft="true"
                 android:layout_above="@id/curRoadUI_biking_myLocationLayout"
-                android:layout_marginLeft="@dimen/dp15"
+                android:layout_marginLeft="@dimen/dp25"
                 android:gravity="center"
-                android:background="@drawable/back_bd"
-                android:visibility="gone">
+                android:background="@drawable/back_bd2"
+                >
 
                 <ImageView
-                    android:layout_width="@dimen/dp35"
-                    android:layout_height="@dimen/dp35"
-                    android:src="@drawable/refresh_icon"
-                    android:scaleType="centerInside"/>
+                    android:layout_width="@dimen/dp25"
+                    android:layout_height="23dp"
+                    android:src="@drawable/refresh_icon"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp12"
-                    android:textColor="@color/tx_black"
-                    android:text="刷新"/>
             </LinearLayout>
+
+
+
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
