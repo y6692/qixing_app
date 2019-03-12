@@ -295,16 +295,54 @@
                 <LinearLayout
                     android:id="@+id/mainUI_scanCode_lock"
                     android:layout_width="match_parent"
-                    android:layout_height="41dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginLeft="23dp"
                     android:layout_marginRight="23dp"
                     android:layout_marginBottom="20dp"
                     android:orientation="horizontal"
-                    android:background="@drawable/btn_bcg_scan_gradient"
                     android:gravity="center"
                     android:layout_alignParentBottom="true"
                     >
+
+                    <LinearLayout
+                        android:id="@+id/curRoadUI_biking_lookPsdBtn"
+                        android:layout_width="96dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/btn_bcg_again"
+                        android:gravity="center"
+                        >
+
+                        <TextView
+                            android:id="@+id/tv_lookPsdBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="再次开锁"
+                            android:textSize="@dimen/sp16"
+                            android:textColor="#E60012"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/curRoadUI_biking_endBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_bcg_scan_gradient2"
+                        android:gravity="center"
+                        >
+
+                        <TextView
+                            android:id="@+id/tv_endBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="我要还车"
+                            android:textSize="@dimen/sp16"
+                            android:textColor="@color/white"
+                            />
+
+                    </LinearLayout>
 
                     <!--<TextView-->
                         <!--android:id="@+id/tv"-->
@@ -318,29 +356,29 @@
                         <!--/>-->
 
 
-                    <Button
-                        android:id="@+id/curRoadUI_biking_lookPsdBtn"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp40"
-                        android:text="查看密码"
-                        android:textSize="@dimen/sp14"
-                        android:textColor="#f86961"
-                        android:background="@drawable/button_shape"
-                        android:gravity="center"
-                        android:layout_weight="1"
-                        android:layout_marginRight="@dimen/dp10"/>
+                    <!--<Button-->
+                        <!--android:id="@+id/curRoadUI_biking_lookPsdBtn"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="@dimen/dp40"-->
+                        <!--android:text="查看密码"-->
+                        <!--android:textSize="@dimen/sp14"-->
+                        <!--android:textColor="#f86961"-->
+                        <!--android:background="@drawable/button_shape"-->
+                        <!--android:gravity="center"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:layout_marginRight="@dimen/dp10"/>-->
 
-                    <Button
-                        android:id="@+id/curRoadUI_biking_endBtn"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp40"
-                        android:text="结束用车"
-                        android:textSize="@dimen/sp14"
-                        android:textColor="#f86961"
-                        android:background="@drawable/button_shape"
-                        android:gravity="center"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="@dimen/dp10"/>
+                    <!--<Button-->
+                        <!--android:id="@+id/curRoadUI_biking_endBtn"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="@dimen/dp40"-->
+                        <!--android:text="结束用车"-->
+                        <!--android:textSize="@dimen/sp14"-->
+                        <!--android:textColor="#f86961"-->
+                        <!--android:background="@drawable/button_shape"-->
+                        <!--android:gravity="center"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:layout_marginLeft="@dimen/dp10"/>-->
 
 
                 </LinearLayout>

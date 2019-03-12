@@ -41,7 +41,7 @@
     <LinearLayout
         android:id="@+id/ll_1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
         android:orientation="horizontal"
         android:fitsSystemWindows="true"
         android:clipToPadding="true"
@@ -53,10 +53,10 @@
 
       <cn.qimate.bike.core.widget.ClearEditText
           android:id="@+id/changePsdUI_oldPsd"
-          android:layout_weight="3"
           android:layout_width="0dp"
-          android:layout_height="43dp"
-          android:background="@drawable/shape_feedback_edit"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:background="@drawable/shape_feedback_edit2"
           android:paddingLeft="@dimen/dp10"
           android:drawableRight="@drawable/delete_selector"
           android:hint="请输入您的优惠码"
@@ -67,11 +67,9 @@
           android:textColor="@color/tx_black_light"/>
 
       <Button
-          android:layout_weight="1"
           android:id="@+id/btn_click_one"
-          android:layout_width="0dp"
-          android:layout_height="43dp"
-          android:layout_marginLeft="-3dp"
+          android:layout_width="88dp"
+          android:layout_height="match_parent"
           android:background="@color/red"
           android:text="立即兑换"
           android:textColor="@color/white"

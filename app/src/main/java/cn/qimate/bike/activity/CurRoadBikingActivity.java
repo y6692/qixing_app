@@ -140,8 +140,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
     private TextView bikeCodeText;
     private TextView time;
-    private Button lookPsdBtn;
-    private Button endBtn;
+    private LinearLayout ll_lookPsdBtn;
+    private TextView tv_lookPsdBtn;
+    private LinearLayout endBtn;
 
     private AMap aMap;
     private MapView mapView;
@@ -683,11 +684,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                             if ("1".equals(bean.getType())){
                                 hintText.setText("还车须至校园地图红色覆盖区，关锁并拨乱密码后点击结束！");
-                                lookPsdBtn.setText("查看密码");
+                                tv_lookPsdBtn.setText("查看密码");
                             }else {
                                 hintText.setText("还车须至校园地图红色覆盖区，关锁后距车一米内点击结束！");
                                 m_nowMac = bean.getMacinfo();
-                                lookPsdBtn.setText("再次开锁");
+                                tv_lookPsdBtn.setText("再次开锁");
 
 //                                if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
 //                                    ToastUtil.showMessageApp(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0");
@@ -1001,8 +1002,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         bikeCodeText = (TextView)findViewById(R.id.curRoadUI_biking_code);
         time = (TextView)findViewById(R.id.curRoadUI_biking_time);
-        lookPsdBtn = (Button)findViewById(R.id.curRoadUI_biking_lookPsdBtn);
-        endBtn = (Button)findViewById(R.id.curRoadUI_biking_endBtn);
+        ll_lookPsdBtn = (LinearLayout)findViewById(R.id.curRoadUI_biking_lookPsdBtn);
+        tv_lookPsdBtn = (TextView)findViewById(R.id.tv_lookPsdBtn);
+        endBtn = (LinearLayout)findViewById(R.id.curRoadUI_biking_endBtn);
         linkServiceBtn = (ImageView)findViewById(R.id.curRoadUI_biking_linkService_btn);
         myLocationBtn = (ImageView)findViewById(R.id.curRoadUI_biking_myLocation);
         linkServiceLayout = (LinearLayout)findViewById(R.id.curRoadUI_biking_linkServiceLayout);
@@ -1041,7 +1043,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         exImage_3.setLayoutParams(params3);
 
         backImg.setOnClickListener(this);
-        lookPsdBtn.setOnClickListener(this);
+        ll_lookPsdBtn.setOnClickListener(this);
         switcher.setOnClickListener(this);
         roleLayout.setOnClickListener(this);
         endBtn.setOnClickListener(this);
@@ -1122,7 +1124,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 customBuilder.create().show();
                 break;
             case R.id.curRoadUI_biking_lookPsdBtn:
-                if ("查看密码".equals(lookPsdBtn.getText().toString().trim())){
+                if ("查看密码".equals(tv_lookPsdBtn.getText().toString().trim())){
                     customBuilder = new CustomDialog.Builder(this);
                     customBuilder.setTitle("查看密码").setMessage("解锁码："+password)
                             .setPositiveButton("取消", new DialogInterface.OnClickListener() {
