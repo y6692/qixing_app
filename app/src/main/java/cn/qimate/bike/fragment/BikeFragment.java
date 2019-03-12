@@ -111,6 +111,7 @@ import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.activity.HistoryRoadDetailActivity;
 import cn.qimate.bike.activity.InsureanceActivity;
 import cn.qimate.bike.activity.LoginActivity;
+import cn.qimate.bike.activity.MyMessageActivity;
 import cn.qimate.bike.activity.MyPurseActivity;
 import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.activity.PersonAlterActivity;
@@ -1404,8 +1405,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener,
 
     private void openGPSSettings() {
 
-
-
         if (checkGPSIsOpen()) {
         } else {
 
@@ -1467,7 +1466,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener,
                     ToastUtil.showMessageApp(context,"请先登录你的账号");
                     return;
                 }
-                UIHelper.goToAct(context, PersonAlterActivity.class);
+                UIHelper.goToAct(context, MyMessageActivity.class);
                 break;
             case R.id.mainUI_marqueeLayout:
 
