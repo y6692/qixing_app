@@ -1,80 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/capture_containter"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#88000000">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/capture_containter"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#666666"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true">
 
     <SurfaceView
         android:id="@+id/capture_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="true"
-        android:fitsSystemWindows="true"/>
+        />
 
     <RelativeLayout
         android:id="@+id/rl_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp90"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/scan_mask"
-        android:paddingTop="@dimen/dp15">
+        android:layout_height="@dimen/dp40"
+        android:background="#000000">
 
-        <ImageView
-            android:id="@+id/top_mask2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerHorizontal="true"
-            android:alpha="0.5"
-            android:onClick="btn"
-            android:src="@drawable/s_light"
-            android:layout_centerVertical="true"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/top_openpicture"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="40dp"
-            android:alpha="0.5"
-            android:onClick="btn"
-            android:src="@drawable/s_img"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/top_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/dp10"
-            android:alpha="0.5"
-            android:onClick="btn"
-            android:src="@drawable/s_left_jiantou"
-            android:layout_centerVertical="true"/>
-
-        <TextView
-            android:id="@+id/loca_show_btnBikeNum2"
+        <LinearLayout
+            android:id="@+id/ll_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:paddingRight="@dimen/dp10"
-            android:paddingLeft="@dimen/dp10"
-            android:textSize="@dimen/sp14"
-            android:textColor="@color/white"
-            android:text="输入编号开锁"
+            android:clickable="true"
             android:gravity="center_vertical"
-            android:onClick="btn"
-            android:visibility="gone"/>
+            android:onClick="btn">
+
+            <ImageView
+                android:id="@+id/mainUI_title_backBtn"
+                android:paddingLeft="14dp"
+                android:paddingRight="12dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/back_image"/>
+
+            <TextView
+                android:layout_marginLeft="-10dp"
+                android:id="@+id/tv_left"
+                android:textSize="@dimen/sp16"
+                android:text="返回"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
+        <!--<ImageView-->
+            <!--android:id="@+id/top_back"-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_marginLeft="@dimen/dp10"-->
+            <!--android:alpha="0.5"-->
+            <!--android:onClick="btn"-->
+            <!--android:src="@drawable/s_left_jiantou"-->
+            <!--android:layout_centerVertical="true"/>-->
     </RelativeLayout>
+
+
     <RelativeLayout
         android:id="@+id/capture_crop_layout"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
+        android:layout_width="258dp"
+        android:layout_height="258dp"
+        android:layout_below="@id/rl_title"
+        android:layout_marginTop="79dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/capture"
+        android:background="@drawable/block_bcg6"
         android:contentDescription="@string/app_name">
 
         <ImageView
@@ -82,137 +78,107 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
-            android:layout_margin="5dp"
+            android:layout_margin="3dp"
             android:background="@drawable/kakalib_scan_ray"
             android:contentDescription="@string/app_name"/>
     </RelativeLayout>
-    <ImageView
-        android:id="@+id/top_mask_bcg"
-        android:layout_width="220dp"
-        android:layout_height="match_parent"
-        android:layout_below="@id/rl_title"
-        android:layout_above="@id/capture_crop_layout"
-        android:src="@null"
-        android:background="@drawable/scan_mask"
-        android:layout_centerHorizontal="true"/>
-    <ImageView
-        android:id="@+id/bottom_mask"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/capture_crop_layout"
-        android:background="@drawable/scan_mask"
-        android:contentDescription="@string/app_name"/>
 
-    <ImageView
-        android:id="@+id/left_mask"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottom_mask"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/rl_title"
-        android:layout_toLeftOf="@id/capture_crop_layout"
-        android:background="@drawable/scan_mask"
-        android:contentDescription="@string/app_name"/>
+    <!--<ImageView-->
+        <!--android:id="@+id/top_mask_bcg"-->
+        <!--android:layout_width="220dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@id/rl_title"-->
+        <!--android:layout_above="@id/capture_crop_layout"-->
+        <!--android:src="@null"-->
+        <!--android:background="@drawable/scan_mask"-->
+        <!--android:layout_centerHorizontal="true"/>-->
 
-    <ImageView
-        android:id="@+id/right_mask"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottom_mask"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/rl_title"
-        android:layout_toRightOf="@id/capture_crop_layout"
-        android:background="@drawable/scan_mask"
-        android:contentDescription="@string/app_name"/>
+    <!--<ImageView-->
+        <!--android:id="@+id/bottom_mask"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_below="@id/capture_crop_layout"-->
+        <!--android:background="@drawable/scan_mask"-->
+        <!--android:contentDescription="@string/app_name"/>-->
+
+    <!--<ImageView-->
+        <!--android:id="@+id/left_mask"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_above="@id/bottom_mask"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_below="@id/rl_title"-->
+        <!--android:layout_toLeftOf="@id/capture_crop_layout"-->
+        <!--android:background="@drawable/scan_mask"-->
+        <!--android:contentDescription="@string/app_name"/>-->
+
+    <!--<ImageView-->
+        <!--android:id="@+id/right_mask"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_above="@id/bottom_mask"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_below="@id/rl_title"-->
+        <!--android:layout_toRightOf="@id/capture_crop_layout"-->
+        <!--android:background="@drawable/scan_mask"-->
+        <!--android:contentDescription="@string/app_name"/>-->
 
     <TextView
-        android:layout_marginTop="@dimen/dp25"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/ll_scan_help"
+        android:layout_marginTop="@dimen/dp30"
+        android:layout_width="130dp"
+        android:layout_height="32dp"
+        android:background="@drawable/block_bcg5"
+        android:layout_below="@id/capture_crop_layout"
         android:layout_centerHorizontal="true"
-        android:text="将二维码图片对准扫描框即可自动扫描"
+        android:gravity="center"
+        android:text="对准车上的二维码"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/sp16"/>
+        android:textSize="@dimen/sp13"/>
 
 
 
     <LinearLayout
         android:id="@+id/ll_scan"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/capture_crop_layout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
+        android:layout_height="83dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
+        android:background="#000000"
         android:onClick="btn"
-        android:weightSum="2">
+        android:gravity="center">
+
         <TextView
             android:id="@+id/loca_show_btnBikeNum"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
             android:layout_weight="1"
             android:drawableTop="@drawable/top_hand"
             android:gravity="center"
-            android:src="@drawable/code_icon"
-            android:text="手动输车号"
-            android:textColor="#DBD5D5"
+            android:text="输入编号开锁"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/sp13"
             android:onClick="btn"
+            android:paddingTop="15dp"
+            android:paddingBottom="16dp"
             />
 
         <TextView
             android:id="@+id/top_mask"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="30dp"
             android:layout_weight="1"
             android:drawableTop="@drawable/top_light"
             android:gravity="center"
-            android:src="@drawable/linecode_icon"
-            android:text="手电筒"
-            android:textColor="#DBD5D5"
+            android:text="打开手电筒"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/sp13"
             android:onClick="btn"
+            android:paddingTop="15dp"
+            android:paddingBottom="16dp"
             />
+
     </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/ll_scan_help"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/capture_crop_layout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:onClick="btn"
-        android:weightSum="2"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/code_icon"
-            android:gravity="center"
-            android:padding="10dp"
-            android:src="@drawable/code_icon"
-            android:text="二维码"
-            android:textColor="#DBD5D5"/>
-
-        <TextView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/linecode_icon"
-            android:gravity="center"
-            android:src="@drawable/linecode_icon"
-            android:text="条形码"
-            android:textColor="#DBD5D5"/>
-    </LinearLayout>
 </RelativeLayout>

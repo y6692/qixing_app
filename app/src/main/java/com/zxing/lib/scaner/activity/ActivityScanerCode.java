@@ -295,9 +295,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         mIvLight = (TextView) findViewById(R.id.top_mask);
         mContainer = (RelativeLayout) findViewById(R.id.capture_containter);
-        top_mask_bcg = (ImageView)findViewById(R.id.top_mask_bcg);
+//        top_mask_bcg = (ImageView)findViewById(R.id.top_mask_bcg);
         mCropLayout = (RelativeLayout) findViewById(R.id.capture_crop_layout);
-        mLlScanHelp = (LinearLayout) findViewById(R.id.ll_scan_help);
+//        mLlScanHelp = (LinearLayout) findViewById(R.id.ll_scan_help);
 
         dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.pop_circles_menu, null);
@@ -381,10 +381,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         int viewId = view.getId();
         if (viewId == R.id.top_mask) {
             light();
-        } else if (viewId == R.id.top_back) {
+        } else if (viewId == R.id.ll_back) {
             scrollToFinishActivity();
-        } else if (viewId == R.id.top_openpicture) {
-            RxPhotoTool.openLocalImage(mActivity);
+//        } else if (viewId == R.id.top_openpicture) {
+//            RxPhotoTool.openLocalImage(mActivity);
         }else if(viewId == R.id.loca_show_btnBikeNum){
             //关闭二维码扫描
             if (handler != null) {
