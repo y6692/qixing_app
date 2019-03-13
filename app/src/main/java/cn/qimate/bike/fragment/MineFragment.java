@@ -132,9 +132,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private ImageView headerImageView;
     private ImageView authState;
     private TextView userName;
-    private LinearLayout curRouteLayout, hisRouteLayout, myPurseLayout;
-    private RelativeLayout myIntegralLayout, myMsgLayout, changePsdLayout,
+    private LinearLayout curRouteLayout, hisRouteLayout;
+    private RelativeLayout myPurseLayout, myRouteLayout, actionCenterLayout, serviceCenterLayout, settingLayout, myIntegralLayout, myMsgLayout, changePsdLayout,
             helpCenterLayout, aboutUsLayout,billing_ruleLayout,questionLayout,insuranceLayout;
+
     private RelativeLayout checkUpdataLayout;
     private TextView myPurse, myIntegral;
 
@@ -173,8 +174,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private int imageWith = 0;
 
 
-
-
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_mine, null);
         unbinder = ButterKnife.bind(this, v);
@@ -208,7 +207,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             }
         }
         scrollView = (PullToZoomScrollViewEx) getActivity().findViewById(R.id.scroll_view);
-        loadViewForCode();
+//        loadViewForCode();
         imageWith = (int)(getActivity().getWindowManager().getDefaultDisplay().getWidth() * 0.8);
         initView();
 
@@ -224,6 +223,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         }else{
             //resume
         }
+    }
+
+    private void loadViewForCode() {
+        View headView = LayoutInflater.from(context).inflate(R.layout.profile_head_view, null, false);
+        View zoomView = LayoutInflater.from(context).inflate(R.layout.profile_zoom_view, null, false);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.profile_content_view, null, false);
+
+        scrollView.setHeaderView(headView);
+        scrollView.setZoomView(zoomView);
+        scrollView.setScrollContentView(contentView);
     }
 
 
@@ -244,29 +253,33 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         pickPhotoBtn.setOnClickListener(itemsOnClick);
         cancelBtn.setOnClickListener(itemsOnClick);
 
-        backImage = scrollView.getPullRootView().findViewById(R.id.personUI_backImage);
-        settingImage = scrollView.getPullRootView().findViewById(R.id.personUI_title_settingBtn);
-        headerImageView =scrollView.getPullRootView().findViewById(R.id.personUI_bottom_header);
-        authState = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_authState);
-        userName = scrollView.getPullRootView().findViewById(R.id.personUI_userName);
-        superVip = (ImageView)getActivity().findViewById(R.id.personUI_superVip);
+        backImage = getActivity().findViewById(R.id.personUI_backImage);
+        settingImage = getActivity().findViewById(R.id.personUI_title_settingBtn);
+        headerImageView = getActivity().findViewById(R.id.personUI_bottom_header);
+        authState = getActivity().findViewById(R.id.personUI_bottom_authState);
+        userName = getActivity().findViewById(R.id.personUI_userName);
+        superVip = getActivity().findViewById(R.id.personUI_superVip);
 //        myPurse = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_myPurse);
-        myIntegral = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_myIntegral);
+        myIntegral = getActivity().findViewById(R.id.personUI_bottom_myIntegral);
 
-        curRouteLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_curRouteLayout);
-        hisRouteLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_hisRouteLayout);
-        myPurseLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_myPurseLayout);
+        curRouteLayout = getActivity().findViewById(R.id.personUI_bottom_curRouteLayout);
+        hisRouteLayout = getActivity().findViewById(R.id.personUI_bottom_hisRouteLayout);
+        myPurseLayout = getActivity().findViewById(R.id.personUI_bottom_myPurseLayout);
+        myRouteLayout = getActivity().findViewById(R.id.personUI_bottom_myRouteLayout);
+        actionCenterLayout = getActivity().findViewById(R.id.personUI_bottom_actionCenterLayout);
+        serviceCenterLayout = getActivity().findViewById(R.id.personUI_bottom_serviceCenterLayout);
+        settingLayout = getActivity().findViewById(R.id.personUI_bottom_settingLayout);
 
-        myIntegralLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_myIntegralLayout);
-        myMsgLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_myMsgLayout);
-        changePsdLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_changePsdLayout);
-        helpCenterLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_helpCenterLayout);
-        aboutUsLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_aboutUsLayout);
-        billing_ruleLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_billing_ruleLayout);
-        questionLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_billing_questionLayout);
-        insuranceLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_billing_insuranceLayout);
-        checkUpdataLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_checkUpdataLayout);
-        logoutLayout = scrollView.getPullRootView().findViewById(R.id.personUI_logoutLayout);
+        myIntegralLayout = getActivity().findViewById(R.id.personUI_bottom_myIntegralLayout);
+        myMsgLayout = getActivity().findViewById(R.id.personUI_bottom_myMsgLayout);
+        changePsdLayout = getActivity().findViewById(R.id.personUI_bottom_changePsdLayout);
+        helpCenterLayout = getActivity().findViewById(R.id.personUI_bottom_helpCenterLayout);
+        aboutUsLayout = getActivity().findViewById(R.id.personUI_bottom_aboutUsLayout);
+        billing_ruleLayout = getActivity().findViewById(R.id.personUI_bottom_billing_ruleLayout);
+        questionLayout = getActivity().findViewById(R.id.personUI_bottom_billing_questionLayout);
+        insuranceLayout = getActivity().findViewById(R.id.personUI_bottom_billing_insuranceLayout);
+        checkUpdataLayout = getActivity().findViewById(R.id.personUI_bottom_checkUpdataLayout);
+        logoutLayout = getActivity().findViewById(R.id.personUI_logoutLayout);
 
         dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_frist_view, null);
@@ -295,23 +308,28 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
         exImage_3.setLayoutParams(params3);
 
-        backImage.setOnClickListener(this);
-        settingImage.setOnClickListener(this);
-        headerImageView.setOnClickListener(this);
-        curRouteLayout.setOnClickListener(this);
-        hisRouteLayout.setOnClickListener(this);
+//        backImage.setOnClickListener(this);
+//        settingImage.setOnClickListener(this);
+//        headerImageView.setOnClickListener(this);
+//        curRouteLayout.setOnClickListener(this);
+//        hisRouteLayout.setOnClickListener(this);
         myPurseLayout.setOnClickListener(this);
-        myIntegralLayout.setOnClickListener(this);
-        myMsgLayout.setOnClickListener(this);
-        changePsdLayout.setOnClickListener(this);
-        helpCenterLayout.setOnClickListener(this);
-        aboutUsLayout.setOnClickListener(this);
-        logoutLayout.setOnClickListener(this);
-        superVip.setOnClickListener(this);
-        billing_ruleLayout.setOnClickListener(this);
-        questionLayout.setOnClickListener(this);
-        insuranceLayout.setOnClickListener(this);
-        checkUpdataLayout.setOnClickListener(this);
+        myRouteLayout.setOnClickListener(this);
+        actionCenterLayout.setOnClickListener(this);
+        serviceCenterLayout.setOnClickListener(this);
+        settingLayout.setOnClickListener(this);
+
+//        myIntegralLayout.setOnClickListener(this);
+//        myMsgLayout.setOnClickListener(this);
+//        changePsdLayout.setOnClickListener(this);
+//        helpCenterLayout.setOnClickListener(this);
+//        aboutUsLayout.setOnClickListener(this);
+//        logoutLayout.setOnClickListener(this);
+//        superVip.setOnClickListener(this);
+//        billing_ruleLayout.setOnClickListener(this);
+//        questionLayout.setOnClickListener(this);
+//        insuranceLayout.setOnClickListener(this);
+//        checkUpdataLayout.setOnClickListener(this);
 //        myCommissionLayout.setOnClickListener(this);
 
         exImage_1.setOnClickListener(myOnClickLister);
@@ -356,11 +374,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         String bikenum = SharedPreferencesUrls.getInstance().getString("bikenum","");
         String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays","");
         if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
-            settingImage.setVisibility(View.GONE);
+//            settingImage.setVisibility(View.GONE);
             superVip.setVisibility(View.GONE);
-            billing_ruleLayout.setVisibility(View.GONE);
+//            billing_ruleLayout.setVisibility(View.GONE);
         } else {
-            settingImage.setVisibility(View.VISIBLE);
+//            settingImage.setVisibility(View.VISIBLE);
             initHttp();
             if (("0".equals(bikenum) || bikenum == null || "".equals(bikenum))
                     && ("0".equals(specialdays) || specialdays == null || "".equals(specialdays))){
@@ -368,11 +386,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             }else {
                 superVip.setVisibility(View.VISIBLE);
             }
-            if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
-                billing_ruleLayout.setVisibility(View.VISIBLE);
-            }else {
-                billing_ruleLayout.setVisibility(View.GONE);
-            }
+//            if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
+//                billing_ruleLayout.setVisibility(View.VISIBLE);
+//            }else {
+//                billing_ruleLayout.setVisibility(View.GONE);
+//            }
         }
 
     }
@@ -806,6 +824,19 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             case R.id.personUI_bottom_myPurseLayout:
                 UIHelper.goToAct(context, MyPurseActivity.class);
                 break;
+            case R.id.personUI_bottom_myRouteLayout:
+                UIHelper.goToAct(context, MyPurseActivity.class);
+                break;
+            case R.id.personUI_bottom_actionCenterLayout:
+                UIHelper.goToAct(context, MyPurseActivity.class);
+                break;
+            case R.id.personUI_bottom_serviceCenterLayout:
+                UIHelper.goToAct(context, MyPurseActivity.class);
+                break;
+            case R.id.personUI_bottom_settingLayout:
+                UIHelper.goToAct(context, SettingActivity.class);
+                break;
+
             case R.id.personUI_bottom_myIntegralLayout:
                 UIHelper.goToAct(context, MyIntegralActivity.class);
                 break;
@@ -1051,15 +1082,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             UIHelper.goToAct(context, LoginActivity.class);
         }
     }
-    private void loadViewForCode() {
-        View headView = LayoutInflater.from(context).inflate(R.layout.profile_head_view, null, false);
-        View zoomView = LayoutInflater.from(context).inflate(R.layout.profile_zoom_view, null, false);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.profile_content_view, null, false);
 
-        scrollView.setHeaderView(headView);
-        scrollView.setZoomView(zoomView);
-        scrollView.setScrollContentView(contentView);
-    }
     private void billRule(){
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
