@@ -339,6 +339,10 @@
             android:name="com.zxing.lib.scaner.activity.ActivityScanerCode"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+        <activity
+            android:name="com.zxing.lib.scaner.activity.BikeNumActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <!-- 后台定位服务 -->
         <service
             android:name=".service.MyService"

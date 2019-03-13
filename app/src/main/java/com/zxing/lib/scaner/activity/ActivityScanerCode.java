@@ -2,7 +2,6 @@ package com.zxing.lib.scaner.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -10,10 +9,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,16 +18,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -46,7 +37,6 @@ import com.sunshine.blelibrary.inter.OnDeviceSearchListener;
 import com.sunshine.blelibrary.utils.GlobalParameterUtils;
 import com.vondear.rxtools.RxAnimationTool;
 import com.vondear.rxtools.RxBeepTool;
-import com.vondear.rxtools.RxPhotoTool;
 import com.vondear.rxtools.interfaces.OnRxScanerListener;
 import com.vondear.rxtools.view.dialog.RxDialogSure;
 import com.zxing.lib.scaner.CameraManager;
@@ -55,21 +45,15 @@ import com.zxing.lib.scaner.decoding.InactivityTimer;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import cn.loopj.android.http.RequestHandle;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
-import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadBikingActivity;
 import cn.qimate.bike.activity.CurRoadStartActivity;
-import cn.qimate.bike.activity.FeedbackActivity;
-import cn.qimate.bike.activity.HistoryRoadDetailActivity;
 import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.core.common.HttpHelper;
@@ -81,7 +65,6 @@ import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
-import cn.qimate.bike.util.PublicWay;
 import cn.qimate.bike.util.SystemUtil;
 import cn.qimate.bike.util.ToastUtil;
 
@@ -179,9 +162,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     volatile String m_nowMac = "";
     private String codenum = "";
     // 输入法
-    private Dialog dialog;
-    private EditText bikeNumEdit;
-    private Button positiveButton,negativeButton;
+//    private Dialog dialog;
+//    private EditText bikeNumEdit;
+//    private Button positiveButton,negativeButton;
     private int Tag = 0;
 
     private String quantity = "";
@@ -299,49 +282,49 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         mCropLayout = (RelativeLayout) findViewById(R.id.capture_crop_layout);
 //        mLlScanHelp = (LinearLayout) findViewById(R.id.ll_scan_help);
 
-        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.pop_circles_menu, null);
-        dialog.setContentView(dialogView);
-        dialog.setCanceledOnTouchOutside(false);
+//        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+//        View dialogView = LayoutInflater.from(this).inflate(R.layout.pop_circles_menu, null);
+//        dialog.setContentView(dialogView);
+//        dialog.setCanceledOnTouchOutside(false);
 
-        bikeNumEdit = (EditText)dialogView.findViewById(R.id.pop_circlesMenu_bikeNumEdit);
-        positiveButton = (Button)dialogView.findViewById(R.id.pop_circlesMenu_positiveButton);
-        negativeButton = (Button)dialogView.findViewById(R.id.pop_circlesMenu_negativeButton);
-        positiveButton.setOnClickListener(this);
-        negativeButton.setOnClickListener(this);
+//        bikeNumEdit = (EditText)dialogView.findViewById(R.id.pop_circlesMenu_bikeNumEdit);
+//        positiveButton = (Button)dialogView.findViewById(R.id.pop_circlesMenu_positiveButton);
+//        negativeButton = (Button)dialogView.findViewById(R.id.pop_circlesMenu_negativeButton);
+//        positiveButton.setOnClickListener(this);
+//        negativeButton.setOnClickListener(this);
 
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.pop_circlesMenu_positiveButton:
-                String bikeNum = bikeNumEdit.getText().toString().trim();
-                if (bikeNum == null || "".equals(bikeNum)){
-                    ToastUtil.showMessageApp(this,"请输入单车编号");
-                    return;
-                }
-                InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                manager.hideSoftInputFromWindow(v.getWindowToken(), 0); // 隐藏
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-                Tag = 1;
-                useBike(bikeNum);
-                break;
-            case R.id.pop_circlesMenu_negativeButton:
-                InputMethodManager manager1= (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                manager1.hideSoftInputFromWindow(v.getWindowToken(), 0); // 隐藏
-                BaseApplication.getInstance().getIBLE().refreshCache();
-                BaseApplication.getInstance().getIBLE().close();
-                BaseApplication.getInstance().getIBLE().disconnect();
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-
-                scrollToFinishActivity();
-
-                break;
+//            case R.id.pop_circlesMenu_positiveButton:
+//                String bikeNum = bikeNumEdit.getText().toString().trim();
+//                if (bikeNum == null || "".equals(bikeNum)){
+//                    ToastUtil.showMessageApp(this,"请输入单车编号");
+//                    return;
+//                }
+//                InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+//                manager.hideSoftInputFromWindow(v.getWindowToken(), 0); // 隐藏
+//                if (dialog.isShowing()) {
+//                    dialog.dismiss();
+//                }
+//                Tag = 1;
+//                useBike(bikeNum);
+//                break;
+//            case R.id.pop_circlesMenu_negativeButton:
+//                InputMethodManager manager1= (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+//                manager1.hideSoftInputFromWindow(v.getWindowToken(), 0); // 隐藏
+//                BaseApplication.getInstance().getIBLE().refreshCache();
+//                BaseApplication.getInstance().getIBLE().close();
+//                BaseApplication.getInstance().getIBLE().disconnect();
+//                if (dialog.isShowing()) {
+//                    dialog.dismiss();
+//                }
+//
+//                scrollToFinishActivity();
+//
+//                break;
         }
     }
 
@@ -393,17 +376,19 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             }
             CameraManager.get().closeDriver();
 
-            WindowManager windowManager = getWindowManager();
-            Display display = windowManager.getDefaultDisplay();
-            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-            lp.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setAttributes(lp);
-            dialog.getWindow().setWindowAnimations(R.style.dialogWindowAnim);
-            dialog.show();
-            InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            manager.showSoftInput(view, InputMethodManager.RESULT_SHOWN);
-            manager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+            UIHelper.goToAct(context, BikeNumActivity.class);
+
+//            WindowManager windowManager = getWindowManager();
+//            Display display = windowManager.getDefaultDisplay();
+//            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+//            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+//            lp.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+//            dialog.getWindow().setAttributes(lp);
+//            dialog.getWindow().setWindowAnimations(R.style.dialogWindowAnim);
+//            dialog.show();
+//            InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+//            manager.showSoftInput(view, InputMethodManager.RESULT_SHOWN);
+//            manager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
     }
 
