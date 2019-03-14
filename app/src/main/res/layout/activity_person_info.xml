@@ -247,8 +247,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="23dp"
                             android:textSize="@dimen/sp16"
-                            android:textColor="#7D7D7D"
-                            android:text="已认证"/>
+                            android:textColor="#E60012"
+                            android:text="未认证"/>
 
                         <ImageView
                             android:layout_width="8dp"
