@@ -310,7 +310,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
 //        backImage.setOnClickListener(this);
 //        settingImage.setOnClickListener(this);
-//        headerImageView.setOnClickListener(this);
+        headerImageView.setOnClickListener(this);
 //        curRouteLayout.setOnClickListener(this);
 //        hisRouteLayout.setOnClickListener(this);
         myPurseLayout.setOnClickListener(this);
