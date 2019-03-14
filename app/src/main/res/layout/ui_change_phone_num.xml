@@ -2,13 +2,207 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ui_main"
+    android:background="#F5F5F5"
     android:fitsSystemWindows="true"
     android:clipToPadding="true"
     android:orientation="vertical">
 
     <include
         layout="@layout/ui_main_title"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:id="@+id/ll_scan"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+
+                <ImageView
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:src="@drawable/phone_icon2"/>
+
+                <TextView
+                    android:id="@+id/loca_show_btnBikeNum"
+                    android:layout_width="match_parent"
+                    android:layout_height="21dp"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:text="1、验证原手机号"
+                    android:textColor="#E60012"
+                    android:textSize="@dimen/sp15"
+                    android:onClick="btn"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+
+                <ImageView
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:src="@drawable/phone_icon"/>
+
+                <TextView
+                    android:id="@+id/loca_show_btnBikeNum2"
+                    android:layout_width="match_parent"
+                    android:layout_height="21dp"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:text="2、验证新手机号"
+                    android:textColor="#A2A2A2"
+                    android:textSize="@dimen/sp15"
+                    android:onClick="btn"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="58dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:background="@drawable/block_bcg7">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="21dp"
+                    android:src="@drawable/p86_icon"/>
+            </LinearLayout>
+
+            <cn.qimate.bike.core.widget.ClearEditText
+                android:id="@+id/changePsdUI_oldPsd"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_feedback_edit4"
+                android:paddingLeft="15dp"
+                android:drawableRight="@drawable/delete_selector"
+                android:hint="输入原手机号"
+                android:inputType="textPassword"
+                android:textSize="@dimen/sp15"
+                android:gravity="center_vertical"
+                android:textColorHint="#A2A2A2"
+                android:textColor="@color/tx_black_light"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="58dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:background="@drawable/block_bcg7">
+
+                <ImageView
+                    android:layout_width="21dp"
+                    android:layout_height="26dp"
+                    android:src="@drawable/identify_icon"/>
+            </LinearLayout>
+
+            <cn.qimate.bike.core.widget.ClearEditText
+                android:id="@+id/changePsdUI_oldPsd2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_feedback_edit4"
+                android:paddingLeft="15dp"
+                android:drawableRight="@drawable/delete_selector"
+                android:hint="输入验证码"
+                android:inputType="textPassword"
+                android:textSize="@dimen/sp15"
+                android:gravity="center_vertical"
+                android:textColorHint="#A2A2A2"
+                android:textColor="@color/tx_black_light"/>
+
+            <LinearLayout
+                android:id="@+id/mainUI_scanCode_lock2"
+                android:layout_width="94dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="7dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@drawable/btn_identify"
+                >
+
+                <TextView
+                    android:id="@+id/tv_nextBtn2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="21dp"
+                    android:text="发送验证码"
+                    android:textSize="@dimen/sp15"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:id="@+id/mainUI_scanCode_lock"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="58dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@drawable/btn_bcg_scan_gradient"
+            >
+
+            <TextView
+                android:id="@+id/tv_nextBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下一步"
+                android:textSize="@dimen/sp18"
+                android:textColor="@color/white"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
 
     <LinearLayout
         android:layout_width="match_parent"

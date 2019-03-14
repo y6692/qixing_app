@@ -52,6 +52,10 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 
     private TextView nameEdit;
     private TextView phoneNum;
+    private RelativeLayout rl_name;
+    private RelativeLayout rl_phoneNum;
+    private RelativeLayout rl_realNameAuth;
+    private RelativeLayout rl_studentAuth;
 //    private EditText nickNameEdit;
 //    private RelativeLayout sexLayout;
 //    private TextView sexText;
@@ -135,6 +139,12 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 
         nameEdit = (TextView)findViewById(R.id.settingUI_name);
         phoneNum = (TextView)findViewById(R.id.settingUI_phoneNum);
+        rl_name = (RelativeLayout)findViewById(R.id.rl_name);
+        rl_phoneNum = (RelativeLayout)findViewById(R.id.rl_phoneNum);
+        rl_realNameAuth = (RelativeLayout)findViewById(R.id.rl_realNameAuth);
+        rl_studentAuth = (RelativeLayout)findViewById(R.id.rl_studentAuth);
+
+
 //        nickNameEdit = (EditText)findViewById(R.id.settingUI_nickName);
 //        sexLayout = (RelativeLayout)findViewById(R.id.settingUI_sexLayout);
 //        sexText = (TextView)findViewById(R.id.settingUI_sex);
@@ -151,6 +161,10 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 //        }
 
         backImg.setOnClickListener(this);
+        rl_name.setOnClickListener(this);
+        rl_phoneNum.setOnClickListener(this);
+        rl_realNameAuth.setOnClickListener(this);
+        rl_studentAuth.setOnClickListener(this);
 //        rightBtn.setOnClickListener(this);
 //        sexLayout.setOnClickListener(this);
 //        schoolLayout.setOnClickListener(this);
@@ -256,6 +270,22 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
         switch (v.getId()){
             case R.id.mainUI_title_backBtn:
                 scrollToFinishActivity();
+                break;
+
+            case R.id.rl_name:
+                UIHelper.goToAct(context, ChangePhoneNumActivity.class);
+                break;
+
+            case R.id.rl_phoneNum:
+                UIHelper.goToAct(context, ChangePhoneNumActivity.class);
+                break;
+
+            case R.id.rl_realNameAuth:
+                UIHelper.goToAct(context, RealNameAuthActivity.class);
+                break;
+
+            case R.id.rl_studentAuth:
+                UIHelper.goToAct(context, ChangePhoneNumActivity.class);
                 break;
 
 //            case R.id.settingUI_sexLayout:

@@ -69,7 +69,7 @@ public class ChangePhoneNumActivity extends SwipeBackActivity implements View.On
 
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
-        title.setText("修改手机号");
+        title.setText("改绑手机");
 
         phoneNumEdit = (EditText) findViewById(R.id.change_phoneNumUI_phoneNum);
         noteCodeEdit = (EditText) findViewById(R.id.change_phoneNumUI_code);
