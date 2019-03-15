@@ -74,7 +74,8 @@ public class CreditScoreActivity extends SwipeBackActivity implements View.OnCli
 //        rl_realNameAuth = (RelativeLayout)findViewById(R.id.rl_realNameAuth);
 //        rl_studentAuth = (RelativeLayout)findViewById(R.id.rl_studentAuth);
 //
-//        backImg.setOnClickListener(this);
+        backImg.setOnClickListener(this);
+        rightBtn.setOnClickListener(this);
 //        rl_name.setOnClickListener(this);
 //        rl_phoneNum.setOnClickListener(this);
 //        rl_realNameAuth.setOnClickListener(this);
@@ -90,6 +91,10 @@ public class CreditScoreActivity extends SwipeBackActivity implements View.OnCli
         switch (v.getId()){
             case R.id.mainUI_title_backBtn:
                 scrollToFinishActivity();
+                break;
+
+            case R.id.mainUI_title_rightBtn:
+                UIHelper.goToAct(context, CreditRecordActivity.class);
                 break;
 
 //            case R.id.rl_name:
