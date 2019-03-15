@@ -77,6 +77,7 @@ import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.ActionCenterActivity;
 import cn.qimate.bike.activity.ChangePasswordPhoneActivity;
+import cn.qimate.bike.activity.CreditScoreActivity;
 import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadBikingActivity;
 import cn.qimate.bike.activity.HistoryRoadActivity;
@@ -260,7 +261,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         authState = getActivity().findViewById(R.id.personUI_bottom_authState);
         userName = getActivity().findViewById(R.id.personUI_userName);
         superVip = getActivity().findViewById(R.id.personUI_superVip);
-//        myPurse = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_myPurse);
         myIntegral = getActivity().findViewById(R.id.personUI_bottom_myIntegral);
 
         curRouteLayout = getActivity().findViewById(R.id.personUI_bottom_curRouteLayout);
@@ -314,6 +314,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         headerImageView.setOnClickListener(this);
 //        curRouteLayout.setOnClickListener(this);
 //        hisRouteLayout.setOnClickListener(this);
+
+        myIntegralLayout.setOnClickListener(this);
+
         myPurseLayout.setOnClickListener(this);
         myRouteLayout.setOnClickListener(this);
         actionCenterLayout.setOnClickListener(this);
@@ -841,7 +844,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.personUI_bottom_myIntegralLayout:
-                UIHelper.goToAct(context, MyIntegralActivity.class);
+                UIHelper.goToAct(context, CreditScoreActivity.class);
                 break;
             case R.id.personUI_bottom_myMsgLayout:
                 UIHelper.goToAct(context, MyMessageActivity.class);

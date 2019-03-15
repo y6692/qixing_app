@@ -126,6 +126,7 @@
 
 
             <RelativeLayout
+                android:id="@+id/personUI_bottom_myIntegralLayout"
                 android:layout_width="109dp"
                 android:layout_height="23dp"
                 android:layout_marginTop="4dp"
