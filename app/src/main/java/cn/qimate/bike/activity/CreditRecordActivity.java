@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -41,6 +43,10 @@ public class CreditRecordActivity extends SwipeBackActivity implements View.OnCl
 
     private Context context;
 
+    private ImageView backImg;
+    private TextView title;
+
+
     // List
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView myList;
@@ -71,6 +77,10 @@ public class CreditRecordActivity extends SwipeBackActivity implements View.OnCl
 
     private void initView(){
 
+        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        title = (TextView) findViewById(R.id.mainUI_title_titleText);
+        title.setText("信用记录");
+
         // list投资列表
         footerView = LayoutInflater.from(context).inflate(R.layout.footer_item, null);
         footerViewType01 = footerView.findViewById(R.id.footer_Layout_type01);// 点击加载更多
@@ -98,6 +108,7 @@ public class CreditRecordActivity extends SwipeBackActivity implements View.OnCl
         myAdapter.setDatas(datas);
         myList.setAdapter(myAdapter);
 
+        backImg.setOnClickListener(this);
         footerLayout.setOnClickListener(this);
     }
 
@@ -132,6 +143,10 @@ public class CreditRecordActivity extends SwipeBackActivity implements View.OnCl
     public void onClick(View v) {
 
         switch (v.getId()) {
+            case R.id.mainUI_title_backBtn:
+                scrollToFinishActivity();
+                break;
+
             case R.id.footer_Layout:
                 if (!isLast) {
                     showPage += 1;

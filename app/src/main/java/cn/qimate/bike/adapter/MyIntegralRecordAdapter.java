@@ -27,13 +27,14 @@ public class MyIntegralRecordAdapter extends BaseViewAdapter<MyIntegralRecordBea
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (null == convertView) {
-            convertView = inflater.inflate(R.layout.item_my_integral_rule, null);
+            convertView = inflater.inflate(R.layout.item_credit_record, null);
         }
         TextView time = BaseViewHolder.get(convertView,R.id.item_myIntegral_rule_time);
         TextView times = BaseViewHolder.get(convertView,R.id.item_myIntegral_rule_times);
         MyIntegralRecordBean bean = getDatas().get(position);
         time.setText(bean.getAddtime());
         times.setText(bean.getReason());
+
         return convertView;
     }
 }

@@ -120,7 +120,6 @@ public class NearFragment extends BaseFragment{
 
             CarCouponFragment carCouponFragment = new CarCouponFragment();
             MerchantCouponFragment merchantCouponFragment = new MerchantCouponFragment();
-//      MyIntegralRuleFragment merchantCouponFragment = new MyIntegralRuleFragment();
 
             fragmentList = new ArrayList<>();
             fragmentList.add(carCouponFragment);
