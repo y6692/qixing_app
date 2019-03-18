@@ -86,6 +86,7 @@ import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.activity.MyIntegralActivity;
 import cn.qimate.bike.activity.MyMessageActivity;
 import cn.qimate.bike.activity.MyPurseActivity;
+import cn.qimate.bike.activity.MyRouteActivity;
 import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.activity.PersonAlterActivity;
 import cn.qimate.bike.activity.PersonInfoActivity;
@@ -827,11 +828,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             case R.id.personUI_bottom_vipCenterLayout:
                 UIHelper.goToAct(context, ActionCenterActivity.class);
                 break;
+
             case R.id.personUI_bottom_myPurseLayout:
                 UIHelper.goToAct(context, MyPurseActivity.class);
                 break;
             case R.id.personUI_bottom_myRouteLayout:
-                UIHelper.goToAct(context, MyPurseActivity.class);
+                UIHelper.goToAct(context, MyRouteActivity.class);
                 break;
             case R.id.personUI_bottom_actionCenterLayout:
                 UIHelper.goToAct(context, MyPurseActivity.class);

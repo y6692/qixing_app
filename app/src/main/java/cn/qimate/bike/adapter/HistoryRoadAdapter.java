@@ -28,10 +28,9 @@ public class HistoryRoadAdapter extends BaseViewAdapter<HistoryRoadBean> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (null == convertView) {
-            convertView = inflater.inflate(R.layout.item_history_road, null);
+            convertView = inflater.inflate(R.layout.item_my_route, null);
         }
         View line = BaseViewHolder.get(convertView,R.id.item_historyRoad_line);
-        MLImageView header = BaseViewHolder.get(convertView,R.id.item_historyRoad_header);
         TextView money = BaseViewHolder.get(convertView,R.id.item_historyRoad_money);
         TextView bikeCode = BaseViewHolder.get(convertView,R.id.item_historyRoad_bikeCode);
         TextView time = BaseViewHolder.get(convertView,R.id.item_historyRoad_time);
@@ -41,8 +40,7 @@ public class HistoryRoadAdapter extends BaseViewAdapter<HistoryRoadBean> {
         }else {
             line.setVisibility(View.VISIBLE);
         }
-        header.setImageResource(R.drawable.his_road_icon);
-        money.setText("￥"+bean.getPrices());
+        money.setText(bean.getPrices());
         bikeCode.setText(bean.getCodenum());
         time.setText(bean.getSt_time());
         return convertView;
