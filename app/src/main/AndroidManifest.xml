@@ -208,15 +208,19 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name=".activity.SettingActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
             android:name=".activity.ChangePhoneNumActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.MyRouteActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+        <activity
+            android:name=".activity.SettingActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+        <activity
+            android:name=".activity.QuestionActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity

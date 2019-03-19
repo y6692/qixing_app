@@ -5,13 +5,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Selection;
-import android.text.Spannable;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -21,13 +17,9 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 
 import org.apache.http.Header;
-import org.json.JSONArray;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
-import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
@@ -40,7 +32,6 @@ import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.ResultConsel;
-import cn.qimate.bike.model.SchoolListBean;
 import cn.qimate.bike.model.UserIndexBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
@@ -48,7 +39,7 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
  * Created by Administrator on 2017/2/12 0012.
  */
 
-public class SettingActivity extends SwipeBackActivity implements View.OnClickListener {
+public class QuestionActivity extends SwipeBackActivity implements View.OnClickListener {
 
     private static final int MSG_SET_ALIAS = 1001;
     private static final int MSG_SET_TAGS = 1002;
@@ -64,37 +55,36 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
+        setContentView(R.layout.activity_question);
         context = this;
         initView();
     }
 
 
     private void initView(){
-
         loadingDialog = new LoadingDialog(context);
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
-        title.setText("设置");
+        title.setText("意见反馈");
 
 
-        cleanLayout = (RelativeLayout) findViewById(R.id.personUI_bottom_cleanLayout);
-        checkLayout = (RelativeLayout) findViewById(R.id.personUI_bottom_checkLayout);
-        aboutUsLayout = (RelativeLayout) findViewById(R.id.personUI_bottom_aboutUsLayout);
-        questionLayout = (RelativeLayout) findViewById(R.id.personUI_bottom_questionLayout);
-        logoutLayout = (LinearLayout) findViewById(R.id.personUI_logoutLayout);
-
-        backImg.setOnClickListener(this);
-        cleanLayout.setOnClickListener(this);
-        checkLayout.setOnClickListener(this);
-        aboutUsLayout.setOnClickListener(this);
-        questionLayout.setOnClickListener(this);
-        logoutLayout.setOnClickListener(this);
-
-        initHttp();
+//        cleanLayout = (RelativeLayout) findViewById(R.id.personUI_bottom_cleanLayout);
+//        checkLayout = (RelativeLayout) findViewById(R.id.personUI_bottom_checkLayout);
+//        aboutUsLayout = (RelativeLayout) findViewById(R.id.personUI_bottom_aboutUsLayout);
+//        questionLayout = (RelativeLayout) findViewById(R.id.personUI_bottom_questionLayout);
+//        logoutLayout = (LinearLayout) findViewById(R.id.personUI_logoutLayout);
+//
+//        backImg.setOnClickListener(this);
+//        cleanLayout.setOnClickListener(this);
+//        checkLayout.setOnClickListener(this);
+//        aboutUsLayout.setOnClickListener(this);
+//        questionLayout.setOnClickListener(this);
+//        logoutLayout.setOnClickListener(this);
+//
+//        initHttp();
 
     }
 
@@ -107,35 +97,35 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
                 scrollToFinishActivity();
                 break;
 
-            case R.id.personUI_bottom_cleanLayout:
-                UIHelper.goToAct(context, MyPurseActivity.class);
-                break;
-            case R.id.personUI_bottom_checkLayout:
-                UpdateManager.getUpdateManager().checkAppUpdate(context, true);
-                break;
-            case R.id.personUI_bottom_aboutUsLayout:
-                UIHelper.goWebViewAct(context, "关于我们", Urls.aboutUs);
-                break;
-            case R.id.personUI_bottom_questionLayout:
-                UIHelper.goToAct(context, QuestionActivity.class);
-                break;
-
-
-            case R.id.personUI_logoutLayout:
-                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                customBuilder.setTitle("温馨提示").setMessage("确认退出吗?")
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        logout(uid, access_token);
-                    }
-                });
-                customBuilder.create().show();
-                break;
+//            case R.id.personUI_bottom_cleanLayout:
+//                UIHelper.goToAct(context, MyPurseActivity.class);
+//                break;
+//            case R.id.personUI_bottom_checkLayout:
+//                UpdateManager.getUpdateManager().checkAppUpdate(context, true);
+//                break;
+//            case R.id.personUI_bottom_aboutUsLayout:
+//                UIHelper.goWebViewAct(context, "关于我们", Urls.aboutUs);
+//                break;
+//            case R.id.personUI_bottom_questionLayout:
+//                UIHelper.goToAct(context, ServiceCenterActivity.class);
+//                break;
+//
+//
+//            case R.id.personUI_logoutLayout:
+//                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+//                customBuilder.setTitle("温馨提示").setMessage("确认退出吗?")
+//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.cancel();
+//                            }
+//                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                        logout(uid, access_token);
+//                    }
+//                });
+//                customBuilder.create().show();
+//                break;
         }
     }
 

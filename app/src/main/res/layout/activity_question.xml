@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:melove="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:background="#F5F5F5"
+    >
+
+    <include
+        layout="@layout/ui_main_title"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="311dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <cn.qimate.bike.core.widget.ClearEditText
+            android:id="@+id/feedbackUI_restCause"
+            android:layout_width="match_parent"
+            android:layout_height="212dp"
+            android:layout_marginTop="21dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/shape_feedback_edit1"
+            android:paddingLeft="18dp"
+            android:paddingTop="16dp"
+            android:drawableRight="@drawable/delete_selector"
+            android:hint="我要吐槽或是给点建议"
+            android:textSize="@dimen/sp14"
+            android:textColor="@color/tx_black_light"
+            android:textColorHint="#C8C8C8"
+            android:gravity="top|left"
+            android:lineSpacingExtra="2dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="21dp"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <cn.qimate.bike.core.widget.MLImageView
+                android:id="@+id/personUI_bottom_header"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/me_header"
+                melove:border_color="#E1E1E1"
+                melove:border_width="1dp"
+                melove:shape_type="round"/>
+
+            <TextView
+                android:id="@+id/curRoadUI_biking_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textColor="#7D7D7D"
+                android:textSize="16sp"
+                android:text="135****1123"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/personUI_logoutLayout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@drawable/btn_bcg_scan_gradient"
+        >
+
+        <TextView
+            android:id="@+id/tv_nextBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="提交"
+            android:textSize="@dimen/sp18"
+            android:textColor="@color/white"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>
+
+
