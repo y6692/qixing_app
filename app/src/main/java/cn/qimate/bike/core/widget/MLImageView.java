@@ -163,7 +163,7 @@ public class MLImageView extends ImageView {
             paint.setColor(mBorderColor);
             paint.setAntiAlias(true);
             if (mShapeType == 0) {
-                canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth / 2, paint);
+                canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth / 2-2, paint);
             } else {
                 // 当ShapeType = 1 时 图片为圆角矩形
                 RectF rectf = new RectF(0, 0, getWidth(), getHeight());

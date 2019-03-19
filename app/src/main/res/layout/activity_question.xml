@@ -47,8 +47,8 @@
 
             <cn.qimate.bike.core.widget.MLImageView
                 android:id="@+id/personUI_bottom_header"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
                 android:src="@drawable/me_header"
                 melove:border_color="#E1E1E1"
                 melove:border_width="1dp"

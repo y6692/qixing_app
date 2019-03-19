@@ -3,12 +3,12 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:minWidth="240dip"
-    android:layout_height="wrap_content">
+    android:layout_height="187dp"
+    android:background="@drawable/dialog_bcg">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#f57752"
         android:orientation="vertical">
 
         <TextView
@@ -19,30 +19,30 @@
             android:gravity="center"
             android:padding="@dimen/dp10"
             android:textColor="#ffffff"
+
             />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/content"
         android:orientation="vertical"
-        android:background="@drawable/border"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-
-        >
+        android:gravity="center">
 
         <TextView
             style="@style/DialogText"
             android:id="@+id/message"
             android:paddingBottom="@dimen/dp15"
             android:paddingTop="@dimen/dp15"
-            android:gravity="center"
+            android:gravity="center|left"
             android:lineSpacingExtra="5dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/dp5"
-            android:paddingRight="@dimen/dp5"
+            android:paddingLeft="21dp"
+            android:paddingRight="21dp"
+            android:textColor="#333333"
+            android:textSize="15sp"
             />
 
         <TextView
@@ -58,10 +58,8 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:background="#ffffff"
         android:layout_width="fill_parent"
-        android:layout_height="40dp">
-
+        android:layout_height="match_parent">
 
         <Button
             android:id="@+id/negativeButton"
