@@ -836,7 +836,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 UIHelper.goToAct(context, MyRouteActivity.class);
                 break;
             case R.id.personUI_bottom_actionCenterLayout:
-                UIHelper.goToAct(context, MyPurseActivity.class);
+                UIHelper.goToAct(context, ActionCenterActivity.class);
                 break;
             case R.id.personUI_bottom_serviceCenterLayout:
                 UIHelper.goToAct(context, MyPurseActivity.class);
