@@ -116,6 +116,7 @@ import cn.qimate.bike.activity.MyPurseActivity;
 import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.activity.PersonAlterActivity;
 import cn.qimate.bike.activity.RealNameAuthActivity;
+import cn.qimate.bike.activity.ServiceCenterActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.base.BaseViewAdapter;
@@ -2763,70 +2764,74 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener,
         LinearLayout feedbackLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_feedbackLayout);
         LinearLayout helpLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_helpLayout);
         final LinearLayout callLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_callLayout);
-        TextView cancleBtn = (TextView)customView.findViewById(R.id.pop_menu_cancleBtn);
+//        TextView cancleBtn = (TextView)customView.findViewById(R.id.pop_menu_cancleBtn);
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.pop_menu_feedbackLayout:
-                        UIHelper.goToAct(context,FeedbackActivity.class);
+                        UIHelper.goToAct(context, FeedbackActivity.class);
                         break;
                     case R.id.pop_menu_helpLayout:
-                        WindowManager windowManager = getActivity().getWindowManager();
-                        Display display = windowManager.getDefaultDisplay();
-                        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-                        lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                        dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-                        dialog.getWindow().setAttributes(lp);
-                        dialog.show();
+//                        WindowManager windowManager = getActivity().getWindowManager();
+//                        Display display = windowManager.getDefaultDisplay();
+//                        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+//                        lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+//                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//                        dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+//                        dialog.getWindow().setAttributes(lp);
+//                        dialog.show();
+
+                        UIHelper.goToAct(context, FeedbackActivity.class);
                         break;
                     case R.id.pop_menu_callLayout:
-                        if (Build.VERSION.SDK_INT >= 23) {
-                            int checkPermission = getActivity().checkSelfPermission(Manifest.permission.CALL_PHONE);
-                            if (checkPermission != PERMISSION_GRANTED) {
-                                if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
-                                    requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
-                                } else {
-                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开拨打电话权限！")
-                                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
-                                                }
-                                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                            getActivity().requestPermissions(
-                                                    new String[] { Manifest.permission.CALL_PHONE }, 0);
-                                        }
-                                    });
-                                    customBuilder.create().show();
-                                }
-                                return;
-                            }
-                        }
-                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                        customBuilder.setTitle("温馨提示").setMessage("确认拨打" + "0519-86999222" + "吗?")
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                                Intent intent=new Intent();
-                                intent.setAction(Intent.ACTION_CALL);
-                                intent.setData(Uri.parse("tel:" + "0519-86999222"));
-                                startActivity(intent);
-                            }
-                        });
-                        customBuilder.create().show();
-                        break;
-                    case R.id.pop_menu_cancleBtn:
+//                        if (Build.VERSION.SDK_INT >= 23) {
+//                            int checkPermission = getActivity().checkSelfPermission(Manifest.permission.CALL_PHONE);
+//                            if (checkPermission != PERMISSION_GRANTED) {
+//                                if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
+//                                    requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
+//                                } else {
+//                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+//                                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开拨打电话权限！")
+//                                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                                public void onClick(DialogInterface dialog, int which) {
+//                                                    dialog.cancel();
+//                                                }
+//                                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog, int which) {
+//                                            dialog.cancel();
+//                                            getActivity().requestPermissions(
+//                                                    new String[] { Manifest.permission.CALL_PHONE }, 0);
+//                                        }
+//                                    });
+//                                    customBuilder.create().show();
+//                                }
+//                                return;
+//                            }
+//                        }
+//                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+//                        customBuilder.setTitle("温馨提示").setMessage("确认拨打" + "0519-86999222" + "吗?")
+//                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        dialog.cancel();
+//                                    }
+//                                }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.cancel();
+//                                Intent intent=new Intent();
+//                                intent.setAction(Intent.ACTION_CALL);
+//                                intent.setData(Uri.parse("tel:" + "0519-86999222"));
+//                                startActivity(intent);
+//                            }
+//                        });
+//                        customBuilder.create().show();
 
+
+                        UIHelper.goToAct(context, ServiceCenterActivity.class);
                         break;
+//                    case R.id.pop_menu_cancleBtn:
+//                        break;
                 }
                 popupwindow.dismiss();
             }
@@ -2835,7 +2840,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener,
         feedbackLayout.setOnClickListener(listener);
         helpLayout.setOnClickListener(listener);
         callLayout.setOnClickListener(listener);
-        cancleBtn.setOnClickListener(listener);
+//        cancleBtn.setOnClickListener(listener);
 
         popupwindow.showAtLocation(customView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }

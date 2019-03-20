@@ -2384,7 +2384,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         LinearLayout feedbackLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_feedbackLayout);
         LinearLayout helpLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_helpLayout);
         final LinearLayout callLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_callLayout);
-        TextView cancleBtn = (TextView)customView.findViewById(R.id.pop_menu_cancleBtn);
+//        TextView cancleBtn = (TextView)customView.findViewById(R.id.pop_menu_cancleBtn);
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -2445,9 +2445,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         });
                         customBuilder.create().show();
                         break;
-                    case R.id.pop_menu_cancleBtn:
-
-                        break;
+//                    case R.id.pop_menu_cancleBtn:
+//                        break;
                 }
                 popupwindow.dismiss();
             }
@@ -2456,7 +2455,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         feedbackLayout.setOnClickListener(listener);
         helpLayout.setOnClickListener(listener);
         callLayout.setOnClickListener(listener);
-        cancleBtn.setOnClickListener(listener);
+//        cancleBtn.setOnClickListener(listener);
 
         popupwindow.showAtLocation(customView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
