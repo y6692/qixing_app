@@ -49,17 +49,6 @@
 
         </LinearLayout>
 
-
-        <!--<ImageView-->
-            <!--android:id="@+id/top_back"-->
-            <!--android:layout_width="40dp"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_marginLeft="@dimen/dp10"-->
-            <!--android:alpha="0.5"-->
-            <!--android:onClick="btn"-->
-            <!--android:src="@drawable/s_left_jiantou"-->
-            <!--android:layout_centerVertical="true"/>-->
     </RelativeLayout>
 
 
@@ -67,9 +56,8 @@
         android:id="@+id/capture_crop_layout"
         android:layout_width="258dp"
         android:layout_height="258dp"
-        android:layout_below="@id/rl_title"
-        android:layout_marginTop="79dp"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/top_mask_bcg"
         android:background="@drawable/block_bcg6"
         android:contentDescription="@string/app_name">
 
@@ -83,46 +71,45 @@
             android:contentDescription="@string/app_name"/>
     </RelativeLayout>
 
-    <!--<ImageView-->
-        <!--android:id="@+id/top_mask_bcg"-->
-        <!--android:layout_width="220dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_below="@id/rl_title"-->
-        <!--android:layout_above="@id/capture_crop_layout"-->
-        <!--android:src="@null"-->
-        <!--android:background="@drawable/scan_mask"-->
-        <!--android:layout_centerHorizontal="true"/>-->
+    <ImageView
+        android:id="@+id/top_mask_bcg"
+        android:layout_width="258dp"
+        android:layout_height="79dp"
+        android:layout_below="@id/rl_title"
+        android:src="@null"
+        android:background="@drawable/scan_mask"
+        android:layout_centerHorizontal="true"/>
 
-    <!--<ImageView-->
-        <!--android:id="@+id/bottom_mask"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_below="@id/capture_crop_layout"-->
-        <!--android:background="@drawable/scan_mask"-->
-        <!--android:contentDescription="@string/app_name"/>-->
+    <ImageView
+        android:id="@+id/bottom_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/capture_crop_layout"
+        android:background="@drawable/scan_mask"
+        android:contentDescription="@string/app_name"/>
 
-    <!--<ImageView-->
-        <!--android:id="@+id/left_mask"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_above="@id/bottom_mask"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_below="@id/rl_title"-->
-        <!--android:layout_toLeftOf="@id/capture_crop_layout"-->
-        <!--android:background="@drawable/scan_mask"-->
-        <!--android:contentDescription="@string/app_name"/>-->
+    <ImageView
+        android:id="@+id/left_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_mask"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/rl_title"
+        android:layout_toLeftOf="@id/capture_crop_layout"
+        android:background="@drawable/scan_mask"
+        android:contentDescription="@string/app_name"/>
 
-    <!--<ImageView-->
-        <!--android:id="@+id/right_mask"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_above="@id/bottom_mask"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_below="@id/rl_title"-->
-        <!--android:layout_toRightOf="@id/capture_crop_layout"-->
-        <!--android:background="@drawable/scan_mask"-->
-        <!--android:contentDescription="@string/app_name"/>-->
+    <ImageView
+        android:id="@+id/right_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_mask"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/rl_title"
+        android:layout_toRightOf="@id/capture_crop_layout"
+        android:background="@drawable/scan_mask"
+        android:contentDescription="@string/app_name"/>
 
     <TextView
         android:layout_marginTop="@dimen/dp30"
