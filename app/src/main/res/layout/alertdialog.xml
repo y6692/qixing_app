@@ -68,8 +68,9 @@
 
         <Button
             android:id="@+id/negativeButton"
-            android:layout_width="127dp"
+            android:layout_width="0dip"
             android:layout_height="40dp"
+            android:layout_weight="1"
             android:layout_marginRight="8dp"
             android:background="@drawable/block_bcg2"
             android:textSize="18sp"
@@ -80,9 +81,10 @@
 
         <Button
             android:id="@+id/positiveButton"
-            android:layout_width="127dp"
+            android:layout_width="0dip"
             android:layout_height="40dp"
             android:layout_marginLeft="8dp"
+            android:layout_weight="1"
             android:background="@drawable/block_bcg1_2"
             android:singleLine="true"
             android:textSize="18sp"

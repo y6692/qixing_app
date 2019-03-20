@@ -804,12 +804,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     }, 1000);
 
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
-                    if (0 == Tag){
-                        customBuilder.setMessage("扫码成功,是否开锁?");
-                    }else {
-                        customBuilder.setMessage("输号成功,是否开锁?");
-                    }
-                    customBuilder.setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                    if (0 == Tag){
+//                        customBuilder.setMessage("扫码成功,是否开锁?");
+//                    }else {
+//                        customBuilder.setMessage("输号成功,是否开锁?");
+//                    }
+                    customBuilder.setTitle("服务规则").setMessage("7MA单车须在校内还车，校外停车将扣10元调度费。").setNegativeButton("不接受", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
 
@@ -821,7 +821,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             }).start();
 
                         }
-                    }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    }).setPositiveButton("接受", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
 
@@ -861,7 +861,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             Log.e("scan===", "scan===="+loadingDialog);
 
                         }
-                    }).setHint(false);
+                    });
                     customBuilder.create().show();
 
                     break;
