@@ -189,6 +189,8 @@ public class CustomDialog extends Dialog {
 			}else{
 				if(type==2){
 					layout = inflater.inflate(R.layout.alertdialog3, null);
+				}else if(type==3){
+					layout = inflater.inflate(R.layout.alertdialog4, null);
 				}else{
 					layout = inflater.inflate(R.layout.alertdialog, null);
 				}
@@ -224,7 +226,7 @@ public class CustomDialog extends Dialog {
                 }
 			}
 
-			dialog.addContentView(layout, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+			dialog.addContentView(layout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 			// set the dialog title
 			((TextView) layout.findViewById(R.id.title)).setText(title);
 			TextView hintText = ((TextView) layout.findViewById(R.id.hintText));
@@ -245,6 +247,7 @@ public class CustomDialog extends Dialog {
 						new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			}
 			dialog.setContentView(layout);
+
 			return dialog;
 		}
 
