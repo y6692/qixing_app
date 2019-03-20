@@ -2943,7 +2943,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener,
                             if (!"2".equals(bean.getCardcheck())){
 
                                 CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                customBuilder.setTitle("温馨提示").setMessage("为了您的骑行安全，请上传身份证完善保险信息")
+                                customBuilder.setTitle("您还未完善保险信息").setMessage("为了您的骑行安全，请上传身份证完善保险信息")
                                         .setNegativeButton("去上传", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 Intent intent1 = new Intent(context,InsureanceActivity.class);
