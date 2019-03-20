@@ -114,7 +114,8 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
                 UpdateManager.getUpdateManager().checkAppUpdate(context, true);
                 break;
             case R.id.personUI_bottom_aboutUsLayout:
-                UIHelper.goWebViewAct(context, "关于我们", Urls.aboutUs);
+//                UIHelper.goWebViewAct(context, "关于我们", Urls.aboutUs);
+                UIHelper.goToAct(context, AboutUsActivity.class);
                 break;
             case R.id.personUI_bottom_questionLayout:
                 UIHelper.goToAct(context, QuestionActivity.class);
