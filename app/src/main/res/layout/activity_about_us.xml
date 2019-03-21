@@ -56,13 +56,15 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:background="@drawable/block_bcg"
         android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/personUI_bottom_cleanLayout"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="35dp"
             >
 
             <LinearLayout
@@ -107,7 +109,7 @@
         <RelativeLayout
             android:id="@+id/personUI_bottom_checkLayout"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="35dp"
             >
 
             <LinearLayout
@@ -151,7 +153,7 @@
         <RelativeLayout
             android:id="@+id/personUI_bottom_aboutUsLayout"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="35dp"
             >
 
             <LinearLayout
@@ -195,7 +197,7 @@
         <RelativeLayout
             android:id="@+id/personUI_bottom_questionLayout"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="35dp"
             >
 
             <LinearLayout
@@ -220,7 +222,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:layout_marginRight="18dp"
+                android:layout_marginRight="22dp"
                 android:orientation="horizontal"
                 android:layout_alignParentRight="true">
 
@@ -238,7 +240,7 @@
         <RelativeLayout
             android:id="@+id/personUI_bottom_emailLayout"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="35dp"
             >
 
             <LinearLayout
@@ -263,7 +265,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:layout_marginRight="18dp"
+                android:layout_marginRight="22dp"
                 android:orientation="horizontal"
                 android:layout_alignParentRight="true">
 
@@ -281,7 +283,7 @@
         <RelativeLayout
             android:id="@+id/personUI_bottom_webLayout"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="35dp"
             >
 
             <LinearLayout
@@ -306,7 +308,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:layout_marginRight="18dp"
+                android:layout_marginRight="22dp"
                 android:orientation="horizontal"
                 android:layout_alignParentRight="true">
 
