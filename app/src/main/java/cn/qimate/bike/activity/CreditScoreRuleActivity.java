@@ -14,7 +14,6 @@ import com.alibaba.fastjson.JSON;
 
 import org.apache.http.Header;
 
-import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
@@ -28,10 +27,11 @@ import cn.qimate.bike.model.UserIndexBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 /**
- * Created by Administrator on 2017/2/12 0012.
+ * 信用分规则
+ * Created by yuanyi on 2019/3/22 0012.
  */
 
-public class CreditScoreActivity extends SwipeBackActivity implements View.OnClickListener {
+public class CreditScoreRuleActivity extends SwipeBackActivity implements View.OnClickListener {
 
     private Context context;
     private LoadingDialog loadingDialog;
@@ -39,20 +39,16 @@ public class CreditScoreActivity extends SwipeBackActivity implements View.OnCli
     private TextView title;
     private TextView rightBtn;
 
-    private ImageView iv_score;
-    private TextView tv_score;
+    private TextView nameEdit;
+    private TextView phoneNum;
     private RelativeLayout rl_rule;
-    private RelativeLayout rl_name;
-    private RelativeLayout rl_phoneNum;
-    private RelativeLayout rl_realNameAuth;
-    private RelativeLayout rl_studentAuth;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_credit_score);
+        setContentView(R.layout.activity_credit_score_rule);
         context = this;
         initView();
     }
@@ -64,34 +60,9 @@ public class CreditScoreActivity extends SwipeBackActivity implements View.OnCli
 
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
-        title.setText("信用分");
-        rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
-        rightBtn.setText("信用记录");
+        title.setText("信用分规则");
 
-        iv_score = (ImageView)findViewById(R.id.iv_score);
-        tv_score = (TextView)findViewById(R.id.tv_score);
-
-        rl_rule = (RelativeLayout)findViewById(R.id.rl_rule);
-//
         backImg.setOnClickListener(this);
-        rightBtn.setOnClickListener(this);
-        rl_rule.setOnClickListener(this);
-//        initHttp();
-
-        int score = Integer.parseInt(tv_score.getText().toString());
-
-        if(score<=100){
-            iv_score.setImageResource(R.drawable.credit_pic1);
-        }else if(score>100 && score<=200){
-            iv_score.setImageResource(R.drawable.credit_pic2);
-        }else if(score>200 && score<=400){
-            iv_score.setImageResource(R.drawable.credit_pic3);
-        }else if(score>400 && score<=700){
-            iv_score.setImageResource(R.drawable.credit_pic4);
-        }else if(score>700 && score<=1000){
-            iv_score.setImageResource(R.drawable.credit_pic5);
-        }
-
     }
 
     @Override
@@ -103,29 +74,6 @@ public class CreditScoreActivity extends SwipeBackActivity implements View.OnCli
                 scrollToFinishActivity();
                 break;
 
-            case R.id.mainUI_title_rightBtn:
-                UIHelper.goToAct(context, CreditRecordActivity.class);
-                break;
-
-            case R.id.rl_rule:
-                UIHelper.goToAct(context, CreditScoreRuleActivity.class);
-                break;
-
-//            case R.id.rl_name:
-//                UIHelper.goToAct(context, ChangePhoneNumActivity.class);
-//                break;
-//
-//            case R.id.rl_phoneNum:
-//                UIHelper.goToAct(context, ChangePhoneNumActivity.class);
-//                break;
-//
-//            case R.id.rl_realNameAuth:
-//                UIHelper.goToAct(context, RealNameAuthActivity.class);
-//                break;
-//
-//            case R.id.rl_studentAuth:
-//                UIHelper.goToAct(context, ChangePhoneNumActivity.class);
-//                break;
 
         }
     }
@@ -163,8 +111,8 @@ public class CreditScoreActivity extends SwipeBackActivity implements View.OnCli
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                         if (result.getFlag().equals("Success")) {
                             UserIndexBean bean = JSON.parseObject(result.getData(), UserIndexBean.class);
-//                            nameEdit.setText(bean.getRealname());
-//                            phoneNum.setText(bean.getTelphone());
+                            nameEdit.setText(bean.getRealname());
+                            phoneNum.setText(bean.getTelphone());
                         } else {
                             Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
                         }

@@ -24,7 +24,7 @@
             >
 
             <ImageView
-                android:id="@+id/personUI_bottom_authState"
+                android:id="@+id/iv_score"
                 android:layout_width="280dp"
                 android:layout_height="268dp"
                 android:layout_centerInParent="true"
@@ -38,12 +38,13 @@
                 android:gravity="center">
 
                 <TextView
+                    android:id="@+id/tv_score"
                     android:layout_width="wrap_content"
                     android:layout_height="45dp"
                     android:textColor="#E60012"
                     android:textSize="33sp"
                     android:textStyle="bold"
-                    android:text="350"/>
+                    android:text="650"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -84,7 +85,7 @@
 
 
         <RelativeLayout
-            android:id="@+id/rl_name"
+            android:id="@+id/rl_rule"
             android:layout_width="match_parent"
             android:layout_height="76dp"
             android:layout_marginLeft="20dp"
