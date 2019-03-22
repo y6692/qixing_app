@@ -66,6 +66,8 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polygon;
 import com.amap.api.maps.model.PolygonOptions;
+import com.aprilbrother.aprilbrothersdk.BeaconManager;
+import com.aprilbrother.aprilbrothersdk.EddyStone;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
@@ -122,6 +124,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
      * 选中的蓝牙设备
      */
     BluetoothDevice mDevice;
+    BeaconManager manager;
 
     public static BluetoothAdapter mBluetoothAdapter;
     private String m_nowMac = "";
@@ -195,8 +198,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
     private LinearLayout slideLayout;
     private int imageWith = 0;
-    private List<String> macList;
-    private List<String> macList2;
+    private List<EddyStone> macList;
+    private List<EddyStone> macList2;
     private int flag = 0;
     public static int flagm = 0;
     boolean isFrist1 = true;
@@ -778,28 +781,52 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             mlocationClient.startLocation();
         }
 
-        mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+//        mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+//            @Override
+//            public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+////           if (!macList.contains(parseAdvData(rssi,scanRecord))){
+////               macList.add(parseAdvData(rssi,scanRecord));
+////           }
+//
+//                k++;
+//
+//                Log.e("biking===LeScan", device + "====" + rssi + "====" + k);
+//
+////                hintText.setText(device + "====" + rssi + "====" + k);
+//
+//                if (!macList.contains(""+device)){
+//                    macList.add(""+device);
+////                    title.setText(isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + k);
+//                }
+//
+//                scan = true;
+//
+//            }
+//        };
+
+        manager = new BeaconManager(this);
+        manager.setEddyStoneListener(new BeaconManager.EddyStoneListener() {
+
             @Override
-            public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-//           if (!macList.contains(parseAdvData(rssi,scanRecord))){
-//               macList.add(parseAdvData(rssi,scanRecord));
-//           }
+            public void onEddyStoneDiscovered(EddyStone eddyStone) {
+                refreshList(eddyStone);
+            }
+
+            private void refreshList(EddyStone eddyStone) {
 
                 k++;
 
-                Log.e("biking===LeScan", device + "====" + rssi + "====" + k);
+                Log.e("EddyStoneListener===", k+"==="+eddyStone);
 
-//                hintText.setText(device + "====" + rssi + "====" + k);
-
-                if (!macList.contains(""+device)){
-                    macList.add(""+device);
-//                    title.setText(isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + k);
+                if (!macList.contains(eddyStone)) {
+                    macList.add(eddyStone);
                 }
 
                 scan = true;
 
             }
-        };
+        });
+
 
 //        startXB();
 
@@ -2075,19 +2102,24 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 macList.clear();
             }
 
-            Log.e("biking===startXB",mBluetoothAdapter+"==="+mLeScanCallback);
-            UUID[] uuids = {Config.xinbiaoUUID};
-            mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
+//            Log.e("biking===startXB",mBluetoothAdapter+"==="+mLeScanCallback);
+//            UUID[] uuids = {Config.xinbiaoUUID};
+//            mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
+
+            manager.startEddyStoneScan();
+
         }
 
     }
 
     private void stopXB() {
         if (!"1".equals(type)) {
-            if (mLeScanCallback != null && mBluetoothAdapter != null) {
-                mBluetoothAdapter.stopLeScan(mLeScanCallback);
-//                mLeScanCallback = null;
-            }
+//            if (mLeScanCallback != null && mBluetoothAdapter != null) {
+//                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+//            }
+
+            manager.stopEddyStoneScan();
+
         }
     }
 
