@@ -13,14 +13,14 @@ public class WeekDayView extends View {
 	// 上横线颜色
 	private int mTopLineColor = Color.parseColor("#CCE4F2");
 	// 下横线颜色
-	private int mBottomLineColor = Color.parseColor("#CCE4F2");
+	private int mBottomLineColor = Color.parseColor("#DDDDDD");
 	// 周一到周五的颜色
-	private int mWeedayColor = Color.parseColor("#20c48a");
+	private int mWeedayColor = Color.parseColor("#E60012");
 	// 周六、周日的颜色
-	private int mWeekendColor = Color.parseColor("#20c48a");
+	private int mWeekendColor = Color.parseColor("#E60012");
 	// 线的宽度
 	private int mStrokeWidth = 4;
-	private int mWeekSize = 14;
+	private int mWeekSize = 18;
 	private Paint paint;
 	private DisplayMetrics mDisplayMetrics;
 	private String[] weekString = new String[] { "日", "一", "二", "三", "四", "五", "六" };
@@ -54,13 +54,13 @@ public class WeekDayView extends View {
 		int height = getHeight();
 		// 进行画上下线
 		paint.setStyle(Style.STROKE);
-		paint.setColor(mTopLineColor);
+//		paint.setColor(mTopLineColor);
 		paint.setStrokeWidth(mStrokeWidth);
-		canvas.drawLine(0, 0, width, 0, paint);
+//		canvas.drawLine(0, 0, width, 0, paint);
 
 		// 画下横线
 		paint.setColor(mBottomLineColor);
-		canvas.drawLine(0, height, width, height, paint);
+		canvas.drawLine(13* mDisplayMetrics.scaledDensity, height, width-13* mDisplayMetrics.scaledDensity, height, paint);
 		paint.setStyle(Style.FILL);
 		paint.setTextSize(mWeekSize * mDisplayMetrics.scaledDensity);
 		int columnWidth = width / 7;

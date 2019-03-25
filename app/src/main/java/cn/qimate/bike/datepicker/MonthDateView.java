@@ -73,7 +73,8 @@ public class MonthDateView extends View {
 			int row = (day + weekNumber - 1) / 7;
 			daysString[row][column] = day + 1;
 			int startX = (int) (mColumnSize * column + (mColumnSize - mPaint.measureText(dayString)) / 2);
-			int startY = (int) (mRowSize * row + mRowSize / 2 - (mPaint.ascent() + mPaint.descent()) / 2);
+			int startY = (int) (mRowSize * (row+1));
+//			int startY = (int) (mRowSize * row + 10* mDisplayMetrics.scaledDensity - (mPaint.ascent() + mPaint.descent()) / 2);
 			try {
 				yearmonthday = Integer.valueOf((year_month + String.format("%2d", (day + 1)).replace(" ", "0")))
 						.intValue();
@@ -133,7 +134,8 @@ public class MonthDateView extends View {
 				return;
 			mPaint.setColor(mCircleColor);
 			float circleX = (float) (mColumnSize * column + mColumnSize * 0.52);
-			float circley = (float) (mRowSize * row + mRowSize * 0.5);
+			float circley = (float) (mRowSize * row + mRowSize * 0.8);
+//			float circley = (float) (mRowSize * row + mRowSize * 0.5);
 			canvas.drawCircle(circleX, circley, mCircleRadius, mPaint);
 		}
 	}
@@ -172,7 +174,9 @@ public class MonthDateView extends View {
 	 */
 	private void initSize() {
 		mColumnSize = getWidth() / NUM_COLUMNS;
-		mRowSize = getHeight() / NUM_ROWS;
+//		mRowSize = getHeight() / NUM_ROWS;
+
+		mRowSize = (int) (33 * mDisplayMetrics.scaledDensity);
 	}
 
 	/**
@@ -266,8 +270,7 @@ public class MonthDateView extends View {
 
 	/**
 	 * 获取选择的日期
-	 * 
-	 * @param mSelDay
+	 *
 	 */
 	public int getmSelDay() {
 		return this.mSelDay;

@@ -57,7 +57,7 @@ public class HistoryRoadFiltateActivity extends SwipeBackActivity implements Vie
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("行程查询");
-        backImg.setImageResource(R.drawable.back_icon);
+//        backImg.setImageResource(R.drawable.back_icon);
         rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
         rightBtn.setText("确认");
 
