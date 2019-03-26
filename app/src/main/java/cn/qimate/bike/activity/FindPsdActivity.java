@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +40,7 @@ public class FindPsdActivity extends SwipeBackActivity implements View.OnClickLi
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
 
     private EditText userNameEdit;
@@ -69,7 +70,7 @@ public class FindPsdActivity extends SwipeBackActivity implements View.OnClickLi
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("找回密码");
 
@@ -81,7 +82,7 @@ public class FindPsdActivity extends SwipeBackActivity implements View.OnClickLi
         codeBtn = (Button) findViewById(R.id.findPsdUI_noteCode);
         submitBtn = (Button) findViewById(R.id.findPsdUI_btn);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         codeBtn.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
@@ -91,7 +92,7 @@ public class FindPsdActivity extends SwipeBackActivity implements View.OnClickLi
     public void onClick(View v) {
         String telphone = userNameEdit.getText().toString();
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.findPsdUI_noteCode:

@@ -47,7 +47,7 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
 
     private TextView payState;
@@ -103,7 +103,7 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
 
         oid = getIntent().getExtras().getString("oid");
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("行程详情");
 
@@ -134,7 +134,7 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
         params.height = (DisplayUtil.getWindowWidth(this) - DisplayUtil.dip2px(context,20))/2;
         imagesLayout.setLayoutParams(params);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
         initHttp();
@@ -146,7 +146,7 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
 
                 new Thread(new Runnable() {

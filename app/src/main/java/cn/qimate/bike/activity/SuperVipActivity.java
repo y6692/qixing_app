@@ -17,7 +17,7 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 public class SuperVipActivity extends SwipeBackActivity implements View.OnClickListener {
 
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
 
     private LinearLayout headLayout;
@@ -33,7 +33,7 @@ public class SuperVipActivity extends SwipeBackActivity implements View.OnClickL
 
     private void initView(){
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("超级会员");
 
@@ -46,7 +46,7 @@ public class SuperVipActivity extends SwipeBackActivity implements View.OnClickL
         bikeNumText = (TextView)findViewById(R.id.ui_superVip_bikeNumText);
         daysText = (TextView)findViewById(R.id.ui_superVip_daysText);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class SuperVipActivity extends SwipeBackActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             default:

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +42,7 @@ public class RechargeRecordActivity extends SwipeBackActivity implements View.On
         AdapterView.OnItemClickListener{
 
     private Context context = this;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
     // List
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -73,7 +74,7 @@ public class RechargeRecordActivity extends SwipeBackActivity implements View.On
 
     private void initView(){
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("充值记录");
 
@@ -104,7 +105,7 @@ public class RechargeRecordActivity extends SwipeBackActivity implements View.On
         myAdapter.setDatas(datas);
         myList.setAdapter(myAdapter);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         footerLayout.setOnClickListener(this);
     }
 
@@ -139,7 +140,7 @@ public class RechargeRecordActivity extends SwipeBackActivity implements View.On
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
 

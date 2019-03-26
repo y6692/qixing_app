@@ -36,7 +36,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     private Context context;
     private LoadingDialog loadingDialog;
     private LoadingDialog payLoadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
 
     private TextView bikeCode;
@@ -93,7 +93,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
         payLoadingDialog.setCancelable(false);
         payLoadingDialog.setCanceledOnTouchOutside(false);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("当前行程");
 
@@ -106,7 +106,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
         balanceText = (TextView)findViewById(R.id.curRoadUI_biked_balance);
         payBalanceLayout = (LinearLayout) findViewById(R.id.curRoadUI_biked_payBalanceLayout);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         payBalanceLayout.setOnClickListener(this);
     }
 
@@ -174,7 +174,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.curRoadUI_biked_payBalanceLayout:

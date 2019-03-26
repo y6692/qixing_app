@@ -55,7 +55,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
 
     private RelativeLayout cleanLayout, checkLayout, aboutUsLayout, questionLayout;
@@ -76,7 +76,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("设置");
 
@@ -87,7 +87,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
         questionLayout = (RelativeLayout) findViewById(R.id.personUI_bottom_questionLayout);
         logoutLayout = (LinearLayout) findViewById(R.id.personUI_logoutLayout);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         cleanLayout.setOnClickListener(this);
         checkLayout.setOnClickListener(this);
         aboutUsLayout.setOnClickListener(this);
@@ -103,7 +103,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
 

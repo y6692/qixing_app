@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +44,7 @@ public class CreditRecordActivity extends SwipeBackActivity implements View.OnCl
 
     private Context context;
 
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
 
 
@@ -77,7 +78,7 @@ public class CreditRecordActivity extends SwipeBackActivity implements View.OnCl
 
     private void initView(){
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("信用记录");
 
@@ -108,7 +109,7 @@ public class CreditRecordActivity extends SwipeBackActivity implements View.OnCl
         myAdapter.setDatas(datas);
         myList.setAdapter(myAdapter);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         footerLayout.setOnClickListener(this);
     }
 
@@ -143,7 +144,7 @@ public class CreditRecordActivity extends SwipeBackActivity implements View.OnCl
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
 

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +33,7 @@ public class ChangePasswordActivity extends SwipeBackActivity implements View.On
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
 
     private EditText oldPsdEdit,newPsdEdit,againNewPsdEdit;
@@ -52,7 +53,7 @@ public class ChangePasswordActivity extends SwipeBackActivity implements View.On
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("修改密码");
 
@@ -61,14 +62,14 @@ public class ChangePasswordActivity extends SwipeBackActivity implements View.On
         againNewPsdEdit = (EditText)findViewById(R.id.changePsdUI_againNewPsd);
         submitBtn = (Button)findViewById(R.id.changePsdUI_submitBtn);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.changePsdUI_submitBtn:

@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +40,7 @@ public class ChangePhoneNumActivity extends SwipeBackActivity implements View.On
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
 
     private EditText phoneNumEdit;
@@ -67,7 +68,7 @@ public class ChangePhoneNumActivity extends SwipeBackActivity implements View.On
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("改绑手机");
 
@@ -77,7 +78,7 @@ public class ChangePhoneNumActivity extends SwipeBackActivity implements View.On
         codeBtn = (Button) findViewById(R.id.change_phoneNumUI_noteCode);
         submitBtn = (Button) findViewById(R.id.change_phoneNumUI_submitBtn);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         codeBtn.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
     }
@@ -88,7 +89,7 @@ public class ChangePhoneNumActivity extends SwipeBackActivity implements View.On
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
         String telphone = phoneNumEdit.getText().toString();
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.change_phoneNumUI_noteCode:

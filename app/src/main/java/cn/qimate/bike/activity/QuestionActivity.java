@@ -46,7 +46,7 @@ public class QuestionActivity extends SwipeBackActivity implements View.OnClickL
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
 
     private RelativeLayout cleanLayout, checkLayout, aboutUsLayout, questionLayout;
@@ -66,7 +66,7 @@ public class QuestionActivity extends SwipeBackActivity implements View.OnClickL
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("意见反馈");
 
@@ -93,7 +93,7 @@ public class QuestionActivity extends SwipeBackActivity implements View.OnClickL
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
 

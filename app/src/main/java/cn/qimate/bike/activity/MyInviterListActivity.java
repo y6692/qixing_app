@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,7 +46,7 @@ public class MyInviterListActivity extends SwipeBackActivity implements View.OnC
         AdapterView.OnItemClickListener {
 
     private Context context;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
     // List
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -79,7 +80,7 @@ public class MyInviterListActivity extends SwipeBackActivity implements View.OnC
 
     private void initView(){
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("邀请人记录");
 
@@ -110,7 +111,7 @@ public class MyInviterListActivity extends SwipeBackActivity implements View.OnC
         myAdapter.setDatas(data);
         myList.setAdapter(myAdapter);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         footerLayout.setOnClickListener(this);
     }
 
@@ -145,7 +146,7 @@ public class MyInviterListActivity extends SwipeBackActivity implements View.OnC
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.footer_Layout:

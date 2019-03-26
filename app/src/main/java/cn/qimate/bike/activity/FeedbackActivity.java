@@ -34,6 +34,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,7 +98,7 @@ public class FeedbackActivity
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
@@ -214,7 +215,7 @@ public class FeedbackActivity
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("问题反馈");
 
@@ -252,7 +253,7 @@ public class FeedbackActivity
         myAdapter = new PhotoGridviewAdapter(context);
         photoMyGridview.setAdapter(myAdapter);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         Tag1.setOnClickListener(this);
         Tag2.setOnClickListener(this);
         Tag3.setOnClickListener(this);
@@ -398,7 +399,7 @@ public class FeedbackActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 closeBle();
 
                 scrollToFinishActivity();

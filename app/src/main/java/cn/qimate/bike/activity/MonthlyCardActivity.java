@@ -12,6 +12,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import cn.qimate.bike.R;
@@ -26,7 +27,7 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 public class MonthlyCardActivity extends SwipeBackActivity implements View.OnClickListener{
 
     private Context context;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
 
     private WebViewWithProgress mWebViewWithProgress;
@@ -44,7 +45,7 @@ public class MonthlyCardActivity extends SwipeBackActivity implements View.OnCli
     }
 
     private void initView(){
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         goPay = (Button) findViewById(R.id.ui_payMonth_cart_submitBtn);
 
@@ -68,7 +69,7 @@ public class MonthlyCardActivity extends SwipeBackActivity implements View.OnCli
 
         // 设置Web视图
         webview.loadUrl(link);
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         goPay.setOnClickListener(this);
 
         webview.setClickable(true);
@@ -124,7 +125,7 @@ public class MonthlyCardActivity extends SwipeBackActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.ui_payMonth_cart_submitBtn:

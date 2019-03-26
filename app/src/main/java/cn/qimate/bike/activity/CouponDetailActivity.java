@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,7 +53,7 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 public class CouponDetailActivity extends SwipeBackActivity implements View.OnClickListener {
 
     private Context context = this;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
     // List
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -77,6 +78,7 @@ public class CouponDetailActivity extends SwipeBackActivity implements View.OnCl
 
     private void initView() {
 
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("优惠券详情");
 
@@ -84,6 +86,7 @@ public class CouponDetailActivity extends SwipeBackActivity implements View.OnCl
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
+        ll_back.setOnClickListener(this);
     }
 
 
@@ -97,7 +100,7 @@ public class CouponDetailActivity extends SwipeBackActivity implements View.OnCl
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
 

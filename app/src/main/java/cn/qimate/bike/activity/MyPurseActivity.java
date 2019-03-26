@@ -42,7 +42,7 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
 
     private RelativeLayout headLayout;
@@ -72,7 +72,7 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("我的钱包");
 
@@ -107,7 +107,7 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
         negativeButton = (Button)dialogView.findViewById(R.id.pop_circlesMenu_negativeButton);
         codeEdit.setHint("请输入兑换码");
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         rechargeBtn.setOnClickListener(this);
         activationBtn.setOnClickListener(this);
         positiveButton.setOnClickListener(this);
@@ -120,7 +120,7 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.myPurseUI_rechargeBtn:

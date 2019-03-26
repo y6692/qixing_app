@@ -56,7 +56,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
 
     private LinearLayout headLayout;
@@ -86,7 +86,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("快捷登录");
 
@@ -107,7 +107,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         loginBtn = (Button) findViewById(R.id.noteLoginUI_btn);
         findPsd = (TextView) findViewById(R.id.noteLoginUI_findPsd);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         codeBtn.setOnClickListener(this);
         loginBtn.setOnClickListener(this);
         findPsd.setOnClickListener(this);
@@ -117,7 +117,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
     public void onClick(View v) {
         String telphone = userNameEdit.getText().toString();
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.noteLoginUI_noteCode:

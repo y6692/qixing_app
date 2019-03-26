@@ -62,7 +62,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
     private TextView rightBtn;
 
@@ -93,7 +93,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
         tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("登录");
         rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
@@ -134,7 +134,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
             }
         });
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
         loginBtn.setOnClickListener(this);
         noteLogin.setOnClickListener(this);
@@ -145,7 +145,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.mainUI_title_rightBtn:

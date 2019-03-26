@@ -11,6 +11,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import cn.qimate.bike.R;
@@ -24,7 +25,7 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 public class WebviewActivity extends SwipeBackActivity implements View.OnClickListener{
 
     private Context context;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
 
     private WebViewWithProgress mWebViewWithProgress;
@@ -42,7 +43,7 @@ public class WebviewActivity extends SwipeBackActivity implements View.OnClickLi
 
     private void initView(){
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText(getIntent().getExtras().getString("title"));
 
@@ -64,7 +65,7 @@ public class WebviewActivity extends SwipeBackActivity implements View.OnClickLi
 
         // 设置Web视图
         webview.loadUrl(link);
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
 
 
         webview.setClickable(true);
@@ -120,7 +121,7 @@ public class WebviewActivity extends SwipeBackActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
         }

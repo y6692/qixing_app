@@ -44,7 +44,7 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 public class MyCommissionActivity extends SwipeBackActivity implements View.OnClickListener {
 
-    private ImageView backBtn;
+    private LinearLayout ll_back;
     private TextView titleText;
     private TextView moneyText;
     private Button withdrawBtn;
@@ -76,7 +76,7 @@ public class MyCommissionActivity extends SwipeBackActivity implements View.OnCl
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backBtn = (ImageView)findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         titleText = (TextView) findViewById(R.id.mainUI_title_titleText);
         moneyText = (TextView) findViewById(R.id.ui_myCommision_moneyText);
         withdrawBtn = (Button) findViewById(R.id.ui_myCommision_withdrawBtn);
@@ -98,7 +98,7 @@ public class MyCommissionActivity extends SwipeBackActivity implements View.OnCl
     }
     private void initListener() {
 
-        backBtn.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         withdrawBtn.setOnClickListener(this);
     }
 
@@ -134,7 +134,7 @@ public class MyCommissionActivity extends SwipeBackActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.ui_myCommision_withdrawBtn:

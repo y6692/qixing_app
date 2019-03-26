@@ -85,7 +85,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
@@ -187,7 +187,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         pvOptions1.setTitle("选择性别");
         pvOptions2.setTitle("选择入学时间");
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("实名认证");
 
@@ -221,7 +221,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         if (schoolList.isEmpty() || item1.isEmpty()){
             getSchoolList();
         }
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         schoolLayout.setOnClickListener(this);
         sexLatout.setOnClickListener(this);
         classLayout.setOnClickListener(this);
@@ -291,7 +291,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.ui_realNameAuth_schoolLayout:

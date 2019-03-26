@@ -56,7 +56,7 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
     private TextView rightBtn;
 
@@ -118,7 +118,7 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
 
         oid = getIntent().getExtras().getString("oid");
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("行程详情");
         rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
@@ -160,7 +160,7 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
         mAMap.moveCamera(cameraUpdate);
 //        myOrdermap();
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
 //        submitBtn.setOnClickListener(this);
 
@@ -255,7 +255,7 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
 
                 new Thread(new Runnable() {

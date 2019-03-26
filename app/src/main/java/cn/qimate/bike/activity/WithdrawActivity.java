@@ -48,7 +48,7 @@ public class WithdrawActivity extends SwipeBackActivity implements View.OnClickL
     private Activity mActivity;
     private LoadingDialog loadingDialog;
 
-    private ImageView backBtn;
+    private LinearLayout ll_back;
     private TextView titleText;
     private LinearLayout headLayout;
     private TextView nameText;
@@ -81,7 +81,7 @@ public class WithdrawActivity extends SwipeBackActivity implements View.OnClickL
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backBtn = (ImageView)findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         titleText = (TextView) findViewById(R.id.mainUI_title_titleText);
         titleText.setText("佣金提现");
 
@@ -104,7 +104,7 @@ public class WithdrawActivity extends SwipeBackActivity implements View.OnClickL
     }
     private void initListener(){
 
-        backBtn.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         headLayout.setOnClickListener(this);
         totalWithdrawBtn.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
@@ -114,7 +114,7 @@ public class WithdrawActivity extends SwipeBackActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.ui_withdraw_headLayout:

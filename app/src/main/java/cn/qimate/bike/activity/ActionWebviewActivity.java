@@ -9,6 +9,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +32,7 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 public class ActionWebviewActivity extends SwipeBackActivity implements View.OnClickListener{
 
     private Context context;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
     private ImageView rightBtn;
 
@@ -52,7 +53,7 @@ public class ActionWebviewActivity extends SwipeBackActivity implements View.OnC
 
     private void initView(){
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText(getIntent().getExtras().getString("title"));
         rightBtn = (ImageView)findViewById(R.id.ui_webView_title_rightBtn);
@@ -76,14 +77,14 @@ public class ActionWebviewActivity extends SwipeBackActivity implements View.OnC
         // 设置Web视图
         webview.loadUrl(link);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.ui_webView_title_rightBtn:

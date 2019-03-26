@@ -50,7 +50,7 @@ public class RegisterActivity extends SwipeBackActivity implements View.OnClickL
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
     private TextView rightBtn;
 
@@ -83,7 +83,7 @@ public class RegisterActivity extends SwipeBackActivity implements View.OnClickL
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("注册");
         rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
@@ -122,7 +122,7 @@ public class RegisterActivity extends SwipeBackActivity implements View.OnClickL
             }
         });
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
         codeBtn.setOnClickListener(this);
         registerBtn.setOnClickListener(this);
@@ -134,7 +134,7 @@ public class RegisterActivity extends SwipeBackActivity implements View.OnClickL
 
         String telphone = userNameEdit.getText().toString();
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.mainUI_title_rightBtn:

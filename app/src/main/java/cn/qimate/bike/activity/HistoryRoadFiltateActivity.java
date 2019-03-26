@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +27,7 @@ public class HistoryRoadFiltateActivity extends SwipeBackActivity implements Vie
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
     private TextView rightBtn;
 
@@ -54,7 +55,7 @@ public class HistoryRoadFiltateActivity extends SwipeBackActivity implements Vie
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("行程查询");
 //        backImg.setImageResource(R.drawable.back_icon);
@@ -113,7 +114,7 @@ public class HistoryRoadFiltateActivity extends SwipeBackActivity implements Vie
             }
         });
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         lastMonth.setOnClickListener(this);
         nextMonth.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
@@ -122,7 +123,7 @@ public class HistoryRoadFiltateActivity extends SwipeBackActivity implements Vie
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.mainUI_title_rightBtn:

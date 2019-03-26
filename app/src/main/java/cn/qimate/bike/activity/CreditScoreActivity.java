@@ -6,6 +6,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +36,7 @@ public class CreditScoreActivity extends SwipeBackActivity implements View.OnCli
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
     private TextView rightBtn;
 
@@ -62,7 +63,7 @@ public class CreditScoreActivity extends SwipeBackActivity implements View.OnCli
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("信用分");
         rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
@@ -73,7 +74,7 @@ public class CreditScoreActivity extends SwipeBackActivity implements View.OnCli
 
         rl_rule = (RelativeLayout)findViewById(R.id.rl_rule);
 //
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
         rl_rule.setOnClickListener(this);
 //        initHttp();
@@ -99,7 +100,7 @@ public class CreditScoreActivity extends SwipeBackActivity implements View.OnCli
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
 

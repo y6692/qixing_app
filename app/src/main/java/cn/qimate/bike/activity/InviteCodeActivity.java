@@ -44,7 +44,7 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 public class InviteCodeActivity extends SwipeBackActivity implements View.OnClickListener {
 
-    private ImageView backImage;
+    private LinearLayout ll_back;
     private TextView codeText;
     private TextView redPacketText;
     private TextView countText;
@@ -77,7 +77,7 @@ public class InviteCodeActivity extends SwipeBackActivity implements View.OnClic
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backImage = (ImageView)findViewById(R.id.ui_inviteCode_backImage);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         codeText = (TextView) findViewById(R.id.ui_inviteCode_codeText);
         redPacketText = (TextView) findViewById(R.id.ui_inviteCode_redPacketText);
         countText = (TextView) findViewById(R.id.ui_inviteCode_countText);
@@ -90,7 +90,7 @@ public class InviteCodeActivity extends SwipeBackActivity implements View.OnClic
 
 
     private void initListener(){
-        backImage.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         countLayout.setOnClickListener(this);
         redPacketLayout.setOnClickListener(this);
         inviteBtn.setOnClickListener(this);
@@ -106,7 +106,7 @@ public class InviteCodeActivity extends SwipeBackActivity implements View.OnClic
             return;
         }
         switch (v.getId()){
-            case R.id.ui_inviteCode_backImage:
+            case R.id.ll_back:
                 if (isBack){
                     scrollToFinishActivity();
                 }else {

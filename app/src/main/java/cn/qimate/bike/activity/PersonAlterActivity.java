@@ -90,7 +90,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
     private Context context;
     private LoadingDialog loadingDialog;
     private PullToZoomScrollViewEx scrollView;
-    private ImageView backImage;
+    private LinearLayout ll_back;
     private ImageView settingImage;
     private ImageView headerImageView;
     private ImageView authState;
@@ -184,7 +184,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
         pickPhotoBtn.setOnClickListener(itemsOnClick);
         cancelBtn.setOnClickListener(itemsOnClick);
 
-        backImage = scrollView.getPullRootView().findViewById(R.id.personUI_backImage);
+        ll_back = scrollView.getPullRootView().findViewById(R.id.ll_back);
         settingImage = scrollView.getPullRootView().findViewById(R.id.personUI_title_settingBtn);
         headerImageView =scrollView.getPullRootView().findViewById(R.id.personUI_bottom_header);
         authState = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_authState);
@@ -235,7 +235,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
         params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
         exImage_3.setLayoutParams(params3);
 
-        backImage.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         settingImage.setOnClickListener(this);
         headerImageView.setOnClickListener(this);
         curRouteLayout.setOnClickListener(this);
@@ -732,7 +732,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
             return;
         }
         switch (v.getId()) {
-            case R.id.personUI_backImage:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.personUI_title_settingBtn:

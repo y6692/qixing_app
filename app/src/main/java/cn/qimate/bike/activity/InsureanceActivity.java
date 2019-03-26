@@ -91,7 +91,7 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
     private boolean isAgree = true;
     private String cardfile = "";
 
-    private ImageView backBtn;
+    private LinearLayout ll_back;
     private TextView titleText;
     private TextView realNameText;
     private EditText certificateNumEdit;
@@ -125,7 +125,7 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backBtn = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         titleText = (TextView)findViewById(R.id.mainUI_title_titleText);
         realNameText = (TextView)findViewById(R.id.ui_insurance_realNameText);
         certificateNumEdit = (EditText)findViewById(R.id.ui_insurance_certificateNumEdit);
@@ -156,7 +156,7 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
 
     private void initListener() {
 
-        backBtn.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         certificateImage.setOnClickListener(this);
         dealImage.setOnClickListener(this);
         dealText.setOnClickListener(this);
@@ -171,7 +171,7 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 if (isBack){
                     scrollToFinishActivity();
                 }else {

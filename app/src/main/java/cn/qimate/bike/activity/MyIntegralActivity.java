@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import cn.qimate.bike.R;
 import cn.qimate.bike.fragment.MyIntegralRecordFragment;
@@ -21,7 +22,7 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 public class MyIntegralActivity extends SwipeBackActivity implements View.OnClickListener {
 
     private Context context;
-    private ImageView backImage;
+    private LinearLayout ll_back;
     private Button leftBtn,rightBtn;
 
     private MyIntegralRecordFragment recordFragment;
@@ -39,14 +40,14 @@ public class MyIntegralActivity extends SwipeBackActivity implements View.OnClic
 
     private void initView(){
 
-        backImage = (ImageView)findViewById(R.id.myIntegralUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         leftBtn = (Button)findViewById(R.id.myIntegralUI_recordBtn);
         rightBtn = (Button)findViewById(R.id.myIntegralUI_ruleBtn);
 
         recordFragment = new MyIntegralRecordFragment();
         ruleFragment = new MyIntegralRuleFragment();
 
-        backImage.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         leftBtn.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
 
@@ -78,7 +79,7 @@ public class MyIntegralActivity extends SwipeBackActivity implements View.OnClic
     public void onClick(View v) {
 
         switch (v.getId()){
-            case R.id.myIntegralUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.myIntegralUI_recordBtn:

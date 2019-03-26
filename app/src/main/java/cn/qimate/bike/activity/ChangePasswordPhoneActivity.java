@@ -6,6 +6,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.qimate.bike.R;
@@ -20,7 +21,7 @@ public class ChangePasswordPhoneActivity extends SwipeBackActivity implements Vi
 
     private Context context;
     private TextView title;
-    private ImageView backImg;
+    private LinearLayout ll_back;
 
     private RelativeLayout passwordLayout;
     private RelativeLayout phoneLayout;
@@ -34,14 +35,14 @@ public class ChangePasswordPhoneActivity extends SwipeBackActivity implements Vi
     }
 
     private void initView(){
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("修改密码、手机号");
 
         passwordLayout = (RelativeLayout)findViewById(R.id.settingUI_passwordLayout);
         phoneLayout = (RelativeLayout)findViewById(R.id.settingUI_phoneLayout);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         passwordLayout.setOnClickListener(this);
         phoneLayout.setOnClickListener(this);
     }
@@ -51,7 +52,7 @@ public class ChangePasswordPhoneActivity extends SwipeBackActivity implements Vi
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.settingUI_passwordLayout:

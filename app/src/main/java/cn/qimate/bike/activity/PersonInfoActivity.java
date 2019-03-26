@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +47,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
 //    private TextView rightBtn;
 
@@ -131,7 +132,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 //        pvOptions1.setTitle("选择性别");
 //        pvOptions2.setTitle("选择年级");
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("个人信息");
 //        rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
@@ -160,7 +161,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 //            getSchoolList();
 //        }
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         rl_name.setOnClickListener(this);
         rl_phoneNum.setOnClickListener(this);
         rl_realNameAuth.setOnClickListener(this);
@@ -268,7 +269,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
 

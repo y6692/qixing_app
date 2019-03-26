@@ -58,7 +58,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
     private IWXAPI api;
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
     private RelativeLayout headLayout;
     private TextView moneyText;
@@ -132,7 +132,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
 //        tagFlowLayout.setAdapter(tagAdapter);
 
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("购买月卡");
         headLayout = (RelativeLayout) findViewById(R.id.ui_payMonth_cart_headLayout);
@@ -176,7 +176,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
         days3Text = (TextView)findViewById(R.id.ui_payMonth_cart_days3Text);
 
         submitBtn = (Button)findViewById(R.id.ui_payMonth_cart_submitBtn);
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         moreLayout.setOnClickListener(this);
         alipayTypeLayout.setOnClickListener(this);
         WeChatTypeLayout.setOnClickListener(this);
@@ -192,7 +192,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.ui_payMonth_cart_moreLayout:
