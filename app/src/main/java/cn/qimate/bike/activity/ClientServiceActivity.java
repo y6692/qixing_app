@@ -82,6 +82,8 @@ import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 /**
  * Created by Administrator1 on 2017/7/20.
  */
@@ -148,7 +150,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         imageUrlList = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+            if (checkPermission != PERMISSION_GRANTED) {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                     requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },0);
                 } else {
@@ -310,8 +312,45 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                 break;
 
             case R.id.mainUI_title_rightBtn:
-                Intent intent = new Intent(context, ServiceCenterActivity.class);
-                startActivityForResult(intent,0);
+                if (Build.VERSION.SDK_INT >= 23) {
+                    int checkPermission = checkSelfPermission(Manifest.permission.CALL_PHONE);
+                    if (checkPermission != PERMISSION_GRANTED) {
+                        if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
+                            requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
+                        } else {
+                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开拨打电话权限！")
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                        }
+                                    }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
+                                }
+                            });
+                            customBuilder.create().show();
+                        }
+                        return;
+                    }
+                }
+                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                customBuilder.setTitle("温馨提示").setMessage("确认拨打" + "0519-86999222" + "吗?")
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        Intent intent=new Intent();
+                        intent.setAction(Intent.ACTION_CALL);
+                        intent.setData(Uri.parse("tel:" + "0519-86999222"));
+                        startActivity(intent);
+                    }
+                });
+                customBuilder.create().show();
                 break;
 
             case R.id.feedbackUI_type_Tag1:
@@ -850,7 +889,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                 case R.id.takePhotoBtn:
                     if (Build.VERSION.SDK_INT >= 23) {
                         int checkPermission = context.checkSelfPermission(Manifest.permission.CAMERA);
-                        if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+                        if (checkPermission != PERMISSION_GRANTED) {
                             if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
                                 requestPermissions(new String[] { Manifest.permission.CAMERA }, 101);
                             } else {
@@ -913,7 +952,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case 0:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED) {
                     initView();
                 }else {
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
@@ -938,7 +977,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                 }
                 break;
             case 101:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults[0] == PERMISSION_GRANTED) {
                     // Permission Granted
                     if (permissions[0].equals(Manifest.permission.CAMERA)) {
 

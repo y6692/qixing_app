@@ -117,6 +117,7 @@ import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 @SuppressLint("NewApi")
 public class MineFragment extends BaseFragment implements View.OnClickListener{
@@ -131,6 +132,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
     private LoadingDialog loadingDialog;
     private PullToZoomScrollViewEx scrollView;
+    private TextView rightBtn;
     private ImageView backImage;
     private ImageView settingImage;
     private ImageView headerImageView;
@@ -257,6 +259,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         pickPhotoBtn.setOnClickListener(itemsOnClick);
         cancelBtn.setOnClickListener(itemsOnClick);
 
+        rightBtn = (TextView) getActivity().findViewById(R.id.personUI_rightBtn);
         backImage = getActivity().findViewById(R.id.personUI_backImage);
         settingImage = getActivity().findViewById(R.id.personUI_title_settingBtn);
         headerImageView = getActivity().findViewById(R.id.personUI_bottom_header);
@@ -311,6 +314,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
         exImage_3.setLayoutParams(params3);
 
+        rightBtn.setOnClickListener(this);
 //        backImage.setOnClickListener(this);
 //        settingImage.setOnClickListener(this);
         headerImageView.setOnClickListener(this);
@@ -809,6 +813,48 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             return;
         }
         switch (v.getId()) {
+            case R.id.personUI_rightBtn:
+                if (Build.VERSION.SDK_INT >= 23) {
+                    int checkPermission = getActivity().checkSelfPermission(Manifest.permission.CALL_PHONE);
+                    if (checkPermission != PERMISSION_GRANTED) {
+                        if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
+                            requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
+                        } else {
+                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开拨打电话权限！")
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                        }
+                                    }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
+                                }
+                            });
+                            customBuilder.create().show();
+                        }
+                        return;
+                    }
+                }
+                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                customBuilder.setTitle("温馨提示").setMessage("确认拨打" + "0519-86999222" + "吗?")
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        Intent intent=new Intent();
+                        intent.setAction(Intent.ACTION_CALL);
+                        intent.setData(Uri.parse("tel:" + "0519-86999222"));
+                        startActivity(intent);
+                    }
+                });
+                customBuilder.create().show();
+                break;
+
             case R.id.personUI_backImage:
                 scrollToFinishActivity();
                 break;
@@ -879,7 +925,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 builder.create().show();
                 break;
             case R.id.personUI_logoutLayout:
-                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                customBuilder = new CustomDialog.Builder(context);
                 customBuilder.setTitle("温馨提示").setMessage("确认退出吗?")
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
