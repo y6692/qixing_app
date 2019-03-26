@@ -315,8 +315,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener,
         ToastUtil.showMessage(context, SharedPreferencesUrls.getInstance().getString("userName", "") + "===" + SharedPreferencesUrls.getInstance().getString("uid", "") + "<==>" + SharedPreferencesUrls.getInstance().getString("access_token", ""));
 
         customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
+        customBuilder.setType(1).setTitle("异常订单已反馈成功").setMessage("本次骑行将正常结算，您的账户将在客服核实后恢复正常。\n客服电话：0519-86999222");
         customDialog = customBuilder.create();
+
+
 
         CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
         customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
@@ -2477,7 +2479,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener,
                         } else {
                             customDialog.dismiss();
                         }
-
 
                     } else {
                         ToastUtil.showMessageApp(context, result.getMsg());
