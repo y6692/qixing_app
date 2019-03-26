@@ -33,7 +33,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -86,12 +85,12 @@ import cn.qimate.bike.util.UtilScreenCapture;
  * Created by Administrator1 on 2017/7/20.
  */
 @SuppressLint("NewApi")
-public class ClientServiceActivity extends SwipeBackActivity implements View.OnClickListener {
+public class ExceptionServiceActivity extends SwipeBackActivity implements View.OnClickListener {
 
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = new AMapLocationClientOption();
 
-    private TextView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6,Tag7;
+    private TextView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6;
     private EditText restCauseEdit;
 
     private boolean isSelected1 = false;
@@ -103,16 +102,15 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private LinearLayout ll_back;
+    private ImageView backImg;
     private TextView title;
-    private TextView rightBtn;
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
     private TextView codeNum;
 
     private PhotoGridviewAdapter myAdapter;
     private MyGridView photoMyGridview;
-    private LinearLayout submitBtn;
+    private Button submitBtn;
 
     private List<String> TagsList;
     private List<String> imageUrlList;
@@ -142,7 +140,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_client_service);
+        setContentView(R.layout.ui_client_service);
         context = this;
         TagsList = new ArrayList<>();
         imageUrlList = new ArrayList<>();
@@ -162,7 +160,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                             }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
-                            ClientServiceActivity.this.requestPermissions(
+                            ExceptionServiceActivity.this.requestPermissions(
                                     new String[] { Manifest.permission.ACCESS_FINE_LOCATION },0);
                         }
                     });
@@ -186,16 +184,12 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         Tag4 = (TextView)findViewById(R.id.feedbackUI_type_Tag4);
         Tag5 = (TextView)findViewById(R.id.feedbackUI_type_Tag5);
         Tag6 = (TextView)findViewById(R.id.feedbackUI_type_Tag6);
-        Tag7 = (TextView)findViewById(R.id.feedbackUI_type_Tag6);
 
         restCauseEdit = (EditText)findViewById(R.id.feedbackUI_restCause);
 
-        ll_back = (LinearLayout) findViewById(R.id.ll_back);
+        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
-        title.setText("借还车异常");
-        rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
-        rightBtn.setText("在线客服");
-
+        title.setText("问题反馈");
         imageUri = Uri.parse("file:///sdcard/temp.jpg");
         iv_popup_window_back = (ImageView)findViewById(R.id.popupWindow_back);
         rl_popup_window = (RelativeLayout)findViewById(R.id.popupWindow);
@@ -209,16 +203,15 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         cancelBtn.setOnClickListener(itemsOnClick);
 
         codeNum = (TextView)findViewById(R.id.ui_client_service_codeNum);
-        codeNum.setText("单车编号："+getIntent().getExtras().getString("bikeCode"));
+        codeNum.setText("车辆编号："+getIntent().getExtras().getString("bikeCode"));
 
         photoMyGridview = (MyGridView)findViewById(R.id.ui_client_service_photoGridView);
-        submitBtn = (LinearLayout)findViewById(R.id.ui_client_service_submitBtn);
+        submitBtn = (Button)findViewById(R.id.ui_client_service_submitBtn);
 
         myAdapter = new PhotoGridviewAdapter(context);
         photoMyGridview.setAdapter(myAdapter);
 
-        ll_back.setOnClickListener(this);
-        rightBtn.setOnClickListener(this);
+        backImg.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
         Tag1.setOnClickListener(this);
@@ -227,7 +220,6 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         Tag4.setOnClickListener(this);
         Tag5.setOnClickListener(this);
         Tag6.setOnClickListener(this);
-        Tag7.setOnClickListener(this);
 
         restCauseEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -270,7 +262,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                 if (position == imageUrlList.size()) {
                     clickPopupWindow();
                 }else {
-                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(ClientServiceActivity.this);
+                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(ExceptionServiceActivity.this);
                     customBuilder.setTitle("温馨提示").setMessage("确认删除图片吗?")
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -304,14 +296,9 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.ll_back:
+            case R.id.mainUI_title_backBtn:
                 UIHelper.goToAct(context, CurRoadBikingActivity.class);
                 scrollToFinishActivity();
-                break;
-
-            case R.id.mainUI_title_rightBtn:
-                Intent intent = new Intent(context, ServiceCenterActivity.class);
-                startActivityForResult(intent,0);
                 break;
 
             case R.id.feedbackUI_type_Tag1:
@@ -607,7 +594,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
             case REQUESTCODE_PICK:// 直接从相册获取
                 if (data != null){
                     try {
-                        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                             if (imageUri != null) {
                                 urlpath = getRealFilePath(context, data.getData());
                                 if (loadingDialog != null && !loadingDialog.isShowing()) {
@@ -626,7 +613,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                 }
                 break;
             case REQUESTCODE_TAKE:// 调用相机拍照
-                if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                     File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
                     if (Uri.fromFile(temp) != null) {
                         urlpath = getRealFilePath(context, Uri.fromFile(temp));
@@ -864,7 +851,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.cancel();
 
-                                        ClientServiceActivity.this.requestPermissions(new String[] { Manifest.permission.CAMERA },
+                                        ExceptionServiceActivity.this.requestPermissions(new String[] { Manifest.permission.CAMERA },
                                                 101);
 
                                     }
@@ -874,7 +861,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                             return;
                         }
                     }
-                    if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                         Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, RxFileTool.getUriForFile(context,
@@ -942,10 +929,10 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                     // Permission Granted
                     if (permissions[0].equals(Manifest.permission.CAMERA)) {
 
-                        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                             Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(ClientServiceActivity.this,
+                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(ExceptionServiceActivity.this,
                                         BuildConfig.APPLICATION_ID + ".provider",
                                         new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
                                 takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -1084,7 +1071,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                     longitude = loc.getLongitude();
                     stopLocation();
                 }else {
-                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(ClientServiceActivity.this);
+                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(ExceptionServiceActivity.this);
                     customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {

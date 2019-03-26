@@ -134,7 +134,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private  LoadingDialog loadingDialog2;
     private  LoadingDialog lockLoading;
     private LinearLayout mainLayout;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
     private TextView rightBtn;
 
@@ -815,9 +815,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
     }
 
-    /**
-     * 方法必须重写
-     */
     @Override
     protected void onDestroy() {
 //          isStop = true;
@@ -974,17 +971,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
         mainLayout = (LinearLayout)findViewById(R.id.mainUI_title_mainLayout);
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
+        rightBtn = (TextView)findViewById(R.id.mainUI_rightBtn);
+
 //        title = (TextView) findViewById(R.id.mainUI_title_titleText);
 //        title.setText("骑行中");
-//        rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
 //        rightBtn.setText("无法结束用车?");
 //        RelativeLayout.LayoutParams params4 = (RelativeLayout.LayoutParams)rightBtn.getLayoutParams();
 //        params4.setMargins(0,DisplayUtil.dip2px(context,8),DisplayUtil.dip2px(context,10),DisplayUtil.dip2px(context,8));
 //        rightBtn.setLayoutParams(params4);
 //        rightBtn.setBackgroundColor(getResources().getColor(R.color.white));
 //        rightBtn.setTextColor(getResources().getColor(R.color.ui_main));
-//        rightBtn.setOnClickListener(this);
 //        rightBtn.setTextSize(16);
 
         switcher = (Switch) findViewById(R.id.switcher);
@@ -1041,7 +1038,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
         exImage_3.setLayoutParams(params3);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
+        rightBtn.setOnClickListener(this);
         ll_lookPsdBtn.setOnClickListener(this);
         switcher.setOnClickListener(this);
         roleLayout.setOnClickListener(this);
@@ -1094,11 +1092,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
-            case R.id.mainUI_title_rightBtn:
-                Intent intent = new Intent(context,ClientServiceActivity.class);
+            case R.id.mainUI_rightBtn:
+                Intent intent = new Intent(context, ClientServiceActivity.class);
                 intent.putExtra("bikeCode",bikeCode);
                 startActivity(intent);
                 scrollToFinishActivity();

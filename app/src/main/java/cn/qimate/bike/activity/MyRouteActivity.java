@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +43,7 @@ public class MyRouteActivity extends SwipeBackActivity implements View.OnClickLi
         AdapterView.OnItemClickListener {
 
     private Context context;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
     private TextView rightBtn;
     // List
@@ -77,7 +78,7 @@ public class MyRouteActivity extends SwipeBackActivity implements View.OnClickLi
 
     private void initView(){
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("我的行程");
         rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
@@ -110,7 +111,7 @@ public class MyRouteActivity extends SwipeBackActivity implements View.OnClickLi
         myAdapter.setDatas(data);
         myList.setAdapter(myAdapter);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
         footerLayout.setOnClickListener(this);
     }
@@ -148,7 +149,7 @@ public class MyRouteActivity extends SwipeBackActivity implements View.OnClickLi
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.mainUI_title_rightBtn:
