@@ -117,6 +117,7 @@ import cn.qimate.bike.activity.MyPurseActivity;
 import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.activity.PersonAlterActivity;
 import cn.qimate.bike.activity.RealNameAuthActivity;
+import cn.qimate.bike.activity.ReportViolationActivity;
 import cn.qimate.bike.activity.ServiceCenterActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;
@@ -2776,16 +2777,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener,
                         UIHelper.goToAct(context, FaultReportActivity.class);
                         break;
                     case R.id.pop_menu_helpLayout:
-//                        WindowManager windowManager = getActivity().getWindowManager();
-//                        Display display = windowManager.getDefaultDisplay();
-//                        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-//                        lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-//                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-//                        dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-//                        dialog.getWindow().setAttributes(lp);
-//                        dialog.show();
-
-                        UIHelper.goToAct(context, FeedbackActivity.class);
+                        UIHelper.goToAct(context, ReportViolationActivity.class);
                         break;
                     case R.id.pop_menu_callLayout:
                         UIHelper.goToAct(context, ServiceCenterActivity.class);
