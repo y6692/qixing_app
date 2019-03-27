@@ -77,6 +77,7 @@ import cn.qimate.bike.core.widget.MyGridView;
 import cn.qimate.bike.img.NetUtil;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
@@ -476,6 +477,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     private void submit(){
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        String other = restCauseEdit.getText().toString().trim();
         RequestParams params = new RequestParams();
         if (uid != null && !"".equals(uid)){
             params.put("uid",uid);
@@ -483,11 +485,38 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         if (access_token != null && !"".equals(access_token)){
             params.put("access_token",access_token);
         }
+
+
+        String content = "";
+        if (TagsList.size() != 0 && !TagsList.isEmpty()){
+            if (other != null && !"".equals(other)){
+                for (int i = 0; i < TagsList.size(); i++){
+                    content = content + TagsList.get(i)+",";
+                }
+                content = content + other+ "。";
+            }else {
+                for (int i = 0;i<TagsList.size();i++){
+                    if (i != TagsList.size() - 1){
+                        content = content + TagsList.get(i)+",";
+                    }else {
+                        content = content + TagsList.get(i)+ "。";
+                    }
+                }
+            }
+        }else {
+            content = other + "。";
+        }
+        if (content == null || "".equals(content)){
+            ToastUtil.showMessageApp(context,"请选择问题类型或者描述问题");
+            return;
+        }
+
         if (imageUrlList.size() == 0 || imageUrlList.isEmpty()){
             Toast.makeText(context,"至少上传一张图片",Toast.LENGTH_SHORT).show();
             return;
         }
-        params.put("content","关锁后无法结束");
+
+        params.put("content", content);
         params.put("bike_code",getIntent().getExtras().getString("bikeCode"));
         params.put("desc_img",imageUrlList);
         params.put("latitude", latitude);
