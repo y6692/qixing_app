@@ -41,7 +41,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/personUI_bottom_myMsgLayout0"
+            android:id="@+id/rl_payCart"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -100,7 +100,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/personUI_bottom_myMsgLayout"
+            android:id="@+id/rl_payCart2"
             android:layout_width="match_parent"
             android:layout_height="56dp">
 

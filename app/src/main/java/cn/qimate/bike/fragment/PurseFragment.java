@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import butterknife.Unbinder;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.PayCartActivity;
 import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.base.BaseViewAdapter;
@@ -60,6 +62,9 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener{
     private Context context;
 
     private TextView title;
+
+    private RelativeLayout rl_payCart;
+    private RelativeLayout rl_payCart2;
 
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,6 +99,12 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener{
 //        title = (TextView) getActivity().findViewById(R.id.mainUI_title_titleText);
 //        title.setText("我的钱包");
 
+        rl_payCart = (RelativeLayout) getActivity().findViewById(R.id.rl_payCart);
+        rl_payCart2 = (RelativeLayout) getActivity().findViewById(R.id.rl_payCart2);
+
+        rl_payCart.setOnClickListener(this);
+        rl_payCart2.setOnClickListener(this);
+
 //        loadingDialog = new LoadingDialog(context);
 //        loadingDialog.setCancelable(false);
 //        loadingDialog.setCanceledOnTouchOutside(false);
@@ -108,6 +119,22 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener{
 
     }
 
+    @Override
+    public void onClick(View v) {
+        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        switch (v.getId()){
+
+            case R.id.rl_payCart:
+            case R.id.rl_payCart2:
+                UIHelper.goToAct(context, PayCartActivity.class);
+//                scrollToFinishActivity();
+                break;
+
+            default:
+                break;
+        }
+    }
 
 
     private void initHttp(){
@@ -156,13 +183,6 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener{
         });
     }
 
-
-
-
-
-
-
-
     @Override
     public void onResume() {
         super.onResume();
@@ -170,16 +190,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener{
 
 
 
-    @Override
-    public void onClick(View v) {
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        switch (v.getId()){
 
-            default:
-                break;
-        }
-    }
 
     @Override
     public void onPause() {
