@@ -70,19 +70,7 @@ public class DensityFreeManageActivity extends SwipeBackActivity implements View
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("免密管理");
 
-
-//        cleanLayout = (RelativeLayout) findViewById(R.id.personUI_bottom_cleanLayout);
-//        checkLayout = (RelativeLayout) findViewById(R.id.personUI_bottom_checkLayout);
-//        aboutUsLayout = (RelativeLayout) findViewById(R.id.personUI_bottom_aboutUsLayout);
-//        questionLayout = (RelativeLayout) findViewById(R.id.personUI_bottom_questionLayout);
-//        logoutLayout = (LinearLayout) findViewById(R.id.personUI_logoutLayout);
-//
         ll_back.setOnClickListener(this);
-//        cleanLayout.setOnClickListener(this);
-//        checkLayout.setOnClickListener(this);
-//        aboutUsLayout.setOnClickListener(this);
-//        questionLayout.setOnClickListener(this);
-//        logoutLayout.setOnClickListener(this);
 //
 //        initHttp();
 

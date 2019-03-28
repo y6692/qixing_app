@@ -597,6 +597,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ui_payMonth_cart_submitBtn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="9"
@@ -609,7 +610,6 @@
                 android:textSize="@dimen/sp15"
                 android:textColor="@color/white"
                 android:text="确认购买"
-
                 />
 
         </LinearLayout>
