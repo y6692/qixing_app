@@ -22,7 +22,12 @@ import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MarkerOptions;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.shareboard.SnsPlatform;
+import com.umeng.socialize.utils.ShareBoardlistener;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -76,6 +81,8 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
 
     private MapView mMapView;
     private AMap mAMap;
+
+    private UMImage image;
 
     private String oid;
     public static boolean isForeground = false;
@@ -158,7 +165,8 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(25);// 设置缩放监听
         mAMap.moveCamera(cameraUpdate);
-//        myOrdermap();
+
+        myOrdermap();
 
         ll_back.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
@@ -168,42 +176,93 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
         initBannerHttp();
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.ll_back:
+                scrollToFinishActivity();
 
-//    private void myOrdermap(){
-//
-//        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-//        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-//        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-//            Toast.makeText(context,"请登录您的账号",Toast.LENGTH_SHORT).show();
-//            UIHelper.goToAct(context,LoginActivity.class);
-//        }else {
-//            RequestParams params = new RequestParams();
-//            params.put("uid",uid);
-//            params.put("access_token",access_token);
-//            params.put("oid",oid);
-//            HttpHelper.get(context, Urls.myOrdermap, params, new TextHttpResponseHandler() {
-//                @Override
-//                public void onStart() {
-//                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-//                        loadingDialog.setTitle("正在加载");
-//                        loadingDialog.show();
-//                    }
-//                }
-//                @Override
-//                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                    if (loadingDialog != null && loadingDialog.isShowing()){
-//                        loadingDialog.dismiss();
-//                    }
-//                    UIHelper.ToastError(context, throwable.toString());
-//                }
-//
-//                @Override
-//                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                    try {
-//                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-//                        if (result.getFlag().equals("Success")) {
-//                            if (result.getData() != null && !"".equals(result.getData())){
-//                                MapTraceBean bean = JSON.parseObject(result.getData(),MapTraceBean.class);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        m_myHandler.sendEmptyMessage(1);
+                    }
+                }).start();
+                break;
+
+            case R.id.mainUI_title_rightBtn:
+                new ShareAction(this).setDisplayList(SHARE_MEDIA.WEIXIN,
+                        SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.QQ,SHARE_MEDIA.QZONE).setShareboardclickCallback(shareBoardlistener)
+                        .open();
+
+            case R.id.history_roadDetailUI_submitBtn:
+                Intent intent = new Intent(context,MapTaceActivity.class);
+                intent.putExtra("oid",oid);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    private ShareBoardlistener shareBoardlistener = new ShareBoardlistener() {
+
+        @Override
+        public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
+            new ShareAction(RouteDetailActivity.this).setPlatform(share_media).setCallback(umShareListener)
+                    .withMedia(image).share();
+        }
+    };
+
+    private UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            Toast.makeText(context, "分享成功", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            Toast.makeText(context, " 分享失败啦", Toast.LENGTH_SHORT).show();
+        }
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            Toast.makeText(context, "分享取消啦", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private void myOrdermap(){
+
+        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+            Toast.makeText(context,"请登录您的账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context,LoginActivity.class);
+        }else {
+            RequestParams params = new RequestParams();
+            params.put("uid",uid);
+            params.put("access_token",access_token);
+            params.put("oid",oid);
+            HttpHelper.get(context, Urls.myOrdermap, params, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("正在加载");
+                        loadingDialog.show();
+                    }
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                        if (result.getFlag().equals("Success")) {
+                            if (result.getData() != null && !"".equals(result.getData())){
+                                MapTraceBean bean = JSON.parseObject(result.getData(),MapTraceBean.class);
 //                                if ("2".equals(bean.getShow_status())){
 //                                    Toast.makeText(context,"无行车轨迹",Toast.LENGTH_SHORT).show();
 //                                    scrollToFinishActivity();
@@ -227,51 +286,26 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
 //                                telText.setText(bean.getTelphone());
 //                                distanceText.setText(bean.getDistance());
 //                                timeText.setText(bean.getLongtimes());
-//                                if (bean.getShare_url().indexOf(Urls.HTTP) == -1){
-//                                    image = new UMImage(context, Urls.host+bean.getShare_url());
-//                                }else {
-//                                    image = new UMImage(context, bean.getShare_url());
-//                                }
-//                            }else {
-//                                Toast.makeText(context,"无历史行驶轨迹",Toast.LENGTH_SHORT).show();
-//                                scrollToFinishActivity();
-//                            }
-//                        } else {
-//                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-//                        }
-//                    } catch (Exception e) {
-//                        Log.e("Test","异常:"+e);
-//                    }
-//                    if (loadingDialog != null && loadingDialog.isShowing()){
-//                        loadingDialog.dismiss();
-//                    }
-//                }
-//            });
-//        }
-//    }
-
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.ll_back:
-                scrollToFinishActivity();
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        m_myHandler.sendEmptyMessage(1);
+                                if (bean.getShare_url().indexOf(Urls.HTTP) == -1){
+                                    image = new UMImage(context, Urls.host+bean.getShare_url());
+                                }else {
+                                    image = new UMImage(context, bean.getShare_url());
+                                }
+                            }else {
+                                Toast.makeText(context,"无历史行驶轨迹",Toast.LENGTH_SHORT).show();
+                                scrollToFinishActivity();
+                            }
+                        } else {
+                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Log.e("Test","异常:"+e);
                     }
-                }).start();
-
-
-                break;
-            case R.id.history_roadDetailUI_submitBtn:
-                Intent intent = new Intent(context,MapTaceActivity.class);
-                intent.putExtra("oid",oid);
-                startActivity(intent);
-                break;
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                }
+            });
         }
     }
 
