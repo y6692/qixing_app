@@ -2549,7 +2549,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 scrollToFinishActivity();
                             }else {
                                 BikeFragment.tz = 2;
-                                Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
+                                Intent intent = new Intent(context, RouteDetailActivity.class);
                                 intent.putExtra("oid",oid);
                                 startActivity(intent);
                             }

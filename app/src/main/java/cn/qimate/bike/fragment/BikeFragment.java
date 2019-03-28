@@ -109,7 +109,6 @@ import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadBikingActivity;
 import cn.qimate.bike.activity.FaultReportActivity;
 import cn.qimate.bike.activity.FeedbackActivity;
-import cn.qimate.bike.activity.HistoryRoadDetailActivity;
 import cn.qimate.bike.activity.InsureanceActivity;
 import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.activity.MyMessageActivity;
@@ -118,6 +117,7 @@ import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.activity.PersonAlterActivity;
 import cn.qimate.bike.activity.RealNameAuthActivity;
 import cn.qimate.bike.activity.ReportViolationActivity;
+import cn.qimate.bike.activity.RouteDetailActivity;
 import cn.qimate.bike.activity.ServiceCenterActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;
@@ -1902,7 +1902,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener,
                                 Log.e("base===","base===Feedback");
                             }else {
                                 tz = 2;
-                                Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
+                                Intent intent = new Intent(context, RouteDetailActivity.class);
                                 intent.putExtra("oid",oid);
                                 startActivity(intent);
 
@@ -2411,12 +2411,12 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener,
                 } else if (tz == 1 && !FeedbackActivity.isForeground) {
                     UIHelper.goToAct(context, FeedbackActivity.class);
                     Log.e("main===", "main===Feedback");
-                } else if (tz == 2 && !HistoryRoadDetailActivity.isForeground) {
-                    intent = new Intent(context, HistoryRoadDetailActivity.class);
+                } else if (tz == 2 && !RouteDetailActivity.isForeground) {
+                    intent = new Intent(context, RouteDetailActivity.class);
                     intent.putExtra("oid", oid);
                     startActivity(intent);
                     Log.e("main===", "main===HistoryRoadDetail");
-                } else if (tz == 3 && !CurRoadBikedActivity.isForeground && !HistoryRoadDetailActivity.isForeground) {
+                } else if (tz == 3 && !CurRoadBikedActivity.isForeground && !RouteDetailActivity.isForeground) {
                     UIHelper.goToAct(context, CurRoadBikedActivity.class);
                     Log.e("main===", "main===CurRoadBiked");
                 }

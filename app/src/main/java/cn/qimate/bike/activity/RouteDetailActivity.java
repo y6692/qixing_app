@@ -172,7 +172,7 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
         rightBtn.setOnClickListener(this);
 //        submitBtn.setOnClickListener(this);
 
-        initHttp();
+//        initHttp();
         initBannerHttp();
     }
 
@@ -192,13 +192,9 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
 
             case R.id.mainUI_title_rightBtn:
                 new ShareAction(this).setDisplayList(SHARE_MEDIA.WEIXIN,
-                        SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.QQ,SHARE_MEDIA.QZONE).setShareboardclickCallback(shareBoardlistener)
+                        SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.QQ,SHARE_MEDIA.QZONE).withText("微信").setShareboardclickCallback(shareBoardlistener)
                         .open();
 
-            case R.id.history_roadDetailUI_submitBtn:
-                Intent intent = new Intent(context,MapTaceActivity.class);
-                intent.putExtra("oid",oid);
-                startActivity(intent);
                 break;
         }
     }
@@ -286,6 +282,9 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
 //                                telText.setText(bean.getTelphone());
 //                                distanceText.setText(bean.getDistance());
 //                                timeText.setText(bean.getLongtimes());
+
+                                Log.e("url===", "==="+bean.getShare_url());
+
                                 if (bean.getShare_url().indexOf(Urls.HTTP) == -1){
                                     image = new UMImage(context, Urls.host+bean.getShare_url());
                                 }else {

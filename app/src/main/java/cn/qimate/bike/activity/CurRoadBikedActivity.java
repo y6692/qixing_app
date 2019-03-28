@@ -220,7 +220,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                         if (result.getFlag().equals("Success")) {
                             Toast.makeText(context,"恭喜您,支付成功!",Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(context,HistoryRoadDetailActivity.class);
+                            Intent intent = new Intent(context, RouteDetailActivity.class);
                             intent.putExtra("oid",oid);
                             startActivity(intent);
                             scrollToFinishActivity();
