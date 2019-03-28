@@ -1001,7 +1001,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         mainLayout = (LinearLayout)findViewById(R.id.mainUI_title_mainLayout);
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
-        rightBtn = (TextView)findViewById(R.id.mainUI_rightBtn);
+        rightBtn = (TextView)findViewById(R.id.curRoadUI_rightBtn);
 
 //        title = (TextView) findViewById(R.id.mainUI_title_titleText);
 //        title.setText("骑行中");
