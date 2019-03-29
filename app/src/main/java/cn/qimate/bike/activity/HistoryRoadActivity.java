@@ -119,7 +119,8 @@ public class HistoryRoadActivity extends SwipeBackActivity implements View.OnCli
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(context,RouteDetailActivity.class);
+//        Intent intent = new Intent(context, RouteDetailActivity.class);
+        Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
         intent.putExtra("oid",myAdapter.getDatas().get(position).getOid());
         startActivity(intent);
     }
