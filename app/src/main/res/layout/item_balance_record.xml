@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/block_bcg"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="21dp"
+                android:textColor="#515151"
+                android:textSize="@dimen/sp15"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:text="充值余额"/>
+
+            <TextView
+                android:id="@+id/item_myIntegral_rule_time"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="7dp"
+                android:textSize="@dimen/sp14"
+                android:textColor="#A2A2A2"
+                android:gravity="center_vertical"
+                android:text="2019-3-21 18:20"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/item_myIntegral_rule_times"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp14"
+                android:gravity="right"
+                android:textStyle="bold"
+                android:text="20元"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="7dp"
+                android:textSize="@dimen/sp14"
+                android:textColor="#A2A2A2"
+                android:gravity="right"
+                android:text="支付宝"/>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+
+
+    <View
+        android:id="@+id/item_balanceRecord_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginRight="9dp"
+        android:background="#DDDDDD"/>
+
+
+</LinearLayout>

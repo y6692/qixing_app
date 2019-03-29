@@ -37,6 +37,7 @@ import butterknife.Unbinder;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.BalanceActivity;
 import cn.qimate.bike.activity.DensityFreeManageActivity;
 import cn.qimate.bike.activity.PayCartActivity;
 import cn.qimate.bike.activity.PayMontCartActivity;
@@ -66,6 +67,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener{
 
     private RelativeLayout rl_payCart;
     private RelativeLayout rl_payCart2;
+    private RelativeLayout rl_balance;
     private RelativeLayout rl_densityFreeManage;
 
 
@@ -103,10 +105,12 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener{
 
         rl_payCart = (RelativeLayout) getActivity().findViewById(R.id.rl_payCart);
         rl_payCart2 = (RelativeLayout) getActivity().findViewById(R.id.rl_payCart2);
+        rl_balance = (RelativeLayout) getActivity().findViewById(R.id.rl_balance);
         rl_densityFreeManage = (RelativeLayout) getActivity().findViewById(R.id.rl_densityFreeManage);
 
         rl_payCart.setOnClickListener(this);
         rl_payCart2.setOnClickListener(this);
+        rl_balance.setOnClickListener(this);
         rl_densityFreeManage.setOnClickListener(this);
 
 //        loadingDialog = new LoadingDialog(context);
@@ -133,6 +137,10 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener{
             case R.id.rl_payCart2:
                 UIHelper.goToAct(context, PayCartActivity.class);
 //                scrollToFinishActivity();
+                break;
+
+            case R.id.rl_balance:
+                UIHelper.goToAct(context, BalanceActivity.class);
                 break;
 
             case R.id.rl_densityFreeManage:
