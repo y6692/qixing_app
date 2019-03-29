@@ -110,6 +110,7 @@ import cn.qimate.bike.activity.CurRoadBikingActivity;
 import cn.qimate.bike.activity.FaultReportActivity;
 import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.activity.InsureanceActivity;
+import cn.qimate.bike.activity.InviteCodeActivity;
 import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.activity.MyMessageActivity;
 import cn.qimate.bike.activity.MyPurseActivity;
@@ -1481,6 +1482,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener,
                 Intent intent = new Intent(context, CouponActivity.class);
                 intent.putExtra("isBack",true);
                 context.startActivity(intent);
+
                 break;
             case R.id.mainUI_myLocationLayout:
             case R.id.mainUI_myLocation:

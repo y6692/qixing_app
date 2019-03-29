@@ -105,7 +105,6 @@ public class HistoryDetailActivity extends SwipeBackActivity implements View.OnC
 
       MontCartHistoryFragment montCartHistoryFragment = new MontCartHistoryFragment();
       TimesCartHistoryFragment timesCartHistoryFragment = new TimesCartHistoryFragment();
-//      TimesCartFragment timesCartHistoryFragment = new TimesCartFragment();
 
       fragmentList = new ArrayList<>();
       fragmentList.add(montCartHistoryFragment);

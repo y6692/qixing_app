@@ -23,6 +23,7 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MarkerOptions;
 import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
@@ -191,9 +192,36 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
                 break;
 
             case R.id.mainUI_title_rightBtn:
-                new ShareAction(this).setDisplayList(SHARE_MEDIA.WEIXIN,
-                        SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.QQ,SHARE_MEDIA.QZONE).withText("微信").setShareboardclickCallback(shareBoardlistener)
+//                new ShareAction(this).setDisplayList(SHARE_MEDIA.WEIXIN,
+//                        SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.QQ,SHARE_MEDIA.QZONE).withText("微信").setShareboardclickCallback(shareBoardlistener)
+//                        .open();
+
+//                UMWeb web = new UMWeb("http:www.baidu.com");
+//                web.setTitle("This is music title");//标题
+//                web.setThumb(new UMImage(this, R.mipmap.ic_launcher));  //缩略图
+//                web.setDescription("my description");//描述
+
+                new ShareAction(this)
+                        .setDisplayList(SHARE_MEDIA.QQ)
+//                        .setPlatform(SHARE_MEDIA.QQ)//传入平台
                         .open();
+//                        .withText("hello")//分享内容
+//                        .setCallback(new UMShareListener() {
+//                            @Override
+//                            public void onResult(SHARE_MEDIA share_media) {
+//                                // 分享结果
+//                            }
+//
+//                            @Override
+//                            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+//                                //分享发生异常
+//                            }
+//
+//                            @Override
+//                            public void onCancel(SHARE_MEDIA share_media) {
+//                                // 分享取消
+//                            }
+//                        }).share();
 
                 break;
         }
@@ -282,9 +310,9 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
 //                                telText.setText(bean.getTelphone());
 //                                distanceText.setText(bean.getDistance());
 //                                timeText.setText(bean.getLongtimes());
-
-                                Log.e("url===", "==="+bean.getShare_url());
-
+//
+//                                Log.e("url===", "==="+bean.getShare_url());
+//
                                 if (bean.getShare_url().indexOf(Urls.HTTP) == -1){
                                     image = new UMImage(context, Urls.host+bean.getShare_url());
                                 }else {
@@ -489,4 +517,12 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
             return false;
         }
     });
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        /** attention to this below ,must add this **/
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
+
 }

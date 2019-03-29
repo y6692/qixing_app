@@ -141,15 +141,17 @@ public class MapTaceActivity extends SwipeBackActivity implements View.OnClickLi
             case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
+
             case R.id.mainUI_title_rightBtn:
                 /**
                  * shareboard need the platform all you want and
                  * callbacklistener,then open it
                  **/
-                new ShareAction(this).setDisplayList(SHARE_MEDIA.WEIXIN,
+                new ShareAction(this).setContentList().setDisplayList(SHARE_MEDIA.WEIXIN,
                         SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.QQ,SHARE_MEDIA.QZONE).setShareboardclickCallback(shareBoardlistener)
                         .open();
                 break;
+
             default:
                 break;
         }
