@@ -18,7 +18,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="74dp"
+        android:layout_height="108dp"
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp">
 
@@ -31,21 +31,30 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="21dp"
-                android:textColor="#515151"
-                android:textSize="@dimen/sp15"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp16"
                 android:gravity="center_vertical"
                 android:textStyle="bold"
-                android:text="充值余额"/>
+                android:text="支付宝购买"/>
+
+            <TextView
+                android:id="@+id/item_myIntegral_rule_time2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="@dimen/sp14"
+                android:textColor="#555555"
+                android:text="天数：30天"/>
 
             <TextView
                 android:id="@+id/item_myIntegral_rule_time"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginTop="7dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:textSize="@dimen/sp14"
-                android:textColor="#A2A2A2"
-                android:gravity="center_vertical"
-                android:text="2019-3-21 18:20"/>
+                android:textColor="#555555"
+                android:text="有效期至：2019-3-21 18:20"/>
+
         </LinearLayout>
 
 
@@ -54,27 +63,18 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:gravity="center_vertical">
+            android:layout_alignParentRight="true">
+
 
             <TextView
                 android:id="@+id/item_myIntegral_rule_times"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textColor="#333333"
-                android:textSize="@dimen/sp14"
-                android:gravity="right"
-                android:textStyle="bold"
-                android:text="20元"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="16dp"
                 android:textSize="@dimen/sp14"
                 android:textColor="#A2A2A2"
                 android:gravity="right"
-                android:text="支付宝"/>
+                android:text="2019-3-21 18:20"/>
         </LinearLayout>
 
 

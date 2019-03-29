@@ -15,18 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.qimate.bike.R;
-import cn.qimate.bike.core.common.UIHelper;
-import cn.qimate.bike.fragment.CarCouponFragment;
-import cn.qimate.bike.fragment.MerchantCouponFragment;
 import cn.qimate.bike.fragment.MontCartFragment;
+import cn.qimate.bike.fragment.MontCartHistoryFragment;
 import cn.qimate.bike.fragment.TimesCartFragment;
+import cn.qimate.bike.fragment.TimesCartHistoryFragment;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 /**
- * 我的车位
- * Created by Wikison on 2017/9/16.
+ * 历史明细
+ * Created by yuanyi on 2019/3/29.
  */
-public class PayCartActivity extends SwipeBackActivity implements View.OnClickListener{
+public class HistoryDetailActivity extends SwipeBackActivity implements View.OnClickListener{
   public static final String INTENT_INDEX = "INTENT_INDEX";
 //  @BindView(R.id.ll_back) LinearLayout llBack;
 //  @BindView(R.id.lh_tv_title) TextView lhTvTitle;
@@ -48,7 +47,7 @@ public class PayCartActivity extends SwipeBackActivity implements View.OnClickLi
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_pay_cart);
+    setContentView(R.layout.activity_history_detail);
     context = this;
     init();
   }
@@ -57,9 +56,7 @@ public class PayCartActivity extends SwipeBackActivity implements View.OnClickLi
 
     ll_back = (LinearLayout) findViewById(R.id.ll_back);
     title = (TextView) findViewById(R.id.mainUI_title_titleText);
-    title.setText("购买骑行套餐");
-    rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
-    rightBtn.setText("历史明细");
+    title.setText("历史明细");
 
     tab = (TabLayout) findViewById(R.id.tab);
     vp = (ViewPager)findViewById(R.id.vp);
@@ -86,7 +83,6 @@ public class PayCartActivity extends SwipeBackActivity implements View.OnClickLi
     });
 
     ll_back.setOnClickListener(this);
-    rightBtn.setOnClickListener(this);
 
   }
 
@@ -96,9 +92,6 @@ public class PayCartActivity extends SwipeBackActivity implements View.OnClickLi
     switch (v.getId()) {
       case R.id.ll_back:
         scrollToFinishActivity();
-        break;
-      case R.id.mainUI_title_rightBtn:
-        UIHelper.goToAct(context, HistoryDetailActivity.class);
         break;
     }
   }
@@ -110,12 +103,13 @@ public class PayCartActivity extends SwipeBackActivity implements View.OnClickLi
     public MyPagerAdapter(FragmentManager fm) {
       super(fm);
 
-      MontCartFragment montCartFragment = new MontCartFragment();
-      TimesCartFragment timesCartFragment = new TimesCartFragment();
+      MontCartHistoryFragment montCartHistoryFragment = new MontCartHistoryFragment();
+      TimesCartHistoryFragment timesCartHistoryFragment = new TimesCartHistoryFragment();
+//      TimesCartFragment timesCartHistoryFragment = new TimesCartFragment();
 
       fragmentList = new ArrayList<>();
-      fragmentList.add(montCartFragment);
-      fragmentList.add(timesCartFragment);
+      fragmentList.add(montCartHistoryFragment);
+      fragmentList.add(timesCartHistoryFragment);
     }
 
     @Override

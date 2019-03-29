@@ -37,7 +37,7 @@ public class BalanceRecordAdapter extends BaseViewAdapter<MyIntegralRecordBean> 
         times.setText(bean.getReason());
 
         View line = BaseViewHolder.get(convertView,R.id.item_balanceRecord_line);
-        if (position == getDatas().size() -1){
+        if (position == 0){
             line.setVisibility(View.GONE);
         }else {
             line.setVisibility(View.VISIBLE);
