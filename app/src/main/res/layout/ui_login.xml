@@ -72,6 +72,7 @@
                         android:paddingLeft="@dimen/dp20"
                         android:paddingRight="0dp"
                         android:textColorHint="#ceced4"
+                        android:textColor="#333333"
                         android:textSize="@dimen/sp12" />
                 </LinearLayout>
 
@@ -112,6 +113,7 @@
                             android:paddingLeft="@dimen/dp20"
                             android:paddingRight="0dp"
                             android:textColorHint="#ceced4"
+                            android:textColor="#333333"
                             android:textSize="@dimen/sp12" />
 
                         <ImageView

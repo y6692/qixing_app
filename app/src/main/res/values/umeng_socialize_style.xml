@@ -67,19 +67,23 @@
     <style name="Theme.UMDialog" parent="android:style/Theme.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 背景透明 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!-- 模糊 -->
+        <item name="android:backgroundDimAmount">0.6</item>
     </style>
 
     <style name="Theme.UMDefault" parent="android:style/Theme.NoTitleBar"></style>
 
     <style name="umeng_socialize_divider">
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_height">0dp</item>
         <item name="android:background">@color/umeng_socialize_divider</item>
     </style>
 
     <style name="umeng_socialize_list_item">
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_height">147dp</item>
         <item name="android:background">@color/umeng_socialize_list_item_bgcolor</item>
         <item name="android:paddingBottom">5dp</item>
         <item name="android:paddingTop">5dp</item>

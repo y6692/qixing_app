@@ -24,6 +24,7 @@ import com.sunshine.blelibrary.inter.OnDeviceSearchListener;
 import com.sunshine.blelibrary.service.BLEService;
 import com.sunshine.blelibrary.utils.GlobalParameterUtils;
 import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
 import com.vondear.rxtools.RxTool;
 
 import java.io.File;
@@ -83,6 +84,8 @@ public class BaseApplication extends Application {
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
 
 		AdHub.initialize(this, "2597");
+
+		UMShareAPI.get(this);
 
 		bleManager = new AndroidBle(this);
 		RxTool.init(getApplicationContext());

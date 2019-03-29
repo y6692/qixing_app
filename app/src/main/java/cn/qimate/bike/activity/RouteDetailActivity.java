@@ -192,19 +192,28 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
                 break;
 
             case R.id.mainUI_title_rightBtn:
-//                new ShareAction(this).setDisplayList(SHARE_MEDIA.WEIXIN,
-//                        SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.QQ,SHARE_MEDIA.QZONE).withText("微信").setShareboardclickCallback(shareBoardlistener)
-//                        .open();
+                new ShareAction(this).setDisplayList(SHARE_MEDIA.WEIXIN,
+                        SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.QQ,SHARE_MEDIA.QZONE).setCallback(umShareListener).setShareboardclickCallback(shareBoardlistener)
+                        .open();
+
+
+//                ShareBoardConfig config =new ShareBoardConfig();
+//                config.setShareboardPostion(ShareBoardConfig.SHAREBOARD_POSITION_CENTER);//分享面板在中间出现
+//                config.setMenuItemBackgroundShape(ShareBoardConfig.BG_SHAPE_CIRCULAR);// 圆角背景
+//                config.setShareboardBackgroundColor(Color.BLUE);//分享面板背景颜色
+//                config.setCancelButtonText("我也能改，点我取消");//取消按钮
+//                config.setTitleVisibility(false);// 隐藏title
+//                mShareAction.open(config);
 
 //                UMWeb web = new UMWeb("http:www.baidu.com");
 //                web.setTitle("This is music title");//标题
 //                web.setThumb(new UMImage(this, R.mipmap.ic_launcher));  //缩略图
 //                web.setDescription("my description");//描述
 
-                new ShareAction(this)
-                        .setDisplayList(SHARE_MEDIA.QQ)
+//                new ShareAction(this)
+//                        .setDisplayList(SHARE_MEDIA.QQ)
 //                        .setPlatform(SHARE_MEDIA.QQ)//传入平台
-                        .open();
+//                        .open();
 //                        .withText("hello")//分享内容
 //                        .setCallback(new UMShareListener() {
 //                            @Override
@@ -231,7 +240,7 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
 
         @Override
         public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
-            new ShareAction(RouteDetailActivity.this).setPlatform(share_media).setCallback(umShareListener)
+            new ShareAction(RouteDetailActivity.this).setPlatform(share_media)
                     .withMedia(image).share();
         }
     };
