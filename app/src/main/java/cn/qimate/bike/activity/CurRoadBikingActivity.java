@@ -691,7 +691,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 hintText.setText("还车须至校园地图红色覆盖区，关锁并拨乱密码后点击结束！");
                                 tv_lookPsdBtn.setText("查看密码");
                             }else {
-                                hintText.setText("还车须至校园地图红色覆盖区，关锁后距车一米内点击结束！");
+                                hintText.setText("还车说明：校内定点停车，并点击“我要还车”");
                                 m_nowMac = bean.getMacinfo();
                                 tv_lookPsdBtn.setText("再次开锁");
 
