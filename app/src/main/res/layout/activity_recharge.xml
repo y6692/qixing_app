@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:staggered="http://schemas.android.com/tools"
     android:background="#F5F5F5"
     android:fitsSystemWindows="true"
     android:clipToPadding="true">
@@ -70,12 +71,29 @@
                         android:textColor="@color/tx_black"/>
                 </LinearLayout>
 
-                <cn.qimate.bike.core.widget.MyListView
+                <!--<cn.qimate.bike.core.widget.MyListView-->
+                    <!--android:id="@+id/rechargeUI_moneyList"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:scrollbars="none"-->
+                    <!--android:divider="@null"/>-->
+
+                <!--<com.origamilabs.library.views.StaggeredGridView-->
+                    <!--android:id="@+id/rechargeUI_moneyList"-->
+                    <!--staggered:numColumns="2"-->
+                    <!--staggered:drawSelectorOnTop="true"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content" />-->
+
+                <com.huewu.pla.lib.MultiColumnListView
+                    xmlns:pla="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/rechargeUI_moneyList"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="none"
-                    android:divider="@null"/>
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="-9dp"
+                    android:layout_marginRight="-9dp"
+                    pla:plaColumnNumber="2"
+                    pla:plaLandscapeColumnNumber="3"/>
 
 
                 <!--<LinearLayout-->

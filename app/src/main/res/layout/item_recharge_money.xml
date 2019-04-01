@@ -9,9 +9,9 @@
         android:id="@+id/item_recharge_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp45"
-        android:layout_marginLeft="@dimen/dp10"
-        android:layout_marginTop="@dimen/dp10"
-        android:layout_marginRight="@dimen/dp10"
+        android:layout_marginLeft="9dp"
+        android:layout_marginTop="19dp"
+        android:layout_marginRight="9dp"
         android:background="@drawable/recharge_money_bcg"
         android:gravity="center"
         android:orientation="horizontal">

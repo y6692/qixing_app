@@ -45,6 +45,8 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.huewu.pla.lib.MultiColumnListView;
+import com.huewu.pla.lib.internal.PLA_AdapterView;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -101,7 +103,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  * Created by Administrator1 on 2017/7/20.
  */
 @SuppressLint("NewApi")
-public class RechargeActivity extends SwipeBackActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class RechargeActivity extends SwipeBackActivity implements View.OnClickListener, PLA_AdapterView.OnItemClickListener {
 
     private static final int SDK_PAY_FLAG = 1;
     private IWXAPI api;
@@ -118,7 +120,7 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
     private LinearLayout ll_back;
     private TextView title;
 
-    private MyListView moneyListView;
+    private MultiColumnListView moneyListView;
     private RelativeLayout alipayTypeLayout,WeChatTypeLayout;
     private ImageView alipayTypeImage,WeChatTypeImage;
     private LinearLayout submitBtn;
@@ -170,7 +172,7 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("充值");
 
-        moneyListView = (MyListView)findViewById(R.id.rechargeUI_moneyList);
+        moneyListView = (MultiColumnListView)findViewById(R.id.rechargeUI_moneyList);
         alipayTypeLayout = (RelativeLayout)findViewById(R.id.rechargeUI_alipayTypeLayout);
         WeChatTypeLayout = (RelativeLayout)findViewById(R.id.rechargeUI_WeChatTypeLayout);
         alipayTypeImage = (ImageView)findViewById(R.id.rechargeUI_alipayTypeImage);
@@ -490,9 +492,14 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
     };
 
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//    @Override
+//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//
+//    }
 
+    @Override
+    public void onItemClick(PLA_AdapterView<?> parent, View view, int position, long id) {
         rid = myAdapter.getDatas().get(position).getId();
         if (position != selectPosition){
             myAdapter.getDatas().get(position).setSelected(true);
