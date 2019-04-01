@@ -2,15 +2,18 @@ package cn.qimate.bike.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +56,9 @@ import cn.qimate.bike.model.HistoryRoadDetailBean;
 import cn.qimate.bike.model.MapTraceBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.UtilAnim;
+import cn.qimate.bike.util.UtilBitmap;
+import cn.qimate.bike.util.UtilScreenCapture;
 
 /**
  * Created by Administrator on 2017/2/18 0018.
@@ -192,9 +198,11 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
                 break;
 
             case R.id.mainUI_title_rightBtn:
-                new ShareAction(this).setDisplayList(SHARE_MEDIA.WEIXIN,
-                        SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.QQ,SHARE_MEDIA.QZONE).setCallback(umShareListener).setShareboardclickCallback(shareBoardlistener)
-                        .open();
+//                new ShareAction(this).setDisplayList(SHARE_MEDIA.WEIXIN,
+//                        SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.QQ,SHARE_MEDIA.QZONE).setShareboardclickCallback(shareBoardlistener)
+//                        .open();
+
+                initmPopupWindowView();
 
 
 //                ShareBoardConfig config =new ShareBoardConfig();
@@ -210,37 +218,81 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
 //                web.setThumb(new UMImage(this, R.mipmap.ic_launcher));  //缩略图
 //                web.setDescription("my description");//描述
 
-//                new ShareAction(this)
-//                        .setDisplayList(SHARE_MEDIA.QQ)
-//                        .setPlatform(SHARE_MEDIA.QQ)//传入平台
-//                        .open();
-//                        .withText("hello")//分享内容
-//                        .setCallback(new UMShareListener() {
-//                            @Override
-//                            public void onResult(SHARE_MEDIA share_media) {
-//                                // 分享结果
-//                            }
-//
-//                            @Override
-//                            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-//                                //分享发生异常
-//                            }
-//
-//                            @Override
-//                            public void onCancel(SHARE_MEDIA share_media) {
-//                                // 分享取消
-//                            }
-//                        }).share();
+
 
                 break;
         }
+    }
+
+    public void initmPopupWindowView(){
+
+        // 获取自定义布局文件的视图
+        View customView = getLayoutInflater().inflate(R.layout.pop_share_menu, null, false);
+        // 创建PopupWindow宽度和高度
+        RelativeLayout pop_win_bg = (RelativeLayout) customView.findViewById(R.id.pop_win_bg);
+        ImageView iv_popup_window_back = (ImageView) customView.findViewById(R.id.popupWindow_back);
+        // 获取截图的Bitmap
+        Bitmap bitmap = UtilScreenCapture.getDrawing(this);
+        if (bitmap != null) {
+            // 将截屏Bitma放入ImageView
+            iv_popup_window_back.setImageBitmap(bitmap);
+            // 将ImageView进行高斯模糊【25是最高模糊等级】【0x77000000是蒙上一层颜色，此参数可不填】
+            UtilBitmap.blurImageView(context, iv_popup_window_back, 10,0xAA000000);
+        } else {
+            // 获取的Bitmap为null时，用半透明代替
+            iv_popup_window_back.setBackgroundColor(0x77000000);
+        }
+        // 打开弹窗
+        UtilAnim.showToUp(pop_win_bg, iv_popup_window_back);
+        // 创建PopupWindow宽度和高度
+        final PopupWindow popupwindow = new PopupWindow(customView, LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT, true);
+        /**
+         * 设置动画效果 ,从上到下加载方式等，不设置自动的下拉，最好 [动画效果不好，不加实现下拉效果，不错]
+         */
+        popupwindow.setAnimationStyle(R.style.PopupAnimation);
+        popupwindow.setOutsideTouchable(false);
+
+        LinearLayout feedbackLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_feedbackLayout);
+        LinearLayout helpLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_helpLayout);
+        final LinearLayout callLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_callLayout);
+//        TextView cancleBtn = (TextView)customView.findViewById(R.id.pop_menu_cancleBtn);
+
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()){
+                    case R.id.pop_menu_feedbackLayout:
+                        new ShareAction(RouteDetailActivity.this).setPlatform(SHARE_MEDIA.QQ).setCallback(umShareListener).withMedia(image).share();
+
+
+                        break;
+                    case R.id.pop_menu_helpLayout:
+                        UIHelper.goToAct(context, ReportViolationActivity.class);
+                        break;
+                    case R.id.pop_menu_callLayout:
+                        UIHelper.goToAct(context, ServiceCenterActivity.class);
+                        break;
+//                    case R.id.pop_menu_cancleBtn:
+//                        break;
+                }
+                popupwindow.dismiss();
+            }
+        };
+
+        feedbackLayout.setOnClickListener(listener);
+        helpLayout.setOnClickListener(listener);
+        callLayout.setOnClickListener(listener);
+//        cancleBtn.setOnClickListener(listener);
+
+        popupwindow.showAtLocation(customView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
 
     private ShareBoardlistener shareBoardlistener = new ShareBoardlistener() {
 
         @Override
         public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
-            new ShareAction(RouteDetailActivity.this).setPlatform(share_media)
+            new ShareAction(RouteDetailActivity.this).setPlatform(share_media).setCallback(umShareListener)
                     .withMedia(image).share();
         }
     };
