@@ -12,7 +12,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -128,7 +127,7 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
                     Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
                     UIHelper.goToAct(context, LoginActivity.class);
                 }else {
-                    UIHelper.goToAct(context,RechargeActivity.class);
+                    UIHelper.goToAct(context,Recharge2Activity.class);
                 }
                 break;
             case R.id.myPurseUI_activationNum_btn:

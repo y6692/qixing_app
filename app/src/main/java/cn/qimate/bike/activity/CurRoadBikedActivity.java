@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -180,7 +179,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
             case R.id.curRoadUI_biked_payBalanceLayout:
                 if (Double.parseDouble(user_money) < Double.parseDouble(prices)){
                     Toast.makeText(context,"当前余额不足,请先充值!",Toast.LENGTH_SHORT).show();
-                    UIHelper.goToAct(context,RechargeActivity.class);
+                    UIHelper.goToAct(context,Recharge2Activity.class);
                 }else {
                     paySubmit();
                 }

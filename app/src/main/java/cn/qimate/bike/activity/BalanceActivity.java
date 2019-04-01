@@ -49,6 +49,7 @@ public class BalanceActivity extends SwipeBackActivity implements View.OnClickLi
     private TextView title;
     private TextView rightBtn;
 
+    private LinearLayout rechargeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +72,11 @@ public class BalanceActivity extends SwipeBackActivity implements View.OnClickLi
         rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
         rightBtn.setText("明细");
 
+        rechargeLayout = (LinearLayout) findViewById(R.id.balanceUI_rechargeLayout);
+
         ll_back.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
+        rechargeLayout.setOnClickListener(this);
 
 //        initHttp();
 
@@ -91,9 +95,10 @@ public class BalanceActivity extends SwipeBackActivity implements View.OnClickLi
                 UIHelper.goToAct(context, BalanceDetailActivity.class);
                 break;
 
-//            case R.id.personUI_bottom_checkLayout:
-//                UpdateManager.getUpdateManager().checkAppUpdate(context, true);
-//                break;
+            case R.id.balanceUI_rechargeLayout:
+                UIHelper.goToAct(context, RechargeActivity.class);
+                break;
+
 
         }
     }

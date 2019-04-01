@@ -133,7 +133,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/personUI_logoutLayout"
+        android:id="@+id/balanceUI_rechargeLayout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="31dp"

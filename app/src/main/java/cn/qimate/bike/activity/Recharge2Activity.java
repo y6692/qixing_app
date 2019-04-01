@@ -1,38 +1,21 @@
 package cn.qimate.bike.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -41,230 +24,128 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alipay.sdk.app.PayTask;
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.vondear.rxtools.RxFileTool;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
-import cn.nostra13.universalimageloader.core.ImageLoader;
-import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.alipay.PayResult;
+import cn.qimate.bike.base.BaseViewAdapter;
 import cn.qimate.bike.base.BaseViewHolder;
-import cn.qimate.bike.core.common.BitmapUtils1;
 import cn.qimate.bike.core.common.HttpHelper;
-import cn.qimate.bike.core.common.NetworkUtils;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
-import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
-import cn.qimate.bike.core.widget.MyGridView;
-import cn.qimate.bike.core.widget.MyPagerGalleryView;
-import cn.qimate.bike.img.NetUtil;
-import cn.qimate.bike.model.BannerBean;
+import cn.qimate.bike.core.widget.MyListView;
+import cn.qimate.bike.model.RechargeBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
-import cn.qimate.bike.util.ToastUtil;
-import cn.qimate.bike.util.UtilAnim;
-import cn.qimate.bike.util.UtilBitmap;
-import cn.qimate.bike.util.UtilScreenCapture;
-
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 /**
- * Created by Administrator1 on 2017/7/20.
+ * Created by Administrator1 on 2017/2/15.
  */
-@SuppressLint("NewApi")
-public class RechargeActivity extends SwipeBackActivity implements View.OnClickListener {
+public class Recharge2Activity extends SwipeBackActivity implements View.OnClickListener,AdapterView.OnItemClickListener{
 
     private static final int SDK_PAY_FLAG = 1;
     private IWXAPI api;
-
-    private TextView Tag1,Tag2,Tag3,Tag4;
-
-    private boolean isSelected1 = false;
-    private boolean isSelected2 = false;
-    private boolean isSelected3 = false;
-    private boolean isSelected4 = false;
 
     private Context context;
     private LoadingDialog loadingDialog;
     private LinearLayout ll_back;
     private TextView title;
+    private TextView rightBtn;
+
+    private MyListView moneyListView;
     private RelativeLayout alipayTypeLayout,WeChatTypeLayout;
     private ImageView alipayTypeImage,WeChatTypeImage;
-    private LinearLayout submitBtn;
-    private RelativeLayout imagesLayout;
-    private MyPagerGalleryView gallery;
-    private LinearLayout pointLayout;
+    private Button submitBtn;
 
-    private List<String> TagsList;
+    private List<RechargeBean> datas;
+    private MyAdapter myAdapter;
+    private int selectPosition = 0;
 
     private String rid = ""; //充值类型
     private String paytype = "1";//1支付宝2微信
     private String osn = "";
-
-    private int[] imageId = new int[] { R.drawable.empty_photo };
-    private String[] imageStrs;
-    private List<BannerBean> datas;
+    private LinearLayout dealLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recharge);
+        setContentView(R.layout.ui_recharge);
         context = this;
         datas = new ArrayList<>();
-        TagsList = new ArrayList<>();
-
         IntentFilter filter = new IntentFilter("data.broadcast.rechargeAction");
         registerReceiver(broadcastReceiver, filter);
-
         initView();
     }
-
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            scrollToFinishActivity();
+        }
+    };
     private void initView(){
 
         loadingDialog = new LoadingDialog(context);
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        Tag1 = (TextView)findViewById(R.id.feedbackUI_type_Tag1);
-        Tag2 = (TextView)findViewById(R.id.feedbackUI_type_Tag2);
-        Tag3 = (TextView)findViewById(R.id.feedbackUI_type_Tag3);
-        Tag4 = (TextView)findViewById(R.id.feedbackUI_type_Tag4);
-
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("充值");
+        rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
+        rightBtn.setText("充值记录");
 
+        moneyListView = (MyListView)findViewById(R.id.rechargeUI_moneyList);
         alipayTypeLayout = (RelativeLayout)findViewById(R.id.rechargeUI_alipayTypeLayout);
         WeChatTypeLayout = (RelativeLayout)findViewById(R.id.rechargeUI_WeChatTypeLayout);
         alipayTypeImage = (ImageView)findViewById(R.id.rechargeUI_alipayTypeImage);
         WeChatTypeImage = (ImageView)findViewById(R.id.rechargeUI_WeChatTypeImage);
-        submitBtn = (LinearLayout) findViewById(R.id.rechargeUI_submitBtn);
-        imagesLayout = (RelativeLayout)findViewById(R.id.rechargeUI_imagesLayout);
-        gallery = (MyPagerGalleryView)findViewById(R.id.rechargeUI_gallery);
-        pointLayout = (LinearLayout)findViewById(R.id.rechargeUI_pointLayout);
+        submitBtn = (Button)findViewById(R.id.rechargeUI_submitBtn);
+        dealLayout = (LinearLayout)findViewById(R.id.rechargeUI_dealLayout);
+
+        if (datas.isEmpty() || 0 == datas.size()){
+            initHttp();
+        }
+        myAdapter = new MyAdapter(context);
+        moneyListView.setAdapter(myAdapter);
+
+        moneyListView.setOnItemClickListener(this);
 
         ll_back.setOnClickListener(this);
+        rightBtn.setOnClickListener(this);
         alipayTypeLayout.setOnClickListener(this);
         WeChatTypeLayout.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
-
-        Tag1.setOnClickListener(this);
-        Tag2.setOnClickListener(this);
-        Tag3.setOnClickListener(this);
-        Tag4.setOnClickListener(this);
-
-        initBannerHttp();
-
+        dealLayout.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
+        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         switch (v.getId()){
             case R.id.ll_back:
-                UIHelper.goToAct(context, CurRoadBikingActivity.class);
                 scrollToFinishActivity();
                 break;
-
-            case R.id.feedbackUI_type_Tag1:
-
-                Log.e("TagsList===", TagsList.size()+"==="+TagsList);
-
-                if (isSelected1){
-                    isSelected1 = false;
-                    if (TagsList.contains(Tag1.getText().toString())){
-                        TagsList.remove(Tag1.getText().toString());
-                    }
-                    Tag1.setTextColor(Color.parseColor("#666666"));
-                    Tag1.setBackgroundResource(R.drawable.shape_feedback);
-                }else {
-                    isSelected1 = true;
-                    if (!TagsList.contains(Tag1.getText().toString())){
-                        TagsList.add(Tag1.getText().toString());
-                    }
-                    Tag1.setTextColor(Color.parseColor("#f57752"));
-                    Tag1.setBackgroundResource(R.drawable.shape_feedback_selectd);
+            case R.id.mainUI_title_rightBtn:
+                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+                    Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+                    return;
                 }
-
-                Log.e("TagsList===111", TagsList.size()+"==="+TagsList);
+                UIHelper.goToAct(context,RechargeRecordActivity.class);
                 break;
-            case R.id.feedbackUI_type_Tag2:
-                if (isSelected2){
-                    isSelected2 = false;
-                    if (TagsList.contains(Tag2.getText().toString())){
-                        TagsList.remove(Tag2.getText().toString());
-                    }
-                    Tag2.setTextColor(Color.parseColor("#666666"));
-                    Tag2.setBackgroundResource(R.drawable.shape_feedback);
-                }else {
-                    isSelected2 = true;
-                    if (!TagsList.contains(Tag2.getText().toString())){
-                        TagsList.add(Tag2.getText().toString());
-                    }
-                    Tag2.setTextColor(Color.parseColor("#f57752"));
-                    Tag2.setBackgroundResource(R.drawable.shape_feedback_selectd);
-                }
-                break;
-            case R.id.feedbackUI_type_Tag3:
-                if (isSelected3){
-                    isSelected3 = false;
-                    if (TagsList.contains(Tag3.getText().toString())){
-                        TagsList.remove(Tag3.getText().toString());
-                    }
-                    Tag3.setTextColor(Color.parseColor("#666666"));
-                    Tag3.setBackgroundResource(R.drawable.shape_feedback);
-                }else {
-                    isSelected3 = true;
-                    if (!TagsList.contains(Tag3.getText().toString())){
-                        TagsList.add(Tag3.getText().toString());
-                    }
-                    Tag3.setTextColor(Color.parseColor("#f57752"));
-                    Tag3.setBackgroundResource(R.drawable.shape_feedback_selectd);
-                }
-                break;
-            case R.id.feedbackUI_type_Tag4:
-                if (isSelected4){
-                    isSelected4 = false;
-                    if (TagsList.contains(Tag4.getText().toString())){
-                        TagsList.remove(Tag4.getText().toString());
-                    }
-                    Tag4.setTextColor(Color.parseColor("#666666"));
-                    Tag4.setBackgroundResource(R.drawable.shape_feedback);
-                }else {
-                    isSelected4 = true;
-                    if (!TagsList.contains(Tag4.getText().toString())){
-                        TagsList.add(Tag4.getText().toString());
-                    }
-                    Tag4.setTextColor(Color.parseColor("#f57752"));
-                    Tag4.setBackgroundResource(R.drawable.shape_feedback_selectd);
-                }
-                break;
-
             case R.id.rechargeUI_alipayTypeLayout:
                 alipayTypeImage.setImageResource(R.drawable.pay_type_selected);
                 WeChatTypeImage.setImageResource(R.drawable.pay_type_normal);
@@ -282,8 +163,11 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
                 }
                 userRecharge(uid,access_token);
                 break;
-
-            default:
+            case R.id.rechargeUI_dealLayout:
+                Intent intent = new Intent(context,WebviewActivity.class);
+                intent.putExtra("title","充值协议");
+                intent.putExtra("link",Urls.rechargeDeal);
+                startActivity(intent);
                 break;
         }
     }
@@ -351,7 +235,7 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
                             @Override
                             public void run() {
                                 // 构造PayTask 对象
-                                PayTask alipay = new PayTask(RechargeActivity.this);
+                                PayTask alipay = new PayTask(Recharge2Activity.this);
                                 // 调用支付接口，获取支付结果
                                 String result = alipay.pay(payInfo, true);
                                 Message msg = new Message();
@@ -436,7 +320,7 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         @SuppressWarnings("unused")
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case SDK_PAY_FLAG: {
+               case SDK_PAY_FLAG: {
                     PayResult payResult = new PayResult((String) msg.obj);
                     String resultInfo = payResult.getResult();// 同步返回需要验证的信息
                     String resultStatus = payResult.getResultStatus();
@@ -463,109 +347,112 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         };
     };
 
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            scrollToFinishActivity();
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        rid = myAdapter.getDatas().get(position).getId();
+        if (position != selectPosition){
+            myAdapter.getDatas().get(position).setSelected(true);
+            myAdapter.getDatas().get(selectPosition).setSelected(false);
+            selectPosition = position;
         }
-    };
+        myAdapter.notifyDataSetChanged();
+     }
 
-    private void initBannerHttp() {
+    private class MyAdapter extends BaseViewAdapter<RechargeBean>{
 
+        private LayoutInflater inflater;
+
+        public MyAdapter(Context context) {
+            super(context);
+            this.inflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (null == convertView) {
+                convertView = inflater.inflate(R.layout.item_recharge_money, null);
+            }
+            LinearLayout layout = BaseViewHolder.get(convertView,R.id.item_recharge_layout);
+            TextView moneyText = BaseViewHolder.get(convertView,R.id.item_recharge_money);
+
+            RechargeBean bean = getDatas().get(position);
+            layout.setSelected(bean.isSelected());
+            moneyText.setSelected(bean.isSelected());
+            moneyText.setText(bean.getTitle());
+            return convertView;
+        }
+    }
+
+    private void initHttp(){
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+        if (uid == null ||"".equals(uid) || access_token == null || "".equals(access_token)){
+            Toast.makeText(context,"请先登录您的账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context,LoginActivity.class);
             return;
         }
+        Log.e("Test","uid:"+uid);
+        Log.e("Test","access_token:"+access_token);
         RequestParams params = new RequestParams();
         params.put("uid",uid);
         params.put("access_token",access_token);
-        params.put("adsid",12);
-        HttpHelper.get(context, Urls.bannerUrl, params, new TextHttpResponseHandler() {
-
+        HttpHelper.get(context, Urls.rechargeList,params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在载入");
+                    loadingDialog.setTitle("正在加载");
                     loadingDialog.show();
                 }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Log.e("Test","广告:"+responseString);
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (0 == result.getErrcode()) {
-                        if (datas.size() != 0 || !datas.isEmpty()) {
+                    if (result.getFlag().equals("Success")) {
+                        JSONArray array = new JSONArray(result.getData());
+                        if (datas.size() != 0 || !datas.isEmpty()){
                             datas.clear();
                         }
-                        JSONArray array = new JSONArray(result.getData());
-                        for (int i = 0; i < array.length(); i++) {
-                            BannerBean bean = JSON.parseObject(array.getJSONObject(i).toString(), BannerBean.class);
+                        for (int i = 0; i < array.length(); i++){
+                            RechargeBean bean = JSON.parseObject(array.getJSONObject(i).toString(), RechargeBean.class);
                             datas.add(bean);
+                            if ( 0 == i){
+                                rid = bean.getId();
+                                bean.setSelected(true);
+                            }else {
+                                bean.setSelected(false);
+                            }
                         }
+                        myAdapter.setDatas(datas);
+                        myAdapter.notifyDataSetChanged();
                     } else {
-                        UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
+                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
                     }
-                    initBanner();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (loadingDialog != null && loadingDialog.isShowing()) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
                     loadingDialog.dismiss();
                 }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
-                initBanner();
             }
         });
     }
-    private void initBanner() {
-        if (datas == null || datas.isEmpty()) {
-            gallery.start(context, null, imageId, 0, pointLayout, R.drawable.point_sel, R.drawable.point_nos);
-        } else {
-            imageStrs = new String[datas.size()];
-            for (int i = 0; i < datas.size(); i++) {
-                imageStrs[i] = datas.get(i).getAd_file();
-            }
-            gallery.start(context, imageStrs, imageId, 3000, pointLayout, R.drawable.point_sel, R.drawable.point_nos);
-
-            gallery.setMyOnItemClickListener(new MyPagerGalleryView.MyOnItemClickListener() {
-
-                @Override
-                public void onItemClick(int curIndex) {
-                    UIHelper.bannerGoAct(context, datas.get(curIndex).getApp_type(), datas.get(curIndex).getApp_id(),
-                            datas.get(curIndex).getAd_link());
-                }
-            });
-        }
-    }
-
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            UIHelper.goToAct(context, CurRoadBikingActivity.class);
             scrollToFinishActivity();
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 }
