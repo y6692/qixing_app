@@ -72,6 +72,7 @@ import cn.nostra13.universalimageloader.core.ImageLoader;
 import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.alipay.PayResult;
+import cn.qimate.bike.base.BaseViewAdapter;
 import cn.qimate.bike.base.BaseViewHolder;
 import cn.qimate.bike.core.common.BitmapUtils1;
 import cn.qimate.bike.core.common.HttpHelper;
@@ -82,9 +83,11 @@ import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.core.widget.MyGridView;
+import cn.qimate.bike.core.widget.MyListView;
 import cn.qimate.bike.core.widget.MyPagerGalleryView;
 import cn.qimate.bike.img.NetUtil;
 import cn.qimate.bike.model.BannerBean;
+import cn.qimate.bike.model.RechargeBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.ToastUtil;
@@ -98,7 +101,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  * Created by Administrator1 on 2017/7/20.
  */
 @SuppressLint("NewApi")
-public class RechargeActivity extends SwipeBackActivity implements View.OnClickListener {
+public class RechargeActivity extends SwipeBackActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private static final int SDK_PAY_FLAG = 1;
     private IWXAPI api;
@@ -114,6 +117,8 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
     private LoadingDialog loadingDialog;
     private LinearLayout ll_back;
     private TextView title;
+
+    private MyListView moneyListView;
     private RelativeLayout alipayTypeLayout,WeChatTypeLayout;
     private ImageView alipayTypeImage,WeChatTypeImage;
     private LinearLayout submitBtn;
@@ -123,20 +128,25 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
 
     private List<String> TagsList;
 
+    private List<RechargeBean> recharge_datas;
+    private MyAdapter myAdapter;
+    private int selectPosition = 0;
+
     private String rid = ""; //充值类型
     private String paytype = "1";//1支付宝2微信
     private String osn = "";
 
     private int[] imageId = new int[] { R.drawable.empty_photo };
     private String[] imageStrs;
-    private List<BannerBean> datas;
+    private List<BannerBean> banner_datas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recharge);
         context = this;
-        datas = new ArrayList<>();
+        recharge_datas = new ArrayList<>();
+        banner_datas = new ArrayList<>();
         TagsList = new ArrayList<>();
 
         IntentFilter filter = new IntentFilter("data.broadcast.rechargeAction");
@@ -151,15 +161,16 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        Tag1 = (TextView)findViewById(R.id.feedbackUI_type_Tag1);
-        Tag2 = (TextView)findViewById(R.id.feedbackUI_type_Tag2);
-        Tag3 = (TextView)findViewById(R.id.feedbackUI_type_Tag3);
-        Tag4 = (TextView)findViewById(R.id.feedbackUI_type_Tag4);
+//        Tag1 = (TextView)findViewById(R.id.feedbackUI_type_Tag1);
+//        Tag2 = (TextView)findViewById(R.id.feedbackUI_type_Tag2);
+//        Tag3 = (TextView)findViewById(R.id.feedbackUI_type_Tag3);
+//        Tag4 = (TextView)findViewById(R.id.feedbackUI_type_Tag4);
 
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("充值");
 
+        moneyListView = (MyListView)findViewById(R.id.rechargeUI_moneyList);
         alipayTypeLayout = (RelativeLayout)findViewById(R.id.rechargeUI_alipayTypeLayout);
         WeChatTypeLayout = (RelativeLayout)findViewById(R.id.rechargeUI_WeChatTypeLayout);
         alipayTypeImage = (ImageView)findViewById(R.id.rechargeUI_alipayTypeImage);
@@ -169,15 +180,23 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         gallery = (MyPagerGalleryView)findViewById(R.id.rechargeUI_gallery);
         pointLayout = (LinearLayout)findViewById(R.id.rechargeUI_pointLayout);
 
+        if (recharge_datas.isEmpty() || 0 == recharge_datas.size()){
+            initHttp();
+        }
+        myAdapter = new MyAdapter(context);
+        moneyListView.setAdapter(myAdapter);
+        moneyListView.setOnItemClickListener(this);
+
+
         ll_back.setOnClickListener(this);
         alipayTypeLayout.setOnClickListener(this);
         WeChatTypeLayout.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
-        Tag1.setOnClickListener(this);
-        Tag2.setOnClickListener(this);
-        Tag3.setOnClickListener(this);
-        Tag4.setOnClickListener(this);
+//        Tag1.setOnClickListener(this);
+//        Tag2.setOnClickListener(this);
+//        Tag3.setOnClickListener(this);
+//        Tag4.setOnClickListener(this);
 
         initBannerHttp();
 
@@ -470,6 +489,108 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         }
     };
 
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        rid = myAdapter.getDatas().get(position).getId();
+        if (position != selectPosition){
+            myAdapter.getDatas().get(position).setSelected(true);
+            myAdapter.getDatas().get(selectPosition).setSelected(false);
+            selectPosition = position;
+        }
+        myAdapter.notifyDataSetChanged();
+    }
+
+    private class MyAdapter extends BaseViewAdapter<RechargeBean> {
+
+        private LayoutInflater inflater;
+
+        public MyAdapter(Context context) {
+            super(context);
+            this.inflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (null == convertView) {
+                convertView = inflater.inflate(R.layout.item_recharge_money, null);
+            }
+            LinearLayout layout = BaseViewHolder.get(convertView,R.id.item_recharge_layout);
+            TextView moneyText = BaseViewHolder.get(convertView,R.id.item_recharge_money);
+
+            RechargeBean bean = getDatas().get(position);
+            layout.setSelected(bean.isSelected());
+            moneyText.setSelected(bean.isSelected());
+            moneyText.setText(bean.getTitle());
+            return convertView;
+        }
+    }
+
+    private void initHttp(){
+        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid == null ||"".equals(uid) || access_token == null || "".equals(access_token)){
+            Toast.makeText(context,"请先登录您的账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context,LoginActivity.class);
+            return;
+        }
+        Log.e("Test","uid:"+uid);
+        Log.e("Test","access_token:"+access_token);
+        RequestParams params = new RequestParams();
+        params.put("uid",uid);
+        params.put("access_token",access_token);
+        HttpHelper.get(context, Urls.rechargeList,params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+                        JSONArray array = new JSONArray(result.getData());
+                        if (recharge_datas.size() != 0 || !recharge_datas.isEmpty()){
+                            recharge_datas.clear();
+                        }
+                        for (int i = 0; i < array.length(); i++){
+                            RechargeBean bean = JSON.parseObject(array.getJSONObject(i).toString(), RechargeBean.class);
+                            recharge_datas.add(bean);
+                            if ( 0 == i){
+                                rid = bean.getId();
+                                bean.setSelected(true);
+                            }else {
+                                bean.setSelected(false);
+                            }
+                        }
+                        myAdapter.setDatas(recharge_datas);
+                        myAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
+
+
     private void initBannerHttp() {
 
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
@@ -499,13 +620,13 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (0 == result.getErrcode()) {
-                        if (datas.size() != 0 || !datas.isEmpty()) {
-                            datas.clear();
+                        if (banner_datas.size() != 0 || !banner_datas.isEmpty()) {
+                            banner_datas.clear();
                         }
                         JSONArray array = new JSONArray(result.getData());
                         for (int i = 0; i < array.length(); i++) {
                             BannerBean bean = JSON.parseObject(array.getJSONObject(i).toString(), BannerBean.class);
-                            datas.add(bean);
+                            banner_datas.add(bean);
                         }
                     } else {
                         UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
@@ -530,12 +651,12 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         });
     }
     private void initBanner() {
-        if (datas == null || datas.isEmpty()) {
+        if (banner_datas == null || banner_datas.isEmpty()) {
             gallery.start(context, null, imageId, 0, pointLayout, R.drawable.point_sel, R.drawable.point_nos);
         } else {
-            imageStrs = new String[datas.size()];
-            for (int i = 0; i < datas.size(); i++) {
-                imageStrs[i] = datas.get(i).getAd_file();
+            imageStrs = new String[banner_datas.size()];
+            for (int i = 0; i < banner_datas.size(); i++) {
+                imageStrs[i] = banner_datas.get(i).getAd_file();
             }
             gallery.start(context, imageStrs, imageId, 3000, pointLayout, R.drawable.point_sel, R.drawable.point_nos);
 
@@ -543,8 +664,8 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
 
                 @Override
                 public void onItemClick(int curIndex) {
-                    UIHelper.bannerGoAct(context, datas.get(curIndex).getApp_type(), datas.get(curIndex).getApp_id(),
-                            datas.get(curIndex).getAd_link());
+                    UIHelper.bannerGoAct(context, banner_datas.get(curIndex).getApp_type(), banner_datas.get(curIndex).getApp_id(),
+                            banner_datas.get(curIndex).getAd_link());
                 }
             });
         }
