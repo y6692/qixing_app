@@ -253,37 +253,39 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
         popupwindow.setAnimationStyle(R.style.PopupAnimation);
         popupwindow.setOutsideTouchable(false);
 
-        LinearLayout feedbackLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_feedbackLayout);
-        LinearLayout helpLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_helpLayout);
-        final LinearLayout callLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_callLayout);
-//        TextView cancleBtn = (TextView)customView.findViewById(R.id.pop_menu_cancleBtn);
+        LinearLayout wechatLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_wechatLayout);
+        LinearLayout wxcircleLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_wxcircleLayout);
+        LinearLayout qqLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_qqLayout);
+        LinearLayout qzoneBtn = (LinearLayout)customView.findViewById(R.id.pop_menu_qzoneLayout);
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()){
-                    case R.id.pop_menu_feedbackLayout:
+                    case R.id.pop_menu_wechatLayout:
+                        new ShareAction(RouteDetailActivity.this).setPlatform(SHARE_MEDIA.WEIXIN).setCallback(umShareListener).withMedia(image).share();
+                        break;
+
+                    case R.id.pop_menu_wxcircleLayout:
+                        new ShareAction(RouteDetailActivity.this).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE).setCallback(umShareListener).withMedia(image).share();
+                        break;
+
+                    case R.id.pop_menu_qqLayout:
                         new ShareAction(RouteDetailActivity.this).setPlatform(SHARE_MEDIA.QQ).setCallback(umShareListener).withMedia(image).share();
+                        break;
 
-
+                    case R.id.pop_menu_qzoneLayout:
+                        new ShareAction(RouteDetailActivity.this).setPlatform(SHARE_MEDIA.QZONE).setCallback(umShareListener).withMedia(image).share();
                         break;
-                    case R.id.pop_menu_helpLayout:
-                        UIHelper.goToAct(context, ReportViolationActivity.class);
-                        break;
-                    case R.id.pop_menu_callLayout:
-                        UIHelper.goToAct(context, ServiceCenterActivity.class);
-                        break;
-//                    case R.id.pop_menu_cancleBtn:
-//                        break;
                 }
                 popupwindow.dismiss();
             }
         };
 
-        feedbackLayout.setOnClickListener(listener);
-        helpLayout.setOnClickListener(listener);
-        callLayout.setOnClickListener(listener);
-//        cancleBtn.setOnClickListener(listener);
+        wechatLayout.setOnClickListener(listener);
+        wxcircleLayout.setOnClickListener(listener);
+        qqLayout.setOnClickListener(listener);
+        qzoneBtn.setOnClickListener(listener);
 
         popupwindow.showAtLocation(customView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }

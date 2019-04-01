@@ -16,110 +16,116 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="147dp"
+        android:orientation="horizontal"
         android:background="@color/white"
         android:layout_alignParentBottom="true">
 
-        <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="@dimen/dp40"-->
-            <!--android:gravity="center"-->
-            <!--android:text="客户服务"-->
-            <!--android:textColor="@color/tx_black"-->
-            <!--android:textSize="@dimen/sp16"/>-->
+        <LinearLayout
+            android:id="@+id/pop_menu_wechatLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
-        <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="@dimen/line_height"-->
-            <!--android:background="@color/white"/>-->
+            <ImageView
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginTop="22dp"
+                android:background="@null"
+                android:src="@drawable/umeng_socialize_wechat"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp15"
+                android:text="微信"/>
+        </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/pop_menu_wxcircleLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="27dp">
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
-            <LinearLayout
-                android:id="@+id/pop_menu_feedbackLayout"
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginTop="22dp"
+                android:background="@null"
+                android:src="@drawable/umeng_socialize_wxcircle"/>
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
-
-                <ImageView
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:layout_marginTop="22dp"
-                    android:background="@null"
-                    android:src="@drawable/service_icon1"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:textColor="#333333"
-                    android:textSize="@dimen/sp15"
-                    android:text="故障上报"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/pop_menu_helpLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
-
-                <ImageView
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:layout_marginTop="22dp"
-                    android:background="@null"
-                    android:src="@drawable/service_icon2"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:textColor="#333333"
-                    android:textSize="@dimen/sp15"
-                    android:text="举报违规"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/pop_menu_callLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
-
-                <ImageView
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:layout_marginTop="22dp"
-                    android:background="@null"
-                    android:src="@drawable/service_icon3"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:textColor="#333333"
-                    android:textSize="@dimen/sp15"
-                    android:text="客服中心"/>
-            </LinearLayout>
+                android:layout_marginTop="1dp"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp15"
+                android:text="朋友圈"/>
         </LinearLayout>
-        <!--<TextView-->
-            <!--android:id="@+id/pop_menu_cancleBtn"-->
+
+        <LinearLayout
+            android:id="@+id/pop_menu_qqLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginTop="22dp"
+                android:background="@null"
+                android:src="@drawable/umeng_socialize_qq"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp15"
+                android:text="QQ"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pop_menu_qzoneLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginTop="22dp"
+                android:background="@null"
+                android:src="@drawable/umeng_socialize_qzone"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp15"
+                android:text="空间"/>
+        </LinearLayout>
+
+
+
+        <!--<LinearLayout-->
             <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="@dimen/dp40"-->
-            <!--android:background="@color/white"-->
-            <!--android:textSize="@dimen/sp16"-->
-            <!--android:text="取消"-->
-            <!--android:textColor="@color/tx_black"-->
-            <!--android:gravity="center"/>-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:paddingBottom="27dp">-->
+        <!--</LinearLayout>-->
+
+
     </LinearLayout>
 </RelativeLayout>
