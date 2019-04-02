@@ -95,6 +95,7 @@ import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.core.widget.LoadingDialog2;
 import cn.qimate.bike.fragment.BikeFragment;
 import cn.qimate.bike.jpush.ServiceReceiver;
 import cn.qimate.bike.model.CurRoadBikingBean;
@@ -135,7 +136,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private Context context;
     private  LoadingDialog loadingDialog;
     private  LoadingDialog loadingDialog2;
-    private  LoadingDialog lockLoading;
+    private LoadingDialog2 lockLoading;
     private LinearLayout mainLayout;
     private LinearLayout ll_back;
     private TextView title;
@@ -982,7 +983,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //        loadingDialog2.setCancelable(false);
 //        loadingDialog2.setCanceledOnTouchOutside(false);
 
-        lockLoading = new LoadingDialog(this);
+        lockLoading = new LoadingDialog2(this);
         lockLoading.setCancelable(false);
         lockLoading.setCanceledOnTouchOutside(false);
 
@@ -1253,7 +1254,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 startXB();
 
                 if (lockLoading != null && !lockLoading.isShowing()){
-                    lockLoading.setTitle("还车点确认中");
+                    lockLoading.setTitle("正在还车中");
                     lockLoading.show();
                 }
 
