@@ -37,6 +37,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     private LoadingDialog payLoadingDialog;
     private LinearLayout ll_back;
     private TextView title;
+    private TextView rightBtn;
 
     private TextView bikeCode;
     private TextView bikeNum;
@@ -54,7 +55,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_cur_road_biked);
+        setContentView(R.layout.activity_unpay_route);
         context = this;
         SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
         initView();
@@ -64,14 +65,14 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     protected void onResume() {
         isForeground = true;
         super.onResume();
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT);
-            UIHelper.goToAct(context,LoginActivity.class);
-        }else {
-            getCurrentorder(uid,access_token);
-        }
+//        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+//        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+//        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+//            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT);
+//            UIHelper.goToAct(context,LoginActivity.class);
+//        }else {
+//            getCurrentorder(uid,access_token);
+//        }
 
         Log.e("history===","biked===onResume");
     }
@@ -94,19 +95,23 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
 
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
-        title.setText("当前行程");
+        title.setText("待支付行程");
+        rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
+        rightBtn.setText("计费规则");
 
-        bikeCode = (TextView)findViewById(R.id.curRoadUI_biked_code);
-        bikeNum = (TextView)findViewById(R.id.curRoadUI_biked_num);
-        startTime = (TextView)findViewById(R.id.curRoadUI_biked_startTime);
-        endTime = (TextView)findViewById(R.id.curRoadUI_biked_endTime);
-        timeText = (TextView)findViewById(R.id.curRoadUI_biked_time);
-        moneyText = (TextView)findViewById(R.id.curRoadUI_biked_money);
-        balanceText = (TextView)findViewById(R.id.curRoadUI_biked_balance);
-        payBalanceLayout = (LinearLayout) findViewById(R.id.curRoadUI_biked_payBalanceLayout);
+
+//        bikeCode = (TextView)findViewById(R.id.curRoadUI_biked_code);
+//        bikeNum = (TextView)findViewById(R.id.curRoadUI_biked_num);
+//        startTime = (TextView)findViewById(R.id.curRoadUI_biked_startTime);
+//        endTime = (TextView)findViewById(R.id.curRoadUI_biked_endTime);
+//        timeText = (TextView)findViewById(R.id.curRoadUI_biked_time);
+//        moneyText = (TextView)findViewById(R.id.curRoadUI_biked_money);
+//        balanceText = (TextView)findViewById(R.id.curRoadUI_biked_balance);
+//        payBalanceLayout = (LinearLayout) findViewById(R.id.curRoadUI_biked_payBalanceLayout);
 
         ll_back.setOnClickListener(this);
-        payBalanceLayout.setOnClickListener(this);
+        rightBtn.setOnClickListener(this);
+//        payBalanceLayout.setOnClickListener(this);
     }
 
 
@@ -176,6 +181,11 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
             case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
+
+            case R.id.mainUI_title_rightBtn:
+                UIHelper.goToAct(context, BalanceDetailActivity.class);
+                break;
+
             case R.id.curRoadUI_biked_payBalanceLayout:
                 if (Double.parseDouble(user_money) < Double.parseDouble(prices)){
                     Toast.makeText(context,"当前余额不足,请先充值!",Toast.LENGTH_SHORT).show();
