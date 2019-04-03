@@ -1,6 +1,7 @@
 package cn.qimate.bike.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,7 @@ import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
+import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
@@ -38,6 +40,8 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     private LinearLayout ll_back;
     private TextView title;
     private TextView rightBtn;
+
+    private CustomDialog customDialog;
 
     private TextView bikeCode;
     private TextView bikeNum;
@@ -92,6 +96,15 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
         payLoadingDialog = new LoadingDialog(context);
         payLoadingDialog.setCancelable(false);
         payLoadingDialog.setCanceledOnTouchOutside(false);
+
+        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setTitle("计费规则").setMessage("0.5元/半小时，不满半小时按半小时算，每天封顶5元。")
+                .setNegativeButton("我知道了", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        customDialog = customBuilder.create();
 
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
@@ -183,7 +196,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                 break;
 
             case R.id.mainUI_title_rightBtn:
-                UIHelper.goToAct(context, BalanceDetailActivity.class);
+                customDialog.show();
                 break;
 
             case R.id.curRoadUI_biked_payBalanceLayout:
