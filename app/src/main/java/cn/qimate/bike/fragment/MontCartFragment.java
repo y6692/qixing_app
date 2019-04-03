@@ -74,6 +74,7 @@ public class MontCartFragment extends BaseFragment implements View.OnClickListen
 
     private Context context;
 
+    private RelativeLayout ll_coupon;
     private LinearLayout submitBtn;
 
 
@@ -132,8 +133,10 @@ public class MontCartFragment extends BaseFragment implements View.OnClickListen
 //        loadingDialog.setCancelable(false);
 //        loadingDialog.setCanceledOnTouchOutside(false);
 
+        ll_coupon = (RelativeLayout)getActivity().findViewById(R.id.ll_coupon);
         submitBtn = (LinearLayout)getActivity().findViewById(R.id.ui_payMonth_cart_submitBtn);
 
+        ll_coupon.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
     }
 
@@ -143,8 +146,12 @@ public class MontCartFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
 
-            case R.id.ui_payMonth_cart_submitBtn:
+            case R.id.ll_coupon:
                 initmPopupWindowView();
+                break;
+
+            case R.id.ui_payMonth_cart_submitBtn:
+                initmPopupWindowView2();
                 break;
             default:
                 break;
@@ -153,6 +160,38 @@ public class MontCartFragment extends BaseFragment implements View.OnClickListen
 
 
     public void initmPopupWindowView(){
+
+        // 获取自定义布局文件的视图
+        View customView = getLayoutInflater().inflate(R.layout.pop_coupon_menu, null, false);
+        // 创建PopupWindow宽度和高度
+        RelativeLayout pop_win_bg = (RelativeLayout) customView.findViewById(R.id.pop_win_bg);
+        ImageView iv_popup_window_back = (ImageView) customView.findViewById(R.id.popupWindow_back);
+        // 获取截图的Bitmap
+        Bitmap bitmap = UtilScreenCapture.getDrawing(getActivity());
+        if (bitmap != null) {
+            // 将截屏Bitma放入ImageView
+            iv_popup_window_back.setImageBitmap(bitmap);
+            // 将ImageView进行高斯模糊【25是最高模糊等级】【0x77000000是蒙上一层颜色，此参数可不填】
+            UtilBitmap.blurImageView(context, iv_popup_window_back, 10,0xAA000000);
+        } else {
+            // 获取的Bitmap为null时，用半透明代替
+            iv_popup_window_back.setBackgroundColor(0x77000000);
+        }
+        // 打开弹窗
+        UtilAnim.showToUp(pop_win_bg, iv_popup_window_back);
+        // 创建PopupWindow宽度和高度
+        final PopupWindow popupwindow = new PopupWindow(customView, LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT, true);
+        /**
+         * 设置动画效果 ,从上到下加载方式等，不设置自动的下拉，最好 [动画效果不好，不加实现下拉效果，不错]
+         */
+        popupwindow.setAnimationStyle(R.style.PopupAnimation);
+        popupwindow.setOutsideTouchable(false);
+
+        popupwindow.showAtLocation(customView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    public void initmPopupWindowView2(){
 
         // 获取自定义布局文件的视图
         View customView = getLayoutInflater().inflate(R.layout.pop_pay_menu, null, false);
@@ -181,35 +220,8 @@ public class MontCartFragment extends BaseFragment implements View.OnClickListen
         popupwindow.setAnimationStyle(R.style.PopupAnimation);
         popupwindow.setOutsideTouchable(false);
 
-//        LinearLayout feedbackLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_feedbackLayout);
-//        LinearLayout helpLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_helpLayout);
-//        final LinearLayout callLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_callLayout);
-//
-//        View.OnClickListener listener = new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                switch (v.getId()){
-//                    case R.id.pop_menu_feedbackLayout:
-//                        UIHelper.goToAct(context, FaultReportActivity.class);
-//                        break;
-//                    case R.id.pop_menu_helpLayout:
-//                        UIHelper.goToAct(context, ReportViolationActivity.class);
-//                        break;
-//                    case R.id.pop_menu_callLayout:
-//                        UIHelper.goToAct(context, ServiceCenterActivity.class);
-//                        break;
-//                }
-//                popupwindow.dismiss();
-//            }
-//        };
-//
-//        feedbackLayout.setOnClickListener(listener);
-//        helpLayout.setOnClickListener(listener);
-//        callLayout.setOnClickListener(listener);
-
         popupwindow.showAtLocation(customView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
-
 
     @Override
     public void onRefresh() {

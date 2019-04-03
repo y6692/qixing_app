@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/pop_win_bg">
+
+    <!-- 弹窗背景 -->
+    <ImageView
+        android:id="@+id/popupWindow_back"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#FFF5F7FA"
+        android:visibility="gone"
+        android:scaleType="fitXY"
+        android:fitsSystemWindows="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="241dp"
+        android:orientation="vertical"
+        android:background="#F5F5F5"
+        android:layout_alignParentBottom="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/block_bcg"
+            android:gravity="center">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="27dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp15"
+                    android:textColor="@color/tx_black"
+                    android:text="不使用优惠券"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/ui_payMonth_cart_alipayTypeImage0"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/pay_type_normal"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/block_bcg"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="9dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                >
+
+                <TextView
+                    android:layout_width="89dp"
+                    android:layout_height="75dp"
+                    android:textSize="@dimen/sp15"
+                    android:textColor="@color/white"
+                    android:background="@drawable/car_coupon"
+                    android:text="九折\n优惠券"
+                    android:gravity="center"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    >
+
+                    <TextView
+                        android:id="@+id/item_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp13"
+                        android:textColor="#333333"
+                        android:text="2019-1-21到期	剩余1天"/>
+
+                    <TextView
+                        android:id="@+id/item_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:textSize="@dimen/sp13"
+                        android:textColor="#333333"
+                        android:text="限用于购买骑行套餐"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/ui_payMonth_cart_alipayTypeImage2"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/pay_type_selected"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/block_bcg"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="9dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                >
+
+                <TextView
+                    android:layout_width="89dp"
+                    android:layout_height="75dp"
+                    android:textSize="@dimen/sp15"
+                    android:textColor="@color/white"
+                    android:background="@drawable/car_coupon"
+                    android:text="九折\n优惠券"
+                    android:gravity="center"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    >
+
+                    <TextView
+                        android:id="@+id/item_num2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp13"
+                        android:textColor="#333333"
+                        android:text="2019-1-21到期	剩余1天"/>
+
+                    <TextView
+                        android:id="@+id/item_status2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:textSize="@dimen/sp13"
+                        android:textColor="#333333"
+                        android:text="限用于购买骑行套餐"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/ui_payMonth_cart_alipayTypeImage1"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/pay_type_normal"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                />
+
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+</RelativeLayout>

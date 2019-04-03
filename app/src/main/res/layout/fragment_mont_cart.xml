@@ -7,7 +7,7 @@
 
     <cn.qimate.bike.core.widget.MyScrollView
         android:layout_width="match_parent"
-        android:layout_height="495dp">
+        android:layout_height="450dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -550,10 +550,74 @@
 
     </cn.qimate.bike.core.widget.MyScrollView>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/ll_coupon"
+        android:background="#DDDDDD"/>
 
+    <RelativeLayout
+        android:id="@+id/ll_coupon"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_above="@+id/ll_line"
+        android:background="#FFEEEF"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="24dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp16"
+                android:textColor="#333333"
+                android:text="优惠券"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ui_payMonth_cart_submitBtn2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp14"
+                android:textColor="#E60012"
+                android:text="不使用优惠券/已选月卡九折券"
+                />
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="14dp"
+                android:layout_marginLeft="11dp"
+                android:layout_marginRight="27dp"
+                android:src="@drawable/yjt4"
+                />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/ll_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/ll_4"
+        android:background="#DDDDDD"/>
 
 
     <LinearLayout
+        android:id="@+id/ll_4"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@id/ll_3"

@@ -207,7 +207,7 @@
             android:background="#DDDDDD"/>
 
         <RelativeLayout
-            android:id="@+id/personUI_bottom_myMsgLayout3"
+            android:id="@+id/rl_coupon"
             android:layout_width="match_parent"
             android:layout_height="56dp">
 
