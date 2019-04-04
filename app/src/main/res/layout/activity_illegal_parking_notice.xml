@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ui_main"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:orientation="vertical">
+
+    <!--<include-->
+        <!--layout="@layout/ui_main_title"/>-->
+
+    <RelativeLayout
+        android:id="@+id/mainUI_titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp40"
+        android:background="@drawable/title_gradient"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:id="@+id/ll_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/mainUI_title_backBtn"
+                android:paddingLeft="14dp"
+                android:paddingRight="12dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/back_image"/>
+
+            <TextView
+                android:layout_marginLeft="-10dp"
+                android:id="@+id/tv_left"
+                android:textSize="@dimen/sp16"
+                android:text="返回"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/mainUI_leftBtn"
+            android:layout_width="@dimen/dp45"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:src="@drawable/main_left_icon"
+            android:padding="8dp"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/mainUI_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="骑行中"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp18"/>
+
+        <TextView
+            android:id="@+id/curRoadUI_rightBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="借/还车异常"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp16"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="21dp"/>
+    </RelativeLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/mainUI_titleLayout"
+        android:background="@color/ui_backgroud"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.amap.api.maps.MapView
+                    android:id="@+id/curRoadUI_biking_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </com.amap.api.maps.MapView>
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="92dp"
+                android:background="@drawable/title_gradient">
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/block_bcg"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:background="@drawable/block_bcg3"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="17dp"
+                        android:textColor="#A2A2A2"
+                        android:textSize="@dimen/sp14"
+                        android:text="单车编号："
+                        />
+
+                    <TextView
+                        android:id="@+id/curRoadUI_biking_code"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp14"
+                        android:textColor="#A2A2A2"
+                        android:layout_centerVertical="true"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="63dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp35"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/curRoadUI_biking_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#E60012"
+                                android:textSize="25sp"
+                                android:text="12"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#E60012"
+                                android:textSize="@dimen/dp15"
+                                android:text="分钟"
+                                />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:textColor="#7D7D7D"
+                            android:textSize="13sp"
+                            android:text="骑行时间"
+                            />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#E0E0E0"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp35"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/curRoadUI_biking_Text2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#E60012"
+                                android:textSize="25sp"
+                                android:text="312"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#E60012"
+                                android:textSize="@dimen/dp15"
+                                android:text="千卡"
+                                />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:textColor="#7D7D7D"
+                            android:textSize="13sp"
+                            android:text="消耗热量"
+                            />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#E0E0E0"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp35"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/curRoadUI_biking_Text3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#E60012"
+                                android:textSize="25sp"
+                                android:text="5"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#E60012"
+                                android:textSize="@dimen/dp15"
+                                android:text="元"
+                                />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:textColor="#7D7D7D"
+                            android:textSize="13sp"
+                            android:text="预计费用"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/mainUI_scanCode_lock"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="23dp"
+                    android:layout_marginRight="23dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_alignParentBottom="true"
+                    >
+
+                    <LinearLayout
+                        android:id="@+id/curRoadUI_biking_lookPsdBtn"
+                        android:layout_width="96dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/btn_bcg_again"
+                        android:gravity="center"
+                        >
+
+                        <TextView
+                            android:id="@+id/tv_lookPsdBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="再次开锁"
+                            android:textSize="@dimen/sp16"
+                            android:textColor="#E60012"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/curRoadUI_biking_endBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_bcg_scan_gradient2"
+                        android:gravity="center"
+                        >
+
+                        <TextView
+                            android:id="@+id/tv_endBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="我要还车"
+                            android:textSize="@dimen/sp16"
+                            android:textColor="@color/white"
+                            />
+
+                    </LinearLayout>
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/tv"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="7dp"-->
+                        <!--android:text="我要还车"-->
+                        <!--android:textSize="@dimen/sp18"-->
+                        <!--android:textColor="@color/white"-->
+                        <!--android:layout_centerInParent="true"-->
+                        <!--/>-->
+
+
+                    <!--<Button-->
+                        <!--android:id="@+id/curRoadUI_biking_lookPsdBtn"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="@dimen/dp40"-->
+                        <!--android:text="查看密码"-->
+                        <!--android:textSize="@dimen/sp14"-->
+                        <!--android:textColor="#f86961"-->
+                        <!--android:background="@drawable/button_shape"-->
+                        <!--android:gravity="center"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:layout_marginRight="@dimen/dp10"/>-->
+
+                    <!--<Button-->
+                        <!--android:id="@+id/curRoadUI_biking_endBtn"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="@dimen/dp40"-->
+                        <!--android:text="结束用车"-->
+                        <!--android:textSize="@dimen/sp14"-->
+                        <!--android:textColor="#f86961"-->
+                        <!--android:background="@drawable/button_shape"-->
+                        <!--android:gravity="center"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:layout_marginLeft="@dimen/dp10"/>-->
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="22dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_alignParentBottom="true"
+                    >
+
+                    <ImageView
+                        android:layout_width="13dp"
+                        android:layout_height="13dp"
+                        android:src="@drawable/warn"/>
+
+                    <TextView
+                        android:id="@+id/curRoadUI_biking_hintText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:text="还车说明：校内定点停车，并点击“我要还车”"
+                        android:textSize="@dimen/sp13"
+                        android:textColor="#A2A2A2"
+                        android:layout_centerInParent="true"
+                        />
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/block_bcg4"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_marginLeft="13dp"
+                        android:orientation="horizontal"
+                        android:layout_alignParentLeft="true">
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:src="@drawable/info"/>
+
+                        <TextView
+                            android:id="@+id/tv_authBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="您还未到还车点，点击查看还车点"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp13"
+                            android:layout_marginLeft="10dp"/>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_marginRight="13dp"
+                        android:orientation="horizontal"
+                        android:layout_alignParentRight="true">
+
+                        <ImageView
+                            android:layout_width="7dp"
+                            android:layout_height="11dp"
+                            android:src="@drawable/yjt3"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/curRoadUI_biking_myLocationLayout"
+                android:layout_width="@dimen/dp40"
+                android:layout_height="@dimen/dp40"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="24dp"
+                android:layout_marginLeft="@dimen/dp25"
+                android:orientation="vertical"
+                android:background="@drawable/back_bd2"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/curRoadUI_biking_myLocation"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/btn_location"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="24dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="@dimen/dp25"
+                android:gravity="center">
+                <LinearLayout
+                    android:id="@+id/curRoadUI_biking_slideLayout"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/back_bd2"
+                    android:layout_marginBottom="21dp">
+                    <ImageView
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:src="@drawable/slide_icon"
+                        android:layout_alignParentRight="true"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/curRoadUI_biking_linkServiceLayout"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
+                    android:background="@drawable/back_bd2"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/curRoadUI_biking_linkService_btn"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:src="@drawable/link_service_icon"
+                        android:layout_alignParentRight="true"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/curRoadUI_biking_refreshLayout"
+                android:layout_width="@dimen/dp40"
+                android:layout_height="@dimen/dp40"
+                android:orientation="vertical"
+                android:layout_marginBottom="21dp"
+                android:layout_alignParentLeft="true"
+                android:layout_above="@id/curRoadUI_biking_myLocationLayout"
+                android:layout_marginLeft="@dimen/dp25"
+                android:gravity="center"
+                android:background="@drawable/back_bd2"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/dp25"
+                    android:layout_height="23dp"
+                    android:src="@drawable/refresh_icon"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/dp45"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:background="#f2f8f6"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:paddingLeft="@dimen/dp5"-->
+            <!--android:paddingRight="@dimen/dp5">-->
+            <!--<ImageView-->
+                <!--android:layout_width="@dimen/dp25"-->
+                <!--android:layout_height="@dimen/dp25"-->
+                <!--android:scaleType="centerInside"-->
+                <!--android:background="@null"-->
+                <!--android:src="@drawable/ic_error"/>-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/curRoadUI_biking_hintText"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/dp5"-->
+                <!--android:textColor="@color/tx_black"-->
+                <!--android:textSize="@dimen/sp14"-->
+                <!--android:text="上锁需手动拉下锁扣，还车需距车一米内点击结束用车!"-->
+                <!--android:lineSpacingExtra="@dimen/dp5"/>-->
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@color/white"-->
+            <!--android:orientation="vertical"-->
+            <!--android:paddingLeft="@dimen/dp5">-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="@dimen/dp40"-->
+                <!--android:paddingLeft="@dimen/dp5"-->
+                <!--android:paddingRight="@dimen/dp10">-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="车辆编号:"-->
+                    <!--android:textSize="@dimen/sp14"-->
+                    <!--android:textColor="@color/tx_black"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_centerVertical="true"/>-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/curRoadUI_biking_code"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textSize="@dimen/sp14"-->
+                    <!--android:textColor="@color/tx_black"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_centerVertical="true"/>-->
+            <!--</RelativeLayout>-->
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="@dimen/line_height"-->
+                <!--android:background="#dedede"/>-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="@dimen/dp40"-->
+                <!--android:paddingLeft="@dimen/dp5"-->
+                <!--android:paddingRight="@dimen/dp10">-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="租车时间:"-->
+                    <!--android:textSize="@dimen/sp14"-->
+                    <!--android:textColor="@color/tx_black"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_centerVertical="true"/>-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/curRoadUI_biking_time"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textSize="@dimen/sp14"-->
+                    <!--android:textColor="@color/tx_black"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_centerVertical="true"/>-->
+            <!--</RelativeLayout>-->
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="@dimen/line_height"-->
+                <!--android:background="#dedede"/>-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:paddingLeft="@dimen/dp15"-->
+                <!--android:paddingRight="@dimen/dp15"-->
+                <!--android:paddingTop="@dimen/dp15"-->
+                <!--android:paddingBottom="@dimen/dp5"-->
+                <!--android:gravity="center_vertical">-->
+
+                <!--<Button-->
+                    <!--android:id="@+id/curRoadUI_biking_lookPsdBtn"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="@dimen/dp40"-->
+                    <!--android:text="查看密码"-->
+                    <!--android:textSize="@dimen/sp14"-->
+                    <!--android:textColor="#f86961"-->
+                    <!--android:background="@drawable/button_shape"-->
+                    <!--android:gravity="center"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:layout_marginRight="@dimen/dp10"/>-->
+
+                <!--<Button-->
+                    <!--android:id="@+id/curRoadUI_biking_endBtn"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="@dimen/dp40"-->
+                    <!--android:text="结束用车"-->
+                    <!--android:textSize="@dimen/sp14"-->
+                    <!--android:textColor="#f86961"-->
+                    <!--android:background="@drawable/button_shape"-->
+                    <!--android:gravity="center"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:layout_marginLeft="@dimen/dp10"/>-->
+            <!--</LinearLayout>-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/dp15"
+                android:paddingRight="@dimen/dp15"
+                android:paddingTop="@dimen/dp5"
+                android:paddingBottom="@dimen/dp5"
+                android:gravity="center_vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_stop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp30"
+                    android:text="临时停车"
+                    android:textSize="@dimen/sp13"
+                    android:gravity="center_vertical"/>
+
+                <Switch
+                    android:id="@+id/switcher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:textOn="是"
+                    android:textOff="否"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/ll_role"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="right|center_vertical">
+
+                    <TextView
+                        android:id="@+id/tv_role"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="临时停车说明"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/sp13"
+                        android:gravity="center_vertical"/>
+
+                    <ImageView
+                        android:layout_width="@dimen/dp25"
+                        android:layout_height="@dimen/dp25"
+                        android:src="@drawable/right_arrows"
+                        android:padding="@dimen/dp5"
+                        android:scaleType="centerInside"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        <!--</LinearLayout>-->
+
+
+
+
+    </LinearLayout>
+</LinearLayout>

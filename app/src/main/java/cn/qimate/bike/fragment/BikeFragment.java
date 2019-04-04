@@ -109,6 +109,7 @@ import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadBikingActivity;
 import cn.qimate.bike.activity.FaultReportActivity;
 import cn.qimate.bike.activity.FeedbackActivity;
+import cn.qimate.bike.activity.IllegalParkingNoticeActivity;
 import cn.qimate.bike.activity.InsureanceActivity;
 import cn.qimate.bike.activity.InviteCodeActivity;
 import cn.qimate.bike.activity.LoginActivity;
@@ -1533,7 +1534,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener,
                                 closeBroadcast();
                                 deactivate();
 
-                                UIHelper.goToAct(context, CurRoadBikingActivity.class);
+//                                UIHelper.goToAct(context, CurRoadBikingActivity.class);
+                                UIHelper.goToAct(context, IllegalParkingNoticeActivity.class);
                                 break;
                             case 1:
                                 UIHelper.goToAct(context,CurRoadBikedActivity.class);
