@@ -1534,11 +1534,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener,
                                 closeBroadcast();
                                 deactivate();
 
-//                                UIHelper.goToAct(context, CurRoadBikingActivity.class);
-                                UIHelper.goToAct(context, IllegalParkingNoticeActivity.class);
+                                UIHelper.goToAct(context, CurRoadBikingActivity.class);
                                 break;
                             case 1:
-                                UIHelper.goToAct(context,CurRoadBikedActivity.class);
+//                                UIHelper.goToAct(context,CurRoadBikedActivity.class);
+                                UIHelper.goToAct(context, IllegalParkingNoticeActivity.class);
                                 break;
                             default:
                                 break;

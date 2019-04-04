@@ -1,8 +1,11 @@
 package cn.qimate.bike.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -28,8 +31,11 @@ import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 /**
- * Created by Administrator on 2017/2/12 0012.
+ * 待支付行程
+ * Created by yuanyi on 2019/4/3.
  */
 
 public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnClickListener{
@@ -40,6 +46,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     private LinearLayout ll_back;
     private TextView title;
     private TextView rightBtn;
+    private TextView tv_service;
 
     private CustomDialog customDialog;
 
@@ -112,6 +119,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
         rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
         rightBtn.setText("计费规则");
 
+        tv_service = (TextView)findViewById(R.id.tv_service);
 
 //        bikeCode = (TextView)findViewById(R.id.curRoadUI_biked_code);
 //        bikeNum = (TextView)findViewById(R.id.curRoadUI_biked_num);
@@ -124,6 +132,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
 
         ll_back.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
+        tv_service.setOnClickListener(this);
 //        payBalanceLayout.setOnClickListener(this);
     }
 
@@ -197,6 +206,48 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
 
             case R.id.mainUI_title_rightBtn:
                 customDialog.show();
+                break;
+
+            case R.id.tv_service:
+                if (Build.VERSION.SDK_INT >= 23) {
+                    int checkPermission = checkSelfPermission(Manifest.permission.CALL_PHONE);
+                    if (checkPermission != PERMISSION_GRANTED) {
+                        if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
+                            requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
+                        } else {
+                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开拨打电话权限！")
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                        }
+                                    }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
+                                }
+                            });
+                            customBuilder.create().show();
+                        }
+                        return;
+                    }
+                }
+                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                customBuilder.setTitle("温馨提示").setMessage("确认拨打" + "0519-86999222" + "吗?")
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        Intent intent=new Intent();
+                        intent.setAction(Intent.ACTION_CALL);
+                        intent.setData(Uri.parse("tel:" + "0519-86999222"));
+                        startActivity(intent);
+                    }
+                });
+                customBuilder.create().show();
                 break;
 
             case R.id.curRoadUI_biked_payBalanceLayout:
