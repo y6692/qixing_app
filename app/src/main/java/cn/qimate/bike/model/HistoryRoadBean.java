@@ -11,6 +11,7 @@ public class HistoryRoadBean {
     private String prices;
     private String codenum;
     private String st_time;
+    private boolean isSelected = false;
 
     public String getOid() {
         return oid;
@@ -50,5 +51,13 @@ public class HistoryRoadBean {
 
     public void setSt_time(String st_time) {
         this.st_time = st_time;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

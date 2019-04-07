@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -222,6 +223,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                                             dialog.cancel();
                                         }
                                     }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.M)
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
                                     requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
