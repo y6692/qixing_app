@@ -1,47 +1,24 @@
 package cn.qimate.bike.base;
 
-import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.AMapUtils;
-import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.Circle;
-import com.amap.api.maps.model.CircleOptions;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
-import com.amap.api.maps.model.MarkerOptions;
-import com.amap.api.maps.model.Polygon;
-import com.amap.api.maps.model.PolygonOptions;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
@@ -49,41 +26,22 @@ import com.sunshine.blelibrary.inter.OnDeviceSearchListener;
 import com.sunshine.blelibrary.utils.GlobalParameterUtils;
 
 import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
-import cn.qimate.bike.activity.CurRoadBikedActivity;
-import cn.qimate.bike.activity.CurRoadBikingActivity;
-import cn.qimate.bike.activity.CurRoadStartActivity;
-import cn.qimate.bike.activity.FeedbackActivity;
-import cn.qimate.bike.activity.HistoryRoadDetailActivity;
-import cn.qimate.bike.activity.LoginActivity;
-import cn.qimate.bike.activity.Main2Activity;
-import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.ble.utils.ParseLeAdvData;
 import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
-import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
-import cn.qimate.bike.core.widget.CustomDialog;
-import cn.qimate.bike.core.widget.LoadingDialog;
-import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
-import cn.qimate.bike.util.ToastUtil;
 
 import static cn.qimate.bike.activity.CurRoadBikingActivity.bytes2hex03;
-import static cn.qimate.bike.core.common.Urls.schoolrangeList;
 
 public class BaseFragmentActivity extends AppCompatActivity
 		implements

@@ -1,38 +1,20 @@
 package cn.qimate.bike.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -41,63 +23,35 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alipay.sdk.app.PayTask;
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
 import com.huewu.pla.lib.MultiColumnListView;
 import com.huewu.pla.lib.internal.PLA_AdapterView;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.vondear.rxtools.RxFileTool;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
-import cn.nostra13.universalimageloader.core.ImageLoader;
-import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.alipay.PayResult;
 import cn.qimate.bike.base.BaseViewAdapter;
 import cn.qimate.bike.base.BaseViewHolder;
-import cn.qimate.bike.core.common.BitmapUtils1;
 import cn.qimate.bike.core.common.HttpHelper;
-import cn.qimate.bike.core.common.NetworkUtils;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
-import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
-import cn.qimate.bike.core.widget.MyGridView;
-import cn.qimate.bike.core.widget.MyListView;
 import cn.qimate.bike.core.widget.MyPagerGalleryView;
-import cn.qimate.bike.img.NetUtil;
 import cn.qimate.bike.model.BannerBean;
 import cn.qimate.bike.model.RechargeBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
-import cn.qimate.bike.util.ToastUtil;
-import cn.qimate.bike.util.UtilAnim;
-import cn.qimate.bike.util.UtilBitmap;
-import cn.qimate.bike.util.UtilScreenCapture;
-
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 /**
  * Created by Administrator1 on 2017/7/20.

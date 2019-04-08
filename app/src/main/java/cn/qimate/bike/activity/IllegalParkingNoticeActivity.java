@@ -83,7 +83,6 @@ import cn.qimate.bike.R;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.ble.utils.ParseLeAdvData;
 import cn.qimate.bike.core.common.AppManager;
-import cn.qimate.bike.core.common.DisplayUtil;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;

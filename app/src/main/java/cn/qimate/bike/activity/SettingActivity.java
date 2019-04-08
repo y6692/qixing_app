@@ -5,14 +5,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Selection;
-import android.text.Spannable;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,13 +16,9 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 
 import org.apache.http.Header;
-import org.json.JSONArray;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
-import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
@@ -40,7 +31,6 @@ import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.ResultConsel;
-import cn.qimate.bike.model.SchoolListBean;
 import cn.qimate.bike.model.UserIndexBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 

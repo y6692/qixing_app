@@ -1,2 +1,3 @@
 include ':app', ':pullzoomview', ':LongshTabStripLibrary',':RxTools-library'
-include ':sunshinelibrary', ':library2', ':library'
+include ':sunshinelibrary', ':library'
+include ':library2'

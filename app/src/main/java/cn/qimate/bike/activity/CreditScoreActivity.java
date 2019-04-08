@@ -15,7 +15,6 @@ import com.alibaba.fastjson.JSON;
 
 import org.apache.http.Header;
 
-import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
