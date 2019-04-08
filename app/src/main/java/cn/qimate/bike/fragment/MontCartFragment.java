@@ -309,6 +309,10 @@ public class MontCartFragment extends BaseFragment implements View.OnClickListen
 //            myAdapter.getDatas().get(selectPosition).setSelected(false);
 //            selectPosition = position;
 //        }
+
+        TextView item_money = BaseViewHolder.get(view, R.id.item_money);
+        item_money.setTextColor(Color.parseColor("#333333"));
+
         myMontCartAdapter.notifyDataSetChanged();
     }
 

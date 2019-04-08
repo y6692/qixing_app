@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_marginTop="23dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginRight="9dp"
+        android:orientation="horizontal"
+        >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/block_bcg11_2"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+
+            <ImageView
+                android:layout_width="34dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="2dp"
+                android:src="@drawable/recommend_icon"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:textSize="25sp"
+                        android:textColor="#E60012"
+                        android:text="8"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/sp14"
+                        android:textColor="#333333"
+                        android:text="次/"
+                        android:gravity="bottom"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="14sp"
+                        android:textColor="#E60012"
+                        android:text="4"
+                        android:gravity="bottom"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/sp14"
+                        android:textColor="#333333"
+                        android:text="元"
+                        android:gravity="bottom"
+                        />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/block_bcg12_1"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="@color/white"
+                    android:text="30天有效期"
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_marginLeft="9dp"-->
+            <!--android:background="@drawable/block_bcg11_2"-->
+            <!--android:orientation="vertical"-->
+            <!--android:gravity="center"-->
+            <!--&gt;-->
+
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="60dp"-->
+                <!--android:orientation="vertical"-->
+                <!--android:gravity="center"-->
+                <!--&gt;-->
+
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--&gt;-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="30dp"-->
+                        <!--android:textSize="25sp"-->
+                        <!--android:textColor="#E60012"-->
+                        <!--android:text="15"-->
+                        <!--/>-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:textSize="@dimen/sp14"-->
+                        <!--android:textColor="#333333"-->
+                        <!--android:text="次/"-->
+                        <!--android:gravity="bottom"-->
+                        <!--/>-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:textSize="14sp"-->
+                        <!--android:textColor="#E60012"-->
+                        <!--android:text="7.5"-->
+                        <!--android:gravity="bottom"-->
+                        <!--/>-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:textSize="@dimen/sp14"-->
+                        <!--android:textColor="#333333"-->
+                        <!--android:text="元"-->
+                        <!--android:gravity="bottom"-->
+                        <!--/>-->
+
+                <!--</LinearLayout>-->
+
+
+            <!--</LinearLayout>-->
+
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:layout_marginLeft="1dp"-->
+                <!--android:layout_marginRight="1dp"-->
+                <!--android:layout_marginBottom="1dp"-->
+                <!--android:background="@drawable/block_bcg12_2"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:gravity="center"-->
+                <!--&gt;-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textSize="@dimen/sp14"-->
+                    <!--android:textColor="#959595"-->
+                    <!--android:text="30天有效期"-->
+                    <!--/>-->
+
+            <!--</LinearLayout>-->
+
+        <!--</RelativeLayout>-->
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -15,7 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,8 @@ import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.Circle;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
+import com.huewu.pla.lib.MultiColumnListView;
+import com.huewu.pla.lib.internal.PLA_AdapterView;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -36,7 +40,7 @@ import butterknife.Unbinder;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
-import cn.qimate.bike.activity.PayMontCartActivity;
+import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.base.BaseViewAdapter;
 import cn.qimate.bike.base.BaseViewHolder;
@@ -47,19 +51,26 @@ import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.BadCarBean;
 import cn.qimate.bike.model.GlobalConfig;
+import cn.qimate.bike.model.RechargeBean;
 import cn.qimate.bike.model.ResultConsel;
 
 import static android.app.Activity.RESULT_OK;
 
 @SuppressLint("NewApi")
 public class TimesCartFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
-        AdapterView.OnItemClickListener{
+        PLA_AdapterView.OnItemClickListener{
 
     private View v;
     Unbinder unbinder;
 
     private Context context;
+    
+    private LoadingDialog loadingDialog;
 
+    private MultiColumnListView mclv_timesCartList;
+    private MyTimesCartAdapter myTimesCartAdapter;
+
+    private List<RechargeBean> timesCart_datas;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_times_cart, null);
@@ -72,8 +83,9 @@ public class TimesCartFragment extends BaseFragment implements View.OnClickListe
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         context = getActivity();
+        timesCart_datas = new ArrayList<>();
 
-//        initView();
+        initView();
 //
 //        initHttp();
 //
@@ -111,10 +123,123 @@ public class TimesCartFragment extends BaseFragment implements View.OnClickListe
 
 
     private void initView(){
-//        loadingDialog = new LoadingDialog(context);
-//        loadingDialog.setCancelable(false);
-//        loadingDialog.setCanceledOnTouchOutside(false);
+        loadingDialog = new LoadingDialog(context);
+        loadingDialog.setCancelable(false);
+        loadingDialog.setCanceledOnTouchOutside(false);
 
+        mclv_timesCartList = (MultiColumnListView)getActivity().findViewById(R.id.mclv_timesCartList);
+//        ll_coupon = (RelativeLayout)getActivity().findViewById(R.id.ll_coupon);
+//        submitBtn = (LinearLayout)getActivity().findViewById(R.id.ui_payMonth_cart_submitBtn);
+
+
+        if (timesCart_datas.isEmpty() || 0 == timesCart_datas.size()){
+            initTimesCartHttp();
+        }
+        myTimesCartAdapter = new MyTimesCartAdapter(context);
+        mclv_timesCartList.setAdapter(myTimesCartAdapter);
+        mclv_timesCartList.setOnItemClickListener(this);
+
+//        ll_coupon.setOnClickListener(this);
+//        submitBtn.setOnClickListener(this);
+    }
+
+    private class MyTimesCartAdapter extends BaseViewAdapter<RechargeBean> {
+
+        private LayoutInflater inflater;
+
+        public MyTimesCartAdapter(Context context) {
+            super(context);
+            this.inflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (null == convertView) {
+                convertView = inflater.inflate(R.layout.item_times_cart, null);
+            }
+//            LinearLayout layout = BaseViewHolder.get(convertView,R.id.item_recharge_layout);
+//            TextView moneyText = BaseViewHolder.get(convertView,R.id.item_recharge_money);
+//
+//            RechargeBean bean = getDatas().get(position);
+//            layout.setSelected(bean.isSelected());
+//            moneyText.setSelected(bean.isSelected());
+//            moneyText.setText(bean.getTitle());
+            return convertView;
+        }
+    }
+
+    private void initTimesCartHttp(){
+        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid == null ||"".equals(uid) || access_token == null || "".equals(access_token)){
+            Toast.makeText(context,"请先登录您的账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context,LoginActivity.class);
+            return;
+        }
+        Log.e("Test","uid:"+uid);
+        Log.e("Test","access_token:"+access_token);
+        RequestParams params = new RequestParams();
+        params.put("uid",uid);
+        params.put("access_token",access_token);
+        HttpHelper.get(context, Urls.rechargeList,params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+                        JSONArray array = new JSONArray(result.getData());
+                        if (timesCart_datas.size() != 0 || !timesCart_datas.isEmpty()){
+                            timesCart_datas.clear();
+                        }
+                        for (int i = 0; i < array.length(); i++){
+                            RechargeBean bean = JSON.parseObject(array.getJSONObject(i).toString(), RechargeBean.class);
+                            timesCart_datas.add(bean);
+                            if ( 0 == i){
+//                                rid = bean.getId();
+                                bean.setSelected(true);
+                            }else {
+                                bean.setSelected(false);
+                            }
+                        }
+                        myTimesCartAdapter.setDatas(timesCart_datas);
+                        myTimesCartAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onItemClick(PLA_AdapterView<?> parent, View view, int position, long id) {
+//        rid = myAdapter.getDatas().get(position).getId();
+//        if (position != selectPosition){
+//            myAdapter.getDatas().get(position).setSelected(true);
+//            myAdapter.getDatas().get(selectPosition).setSelected(false);
+//            selectPosition = position;
+//        }
+        myTimesCartAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -131,12 +256,6 @@ public class TimesCartFragment extends BaseFragment implements View.OnClickListe
 //            swipeRefreshLayout.setRefreshing(false);
 //        }
     }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }
-
 
 
 //    private void initHttp(){
