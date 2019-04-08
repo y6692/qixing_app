@@ -5,13 +5,11 @@
     android:background="#F5F5F5">
 
 
-    <cn.qimate.bike.core.widget.MyScrollView
-        android:layout_width="match_parent"
-        android:layout_height="450dp">
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="450dp"
             android:layout_marginLeft="@dimen/dp10"
             android:layout_marginRight="@dimen/dp10"
             android:fitsSystemWindows="true"
@@ -141,414 +139,75 @@
             </LinearLayout>
 
 
-            <LinearLayout
+            <com.huewu.pla.lib.MultiColumnListView
+                xmlns:pla="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/mclv_montCartList"
                 android:layout_width="match_parent"
-                android:layout_height="90dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="18dp"
-                android:orientation="horizontal"
-                >
+                android:layout_height="224dp"
+                android:layout_marginLeft="9dp"
+                android:layout_marginRight="9dp"
+                pla:plaColumnNumber="2"
+                pla:plaLandscapeColumnNumber="3"/>
 
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginRight="9dp"
-                    android:background="@drawable/block_bcg11_2"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    >
-
-                    <ImageView
-                        android:layout_width="34dp"
-                        android:layout_height="35dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginLeft="2dp"
-                        android:src="@drawable/recommend_icon"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        >
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="30dp"
-                                android:textSize="25sp"
-                                android:textColor="#E60012"
-                                android:text="19.9"
-                                />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:textSize="@dimen/sp14"
-                                android:textColor="#333333"
-                                android:text="元"
-                                android:gravity="bottom"
-                                />
-
-                        </LinearLayout>
-
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="1dp"
-                        android:layout_marginRight="1dp"
-                        android:layout_marginBottom="1dp"
-                        android:background="@drawable/block_bcg12_1"
-                        android:layout_alignParentBottom="true"
-                        android:gravity="center"
-                        >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/sp14"
-                            android:textColor="@color/white"
-                            android:text="30天不限次数"
-                            />
-
-                    </LinearLayout>
-
-                </RelativeLayout>
-
-
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="9dp"
-                    android:background="@drawable/block_bcg11_2"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    >
-
-                    <ImageView
-                        android:layout_width="34dp"
-                        android:layout_height="35dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginLeft="2dp"
-                        android:src="@drawable/eight_off_icon"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        >
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:textSize="@dimen/sp14"
-                                android:textColor="#333333"
-                                android:text="首月"
-                                android:gravity="bottom"
-                                />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="30dp"
-                                android:textSize="25sp"
-                                android:textColor="#E60012"
-                                android:text="12"
-                                />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:textSize="@dimen/sp14"
-                                android:textColor="#333333"
-                                android:text="元"
-                                android:gravity="bottom"
-                                />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:textSize="@dimen/sp14"
-                                android:textColor="#333333"
-                                android:text="次月"
-                                android:gravity="bottom"
-                                />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="23dp"
-                                android:textSize="18sp"
-                                android:textColor="#E60012"
-                                android:text="15"
-                                />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:textSize="@dimen/sp14"
-                                android:textColor="#333333"
-                                android:text="元/月"
-                                android:gravity="bottom"
-                                />
-
-                        </LinearLayout>
-
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="1dp"
-                        android:layout_marginRight="1dp"
-                        android:layout_marginBottom="1dp"
-                        android:background="@drawable/block_bcg12_2"
-                        android:layout_alignParentBottom="true"
-                        android:gravity="center"
-                        >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/sp14"
-                            android:textColor="#959595"
-                            android:text="连续包月，不限次"
-                            />
-
-                    </LinearLayout>
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-
-            <LinearLayout
+            <cn.qimate.bike.core.widget.MyScrollView
                 android:layout_width="match_parent"
-                android:layout_height="90dp"
-                android:layout_marginTop="23dp"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="18dp"
-                android:orientation="horizontal"
-                >
+                android:layout_height="match_parent"
+                android:layout_marginTop="26dp">
 
-                <RelativeLayout
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginRight="9dp"
-                    android:background="@drawable/block_bcg11_2"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    >
+                    android:layout_marginLeft="21dp"
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp15"
+                        android:textColor="#646464"
+                        android:textStyle="bold"
+                        android:text="套餐购买须知"/>
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="21dp"
+                        android:textSize="@dimen/sp13"
+                        android:textColor="#A2A2A2"
+                        android:lineSpacingExtra="12dp"
+                        android:text="1、有效期内不限骑行次数，单次骑行前1小时免费，超出时间按正常计费规则计费。\n2、用户需遵守7MA出行服务规则、信用分规则等用户协议要求，骑行套餐购买成功后不支持退款。\n本服务由7MA出行提供，有任何疑问请联系客服。"/>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="30dp"
-                                android:textSize="25sp"
-                                android:textColor="#E60012"
-                                android:text="39.9"
-                                />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:textSize="@dimen/sp15"
+                        android:textColor="#646464"
+                        android:textStyle="bold"
+                        android:text="连续包月声明"/>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:textSize="@dimen/sp14"
-                                android:textColor="#333333"
-                                android:text="元"
-                                android:gravity="bottom"
-                                />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="21dp"
+                        android:textSize="@dimen/sp13"
+                        android:textColor="#A2A2A2"
+                        android:lineSpacingExtra="12dp"
+                        android:text="1、若您开通连续包月套餐，将会通过支付宝免密支付以30天为周期自动续费。\n2、连续包月套餐会在月卡到期前24小时内通过支付宝免密支付扣费，扣费成功后月卡有效期顺延30天，扣费成功后不支持退款。\n3、如需取消连续包月套餐，请在下一次扣费前24小时，在我的钱包—免密管理关闭自动续费功能。"/>
 
-                        </LinearLayout>
+                </LinearLayout>
 
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="1dp"
-                        android:layout_marginRight="1dp"
-                        android:layout_marginBottom="1dp"
-                        android:background="@drawable/block_bcg12_2"
-                        android:layout_alignParentBottom="true"
-                        android:gravity="center"
-                        >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/sp14"
-                            android:textColor="#959595"
-                            android:text="90天不限次"
-                            />
-
-                    </LinearLayout>
-
-                </RelativeLayout>
+            </cn.qimate.bike.core.widget.MyScrollView>
 
 
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="9dp"
-                    android:background="@drawable/block_bcg11_2"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        >
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="30dp"
-                                android:textSize="25sp"
-                                android:textColor="#E60012"
-                                android:text="120"
-                                />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:textSize="@dimen/sp14"
-                                android:textColor="#333333"
-                                android:text="元"
-                                android:gravity="bottom"
-                                />
-
-                        </LinearLayout>
-
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="1dp"
-                        android:layout_marginRight="1dp"
-                        android:layout_marginBottom="1dp"
-                        android:background="@drawable/block_bcg12_2"
-                        android:layout_alignParentBottom="true"
-                        android:gravity="center"
-                        >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/sp14"
-                            android:textColor="#959595"
-                            android:text="180天不限次"
-                            />
-
-                    </LinearLayout>
-
-
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="26dp"
-                android:layout_marginLeft="21dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp15"
-                    android:textColor="#646464"
-                    android:textStyle="bold"
-                    android:text="套餐购买须知"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="21dp"
-                    android:textSize="@dimen/sp13"
-                    android:textColor="#A2A2A2"
-                    android:lineSpacingExtra="12dp"
-                    android:text="1、有效期内不限骑行次数，单次骑行前1小时免费，超出时间按正常计费规则计费。\n2、用户需遵守7MA出行服务规则、信用分规则等用户协议要求，骑行套餐购买成功后不支持退款。\n本服务由7MA出行提供，有任何疑问请联系客服。"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:textSize="@dimen/sp15"
-                    android:textColor="#646464"
-                    android:textStyle="bold"
-                    android:text="连续包月声明"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="21dp"
-                    android:textSize="@dimen/sp13"
-                    android:textColor="#A2A2A2"
-                    android:lineSpacingExtra="12dp"
-                    android:text="1、若您开通连续包月套餐，将会通过支付宝免密支付以30天为周期自动续费。\n2、连续包月套餐会在月卡到期前24小时内通过支付宝免密支付扣费，扣费成功后月卡有效期顺延30天，扣费成功后不支持退款。\n3、如需取消连续包月套餐，请在下一次扣费前24小时，在我的钱包—免密管理关闭自动续费功能。"/>
-
-            </LinearLayout>
 
 
 
         </LinearLayout>
 
-    </cn.qimate.bike.core.widget.MyScrollView>
+
 
     <View
         android:layout_width="match_parent"

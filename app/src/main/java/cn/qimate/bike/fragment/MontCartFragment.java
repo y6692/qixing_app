@@ -32,6 +32,8 @@ import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.Circle;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
+import com.huewu.pla.lib.MultiColumnListView;
+import com.huewu.pla.lib.internal.PLA_AdapterView;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -46,7 +48,9 @@ import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.CouponDetailActivity;
 import cn.qimate.bike.activity.FaultReportActivity;
+import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.activity.PayMontCartActivity;
+import cn.qimate.bike.activity.RechargeActivity;
 import cn.qimate.bike.activity.ReportViolationActivity;
 import cn.qimate.bike.activity.ServiceCenterActivity;
 import cn.qimate.bike.base.BaseFragment;
@@ -61,6 +65,7 @@ import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.BadCarBean;
 import cn.qimate.bike.model.GlobalConfig;
 import cn.qimate.bike.model.HistoryRoadBean;
+import cn.qimate.bike.model.RechargeBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
@@ -70,17 +75,20 @@ import static android.app.Activity.RESULT_OK;
 
 @SuppressLint("NewApi")
 public class MontCartFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
-        AdapterView.OnItemClickListener{
+        PLA_AdapterView.OnItemClickListener{
     private View v;
     Unbinder unbinder;
 
     private Context context;
 
+    private LoadingDialog loadingDialog;
     private RelativeLayout ll_coupon;
     private LinearLayout submitBtn;
 
+    private MultiColumnListView mclv_montCartList;
     ListView listview;
     SwipeRefreshLayout swipeRefreshLayout;
+    private MyMontCartAdapter myMontCartAdapter;
     private MyAdapter myAdapter;
 
     private RelativeLayout rl_total_select;
@@ -94,7 +102,8 @@ public class MontCartFragment extends BaseFragment implements View.OnClickListen
     private View footerViewType05;
 
     private View footerLayout;
-    private List<HistoryRoadBean> datas;
+    private List<RechargeBean> montCart_datas;
+    private List<HistoryRoadBean> coupon_datas;
     private boolean isRefresh = true;// 是否刷新中
     private boolean isLast = false;
     private int showPage = 1;
@@ -112,7 +121,8 @@ public class MontCartFragment extends BaseFragment implements View.OnClickListen
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         context = getActivity();
-        datas = new ArrayList<>();
+        montCart_datas = new ArrayList<>();
+        coupon_datas = new ArrayList<>();
 
         initView();
 //
@@ -183,18 +193,124 @@ public class MontCartFragment extends BaseFragment implements View.OnClickListen
 
 
     private void initView(){
-//        loadingDialog = new LoadingDialog(context);
-//        loadingDialog.setCancelable(false);
-//        loadingDialog.setCanceledOnTouchOutside(false);
+        loadingDialog = new LoadingDialog(context);
+        loadingDialog.setCancelable(false);
+        loadingDialog.setCanceledOnTouchOutside(false);
 
+        mclv_montCartList = (MultiColumnListView)getActivity().findViewById(R.id.mclv_montCartList);
         ll_coupon = (RelativeLayout)getActivity().findViewById(R.id.ll_coupon);
         submitBtn = (LinearLayout)getActivity().findViewById(R.id.ui_payMonth_cart_submitBtn);
+
+
+        if (montCart_datas.isEmpty() || 0 == montCart_datas.size()){
+            initMontCartHttp();
+        }
+        myMontCartAdapter = new MyMontCartAdapter(context);
+        mclv_montCartList.setAdapter(myMontCartAdapter);
+        mclv_montCartList.setOnItemClickListener(this);
 
         ll_coupon.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
     }
 
+    private class MyMontCartAdapter extends BaseViewAdapter<RechargeBean> {
 
+        private LayoutInflater inflater;
+
+        public MyMontCartAdapter(Context context) {
+            super(context);
+            this.inflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (null == convertView) {
+                convertView = inflater.inflate(R.layout.item_mont_cart, null);
+            }
+//            LinearLayout layout = BaseViewHolder.get(convertView,R.id.item_recharge_layout);
+//            TextView moneyText = BaseViewHolder.get(convertView,R.id.item_recharge_money);
+//
+//            RechargeBean bean = getDatas().get(position);
+//            layout.setSelected(bean.isSelected());
+//            moneyText.setSelected(bean.isSelected());
+//            moneyText.setText(bean.getTitle());
+            return convertView;
+        }
+    }
+
+    private void initMontCartHttp(){
+        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid == null ||"".equals(uid) || access_token == null || "".equals(access_token)){
+            Toast.makeText(context,"请先登录您的账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context,LoginActivity.class);
+            return;
+        }
+        Log.e("Test","uid:"+uid);
+        Log.e("Test","access_token:"+access_token);
+        RequestParams params = new RequestParams();
+        params.put("uid",uid);
+        params.put("access_token",access_token);
+        HttpHelper.get(context, Urls.rechargeList,params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+                        JSONArray array = new JSONArray(result.getData());
+                        if (montCart_datas.size() != 0 || !montCart_datas.isEmpty()){
+                            montCart_datas.clear();
+                        }
+                        for (int i = 0; i < array.length(); i++){
+                            RechargeBean bean = JSON.parseObject(array.getJSONObject(i).toString(), RechargeBean.class);
+                            montCart_datas.add(bean);
+                            if ( 0 == i){
+//                                rid = bean.getId();
+                                bean.setSelected(true);
+                            }else {
+                                bean.setSelected(false);
+                            }
+                        }
+                        myMontCartAdapter.setDatas(montCart_datas);
+                        myMontCartAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onItemClick(PLA_AdapterView<?> parent, View view, int position, long id) {
+//        rid = myAdapter.getDatas().get(position).getId();
+//        if (position != selectPosition){
+//            myAdapter.getDatas().get(position).setSelected(true);
+//            myAdapter.getDatas().get(selectPosition).setSelected(false);
+//            selectPosition = position;
+//        }
+        myMontCartAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onClick(View v) {
@@ -210,8 +326,8 @@ public class MontCartFragment extends BaseFragment implements View.OnClickListen
 
             case R.id.rl_total_select:
                 iv_total_select.setImageResource(R.drawable.pay_type_selected);
-                for (int i = 0; i < datas.size(); i++) {
-                    datas.get(i).setSelected(false);
+                for (int i = 0; i < coupon_datas.size(); i++) {
+                    coupon_datas.get(i).setSelected(false);
                 }
                 myAdapter.notifyDataSetChanged();
                 break;
@@ -258,12 +374,12 @@ public class MontCartFragment extends BaseFragment implements View.OnClickListen
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(android.R.color.holo_green_dark), getResources().getColor(android.R.color.holo_green_light),
                 getResources().getColor(android.R.color.holo_orange_light), getResources().getColor(android.R.color.holo_red_light));
 
-        if(datas.isEmpty()){
+        if(coupon_datas.isEmpty()){
             initHttp();
         }
 
         myAdapter = new MyAdapter(context);
-        myAdapter.setDatas(datas);
+        myAdapter.setDatas(coupon_datas);
         listview.setAdapter(myAdapter);
 
         footerLayout.setOnClickListener(this);
@@ -277,11 +393,11 @@ public class MontCartFragment extends BaseFragment implements View.OnClickListen
 
                 iv_total_select.setImageResource(R.drawable.pay_type_normal);
 
-                if (!datas.get(position).isSelected()) {
-                    datas.get(position).setSelected(true);
-                    for (int i = 0; i < datas.size(); i++) {
+                if (!coupon_datas.get(position).isSelected()) {
+                    coupon_datas.get(position).setSelected(true);
+                    for (int i = 0; i < coupon_datas.size(); i++) {
                         if (i != position) {
-                            datas.get(i).setSelected(false);
+                            coupon_datas.get(i).setSelected(false);
                         }
                     }
                 }
@@ -291,10 +407,6 @@ public class MontCartFragment extends BaseFragment implements View.OnClickListen
 
             }
         });
-
-
-
-
 
 
         // 获取截图的Bitmap
@@ -380,7 +492,7 @@ public class MontCartFragment extends BaseFragment implements View.OnClickListen
                         }
                         for (int i = 0; i < array.length(); i++) {
                             HistoryRoadBean bean = JSON.parseObject(array.getJSONObject(i).toString(), HistoryRoadBean.class);
-                            datas.add(bean);
+                            coupon_datas.add(bean);
                         }
 
                     } else {
@@ -550,10 +662,6 @@ public class MontCartFragment extends BaseFragment implements View.OnClickListen
 //        }
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }
 
 
 

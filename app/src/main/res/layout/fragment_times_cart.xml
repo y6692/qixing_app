@@ -16,46 +16,84 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginTop="14dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="18dp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@drawable/block_bcg11_2">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:textSize="@dimen/sp13"
-                android:textColor="#333333"
-                android:text="当前剩余"/>
+            <LinearLayout
+                android:layout_width="103dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/car_coupon"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:textSize="@dimen/sp13"
-                android:textColor="#E60012"
-                android:text="30"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:textSize="@dimen/sp13"
-                android:textColor="#333333"
-                android:text="次骑行将在"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="23sp"
+                        android:textColor="@color/white"
+                        android:text="36"
+                        />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:textSize="@dimen/sp13"
-                android:textColor="#E60012"
-                android:text="23"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp13"
+                        android:textColor="@color/white"
+                        android:text="次"
+                        />
+                </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:textSize="@dimen/sp13"
-                android:textColor="#333333"
-                android:text="天后失效"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textSize="@dimen/sp13"
+                    android:textColor="@color/white"
+                    android:text="剩余次数"
+                    />
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingLeft="26dp"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                >
+
+                <TextView
+                    android:id="@+id/item_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp13"
+                    android:textColor="#333333"
+                    android:text="2019-1-21到期"/>
+
+                <TextView
+                    android:id="@+id/item_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:textSize="@dimen/sp13"
+                    android:textColor="#333333"
+                    android:text="当前剩余骑行次数"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
