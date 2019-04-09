@@ -161,7 +161,6 @@
                         android:id="@+id/tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="7dp"
                         android:text="登录"
                         android:textSize="@dimen/sp18"
                         android:textColor="@color/white"

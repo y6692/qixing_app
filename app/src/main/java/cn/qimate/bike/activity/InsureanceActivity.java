@@ -111,7 +111,7 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_insurance);
+        setContentView(R.layout.activity_identity_card_auth);
         ButterKnife.bind(this);
         context = this;
         isBack = getIntent().getExtras().getBoolean("isBack");
@@ -119,53 +119,50 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
     }
 
     private void init() {
-
-
         loadingDialog = new LoadingDialog(context);
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         titleText = (TextView)findViewById(R.id.mainUI_title_titleText);
-        realNameText = (TextView)findViewById(R.id.ui_insurance_realNameText);
-        certificateNumEdit = (EditText)findViewById(R.id.ui_insurance_certificateNumEdit);
-        certificateNumText = (TextView)findViewById(R.id.ui_insurance_certificateNumText);
-        certificateImage = (ImageView)findViewById(R.id.ui_insurance_certificateImage);
-        dealImage = (ImageView)findViewById(R.id.ui_insurance_dealImage);
-        dealText = (TextView)findViewById(R.id.ui_insurance_dealText);
-        submitBtn = (Button)findViewById(R.id.ui_insurance_submitBtn);
-        remarkText = (TextView)findViewById(R.id.ui_insurance_remarkText);
+//        realNameText = (TextView)findViewById(R.id.ui_insurance_realNameText);
+//        certificateNumEdit = (EditText)findViewById(R.id.ui_insurance_certificateNumEdit);
+//        certificateNumText = (TextView)findViewById(R.id.ui_insurance_certificateNumText);
+//        certificateImage = (ImageView)findViewById(R.id.ui_insurance_certificateImage);
+//        dealImage = (ImageView)findViewById(R.id.ui_insurance_dealImage);
+//        dealText = (TextView)findViewById(R.id.ui_insurance_dealText);
+//        submitBtn = (Button)findViewById(R.id.ui_insurance_submitBtn);
+//        remarkText = (TextView)findViewById(R.id.ui_insurance_remarkText);
+//
+//        iv_popup_window_back = (ImageView)findViewById(R.id.popupWindow_back);
+//        rl_popup_window = (RelativeLayout)findViewById(R.id.popupWindow);
+//        takePhotoBtn = (Button)findViewById(R.id.takePhotoBtn);
+//        pickPhotoBtn = (Button)findViewById(R.id.pickPhotoBtn);
+//        cancelBtn = (Button)findViewById(R.id.cancelBtn);
+//
+        titleText.setText("身份证认证");
+//
+//        imageUri = Uri.parse("file:///sdcard/temp.jpg");
+//
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) certificateImage.getLayoutParams();
+//        params.height = (DisplayUtil.getWindowWidth(this) - DisplayUtil.dip2px(context, 20)) *
+//                540 / 856;
+//        certificateImage.setLayoutParams(params);
 
-        iv_popup_window_back = (ImageView)findViewById(R.id.popupWindow_back);
-        rl_popup_window = (RelativeLayout)findViewById(R.id.popupWindow);
-        takePhotoBtn = (Button)findViewById(R.id.takePhotoBtn);
-        pickPhotoBtn = (Button)findViewById(R.id.pickPhotoBtn);
-        cancelBtn = (Button)findViewById(R.id.cancelBtn);
-
-        titleText.setText("骑行保险");
-
-        imageUri = Uri.parse("file:///sdcard/temp.jpg");
-
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) certificateImage.getLayoutParams();
-        params.height = (DisplayUtil.getWindowWidth(this) - DisplayUtil.dip2px(context, 20)) *
-                540 / 856;
-        certificateImage.setLayoutParams(params);
-        initListener();
-        initHttp();
-    }
-
-    private void initListener() {
 
         ll_back.setOnClickListener(this);
-        certificateImage.setOnClickListener(this);
-        dealImage.setOnClickListener(this);
-        dealText.setOnClickListener(this);
-        submitBtn.setOnClickListener(this);
+//        certificateImage.setOnClickListener(this);
+//        dealImage.setOnClickListener(this);
+//        dealText.setOnClickListener(this);
+//        submitBtn.setOnClickListener(this);
+//
+//        takePhotoBtn.setOnClickListener(itemsOnClick);
+//        pickPhotoBtn.setOnClickListener(itemsOnClick);
+//        cancelBtn.setOnClickListener(itemsOnClick);
 
-        takePhotoBtn.setOnClickListener(itemsOnClick);
-        pickPhotoBtn.setOnClickListener(itemsOnClick);
-        cancelBtn.setOnClickListener(itemsOnClick);
+//        initHttp();
     }
+
 
     @Override
     public void onClick(View v) {
