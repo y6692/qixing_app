@@ -168,46 +168,33 @@
                                 android:layout_height="115dp"
                                 android:layout_weight="1"
                                 android:layout_marginRight="12dp"
-                                android:background="@drawable/block_bcg13"
                                 android:orientation="vertical"
                                 android:gravity="center">
 
                                 <ImageView
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
+                                    android:id="@+id/ui_insurance_certificateImage"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
                                     android:src="@drawable/identity_card_icon1"/>
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="@dimen/sp15"
-                                    android:textColor="#A2A2A2"
-                                    android:text="证件正面"/>
 
                             </LinearLayout>
 
 
                             <LinearLayout
-                                android:id="@+id/ui_insurance_certificateImage"
                                 android:layout_width="0dp"
                                 android:layout_height="115dp"
                                 android:layout_weight="1"
                                 android:layout_marginLeft="12dp"
-                                android:background="@drawable/block_bcg13"
                                 android:orientation="vertical"
                                 android:gravity="center">
 
                                 <ImageView
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
+                                    android:id="@+id/ui_insurance_certificateImage2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
                                     android:src="@drawable/identity_card_icon2"/>
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="@dimen/sp15"
-                                    android:textColor="#A2A2A2"
-                                    android:text="证件反面"/>
 
                             </LinearLayout>
 
@@ -232,7 +219,7 @@
                                 android:id="@+id/ui_insurance_dealImage"
                                 android:layout_width="@dimen/dp20"
                                 android:layout_height="@dimen/dp20"
-                                android:src="@drawable/recharge_selected"/>
+                                android:src="@drawable/check_icon2"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -281,7 +268,7 @@
             android:gravity="center"
             >
             <TextView
-                android:id="@+id/tv"
+                android:id="@+id/tv_insurance_submitBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="提交"

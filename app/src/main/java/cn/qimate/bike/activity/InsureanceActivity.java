@@ -93,19 +93,22 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
 
     private LinearLayout ll_back;
     private TextView titleText;
-    private TextView realNameText;
+    private EditText realNameText;
     private EditText certificateNumEdit;
     private TextView certificateNumText;
     private ImageView certificateImage;
+    private ImageView certificateImage2;
     private ImageView dealImage;
     private TextView dealText;
-    private Button submitBtn;
+    private LinearLayout submitBtn;
+    private TextView tv_submitBtn;
     private TextView remarkText;
     private ImageView iv_popup_window_back;
     private RelativeLayout rl_popup_window;
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
     private boolean isBack = true;
+    private int photo = 1;
 
 
     @Override
@@ -125,42 +128,46 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
 
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         titleText = (TextView)findViewById(R.id.mainUI_title_titleText);
-//        realNameText = (TextView)findViewById(R.id.ui_insurance_realNameText);
-//        certificateNumEdit = (EditText)findViewById(R.id.ui_insurance_certificateNumEdit);
+        realNameText = (EditText)findViewById(R.id.ui_insurance_realNameText);
+        certificateNumEdit = (EditText)findViewById(R.id.ui_insurance_certificateNumEdit);
 //        certificateNumText = (TextView)findViewById(R.id.ui_insurance_certificateNumText);
-//        certificateImage = (ImageView)findViewById(R.id.ui_insurance_certificateImage);
-//        dealImage = (ImageView)findViewById(R.id.ui_insurance_dealImage);
+        certificateImage = (ImageView)findViewById(R.id.ui_insurance_certificateImage);
+        certificateImage2 = (ImageView)findViewById(R.id.ui_insurance_certificateImage2);
+        dealImage = (ImageView)findViewById(R.id.ui_insurance_dealImage);
 //        dealText = (TextView)findViewById(R.id.ui_insurance_dealText);
-//        submitBtn = (Button)findViewById(R.id.ui_insurance_submitBtn);
-//        remarkText = (TextView)findViewById(R.id.ui_insurance_remarkText);
-//
-//        iv_popup_window_back = (ImageView)findViewById(R.id.popupWindow_back);
-//        rl_popup_window = (RelativeLayout)findViewById(R.id.popupWindow);
-//        takePhotoBtn = (Button)findViewById(R.id.takePhotoBtn);
-//        pickPhotoBtn = (Button)findViewById(R.id.pickPhotoBtn);
-//        cancelBtn = (Button)findViewById(R.id.cancelBtn);
-//
+        submitBtn = (LinearLayout)findViewById(R.id.ui_insurance_submitBtn);
+        tv_submitBtn = (TextView)findViewById(R.id.tv_insurance_submitBtn);
+        remarkText = (TextView)findViewById(R.id.ui_insurance_remarkText);
+
+        iv_popup_window_back = (ImageView)findViewById(R.id.popupWindow_back);
+        rl_popup_window = (RelativeLayout)findViewById(R.id.popupWindow);
+        takePhotoBtn = (Button)findViewById(R.id.takePhotoBtn);
+        pickPhotoBtn = (Button)findViewById(R.id.pickPhotoBtn);
+        cancelBtn = (Button)findViewById(R.id.cancelBtn);
+
         titleText.setText("身份证认证");
-//
-//        imageUri = Uri.parse("file:///sdcard/temp.jpg");
-//
-//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) certificateImage.getLayoutParams();
-//        params.height = (DisplayUtil.getWindowWidth(this) - DisplayUtil.dip2px(context, 20)) *
-//                540 / 856;
-//        certificateImage.setLayoutParams(params);
+
+        imageUri = Uri.parse("file:///sdcard/temp.jpg");
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) certificateImage.getLayoutParams();
+        params.height = (DisplayUtil.getWindowWidth(this) - DisplayUtil.dip2px(context, 20)) *
+                540 / 856;
+        certificateImage.setLayoutParams(params);
+        certificateImage2.setLayoutParams(params);
 
 
         ll_back.setOnClickListener(this);
-//        certificateImage.setOnClickListener(this);
-//        dealImage.setOnClickListener(this);
+        certificateImage.setOnClickListener(this);
+        certificateImage2.setOnClickListener(this);
+        dealImage.setOnClickListener(this);
 //        dealText.setOnClickListener(this);
-//        submitBtn.setOnClickListener(this);
-//
-//        takePhotoBtn.setOnClickListener(itemsOnClick);
-//        pickPhotoBtn.setOnClickListener(itemsOnClick);
-//        cancelBtn.setOnClickListener(itemsOnClick);
+        submitBtn.setOnClickListener(this);
 
-//        initHttp();
+        takePhotoBtn.setOnClickListener(itemsOnClick);
+        pickPhotoBtn.setOnClickListener(itemsOnClick);
+        cancelBtn.setOnClickListener(itemsOnClick);
+
+        initHttp();
     }
 
 
@@ -183,15 +190,20 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
                 }
                 break;
             case R.id.ui_insurance_certificateImage:
+                photo = 1;
+                clickPopupWindow();
+                break;
+            case R.id.ui_insurance_certificateImage2:
+                photo = 2;
                 clickPopupWindow();
                 break;
             case R.id.ui_insurance_dealImage:
                 if (isAgree){
                     isAgree = false;
-                    dealImage.setImageResource(R.drawable.recharge_normal);
+                    dealImage.setImageResource(R.drawable.check_icon1);
                 }else {
                     isAgree = true;
-                    dealImage.setImageResource(R.drawable.recharge_selected);
+                    dealImage.setImageResource(R.drawable.check_icon2);
                 }
                 break;
             case R.id.ui_insurance_dealText:
@@ -276,36 +288,36 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
                                 switch (Integer.parseInt(bean.getCardcheck())){
                                     case 1:
                                         submitBtn.setEnabled(true);
-                                        submitBtn.setText("提 交");
+                                        tv_submitBtn.setText("提 交");
                                         dealImage.setEnabled(true);
                                         isAgree = false;
-                                        dealImage.setImageResource(R.drawable.recharge_normal);
+                                        dealImage.setImageResource(R.drawable.check_icon1);
                                         certificateNumEdit.setEnabled(true);
                                         certificateNumEdit.setVisibility(View.VISIBLE);
-                                        certificateNumText.setVisibility(View.GONE);
+//                                        certificateNumText.setVisibility(View.GONE);
                                         certificateImage.setEnabled(true);
                                         break;
                                     case 2:
                                         submitBtn.setEnabled(false);
-                                        submitBtn.setText("已通过");
+                                        tv_submitBtn.setText("已通过");
                                         dealImage.setEnabled(false);
                                         isAgree = true;
                                         certificateNumEdit.setEnabled(false);
                                         certificateImage.setEnabled(false);
                                         certificateNumEdit.setVisibility(View.GONE);
-                                        certificateNumText.setVisibility(View.VISIBLE);
-                                        dealImage.setImageResource(R.drawable.recharge_selected);
+//                                        certificateNumText.setVisibility(View.VISIBLE);
+                                        dealImage.setImageResource(R.drawable.check_icon2);
                                         break;
                                     case 3:
                                         submitBtn.setEnabled(true);
                                         isAgree = false;
                                         certificateNumEdit.setEnabled(true);
                                         certificateImage.setEnabled(true);
-                                        dealImage.setImageResource(R.drawable.recharge_normal);
-                                        submitBtn.setText("被驳回");
+                                        dealImage.setImageResource(R.drawable.check_icon1);
+                                        tv_submitBtn.setText("被驳回");
                                         remarkText.setText("*"+bean.getRemark()+"*");
                                         certificateNumEdit.setVisibility(View.VISIBLE);
-                                        certificateNumText.setVisibility(View.GONE);
+//                                        certificateNumText.setVisibility(View.GONE);
                                         break;
                                     default:
                                         break;
@@ -522,7 +534,12 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
                             option.inSampleSize = 1;
                             cardfile = jsonObject.optString("data");
                             Log.e("Test","RRRRR:"+cardfile);
-                            ImageLoader.getInstance().displayImage(Urls.host + cardfile, certificateImage);
+                            if(photo==1){
+                                ImageLoader.getInstance().displayImage(Urls.host + cardfile, certificateImage);
+                            }else{
+                                ImageLoader.getInstance().displayImage(Urls.host + cardfile, certificateImage2);
+                            }
+
                             Toast.makeText(context, "照片上传成功", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(context, jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
