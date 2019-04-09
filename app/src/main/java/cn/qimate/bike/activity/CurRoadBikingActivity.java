@@ -220,6 +220,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private long p = -1;
     private int xb = 0;
     private int n = 0;
+    private boolean isClickCount = false;
     private int clickCount = 0;
     private boolean first3 = true;
     private boolean isEndBtn = false;
@@ -558,12 +559,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         if (!isContainsList.contains(true) && macList2.size() <= 0) {
                             customDialog3.show();
 
-                            if(clickCount>=3){
-                                intent = new Intent(context,ClientServiceActivity.class);
-                                intent.putExtra("bikeCode",bikeCode);
-                                startActivity(intent);
-                                scrollToFinishActivity();
-                            }
+                            clickCountDeal();
                         } else {
                             submit(uid, access_token);
                         }
@@ -576,12 +572,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     //锁已开启
                     ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
-                    if(clickCount>=3){
-                        intent = new Intent(context,ClientServiceActivity.class);
-                        intent.putExtra("bikeCode",bikeCode);
-                        startActivity(intent);
-                        scrollToFinishActivity();
-                    }
+                    clickCountDeal();
 
                 }
                 break;
@@ -1498,12 +1489,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                                     });
                                             customBuilder.create().show();
 
-                                            if(clickCount>=3){
-                                                Intent intent = new Intent(context,ClientServiceActivity.class);
-                                                intent.putExtra("bikeCode",bikeCode);
-                                                startActivity(intent);
-                                                scrollToFinishActivity();
-                                            }
+                                            clickCountDeal();
 
                                         }
 
@@ -1541,12 +1527,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                                     });
                                             customBuilder.create().show();
 
-                                            if(clickCount>=3){
-                                                Intent intent = new Intent(context,ClientServiceActivity.class);
-                                                intent.putExtra("bikeCode",bikeCode);
-                                                startActivity(intent);
-                                                scrollToFinishActivity();
-                                            }
+                                            clickCountDeal();
                                         }
 
                                     }
@@ -1602,22 +1583,12 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         } else {
                             ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
-                            if(clickCount>=3){
-                                Intent intent = new Intent(context,ClientServiceActivity.class);
-                                intent.putExtra("bikeCode",bikeCode);
-                                startActivity(intent);
-                                scrollToFinishActivity();
-                            }
+                            clickCountDeal();
                         }
                     } else {
                         ToastUtil.showMessageApp(context,result.getMsg());
 
-                        if(clickCount>=3){
-                            Intent intent = new Intent(context,ClientServiceActivity.class);
-                            intent.putExtra("bikeCode",bikeCode);
-                            startActivity(intent);
-                            scrollToFinishActivity();
-                        }
+                        clickCountDeal();
                     }
                 } catch (Exception e) {
                 }
@@ -1677,12 +1648,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                         });
                                 customBuilder.create().show();
 
-                                if(clickCount>=3){
-                                    Intent intent = new Intent(context,ClientServiceActivity.class);
-                                    intent.putExtra("bikeCode",bikeCode);
-                                    startActivity(intent);
-                                    scrollToFinishActivity();
-                                }
+                                clickCountDeal();
                             }
                         }
                     }, 10 * 1000);
@@ -1720,12 +1686,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                             });
                                     customBuilder.create().show();
 
-                                    if(clickCount>=3){
-                                        Intent intent = new Intent(context,ClientServiceActivity.class);
-                                        intent.putExtra("bikeCode",bikeCode);
-                                        startActivity(intent);
-                                        scrollToFinishActivity();
-                                    }
+                                    clickCountDeal();
                                 }
                             }
                         }
@@ -1754,12 +1715,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         });
                         customBuilder.create().show();
 
-                        if(clickCount>=3){
-                            Intent intent = new Intent(context,ClientServiceActivity.class);
-                            intent.putExtra("bikeCode",bikeCode);
-                            startActivity(intent);
-                            scrollToFinishActivity();
-                        }
+                        clickCountDeal();
                     }else {
                         flag = 2;
                         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -1796,12 +1752,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                                 });
                                         customBuilder.create().show();
 
-                                        if(clickCount>=3){
-                                            Intent intent = new Intent(context,ClientServiceActivity.class);
-                                            intent.putExtra("bikeCode",bikeCode);
-                                            startActivity(intent);
-                                            scrollToFinishActivity();
-                                        }
+                                        clickCountDeal();
                                     }
                                 }
                             }, 10 * 1000);
@@ -1839,12 +1790,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                                     });
                                             customBuilder.create().show();
 
-                                            if(clickCount>=3){
-                                                Intent intent = new Intent(context,ClientServiceActivity.class);
-                                                intent.putExtra("bikeCode",bikeCode);
-                                                startActivity(intent);
-                                                scrollToFinishActivity();
-                                            }
+                                            clickCountDeal();
                                         }
                                     }
                                 }
@@ -1857,15 +1803,19 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }else {
                     customDialog3.show();
 
-                    if(clickCount>=3){
-                        Intent intent = new Intent(context,ClientServiceActivity.class);
-                        intent.putExtra("bikeCode",bikeCode);
-                        startActivity(intent);
-                        scrollToFinishActivity();
-                    }
+                    clickCountDeal();
                 }
             }
 
+        }
+    }
+
+    public void clickCountDeal(){
+        if(isClickCount && clickCount>=3){
+            Intent intent = new Intent(context,ClientServiceActivity.class);
+            intent.putExtra("bikeCode",bikeCode);
+            startActivity(intent);
+            scrollToFinishActivity();
         }
     }
 
@@ -1913,12 +1863,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                                 });
                                         customBuilder.create().show();
 
-                                        if(clickCount>=3){
-                                            Intent intent = new Intent(context,ClientServiceActivity.class);
-                                            intent.putExtra("bikeCode",bikeCode);
-                                            startActivity(intent);
-                                            scrollToFinishActivity();
-                                        }
+                                        clickCountDeal();
                                     }else{
                                         carClose();
                                     }
@@ -1953,12 +1898,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                     first3 = false;
                                     customDialog3.show();
 
-                                    if(clickCount>=3){
-                                        Intent intent = new Intent(context,ClientServiceActivity.class);
-                                        intent.putExtra("bikeCode",bikeCode);
-                                        startActivity(intent);
-                                        scrollToFinishActivity();
-                                    }
+                                    clickCountDeal();
                                 }else{
                                     carClose();
                                 }
@@ -2010,12 +1950,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                                     });
                                             customBuilder.create().show();
 
-                                            if(clickCount>=3){
-                                                Intent intent = new Intent(context,ClientServiceActivity.class);
-                                                intent.putExtra("bikeCode",bikeCode);
-                                                startActivity(intent);
-                                                scrollToFinishActivity();
-                                            }
+                                            clickCountDeal();
                                         }else{
                                             carClose();
                                         }
@@ -2052,12 +1987,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                         first3 = false;
                                         customDialog3.show();
 
-                                        if(clickCount>=3){
-                                            Intent intent = new Intent(context,ClientServiceActivity.class);
-                                            intent.putExtra("bikeCode",bikeCode);
-                                            startActivity(intent);
-                                            scrollToFinishActivity();
-                                        }
+                                        clickCountDeal();
                                     }else{
                                         carClose();
                                     }
@@ -2072,12 +2002,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }else {
                     customDialog3.show();
 
-                    if(clickCount>=3){
-                        Intent intent = new Intent(context,ClientServiceActivity.class);
-                        intent.putExtra("bikeCode",bikeCode);
-                        startActivity(intent);
-                        scrollToFinishActivity();
-                    }
+                    clickCountDeal();
                 }
             }
 
@@ -2326,24 +2251,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                             first3 = false;
                                             customDialog3.show();
 
-                                            if(clickCount>=3){
-                                                Intent intent = new Intent(context,ClientServiceActivity.class);
-                                                intent.putExtra("bikeCode",bikeCode);
-                                                startActivity(intent);
-                                                scrollToFinishActivity();
-                                            }
+                                            clickCountDeal();
                                         }else{
                                             carClose();
                                         }
                                     }else{
                                         customDialog3.show();
 
-                                        if(clickCount>=3){
-                                            Intent intent = new Intent(context,ClientServiceActivity.class);
-                                            intent.putExtra("bikeCode",bikeCode);
-                                            startActivity(intent);
-                                            scrollToFinishActivity();
-                                        }
+                                        clickCountDeal();
 
                                     }
                                 }
@@ -2361,12 +2276,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                    }
                     customDialog3.show();
 
-                    if(clickCount>=3){
-                        Intent intent = new Intent(context,ClientServiceActivity.class);
-                        intent.putExtra("bikeCode",bikeCode);
-                        startActivity(intent);
-                        scrollToFinishActivity();
-                    }
+                    clickCountDeal();
                 }
 
                 break;
