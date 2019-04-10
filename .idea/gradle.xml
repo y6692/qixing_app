@@ -3,9 +3,8 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="distributionType" value="LOCAL" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="E:/gradle-4.4" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -13,6 +12,7 @@
             <option value="$PROJECT_DIR$/RxTools-library" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/library" />
+            <option value="$PROJECT_DIR$/library2" />
             <option value="$PROJECT_DIR$/pullzoomview" />
             <option value="$PROJECT_DIR$/sunshinelibrary" />
           </set>
