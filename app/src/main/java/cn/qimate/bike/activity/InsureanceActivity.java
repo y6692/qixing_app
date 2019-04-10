@@ -399,8 +399,21 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
                 }
                 break;
             case REQUESTCODE_TAKE:// 调用相机拍照
+//                if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+//                    File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
+//                    if (Uri.fromFile(temp) != null) {
+//                        urlpath = getRealFilePath(context, Uri.fromFile(temp));
+//                        if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                            loadingDialog.setTitle("请稍等");
+//                            loadingDialog.show();
+//                        }
+//                        new Thread(uploadImageRunnable).start();
+//                    }
+//                }else {
+//                    Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+//                }
                 if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
-                    File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
+                    File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
                     if (Uri.fromFile(temp) != null) {
                         urlpath = getRealFilePath(context, Uri.fromFile(temp));
                         if (loadingDialog != null && !loadingDialog.isShowing()) {
@@ -582,16 +595,20 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
                     }
                     if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
                         Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, RxFileTool.getUriForFile(context,
-                                    new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
-                            takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        }else {
-                            // 下面这句指定调用相机拍照后的照片存储的路径
-                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                                    Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+
+                        File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);
+                        if(!file.getParentFile().exists()){
+                            file.getParentFile().mkdirs();
                         }
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(InsureanceActivity.this,
+                                    BuildConfig.APPLICATION_ID + ".fileprovider",
+                                    file));
+                        }else {
+                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                        }
+
                         startActivityForResult(takeIntent, REQUESTCODE_TAKE);
                     }else {
                         Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
@@ -623,18 +640,40 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
                     // Permission Granted
                     if (permissions[0].equals(Manifest.permission.CAMERA)) {
 
+//                        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+//                            Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(InsureanceActivity.this,
+//                                        BuildConfig.APPLICATION_ID + ".provider",
+//                                        new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+//                                takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                                takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//                            }else {
+//                                // 下面这句指定调用相机拍照后的照片存储的路径
+//                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+//                                        Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+//                            }
+//                            startActivityForResult(takeIntent, REQUESTCODE_TAKE);
+//                        }else {
+//                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+//                        }
+
                         if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
                             Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                            File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);
+                            if(!file.getParentFile().exists()){
+                                file.getParentFile().mkdirs();
+                            }
+
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(InsureanceActivity.this,
-                                        BuildConfig.APPLICATION_ID + ".provider",
-                                        new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
-                                takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                        BuildConfig.APPLICATION_ID + ".fileprovider",
+                                        file));
+
                             }else {
                                 // 下面这句指定调用相机拍照后的照片存储的路径
-                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                                        Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                             }
                             startActivityForResult(takeIntent, REQUESTCODE_TAKE);
                         }else {
