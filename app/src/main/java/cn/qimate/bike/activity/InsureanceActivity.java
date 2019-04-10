@@ -102,6 +102,7 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
     private TextView dealText;
     private LinearLayout submitBtn;
     private TextView tv_submitBtn;
+    private LinearLayout remarkLayout;
     private TextView remarkText;
     private ImageView iv_popup_window_back;
     private RelativeLayout rl_popup_window;
@@ -137,6 +138,7 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
 //        dealText = (TextView)findViewById(R.id.ui_insurance_dealText);
         submitBtn = (LinearLayout)findViewById(R.id.ui_insurance_submitBtn);
         tv_submitBtn = (TextView)findViewById(R.id.tv_insurance_submitBtn);
+        remarkLayout = (LinearLayout)findViewById(R.id.ui_insurance_remarkLayout);
         remarkText = (TextView)findViewById(R.id.ui_insurance_remarkText);
 
         iv_popup_window_back = (ImageView)findViewById(R.id.popupWindow_back);
@@ -296,6 +298,7 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
                                         certificateNumEdit.setVisibility(View.VISIBLE);
 //                                        certificateNumText.setVisibility(View.GONE);
                                         certificateImage.setEnabled(true);
+                                        remarkLayout.setVisibility(View.GONE);
                                         break;
                                     case 2:
                                         submitBtn.setEnabled(false);
@@ -307,6 +310,7 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
                                         certificateNumEdit.setVisibility(View.GONE);
 //                                        certificateNumText.setVisibility(View.VISIBLE);
                                         dealImage.setImageResource(R.drawable.check_icon2);
+                                        remarkLayout.setVisibility(View.GONE);
                                         break;
                                     case 3:
                                         submitBtn.setEnabled(true);
@@ -315,7 +319,8 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
                                         certificateImage.setEnabled(true);
                                         dealImage.setImageResource(R.drawable.check_icon1);
                                         tv_submitBtn.setText("被驳回");
-                                        remarkText.setText("*"+bean.getRemark()+"*");
+                                        remarkLayout.setVisibility(View.VISIBLE);
+                                        remarkText.setText(bean.getRemark());
                                         certificateNumEdit.setVisibility(View.VISIBLE);
 //                                        certificateNumText.setVisibility(View.GONE);
                                         break;

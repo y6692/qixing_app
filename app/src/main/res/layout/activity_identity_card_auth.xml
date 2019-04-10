@@ -43,10 +43,47 @@
                         android:paddingRight="@dimen/dp20"
                         android:background="@color/white">
 
+                        <!--<TextView-->
+                            <!--android:id="@+id/ui_insurance_remarkText"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingTop="@dimen/dp15"-->
+                            <!--android:paddingBottom="@dimen/dp20"-->
+                            <!--android:textColor="@color/ui_main"-->
+                            <!--android:textSize="@dimen/sp14"-->
+                            <!--android:text="*请上传本人完整身份证/护照(含四边框)正面照片*"-->
+                            <!--android:visibility="invisible"/>-->
+
+                        <LinearLayout
+                            android:visibility="gone"
+                            android:id="@+id/ui_insurance_remarkLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="14dp"
+                                android:layout_height="14dp"
+                                android:src="@drawable/warn3" />
+
+                            <TextView
+                                android:id="@+id/ui_insurance_remarkText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="4dp"
+                                android:text="身份证认证被驳回，请重新完善"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14" />
+
+                        </LinearLayout>
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="30dp"
+                            android:layout_marginTop="20dp"
                             android:textSize="@dimen/sp15"
                             android:textColor="#333333"
                             android:text="个人信息"/>
@@ -237,20 +274,6 @@
                                 android:textSize="@dimen/sp15"/>
                         </LinearLayout>
 
-
-
-
-                        <TextView
-                            android:id="@+id/ui_insurance_remarkText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:paddingTop="@dimen/dp15"
-                            android:paddingBottom="@dimen/dp20"
-                            android:textColor="@color/ui_main"
-                            android:textSize="@dimen/sp14"
-                            android:text="*请上传本人完整身份证/护照(含四边框)正面照片*"
-                            android:visibility="invisible"/>
                     </LinearLayout>
                 </cn.qimate.bike.core.widget.MyScrollView>
             </LinearLayout>
