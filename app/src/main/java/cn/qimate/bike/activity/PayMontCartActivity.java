@@ -1,6 +1,7 @@
 package cn.qimate.bike.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +14,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -34,6 +36,7 @@ import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.alipay.PayResult;
+import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.DensityUtils;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
@@ -55,7 +58,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
     private IWXAPI api;
     private Context context;
     private LoadingDialog loadingDialog;
-    private LinearLayout ll_back;
+    private ImageView backImg;
     private TextView title;
     private RelativeLayout headLayout;
     private TextView moneyText;
@@ -129,7 +132,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
 //        tagFlowLayout.setAdapter(tagAdapter);
 
 
-        ll_back = (LinearLayout) findViewById(R.id.ll_back);
+        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("购买月卡");
         headLayout = (RelativeLayout) findViewById(R.id.ui_payMonth_cart_headLayout);
@@ -173,7 +176,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
         days3Text = (TextView)findViewById(R.id.ui_payMonth_cart_days3Text);
 
         submitBtn = (Button)findViewById(R.id.ui_payMonth_cart_submitBtn);
-        ll_back.setOnClickListener(this);
+        backImg.setOnClickListener(this);
         moreLayout.setOnClickListener(this);
         alipayTypeLayout.setOnClickListener(this);
         WeChatTypeLayout.setOnClickListener(this);
@@ -189,7 +192,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.ll_back:
+            case R.id.mainUI_title_backBtn:
                 scrollToFinishActivity();
                 break;
             case R.id.ui_payMonth_cart_moreLayout:
@@ -270,13 +273,13 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                 break;
             case R.id.ui_payMonth_cart_submitBtn:
                 CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-                customBuilder.setType(3).setTitle("28.8").setMessage("已使用优惠券，已优惠X元。")
-//                customBuilder.setTitle("温馨提示").setMessage("是否确定支付?")
+//                customBuilder.setTitle("温馨提示").setMessage("使用优惠券，省X元           实付款：X元")
+                customBuilder.setTitle("温馨提示").setMessage("是否确定支付?")
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
                             }
-                        }).setPositiveButton("确认支付", new DialogInterface.OnClickListener() {
+                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                         userPay();
