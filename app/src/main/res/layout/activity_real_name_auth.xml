@@ -29,6 +29,7 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
+                    android:id="@+id/rl_selectLayout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp100"
                     android:layout_marginTop="27dp"
@@ -90,6 +91,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rl_selectLayout2"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp100"
                     android:layout_marginTop="19dp"
@@ -166,7 +168,7 @@
                     />
 
                 <RelativeLayout
-                    android:id="@+id/rechargeUI_WeChatTypeLayout"
+                    android:id="@+id/realNameAuthUI_WeChatTypeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="19dp">
@@ -193,7 +195,7 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:id="@+id/rechargeUI_WeChatTypeImage"
+                        android:id="@+id/realNameAuthUI_WeChatTypeImage"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_marginRight="31dp"
@@ -204,7 +206,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rechargeUI_alipayTypeLayout"
+                    android:id="@+id/realNameAuthUI_alipayTypeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="22dp"
@@ -231,7 +233,7 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:id="@+id/rechargeUI_alipayTypeImage"
+                        android:id="@+id/realNameAuthUI_alipayTypeImage"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_marginRight="31dp"
@@ -261,15 +263,13 @@
                     />
 
                 <RelativeLayout
-                    android:id="@+id/rechargeUI_WeChatTypeLayout2"
+                    android:id="@+id/realNameAuthUI_cartLayout"
                     android:layout_width="match_parent"
                     android:layout_height="66dp"
                     android:layout_marginTop="14dp"
                     android:layout_marginLeft="22dp"
                     android:layout_marginRight="23dp"
                     android:background="@drawable/block_bcg2">
-
-
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -329,7 +329,7 @@
 
 
                     <ImageView
-                        android:id="@+id/rechargeUI_WeChatTypeImage2"
+                        android:id="@+id/realNameAuthUI_cartImage"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_marginRight="13dp"
@@ -355,6 +355,7 @@
         />
 
     <LinearLayout
+        android:id="@+id/realNameAuthUI_payLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white"
@@ -378,6 +379,7 @@
                 />
 
             <TextView
+                android:id="@+id/tv_totalMoney"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp18"
@@ -418,5 +420,32 @@
     </LinearLayout>
 
 
+    <RelativeLayout
+        android:id="@+id/realNameAuthUI_payLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/title_gradient"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp15"
+            android:textColor="@color/white"
+            android:text="去免押金认证"
+            android:layout_centerInParent="true"
+            />
+
+        <ImageView
+            android:layout_width="8dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="13dp"
+            android:src="@drawable/yjt3"
+            android:layout_alignParentRight="true"
+            />
+
+
+    </RelativeLayout>
 
 </LinearLayout>

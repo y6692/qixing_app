@@ -112,10 +112,17 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
     private TextView type1Text,type2Text,type3Text;
     private TextView type1Text2,type1Text3,type2Text2,type2Text3;
     private TextView days1Text,days2Text,days3Text;
+    private RelativeLayout rl_selectLayout, rl_selectLayout2, rl_select, rl_select2;
+    private RelativeLayout cartLayout;
+    private ImageView cartImage ;
+    private LinearLayout payLayout;
+    private RelativeLayout payLayout2;
     private LinearLayout submitBtn;
+    private TextView totalMoney;
     private String paytype = "1";
     private String osn = "";
-    private int type = 2;
+    private int goType = 1;
+    private int type = 1;
     private String gamestatus = "1";
 
     @Override
@@ -153,19 +160,32 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
         rightBtn.setText("联系客服");
 
+        rl_selectLayout = (RelativeLayout)findViewById(R.id.rl_selectLayout);
+        rl_selectLayout2 = (RelativeLayout)findViewById(R.id.rl_selectLayout2);
+        rl_select = (RelativeLayout)findViewById(R.id.rl_select);
+        rl_select2 = (RelativeLayout)findViewById(R.id.rl_select2);
+        WeChatTypeLayout = (RelativeLayout)findViewById(R.id.realNameAuthUI_WeChatTypeLayout);
+        alipayTypeLayout = (RelativeLayout)findViewById(R.id.realNameAuthUI_alipayTypeLayout);
+        WeChatTypeImage = (ImageView)findViewById(R.id.realNameAuthUI_WeChatTypeImage);
+        alipayTypeImage = (ImageView)findViewById(R.id.realNameAuthUI_alipayTypeImage);
+        cartLayout = (RelativeLayout)findViewById(R.id.realNameAuthUI_cartLayout);
+        cartImage = (ImageView)findViewById(R.id.realNameAuthUI_cartImage);
+        payLayout = (LinearLayout)findViewById(R.id.realNameAuthUI_payLayout);
+        payLayout2 = (RelativeLayout)findViewById(R.id.realNameAuthUI_payLayout2);
         submitBtn = (LinearLayout)findViewById(R.id.ui_realNameAuth_submitBtn);
+        totalMoney = (TextView)findViewById(R.id.tv_totalMoney);
+
+        totalMoney.setText("219.90");
 
         ll_back.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
 
 
-//        moreLayout.setOnClickListener(this);
-//        alipayTypeLayout.setOnClickListener(this);
-//        WeChatTypeLayout.setOnClickListener(this);
-//        balanceTypeLayout.setOnClickListener(this);
-//        type1Layout.setOnClickListener(this);
-//        type2Layout.setOnClickListener(this);
-//        type3Layout.setOnClickListener(this);
+        WeChatTypeLayout.setOnClickListener(this);
+        alipayTypeLayout.setOnClickListener(this);
+        rl_selectLayout.setOnClickListener(this);
+        rl_selectLayout2.setOnClickListener(this);
+        cartLayout.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 //
 //        UserMonth();
@@ -219,82 +239,74 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                 });
                 customBuilder.create().show();
                 break;
-            case R.id.ui_payMonth_cart_moreLayout:
-                moreLayout.setVisibility(View.GONE);
-                moreLayout2.setVisibility(View.VISIBLE);
+            case R.id.rl_selectLayout:
+                goType = 1;
+                rl_select.setVisibility(View.VISIBLE);
+                rl_select2.setVisibility(View.GONE);
+
+                payLayout.setVisibility(View.VISIBLE);
+                payLayout2.setVisibility(View.GONE);
+
+                if(type == 0){
+                    totalMoney.setText("200.00");
+                }else{
+                    totalMoney.setText("219.00");
+                }
+
                 break;
-            case R.id.ui_payMonth_cart_alipayTypeLayout:
-                alipayTypeImage.setImageResource(R.drawable.pay_type_selected);
-                WeChatTypeImage.setImageResource(R.drawable.pay_type_normal);
-                balanceTypeImage.setImageResource(R.drawable.pay_type_normal);
+            case R.id.rl_selectLayout2:
+                goType = 2;
+                rl_select.setVisibility(View.GONE);
+                rl_select2.setVisibility(View.VISIBLE);
+
+                if(type == 0){
+                    payLayout.setVisibility(View.GONE);
+                    payLayout2.setVisibility(View.VISIBLE);
+                }else{
+                    totalMoney.setText("19.00");
+                }
+
+
+                break;
+
+            case R.id.realNameAuthUI_WeChatTypeLayout:
+                WeChatTypeImage.setImageResource(R.drawable.pay_type_selected);
+                alipayTypeImage.setImageResource(R.drawable.pay_type_normal);
                 paytype = "1";
                 break;
-            case R.id.ui_payMonth_cart_WeChatTypeLayout:
-                alipayTypeImage.setImageResource(R.drawable.pay_type_normal);
-                WeChatTypeImage.setImageResource(R.drawable.pay_type_selected);
-                balanceTypeImage.setImageResource(R.drawable.pay_type_normal);
+            case R.id.realNameAuthUI_alipayTypeLayout:
+                WeChatTypeImage.setImageResource(R.drawable.pay_type_normal);
+                alipayTypeImage.setImageResource(R.drawable.pay_type_selected);
                 paytype = "2";
                 break;
-            case R.id.ui_payMonth_cart_balanceTypeLayout:
-                paytype = "3";
-                alipayTypeImage.setImageResource(R.drawable.pay_type_normal);
-                WeChatTypeImage.setImageResource(R.drawable.pay_type_normal);
-                balanceTypeImage.setImageResource(R.drawable.pay_type_selected);
+
+            case R.id.realNameAuthUI_cartLayout:
+
+                if(type==1){
+                    type = 0;
+                    cartImage.setImageResource(R.drawable.pay_type_normal);
+
+                    if(goType == 2){
+                        payLayout.setVisibility(View.GONE);
+                        payLayout2.setVisibility(View.VISIBLE);
+                    }else{
+                        totalMoney.setText("200.00");
+                    }
+                }else{
+                    type = 1;
+                    cartImage.setImageResource(R.drawable.pay_type_selected);
+                    payLayout.setVisibility(View.VISIBLE);
+                    payLayout2.setVisibility(View.GONE);
+
+                    if(goType == 2){
+                        totalMoney.setText("19.00");
+                    }else{
+                        totalMoney.setText("219.00");
+                    }
+                }
+
                 break;
-            case R.id.ui_payMonth_cart_type1Layout:
-                type = 1;
-                moneyText.setText(type1Text.getText().toString().trim());
-                daysText.setText(days1Text.getText().toString().trim());
-                type1Layout.setBackgroundResource(R.drawable.shape_cart_secleced);
-                type2Layout.setBackgroundResource(R.drawable.shape_feedback_edit);
-                type3Layout.setBackgroundResource(R.drawable.shape_feedback_edit);
-                type1Text.setTextColor(getResources().getColor(R.color.white));
-                type1Text2.setTextColor(getResources().getColor(R.color.white));
-                type1Text3.setTextColor(getResources().getColor(R.color.white));
-                type2Text.setTextColor(getResources().getColor(R.color.black));
-                type2Text2.setTextColor(getResources().getColor(R.color.black));
-                type2Text3.setTextColor(getResources().getColor(R.color.black));
-                type3Text.setTextColor(getResources().getColor(R.color.black));
-                days1Text.setTextColor(getResources().getColor(R.color.white));
-                days2Text.setTextColor(getResources().getColor(R.color.black));
-                days3Text.setTextColor(getResources().getColor(R.color.black));
-                break;
-            case R.id.ui_payMonth_cart_type2Layout:
-                type = 2;
-                moneyText.setText(type2Text.getText().toString().trim());
-                daysText.setText(days2Text.getText().toString().trim());
-                type1Layout.setBackgroundResource(R.drawable.shape_feedback_edit);
-                type2Layout.setBackgroundResource(R.drawable.shape_cart_secleced);
-                type3Layout.setBackgroundResource(R.drawable.shape_feedback_edit);
-                type1Text.setTextColor(getResources().getColor(R.color.black));
-                type1Text2.setTextColor(getResources().getColor(R.color.black));
-                type1Text3.setTextColor(getResources().getColor(R.color.black));
-                type2Text.setTextColor(getResources().getColor(R.color.white));
-                type2Text2.setTextColor(getResources().getColor(R.color.white));
-                type2Text3.setTextColor(getResources().getColor(R.color.white));
-                type3Text.setTextColor(getResources().getColor(R.color.black));
-                days1Text.setTextColor(getResources().getColor(R.color.black));
-                days2Text.setTextColor(getResources().getColor(R.color.white));
-                days3Text.setTextColor(getResources().getColor(R.color.black));
-                break;
-            case R.id.ui_payMonth_cart_type3Layout:
-                type = 4;
-                moneyText.setText(type3Text.getText().toString().trim());
-                daysText.setText(days3Text.getText().toString().trim());
-                type1Layout.setBackgroundResource(R.drawable.shape_feedback_edit);
-                type2Layout.setBackgroundResource(R.drawable.shape_feedback_edit);
-                type3Layout.setBackgroundResource(R.drawable.shape_cart_secleced);
-                type1Text.setTextColor(getResources().getColor(R.color.black));
-                type1Text2.setTextColor(getResources().getColor(R.color.black));
-                type1Text3.setTextColor(getResources().getColor(R.color.black));
-                type2Text.setTextColor(getResources().getColor(R.color.black));
-                type2Text2.setTextColor(getResources().getColor(R.color.black));
-                type2Text3.setTextColor(getResources().getColor(R.color.black));
-                type3Text.setTextColor(getResources().getColor(R.color.white));
-                days1Text.setTextColor(getResources().getColor(R.color.black));
-                days2Text.setTextColor(getResources().getColor(R.color.black));
-                days3Text.setTextColor(getResources().getColor(R.color.white));
-                break;
+
             case R.id.ui_realNameAuth_submitBtn:
                 customBuilder = new CustomDialog.Builder(this);
                 customBuilder.setTitle("温馨提示").setMessage("是否确定支付?")
@@ -309,6 +321,14 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                     }
                 });
                 customBuilder.create().show();
+
+//                if(goType == 1){
+//                    Intent intent1 = new Intent(context,InsureanceActivity.class);
+//                    intent1.putExtra("isBack",true);
+//                    context.startActivity(intent1);
+//                }else{
+//                    UIHelper.goToAct(context, DepositFreeAuthActivity.class);
+//                }
 
                 break;
             default:
