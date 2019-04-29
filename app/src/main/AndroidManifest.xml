@@ -86,10 +86,20 @@
         <activity
             android:name=".full.SplashActivity2"
             android:label="@string/app_name">
+
+        </activity>
+
+        <activity android:name=".activity.Main2Activity" />
+        <activity android:name=".activity.Main3Activity" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
          <!--<activity-->
@@ -159,12 +169,7 @@
 
         <activity android:name=".full.SplashActivity" />
 
-        <activity android:name=".activity.Main2Activity" />
-        <activity android:name=".activity.Main3Activity" />
-        <activity
-            android:name=".activity.MainActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
         <activity
             android:name=".activity.InstructionsActivity"
             android:screenOrientation="portrait"

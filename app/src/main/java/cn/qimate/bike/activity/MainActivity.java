@@ -369,6 +369,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
             }
         }
 
+//        JPushInterface.init(getApplicationContext());
+
         loadingDialog = new LoadingDialog(this);
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);

@@ -38,6 +38,7 @@ import cn.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import cn.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import cn.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import cn.nostra13.universalimageloader.utils.StorageUtils;
+import cn.qimate.bike.activity.CrashHandler;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.lock.utils.ToastUtils;
 
@@ -81,6 +82,9 @@ public class BaseApplication extends Application {
 
 //		registerReceiver(broadcastReceiver2, Config.initFilter());
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+
+//		CrashHandler.getInstance().init(this);
+
 
 		AdHub.initialize(this, "2597");
 
