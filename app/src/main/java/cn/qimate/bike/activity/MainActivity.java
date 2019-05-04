@@ -314,7 +314,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         customDialog4 = customBuilder.create();
 
         m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-        Log.e("main===", "m_nowMac====" + m_nowMac);
+        Log.e("main===", "m_nowMac ====" + m_nowMac);
 
 //        if (!"".equals(m_nowMac)) {
 //
