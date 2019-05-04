@@ -133,7 +133,7 @@ public class SplashActivity2 extends BaseActivity {
 			locationOption = new AMapLocationClientOption();
 		}
         initjpush();
-        registerMessageReceiver();
+//        registerMessageReceiver();
 		initLocation();
 
 
@@ -381,7 +381,7 @@ public class SplashActivity2 extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        unregisterReceiver(mMessageReceiver);
+//        unregisterReceiver(mMessageReceiver);
     }
 
     /**

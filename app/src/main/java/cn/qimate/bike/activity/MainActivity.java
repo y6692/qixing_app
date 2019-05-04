@@ -254,6 +254,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
 		setContentView(R.layout.ui_main);
+
+        CrashHandler.getInstance().init(this);
+
 		context = this;
         savedIS = savedInstanceState;
 
@@ -357,19 +360,46 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
     private void initView() {
         openGPSSettings();
 
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
-                } else {
-                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
-                }
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
                 return;
             }
         }
 
-//        JPushInterface.init(getApplicationContext());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int checkPermission = this.checkSelfPermission(Manifest.permission.READ_PHONE_STATE);
+            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, 100);
+                return;
+            }
+        }
+        // <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int checkPermission = this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                return;
+            }
+        }
+
+
+//        openGPSSettings();
+//
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+//            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+//                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+//                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
+//                } else {
+//                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
+//                }
+//                return;
+//            }
+//        }
+
+        JPushInterface.init(getApplicationContext());
 
         loadingDialog = new LoadingDialog(this);
         loadingDialog.setCancelable(false);
@@ -507,12 +537,13 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
     @Override
     protected void onResume() {
-        isForeground = true;
         super.onResume();
+        JPushInterface.onResume(this);
 
+        isForeground = true;
         tz = 0;
 
-        JPushInterface.onResume(this);
+
         if(mapView!=null){
             mapView.onResume();
         }
@@ -1157,6 +1188,10 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
     @Override
     protected void onPause() {
+
+        super.onPause();
+        JPushInterface.onPause(this);
+
         isForeground = false;
         if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
@@ -1164,13 +1199,12 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         if (lockLoading != null && lockLoading.isShowing()) {
             lockLoading.dismiss();
         }
-        super.onPause();
 
 //		if(mlocationClient!=null) {
 //			mlocationClient.stopLocation();//停止定位
 //		}
 
-		JPushInterface.onPause(this);
+
 //		if(mapView!=null){
 //            mapView.onPause();
 //        }
