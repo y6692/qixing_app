@@ -1,22 +1,51 @@
 package cn.qimate.bike.base;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.sunshine.blelibrary.inter.OnConnectionListener;
+
+import java.util.Set;
+
+import cn.jpush.android.api.JPushInterface;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 
-public class BaseFragment extends Fragment {
-	
+public class BaseFragment extends Fragment implements OnConnectionListener {
+
+	private static final int MSG_SET_ALIAS = 1001;
+	private static final int MSG_SET_TAGS = 1002;
+
 	private BaseApplication baseApplication;
 	public String uid;
 	public String access_token;
 	public Boolean userlogin = false;
+
+	public static String m_nowMac = "";  //"A8:1B:6A:B4:E7:C9"
+	public static String oid = "";
+	public static String osn = "";
+	public static String type = "";
+
+	protected AMap aMap;
+	protected BitmapDescriptor successDescripter;
+
+	public static double referLatitude = 0.0;
+	public static double referLongitude = 0.0;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		init();
 		uid = SharedPreferencesUrls.getInstance().getString("uid","");	
-		access_token = SharedPreferencesUrls.getInstance().getString("access_token","");		
+		access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+
+		m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+		oid = SharedPreferencesUrls.getInstance().getString("oid", "");
+		osn = SharedPreferencesUrls.getInstance().getString("osn", "");
+		type = SharedPreferencesUrls.getInstance().getString("type", "");
+
 		RefreshLogin();
 	}
 	private void init() {
@@ -35,6 +64,44 @@ public class BaseFragment extends Fragment {
 		Intent intent = new Intent(getActivity(), clazz);
 		startActivity(intent);
 	}
+
+	@Override
+	public void onDisconnect(int state) {
+		mHandler.sendEmptyMessageDelayed(0, 1000);
+	}
+	@Override
+	public void onServicesDiscovered(String name, String address) {
+		getToken();
+	}
+	@Override
+	public void onTimeOut() {}
+
+	private void getToken() {
+		mHandler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				BaseApplication.getInstance().getIBLE().getToken();
+			}
+		}, 500);
+	}
+
+	private final Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(android.os.Message msg) {
+			super.handleMessage(msg);
+			switch (msg.what) {
+				case MSG_SET_ALIAS:
+					JPushInterface.setAliasAndTags(getContext(), (String) msg.obj, null, null);
+					break;
+
+				case MSG_SET_TAGS:
+					JPushInterface.setAliasAndTags(getContext(), null, (Set<String>) msg.obj, null);
+					break;
+
+				default:
+			}
+		}
+	};
 	
 	//用户已经登录过没有退出刷新登录
 	public void RefreshLogin(){

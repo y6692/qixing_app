@@ -156,8 +156,9 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                         }
                         balanceText.setText(user_money);
                         oid = bean.getOid();
-                        if (Double.parseDouble(prices) <= Double.parseDouble(user_money)
-                                && Double.parseDouble(prices) <= 5){
+//                        if (Double.parseDouble(prices) <= Double.parseDouble(user_money)
+//                                && Double.parseDouble(prices) <= 5){
+                        if (Double.parseDouble(prices) <= Double.parseDouble(user_money)){
                             paySubmit();
                         }
                     } else {

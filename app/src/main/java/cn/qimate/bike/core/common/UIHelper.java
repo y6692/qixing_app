@@ -10,6 +10,7 @@ import cn.qimate.bike.activity.MonthlyCardActivity;
 import cn.qimate.bike.activity.WebviewActivity;
 import cn.qimate.bike.base.BaseActivity;
 import cn.qimate.bike.core.widget.ConfirmDialog;
+import cn.qimate.bike.fragment.BikeFragment;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 public class UIHelper {
@@ -377,7 +378,7 @@ public class UIHelper {
 
 			break;
 		default:
-			if (!MainActivity.isForeground){
+			if (!BikeFragment.isForeground){
 				UIHelper.goToAct(context, MainActivity.class);
 			}
 			break;

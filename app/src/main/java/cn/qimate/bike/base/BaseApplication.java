@@ -48,7 +48,7 @@ import cn.qimate.bike.lock.utils.ToastUtils;
  *
  */
 public class BaseApplication extends Application {
-
+	public  static Context context;
 	private static BaseApplication app;
 	private PackageInfo packageInfo;
 	private IBLE bleManager;

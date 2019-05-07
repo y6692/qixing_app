@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.qimate.bike.activity.MainActivity;
+import cn.qimate.bike.fragment.BikeFragment;
 
 /**
  * 自定义接收器
@@ -43,7 +44,7 @@ public class MyReceiver extends BroadcastReceiver {
 			processCustomMessage(context);
 		} else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
 			//打开自定义的Activity
-			if (!MainActivity.isForeground){
+			if (!BikeFragment.isForeground){
 				goAct(bundle,context,MainActivity.class);
 			}
 		} else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {

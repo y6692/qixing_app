@@ -61,6 +61,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import butterknife.OnClick;
 import cn.loopj.android.http.RequestHandle;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
@@ -72,6 +73,7 @@ import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.activity.HistoryRoadDetailActivity;
 import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.base.BaseApplication;
+import cn.qimate.bike.ble.BLEService;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
@@ -81,7 +83,10 @@ import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.ByteUtil;
+import cn.qimate.bike.util.IoBuffer;
 import cn.qimate.bike.util.PublicWay;
+import cn.qimate.bike.util.SharePreUtil;
 import cn.qimate.bike.util.SystemUtil;
 import cn.qimate.bike.util.ToastUtil;
 
@@ -190,11 +195,23 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private boolean isOpen = false;
     private int n = 0;
 
+    BLEService bleService = new BLEService();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scaner_code);
         context = this;
+
+        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+
+        BLEService.bluetoothAdapter = mBluetoothAdapter;
+
+        bleService.view = this;
+        bleService.showValue = true;
+
+        bleService.connect("34:03:DE:54:E6:C6");
 
         registerReceiver(broadcastReceiver, Config.initFilter());
         GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
@@ -213,11 +230,62 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         inactivityTimer = new InactivityTimer(this);
     }
 
+    public void btn(View view) {
+        int viewId = view.getId();
+        if (viewId == R.id.top_mask) {
+//            light();
+
+            bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
+
+//            bleService.sleep(2000);
+
+            Log.e("light===4_3", "===");
+
+
+            button3();
+
+        } else if (viewId == R.id.top_back) {
+            scrollToFinishActivity();
+        } else if (viewId == R.id.top_openpicture) {
+            RxPhotoTool.openLocalImage(mActivity);
+        }else if(viewId == R.id.loca_show_btnBikeNum){
+            button4();
+
+//            //关闭二维码扫描
+//            if (handler != null) {
+//                handler.quitSynchronously();
+//                handler = null;
+//            }
+//            CameraManager.get().closeDriver();
+//
+//            WindowManager windowManager = getWindowManager();
+//            Display display = windowManager.getDefaultDisplay();
+//            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+//            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+//            lp.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+//            dialog.getWindow().setAttributes(lp);
+//            dialog.getWindow().setWindowAnimations(R.style.dialogWindowAnim);
+//            dialog.show();
+//            InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+//            manager.showSoftInput(view, InputMethodManager.RESULT_SHOWN);
+//            manager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
+    }
+
+    @Override
+    public void oncall() {
+        super.oncall();
+        button9();
+    }
+
+
     @SuppressWarnings("deprecation")
     @Override
     protected void onResume() {
         super.onResume();
         ToastUtil.showMessage(this, "scaner===="+referLatitude);
+
+
 
 //        try {
 //            if (internalReceiver != null) {
@@ -377,35 +445,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         CameraManager.FRAME_HEIGHT = mCropHeight;
     }
 
-    public void btn(View view) {
-        int viewId = view.getId();
-        if (viewId == R.id.top_mask) {
-            light();
-        } else if (viewId == R.id.top_back) {
-            scrollToFinishActivity();
-        } else if (viewId == R.id.top_openpicture) {
-            RxPhotoTool.openLocalImage(mActivity);
-        }else if(viewId == R.id.loca_show_btnBikeNum){
-            //关闭二维码扫描
-            if (handler != null) {
-                handler.quitSynchronously();
-                handler = null;
-            }
-            CameraManager.get().closeDriver();
 
-            WindowManager windowManager = getWindowManager();
-            Display display = windowManager.getDefaultDisplay();
-            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-            lp.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setAttributes(lp);
-            dialog.getWindow().setWindowAnimations(R.style.dialogWindowAnim);
-            dialog.show();
-            InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            manager.showSoftInput(view, InputMethodManager.RESULT_SHOWN);
-            manager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        }
-    }
 
     private void light() {
         if (mFlashing) {
@@ -566,6 +606,59 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                         }
                                     }
                                 }
+                            }else if ("4".equals(jsonObject.getString("type"))){
+
+                                if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                                    ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+                                    scrollToFinishActivity();
+                                }
+//                                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+//                                mBluetoothAdapter = bluetoothManager.getAdapter();
+//
+//                                BLEService.bluetoothAdapter = mBluetoothAdapter;
+
+//                                bleService.view = context;
+//                                bleService.showValue = true;
+
+                                if (mBluetoothAdapter == null) {
+                                    ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                                    scrollToFinishActivity();
+                                    return;
+                                }
+                                if (!mBluetoothAdapter.isEnabled()) {
+                                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                                    startActivityForResult(enableBtIntent, 188);
+                                }else{
+//                                    if (!TextUtils.isEmpty(m_nowMac)) {
+//
+//                                    }
+
+                                    Log.e("scan===4_1", "==="+jsonObject.getString("macinfo"));
+
+//                                    bleService.connect(jsonObject.getString("macinfo"));
+
+//                                    bleService.sleep(2000);
+
+                                    Log.e("scan===4_2", "==="+jsonObject.getString("macinfo"));
+
+                                    bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
+
+                                    bleService.sleep(2000);
+
+                                    Log.e("scan===4_3", "==="+jsonObject.getString("macinfo"));
+
+//                                    button8();
+//                                    button9();
+
+                                    button3();
+//                                      button4();
+
+                                    Log.e("scan===4_4", "==="+jsonObject.getString("macinfo"));
+                                }
+
+
+
+
                             }
 
 //                            if (loadingDialog != null && loadingDialog.isShowing()){
@@ -573,6 +666,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //                            }
 
                         } else {
+
+
+
                             Toast.makeText(context,result.getMsg(),10 * 1000).show();
                             if (loadingDialog != null && loadingDialog.isShowing()){
                                 loadingDialog.dismiss();
@@ -594,7 +690,87 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         }
     }
 
+    //注册
+    void button8() {
+        IoBuffer ioBuffer = IoBuffer.allocate(20);
+        ioBuffer.writeByte((byte) 0x82);
+        ByteUtil.log("tel-->" + "13188888888");
+        String str = "13188888888";
 
+        byte[] bb = new byte[11];
+        for (int i = 0; i < str.length(); i++) {
+            char a = str.charAt(i);
+            bb[i] = (byte) a;
+        }
+        ioBuffer.writeBytes(bb);
+
+        int crc = (int) ByteUtil.crc32(getfdqId("G3AF600000922E2XH"));
+        byte cc[] = ByteUtil.intToByteArray(crc);
+        ioBuffer.writeByte(cc[0] ^ cc[3]);
+        ioBuffer.writeByte(cc[1] ^ cc[2]);
+        ioBuffer.writeInt(0);
+        bleService.write(toBody(ioBuffer.readableBytes()));
+    }
+
+    //认证
+    void button9() {
+        IoBuffer ioBuffer = IoBuffer.allocate(20);
+        ioBuffer.writeByte((byte) 0x83);
+        ioBuffer.writeBytes(getfdqId("13188888888"));
+//        ioBuffer.writeBytes(getfdqId("13188888888".trim().toUpperCase()));
+        bleService.write(toBody(ioBuffer.readableBytes()));
+//        SharePreUtil.getPreferences("FDQID").putString("ID", "13188888888");
+//        SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
+    }
+
+    byte[] getfdqId(String str) {
+
+        IoBuffer ioBuffer = IoBuffer.allocate(17);
+        for (int i = 0; i < str.length(); i++) {
+            char a = str.charAt(i);
+            ioBuffer.writeByte((byte) a);
+        }
+        return ioBuffer.array();
+    }
+
+    //启动
+    void button3() {
+        IoBuffer ioBuffer = IoBuffer.allocate(20);
+        byte[] cmd = sendCmd("00000101", "00000000");
+        ioBuffer.writeBytes(cmd);
+        bleService.write(toBody(ioBuffer.readableBytes()));
+    }
+
+    //关闭
+    void button4() {
+        IoBuffer ioBuffer = IoBuffer.allocate(20);
+        byte[] cmd = sendCmd("00000010", "00000000");
+        ioBuffer.writeBytes(cmd);
+        bleService.write(toBody(ioBuffer.readableBytes()));
+    }
+
+
+    public byte[] sendCmd(String s1, String s2) {
+        IoBuffer ioBuffer = IoBuffer.allocate(5);
+        ioBuffer.writeByte(0XA1);
+        ioBuffer.writeByte(ByteUtil.BitToByte(s1));
+        ioBuffer.writeByte(ByteUtil.BitToByte(s2));
+
+        ioBuffer.writeByte(0);
+        ioBuffer.writeByte(0);
+
+        return ioBuffer.array();
+    }
+
+    IoBuffer toBody(byte[] bb) {
+        IoBuffer buffer = IoBuffer.allocate(20);
+        buffer.writeByte(bb.length + 1);
+        buffer.writeBytes(bb);
+        buffer.writeByte((int) ByteUtil.SumCheck(bb));
+
+
+        return buffer.flip();
+    }
 
     private void getCurrentorder(final String uid, final String access_token){
         RequestParams params = new RequestParams();
