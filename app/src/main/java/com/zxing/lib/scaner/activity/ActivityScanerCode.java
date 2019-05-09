@@ -82,6 +82,7 @@ import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.CurRoadBikingBean;
+import cn.qimate.bike.model.EbikeInfoBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.ByteUtil;
@@ -505,8 +506,90 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         return handler;
     }
 
-    private void useBike(String result){
+    private void useBike(final String result){
         Log.e("scan===useBike", result.indexOf('&')+"<===>"+result);
+
+        int code = Integer.parseInt(result.split("\\?")[1].split("&")[0].split("=")[1]);
+
+        if(result.indexOf('&')!=-1 || (code >= 80001651 && code <= 80002000)){
+
+            ebikeInfo(result);
+
+
+        }else{
+            useCar(result);
+        }
+
+    }
+
+    private void ebikeInfo(final String tokencode){
+        Log.e("scan===000", "ebikeInfo===="+tokencode);
+
+        final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+
+        RequestParams params = new RequestParams();
+        params.put("uid", uid);
+        params.put("access_token",access_token);
+        params.put("tokencode", tokencode);
+//        params.put("version", "");
+        HttpHelper.get(this, Urls.ebikeInfo, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+//                        ToastUtil.showMessageApp(context,"电量更新成功");
+                        Log.e("scan===", "ebikeInfo===="+result.getData());
+
+                        EbikeInfoBean bean = JSON.parseObject(result.getData(), EbikeInfoBean.class);
+
+                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
+                        customBuilder.setMessage("这是一辆电单车,要在校内停车线内还车");
+
+                        customBuilder.setType(4).setElectricity(bean.getElectricity()).setMileage(bean.getMileage()).setFee(bean.getFee()).setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                                scrollToFinishActivity();
+                            }
+                        }).setPositiveButton("开锁", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+
+                                useCar(tokencode);
+                            }
+                        }).setHint(false);
+                        customBuilder.create().show();
+
+
+                    } else {
+                        ToastUtil.showMessageApp(context, result.getMsg());
+                    }
+                } catch (Exception e) {
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
+
+    void useCar(String result){
 
         final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");

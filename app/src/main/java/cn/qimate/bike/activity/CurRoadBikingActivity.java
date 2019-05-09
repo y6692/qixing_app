@@ -178,6 +178,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private String access_token = "";
     private boolean isLock = false;
     private ImageView linkServiceBtn;
+    private LinearLayout ebikeInfoLayout;
     private LinearLayout linkServiceLayout;
     private boolean isFrist = true;
     private Dialog dialog;
@@ -393,6 +394,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         bikeCodeText = (TextView)findViewById(R.id.curRoadUI_biking_code);
         time = (TextView)findViewById(R.id.curRoadUI_biking_time);
+        ebikeInfoLayout = (LinearLayout)findViewById(R.id.curRoadUI_biking_ebikeInfoLayout);
         electricity = (TextView)findViewById(R.id.curRoadUI_biking_electricity);
         mileage = (TextView)findViewById(R.id.curRoadUI_biking_mileage);
         lookPsdBtn = (Button)findViewById(R.id.curRoadUI_biking_lookPsdBtn);
@@ -498,6 +500,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
                 mBluetoothAdapter = bluetoothManager.getAdapter();
             }
+
+            BLEService.bluetoothAdapter = mBluetoothAdapter;
+
+            bleService.view = context;
+            bleService.showValue = true;
 
             if (mBluetoothAdapter == null) {
                 ToastUtil.showMessageApp(context, "获取蓝牙失败");
@@ -864,6 +871,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                 if ("4".equals(bean.getType())){
 
+                                    ebikeInfoLayout.setVisibility(View.VISIBLE);
+
                                     if(ebikeInfoThread ==null){
                                         Runnable ebikeInfoRunnable = new Runnable() {
                                             @Override
@@ -1189,6 +1198,120 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }
     };
 
+    void temporaryLock(){
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("checkConnect===", "===");
+
+                if(!bleService.connect){
+                    cn++;
+
+                    if(cn<5){
+                        temporaryLock();
+                    }else{
+                        customDialog4.show();
+                        return;
+                    }
+
+                }else{
+                    bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
+
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("temporaryLock===4_3", "==="+m_nowMac);
+
+                            button9();
+                            button2();
+
+                            m_myHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.e("temporaryLock===4_4", bleService.cc+"==="+"B1 2A 80 00 00 5B ".equals(bleService.cc));
+
+                                    if("B1 2A 80 00 00 5B ".equals(bleService.cc)){
+                                        Log.e("temporaryLock===4_5", oid+"==="+bleService.cc);
+
+                                        ToastUtil.showMessageApp(context,"关锁成功");
+                                    }else{
+                                        ToastUtil.showMessageApp(context,"关锁失败，请重试");
+//                                        customDialog5.show();
+                                    }
+
+                                    Log.e("temporaryLock===4_6", "==="+bleService.cc);
+
+                                }
+                            }, 500);
+                        }
+                    }, 500);
+                }
+
+            }
+        }, 2 * 1000);
+    }
+
+    void openLock(){
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("checkConnect===", "===");
+
+                if(!bleService.connect){
+                    cn++;
+
+                    if(cn<5){
+                        openLock();
+                    }else{
+                        customDialog4.show();
+                        return;
+                    }
+
+                }else{
+                    bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
+
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("openLock===4_3", "==="+m_nowMac);
+
+                            button9();
+                            button3();
+
+                            m_myHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.e("openLock===4_4", bleService.cc+"==="+"B1 25 80 00 00 56 ".equals(bleService.cc));
+
+                                    if("B1 25 80 00 00 56 ".equals(bleService.cc)){
+                                        Log.e("openLock===4_5", oid+"==="+bleService.cc);
+
+                                        ToastUtil.showMessageApp(context,"开锁成功");
+                                    }else{
+                                        ToastUtil.showMessageApp(context,"开锁失败，请重试");
+//                                        customDialog5.show();
+                                    }
+
+                                    Log.e("openLock===4_6", "==="+bleService.cc);
+
+                                }
+                            }, 500);
+                        }
+                    }, 500);
+                }
+
+            }
+        }, 2 * 1000);
+    }
+
+    //启动
+    void button3() {
+        IoBuffer ioBuffer = IoBuffer.allocate(20);
+        byte[] cmd = sendCmd("00000101", "00000000");
+        ioBuffer.writeBytes(cmd);
+        bleService.write(toBody(ioBuffer.readableBytes()));
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -1230,6 +1353,22 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         }
                     });
                     customBuilder.create().show();
+                }else if ("临时上锁".equals(lookPsdBtn.getText().toString().trim())){
+                    lookPsdBtn.setText("开锁用车");
+                    Log.e("biking===lookPsdBtn", "onClick==="+m_nowMac);
+
+                    bleService.connect(m_nowMac);
+
+                    cn = 0;
+                    temporaryLock();
+                }else if ("开锁用车".equals(lookPsdBtn.getText().toString().trim())){
+                    lookPsdBtn.setText("临时上锁");
+                    Log.e("biking===lookPsdBtn", "onClick==="+m_nowMac);
+
+                    bleService.connect(m_nowMac);
+
+                    cn = 0;
+                    openLock();
                 }else {
                     flag = 1;
 
@@ -2305,6 +2444,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }, 2 * 1000);
     }
 
+
+
     public void closeEbike(){
         RequestParams params = new RequestParams();
         params.put("uid",uid);
@@ -2400,13 +2541,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                     scrollToFinishActivity();
                 }
-                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-                mBluetoothAdapter = bluetoothManager.getAdapter();
 
-                BLEService.bluetoothAdapter = mBluetoothAdapter;
-
-                bleService.view = context;
-                bleService.showValue = true;
 
                 if (mBluetoothAdapter == null) {
                     ToastUtil.showMessageApp(context, "获取蓝牙失败");
@@ -3221,14 +3356,16 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                         startActivityForResult(enableBtIntent, 188);
                     }else{
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("正在唤醒车锁");
-                            loadingDialog.show();
-                        }
+
 
                         if("4".equals(type)){
 
                         }else{
+                            if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                loadingDialog.setTitle("正在唤醒车锁");
+                                loadingDialog.show();
+                            }
+
                             connect();
                         }
 

@@ -45,6 +45,36 @@ public class CustomDialog extends Dialog {
 		private boolean isHint = true;
 		private View contentView;
 		private int type;
+		private String electricity;
+		private String mileage;
+		private String fee;
+
+		public String getElectricity() {
+			return electricity;
+		}
+
+		public Builder setElectricity(String electricity) {
+			this.electricity = electricity;
+			return this;
+		}
+
+		public String getMileage() {
+			return mileage;
+		}
+
+		public Builder setMileage(String mileage) {
+			this.mileage = mileage;
+			return this;
+		}
+
+		public String getFee() {
+			return fee;
+		}
+
+		public Builder setFee(String fee) {
+			this.fee = fee;
+			return this;
+		}
 
 		private OnClickListener positiveButtonClickListener, negativeButtonClickListener;
 
@@ -189,6 +219,8 @@ public class CustomDialog extends Dialog {
 			}else{
 				if(type==2){
 					layout = inflater.inflate(R.layout.alertdialog3, null);
+				}else if(type==4){
+					layout = inflater.inflate(R.layout.alertdialog4, null);
 				}else{
 					layout = inflater.inflate(R.layout.alertdialog, null);
 				}
@@ -227,12 +259,25 @@ public class CustomDialog extends Dialog {
 			dialog.addContentView(layout, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 			// set the dialog title
 			((TextView) layout.findViewById(R.id.title)).setText(title);
-			TextView hintText = ((TextView) layout.findViewById(R.id.hintText));
-			if (isHint){
-				hintText.setVisibility(View.GONE);
-			}else {
-				hintText.setVisibility(View.VISIBLE);
+
+			if(type==4){
+				TextView tv_electricity = ((TextView) layout.findViewById(R.id.electricity));
+				TextView tv_mileage = ((TextView) layout.findViewById(R.id.mileage));
+				TextView tv_fee = ((TextView) layout.findViewById(R.id.fee));
+
+				tv_electricity.setText(electricity);
+				tv_mileage.setText(mileage);
+				tv_fee.setText(fee);
+
+			}else{
+				TextView hintText = ((TextView) layout.findViewById(R.id.hintText));
+				if (isHint){
+					hintText.setVisibility(View.GONE);
+				}else {
+					hintText.setVisibility(View.VISIBLE);
+				}
 			}
+
 
 			// set the content message
 			if (message != null) {

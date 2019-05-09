@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:minWidth="240dip"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#f57752"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/DialogText.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/dp10"
+            android:textColor="#ffffff"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:orientation="horizontal"
+        android:background="@drawable/border"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        >
+        
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/park_icon"/>
+
+        <TextView
+            style="@style/DialogText"
+            android:id="@+id/message"
+            android:paddingBottom="@dimen/dp15"
+            android:paddingTop="@dimen/dp15"
+            android:gravity="left"
+            android:lineSpacingExtra="5dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dp5"
+            android:paddingRight="@dimen/dp5"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/content2"
+        android:orientation="horizontal"
+        android:background="@drawable/border"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/DialogText"
+                android:id="@+id/electricity"
+                android:paddingTop="@dimen/dp15"
+                android:gravity="center"
+                android:lineSpacingExtra="5dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp5"
+                android:paddingRight="@dimen/dp5"
+                android:text="70%"
+                />
+
+            <TextView
+                style="@style/DialogText"
+                android:paddingBottom="@dimen/dp15"
+                android:paddingTop="@dimen/dp5"
+                android:gravity="center"
+                android:lineSpacingExtra="5dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp5"
+                android:paddingRight="@dimen/dp5"
+                android:text="剩余电量"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/DialogText"
+                android:id="@+id/mileage"
+                android:paddingTop="@dimen/dp15"
+                android:gravity="center"
+                android:lineSpacingExtra="5dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp5"
+                android:paddingRight="@dimen/dp5"
+                android:text="20KM"
+                />
+
+            <TextView
+                style="@style/DialogText"
+                android:paddingBottom="@dimen/dp15"
+                android:paddingTop="@dimen/dp5"
+                android:gravity="center"
+                android:lineSpacingExtra="5dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp5"
+                android:paddingRight="@dimen/dp5"
+                android:text="续航里程"
+                />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/content3"
+        android:orientation="horizontal"
+        android:background="@drawable/border"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        >
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cost_icon"/>
+
+        <TextView
+            style="@style/DialogText"
+            android:id="@+id/fee"
+            android:paddingBottom="@dimen/dp15"
+            android:paddingTop="@dimen/dp15"
+            android:gravity="left"
+            android:lineSpacingExtra="5dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dp5"
+            android:paddingRight="@dimen/dp5"
+            android:text="15/1"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:background="#ffffff"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp">
+
+
+        <Button
+            android:id="@+id/negativeButton"
+            android:layout_marginTop="0dip"
+            android:layout_width="0dip"
+            android:layout_weight="1"
+            android:background="@null"
+            android:layout_height="40dp"
+            android:textSize="@dimen/sp12"
+            android:singleLine="true"
+            android:gravity="center"/>
+        <ImageView
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/alertborder"/>
+        <Button
+            android:id="@+id/positiveButton"
+            android:layout_width="0dip"
+            android:layout_height="40dp"
+            android:layout_marginTop="0dip"
+            android:layout_weight="1"
+            android:background="@null"
+            android:singleLine="true"
+            android:textSize="@dimen/sp12"
+            android:textColor="#f57752"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+</LinearLayout>
