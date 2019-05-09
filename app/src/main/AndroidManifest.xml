@@ -73,34 +73,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
-    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE"/>-->
-
-    <!--<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>-->
-    <!--<uses-permission android:name="android.permission.RESTART_PACKAGES"/>-->
-    <!--<uses-permission android:name="android.permission.BROADCAST_STICKY"/>-->
-    <!--<uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>-->
-    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>-->
-    <!--<uses-permission android:name="android.permission.WAKE_LOCK"/>-->
-    <!--<uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>-->
-    <!--<uses-permission android:name="android.permission.GET_TASKS"/>-->
-    <!--<uses-permission android:name="android.permission.READ_LOGS"/>-->
-    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>-->
-    <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>-->
-    <!--<uses-permission android:name="android.permission.BLUETOOTH"/>-->
-    <!--<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>-->
-    <!--<uses-permission android:name="android.permission.INTERNET"/>-->
-    <!--<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>-->
-    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>-->
-    <!--<uses-permission android:name="android.permission.WRITE_CONTACTS"/>-->
-    <!--<uses-permission android:name="android.permission.WRITE_SETTINGS"/>-->
-    <!--<uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>-->
-
-    <uses-feature
-        android:name="android.hardware.bluetooth_le"
-        android:required="true"/>
-
-    <uses-permission android:name="android.permission.CAMERA"></uses-permission>
-    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 
     <application
         android:name=".base.BaseApplication"
@@ -119,6 +91,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
          <!--<activity-->
              <!--android:name=".activity.EddyStoneScanActivity" >-->
@@ -189,10 +167,7 @@
 
         <activity android:name=".activity.Main2Activity" />
         <activity android:name=".activity.Main3Activity" />
-        <activity
-            android:name=".activity.MainActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
         <activity
             android:name=".activity.InstructionsActivity"
             android:screenOrientation="portrait"

@@ -10,7 +10,8 @@ package cn.qimate.bike.core.common;
 public class Urls {
 
 	public static String HTTP = "http://";
-	public static String host = HTTP + "app.7mate.cn";
+//	public static String host = HTTP + "app.7mate.cn";
+	public static String host = HTTP + "test.7mate.cn";
 //    public static String host = HTTP + "192.168.206.10:8345";
 	/***上传坐标*/
 	public static String locationHost = HTTP + "106.14.188.246";
@@ -148,9 +149,15 @@ public class Urls {
 	public static String openAgain = host + "/index.php?g=App&m=User&a=open_again";
 	/**判断当前锁是否为关闭*/
 	public static String carClose = host + "/index.php?g=App&m=User&a=car_close";
+	/**关闭电单车*/
+	public static String closeEbike = host + "/index.php?g=App&m=User&a=closeEbike";
 
 	/**坏车列表*/
 	public static String badcarList = host + "/index.php?g=App&m=UserManage&a=badcar_list";
 	/**坏车详情*/
 	public static String badcarShow = host + "/index.php?g=App&m=UserManage&a=badcar_show";
+
+    /**电单车信息*/
+//    public static String ebikeInfo = host + "/index.php?g=App&m=Ebike&a=info";
+    public static String ebikeInfo = host + "?g=App&m=Ebike&a=info";
 }

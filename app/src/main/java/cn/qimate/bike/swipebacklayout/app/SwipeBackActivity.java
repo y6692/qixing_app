@@ -24,6 +24,7 @@ import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.base.BaseFragmentActivity;
+import cn.qimate.bike.ble.BLEService;
 import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
@@ -37,6 +38,8 @@ public class SwipeBackActivity extends BaseFragmentActivity implements SwipeBack
 	private static final int VIBRATE_DURATION = 10;
 	private SwipeBackActivityHelper mHelper;
 	private SwipeBackLayout mSwipeBackLayout;
+
+	public BLEService bleService = new BLEService();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

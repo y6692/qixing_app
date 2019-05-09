@@ -49,6 +49,9 @@ public class BLEService {
 	public static final UUID serviceuuid= UUID.fromString("0000ff00-0000-1000-8000-00805f9b34fb");
 	public static final UUID chracteruuid= UUID.fromString("0000ff01-0000-1000-8000-00805f9b34fb");
 	public static final UUID CLIENT_CHARACTERISTIC_CONFIG = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+
+	public boolean connect = false;
+	public String cc = "";
 	
 	private final BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
 
@@ -63,6 +66,10 @@ public class BLEService {
 					public void run() {
 //						TextView textView = ((TextView)((BaseActivity)view).findViewById(R.id.readvalue));
 //						textView.setText("connection");
+
+						Log.e("oCS===", "===CONNECTED");
+
+						connect = true;
 					}
 				});
 			} else if (newState == BluetoothProfile.STATE_DISCONNECTED) { // 断开
@@ -72,6 +79,10 @@ public class BLEService {
 					public void run() {
 //						TextView textView = ((TextView)((BaseActivity)view).findViewById(R.id.readvalue));
 //						textView.setText("disconnect");
+
+						Log.e("oCS===", "===DISCONNECTED");
+
+						connect = false;
 					}
 				});
 				ByteUtil.log("cnt.get()====="+cnt.get());
@@ -167,13 +178,16 @@ public class BLEService {
 
 				final byte[] data =  readBytebuf();
 				if(data == null) return;
-//				handler.post(new Runnable() {
-//					@Override
-//					public void run() {
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
 //						TextView textView = ((TextView)((BaseActivity)view).findViewById(R.id.readvalue));
 //						textView.setText(ioBuffer.toHexArray(data));
-//					}
-//				});
+
+						cc = ioBuffer.toHexArray(data);
+						Log.e("oCC===", data+"==="+ioBuffer.toHexArray(data));
+					}
+				});
 			}
 			sleep(30);
 		}
