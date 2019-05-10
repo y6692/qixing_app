@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/ui_fristView_mainLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="400dp"
         android:orientation="vertical"
         android:background="@color/white">
 
@@ -24,56 +24,52 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingTop="@dimen/dp10"
-            android:paddingLeft="@dimen/dp10"
-            android:paddingRight="@dimen/dp10">
+            android:layout_height="match_parent"
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/ui_fristView_exImage_1"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@null"
-                android:src="@drawable/frist_view_no_lock"
-                android:scaleType="centerInside"/>
+                android:layout_height="wrap_content"
+                android:src="@drawable/frist_view"/>
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingTop="@dimen/dp10"
-            android:paddingLeft="@dimen/dp10"
-            android:paddingRight="@dimen/dp10">
+        <!--<LinearLayout-->
+            <!--android:visibility="gone"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingTop="@dimen/dp10"-->
+            <!--android:paddingLeft="@dimen/dp10"-->
+            <!--android:paddingRight="@dimen/dp10">-->
 
-            <ImageView
-                android:id="@+id/ui_fristView_exImage_2"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@null"
-                android:src="@drawable/fist_view_nor_lock"
-                android:scaleType="centerCrop"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingTop="@dimen/dp10"
-            android:paddingLeft="@dimen/dp10"
-            android:paddingRight="@dimen/dp10">
+            <!--<ImageView-->
+                <!--android:id="@+id/ui_fristView_exImage_2"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@null"-->
+                <!--android:src="@drawable/fist_view_nor_lock"-->
+                <!--android:scaleType="centerCrop"/>-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:visibility="gone"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingTop="@dimen/dp10"-->
+            <!--android:paddingLeft="@dimen/dp10"-->
+            <!--android:paddingRight="@dimen/dp10">-->
 
-            <ImageView
-                android:id="@+id/ui_fristView_exImage_3"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@null"
-                android:src="@drawable/frist_view_rule"
-                android:scaleType="centerCrop"
-                android:layout_marginBottom="@dimen/dp10"/>
-        </LinearLayout>
+            <!--<ImageView-->
+                <!--android:id="@+id/ui_fristView_exImage_3"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@null"-->
+                <!--android:src="@drawable/frist_view_rule"-->
+                <!--android:scaleType="centerCrop"-->
+                <!--android:layout_marginBottom="@dimen/dp10"/>-->
+        <!--</LinearLayout>-->
     </LinearLayout>
 
     <View

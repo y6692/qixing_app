@@ -144,7 +144,6 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.Context.KEYGUARD_SERVICE;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static cn.qimate.bike.activity.CurRoadBikingActivity.bytes2hex03;
-import static cn.qimate.bike.core.common.Urls.schoolrangeList;
 
 @SuppressLint("NewApi")
 public class BikeFragment extends BaseFragment implements View.OnClickListener, LocationSource,
@@ -167,7 +166,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private ImageView myLocationBtn, linkBtn;
     private LinearLayout scanLock, myCommissionLayout, myLocationLayout, linkLayout;
 
-    //	private AMap aMap;
+    protected AMap aMap;
+    protected BitmapDescriptor successDescripter;
     private MapView mapView;
     //	private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
@@ -254,6 +254,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private BluetoothAdapter.LeScanCallback mLeScanCallback;
     private int n=0;
 
+    private int carType = 1;
+
     private Bundle savedIS;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -338,14 +340,14 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         if(hidden){
             //pause
 
-//            mapView.setVisibility(View.GONE);
+            mapView.setVisibility(View.GONE);
 
 //            mapView.onPause();
 //            deactivate();
         }else{
             //resume
 
-//            mapView.setVisibility(View.VISIBLE);
+            mapView.setVisibility(View.VISIBLE);
 
 //            mapView.onResume();
 //
@@ -397,8 +399,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
         exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
-        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
-        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
+//        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
+//        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
         closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
         advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
@@ -438,7 +440,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
         aMap.moveCamera(cameraUpdate);
         successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
-        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.ebike_icon);
+        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
 
         aMap.setOnMapTouchListener(this);
         setUpLocationStyle();
@@ -464,17 +466,17 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         params.height = (int) (activity.getWindowManager().getDefaultDisplay().getWidth() * 0.16);
         titleImage.setLayoutParams(params);
 
-        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
-        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-        exImage_1.setLayoutParams(params1);
-
-        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
-        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-        exImage_2.setLayoutParams(params2);
-
-        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
-        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-        exImage_3.setLayoutParams(params3);
+//        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
+//        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+//        exImage_1.setLayoutParams(params1);
+//
+//        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
+//        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+//        exImage_2.setLayoutParams(params2);
+//
+//        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
+//        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+//        exImage_3.setLayoutParams(params3);
 
         if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
             SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
@@ -497,8 +499,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 }
             }).start();
         }
-        exImage_1.setOnClickListener(myOnClickLister);
-        exImage_2.setOnClickListener(myOnClickLister);
+//        exImage_1.setOnClickListener(myOnClickLister);
+//        exImage_2.setOnClickListener(myOnClickLister);
         closeBtn.setOnClickListener(myOnClickLister);
 
 
@@ -928,7 +930,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
             if ((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
 
-            Log.e("main===Changed", isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + type);
+            Log.e("main===Changed", isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + amapLocation.getLatitude() );
             ToastUtil.showMessage(context, isContainsList.contains(true) + "》》》" + near + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
 
             if (amapLocation != null && amapLocation.getErrorCode() == 0) {
@@ -952,9 +954,14 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     referLongitude = amapLocation.getLongitude();
                     myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
 
+                    Log.e("main===Changed>>>0", "》》》"+mFirstFix);
+
                     if (mFirstFix) {
+
+                        Log.e("main===Changed>>>1", "》》》");
+
                         mFirstFix = false;
-                        schoolrangeList();
+                        schoolRange();
                         initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
                         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
                     } else {
@@ -1718,6 +1725,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 break;
             case R.id.mainUI_slideLayout:
                 UIHelper.goWebViewAct(context,"停车须知",Urls.phtml5 + uid);
+
                 break;
             default:
                 break;
@@ -1798,6 +1806,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         RequestParams params = new RequestParams();
         params.put("latitude",latitude);
         params.put("longitude",longitude);
+        params.put("type", 1);
         HttpHelper.get(context, Urls.nearby, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -2699,18 +2708,18 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.ui_fristView_exImage_1:
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
-                    break;
-                case R.id.ui_fristView_exImage_2:
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
-                    break;
+//                case R.id.ui_fristView_exImage_1:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
+//                    break;
+//                case R.id.ui_fristView_exImage_2:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
+//                    break;
                 case R.id.ui_fristView_closeBtn:
                     if (dialog != null && dialog.isShowing()) {
                         dialog.dismiss();
@@ -3290,9 +3299,14 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    private void schoolrangeList(){
+    private void schoolRange(){
+
+        Log.e("main===schoolRange0", "==="+carType);
+
         RequestParams params = new RequestParams();
-        HttpHelper.get(context, schoolrangeList, params, new TextHttpResponseHandler() {
+        params.put("type", 1);
+
+        HttpHelper.get(context, Urls.schoolRange, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 if (loadingDialog != null && !loadingDialog.isShowing()) {
@@ -3311,6 +3325,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 try {
+                    Log.e("main===schoolRange1", "==="+carType);
+
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
                         JSONArray jsonArray = new JSONArray(result.getData());
@@ -3328,17 +3344,17 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                             Polygon polygon = null;
                             PolygonOptions pOption = new PolygonOptions();
                             pOption.addAll(list);
-//                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
-//                                    .strokeColor(Color.argb(160, 255, 0, 0))
-//                                    .fillColor(Color.argb(160, 255, 0, 0)));
+                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
+                                    .strokeColor(Color.argb(160, 255, 0, 0))
+                                    .fillColor(Color.argb(160, 255, 0, 0)));
 
 //                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
 //                                    .strokeColor(Color.argb(160, 0, 0, 255))
 //                                    .fillColor(Color.argb(160, 0, 0, 255)));
 
-                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
-                                    .strokeColor(Color.argb(255, 0, 255, 0))
-                                    .fillColor(Color.argb(255, 0, 255, 0)));
+//                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                    .strokeColor(Color.argb(255, 0, 255, 0))
+//                                    .fillColor(Color.argb(255, 0, 255, 0)));
 
                             pOptions.add(polygon);
                             isContainsList.add(polygon.contains(myLocation));
@@ -3354,6 +3370,71 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             }
         });
     }
+
+//    private void schoolrangeList(){
+//        RequestParams params = new RequestParams();
+//        HttpHelper.get(context, schoolrangeList, params, new TextHttpResponseHandler() {
+//            @Override
+//            public void onStart() {
+//                if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                    loadingDialog.setTitle("正在加载");
+//                    loadingDialog.show();
+//                }
+//            }
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                if (loadingDialog != null && loadingDialog.isShowing()){
+//                    loadingDialog.dismiss();
+//                }
+//                UIHelper.ToastError(context, throwable.toString());
+//            }
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+//                try {
+//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//                    if (result.getFlag().equals("Success")) {
+//                        JSONArray jsonArray = new JSONArray(result.getData());
+//                        if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+//                            isContainsList.clear();
+//                        }
+//                        for (int i = 0; i < jsonArray.length(); i++) {
+//                            List<LatLng> list = new ArrayList<>();
+//                            for (int j = 0; j < jsonArray.getJSONArray(i).length(); j ++){
+//                                JSONObject jsonObject = jsonArray.getJSONArray(i).getJSONObject(j);
+//                                LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")),
+//                                        Double.parseDouble(jsonObject.getString("longitude")));
+//                                list.add(latLng);
+//                            }
+//                            Polygon polygon = null;
+//                            PolygonOptions pOption = new PolygonOptions();
+//                            pOption.addAll(list);
+////                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
+////                                    .strokeColor(Color.argb(160, 255, 0, 0))
+////                                    .fillColor(Color.argb(160, 255, 0, 0)));
+//
+////                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
+////                                    .strokeColor(Color.argb(160, 0, 0, 255))
+////                                    .fillColor(Color.argb(160, 0, 0, 255)));
+//
+//                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                    .strokeColor(Color.argb(255, 0, 255, 0))
+//                                    .fillColor(Color.argb(255, 0, 255, 0)));
+//
+//                            pOptions.add(polygon);
+//                            isContainsList.add(polygon.contains(myLocation));
+//                        }
+//                    }else {
+//                        ToastUtil.showMessageApp(context,result.getMsg());
+//                    }
+//                }catch (Exception e){
+//                }
+//                if (loadingDialog != null && loadingDialog.isShowing()){
+//                    loadingDialog.dismiss();
+//                }
+//            }
+//        });
+//    }
 
 
 

@@ -215,25 +215,25 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
 
         titleImage = dialogView.findViewById(R.id.ui_fristView_title);
         exImage_1 = dialogView.findViewById(R.id.ui_fristView_exImage_1);
-        exImage_2 = dialogView.findViewById(R.id.ui_fristView_exImage_2);
-        exImage_3 = dialogView.findViewById(R.id.ui_fristView_exImage_3);
+//        exImage_2 = dialogView.findViewById(R.id.ui_fristView_exImage_2);
+//        exImage_3 = dialogView.findViewById(R.id.ui_fristView_exImage_3);
         closeBtn = dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
         params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
         titleImage.setLayoutParams(params);
 
-        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
-        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-        exImage_1.setLayoutParams(params1);
-
-        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
-        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-        exImage_2.setLayoutParams(params2);
-
-        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
-        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-        exImage_3.setLayoutParams(params3);
+//        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
+//        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+//        exImage_1.setLayoutParams(params1);
+//
+//        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
+//        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+//        exImage_2.setLayoutParams(params2);
+//
+//        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
+//        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+//        exImage_3.setLayoutParams(params3);
 
         backImage.setOnClickListener(this);
         settingImage.setOnClickListener(this);
@@ -254,8 +254,8 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
         checkUpdataLayout.setOnClickListener(this);
 //        myCommissionLayout.setOnClickListener(this);
 
-        exImage_1.setOnClickListener(myOnClickLister);
-        exImage_2.setOnClickListener(myOnClickLister);
+//        exImage_1.setOnClickListener(myOnClickLister);
+//        exImage_2.setOnClickListener(myOnClickLister);
         closeBtn.setOnClickListener(myOnClickLister);
         billRule();
     }
@@ -264,18 +264,18 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.ui_fristView_exImage_1:
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
-                    break;
-                case R.id.ui_fristView_exImage_2:
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
-                    break;
+//                case R.id.ui_fristView_exImage_1:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
+//                    break;
+//                case R.id.ui_fristView_exImage_2:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
+//                    break;
                 case R.id.ui_fristView_closeBtn:
                     if (dialog != null && dialog.isShowing()) {
                         dialog.dismiss();

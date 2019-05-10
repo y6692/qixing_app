@@ -91,7 +91,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = new AMapLocationClientOption();
 
-    private TextView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6;
+    private TextView Tag1,Tag2,Tag3,Tag4;
     private EditText restCauseEdit;
 
     private boolean isSelected1 = false;
@@ -138,11 +138,17 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     private double latitude = 0.0;
     private double longitude = 0.0;
 
+    private TextView tv;
+    private String type = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ui_client_service);
         context = this;
+
+        type = SharedPreferencesUrls.getInstance().getString("type", "");
+
         TagsList = new ArrayList<>();
         imageUrlList = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -183,8 +189,8 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         Tag2 = (TextView)findViewById(R.id.feedbackUI_type_Tag2);
         Tag3 = (TextView)findViewById(R.id.feedbackUI_type_Tag3);
         Tag4 = (TextView)findViewById(R.id.feedbackUI_type_Tag4);
-        Tag5 = (TextView)findViewById(R.id.feedbackUI_type_Tag5);
-        Tag6 = (TextView)findViewById(R.id.feedbackUI_type_Tag6);
+//        Tag5 = (TextView)findViewById(R.id.feedbackUI_type_Tag5);
+//        Tag6 = (TextView)findViewById(R.id.feedbackUI_type_Tag6);
 
         restCauseEdit = (EditText)findViewById(R.id.feedbackUI_restCause);
 
@@ -198,6 +204,14 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         takePhotoBtn = (Button)findViewById(R.id.takePhotoBtn);
         pickPhotoBtn = (Button)findViewById(R.id.pickPhotoBtn);
         cancelBtn = (Button)findViewById(R.id.cancelBtn);
+        tv = (TextView)findViewById(R.id.tv);
+
+        if("4".equals(type)){
+            tv.setText("还车提示：校内地图绿色区域关锁，并点击结束");
+        }else{
+            tv.setText("还车提示：校内地图红色区域关锁，并点击结束");
+        }
+
         pickPhotoBtn.setVisibility(View.GONE);
         takePhotoBtn.setOnClickListener(itemsOnClick);
 //        pickPhotoBtn.setOnClickListener(itemsOnClick);
@@ -219,8 +233,8 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         Tag2.setOnClickListener(this);
         Tag3.setOnClickListener(this);
         Tag4.setOnClickListener(this);
-        Tag5.setOnClickListener(this);
-        Tag6.setOnClickListener(this);
+//        Tag5.setOnClickListener(this);
+//        Tag6.setOnClickListener(this);
 
         restCauseEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -412,58 +426,58 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                     submitBtn.setEnabled(true);
                 }
                 break;
-            case R.id.feedbackUI_type_Tag5:
-                if (isSelected5){
-                    isSelected5 = false;
-                    if (TagsList.contains(Tag5.getText().toString())){
-                        TagsList.remove(Tag5.getText().toString());
-                    }
-                    Tag5.setTextColor(Color.parseColor("#666666"));
-                    Tag5.setBackgroundResource(R.drawable.shape_feedback);
-                }else {
-                    isSelected5 = true;
-                    if (!TagsList.contains(Tag5.getText().toString())){
-                        TagsList.add(Tag5.getText().toString());
-                    }
-                    Tag5.setTextColor(Color.parseColor("#f57752"));
-                    Tag5.setBackgroundResource(R.drawable.shape_feedback_selectd);
-                }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    submitBtn.setEnabled(true);
-                }
-                break;
-            case R.id.feedbackUI_type_Tag6:
-                if (isSelected6){
-                    isSelected6 = false;
-                    if (TagsList.contains(Tag6.getText().toString())){
-                        TagsList.remove(Tag6.getText().toString());
-                    }
-                    Tag6.setTextColor(Color.parseColor("#666666"));
-                    Tag6.setBackgroundResource(R.drawable.shape_feedback);
-                }else {
-                    isSelected6 = true;
-                    if (!TagsList.contains(Tag6.getText().toString())){
-                        TagsList.add(Tag6.getText().toString());
-                    }
-                    Tag6.setTextColor(Color.parseColor("#f57752"));
-                    Tag6.setBackgroundResource(R.drawable.shape_feedback_selectd);
-                }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    submitBtn.setEnabled(true);
-                }
-                break;
+//            case R.id.feedbackUI_type_Tag5:
+//                if (isSelected5){
+//                    isSelected5 = false;
+//                    if (TagsList.contains(Tag5.getText().toString())){
+//                        TagsList.remove(Tag5.getText().toString());
+//                    }
+//                    Tag5.setTextColor(Color.parseColor("#666666"));
+//                    Tag5.setBackgroundResource(R.drawable.shape_feedback);
+//                }else {
+//                    isSelected5 = true;
+//                    if (!TagsList.contains(Tag5.getText().toString())){
+//                        TagsList.add(Tag5.getText().toString());
+//                    }
+//                    Tag5.setTextColor(Color.parseColor("#f57752"));
+//                    Tag5.setBackgroundResource(R.drawable.shape_feedback_selectd);
+//                }
+//                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+//                        restCauseEdit.getText().toString().trim() == null
+//                                || "".equals(restCauseEdit.getText().toString().trim()))){
+//                    submitBtn.setEnabled(false);
+//                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+//                    submitBtn.setEnabled(false);
+//                }else{
+//                    submitBtn.setEnabled(true);
+//                }
+//                break;
+//            case R.id.feedbackUI_type_Tag6:
+//                if (isSelected6){
+//                    isSelected6 = false;
+//                    if (TagsList.contains(Tag6.getText().toString())){
+//                        TagsList.remove(Tag6.getText().toString());
+//                    }
+//                    Tag6.setTextColor(Color.parseColor("#666666"));
+//                    Tag6.setBackgroundResource(R.drawable.shape_feedback);
+//                }else {
+//                    isSelected6 = true;
+//                    if (!TagsList.contains(Tag6.getText().toString())){
+//                        TagsList.add(Tag6.getText().toString());
+//                    }
+//                    Tag6.setTextColor(Color.parseColor("#f57752"));
+//                    Tag6.setBackgroundResource(R.drawable.shape_feedback_selectd);
+//                }
+//                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+//                        restCauseEdit.getText().toString().trim() == null
+//                                || "".equals(restCauseEdit.getText().toString().trim()))){
+//                    submitBtn.setEnabled(false);
+//                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+//                    submitBtn.setEnabled(false);
+//                }else{
+//                    submitBtn.setEnabled(true);
+//                }
+//                break;
 
 
             case R.id.ui_client_service_submitBtn:
@@ -521,6 +535,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         params.put("desc_img",imageUrlList);
         params.put("latitude", latitude);
         params.put("longitude",longitude);
+        params.put("type", "4".equals(type)?2:1);
         HttpHelper.post(context, Urls.feedback, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {

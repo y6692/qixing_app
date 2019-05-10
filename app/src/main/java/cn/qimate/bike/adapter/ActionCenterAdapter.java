@@ -65,7 +65,7 @@ public class ActionCenterAdapter extends BaseViewAdapter<ActionCenterBean>{
         if (bean.getAc_thumb() != null && !"".equals(bean.getAc_thumb())){
             // 加载图片
 //            Glide.with(getContext()).load(Urls.host+bean.getAc_thumb()).placeholder(R.drawable.empty_photo).into(imageview);
-            ImageLoader.getInstance().displayImage(Urls.host+bean.getAc_thumb(),imageview,options);
+            ImageLoader.getInstance().displayImage(Urls.host+bean.getAc_thumb(), imageview, options);
         }
         title.setText(bean.getTitle());
         return convertView;

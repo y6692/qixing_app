@@ -99,6 +99,8 @@ public class Urls {
 	public static String pointRule = host + "/index.php?g=App&m=Index&a=pointsrole";
 	/**学校范围电子栅栏*/
 	public static String schoolrangeList = host + "/index.php?g=App&m=Index&a=schoolrangeList";
+	/**学校范围电子栅栏*/
+	public static String schoolRange = host + "?g=App&m=SchoolRange&a=index";
 	/** 版本检测更新 */
 	public static String updateApp = host + "/index.php?g=App&m=Index&a=android";
 	/**获取启动页图广告*/
@@ -130,6 +132,8 @@ public class Urls {
 	public static String stopSite = host + "/index.php?a=pmaps&m=Index&g=App";
 	/**t停车点H5*/
 	public static String phtml5 = host + "/index.php?g=App&m=Helper&a=phtml5&uid=";
+	/**t电单车停车点H5*/
+	public static String ebike_phtml5 = host + "/index.php?g=App&m=Helper&a=ebike_phtml5&uid=";
 	/**获取身份证信息*/
 	public static String useinfo = host + "/index.php?g=App&m=UserCard&a=cardinfo";
 	/**提交身份证信息*/
@@ -145,6 +149,9 @@ public class Urls {
 	public static String gradeList = host + "/index.php?a=get_grade_list&m=Index&g=App";
 	/**获取月卡配置接口*/
 	public static String userMonth = host + "/index.php?a=month_card_set&m=UserMonth&g=App";
+	/**月卡首页接口*/
+	public static String userMonthIndex = host + "?g=App&m=userMonth&a=index";
+
 	/**3合1锁再次开锁*/
 	public static String openAgain = host + "/index.php?g=App&m=User&a=open_again";
 	/**判断当前锁是否为关闭*/

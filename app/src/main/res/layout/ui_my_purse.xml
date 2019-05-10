@@ -76,19 +76,46 @@
                             android:textSize="@dimen/sp16" />
                     </LinearLayout>
                 </RelativeLayout>
-                <Button
-                    android:id="@+id/myPurseUI_monthCard"
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp45"
-                    android:layout_marginLeft="@dimen/dp15"
-                    android:layout_marginRight="@dimen/dp15"
+                    android:orientation="horizontal"
+
                     android:layout_marginTop="@dimen/dp15"
-                    android:background="@drawable/btn_bcg"
-                    android:gravity="center"
-                    android:maxHeight="0dp"
-                    android:text="购买套餐(骑行更划算)"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp16"/>
+                    >
+
+                    <Button
+                        android:id="@+id/myPurseUI_monthCard_bike"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dp45"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="@dimen/dp15"
+                        android:layout_marginRight="@dimen/dp15"
+                        android:background="@drawable/btn_bcg"
+                        android:gravity="center"
+                        android:maxHeight="0dp"
+                        android:text="购买骑行卡(单车)"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp16"/>
+
+                    <Button
+                        android:id="@+id/myPurseUI_monthCard_ebike"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dp45"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="@dimen/dp15"
+                        android:layout_marginRight="@dimen/dp15"
+                        android:background="@drawable/btn_bcg"
+                        android:gravity="center"
+                        android:maxHeight="0dp"
+                        android:text="购买骑行卡(电单车)"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp16"/>
+
+                </LinearLayout>
+
+
 
 
                 <Button

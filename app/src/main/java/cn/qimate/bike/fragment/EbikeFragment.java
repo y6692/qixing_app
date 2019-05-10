@@ -162,7 +162,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     private ImageView myLocationBtn, linkBtn;
     private LinearLayout scanLock, myCommissionLayout, myLocationLayout, linkLayout;
 
-    //	private AMap aMap;
+    protected AMap aMap;
+    protected BitmapDescriptor successDescripter;
     private MapView mapView;
     //	private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
@@ -275,7 +276,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         bikeMarkerList = new ArrayList<>();
         imageWith = (int) (activity.getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 
-        mapView = (MapView) activity.findViewById(R.id.mainUI_map);
+        mapView = (MapView) activity.findViewById(R.id.mainUI_map2);
         mapView.onCreate(savedInstanceState);
 
         IntentFilter filter = new IntentFilter();
@@ -304,7 +305,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         customDialog = customBuilder.create();
 
         CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
+        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图绿色区域，或打开手机GPS并重启软件再试")
                 .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -313,7 +314,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         customDialog3 = customBuilder.create();
 
         customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域")
+        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图绿色区域")
                 .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -334,14 +335,14 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         if(hidden){
             //pause
 
-//            mapView.setVisibility(View.GONE);
+            mapView.setVisibility(View.GONE);
 
 //            mapView.onPause();
 //            deactivate();
         }else{
             //resume
 
-//            mapView.setVisibility(View.VISIBLE);
+            mapView.setVisibility(View.VISIBLE);
 
 //            mapView.onResume();
 //
@@ -389,12 +390,12 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         advDialog.setContentView(advDialogView);
         advDialog.setCanceledOnTouchOutside(false);
 
-        marqueeLayout = activity.findViewById(R.id.mainUI_marqueeLayout);
+        marqueeLayout = activity.findViewById(R.id.mainUI_marqueeLayout2);
 
         titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
         exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
-        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
-        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
+//        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
+//        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
         closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
         advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
@@ -404,21 +405,21 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         params4.height = (int) (activity.getWindowManager().getDefaultDisplay().getWidth() * 0.8);
         advImageView.setLayoutParams(params4);
 
-        marquee = (TextView) activity.findViewById(R.id.mainUI_marquee);
+        marquee = (TextView) activity.findViewById(R.id.mainUI_marquee2);
 //        title = (TextView) activity.findViewById(R.id.mainUI_title);
 //        leftBtn = (ImageView) activity.findViewById(R.id.mainUI_leftBtn);
 //        rightBtn = (ImageView) activity.findViewById(R.id.mainUI_rightBtn);
-        myCommissionLayout =  (LinearLayout) activity.findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
-        myLocationLayout =  (LinearLayout) activity.findViewById(R.id.mainUI_myLocationLayout);
-        linkLayout = (LinearLayout) activity.findViewById(R.id.mainUI_linkServiceLayout);
-        myLocationBtn = (ImageView) activity.findViewById(R.id.mainUI_myLocation);
-        scanLock = (LinearLayout) activity.findViewById(R.id.mainUI_scanCode_lock);
-        linkBtn = (ImageView) activity.findViewById(R.id.mainUI_linkService_btn);
-        authBtn = (Button)activity.findViewById(R.id.mainUI_authBtn);
-        cartBtn = (Button)activity.findViewById(R.id.mainUI_cartBtn);
-        rechargeBtn = (Button)activity.findViewById(R.id.mainUI_rechargeBtn);
-        refreshLayout = (LinearLayout) activity.findViewById(R.id.mainUI_refreshLayout);
-        slideLayout = (LinearLayout)activity.findViewById(R.id.mainUI_slideLayout);
+        myCommissionLayout =  (LinearLayout) activity.findViewById(R.id.personUI_bottom_billing_myCommissionLayout2);
+        myLocationLayout =  (LinearLayout) activity.findViewById(R.id.mainUI_myLocationLayout2);
+        linkLayout = (LinearLayout) activity.findViewById(R.id.mainUI_linkServiceLayout2);
+        myLocationBtn = (ImageView) activity.findViewById(R.id.mainUI_myLocation2);
+        scanLock = (LinearLayout) activity.findViewById(R.id.mainUI_scanCode_lock2);
+        linkBtn = (ImageView) activity.findViewById(R.id.mainUI_linkService_btn2);
+        authBtn = (Button)activity.findViewById(R.id.mainUI_authBtn2);
+        cartBtn = (Button)activity.findViewById(R.id.mainUI_cartBtn2);
+        rechargeBtn = (Button)activity.findViewById(R.id.mainUI_rechargeBtn2);
+        refreshLayout = (LinearLayout) activity.findViewById(R.id.mainUI_refreshLayout2);
+        slideLayout = (LinearLayout)activity.findViewById(R.id.mainUI_slideLayout2);
 
         if(aMap==null){
             aMap = mapView.getMap();
@@ -460,17 +461,17 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         params.height = (int) (activity.getWindowManager().getDefaultDisplay().getWidth() * 0.16);
         titleImage.setLayoutParams(params);
 
-        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
-        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-        exImage_1.setLayoutParams(params1);
-
-        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
-        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-        exImage_2.setLayoutParams(params2);
-
-        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
-        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-        exImage_3.setLayoutParams(params3);
+//        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
+//        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+//        exImage_1.setLayoutParams(params1);
+//
+//        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
+//        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+//        exImage_2.setLayoutParams(params2);
+//
+//        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
+//        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+//        exImage_3.setLayoutParams(params3);
 
         if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
             SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
@@ -493,8 +494,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 }
             }).start();
         }
-        exImage_1.setOnClickListener(myOnClickLister);
-        exImage_2.setOnClickListener(myOnClickLister);
+//        exImage_1.setOnClickListener(myOnClickLister);
+//        exImage_2.setOnClickListener(myOnClickLister);
         closeBtn.setOnClickListener(myOnClickLister);
 
 
@@ -950,7 +951,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                     if (mFirstFix) {
                         mFirstFix = false;
-                        schoolrangeList();
+                        schoolRange();
                         initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
                         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
                     } else {
@@ -1545,23 +1546,23 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 }
                 UIHelper.goToAct(context, PersonAlterActivity.class);
                 break;
-            case R.id.mainUI_marqueeLayout:
+            case R.id.mainUI_marqueeLayout2:
 
                 break;
-            case R.id.personUI_bottom_billing_myCommissionLayout:
+            case R.id.personUI_bottom_billing_myCommissionLayout2:
 //                Intent intent = new Intent(context,InviteCodeActivity.class);
                 Intent intent = new Intent(context, CouponActivity.class);
                 intent.putExtra("isBack",true);
                 context.startActivity(intent);
                 break;
-            case R.id.mainUI_myLocationLayout:
-            case R.id.mainUI_myLocation:
+            case R.id.mainUI_myLocationLayout2:
+            case R.id.mainUI_myLocation2:
                 if (myLocation != null) {
                     CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
                     aMap.animateCamera(update);
                 }
                 break;
-            case R.id.mainUI_scanCode_lock:
+            case R.id.mainUI_scanCode_lock2:
 
                 if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
                     ToastUtil.showMessageApp(context,"请先登录账号");
@@ -1589,11 +1590,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                     ToastUtil.showMessage(context,"您还未认证,请先认证");
                 }
                 break;
-            case R.id.mainUI_linkServiceLayout:
-            case R.id.mainUI_linkService_btn:
+            case R.id.mainUI_linkServiceLayout2:
+            case R.id.mainUI_linkService_btn2:
                 initmPopupWindowView();
                 break;
-            case R.id.mainUI_authBtn:
+            case R.id.mainUI_authBtn2:
                 if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
                     UIHelper.goToAct(context,LoginActivity.class);
                 }else {
@@ -1616,10 +1617,10 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                     }
                 }
                 break;
-            case R.id.mainUI_rechargeBtn:
+            case R.id.mainUI_rechargeBtn2:
                 UIHelper.goToAct(context, MyPurseActivity.class);
                 break;
-            case R.id.mainUI_refreshLayout:
+            case R.id.mainUI_refreshLayout2:
                 RefreshLogin();
                 if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
                     UIHelper.goToAct(context,LoginActivity.class);
@@ -1709,11 +1710,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                     advDialog.dismiss();
                 }
                 break;
-            case R.id.mainUI_cartBtn:
+            case R.id.mainUI_cartBtn2:
                 UIHelper.goToAct(context, PayMontCartActivity.class);
                 break;
-            case R.id.mainUI_slideLayout:
-                UIHelper.goWebViewAct(context,"停车须知",Urls.phtml5 + uid);
+            case R.id.mainUI_slideLayout2:
+                UIHelper.goWebViewAct(context,"停车须知",Urls.ebike_phtml5 + uid);
                 break;
             default:
                 break;
@@ -1794,6 +1795,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         RequestParams params = new RequestParams();
         params.put("latitude",latitude);
         params.put("longitude",longitude);
+        params.put("type", 2);
         HttpHelper.get(context, Urls.nearby, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -2695,18 +2697,18 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.ui_fristView_exImage_1:
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
-                    break;
-                case R.id.ui_fristView_exImage_2:
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
-                    break;
+//                case R.id.ui_fristView_exImage_1:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
+//                    break;
+//                case R.id.ui_fristView_exImage_2:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
+//                    break;
                 case R.id.ui_fristView_closeBtn:
                     if (dialog != null && dialog.isShowing()) {
                         dialog.dismiss();
@@ -3286,9 +3288,14 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
-    private void schoolrangeList(){
+    private void schoolRange(){
+
+        Log.e("main===schoolRange2", "===");
+
         RequestParams params = new RequestParams();
-        HttpHelper.get(context, schoolrangeList, params, new TextHttpResponseHandler() {
+        params.put("type", 2);
+
+        HttpHelper.get(context, Urls.schoolRange, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 if (loadingDialog != null && !loadingDialog.isShowing()) {
@@ -3324,9 +3331,18 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                             Polygon polygon = null;
                             PolygonOptions pOption = new PolygonOptions();
                             pOption.addAll(list);
+//                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                    .strokeColor(Color.argb(160, 255, 0, 0))
+//                                    .fillColor(Color.argb(160, 255, 0, 0)));
+
+//                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                    .strokeColor(Color.argb(160, 0, 0, 255))
+//                                    .fillColor(Color.argb(160, 0, 0, 255)));
+
                             polygon = aMap.addPolygon(pOption.strokeWidth(2)
-                                    .strokeColor(Color.argb(160, 255, 0, 0))
-                                    .fillColor(Color.argb(160, 255, 0, 0)));
+                                    .strokeColor(Color.argb(255, 0, 255, 0))
+                                    .fillColor(Color.argb(255, 0, 255, 0)));
+
                             pOptions.add(polygon);
                             isContainsList.add(polygon.contains(myLocation));
                         }
@@ -3341,6 +3357,62 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             }
         });
     }
+
+//    private void schoolrangeList(){
+//        RequestParams params = new RequestParams();
+//        HttpHelper.get(context, schoolrangeList, params, new TextHttpResponseHandler() {
+//            @Override
+//            public void onStart() {
+//                if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                    loadingDialog.setTitle("正在加载");
+//                    loadingDialog.show();
+//                }
+//            }
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                if (loadingDialog != null && loadingDialog.isShowing()){
+//                    loadingDialog.dismiss();
+//                }
+//                UIHelper.ToastError(context, throwable.toString());
+//            }
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+//                try {
+//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//                    if (result.getFlag().equals("Success")) {
+//                        JSONArray jsonArray = new JSONArray(result.getData());
+//                        if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+//                            isContainsList.clear();
+//                        }
+//                        for (int i = 0; i < jsonArray.length(); i++) {
+//                            List<LatLng> list = new ArrayList<>();
+//                            for (int j = 0; j < jsonArray.getJSONArray(i).length(); j ++){
+//                                JSONObject jsonObject = jsonArray.getJSONArray(i).getJSONObject(j);
+//                                LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")),
+//                                        Double.parseDouble(jsonObject.getString("longitude")));
+//                                list.add(latLng);
+//                            }
+//                            Polygon polygon = null;
+//                            PolygonOptions pOption = new PolygonOptions();
+//                            pOption.addAll(list);
+//                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                    .strokeColor(Color.argb(160, 255, 0, 0))
+//                                    .fillColor(Color.argb(160, 255, 0, 0)));
+//                            pOptions.add(polygon);
+//                            isContainsList.add(polygon.contains(myLocation));
+//                        }
+//                    }else {
+//                        ToastUtil.showMessageApp(context,result.getMsg());
+//                    }
+//                }catch (Exception e){
+//                }
+//                if (loadingDialog != null && loadingDialog.isShowing()){
+//                    loadingDialog.dismiss();
+//                }
+//            }
+//        });
+//    }
 
 
 

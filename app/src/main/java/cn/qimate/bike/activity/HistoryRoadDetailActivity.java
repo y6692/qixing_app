@@ -63,6 +63,7 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
     private LinearLayout pointLayout;
 
     private TextView freeDaysText;
+    private TextView tv;
 
     private String oid;
     public static boolean isForeground = false;
@@ -72,11 +73,16 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
     private String[] imageStrs;
     private List<BannerBean> datas;
 
+    private String type = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ui_history_road_detail);
         context = this;
+
+        type = SharedPreferencesUrls.getInstance().getString("type", "");
+
         datas = new ArrayList<>();
         initView();
     }
@@ -118,6 +124,13 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
         imagesLayout = (RelativeLayout)findViewById(R.id.history_roadDetailUI_imagesLayout);
         gallery = (MyPagerGalleryView)findViewById(R.id.history_roadDetailUI_gallery);
         pointLayout = (LinearLayout)findViewById(R.id.history_roadDetailUI_pointLayout);
+        tv = (TextView)findViewById(R.id.tv);
+
+        if("4".equals(type)){
+            tv.setText("还车须至校内地图绿色区域，封顶20元/天");
+        }else{
+            tv.setText("还车须至校内地图红色区域，封顶5元/天");
+        }
 
         freeDaysText = (TextView) findViewById(R.id.history_roadDetailUI_freeDaysText);
         if ("0".equals(SharedPreferencesUrls.getInstance().getString("specialdays","0.00"))

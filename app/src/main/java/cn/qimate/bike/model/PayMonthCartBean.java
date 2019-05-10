@@ -3,12 +3,66 @@ package cn.qimate.bike.model;
 public class PayMonthCartBean {
 
     private String month_money;
+    private String month_money_original;
+    private String month_money_discount;
     private String month_day;
     private String quarter_money;
+    private String quarter_money_original;
+    private String quarter_money_discount;
     private String quarter_day;
     private String week_money;
+    private String week_money_original;
+    private String week_money_discount;
     private String week_day;
     private String gamestatus;
+
+    public String getMonth_money_original() {
+        return month_money_original;
+    }
+
+    public void setMonth_money_original(String month_money_original) {
+        this.month_money_original = month_money_original;
+    }
+
+    public String getMonth_money_discount() {
+        return month_money_discount;
+    }
+
+    public void setMonth_money_discount(String month_money_discount) {
+        this.month_money_discount = month_money_discount;
+    }
+
+    public String getQuarter_money_original() {
+        return quarter_money_original;
+    }
+
+    public void setQuarter_money_original(String quarter_money_original) {
+        this.quarter_money_original = quarter_money_original;
+    }
+
+    public String getQuarter_money_discount() {
+        return quarter_money_discount;
+    }
+
+    public void setQuarter_money_discount(String quarter_money_discount) {
+        this.quarter_money_discount = quarter_money_discount;
+    }
+
+    public String getWeek_money_original() {
+        return week_money_original;
+    }
+
+    public void setWeek_money_original(String week_money_original) {
+        this.week_money_original = week_money_original;
+    }
+
+    public String getWeek_money_discount() {
+        return week_money_discount;
+    }
+
+    public void setWeek_money_discount(String week_money_discount) {
+        this.week_money_discount = week_money_discount;
+    }
 
     public String getGamestatus() {
         return gamestatus;

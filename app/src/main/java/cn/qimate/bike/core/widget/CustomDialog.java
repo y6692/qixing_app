@@ -7,9 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import cn.nostra13.universalimageloader.core.DisplayImageOptions;
+import cn.nostra13.universalimageloader.core.ImageLoader;
 import cn.qimate.bike.R;
+import cn.qimate.bike.core.common.Urls;
 
 /**
  * 
@@ -48,6 +53,16 @@ public class CustomDialog extends Dialog {
 		private String electricity;
 		private String mileage;
 		private String fee;
+		private String img_url;
+
+		public String getImg_url() {
+			return img_url;
+		}
+
+		public Builder setImg_url(String img_url) {
+			this.img_url = img_url;
+			return this;
+		}
 
 		public String getElectricity() {
 			return electricity;
@@ -221,6 +236,8 @@ public class CustomDialog extends Dialog {
 					layout = inflater.inflate(R.layout.alertdialog3, null);
 				}else if(type==4){
 					layout = inflater.inflate(R.layout.alertdialog4, null);
+				}else if(type==5){
+					layout = inflater.inflate(R.layout.alertdialog5, null);
 				}else{
 					layout = inflater.inflate(R.layout.alertdialog, null);
 				}
@@ -269,6 +286,11 @@ public class CustomDialog extends Dialog {
 				tv_mileage.setText(mileage);
 				tv_fee.setText(fee);
 
+			}else if(type==5){
+				ImageView iv_img_url = ((ImageView) layout.findViewById(R.id.img_url));
+
+				ImageLoader.getInstance().displayImage(img_url, iv_img_url, options);
+
 			}else{
 				TextView hintText = ((TextView) layout.findViewById(R.id.hintText));
 				if (isHint){
@@ -294,5 +316,16 @@ public class CustomDialog extends Dialog {
 		}
 
 	}
+
+
+	private static DisplayImageOptions options = new DisplayImageOptions.Builder()
+			.showImageOnLoading(R.drawable.empty_photo) // 加载图片时的图片
+			.showImageForEmptyUri(R.drawable.empty_photo) // 没有图片资源时的默认图片
+			.showImageOnFail(R.drawable.big_loadpic_fail_listpage) // 加载失败时的图片
+			.cacheInMemory(false) // 启用内存缓存
+			.cacheOnDisk(false) // 启用外存缓存
+			.considerExifParams(true) // 启用EXIF和JPEG图像格式
+			// .displayer(new RoundedBitmapDisplayer(20)) //设置显示风格这里是圆角矩形
+			.build();
 
 }

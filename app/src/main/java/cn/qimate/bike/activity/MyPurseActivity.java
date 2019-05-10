@@ -2,6 +2,8 @@ package cn.qimate.bike.activity;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.Display;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.zxing.lib.scaner.activity.ActivityScanerCode;
 
 import org.apache.http.Header;
 
@@ -29,9 +32,12 @@ import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
+import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.core.widget.MLImageView;
+import cn.qimate.bike.model.EbikeInfoBean;
 import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.model.UserMonthIndexBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 /**
@@ -56,7 +62,14 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
     private Button positiveButton,negativeButton;
     private TextView dialogTitle;
     private TextView dialogTitle2;
-    private Button monthCard;
+
+    private Button monthCardBike;
+    private Button monthCardEbike;
+
+    private String bike_img_url = "";
+    private String ebike_img_url = "";
+    private String bike_desc = "";
+    private String ebike_desc = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +95,8 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
         money.setText(SharedPreferencesUrls.getInstance().getString("money",""));
         rechargeBtn = (TextView)findViewById(R.id.myPurseUI_rechargeBtn);
         activationBtn = (Button)findViewById(R.id.myPurseUI_activationNum_btn);
-        monthCard = (Button)findViewById(R.id.myPurseUI_monthCard);
+        monthCardBike = (Button)findViewById(R.id.myPurseUI_monthCard_bike);
+        monthCardEbike = (Button)findViewById(R.id.myPurseUI_monthCard_ebike);
 
         rechargeBtn.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
 
@@ -112,7 +126,11 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
         activationBtn.setOnClickListener(this);
         positiveButton.setOnClickListener(this);
         negativeButton.setOnClickListener(this);
-        monthCard.setOnClickListener(this);
+        monthCardBike.setOnClickListener(this);
+        monthCardEbike.setOnClickListener(this);
+
+        userMonthIndex();
+
     }
 
     @Override
@@ -173,12 +191,129 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
                 }
                 activation(bikeNum);
                 break;
-            case R.id.myPurseUI_monthCard:
-                UIHelper.goToAct(context,PayMontCartActivity.class);
-                scrollToFinishActivity();
+            case R.id.myPurseUI_monthCard_bike:
+
+                CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+                customBuilder.setMessage(bike_desc);
+
+                customBuilder.setType(5).setImg_url(bike_img_url).setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+
+                        Intent intent = new Intent(context, PayMontCartActivity.class);
+                        intent.putExtra("carType",1);
+                        context.startActivity(intent);
+
+//                        UIHelper.goToAct(context,PayMontCartActivity.class);
+//                        scrollToFinishActivity();
+                    }
+                }).setHint(false);
+                customBuilder.create().show();
+
+
+                break;
+            case R.id.myPurseUI_monthCard_ebike:
+                customBuilder = new CustomDialog.Builder(this);
+                customBuilder.setMessage(ebike_desc);
+
+                customBuilder.setType(5).setImg_url(ebike_img_url).setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+
+                        Intent intent = new Intent(context, PayMontCartActivity.class);
+                        intent.putExtra("carType",2);
+                        context.startActivity(intent);
+
+//                        UIHelper.goToAct(context,PayMontCartActivity.class);
+//                        scrollToFinishActivity();
+                    }
+                }).setHint(false);
+                customBuilder.create().show();
                 break;
             default:
                 break;
+        }
+    }
+
+    private void userMonthIndex(){
+        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context, LoginActivity.class);
+        }else {
+            RequestParams params = new RequestParams();
+            params.put("uid",uid);
+            params.put("access_token",access_token);
+            HttpHelper.post(context, Urls.userMonthIndex, params, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("正在提交");
+                        loadingDialog.show();
+                    }
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                        if (result.getFlag().equals("Success")) {
+//                            Toast.makeText(context,"获取成功",Toast.LENGTH_SHORT).show();
+
+                            UserMonthIndexBean bean = JSON.parseObject(result.getData(), UserMonthIndexBean.class);
+
+                            if("0".equals(bean.getBike_open_state())){
+//                                monthCardBike.setVisibility(View.GONE);
+//                                monthCardEbike.setVisibility(View.GONE);
+
+                                monthCardBike.setVisibility(View.VISIBLE);
+                                monthCardEbike.setVisibility(View.VISIBLE);
+                            }else if("1".equals(bean.getBike_open_state())){
+                                monthCardBike.setVisibility(View.VISIBLE);
+                                monthCardEbike.setVisibility(View.GONE);
+                            }else if("2".equals(bean.getBike_open_state())){
+                                monthCardBike.setVisibility(View.GONE);
+                                monthCardEbike.setVisibility(View.VISIBLE);
+                            }else if("3".equals(bean.getBike_open_state())){
+                                monthCardBike.setVisibility(View.VISIBLE);
+                                monthCardEbike.setVisibility(View.VISIBLE);
+                            }
+
+                            bike_img_url = bean.getBike_img_url();
+                            ebike_img_url = bean.getEbike_img_url();
+
+                            bike_desc = bean.getBike_desc();
+                            ebike_desc = bean.getEbike_desc();
+
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                        }else {
+                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                        }
+                    }catch (Exception e){
+                    }
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                }
+            });
         }
     }
 

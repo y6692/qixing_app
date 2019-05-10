@@ -34,15 +34,25 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:orientation="vertical"
                         android:paddingTop="@dimen/dp15"
                         android:paddingBottom="@dimen/dp10">
 
                         <TextView
+                            android:id="@+id/tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="还车提示：校内地图红色区域关锁，并点击结束\n还是无法结束？重启软件试试吧！"
+                            android:text="还车提示：校内地图红色区域关锁，并点击结束"
                             android:textSize="@dimen/sp15"
                             android:textColor="@color/tx_black"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="还是无法结束？重启软件试试吧！"
+                            android:textSize="@dimen/sp15"
+                            android:textColor="@color/tx_black"/>
+
                     </LinearLayout>
                     <View
                         android:layout_width="match_parent"
@@ -100,7 +110,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
-                            android:text="锁关不上"
+                            android:text="车辆故障"
                             android:padding="@dimen/dp10"
                             android:textColor="@color/tx_black_light"
                             android:textSize="@dimen/sp12"/>
@@ -109,7 +119,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
-                            android:text="已关锁提示未关"
+                            android:text="车锁故障"
                             android:padding="@dimen/dp10"
                             android:textColor="@color/tx_black_light"
                             android:textSize="@dimen/sp12"
@@ -137,30 +147,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
-                            android:text="蓝牙连接失败"
-                            android:padding="@dimen/dp10"
-                            android:textColor="@color/tx_black_light"
-                            android:textSize="@dimen/sp12"/>
-                        <TextView
-                            android:id="@+id/feedbackUI_type_Tag5"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shape_feedback"
-                            android:text="一直在加载"
-                            android:padding="@dimen/dp10"
-                            android:textColor="@color/tx_black_light"
-                            android:textSize="@dimen/sp12"
-                            android:layout_marginLeft="@dimen/dp10"/>
-                        <TextView
-                            android:id="@+id/feedbackUI_type_Tag6"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shape_feedback"
                             android:text="其他"
                             android:padding="@dimen/dp10"
                             android:textColor="@color/tx_black_light"
-                            android:textSize="@dimen/sp12"
-                            android:layout_marginLeft="@dimen/dp10"/>
+                            android:textSize="@dimen/sp12"/>
                     </LinearLayout>
 
                     <cn.qimate.bike.core.widget.ClearEditText

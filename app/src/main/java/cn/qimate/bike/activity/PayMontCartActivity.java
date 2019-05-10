@@ -67,7 +67,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
     private RelativeLayout alipayTypeLayout,WeChatTypeLayout,balanceTypeLayout;
     private RelativeLayout moreLayout;
     private LinearLayout moreLayout2;
-    private ImageView alipayTypeImage,WeChatTypeImage,balanceTypeImage;
+    private ImageView iv_cart, alipayTypeImage, WeChatTypeImage, balanceTypeImage;
     private LinearLayout type1Layout,type2Layout,type3Layout;
     private TextView type1Text,type2Text,type3Text;
     private TextView type1Text2,type1Text3,type2Text2,type2Text3;
@@ -76,6 +76,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
     private String paytype = "1";
     private String osn = "";
     private int type = 2;
+    private int carType = 1;
     private String gamestatus = "1";
 
     @Override
@@ -83,6 +84,9 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ui_pay_month_cart);
         context = this;
+
+        carType = getIntent().getIntExtra("carType", 1);
+
         IntentFilter filter = new IntentFilter("data.broadcast.rechargeAction");
         registerReceiver(broadcastReceiver, filter);
         initView();
@@ -144,6 +148,14 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
 
         moneyText = (TextView) findViewById(R.id.ui_payMonth_card_moneyText);
         daysText = (TextView)findViewById(R.id.ui_payMonth_card_daysText);
+
+        iv_cart = (ImageView)findViewById(R.id.iv_cart);
+
+        if(carType == 1){
+            iv_cart.setImageResource(R.drawable.bike_month_cart_icon);
+        }else{
+            iv_cart.setImageResource(R.drawable.ebike_month_cart_icon);
+        }
 
         alipayTypeLayout = (RelativeLayout)findViewById(R.id.ui_payMonth_cart_alipayTypeLayout);
         WeChatTypeLayout = (RelativeLayout)findViewById(R.id.ui_payMonth_cart_WeChatTypeLayout);
@@ -538,8 +550,9 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
     //获取月卡配置接口
     public void UserMonth() {
         RequestParams params = new RequestParams();
-        params.put("uid",SharedPreferencesUrls.getInstance().getString("uid",""));
+        params.put("macinfo",SharedPreferencesUrls.getInstance().getString("uid",""));
         params.put("access_token",SharedPreferencesUrls.getInstance().getString("access_token",""));
+        params.put("type", carType);
         HttpHelper.get(context, Urls.userMonth,params,new TextHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -554,10 +567,19 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
                         PayMonthCartBean bean = JSON.parseObject(result.getData(),PayMonthCartBean.class);
+
+                        Log.e("UserMonth===", SharedPreferencesUrls.getInstance().getString("uid","")+"==="+SharedPreferencesUrls.getInstance().getString("access_token","")+"==="+bean.getMonth_money_original());
+
                         type1Text.setText(bean.getMonth_money()+"元");
+                        type1Text2.setText(bean.getMonth_money_original()+"元");
+                        type1Text3.setText(bean.getMonth_money_discount());
                         days1Text.setText("("+bean.getMonth_day()+"天不限次)");
+
                         type2Text.setText(bean.getQuarter_money()+"元");
+                        type2Text2.setText(bean.getQuarter_money_original()+"元");
+                        type2Text3.setText(bean.getQuarter_money_discount());
                         days2Text.setText("("+bean.getQuarter_day()+"天不限次)");
+
                         type3Text.setText(bean.getWeek_money()+"元");
                         days3Text.setText("("+bean.getWeek_day()+"天不限次)");
 

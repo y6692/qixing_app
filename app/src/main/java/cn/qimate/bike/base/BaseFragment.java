@@ -28,8 +28,7 @@ public class BaseFragment extends Fragment implements OnConnectionListener {
 	public static String osn = "";
 	public static String type = "";
 
-	protected AMap aMap;
-	protected BitmapDescriptor successDescripter;
+
 
 	public static double referLatitude = 0.0;
 	public static double referLongitude = 0.0;

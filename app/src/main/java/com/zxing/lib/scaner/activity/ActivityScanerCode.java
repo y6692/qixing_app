@@ -200,6 +200,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
 //    BLEService bleService = new BLEService();
     private String tel = "13188888888";
+    private String bleid = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -555,7 +556,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
 //                        ToastUtil.showMessageApp(context,"电量更新成功");
-                        Log.e("scan===", "ebikeInfo===="+result.getData());
+                        Log.e("scan===ebikeInfo", "===="+result.getData());
 
                         EbikeInfoBean bean = JSON.parseObject(result.getData(), EbikeInfoBean.class);
 
@@ -617,6 +618,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     if (loadingDialog != null && loadingDialog.isShowing()){
                         loadingDialog.dismiss();
                     }
+
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                    Log.e("scan===useCar", "Fail==="+result);
                     UIHelper.ToastError(context, throwable.toString());
                 }
                 @Override
@@ -629,7 +634,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                             JSONObject jsonObject = new JSONObject(result.getData());
 
-                            Log.e("scan===", responseString+"statusCode==="+result.getFlag()+"==="+statusCode+"==="+jsonObject.getString("type"));
+                            Log.e("scan===", jsonObject.getString("bleid")+"==="+responseString+"statusCode==="+result.getFlag()+"==="+statusCode+"==="+jsonObject.getString("type"));
 
                             type = jsonObject.getString("type");
 
@@ -703,6 +708,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             }else if ("4".equals(type)){
                                 codenum = jsonObject.getString("codenum");
                                 m_nowMac = jsonObject.getString("macinfo");
+                                bleid = jsonObject.getString("bleid");
 
                                 if ("200".equals(jsonObject.getString("code"))){
                                     Log.e("useBike===4", "===="+jsonObject);
@@ -712,6 +718,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
                                     SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
                                     SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
+                                    SharedPreferencesUrls.getInstance().putString("type", type);
+                                    SharedPreferencesUrls.getInstance().putString("tempStat","0");
 
                                     UIHelper.goToAct(context, CurRoadBikingActivity.class);
                                     scrollToFinishActivity();
@@ -739,7 +747,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                         startActivityForResult(enableBtIntent, 188);
                                     }else{
 
-                                        Log.e("scan===4_1", "==="+jsonObject.getString("macinfo"));
+                                        Log.e("scan===4_1", bleid+"==="+jsonObject.getString("macinfo"));
 
                                         bleService.connect(m_nowMac);
 
@@ -840,6 +848,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                         SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
                                         SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
                                         SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
+                                        SharedPreferencesUrls.getInstance().putString("type", type);
+                                        SharedPreferencesUrls.getInstance().putString("tempStat","0");
 
                                         UIHelper.goToAct(context, CurRoadBikingActivity.class);
                                         scrollToFinishActivity();
@@ -874,15 +884,15 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         }
         ioBuffer.writeBytes(bb);
 
-        String bleID = "";
+//        String bleID = "";
+//
+//        if("34:03:DE:54:E6:C6".equals(m_nowMac)){
+//            bleID = "G3AF600000922E2XH";
+//        }else if("34:03:DE:54:E4:34".equals(m_nowMac)){
+//            bleID = "G3A1800000629BCXH";
+//        }
 
-        if("34:03:DE:54:E6:C6".equals(m_nowMac)){
-            bleID = "G3AF600000922E2XH";
-        }else if("34:03:DE:54:E4:34".equals(m_nowMac)){
-            bleID = "G3A1800000629BCXH";
-        }
-
-        int crc = (int) ByteUtil.crc32(getfdqId(bleID));
+        int crc = (int) ByteUtil.crc32(getfdqId(bleid));
         byte cc[] = ByteUtil.intToByteArray(crc);
         ioBuffer.writeByte(cc[0] ^ cc[3]);
         ioBuffer.writeByte(cc[1] ^ cc[2]);
@@ -1022,6 +1032,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
                             SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
                             SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
+                            SharedPreferencesUrls.getInstance().putString("type", type);
+                            SharedPreferencesUrls.getInstance().putString("tempStat","0");
 
                             UIHelper.goToAct(context, CurRoadBikingActivity.class);
                             scrollToFinishActivity();
@@ -1063,21 +1075,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         if("4".equals(type)){
                             bleService.connect(m_nowMac);
 
-                            bleService.sleep(2000);
-
-                            Log.e("188===4_2", "==="+m_nowMac);
-
-                            bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
-
-                            bleService.sleep(500);
-
-                            Log.e("188===4_3", "==="+m_nowMac);
-
-                            button8();
-                            button9();
-
-                            button3();
-
+                            checkConnect();
 
                             if (null != loadingDialog && loadingDialog.isShowing()) {
                                 loadingDialog.dismiss();
@@ -1279,6 +1277,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
                         SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
                         SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
+                        SharedPreferencesUrls.getInstance().putString("type", type);
+                        SharedPreferencesUrls.getInstance().putString("tempStat","0");
 
                         UIHelper.goToAct(context, CurRoadBikingActivity.class);
                         scrollToFinishActivity();
@@ -1346,6 +1346,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
                             SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
                             SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
+                            SharedPreferencesUrls.getInstance().putString("type", type);
+                            SharedPreferencesUrls.getInstance().putString("tempStat","0");
 
                             UIHelper.goToAct(context, CurRoadBikingActivity.class);
                             scrollToFinishActivity();
@@ -1416,6 +1418,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
                                 SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
                                 SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
+                                SharedPreferencesUrls.getInstance().putString("type", type);
+                                SharedPreferencesUrls.getInstance().putString("tempStat","0");
 
                                 UIHelper.goToAct(context, CurRoadBikingActivity.class);
                                 scrollToFinishActivity();
