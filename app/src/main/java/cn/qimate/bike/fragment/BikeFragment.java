@@ -254,6 +254,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback;
     private int n=0;
+    private float accuracy = 29.0f;
+
+    private boolean isHidden;
 
     private int carType = 1;
 
@@ -270,8 +273,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         context = getActivity();
         activity = getActivity();
 
-        aMap = ((MainActivity)activity).aMap;
-        successDescripter = ((MainActivity)activity).successDescripter;
+//        aMap = ((MainActivity)activity).aMap;
+//        successDescripter = ((MainActivity)activity).successDescripter;
         mapView = ((MainActivity)activity).mapView;
 
         WindowManager.LayoutParams winParams = activity.getWindow().getAttributes();
@@ -340,7 +343,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
 
-        Log.e("onHiddenChanged===bike", hidden+"==="+myLocation+"==="+referLatitude);
+        Log.e("onHiddenChanged===bike", hidden+"==="+pOptions.size()+"==="+referLatitude);
+
+        isHidden = hidden;
 
         if(hidden){
             //pause
@@ -353,23 +358,57 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }else{
             //resume
 
+//            mapView.onResume();
+
             pOptions.clear();
+            isContainsList.clear();
             aMap.clear();
 
             setUpMap();
 
 //            m_myHandler.sendEmptyMessage(4);
 
+//            aMap.setMapType(AMap.MAP_TYPE_NAVI);
+//            aMap.getUiSettings().setZoomControlsEnabled(false);
+//            aMap.getUiSettings().setMyLocationButtonEnabled(false);
+//            aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+//            aMap.getUiSettings().setLogoBottomMargin(-50);
+//
+//            CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
+//            aMap.moveCamera(cameraUpdate);
+
+            aMap.setOnMapTouchListener(this);
+//            setUpLocationStyle();
 
 
-            schoolRange();
 
             if(myLocation!=null){
-                initNearby(myLocation.latitude, myLocation.longitude);
+            }
+
+            if(centerMarker!=null){
+                centerMarker.remove();
+            }
+            if(mCircle!=null){
+                mCircle.remove();
             }
 
 
-            addChooseMarker();
+            if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
+                isContainsList.clear();
+            }
+            for (int i = 0; i < pOptions.size(); i++) {
+                isContainsList.add(pOptions.get(i).contains(myLocation));
+            }
+
+            schoolRange();
+
+            if(referLatitude!=0 && referLongitude!=0){
+                initNearby(referLatitude, referLongitude);
+
+                myLocation = new LatLng(referLatitude, referLongitude);
+                addChooseMarker();
+                addCircle(myLocation, accuracy);
+            }
 
 //            if (mlocationClient != null) {
 //                mlocationClient.setLocationListener(this);
@@ -381,7 +420,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 //            setUpMap();
 //            mapView.setVisibility(View.VISIBLE);
-//            mapView.onResume();
+//
 
 //
 //            if (aMap != null) {
@@ -391,6 +430,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void schoolRange(){
+        if(isHidden) return;
 
         Log.e("main===schoolRange0", "==="+carType);
 
@@ -415,6 +455,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                if(isHidden) return;
+
                 try {
                     Log.e("main===schoolRange1", "==="+carType);
 
@@ -447,11 +489,18 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //                                    .strokeColor(Color.argb(255, 0, 255, 0))
 //                                    .fillColor(Color.argb(255, 0, 255, 0)));
 
-                            pOptions.add(polygon);
+                            if(!isHidden){
+                                pOptions.add(polygon);
 
-//                            Log.e("pOptions===Bike", "==="+pOptions.size());
+                                isContainsList.add(polygon.contains(myLocation));
+                            }else{
+                                Log.e("pOptions===Bike", isContainsList.size()+"==="+pOptions.size());
+                            }
 
-                            isContainsList.add(polygon.contains(myLocation));
+
+
+
+
                         }
                     }else {
                         ToastUtil.showMessageApp(context,result.getMsg());
@@ -467,6 +516,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     /**附近车接口 */
     private void initNearby(double latitude, double longitude){
+
+        if(isHidden) return;
 
         Log.e("main===initNearby0", latitude+"==="+longitude);
 
@@ -493,10 +544,15 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
 
+                if(isHidden) return;
+
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
                         JSONArray array = new JSONArray(result.getData());
+
+                        Log.e("initNearby===Bike", "==="+array.length());
+
                         for (Marker marker : bikeMarkerList){
                             if (marker != null){
                                 marker.remove();
@@ -506,7 +562,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                             bikeMarkerList.clear();
                         }
                         if (0 == array.length()){
-                            ToastUtils.show("附近没有自行车");
+                            ToastUtils.show("附近没有单车");
                         }else {
                             for (int i = 0; i < array.length(); i++){
                                 NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
@@ -1105,6 +1161,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     public void onLocationChanged(AMapLocation amapLocation) {
         change = true;
 
+        if(isHidden) return;
+
         if (mListener != null && amapLocation != null) {
 
             if ((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
@@ -1156,6 +1214,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     }
 
                     ToastUtil.showMessage(context, isContainsList.contains(true) + "======" + near);
+
+                    accuracy = amapLocation.getAccuracy();
 
                     addChooseMarker();
                     addCircle(myLocation, amapLocation.getAccuracy());
@@ -1958,10 +2018,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 
     public void onCameraChangeFinish(CameraPosition cameraPosition) {
-        Log.e("main===ChangeFinish", isContainsList.contains(true) + "》》》" + near + "===" + macList.size()+">>>"+isUp + "===" + cameraPosition.target.latitude);
+        Log.e("main===ChangeFinish_B", isContainsList.contains(true) + "》》》" + near + "===" + macList.size()+">>>"+isUp + "===" + cameraPosition.target.latitude);
 
 
-        if (isUp){
+        if (isUp  && !isHidden){
             initNearby(cameraPosition.target.latitude, cameraPosition.target.longitude);
 
             if (centerMarker != null) {
@@ -2912,6 +2972,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 
     public void onTouch(MotionEvent motionEvent) {
+        Log.e("main===onTouch", "===" + motionEvent.getAction());
+
+
         if (motionEvent.getAction() == MotionEvent.ACTION_UP ||
                 motionEvent.getAction() == MotionEvent.ACTION_CANCEL || motionEvent.getAction() == MotionEvent.ACTION_OUTSIDE
                 || motionEvent.getActionMasked() == MotionEvent.ACTION_POINTER_UP){

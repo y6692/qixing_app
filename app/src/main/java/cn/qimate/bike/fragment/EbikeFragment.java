@@ -251,6 +251,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback;
     private int n=0;
+    private float accuracy = 29.0f;
+
+    private boolean isHidden;
 
     private Bundle savedIS;
 
@@ -265,8 +268,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         context = getActivity();
         activity = getActivity();
 
-        aMap = ((MainActivity)activity).aMap;
-        successDescripter = ((MainActivity)activity).successDescripter;
+//        aMap = ((MainActivity)activity).aMap;
+//        successDescripter = ((MainActivity)activity).successDescripter;
         mapView = ((MainActivity)activity).mapView;
 
         WindowManager.LayoutParams winParams = activity.getWindow().getAttributes();
@@ -335,7 +338,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
 
-        Log.e("onHiddenChanged===ebike", hidden+"==="+myLocation);
+        Log.e("onHiddenChanged===ebike", hidden+"==="+pOptions.size());
+
+        isHidden = hidden;
 
         if(hidden){
             //pause
@@ -344,12 +349,15 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //            mapView.setVisibility(View.GONE);
 
 
+
 //            deactivate();
         }else{
             //resume
 
-            pOptions.clear();
+//            mapView.onResume();
 
+            pOptions.clear();
+            isContainsList.clear();
             aMap.clear();
 
             setUpMap();
@@ -357,16 +365,37 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //            m_myHandler.sendEmptyMessage(4);
 
 
-//            addCircle(myLocation, amapLocation.getAccuracy());
+            aMap.setOnMapTouchListener(this);
+
+            if(myLocation!=null){
+            }
+
+            if(centerMarker!=null){
+                centerMarker.remove();
+            }
+            if(mCircle!=null){
+                mCircle.remove();
+            }
+
+            if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
+                isContainsList.clear();
+            }
+            for (int i = 0; i < pOptions.size(); i++) {
+                isContainsList.add(pOptions.get(i).contains(myLocation));
+            }
 
             schoolRange();
 
-            if(myLocation!=null){
-                initNearby(31.764359809027777,119.92034098307292);
+            if(referLatitude!=0 && referLongitude!=0){
+                initNearby(referLatitude, referLongitude);
+
+                myLocation = new LatLng(referLatitude, referLongitude);
+                addChooseMarker();
+                addCircle(myLocation, accuracy);
             }
 
 
-            addChooseMarker();
+
 
 //            setUpMap();
 //            mapView.setVisibility(View.VISIBLE);
@@ -379,6 +408,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void schoolRange(){
+        if(isHidden) return;
 
         Log.e("main===schoolRange2", "===");
 
@@ -403,6 +433,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                if(isHidden) return;
+
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
@@ -433,11 +465,14 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                     .strokeColor(Color.argb(255, 0, 255, 0))
                                     .fillColor(Color.argb(255, 0, 255, 0)));
 
-                            pOptions.add(polygon);
+                            if(!isHidden){
+                                pOptions.add(polygon);
 
-                            Log.e("pOptions===Ebike", "==="+pOptions.size());
+//                            Log.e("pOptions===Ebike", "==="+pOptions.size());
 
-                            isContainsList.add(polygon.contains(myLocation));
+                                isContainsList.add(polygon.contains(myLocation));
+                            }
+
                         }
                     }else {
                         ToastUtil.showMessageApp(context,result.getMsg());
@@ -454,6 +489,10 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     /**附近车接口* */
     private void initNearby(double latitude, double longitude){
+        if(isHidden) return;
+
+        Log.e("initNearby===Ebike000", latitude+"==="+longitude);
+
         RequestParams params = new RequestParams();
         params.put("latitude",latitude);
         params.put("longitude",longitude);
@@ -476,11 +515,15 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                if(isHidden) return;
 
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
                         JSONArray array = new JSONArray(result.getData());
+
+                        Log.e("initNearby===Ebike", "==="+array.length());
+
                         for (Marker marker : bikeMarkerList){
                             if (marker != null){
                                 marker.remove();
@@ -490,7 +533,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                             bikeMarkerList.clear();
                         }
                         if (0 == array.length()){
-                            ToastUtils.show("附近没有自行车");
+                            ToastUtils.show("附近没有电单车");
                         }else {
                             for (int i = 0; i < array.length(); i++){
                                 NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
@@ -1082,11 +1125,13 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     public void onLocationChanged(AMapLocation amapLocation) {
         change = true;
 
+        if(isHidden) return;
+
         if (mListener != null && amapLocation != null) {
 
             if ((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
 
-            Log.e("main===ChangedB", isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + type);
+            Log.e("main===ChangedB", isContainsList.contains(true) + "》》》" + amapLocation.getAccuracy() + "===" + macList.size() + "===" + type);
             ToastUtil.showMessage(context, isContainsList.contains(true) + "》》》" + near + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
 
             if (amapLocation != null && amapLocation.getErrorCode() == 0) {
@@ -1128,6 +1173,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                     }
 
                     ToastUtil.showMessage(context, isContainsList.contains(true) + "======" + near);
+
+
+                    accuracy = amapLocation.getAccuracy();
 
                     addChooseMarker();
                     addCircle(myLocation, amapLocation.getAccuracy());
@@ -1929,10 +1977,10 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
 
     public void onCameraChangeFinish(CameraPosition cameraPosition) {
-        Log.e("main===ChangeFinish", isContainsList.contains(true) + "》》》" + near + "===" + macList.size());
+        Log.e("main===ChangeFinish_Eb", isContainsList.contains(true) + "》》》" + near + "===" + macList.size());
 
 
-        if (isUp){
+        if (isUp && !isHidden){
             initNearby(cameraPosition.target.latitude, cameraPosition.target.longitude);
 
             if (centerMarker != null) {
@@ -2831,7 +2879,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 aMap.animateCamera(update, 1000, new AMap.CancelableCallback() {
                     @Override
                     public void onFinish() {
-//					    aMap.setOnCameraChangeListener(MainActivity.this);
+					    aMap.setOnCameraChangeListener(EbikeFragment.this);
                     }
 
                     @Override

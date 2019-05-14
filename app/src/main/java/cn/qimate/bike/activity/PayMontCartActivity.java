@@ -549,8 +549,12 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
     }
     //获取月卡配置接口
     public void UserMonth() {
+
+        Log.e("UserMonth===000", carType+"==="+SharedPreferencesUrls.getInstance().getString("uid","")+"==="+SharedPreferencesUrls.getInstance().getString("access_token",""));
+
+
         RequestParams params = new RequestParams();
-        params.put("macinfo",SharedPreferencesUrls.getInstance().getString("uid",""));
+        params.put("uid",SharedPreferencesUrls.getInstance().getString("uid",""));
         params.put("access_token",SharedPreferencesUrls.getInstance().getString("access_token",""));
         params.put("type", carType);
         HttpHelper.get(context, Urls.userMonth,params,new TextHttpResponseHandler() {

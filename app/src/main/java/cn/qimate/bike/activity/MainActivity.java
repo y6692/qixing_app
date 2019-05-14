@@ -95,6 +95,30 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //        AppApplication.getApp().scan();
     }
 
+    @Override protected void onResume() {
+        super.onResume();
+        Log.e("main===onResume", "===");
+
+        mapView.onResume();
+
+        type = SharedPreferencesUrls.getInstance().getString("type", "");
+
+//        aMap = mapView.getMap();
+//
+//        aMap.clear();
+
+        Log.e("main===onResume2", "===");
+
+        if("4".equals(type)){
+            changeTab(1);
+        }else{
+            changeTab(0);
+        }
+
+        Log.e("main===onResume3", "===");
+
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -129,8 +153,9 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         mFragments.add(bikeFragment);
         mFragments.add(ebikeFragment);
 
+        Log.e("main===initData", "===");
+
         for (int i = 0; i < mTitles.length; i++) {
-//        for (int i = 0; i < 1; i++) {
             mTabEntities.add(new TabTopEntity(mTitles[i]));
         }
     }
@@ -157,20 +182,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     private void initListener() {
     }
 
-    @Override protected void onResume() {
-        super.onResume();
 
-        mapView.onResume();
-
-        type = SharedPreferencesUrls.getInstance().getString("type", "");
-
-        if("4".equals(type)){
-            changeTab(1);
-        }else{
-            changeTab(0);
-        }
-        Log.e("main===onResume", "===");
-    }
 
     @Override
     public void onClick(View view) {

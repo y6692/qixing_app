@@ -817,9 +817,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         }
                     }
 
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
+//                    if (loadingDialog != null && loadingDialog.isShowing()){
+//                        loadingDialog.dismiss();
+//                    }
 
                 }
             });
