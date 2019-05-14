@@ -244,6 +244,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private Thread ebikeInfoThread;
 
     private String tel = "13188888888";
+    private String bleid = "";
 
     @Override
     @TargetApi(23)
@@ -254,7 +255,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //        instance = this;
         BikeFragment.tz = 0;
 
+        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
         type = SharedPreferencesUrls.getInstance().getString("type", "");
+        bleid = SharedPreferencesUrls.getInstance().getString("bleid", "");
+
 
         //注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
         IntentFilter filter = new IntentFilter("data.broadcast.action");
@@ -865,10 +869,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                            hintText.setText("校内地图红色区域关锁，并点击结束");
 
                             if ("1".equals(bean.getType())){
-                                hintText.setText("还车须至校园地图"+("4".equals(type)?"绿色":"红色")+"覆盖区，关锁并拨乱密码后点击结束！");
+                                hintText.setText("还车须至校园地图"+("4".equals(type)?"绿色":"红色")+"区域，关锁并拨乱密码后点击结束！");
                                 lookPsdBtn.setText("查看密码");
                             }else {
-                                hintText.setText("还车须至校园地图"+("4".equals(type)?"绿色":"红色")+"覆盖区，关锁后距车一米内点击结束！");
+                                hintText.setText("还车须至校园地图"+("4".equals(type)?"绿色":"红色")+"区域，距车1米内点击结束！");
                                 m_nowMac = bean.getMacinfo();
 
                                 if ("4".equals(bean.getType())){
@@ -1230,40 +1234,69 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         public void run() {
                             Log.e("temporaryLock===4_3", "==="+m_nowMac);
 
+                            button8();
                             button9();
                             button2();
 
-                            m_myHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Log.e("temporaryLock===4_4", bleService.cc+"==="+"B1 2A 80 00 00 5B ".equals(bleService.cc));
-
-                                    if("B1 2A 80 00 00 5B ".equals(bleService.cc)){
-                                        Log.e("temporaryLock===4_5", oid+"==="+bleService.cc);
-
-                                        lookPsdBtn.setText("开锁用车");
-                                        ToastUtil.showMessageApp(context,"关锁成功");
-
-                                        SharedPreferencesUrls.getInstance().putString("tempStat","1");
-                                    }else{
-                                        ToastUtil.showMessageApp(context,"关锁失败，请重试");
-//                                        customDialog5.show();
-                                    }
-
-                                    if (loadingDialog != null && loadingDialog.isShowing()){
-                                        loadingDialog.dismiss();
-                                    }
-
-                                    Log.e("temporaryLock===4_6", "==="+bleService.cc);
-
-                                }
-                            }, 500);
+                            closeLock();
                         }
                     }, 500);
                 }
 
             }
         }, 2 * 1000);
+    }
+
+    void closeLock(){
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("temporaryLock===4_4", bleService.cc+"==="+"B1 2A 80 00 00 5B ".equals(bleService.cc));
+
+                if("B1 2A 80 00 00 5B ".equals(bleService.cc)){
+                    Log.e("temporaryLock===4_5", oid+"==="+bleService.cc);
+
+                    lookPsdBtn.setText("开锁用车");
+                    ToastUtil.showMessageApp(context,"关锁成功");
+
+                    SharedPreferencesUrls.getInstance().putString("tempStat","1");
+                }else{
+                    closeLock();
+
+//                    ToastUtil.showMessageApp(context,"关锁失败，请重试");
+//                                        customDialog5.show();
+                }
+
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+
+                Log.e("temporaryLock===4_6", "==="+bleService.cc);
+
+            }
+        }, 500);
+    }
+
+    //注册
+    void button8() {
+        IoBuffer ioBuffer = IoBuffer.allocate(20);
+        ioBuffer.writeByte((byte) 0x82);
+        ByteUtil.log("tel-->" + tel);
+        String str = tel;
+
+        byte[] bb = new byte[11];
+        for (int i = 0; i < str.length(); i++) {
+            char a = str.charAt(i);
+            bb[i] = (byte) a;
+        }
+        ioBuffer.writeBytes(bb);
+
+        int crc = (int) ByteUtil.crc32(getfdqId(bleid));
+        byte cc[] = ByteUtil.intToByteArray(crc);
+        ioBuffer.writeByte(cc[0] ^ cc[3]);
+        ioBuffer.writeByte(cc[1] ^ cc[2]);
+        ioBuffer.writeInt(0);
+        bleService.write(toBody(ioBuffer.readableBytes()));
     }
 
     void openLock(){
@@ -1293,36 +1326,42 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             button9();
                             button3();
 
-                            m_myHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Log.e("openLock===4_4", bleService.cc+"==="+"B1 25 80 00 00 56 ".equals(bleService.cc));
-
-                                    if("B1 25 80 00 00 56 ".equals(bleService.cc)){
-                                        Log.e("openLock===4_5", oid+"==="+bleService.cc);
-                                        lookPsdBtn.setText("临时上锁");
-                                        ToastUtil.showMessageApp(context,"开锁成功");
-
-                                        SharedPreferencesUrls.getInstance().putString("tempStat","0");
-                                    }else{
-                                        ToastUtil.showMessageApp(context,"开锁失败，请重试");
-//                                        customDialog5.show();
-                                    }
-
-                                    if (loadingDialog != null && loadingDialog.isShowing()){
-                                        loadingDialog.dismiss();
-                                    }
-
-                                    Log.e("openLock===4_6", "==="+bleService.cc);
-
-                                }
-                            }, 500);
+                            openLock2();
                         }
                     }, 500);
                 }
 
             }
         }, 2 * 1000);
+    }
+
+    void openLock2() {
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("openLock===4_4", bleService.cc+"==="+"B1 25 80 00 00 56 ".equals(bleService.cc));
+
+                if("B1 25 80 00 00 56 ".equals(bleService.cc)){
+                    Log.e("openLock===4_5", oid+"==="+bleService.cc);
+                    lookPsdBtn.setText("临时上锁");
+                    ToastUtil.showMessageApp(context,"开锁成功");
+
+                    SharedPreferencesUrls.getInstance().putString("tempStat","0");
+                }else{
+                    openLock2();
+
+//                    ToastUtil.showMessageApp(context,"开锁失败，请重试");
+//                                        customDialog5.show();
+                }
+
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+
+                Log.e("openLock===4_6", "==="+bleService.cc);
+
+            }
+        }, 500);
     }
 
     //启动
@@ -1890,11 +1929,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
-                        SharedPreferencesUrls.getInstance().putString("type","");
                         SharedPreferencesUrls.getInstance().putString("m_nowMac","");
                         SharedPreferencesUrls.getInstance().putString("oid","");
                         SharedPreferencesUrls.getInstance().putString("osn","");
-                        SharedPreferencesUrls.getInstance().putString("type","");
+                        SharedPreferencesUrls.getInstance().putString("type",type);
                         SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
                         SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
                         SharedPreferencesUrls.getInstance().putString("biking_latitude","");
@@ -2367,14 +2405,18 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                 break;
             case 3:
-                if (lockLoading != null && lockLoading.isShowing()){
-                    lockLoading.dismiss();
-                }
+
                 stopXB();
 
                 Log.e("biking===3", type+"===" + BaseApplication.getInstance().getIBLE().getConnectStatus());
 
-                if("3".equals(type)){
+                if("4".equals(type)){
+                    endBtn4();
+                }else{
+                    if (lockLoading != null && lockLoading.isShowing()){
+                        lockLoading.dismiss();
+                    }
+
                     if(macList.size()>0 || isContainsList.contains(true)){
                         if(BaseApplication.getInstance().getIBLE().getConnectStatus()){
                             if("3".equals(type)){
@@ -2427,20 +2469,16 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         }
 
                     }else{
-//                    if("3".equals(type)){
-//                        customDialog4.show();
-//                    }else{
-//                        customDialog3.show();
-//                    }
+    //                    if("3".equals(type)){
+    //                        customDialog4.show();
+    //                    }else{
+    //                        customDialog3.show();
+    //                    }
                         customDialog3.show();
 
                         clickCountDeal();
                     }
-                }else if("4".equals(type)){
-                    endBtn4();
                 }
-
-
 
                 break;
 
@@ -2475,6 +2513,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     }
 
                 }else{
+                    if (lockLoading != null && lockLoading.isShowing()){
+                        lockLoading.dismiss();
+                    }
+
                     closeEbike();
                 }
 

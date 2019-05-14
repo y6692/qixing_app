@@ -22,7 +22,8 @@ public class SuperVipActivity extends SwipeBackActivity implements View.OnClickL
 
     private LinearLayout headLayout;
     private TextView bikeNumText;
-    private TextView daysText;
+    private TextView daysBikeText;
+    private TextView daysEbikeText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,8 @@ public class SuperVipActivity extends SwipeBackActivity implements View.OnClickL
         headLayout.setLayoutParams(params);
 
         bikeNumText = (TextView)findViewById(R.id.ui_superVip_bikeNumText);
-        daysText = (TextView)findViewById(R.id.ui_superVip_daysText);
+        daysBikeText = (TextView)findViewById(R.id.ui_superVip_daysBikeText);
+        daysEbikeText = (TextView)findViewById(R.id.ui_superVip_daysEbikeText);
 
         backImg.setOnClickListener(this);
     }
@@ -62,9 +64,17 @@ public class SuperVipActivity extends SwipeBackActivity implements View.OnClickL
         if (SharedPreferencesUrls.getInstance().getString("specialdays","") == null ||
                 "".equals(SharedPreferencesUrls.getInstance().getString("specialdays",""))
                 || "0".equals(SharedPreferencesUrls.getInstance().getString("specialdays",""))){
-            daysText.setText("/");
+            daysBikeText.setText("/");
         }else {
-            daysText.setText(SharedPreferencesUrls.getInstance().getString("specialdays",""));
+            daysBikeText.setText(SharedPreferencesUrls.getInstance().getString("specialdays",""));
+        }
+
+        if (SharedPreferencesUrls.getInstance().getString("ebike_specialdays","") == null ||
+                "".equals(SharedPreferencesUrls.getInstance().getString("ebike_specialdays",""))
+                || "0".equals(SharedPreferencesUrls.getInstance().getString("ebike_specialdays",""))){
+            daysEbikeText.setText("/");
+        }else {
+            daysEbikeText.setText(SharedPreferencesUrls.getInstance().getString("ebike_specialdays",""));
         }
     }
     @Override

@@ -46,7 +46,7 @@
                             android:background="@drawable/shape_feedback_edit"
                             android:paddingLeft="@dimen/dp10"
                             android:drawableRight="@drawable/delete_selector"
-                            android:hint="请输入单车编号"
+                            android:hint="请输入车辆编号"
                             android:textSize="@dimen/sp12"
                             android:textColor="@color/tx_black_light"
                             android:textColorHint="@color/tx_black_light"/>
@@ -109,94 +109,133 @@
                                 android:textSize="@dimen/sp12"
                                 android:layout_marginLeft="@dimen/dp10"/>
                         </LinearLayout>
+
                         <!--<LinearLayout-->
                             <!--android:layout_width="match_parent"-->
                             <!--android:layout_height="wrap_content"-->
-                            <!--android:orientation="horizontal"-->
-                            <!--android:layout_marginTop="@dimen/dp10">-->
+                            <!--android:orientation="horizontal">-->
 
                             <!--<TextView-->
-                                <!--android:id="@+id/feedbackUI_type_Tag4"-->
+                                <!--android:id="@+id/feedbackUI_type_Tag1"-->
                                 <!--android:layout_width="wrap_content"-->
                                 <!--android:layout_height="wrap_content"-->
                                 <!--android:background="@drawable/shape_feedback"-->
-                                <!--android:text="无法手动关锁"-->
+                                <!--android:text="车辆故障"-->
                                 <!--android:padding="@dimen/dp10"-->
                                 <!--android:textColor="@color/tx_black_light"-->
                                 <!--android:textSize="@dimen/sp12"/>-->
                             <!--<TextView-->
-                                <!--android:id="@+id/feedbackUI_type_Tag5"-->
+                                <!--android:id="@+id/feedbackUI_type_Tag2"-->
                                 <!--android:layout_width="wrap_content"-->
                                 <!--android:layout_height="wrap_content"-->
                                 <!--android:background="@drawable/shape_feedback"-->
-                                <!--android:text="关锁后无法结束"-->
+                                <!--android:text="车锁故障"-->
                                 <!--android:padding="@dimen/dp10"-->
                                 <!--android:textColor="@color/tx_black_light"-->
                                 <!--android:textSize="@dimen/sp12"-->
                                 <!--android:layout_marginLeft="@dimen/dp10"/>-->
                             <!--<TextView-->
-                                <!--android:id="@+id/feedbackUI_type_Tag6"-->
+                                <!--android:id="@+id/feedbackUI_type_Tag3"-->
                                 <!--android:layout_width="wrap_content"-->
                                 <!--android:layout_height="wrap_content"-->
                                 <!--android:background="@drawable/shape_feedback"-->
-                                <!--android:text="扫码失败"-->
+                                <!--android:text="在还车点提示不在"-->
                                 <!--android:padding="@dimen/dp10"-->
                                 <!--android:textColor="@color/tx_black_light"-->
                                 <!--android:textSize="@dimen/sp12"-->
                                 <!--android:layout_marginLeft="@dimen/dp10"/>-->
                         <!--</LinearLayout>-->
-                        <!--<LinearLayout-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:orientation="horizontal"-->
-                            <!--android:layout_marginTop="@dimen/dp10">-->
 
-                            <!--<TextView-->
-                                <!--android:id="@+id/feedbackUI_type_Tag7"-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:background="@drawable/shape_feedback"-->
-                                <!--android:text="二维码/编号破坏"-->
-                                <!--android:padding="@dimen/dp10"-->
-                                <!--android:textColor="@color/tx_black_light"-->
-                                <!--android:textSize="@dimen/sp12"/>-->
+                        <LinearLayout
+                            android:id="@+id/ll_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="@dimen/dp10">
 
-                            <!--<TextView-->
-                                <!--android:id="@+id/feedbackUI_type_Tag8"-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:background="@drawable/shape_feedback"-->
-                                <!--android:text="违规乱停"-->
-                                <!--android:padding="@dimen/dp10"-->
-                                <!--android:textColor="@color/tx_black_light"-->
-                                <!--android:textSize="@dimen/sp12"-->
-                                <!--android:layout_marginLeft="@dimen/dp10"/>-->
+                            <TextView
+                                android:id="@+id/feedbackUI_type_Tag4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/shape_feedback"
+                                android:text="无法手动关锁"
+                                android:padding="@dimen/dp10"
+                                android:textColor="@color/tx_black_light"
+                                android:textSize="@dimen/sp12"/>
+                            <TextView
+                                android:id="@+id/feedbackUI_type_Tag5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/shape_feedback"
+                                android:text="关锁后无法结束"
+                                android:padding="@dimen/dp10"
+                                android:textColor="@color/tx_black_light"
+                                android:textSize="@dimen/sp12"
+                                android:layout_marginLeft="@dimen/dp10"/>
+                            <TextView
+                                android:id="@+id/feedbackUI_type_Tag6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/shape_feedback"
+                                android:text="扫码失败"
+                                android:padding="@dimen/dp10"
+                                android:textColor="@color/tx_black_light"
+                                android:textSize="@dimen/sp12"
+                                android:layout_marginLeft="@dimen/dp10"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/ll_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="@dimen/dp10">
 
-                            <!--<TextView-->
-                                <!--android:id="@+id/feedbackUI_type_Tag10"-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:background="@drawable/shape_feedback"-->
-                                <!--android:text="关锁后不能结束"-->
-                                <!--android:padding="@dimen/dp10"-->
-                                <!--android:textColor="@color/tx_black_light"-->
-                                <!--android:textSize="@dimen/sp12"-->
-                                <!--android:layout_marginLeft="@dimen/dp10"-->
-                                <!--android:visibility="gone"/>-->
+                            <TextView
+                                android:id="@+id/feedbackUI_type_Tag7"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/shape_feedback"
+                                android:text="二维码/编号破坏"
+                                android:padding="@dimen/dp10"
+                                android:textColor="@color/tx_black_light"
+                                android:textSize="@dimen/sp12"/>
 
-                            <!--<TextView-->
-                                <!--android:id="@+id/feedbackUI_type_Tag9"-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:background="@drawable/shape_feedback"-->
-                                <!--android:text="上锁后不能结束用车"-->
-                                <!--android:padding="@dimen/dp10"-->
-                                <!--android:textColor="@color/tx_black_light"-->
-                                <!--android:textSize="@dimen/sp12"-->
-                                <!--android:layout_marginLeft="@dimen/dp10"-->
-                                <!--android:visibility="gone"/>-->
+                            <TextView
+                                android:id="@+id/feedbackUI_type_Tag8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/shape_feedback"
+                                android:text="违规乱停"
+                                android:padding="@dimen/dp10"
+                                android:textColor="@color/tx_black_light"
+                                android:textSize="@dimen/sp12"
+                                android:layout_marginLeft="@dimen/dp10"/>
 
-                        <!--</LinearLayout>-->
+                            <TextView
+                                android:id="@+id/feedbackUI_type_Tag10"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/shape_feedback"
+                                android:text="关锁后不能结束"
+                                android:padding="@dimen/dp10"
+                                android:textColor="@color/tx_black_light"
+                                android:textSize="@dimen/sp12"
+                                android:layout_marginLeft="@dimen/dp10"
+                                android:visibility="gone"/>
+
+                            <TextView
+                                android:id="@+id/feedbackUI_type_Tag9"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/shape_feedback"
+                                android:text="上锁后不能结束用车"
+                                android:padding="@dimen/dp10"
+                                android:textColor="@color/tx_black_light"
+                                android:textSize="@dimen/sp12"
+                                android:layout_marginLeft="@dimen/dp10"
+                                android:visibility="gone"/>
+
+                        </LinearLayout>
                         <cn.qimate.bike.core.widget.ClearEditText
                             android:id="@+id/feedbackUI_restCause"
                             android:layout_width="match_parent"
@@ -231,7 +270,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="拍摄带有车辆编号、车锁及单车周围环境照片:"
+                        android:text="拍摄上传带有车辆编号及周围环境照片:"
                         android:textColor="#990000"
                         android:textSize="@dimen/sp12"
                         android:paddingLeft="@dimen/dp10"

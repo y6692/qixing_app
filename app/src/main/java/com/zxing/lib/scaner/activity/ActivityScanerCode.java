@@ -216,8 +216,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //        bleService.view = this;
 //        bleService.showValue = true;
 
-
-
         registerReceiver(broadcastReceiver, Config.initFilter());
         GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
         BaseApplication.getInstance().getIBLE().refreshCache();
@@ -405,8 +403,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     dialog.dismiss();
                 }
                 Tag = 1;
-                useBike(bikeNum);
+//                useBike(bikeNum);
+
+                ebikeInfo(bikeNum);
+
                 break;
+
             case R.id.pop_circlesMenu_negativeButton:
                 InputMethodManager manager1= (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 manager1.hideSoftInputFromWindow(v.getWindowToken(), 0); // 隐藏
@@ -510,12 +512,21 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private void useBike(final String result){
         Log.e("scan===useBike", result.indexOf('&')+"<===>"+result);
 
-        int code = Integer.parseInt(result.split("\\?")[1].split("&")[0].split("=")[1]);
+        int code = 0;
+        if(result.split("&").length==1){
+            if(result.split("\\?")[1].split("&")[0].split("=")[1].matches(".*[a-zA-z].*")){
+                useCar(result);
+                return;
+            }else{
+                code = Integer.parseInt(result.split("\\?")[1].split("&")[0].split("=")[1]);
+            }
+        }else{
+            code = Integer.parseInt(result.split("\\?")[1].split("&")[0].split("=")[1]);
+        }
 
-        if(result.indexOf('&')!=-1 || (code >= 80001651 && code <= 80002000)){
+        if(result.indexOf('&')!=-1 || (code >= 80001651 && code <= 80002000)){  //电单车
 
             ebikeInfo(result);
-
 
         }else{
             useCar(result);
@@ -554,28 +565,36 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                    Log.e("scan===ebikeInfo", "===="+result.data);
+
                     if (result.getFlag().equals("Success")) {
 //                        ToastUtil.showMessageApp(context,"电量更新成功");
-                        Log.e("scan===ebikeInfo", "===="+result.getData());
+                        Log.e("scan===ebikeInfo", "===="+responseString);
 
-                        EbikeInfoBean bean = JSON.parseObject(result.getData(), EbikeInfoBean.class);
+                        if ("[]".equals(result.getData()) || 0 == result.getData().length()){
+                            useCar(tokencode);
+                        }else{
+                            EbikeInfoBean bean = JSON.parseObject(result.getData(), EbikeInfoBean.class);
 
-                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
-                        customBuilder.setMessage("这是一辆电单车,要在校内停车线内还车");
+                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
+                            customBuilder.setMessage("电单车必须在校内停车线还车");
 
-                        customBuilder.setType(4).setElectricity(bean.getElectricity()).setMileage(bean.getMileage()).setFee(bean.getFee()).setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                                scrollToFinishActivity();
-                            }
-                        }).setPositiveButton("开锁", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
+                            customBuilder.setType(4).setElectricity(bean.getElectricity()).setMileage(bean.getMileage()).setFee(bean.getFee()).setTitle("这是一辆电单车").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    scrollToFinishActivity();
+                                }
+                            }).setPositiveButton("开锁", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
 
-                                useCar(tokencode);
-                            }
-                        }).setHint(false);
-                        customBuilder.create().show();
+                                    useCar(tokencode);
+                                }
+                            }).setHint(false);
+                            customBuilder.create().show();
+                        }
+
 
 
                     } else {
@@ -636,6 +655,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                             Log.e("scan===", jsonObject.getString("bleid")+"==="+responseString+"statusCode==="+result.getFlag()+"==="+statusCode+"==="+jsonObject.getString("type"));
 
+                            bleid = jsonObject.getString("bleid");
                             type = jsonObject.getString("type");
 
                             if ("1".equals(type)){          //机械锁
@@ -708,7 +728,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             }else if ("4".equals(type)){
                                 codenum = jsonObject.getString("codenum");
                                 m_nowMac = jsonObject.getString("macinfo");
-                                bleid = jsonObject.getString("bleid");
+//                                bleid = jsonObject.getString("bleid");
 
                                 if ("200".equals(jsonObject.getString("code"))){
                                     Log.e("useBike===4", "===="+jsonObject);
@@ -720,6 +740,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
                                     SharedPreferencesUrls.getInstance().putString("type", type);
                                     SharedPreferencesUrls.getInstance().putString("tempStat","0");
+                                    SharedPreferencesUrls.getInstance().putString("bleid",bleid);
 
                                     UIHelper.goToAct(context, CurRoadBikingActivity.class);
                                     scrollToFinishActivity();
@@ -850,6 +871,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                         SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
                                         SharedPreferencesUrls.getInstance().putString("type", type);
                                         SharedPreferencesUrls.getInstance().putString("tempStat","0");
+                                        SharedPreferencesUrls.getInstance().putString("bleid",bleid);
 
                                         UIHelper.goToAct(context, CurRoadBikingActivity.class);
                                         scrollToFinishActivity();
@@ -985,7 +1007,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
-                        Log.e("scan===", "getCurrentorder===="+result.getData());
+                        Log.e("scan===getCurrentorder", n+"===="+result.getData());
 
                         if ("[]".equals(result.getData()) || 0 == result.getData().length()){
                             if(n<5){
@@ -1034,6 +1056,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
                             SharedPreferencesUrls.getInstance().putString("type", type);
                             SharedPreferencesUrls.getInstance().putString("tempStat","0");
+                            SharedPreferencesUrls.getInstance().putString("bleid",bleid);
 
                             UIHelper.goToAct(context, CurRoadBikingActivity.class);
                             scrollToFinishActivity();
@@ -1279,6 +1302,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
                         SharedPreferencesUrls.getInstance().putString("type", type);
                         SharedPreferencesUrls.getInstance().putString("tempStat","0");
+                        SharedPreferencesUrls.getInstance().putString("bleid",bleid);
 
                         UIHelper.goToAct(context, CurRoadBikingActivity.class);
                         scrollToFinishActivity();
@@ -1348,6 +1372,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
                             SharedPreferencesUrls.getInstance().putString("type", type);
                             SharedPreferencesUrls.getInstance().putString("tempStat","0");
+                            SharedPreferencesUrls.getInstance().putString("bleid",bleid);
 
                             UIHelper.goToAct(context, CurRoadBikingActivity.class);
                             scrollToFinishActivity();
@@ -1420,6 +1445,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
                                 SharedPreferencesUrls.getInstance().putString("type", type);
                                 SharedPreferencesUrls.getInstance().putString("tempStat","0");
+                                SharedPreferencesUrls.getInstance().putString("bleid",bleid);
 
                                 UIHelper.goToAct(context, CurRoadBikingActivity.class);
                                 scrollToFinishActivity();

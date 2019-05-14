@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.MapView;
+import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
 
@@ -22,6 +24,11 @@ public class BaseFragment extends Fragment implements OnConnectionListener {
 	public String uid;
 	public String access_token;
 	public Boolean userlogin = false;
+
+//	protected AMap aMap;
+//	protected BitmapDescriptor successDescripter;
+//	protected MapView mapView;
+
 
 	public static String m_nowMac = "";  //"A8:1B:6A:B4:E7:C9"
 	public static String oid = "";

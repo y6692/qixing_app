@@ -17,6 +17,15 @@ public class UserMsgBean {
     private String bikenum;
     private String iscert;
     private String specialdays;
+    private String ebike_specialdays;
+
+    public String getEbike_specialdays() {
+        return ebike_specialdays;
+    }
+
+    public void setEbike_specialdays(String ebike_specialdays) {
+        this.ebike_specialdays = ebike_specialdays;
+    }
 
     public String getSpecialdays() {
         return specialdays;

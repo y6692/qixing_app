@@ -249,6 +249,9 @@ public class BaseFragmentActivity extends AppCompatActivity
 								if (result.getFlag().equals("Success")) {
 									UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
 									// 极光标记别名
+
+									Log.e("RefreshLogin===", bean.getSpecialdays()+"==="+bean.getEbike_specialdays());
+
 									setAlias(bean.getUid());
 									SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
 									SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
@@ -260,6 +263,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 									SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
 									SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
 									SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
+									SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
 									SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
 								} else {
 									setAlias("");

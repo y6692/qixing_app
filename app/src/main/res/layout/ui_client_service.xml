@@ -42,7 +42,7 @@
                             android:id="@+id/tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="还车提示：校内地图红色区域关锁，并点击结束"
+                            android:text="还车提示：校园地图绿色区域停车并点击结束"
                             android:textSize="@dimen/sp15"
                             android:textColor="@color/tx_black"/>
 
@@ -137,6 +137,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -147,10 +148,31 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
-                            android:text="其他"
+                            android:text="蓝牙连接失败"
                             android:padding="@dimen/dp10"
                             android:textColor="@color/tx_black_light"
                             android:textSize="@dimen/sp12"/>
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_feedback"
+                            android:text="一直在加载"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/tx_black_light"
+                            android:textSize="@dimen/sp12"
+                            android:layout_marginLeft="@dimen/dp10"/>
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_feedback"
+                            android:text="其他"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/tx_black_light"
+                            android:textSize="@dimen/sp12"
+                            android:layout_marginLeft="@dimen/dp10"/>
                     </LinearLayout>
 
                     <cn.qimate.bike.core.widget.ClearEditText
@@ -205,7 +227,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="请拍摄已关锁照片（锁环、编号须清晰）和周围环境照片："
+                        android:text="拍摄上传带有车辆编号及周围环境照片："
                         android:textColor="#990000"
                         android:textSize="@dimen/sp12"
                         android:layout_marginTop="@dimen/dp15"

@@ -33,6 +33,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -91,7 +92,8 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = new AMapLocationClientOption();
 
-    private TextView Tag1,Tag2,Tag3,Tag4;
+    private TextView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6;
+    private LinearLayout ll_2;
     private EditText restCauseEdit;
 
     private boolean isSelected1 = false;
@@ -189,8 +191,22 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         Tag2 = (TextView)findViewById(R.id.feedbackUI_type_Tag2);
         Tag3 = (TextView)findViewById(R.id.feedbackUI_type_Tag3);
         Tag4 = (TextView)findViewById(R.id.feedbackUI_type_Tag4);
-//        Tag5 = (TextView)findViewById(R.id.feedbackUI_type_Tag5);
-//        Tag6 = (TextView)findViewById(R.id.feedbackUI_type_Tag6);
+        Tag5 = (TextView)findViewById(R.id.feedbackUI_type_Tag5);
+        Tag6 = (TextView)findViewById(R.id.feedbackUI_type_Tag6);
+
+        ll_2 = (LinearLayout)findViewById(R.id.ll_2);
+
+        if("4".equals(type)){
+            Tag1.setText("车辆故障");
+            Tag2.setText("车锁故障");
+            Tag3.setText("在还车点提示不在");
+            ll_2.setVisibility(View.GONE);
+        }else{
+            Tag1.setText("锁关不上");
+            Tag2.setText("已关锁提示未关");
+            Tag3.setText("蓝牙连接失败");
+            ll_2.setVisibility(View.VISIBLE);
+        }
 
         restCauseEdit = (EditText)findViewById(R.id.feedbackUI_restCause);
 
@@ -233,8 +249,8 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         Tag2.setOnClickListener(this);
         Tag3.setOnClickListener(this);
         Tag4.setOnClickListener(this);
-//        Tag5.setOnClickListener(this);
-//        Tag6.setOnClickListener(this);
+        Tag5.setOnClickListener(this);
+        Tag6.setOnClickListener(this);
 
         restCauseEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -426,58 +442,58 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                     submitBtn.setEnabled(true);
                 }
                 break;
-//            case R.id.feedbackUI_type_Tag5:
-//                if (isSelected5){
-//                    isSelected5 = false;
-//                    if (TagsList.contains(Tag5.getText().toString())){
-//                        TagsList.remove(Tag5.getText().toString());
-//                    }
-//                    Tag5.setTextColor(Color.parseColor("#666666"));
-//                    Tag5.setBackgroundResource(R.drawable.shape_feedback);
-//                }else {
-//                    isSelected5 = true;
-//                    if (!TagsList.contains(Tag5.getText().toString())){
-//                        TagsList.add(Tag5.getText().toString());
-//                    }
-//                    Tag5.setTextColor(Color.parseColor("#f57752"));
-//                    Tag5.setBackgroundResource(R.drawable.shape_feedback_selectd);
-//                }
-//                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-//                        restCauseEdit.getText().toString().trim() == null
-//                                || "".equals(restCauseEdit.getText().toString().trim()))){
-//                    submitBtn.setEnabled(false);
-//                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-//                    submitBtn.setEnabled(false);
-//                }else{
-//                    submitBtn.setEnabled(true);
-//                }
-//                break;
-//            case R.id.feedbackUI_type_Tag6:
-//                if (isSelected6){
-//                    isSelected6 = false;
-//                    if (TagsList.contains(Tag6.getText().toString())){
-//                        TagsList.remove(Tag6.getText().toString());
-//                    }
-//                    Tag6.setTextColor(Color.parseColor("#666666"));
-//                    Tag6.setBackgroundResource(R.drawable.shape_feedback);
-//                }else {
-//                    isSelected6 = true;
-//                    if (!TagsList.contains(Tag6.getText().toString())){
-//                        TagsList.add(Tag6.getText().toString());
-//                    }
-//                    Tag6.setTextColor(Color.parseColor("#f57752"));
-//                    Tag6.setBackgroundResource(R.drawable.shape_feedback_selectd);
-//                }
-//                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-//                        restCauseEdit.getText().toString().trim() == null
-//                                || "".equals(restCauseEdit.getText().toString().trim()))){
-//                    submitBtn.setEnabled(false);
-//                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-//                    submitBtn.setEnabled(false);
-//                }else{
-//                    submitBtn.setEnabled(true);
-//                }
-//                break;
+            case R.id.feedbackUI_type_Tag5:
+                if (isSelected5){
+                    isSelected5 = false;
+                    if (TagsList.contains(Tag5.getText().toString())){
+                        TagsList.remove(Tag5.getText().toString());
+                    }
+                    Tag5.setTextColor(Color.parseColor("#666666"));
+                    Tag5.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected5 = true;
+                    if (!TagsList.contains(Tag5.getText().toString())){
+                        TagsList.add(Tag5.getText().toString());
+                    }
+                    Tag5.setTextColor(Color.parseColor("#f57752"));
+                    Tag5.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+                        restCauseEdit.getText().toString().trim() == null
+                                || "".equals(restCauseEdit.getText().toString().trim()))){
+                    submitBtn.setEnabled(false);
+                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+                    submitBtn.setEnabled(false);
+                }else{
+                    submitBtn.setEnabled(true);
+                }
+                break;
+            case R.id.feedbackUI_type_Tag6:
+                if (isSelected6){
+                    isSelected6 = false;
+                    if (TagsList.contains(Tag6.getText().toString())){
+                        TagsList.remove(Tag6.getText().toString());
+                    }
+                    Tag6.setTextColor(Color.parseColor("#666666"));
+                    Tag6.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected6 = true;
+                    if (!TagsList.contains(Tag6.getText().toString())){
+                        TagsList.add(Tag6.getText().toString());
+                    }
+                    Tag6.setTextColor(Color.parseColor("#f57752"));
+                    Tag6.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+                        restCauseEdit.getText().toString().trim() == null
+                                || "".equals(restCauseEdit.getText().toString().trim()))){
+                    submitBtn.setEnabled(false);
+                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+                    submitBtn.setEnabled(false);
+                }else{
+                    submitBtn.setEnabled(true);
+                }
+                break;
 
 
             case R.id.ui_client_service_submitBtn:

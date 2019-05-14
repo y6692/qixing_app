@@ -10,6 +10,44 @@
     <include
         layout="@layout/ui_main_title"/>
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp160"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/ui_superVip_bikeNumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp22"
+            android:text=""/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="剩余免费次数"
+            android:textSize="@dimen/sp14"
+            android:textColor="@color/white"
+            android:layout_marginTop="@dimen/dp15"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="免费次数可用于单车和电单车"
+            android:textSize="@dimen/sp14"
+            android:textColor="@color/white"
+            android:layout_marginTop="@dimen/dp15"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:background="#ffbba0"
+        android:layout_marginLeft="@dimen/dp20"
+        android:layout_marginRight="@dimen/dp20"/>
+
     <LinearLayout
         android:id="@+id/ui_superVip_headLayout"
         android:layout_width="match_parent"
@@ -24,7 +62,7 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/ui_superVip_bikeNumText"
+                android:id="@+id/ui_superVip_daysBikeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
@@ -34,7 +72,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="免费次数"
+                android:text="单车剩余免费天数"
                 android:textSize="@dimen/sp14"
                 android:textColor="@color/white"
                 android:layout_marginTop="@dimen/dp15"/>
@@ -53,7 +91,7 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/ui_superVip_daysText"
+                android:id="@+id/ui_superVip_daysEbikeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
@@ -63,7 +101,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="免费天数"
+                android:text="电单车剩余免费天数"
                 android:textSize="@dimen/sp14"
                 android:textColor="@color/white"
                 android:layout_marginTop="@dimen/dp15"/>

@@ -62,6 +62,7 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
     private MyPagerGalleryView gallery;
     private LinearLayout pointLayout;
 
+    private TextView freeText;
     private TextView freeDaysText;
     private TextView tv;
 
@@ -92,7 +93,7 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
         isForeground = true;
         super.onResume();
 
-        Log.e("history===","history===onResume");
+        Log.e("history===","history===onResume==="+type);
     }
 
     @Override
@@ -126,11 +127,18 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
         pointLayout = (LinearLayout)findViewById(R.id.history_roadDetailUI_pointLayout);
         tv = (TextView)findViewById(R.id.tv);
 
-        if("4".equals(type)){
-            tv.setText("还车须至校内地图绿色区域，封顶20元/天");
-        }else{
-            tv.setText("还车须至校内地图红色区域，封顶5元/天");
-        }
+
+
+//        freeText = (TextView) findViewById(R.id.history_roadDetailUI_freeText);
+//        if ("0".equals(SharedPreferencesUrls.getInstance().getString("specialdays","0.00"))
+//                || "0.00".equals(SharedPreferencesUrls.getInstance().getString("specialdays","0.00"))){
+//            freeText.setVisibility(View.GONE);
+//        }else {
+//            freeText.setVisibility(View.VISIBLE);
+//            freeText.setText("剩余免费"+
+//                    SharedPreferencesUrls.getInstance().getString("specialdays","0.00")
+//                    +"天，每次前一个小时免费");
+//        }
 
         freeDaysText = (TextView) findViewById(R.id.history_roadDetailUI_freeDaysText);
         if ("0".equals(SharedPreferencesUrls.getInstance().getString("specialdays","0.00"))
@@ -138,9 +146,17 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
             freeDaysText.setVisibility(View.GONE);
         }else {
             freeDaysText.setVisibility(View.VISIBLE);
-            freeDaysText.setText("剩余免费"+
-                    SharedPreferencesUrls.getInstance().getString("specialdays","0.00")
-                    +"天，每次前一个小时免费");
+            if("4".equals(type)){
+                freeDaysText.setText("电单车剩余免费"+ SharedPreferencesUrls.getInstance().getString("specialdays","0.00") +"天，每次前一个小时免费");
+            }else{
+                freeDaysText.setText("单车剩余免费"+ SharedPreferencesUrls.getInstance().getString("specialdays","0.00") +"天，每次前一个小时免费");
+            }
+        }
+
+        if("4".equals(type)){
+            tv.setText("还车须至校内地图绿色区域，封顶20元/天");
+        }else{
+            tv.setText("还车须至校内地图红色区域，封顶5元/天");
         }
 
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)imagesLayout.getLayoutParams();

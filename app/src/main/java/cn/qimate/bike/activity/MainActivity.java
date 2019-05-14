@@ -20,6 +20,8 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
@@ -70,20 +72,33 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     private BikeFragment bikeFragment;
     private EbikeFragment ebikeFragment;
 
+    public AMap aMap;
+    public BitmapDescriptor successDescripter;
+    public MapView mapView;
+
     @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.ui_main);
         ButterKnife.bind(this);
 
         IntentFilter filter = new IntentFilter("data.broadcast.action");
         registerReceiver(mReceiver, filter);
 
+        mapView = (MapView) findViewById(R.id.mainUI_map);
+        mapView.onCreate(savedInstanceState);
+
         initData();
         initView();
         initListener();
 //        initLocation();
 //        AppApplication.getApp().scan();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
     }
 
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -115,6 +130,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         mFragments.add(ebikeFragment);
 
         for (int i = 0; i < mTitles.length; i++) {
+//        for (int i = 0; i < 1; i++) {
             mTabEntities.add(new TabTopEntity(mTitles[i]));
         }
     }
@@ -143,6 +159,17 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     @Override protected void onResume() {
         super.onResume();
+
+        mapView.onResume();
+
+        type = SharedPreferencesUrls.getInstance().getString("type", "");
+
+        if("4".equals(type)){
+            changeTab(1);
+        }else{
+            changeTab(0);
+        }
+        Log.e("main===onResume", "===");
     }
 
     @Override

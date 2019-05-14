@@ -19,6 +19,7 @@
             android:gravity="center"
             android:padding="@dimen/dp10"
             android:textColor="#ffffff"
+            android:textSize="18sp"
             />
     </LinearLayout>
 
@@ -49,6 +50,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/dp5"
             android:paddingRight="@dimen/dp5"
+
             />
 
     </LinearLayout>
@@ -153,18 +155,17 @@
             android:src="@drawable/cost_icon"/>
 
         <TextView
-            style="@style/DialogText"
             android:id="@+id/fee"
-            android:paddingBottom="@dimen/dp15"
-            android:paddingTop="@dimen/dp15"
-            android:gravity="left"
-            android:lineSpacingExtra="5dp"
+            style="@style/DialogText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:gravity="left"
+            android:lineSpacingExtra="5dp"
             android:paddingLeft="@dimen/dp5"
+            android:paddingTop="@dimen/dp15"
             android:paddingRight="@dimen/dp5"
-            android:text="15/1"
-            />
+            android:paddingBottom="@dimen/dp15"
+            android:text="15/1" />
 
     </LinearLayout>
 
