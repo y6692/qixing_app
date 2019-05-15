@@ -208,7 +208,7 @@ public class FeedbackActivity
 
         destroyLocation();
 
-        closeBle();
+//        closeBle();
 
     }
 
@@ -420,7 +420,7 @@ public class FeedbackActivity
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.mainUI_title_backBtn:
-                closeBle();
+//                closeBle();
 
                 scrollToFinishActivity();
                 break;
@@ -740,6 +740,7 @@ public class FeedbackActivity
                 break;
         }
     }
+
     Handler m_myHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message mes) {
@@ -837,7 +838,7 @@ public class FeedbackActivity
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
                         ToastUtil.showMessageApp(context,"谢谢您的反馈,工作人员将很快处理");
-                        closeBle();
+//                        closeBle();
 
                         scrollToFinishActivity();
 
@@ -1392,7 +1393,7 @@ public class FeedbackActivity
 
 //            finish();
 
-            closeBle();
+//            closeBle();
 
 //            try {
 //                if (internalReceiver != null) {
