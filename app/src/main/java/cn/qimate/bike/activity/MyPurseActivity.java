@@ -71,6 +71,8 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
     private String bike_desc = "";
     private String ebike_desc = "";
 
+    private String bike_open_state = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -193,31 +195,36 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
                 break;
             case R.id.myPurseUI_monthCard_bike:
 
-                CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-                customBuilder.setMessage(bike_desc);
+                if("1".equals(bike_open_state)){
+                    Intent intent = new Intent(context, PayMontCartActivity.class);
+                    intent.putExtra("carType",1);
+                    context.startActivity(intent);
+                }else{
+                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+                    customBuilder.setMessage(bike_desc);
 
-                customBuilder.setType(5).setImg_url(bike_img_url).setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
+                    customBuilder.setType(5).setImg_url(bike_img_url).setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
 
-                        Intent intent = new Intent(context, PayMontCartActivity.class);
-                        intent.putExtra("carType",1);
-                        context.startActivity(intent);
+                            Intent intent = new Intent(context, PayMontCartActivity.class);
+                            intent.putExtra("carType",1);
+                            context.startActivity(intent);
+                        }
+                    }).setHint(false);
+                    customBuilder.create().show();
+                }
 
-//                        UIHelper.goToAct(context,PayMontCartActivity.class);
-//                        scrollToFinishActivity();
-                    }
-                }).setHint(false);
-                customBuilder.create().show();
+
 
 
                 break;
             case R.id.myPurseUI_monthCard_ebike:
-                customBuilder = new CustomDialog.Builder(this);
+                CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
                 customBuilder.setMessage(ebike_desc);
 
                 customBuilder.setType(5).setImg_url(ebike_img_url).setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -278,19 +285,24 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
 
                             UserMonthIndexBean bean = JSON.parseObject(result.getData(), UserMonthIndexBean.class);
 
-                            if("0".equals(bean.getBike_open_state())){
-//                                monthCardBike.setVisibility(View.GONE);
+                            bike_open_state = bean.getBike_open_state();
+
+                            if("0".equals(bike_open_state)){
+                                monthCardBike.setVisibility(View.GONE);
+                                monthCardEbike.setVisibility(View.GONE);
+
+//                                monthCardBike.setVisibility(View.VISIBLE);
 //                                monthCardEbike.setVisibility(View.GONE);
 
-                                monthCardBike.setVisibility(View.VISIBLE);
-                                monthCardEbike.setVisibility(View.VISIBLE);
-                            }else if("1".equals(bean.getBike_open_state())){
+//                                monthCardBike.setVisibility(View.VISIBLE);
+//                                monthCardEbike.setVisibility(View.VISIBLE);
+                            }else if("1".equals(bike_open_state)){
                                 monthCardBike.setVisibility(View.VISIBLE);
                                 monthCardEbike.setVisibility(View.GONE);
-                            }else if("2".equals(bean.getBike_open_state())){
+                            }else if("2".equals(bike_open_state)){
                                 monthCardBike.setVisibility(View.GONE);
                                 monthCardEbike.setVisibility(View.VISIBLE);
-                            }else if("3".equals(bean.getBike_open_state())){
+                            }else if("3".equals(bike_open_state)){
                                 monthCardBike.setVisibility(View.VISIBLE);
                                 monthCardEbike.setVisibility(View.VISIBLE);
                             }

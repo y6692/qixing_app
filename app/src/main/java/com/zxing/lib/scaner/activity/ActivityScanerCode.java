@@ -618,12 +618,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             UIHelper.goToAct(context, LoginActivity.class);
         }else {
             RequestParams params = new RequestParams();
-            params.put("uid",uid);
-            params.put("access_token",access_token);
-            params.put("tokencode",result);
-            params.put("latitude",SharedPreferencesUrls.getInstance().getString("latitude",""));
-            params.put("longitude",SharedPreferencesUrls.getInstance().getString("longitude",""));
-            params.put("telprama","手机型号：" + SystemUtil.getSystemModel() + ", Android系统版本号："+SystemUtil.getSystemVersion());
+            params.put("uid", uid);
+            params.put("access_token", access_token);
+            params.put("tokencode", result);
+            params.put("latitude", SharedPreferencesUrls.getInstance().getString("latitude",""));
+            params.put("longitude", SharedPreferencesUrls.getInstance().getString("longitude",""));
+            params.put("telprama", "手机型号：" + SystemUtil.getSystemModel() + ", Android系统版本号："+SystemUtil.getSystemVersion());
             HttpHelper.post(context, Urls.useCar, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {

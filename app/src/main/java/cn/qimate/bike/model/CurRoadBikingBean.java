@@ -20,6 +20,15 @@ public class CurRoadBikingBean {
     private String status;
     private String macinfo;
     private String tokencode;
+    private int is_super_member;
+
+    public int getIs_super_member() {
+        return is_super_member;
+    }
+
+    public void setIs_super_member(int is_super_member) {
+        this.is_super_member = is_super_member;
+    }
 
     public String getEd_time() {
         return ed_time;

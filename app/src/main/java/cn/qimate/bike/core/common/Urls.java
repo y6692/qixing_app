@@ -10,8 +10,8 @@ package cn.qimate.bike.core.common;
 public class Urls {
 
 	public static String HTTP = "http://";
-//	public static String host = HTTP + "app.7mate.cn";
-	public static String host = HTTP + "test.7mate.cn";
+	public static String host = HTTP + "app.7mate.cn";
+//	public static String host = HTTP + "test.7mate.cn";
 //	public static String host = HTTP + "uat.7mate.cn";
 //    public static String host = HTTP + "192.168.206.10:8345";
 	/***上传坐标*/
@@ -170,4 +170,9 @@ public class Urls {
     /**电单车信息*/
 //    public static String ebikeInfo = host + "/index.php?g=App&m=Ebike&a=info";
     public static String ebikeInfo = host + "?g=App&m=Ebike&a=info";
+
+	/**支付宝支付单车费用接口*/
+	public static String alipayBike = host + "?g=App&m=AlipayBike&a=alipay";
+	/**微信支付单车费用接口*/
+	public static String wxpayBike = host + "?g=App&m=WxpayBike&a=wxpay";
 }

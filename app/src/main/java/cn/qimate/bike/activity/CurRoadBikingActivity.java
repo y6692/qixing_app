@@ -220,6 +220,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private CustomDialog customDialog4;
     private CustomDialog customDialog5;
     private CustomDialog customDialog6;
+    private CustomDialog customDialog7;
+    private CustomDialog customDialog8;
 
     int near = 1;
     protected InternalReceiver internalReceiver = null;
@@ -316,6 +318,24 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     }
                 });
         customDialog6 = customBuilder.create();
+
+        customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setTitle("温馨提示").setMessage("关锁失败，请重试")
+                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        customDialog7 = customBuilder.create();
+
+        customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setTitle("温馨提示").setMessage("开锁失败，请重试")
+                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        customDialog8 = customBuilder.create();
 
 //        customBuilder = new CustomDialog.Builder(context);
 //        customBuilder.setTitle("温馨提示").setMessage("不在还车点，请至校内地图红色区域停车")
@@ -1237,6 +1257,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     if(cn<5){
                         checkConnectCloseTemp();
                     }else{
+                        if (lockLoading != null && lockLoading.isShowing()){
+                            lockLoading.dismiss();
+                        }
+
                         customDialog6.show();
                         return;
                     }
@@ -1371,9 +1395,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                     SharedPreferencesUrls.getInstance().putString("tempStat","1");
 
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
+
 
                 }else{
 //                    button9();
@@ -1386,19 +1408,19 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                        loadingDialog.show();
 //                    }
 
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
 
-                    bleService.connect(m_nowMac);
-
-                    cn = 0;
-                    temporaryLock();
+//                    bleService.connect(m_nowMac);
+//
+//                    cn = 0;
+//                    temporaryLock();
 
 //                    ToastUtil.showMessageApp(context,"关锁失败，请重试");
-//                                        customDialog5.show();
+                      customDialog7.show();
                 }
 
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
 
 
                 Log.e("temporaryLock===4_6", "==="+bleService.cc);
@@ -1421,6 +1443,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         if(cn<5){
                             checkConnectOpenTemp();
                         }else{
+                            if (lockLoading != null && lockLoading.isShowing()){
+                                lockLoading.dismiss();
+                            }
+
                             customDialog6.show();
                             return;
                         }
@@ -1547,10 +1573,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                     SharedPreferencesUrls.getInstance().putString("tempStat","0");
                 }else{
-                    openLock2();
+//                  openLock2();
 
-//                    ToastUtil.showMessageApp(context,"开锁失败，请重试");
-//                                        customDialog5.show();
+                    customDialog8.show();
+
+//                  ToastUtil.showMessageApp(context,"开锁失败，请重试");
                 }
 
                 if (loadingDialog != null && loadingDialog.isShowing()){
@@ -2803,6 +2830,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     if(cn<5){
                         checkConnect();
                     }else{
+                        if (lockLoading != null && lockLoading.isShowing()){
+                            lockLoading.dismiss();
+                        }
+
                         customDialog4.show();
                         return;
                     }
