@@ -316,6 +316,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
             params.put("access_token",access_token);
             params.put("paytype",paytype);
             params.put("type",type);
+            params.put("recharge_type",carType);
             HttpHelper.post(context, Urls.monthcard, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
@@ -336,6 +337,9 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
                     try {
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        Log.e("userPay===", "==="+carType);
+
                         if (result.getFlag().equals("Success")) {
                             osn = result.getData();
                             if ("1".equals(paytype)){

@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -26,15 +28,23 @@ import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.qimate.bike.R;
+import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragmentActivity;
 import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
+import cn.qimate.bike.core.common.UpdateManager;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.fragment.BikeFragment;
@@ -88,11 +98,93 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         mapView = (MapView) findViewById(R.id.mainUI_map);
         mapView.onCreate(savedInstanceState);
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                m_myHandler.sendEmptyMessage(1);
+            }
+        }).start();
+
         initData();
         initView();
         initListener();
 //        initLocation();
 //        AppApplication.getApp().scan();
+
+        type = SharedPreferencesUrls.getInstance().getString("type", "");
+
+        if("4".equals(type)){
+            changeTab(1);
+        }else{
+            changeTab(0);
+        }
+    }
+
+    protected Handler m_myHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message mes) {
+            switch (mes.what) {
+                case 0:
+                    break;
+                case 1:
+                    getNetTime();
+
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        }
+    });
+
+    //获取网络时间
+    private void getNetTime() {
+
+        Log.e("getNetTime==", "===");
+
+        URL url = null;//取得资源对象
+        final DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        try {
+//			url = new URL("http://www.baidu.com");
+            url = new URL("http://www.ntsc.ac.cn");//中国科学院国家授时中心
+            //url = new URL("http://www.bjtime.cn");
+            URLConnection uc = url.openConnection();//生成连接对象
+            uc.connect(); //发出连接
+            long ld = uc.getDate(); //取得网站日期时间
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(ld);
+            final String format = formatter.format(calendar.getTime());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (SharedPreferencesUrls.getInstance().getString("date","") != null &&
+                            !"".equals(SharedPreferencesUrls.getInstance().getString("date",""))){
+                        if (!format.equals(SharedPreferencesUrls.getInstance().getString("date",""))){
+                            UpdateManager.getUpdateManager().checkAppUpdate(context, true);
+                            SharedPreferencesUrls.getInstance().putString("date",""+format);
+                        }
+                    }else {
+                        // 版本更新
+                        UpdateManager.getUpdateManager().checkAppUpdate(context, true);
+                        SharedPreferencesUrls.getInstance().putString("date",""+format);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            String date = formatter.format(new Date());
+            if (SharedPreferencesUrls.getInstance().getString("date","") != null &&
+                    !"".equals(SharedPreferencesUrls.getInstance().getString("date",""))){
+                if (!date.equals(SharedPreferencesUrls.getInstance().getString("date",""))){
+                    UpdateManager.getUpdateManager().checkAppUpdate(context, true);
+                    SharedPreferencesUrls.getInstance().putString("date",""+date);
+                }
+            }else {
+                // 版本更新
+                UpdateManager.getUpdateManager().checkAppUpdate(context, true);
+                SharedPreferencesUrls.getInstance().putString("date",""+date);
+            }
+            e.printStackTrace();
+        }
     }
 
     @Override protected void onResume() {
@@ -101,7 +193,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         mapView.onResume();
 
-        type = SharedPreferencesUrls.getInstance().getString("type", "");
+
 
 //        aMap = mapView.getMap();
 //
@@ -109,14 +201,16 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         Log.e("main===onResume2", "===");
 
-        if("4".equals(type)){
-            changeTab(1);
-        }else{
-            changeTab(0);
+    }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+
+        if (mapView != null) {
+            mapView.onDestroy();
         }
-
-        Log.e("main===onResume3", "===");
-
     }
 
     @Override

@@ -297,12 +297,12 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         filter = new IntentFilter("data.broadcast.action");
         activity.registerReceiver(broadcastReceiver, filter);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                m_myHandler.sendEmptyMessage(1);
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                m_myHandler.sendEmptyMessage(1);
+//            }
+//        }).start();
 
         initView();
 
@@ -744,7 +744,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         type = SharedPreferencesUrls.getInstance().getString("type", "");
 
         ToastUtil.showMessage(context, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + ">>>" + m_nowMac);
-        Log.e("main===", "main====onResume==="+first+"==="+mBluetoothAdapter+"==="+mLeScanCallback);
+        Log.e("main===ebike", "main====onResume==="+first+"==="+mBluetoothAdapter+"==="+mLeScanCallback);
 
         closeBroadcast();
 //        try {
@@ -758,7 +758,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-        String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
+//        String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
+        String ebike_specialdays = SharedPreferencesUrls.getInstance().getString("ebike_specialdays", "");
         if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
             authBtn.setVisibility(View.VISIBLE);
             authBtn.setText("您还未登录，点我快速登录");
@@ -855,13 +856,18 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             } else {
                 rechargeBtn.setVisibility(View.GONE);
             }
-            if (("0".equals(specialdays) || specialdays == null || "".equals(specialdays))
-                    && ("0".equals(specialdays) || specialdays == null || "".equals(specialdays))) {
+
+            Log.e("type===", type+"==="+ebike_specialdays);
+
+
+            if (("0".equals(ebike_specialdays) || ebike_specialdays == null || "".equals(ebike_specialdays))
+                    && ("0".equals(ebike_specialdays) || ebike_specialdays == null || "".equals(ebike_specialdays))) {
                 cartBtn.setVisibility(View.GONE);
             } else {
                 cartBtn.setVisibility(View.VISIBLE);
-                cartBtn.setText("免费" + specialdays + "天,每次前一个小时免费,点击续费");
+                cartBtn.setText("免费" + ebike_specialdays + "天,每次前一个小时免费,点击续费");
             }
+
         }
     }
 
@@ -1920,7 +1926,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 }
                 break;
             case R.id.mainUI_cartBtn2:
-                UIHelper.goToAct(context, PayMontCartActivity.class);
+                intent = new Intent(context, PayMontCartActivity.class);
+                intent.putExtra("carType",2);
+                context.startActivity(intent);
                 break;
             case R.id.mainUI_slideLayout2:
                 UIHelper.goWebViewAct(context,"停车须知",Urls.ebike_phtml5 + uid);
@@ -3372,11 +3380,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     /**
      * 方法必须重写
      */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        mapView.onSaveInstanceState(outState);
+//    }
 
 
     private void setUpLocationStyle() {

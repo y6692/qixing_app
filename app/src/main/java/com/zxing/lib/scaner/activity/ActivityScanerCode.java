@@ -624,6 +624,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             params.put("latitude", SharedPreferencesUrls.getInstance().getString("latitude",""));
             params.put("longitude", SharedPreferencesUrls.getInstance().getString("longitude",""));
             params.put("telprama", "手机型号：" + SystemUtil.getSystemModel() + ", Android系统版本号："+SystemUtil.getSystemVersion());
+            params.put("can_use_ebike", 1);
             HttpHelper.post(context, Urls.useCar, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
@@ -728,7 +729,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             }else if ("4".equals(type)){
                                 codenum = jsonObject.getString("codenum");
                                 m_nowMac = jsonObject.getString("macinfo");
-//                                bleid = jsonObject.getString("bleid");
 
                                 if ("200".equals(jsonObject.getString("code"))){
                                     Log.e("useBike===4", "===="+jsonObject);

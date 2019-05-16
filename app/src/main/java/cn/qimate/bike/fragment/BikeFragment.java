@@ -302,12 +302,12 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         filter = new IntentFilter("data.broadcast.action");
         activity.registerReceiver(broadcastReceiver, filter);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                m_myHandler.sendEmptyMessage(1);
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                m_myHandler.sendEmptyMessage(1);
+//            }
+//        }).start();
 
         initView();
 
@@ -780,7 +780,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         type = SharedPreferencesUrls.getInstance().getString("type", "");
 
         ToastUtil.showMessage(context, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + ">>>" + m_nowMac);
-        Log.e("main===", "main====onResume==="+first+"==="+mBluetoothAdapter+"==="+mLeScanCallback);
+        Log.e("main===bike", "main====onResume==="+first+"==="+mBluetoothAdapter+"==="+mLeScanCallback);
 
         closeBroadcast();
 //        try {
@@ -891,6 +891,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             } else {
                 rechargeBtn.setVisibility(View.GONE);
             }
+
             if (("0".equals(specialdays) || specialdays == null || "".equals(specialdays))
                     && ("0".equals(specialdays) || specialdays == null || "".equals(specialdays))) {
                 cartBtn.setVisibility(View.GONE);
@@ -898,6 +899,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 cartBtn.setVisibility(View.VISIBLE);
                 cartBtn.setText("免费" + specialdays + "天,每次前一个小时免费,点击续费");
             }
+
         }
     }
 
@@ -1960,7 +1962,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 }
                 break;
             case R.id.mainUI_cartBtn:
-                UIHelper.goToAct(context, PayMontCartActivity.class);
+                intent = new Intent(context, PayMontCartActivity.class);
+                intent.putExtra("carType",1);
+                context.startActivity(intent);
                 break;
             case R.id.mainUI_slideLayout:
                 UIHelper.goWebViewAct(context,"停车须知",Urls.phtml5 + uid);
@@ -3416,11 +3420,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     /**
      * 方法必须重写
      */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        mapView.onSaveInstanceState(outState);
+//    }
 
 
     private void setUpLocationStyle() {
@@ -3676,6 +3680,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     //获取网络时间
     private void getNetTime() {
+
+        Log.e("getNetTime==", "===");
+
         URL url = null;//取得资源对象
         final DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         try {

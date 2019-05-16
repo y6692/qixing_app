@@ -85,7 +85,8 @@ public class UIHelper {
 		if (!NetworkUtils.isNetWorkAvalible(context)) {
 			openDialogOneMsg(context, R.drawable.ic_error, "无网络连接，请先打开网络连接");
 		} else if (msg.contains("SocketTimeoutException") || msg.contains("ConnectTimeoutException")) {
-			openDialogOneMsg(context, R.drawable.ic_error, "网速不给力哦！");
+//			openDialogOneMsg(context, R.drawable.ic_error, "网速不给力哦！");
+			openDialogOneMsg(context, R.drawable.ic_error, "请求超时，请稍后再试");
 		} else {
 			openDialogOneMsg(context, R.drawable.ic_error, "请求失败");
 		}

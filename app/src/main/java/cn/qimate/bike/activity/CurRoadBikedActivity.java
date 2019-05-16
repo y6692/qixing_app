@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -86,6 +89,8 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     private String access_token = "";
 
     private int flag = 0;
+
+    PopupWindow popupwindow;
 
 
     @Override
@@ -276,6 +281,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                 ll_pop_payLayout.setOnClickListener(this);
                 alipayTypeLayout.setOnClickListener(this);
                 WeChatTypeLayout.setOnClickListener(this);
+                iv_popup_window_back.setOnClickListener(this);
 
                 // 获取截图的Bitmap
                 Bitmap bitmap = UtilScreenCapture.getDrawing(this);
@@ -291,15 +297,23 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                 // 打开弹窗
                 UtilAnim.showToUp(pop_win_bg, iv_popup_window_back);
                 // 创建PopupWindow宽度和高度
-                final PopupWindow popupwindow = new PopupWindow(customView, LinearLayout.LayoutParams.MATCH_PARENT,
+                popupwindow = new PopupWindow(customView, LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT, true);
                 /**
                  * 设置动画效果 ,从上到下加载方式等，不设置自动的下拉，最好 [动画效果不好，不加实现下拉效果，不错]
                  */
                 popupwindow.setAnimationStyle(R.style.PopupAnimation);
-                popupwindow.setOutsideTouchable(false);
+
+                popupwindow.setBackgroundDrawable(new BitmapDrawable());
+//                popupwindow.setFocusable(true);
+//                popupwindow.setTouchable(true);
+                popupwindow.setOutsideTouchable(true);
 
                 popupwindow.showAtLocation(customView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                break;
+
+            case R.id.popupWindow_back:
+                popupwindow.dismiss();
                 break;
 
             case R.id.ui_curRoadBiked_alipayTypeLayout:
