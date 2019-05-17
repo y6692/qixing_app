@@ -143,7 +143,13 @@ public class UpdateManager {
 		loadingDialog = new LoadingDialog(context);
 		loadingDialog.setCancelable(false);
 		loadingDialog.setCanceledOnTouchOutside(false);
+
+		Log.e("checkAppUpdate==0", "===");
+
 		getCurrentVersion();
+
+		Log.e("checkAppUpdate==1", "===");
+
 		HttpHelper.get(context, Urls.updateApp, new TextHttpResponseHandler() {
 
 			@Override
@@ -164,6 +170,8 @@ public class UpdateManager {
 						if (mUpdate != null) {
 
 							ToastUtil.showMessage(context, curVersionName+"==="+mUpdate.getAppVersion());
+
+							Log.e("checkAppUpdate==", curVersionName+"==="+mUpdate.getAppVersion());
 
 							if (!curVersionName.equals(mUpdate.getAppVersion())) {
 								if ("2".equals(mUpdate.isForce())) {
@@ -237,6 +245,8 @@ public class UpdateManager {
 		}
 		noticeDialog = builder.create();
 		noticeDialog.show();
+
+		Log.e("showNoticeDialog===", "===");
 	}
 
 	private void showDialog() {

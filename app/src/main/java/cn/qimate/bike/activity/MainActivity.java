@@ -150,6 +150,9 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             //url = new URL("http://www.bjtime.cn");
             URLConnection uc = url.openConnection();//生成连接对象
             uc.connect(); //发出连接
+
+            Log.e("getNetTime==>>>", "===");
+
             long ld = uc.getDate(); //取得网站日期时间
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(ld);
@@ -157,6 +160,9 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+
+                    Log.e("date===", "==="+SharedPreferencesUrls.getInstance().getString("date",""));
+
                     if (SharedPreferencesUrls.getInstance().getString("date","") != null &&
                             !"".equals(SharedPreferencesUrls.getInstance().getString("date",""))){
                         if (!format.equals(SharedPreferencesUrls.getInstance().getString("date",""))){
@@ -171,14 +177,26 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 }
             });
         } catch (Exception e) {
+            Log.e("getNetTime==1", "==="+SharedPreferencesUrls.getInstance().getString("date",""));
+
             String date = formatter.format(new Date());
+
+            Log.e("getNetTime==1_2", "==="+SharedPreferencesUrls.getInstance().getString("date",""));
+
             if (SharedPreferencesUrls.getInstance().getString("date","") != null &&
                     !"".equals(SharedPreferencesUrls.getInstance().getString("date",""))){
+
+                Log.e("getNetTime==2", "==="+date);
+
                 if (!date.equals(SharedPreferencesUrls.getInstance().getString("date",""))){
+                    Log.e("getNetTime==2_2", "===");
+
                     UpdateManager.getUpdateManager().checkAppUpdate(context, true);
                     SharedPreferencesUrls.getInstance().putString("date",""+date);
                 }
             }else {
+
+                Log.e("getNetTime==23", "===");
                 // 版本更新
                 UpdateManager.getUpdateManager().checkAppUpdate(context, true);
                 SharedPreferencesUrls.getInstance().putString("date",""+date);
