@@ -52,16 +52,18 @@ public class SplashTestActivity extends Activity {
 
     protected void bindData() {
         timer = new Timer();
-        username = "18112348925";
+        username = "18151207269";
     }
 
     protected void bindView() {
         if (StringUtils.isNotEmpty(username)) {
 //            layProgress.setVisibility(View.VISIBLE);
-//            deviceId = Installation.id(this);
+            deviceId = Installation.id(this);
             beginTime = System.currentTimeMillis();
 
-            deviceId = "5649abda-4bbd-42a7-9ecb-f56ecbd8a944";
+//            deviceId = "5649abda-4bbd-42a7-9ecb-f56ecbd8a944";
+
+//            toListActivity();
 
             OkHttpClientManager.getInstance().UserLogin(username, deviceId, new ResultCallback<RUserLogin>() {
                 @Override
