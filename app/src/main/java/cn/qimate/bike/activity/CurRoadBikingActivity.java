@@ -1360,7 +1360,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                             button8();
                             button9();
-                            button2();
+                            button2();    //设防
 
                             closeLock();
                         }
@@ -1558,8 +1558,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         public void run() {
                             Log.e("openLock===4_3", "==="+m_nowMac);
 
+                            button8();
                             button9();
-                            button3();
+                            button3();  //启动
 
                             openLock2();
                         }
@@ -2908,26 +2909,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 public void run() {
                                     Log.e("endBtn4===4_3", "==="+m_nowMac);
 
+                                    button8();
                                     button9();
                                     button2();
 
-                                    m_myHandler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Log.e("endBtn4===4_4", bleService.cc+"==="+"B1 2A 80 00 00 5B ".equals(bleService.cc));
+                                    cn=0;
+                                    closeLock2();
 
-                                            if("B1 2A 80 00 00 5B ".equals(bleService.cc)){
-                                                Log.e("endBtn4===4_5", oid+"==="+bleService.cc);
-                                                macList2 = new ArrayList<> (macList);
-                                                submit(uid, access_token);
-                                            }else{
-                                                customDialog5.show();
-                                            }
 
-                                            Log.e("endBtn4===4_6", "==="+bleService.cc);
-
-                                        }
-                                    }, 500);
                                 }
                             }, 500);
 
@@ -2944,6 +2933,68 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             }
         });
     }
+
+    void closeLock2(){
+
+//        m_myHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.e("endBtn4===4_4", bleService.cc+"==="+"B1 2A 80 00 00 5B ".equals(bleService.cc));
+//
+//                if("B1 2A 80 00 00 5B ".equals(bleService.cc)){
+//                    Log.e("endBtn4===4_5", oid+"==="+bleService.cc);
+//                    macList2 = new ArrayList<> (macList);
+//                    submit(uid, access_token);
+//                }else{
+//                    customDialog5.show();
+//                }
+//
+//                Log.e("endBtn4===4_6", "==="+bleService.cc);
+//
+//            }
+//        }, 500);
+
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("endBtn4===4_4", bleService.cc+"==="+"B1 2A 80 00 00 5B ".equals(bleService.cc));
+
+                if("B1 2A 80 00 00 5B ".equals(bleService.cc)){
+                    Log.e("endBtn4===4_5", oid+"==="+bleService.cc);
+                    macList2 = new ArrayList<> (macList);
+                    submit(uid, access_token);
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+
+                }else{
+                    cn++;
+
+                    if(cn<=10){
+                        button9();
+                        button2();
+
+                        closeLock2();
+                    }else{
+                        customDialog5.show();
+
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+
+                }
+
+
+
+
+                Log.e("temporaryLock===4_6", "==="+bleService.cc);
+
+            }
+        }, 500);
+    }
+
 
     public void endBtn4(){
         final String uid = SharedPreferencesUrls.getInstance().getString("uid","");

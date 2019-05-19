@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.hubcloud.adhubsdk.AdHub;
+import com.sofi.blelocker.library.BluetoothContext;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.impl.AndroidBle;
@@ -76,6 +77,8 @@ public class BaseApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		app = this;
+
+		BluetoothContext.set(this);
 
 		setDebug(false);
 

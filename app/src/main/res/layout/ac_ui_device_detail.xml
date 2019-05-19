@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--<include-->
+        <!--android:id="@+id/toolbar"-->
+        <!--layout="@layout/include_toolbar" />-->
+
+    <!-- 底部菜单 -->
+    <LinearLayout
+        android:id="@+id/layBottom"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:baselineAligned="false">
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<Button-->
+                <!--android:id="@+id/btnScan"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+                <!--android:text="@string/bottom_scan"-->
+                <!--android:textColor="@color/color_black_primary"-->
+                <!--android:textSize="@dimen/bottom_tv_size" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/btnBuzzer"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+                <!--android:text="@string/bottom_buzzer"-->
+                <!--android:textColor="@color/color_black_primary"-->
+                <!--android:textSize="@dimen/bottom_tv_size" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/btnQueryOpenState"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+                <!--android:text="@string/bottom_open_state"-->
+                <!--android:textColor="@color/color_black_primary"-->
+                <!--android:textSize="@dimen/bottom_tv_size" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/btnQueryRunState"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+                <!--android:text="@string/bottom_run_state"-->
+                <!--android:textColor="@color/color_black_primary"-->
+                <!--android:textSize="@dimen/bottom_tv_size" />-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal" >-->
+
+            <!--<Button-->
+                <!--android:id="@+id/btnGetConfig"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+                <!--android:text="@string/bottom_get_config"-->
+                <!--android:textColor="@color/color_black_primary"-->
+                <!--android:textSize="@dimen/bottom_tv_size" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/btnGetRecord"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+                <!--android:text="@string/bottom_record"-->
+                <!--android:textColor="@color/color_black_primary"-->
+                <!--android:textSize="@dimen/bottom_tv_size" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/btnLowPacketEnable"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+                <!--android:text="@string/bottom_low_power_enable"-->
+                <!--android:textColor="@color/color_black_primary"-->
+                <!--android:textSize="@dimen/bottom_tv_size" />-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal" >-->
+
+            <!--<Button-->
+                <!--android:id="@+id/btnLowPacketDisable"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+                <!--android:text="@string/bottom_low_power_disable"-->
+                <!--android:textColor="@color/color_black_primary"-->
+                <!--android:textSize="@dimen/bottom_tv_size" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/btnUpdatekey"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+                <!--android:text="@string/bottom_update_key"-->
+                <!--android:textColor="@color/color_black_primary"-->
+                <!--android:textSize="@dimen/bottom_tv_size" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/btnExitFactory"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+                <!--android:text="@string/bottom_exit_factory"-->
+                <!--android:textColor="@color/color_black_primary"-->
+                <!--android:textSize="@dimen/bottom_tv_size" />-->
+
+        <!--</LinearLayout>-->
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/layLockView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:layout_above="@id/layBottom"
+        layout="@layout/ac_ui_device_detail_lock" />
+
+    <!--android:layout_below="@id/toolbar"-->
+
+</RelativeLayout>
