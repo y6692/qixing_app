@@ -168,8 +168,9 @@ public class Urls {
 	public static String badcarShow = host + "/index.php?g=App&m=UserManage&a=badcar_show";
 
     /**电单车信息*/
+	public static String ebikeInfo = host + "?g=App&m=Ebike&a=info";
 //    public static String ebikeInfo = host + "/index.php?g=App&m=Ebike&a=info";
-    public static String ebikeInfo = host + "?g=App&m=Ebike&a=info";
+
 
 	/**支付宝支付单车费用接口*/
 	public static String alipayBike = host + "?g=App&m=AlipayBike&a=alipay";
