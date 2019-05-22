@@ -100,7 +100,7 @@ public class ColorPickerPreference extends Preference {
         Resources res = view.getContext().getResources();
         GradientDrawable colorChoiceDrawable = null;
 
-        colorIndicator = (ImageView) view.findViewById(R.id.color_indicator);
+        colorIndicator = view.findViewById(R.id.color_indicator);
 
         Drawable currentDrawable = colorIndicator.getDrawable();
         if (currentDrawable != null && currentDrawable instanceof GradientDrawable)

@@ -48,8 +48,8 @@ public class RxDialogLoading extends RxDialog {
 
     private void initView(Context context) {
         mDialogContentView = LayoutInflater.from(context).inflate(R.layout.dialog_loading_spinkit, null);
-        mLoadingView = (SpinKitView) mDialogContentView.findViewById(R.id.spin_kit);
-        mTextView = (TextView) mDialogContentView.findViewById(R.id.name);
+        mLoadingView = mDialogContentView.findViewById(R.id.spin_kit);
+        mTextView = mDialogContentView.findViewById(R.id.name);
         setContentView(mDialogContentView);
     }
 

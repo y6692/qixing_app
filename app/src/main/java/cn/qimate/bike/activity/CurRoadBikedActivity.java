@@ -267,14 +267,14 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                 // 获取自定义布局文件的视图
                 View customView = getLayoutInflater().inflate(R.layout.pop_pay_menu, null, false);
                 // 创建PopupWindow宽度和高度
-                RelativeLayout pop_win_bg = (RelativeLayout) customView.findViewById(R.id.pop_win_bg);
-                ImageView iv_popup_window_back = (ImageView) customView.findViewById(R.id.popupWindow_back);
-                TextView tv_pop_money = (TextView) customView.findViewById(R.id.tv_pop_money);
-                LinearLayout ll_pop_payLayout = (LinearLayout) customView.findViewById(R.id.ll_pop_payLayout);
-                RelativeLayout alipayTypeLayout = (RelativeLayout)customView.findViewById(R.id.ui_curRoadBiked_alipayTypeLayout);
-                RelativeLayout WeChatTypeLayout = (RelativeLayout)customView.findViewById(R.id.ui_curRoadBiked_WeChatTypeLayout);
-                alipayTypeImage = (ImageView)customView.findViewById(R.id.ui_curRoadBiked_alipayTypeImage);
-                WeChatTypeImage = (ImageView)customView.findViewById(R.id.ui_curRoadBiked_WeChatTypeImage);
+                RelativeLayout pop_win_bg = customView.findViewById(R.id.pop_win_bg);
+                ImageView iv_popup_window_back = customView.findViewById(R.id.popupWindow_back);
+                TextView tv_pop_money = customView.findViewById(R.id.tv_pop_money);
+                LinearLayout ll_pop_payLayout = customView.findViewById(R.id.ll_pop_payLayout);
+                RelativeLayout alipayTypeLayout = customView.findViewById(R.id.ui_curRoadBiked_alipayTypeLayout);
+                RelativeLayout WeChatTypeLayout = customView.findViewById(R.id.ui_curRoadBiked_WeChatTypeLayout);
+                alipayTypeImage = customView.findViewById(R.id.ui_curRoadBiked_alipayTypeImage);
+                WeChatTypeImage = customView.findViewById(R.id.ui_curRoadBiked_WeChatTypeImage);
 
                 tv_pop_money.setText(prices);
 
@@ -425,7 +425,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                 default:
                     break;
             }
-        };
+        }
     };
 
     public void wxpayBikeAction(final String osn,String uid,String access_token) {

@@ -260,7 +260,7 @@ public class FindPsdActivity extends SwipeBackActivity implements View.OnClickLi
                 codeBtn.setText(num + "秒");
                 codeBtn.setEnabled(false);
             }
-        };
+        }
     };
 
     @Override

@@ -200,9 +200,9 @@ public class ScanCaptureAct extends SwipeBackActivity implements View.OnClickLis
 		dialog.setContentView(dialogView);
 		dialog.setCanceledOnTouchOutside(false);
 
-		bikeNumEdit = (EditText)dialogView.findViewById(R.id.pop_circlesMenu_bikeNumEdit);
-		positiveButton = (Button)dialogView.findViewById(R.id.pop_circlesMenu_positiveButton);
-		negativeButton = (Button)dialogView.findViewById(R.id.pop_circlesMenu_negativeButton);
+		bikeNumEdit = dialogView.findViewById(R.id.pop_circlesMenu_bikeNumEdit);
+		positiveButton = dialogView.findViewById(R.id.pop_circlesMenu_positiveButton);
+		negativeButton = dialogView.findViewById(R.id.pop_circlesMenu_negativeButton);
 
 		cancle.setOnClickListener(this);
 		bikeNunBtn.setOnClickListener(this);

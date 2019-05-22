@@ -967,8 +967,8 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                             myIntegral.setText(bean.getPoints());
                             userName.setText(bean.getTelphone());
                             if (bean.getHeadimg() != null && !"".equals(bean.getHeadimg())) {
-                                if ("gif".equalsIgnoreCase(bean.getHeadimg().substring(bean.getHeadimg().lastIndexOf(".") + 1,
-                                        bean.getHeadimg().length()))) {
+                                if ("gif".equalsIgnoreCase(bean.getHeadimg().substring(bean.getHeadimg().lastIndexOf(".") + 1
+                                ))) {
                                     Glide.with(PersonAlterActivity.this).load(Urls.host + bean.getHeadimg())
                                             .asGif().centerCrop().into(headerImageView);
                                 } else {

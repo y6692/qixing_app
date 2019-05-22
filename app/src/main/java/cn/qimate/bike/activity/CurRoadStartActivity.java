@@ -577,7 +577,7 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
                     handler.sendEmptyMessageDelayed(1, 1000);
                 }
             }
-        };
+        }
     };
 
     private void getCurrentorderStart(String uid, String access_token){

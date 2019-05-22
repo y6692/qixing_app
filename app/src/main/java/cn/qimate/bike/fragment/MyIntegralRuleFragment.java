@@ -40,7 +40,7 @@ public class MyIntegralRuleFragment extends BaseFragment{
 
     private void initView(){
 
-        mWebViewWithProgress = (WebViewWithProgress) mRootView.findViewById(R.id.frag_myIntegral_record_webView);
+        mWebViewWithProgress = mRootView.findViewById(R.id.frag_myIntegral_record_webView);
         webview = mWebViewWithProgress.getWebView();
 
         WebSettings webSettings = webview.getSettings();

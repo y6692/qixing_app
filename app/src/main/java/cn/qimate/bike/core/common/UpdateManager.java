@@ -120,8 +120,8 @@ public class UpdateManager {
 				UIHelper.showToastMsg(mContext, "无法下载安装文件，请检查SD卡是否挂载", R.drawable.ic_error);
 				break;
 			}
-		};
-	};
+		}
+    };
 
 	public static UpdateManager getUpdateManager() {
 		if (updateManager == null) {
@@ -282,8 +282,8 @@ public class UpdateManager {
 		builder.setOnKeyListener(keylistener).setCancelable(false);
 		final LayoutInflater inflater = LayoutInflater.from(mContext);
 		View v = inflater.inflate(R.layout.update_progress, null);
-		mProgress = (ProgressBar) v.findViewById(R.id.update_progress);
-		mProgressText = (TextView) v.findViewById(R.id.update_progress_text);
+		mProgress = v.findViewById(R.id.update_progress);
+		mProgressText = v.findViewById(R.id.update_progress_text);
 		builder.setView(v);
 
 		if ("1".equals(mUpdate.isForce())) {
@@ -358,7 +358,7 @@ public class UpdateManager {
 				apkFileSize = df.format((float) length / 1024 / 1024) + "MB";
 
 				int count = 0;
-				byte buf[] = new byte[1024];
+                byte[] buf = new byte[1024];
 
 				do {
 					int numread = is.read(buf);
@@ -428,11 +428,7 @@ public class UpdateManager {
 	}
 	OnKeyListener keylistener = new OnKeyListener() {
 		public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-			if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-				return true;
-			} else {
-				return false;
-			}
+            return keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0;
 		}
 	};
 }

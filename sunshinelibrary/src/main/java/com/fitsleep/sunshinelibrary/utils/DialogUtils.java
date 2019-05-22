@@ -33,7 +33,7 @@ public class DialogUtils {
         if (!TextUtils.isEmpty(message)){
             ((TextView) view.findViewById(R.id.tv_message)).setText(message);
         }
-        ImageView imageView = (ImageView) view.findViewById(R.id.image);
+        ImageView imageView = view.findViewById(R.id.image);
         imageView.startAnimation(AlertAnimateUtil.getRotateAnimation());
         dialog.setCanceledOnTouchOutside(false);
         dialog.setContentView(view);

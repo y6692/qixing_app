@@ -49,7 +49,7 @@ public class BannerActivity extends AppCompatActivity {
         // Initialize the Mobile Ads SDK.
         //不建议在activity里面初始化，请放在application里面
         AdHub.initialize(this, appId);
-        final AdView adView = (AdView) findViewById(R.id.adView);
+        final AdView adView = findViewById(R.id.adView);
         //设置广告位ID
         adView.setAdUnitId(adUnitId);
         adView.setAdListener(new AdListener() {

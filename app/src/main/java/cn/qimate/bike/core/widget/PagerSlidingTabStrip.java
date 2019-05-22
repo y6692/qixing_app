@@ -46,7 +46,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 	private Context context;
 
 	public interface IconTabProvider {
-		public int getPageIconResId(int position);
+		int getPageIconResId(int position);
 	}
 
 	// @formatter:off

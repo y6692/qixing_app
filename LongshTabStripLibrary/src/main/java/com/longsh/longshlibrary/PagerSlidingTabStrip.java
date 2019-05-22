@@ -32,7 +32,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 
     public interface IconTabProvider {
-        public int getPageIconResId(int position);
+        int getPageIconResId(int position);
     }
 
     // @formatter:off
@@ -210,7 +210,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     private void addTextTab(final int position, String title) {
         View layoutView = View.inflate(getContext(), R.layout.layout_tv, null);
-        TextView tab = (TextView) layoutView.findViewById(R.id.tv_content);
+        TextView tab = layoutView.findViewById(R.id.tv_content);
         tab.setText(title);
         tab.setGravity(Gravity.CENTER);
         tab.setSingleLine();
@@ -268,7 +268,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
             if (v.findViewById(R.id.tv_content) instanceof TextView) {
 
-                TextView tab = (TextView) v.findViewById(R.id.tv_content);
+                TextView tab = v.findViewById(R.id.tv_content);
                 tab.setTextSize(TypedValue.COMPLEX_UNIT_PX, tabTextSize);
                 tab.setTypeface(tabTypeface, tabTypefaceStyle);
                 tab.setTextColor(tabTextColor);
@@ -348,7 +348,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         }
         float tvWidth = 0;
         if (currentTab instanceof TextView) {
-            TextView tab = (TextView) currentTab.findViewById(R.id.tv_content);
+            TextView tab = currentTab.findViewById(R.id.tv_content);
             tvWidth = tab.getPaint().measureText(tab.getText().toString() + "");
         }
         Log.d("viewlog", "lineLeft=" + lineLeft + ",lineRight=" + lineRight);

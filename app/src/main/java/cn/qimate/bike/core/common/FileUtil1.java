@@ -90,7 +90,7 @@ public class FileUtil1 {
 		if (TextUtils.isEmpty(charsetName))
 			charsetName = "utf-8";
 		File file = new File(filePath);
-		StringBuilder fileContent = new StringBuilder("");
+		StringBuilder fileContent = new StringBuilder();
 		if (file == null || !file.isFile())
 			return null;
 		BufferedReader reader = null;
@@ -270,7 +270,7 @@ public class FileUtil1 {
 		try {
 			createFile(file.getAbsolutePath());
 			out = new FileOutputStream(file, append);
-			byte data[] = new byte[1024];
+            byte[] data = new byte[1024];
 			int length = -1;
 			while ((length = stream.read(data)) != -1) {
 				out.write(data, 0, length);
@@ -370,10 +370,8 @@ public class FileUtil1 {
 
 			@Override
 			public boolean accept(File dir, String filename) {
-				if (filename.indexOf("." + extension) > 0)
-					return true;
-				return false;
-			}
+                return filename.indexOf("." + extension) > 0;
+            }
 		});
 		if (files == null)
 			return Collections.emptyList();
@@ -448,7 +446,7 @@ public class FileUtil1 {
 			return false;
 		}
 		File folder = new File(filePath);
-		return (folder.exists() && folder.isDirectory()) ? true : folder.mkdirs();
+		return (folder.exists() && folder.isDirectory()) || folder.mkdirs();
 	}
 
 	/**
@@ -461,7 +459,7 @@ public class FileUtil1 {
 	public static boolean makeDirs(File dir) {
 		if (dir == null)
 			return false;
-		return (dir.exists() && dir.isDirectory()) ? true : dir.mkdirs();
+		return (dir.exists() && dir.isDirectory()) || dir.mkdirs();
 	}
 
 	/**

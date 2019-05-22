@@ -87,7 +87,7 @@ public class RxPopupImply extends PopupWindow {
      * 初始化弹窗列表
      */
     private void initUI(String str) {
-        tv_imply = (TextView) getContentView().findViewById(R.id.tv_imply);
+        tv_imply = getContentView().findViewById(R.id.tv_imply);
         tv_imply.setText(str);
       /*  mListView = (ListView) getContentView().findViewById(R.id.title_list);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

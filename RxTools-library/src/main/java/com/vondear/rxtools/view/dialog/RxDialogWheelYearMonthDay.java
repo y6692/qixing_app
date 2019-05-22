@@ -36,9 +36,9 @@ public class RxDialogWheelYearMonthDay extends RxDialog {
     private CheckBox mCheckBoxDay;
     private Calendar mCalendar;
     private LinearLayout llType;
-    private String mMonths[] = new String[]{"01", "02", "03",
+    private String[] mMonths = new String[]{"01", "02", "03",
             "04", "05", "06", "07", "08", "09", "10", "11", "12"};
-    private String mDays[] = new String[]{"01", "02", "03", "04", "05", "06", "07",
+    private String[] mDays = new String[]{"01", "02", "03", "04", "05", "06", "07",
             "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
             "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"};
 

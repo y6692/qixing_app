@@ -345,7 +345,7 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
                 default:
                     break;
             }
-        };
+        }
     };
 
     @Override

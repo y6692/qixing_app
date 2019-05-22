@@ -247,7 +247,7 @@ public class CustomDialog extends Dialog {
                 if (positiveButtonText != null) {
                     ((Button) layout.findViewById(R.id.positiveButton)).setText(positiveButtonText);
                     if (positiveButtonClickListener != null) {
-                        ((Button) layout.findViewById(R.id.positiveButton)).setOnClickListener(new View.OnClickListener() {
+                        layout.findViewById(R.id.positiveButton).setOnClickListener(new View.OnClickListener() {
                             public void onClick(View v) {
                                 positiveButtonClickListener.onClick(dialog, DialogInterface.BUTTON_POSITIVE);
                             }
@@ -261,7 +261,7 @@ public class CustomDialog extends Dialog {
                 if (negativeButtonText != null) {
                     ((Button) layout.findViewById(R.id.negativeButton)).setText(negativeButtonText);
                     if (negativeButtonClickListener != null) {
-                        ((Button) layout.findViewById(R.id.negativeButton)).setOnClickListener(new View.OnClickListener() {
+                        layout.findViewById(R.id.negativeButton).setOnClickListener(new View.OnClickListener() {
                             public void onClick(View v) {
                                 negativeButtonClickListener.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
                             }
@@ -278,21 +278,21 @@ public class CustomDialog extends Dialog {
 			((TextView) layout.findViewById(R.id.title)).setText(title);
 
 			if(type==4){
-				TextView tv_electricity = ((TextView) layout.findViewById(R.id.electricity));
-				TextView tv_mileage = ((TextView) layout.findViewById(R.id.mileage));
-				TextView tv_fee = ((TextView) layout.findViewById(R.id.fee));
+				TextView tv_electricity = layout.findViewById(R.id.electricity);
+				TextView tv_mileage = layout.findViewById(R.id.mileage);
+				TextView tv_fee = layout.findViewById(R.id.fee);
 
 				tv_electricity.setText(electricity);
 				tv_mileage.setText(mileage);
 				tv_fee.setText(fee);
 
 			}else if(type==5){
-				ImageView iv_img_url = ((ImageView) layout.findViewById(R.id.img_url));
+				ImageView iv_img_url = layout.findViewById(R.id.img_url);
 
 				ImageLoader.getInstance().displayImage(img_url, iv_img_url, options);
 
 			}else{
-				TextView hintText = ((TextView) layout.findViewById(R.id.hintText));
+				TextView hintText = layout.findViewById(R.id.hintText);
 				if (isHint){
 					hintText.setVisibility(View.GONE);
 				}else {

@@ -54,6 +54,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -350,7 +351,7 @@ public class RxFileTool {
 
                 if (temp.isFile()) {
                     FileInputStream input = new FileInputStream(temp);
-                    FileOutputStream output = new FileOutputStream(newPath + "/" + (temp.getName()).toString());
+                    FileOutputStream output = new FileOutputStream(newPath + "/" + (temp.getName()));
                     byte[] b = new byte[1024 * 5];
                     int len;
                     while ((len = input.read(b)) != -1) {
@@ -532,7 +533,7 @@ public class RxFileTool {
      */
     public static void saveFileUTF8(String path, String content, Boolean append) throws IOException {
         FileOutputStream fos = new FileOutputStream(path, append);
-        Writer out = new OutputStreamWriter(fos, "UTF-8");
+        Writer out = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
         out.write(content);
         out.flush();
         out.close();
@@ -552,7 +553,7 @@ public class RxFileTool {
             byte[] buffer = new byte[length];
             fin.read(buffer);
             fin.close();
-            result = new String(buffer, "UTF-8");
+            result = new String(buffer, StandardCharsets.UTF_8);
         } catch (Exception e) {
         }
         return result;
@@ -1357,7 +1358,7 @@ public class RxFileTool {
         OutputStream os = null;
         try {
             os = new BufferedOutputStream(new FileOutputStream(file, append));
-            byte data[] = new byte[KB];
+            byte[] data = new byte[KB];
             int len;
             while ((len = is.read(data, 0, KB)) != -1) {
                 os.write(data, 0, len);

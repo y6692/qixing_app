@@ -132,7 +132,7 @@ public class OkHttpClientManager {
         PRent p = new PRent(macKey, keySource, timestamp);
         RequestBody requestBody = RequestBody.create(JSON, p.getPStr());
 
-        Log.e("p.getPStr===", "==="+p.getPStr().toString());
+        Log.e("p.getPStr===", "==="+ p.getPStr());
 
         deliveryRequest(buildRequest(requestBody), callback);
     }
@@ -166,7 +166,7 @@ public class OkHttpClientManager {
     private Request buildRequest(RequestBody requestBody) {
         Request.Builder builder = new Request.Builder()
                 .url(Constants.URL)
-                .header("User-Agent", "okhttp/demo");;
+                .header("User-Agent", "okhttp/demo");
         builder.post(requestBody);
 
         return builder.build();

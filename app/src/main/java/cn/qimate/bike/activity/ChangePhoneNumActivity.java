@@ -241,7 +241,7 @@ public class ChangePhoneNumActivity extends SwipeBackActivity implements View.On
                     handler.sendEmptyMessageDelayed(1, 1000);
                 }
             }
-        };
+        }
     };
 
     @Override

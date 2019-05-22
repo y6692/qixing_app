@@ -84,7 +84,7 @@ public class ZipUtils {
                 zipFile(file, zipout, rootpath);
             }
         } else {
-            byte buffer[] = new byte[ConstUtils.MB];
+            byte[] buffer = new byte[ConstUtils.MB];
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(resFile), ConstUtils.MB);
             zipout.putNextEntry(new ZipEntry(rootpath));
             int realLength;
@@ -105,7 +105,7 @@ public class ZipUtils {
      * @param folderPath 解压缩的目标目录
      * @throws IOException 当解压缩过程出错时抛出
      */
-    public static void upZipFile(File zipFile, String folderPath) throws ZipException, IOException {
+    public static void upZipFile(File zipFile, String folderPath) throws IOException {
         File desDir = new File(folderPath);
         if (!desDir.exists()) {
             desDir.mkdirs();
@@ -125,7 +125,7 @@ public class ZipUtils {
                 desFile.createNewFile();
             }
             OutputStream out = new FileOutputStream(desFile);
-            byte buffer[] = new byte[ConstUtils.MB];
+            byte[] buffer = new byte[ConstUtils.MB];
             int realLength;
             while ((realLength = in.read(buffer)) > 0) {
                 out.write(buffer, 0, realLength);
@@ -171,7 +171,7 @@ public class ZipUtils {
                     desFile.createNewFile();
                 }
                 OutputStream out = new FileOutputStream(desFile);
-                byte buffer[] = new byte[ConstUtils.MB];
+                byte[] buffer = new byte[ConstUtils.MB];
                 int realLength;
                 while ((realLength = in.read(buffer)) > 0) {
                     out.write(buffer, 0, realLength);

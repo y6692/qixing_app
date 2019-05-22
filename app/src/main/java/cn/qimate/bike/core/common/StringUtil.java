@@ -117,11 +117,8 @@ public class StringUtil {
 			return false;
 		}
 		if (phone.startsWith("1")) {
-			if (phone.length() != 11) {
-				return false;
-			}
-			return true;
-		}
+            return phone.length() == 11;
+        }
 		if (!phone.startsWith("0")) {
 			return false;
 		}
@@ -132,13 +129,9 @@ public class StringUtil {
 		if (startLen != 3 && startLen != 4) {
 			return false;
 		}
-		int endLen = phone.substring(phone.indexOf("-")+1, phone.length()).length();
-		if (endLen != 7 && endLen != 8) {
-			return false;
-		}
-
-		return true;
-	}
+		int endLen = phone.substring(phone.indexOf("-")+1).length();
+        return endLen == 7 || endLen == 8;
+    }
 	
 	public static boolean isPhoneNumberValid(String phoneNumber) {
 		boolean isValid = false;

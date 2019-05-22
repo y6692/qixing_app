@@ -152,8 +152,8 @@ public class ByteUtil {
 		byte b  = (byte)(a/2);
 		System.out.println(b&0xff);
 		System.out.println(0x91&0xff);
-		
-		byte bb[] = new byte[3];
+
+		byte[] bb = new byte[3];
 		System.out.println(bb.length);
 
 

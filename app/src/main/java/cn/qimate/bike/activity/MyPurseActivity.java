@@ -112,15 +112,15 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
         dialog.setContentView(dialogView);
         dialog.setCanceledOnTouchOutside(false);
 
-        dialogTitle = (TextView) dialogView.findViewById(R.id.title);
+        dialogTitle = dialogView.findViewById(R.id.title);
         dialogTitle.setText("输入兑换码");
 
-        dialogTitle2 = (TextView) dialogView.findViewById(R.id.title2);
+        dialogTitle2 = dialogView.findViewById(R.id.title2);
         dialogTitle2.setVisibility(View.GONE);
 
-        codeEdit = (EditText)dialogView.findViewById(R.id.pop_circlesMenu_bikeNumEdit);
-        positiveButton = (Button)dialogView.findViewById(R.id.pop_circlesMenu_positiveButton);
-        negativeButton = (Button)dialogView.findViewById(R.id.pop_circlesMenu_negativeButton);
+        codeEdit = dialogView.findViewById(R.id.pop_circlesMenu_bikeNumEdit);
+        positiveButton = dialogView.findViewById(R.id.pop_circlesMenu_positiveButton);
+        negativeButton = dialogView.findViewById(R.id.pop_circlesMenu_negativeButton);
         codeEdit.setHint("请输入兑换码");
 
         backImg.setOnClickListener(this);

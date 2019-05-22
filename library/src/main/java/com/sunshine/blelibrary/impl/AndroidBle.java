@@ -229,7 +229,7 @@ public class AndroidBle implements IBLE {
         if (mBluetoothGatt != null) {
             try {
                 BluetoothGatt localBluetoothGatt = mBluetoothGatt;
-                Method localMethod = localBluetoothGatt.getClass().getMethod("refresh", new Class[0]);
+                Method localMethod = localBluetoothGatt.getClass().getMethod("refresh");
                 if (localMethod != null) {
                     boolean bool = ((Boolean) localMethod.invoke(localBluetoothGatt, new Object[0])).booleanValue();
                     return bool;
@@ -345,7 +345,7 @@ public class AndroidBle implements IBLE {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             mHandler.removeMessages(1);
-            byte mingwen[] = null;
+            byte[] mingwen = null;
             try {
                 byte[] values = characteristic.getValue();
                 byte[] x = new byte[16];

@@ -35,7 +35,7 @@ public class RxAutoImageView extends FrameLayout {
     private void initView(final Context context, AttributeSet attrs) {
         LayoutInflater.from(context).inflate(R.layout.layout_auto_imageview, this);
 
-        mImageView = (ImageView) findViewById(R.id.img_backgroud);
+        mImageView = findViewById(R.id.img_backgroud);
 
         //获得这个控件对应的属性。
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.RxAutoImageView);

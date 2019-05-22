@@ -472,7 +472,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                 codeBtn.setText(num + "秒");
                 codeBtn.setEnabled(false);
             }
-        };
+        }
     };
 
     @Override

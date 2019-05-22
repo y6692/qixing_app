@@ -42,7 +42,7 @@ public interface ImageDownloader {
 	InputStream getStream(String imageUri, Object extra) throws IOException;
 
 	/** Represents supported schemes(protocols) of URI. Provides convenient methods for work with schemes and URIs. */
-	public enum Scheme {
+    enum Scheme {
 		HTTP("http"), HTTPS("https"), FILE("file"), CONTENT("content"), ASSETS("assets"), DRAWABLE("drawable"), UNKNOWN("");
 
 		private String scheme;

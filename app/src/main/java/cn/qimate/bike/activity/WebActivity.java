@@ -39,7 +39,7 @@ public class WebActivity extends BaseActivity {
 
         url = SharedPreferencesUrls.getInstance().getString("ad_link", "");
 
-        myWebView = (WebView) findViewById(R.id.myWebView);
+        myWebView = findViewById(R.id.myWebView);
         WebSettings mysettings = myWebView.getSettings();
         mysettings.setSupportZoom(true);
         mysettings.setBuiltInZoomControls(true);

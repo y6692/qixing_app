@@ -441,7 +441,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                 default:
                     break;
             }
-        };
+        }
     };
 
     public void show_wxpay(final String osn,String uid,String access_token) {

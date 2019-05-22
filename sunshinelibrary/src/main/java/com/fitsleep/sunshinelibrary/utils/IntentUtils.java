@@ -254,7 +254,6 @@ public class IntentUtils {
                 startActivityAndFinish(context,cls);
             }
 
-            ;
         }.start();
     }
 

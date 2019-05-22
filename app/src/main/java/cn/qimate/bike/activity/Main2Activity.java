@@ -74,7 +74,7 @@ public class Main2Activity extends BaseFragmentActivity implements
         winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
 
-        mapView = (MapView) findViewById(R.id.map);
+        mapView = findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
         aMap = mapView.getMap();
 

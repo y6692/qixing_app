@@ -579,7 +579,7 @@ public class TimeUtils {
 		Calendar oDate = Calendar.getInstance();
 		oDate.set(year, mon - 1, day);
 		oDate.add(Calendar.DATE, (-1) * (oDate.get(Calendar.DAY_OF_WEEK)));
-		String s = new String();
+		String s = "";
 		List<String> data = new ArrayList<String>();
 		for (int i = 1; i < 8; i++) {
 			oDate.add(Calendar.DATE, 1);
@@ -652,7 +652,7 @@ public class TimeUtils {
 	 * {2015-06-01 23:59:59,2015-06-02 23:59:59,......,2015-06-30 23:59:59}
 	 */
 	public static String[] getMonthTime(String year, String month, boolean isDayStart) {
-		int days[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };// 每个月的天数
+        int[] days = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};// 每个月的天数
 		int Iyear = Integer.parseInt(year);// 年
 		int Imonth = Integer.parseInt(month);// 月
 		if (leapYear(Iyear)) {// 判断润年还是平年
@@ -683,9 +683,9 @@ public class TimeUtils {
 	 * {2015-01-31 23:59:59,2015-02-28 23:59:59,...,2015-06-30 23:59:59,......,2015-12-31 23:59:59}
 	 */
 	public static String[] getYearTime(String year,boolean bool){
-		String starttime[] = new String[12];
-		String endtime[] = new String[12];
-		int days[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };// 每个月的天数
+        String[] starttime = new String[12];
+        String[] endtime = new String[12];
+        int[] days = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};// 每个月的天数
 		if (leapYear(Integer.parseInt(year))) {// 判断润年还是平年
 			days[1] = 29;
 		}
@@ -714,9 +714,9 @@ public class TimeUtils {
 	 * {2015-01-31 23:59:59,2015-02-28 23:59:59,...,2015-06-30 23:59:59,......,2015-12-31 23:59:59}
 	 */
 	public static String[] getYearTime2(int year,int month,boolean bool){
-		String starttime[] = new String[12];
-		String endtime[] = new String[12];
-		int days[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };// 每个月的天数
+        String[] starttime = new String[12];
+        String[] endtime = new String[12];
+        int[] days = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};// 每个月的天数
 		if (leapYear(year)) {// 判断润年还是平年
 			days[1] = 29;
 		}
@@ -779,7 +779,7 @@ public class TimeUtils {
 	 * @return 天数
 	 */
 	public static int getCurrentDay(String DateString){
-		int a[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };// 每个月的天数
+        int[] a = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};// 每个月的天数
 		int year = Integer.parseInt(DateString.substring(0, 4));// 年
 		int month = Integer.parseInt(DateString.substring(5, 7));// 月
 		int day = Integer.parseInt(DateString.substring(8, 10));// 日
@@ -818,7 +818,7 @@ public class TimeUtils {
 	 * @return (2015/06/08或2015/06/03)
 	 */
 	public static String nextSevenDate(String date, int daynext) {
-		int a[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };// 每个月的天数
+        int[] a = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};// 每个月的天数
 		String newDate = "";
 		int tempDay = 0;
 		int year = Integer.parseInt(date.substring(0, 4));// 年

@@ -138,7 +138,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
             pvOptions.setCyclic(false, false, false);
             pvOptions.setSelectOptions(0, 0, 0);
             sexLatout.setClickable(true);
-        };
+        }
     };
 
     private Handler handler1 = new Handler() {
@@ -148,7 +148,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
             pvOptions1.setCyclic(false, false, false);
             pvOptions1.setSelectOptions(0, 0, 0);
             schoolLayout.setClickable(true);
-        };
+        }
     };
     private Handler handler2 = new Handler() {
         public void handleMessage(Message msg) {
@@ -157,7 +157,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
             pvOptions2.setCyclic(false, false, false);
             pvOptions2.setSelectOptions(0, 0, 0);
             classLayout.setClickable(true);
-        };
+        }
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {

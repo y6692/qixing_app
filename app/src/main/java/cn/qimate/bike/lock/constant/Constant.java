@@ -56,39 +56,39 @@ public interface Constant {
     //正则表达式 二维码验证
     String REGEX_QR_CODE = "http://www.happybike.club/\\?b=\\d{9}";
 
-    public static final String BLE_SEARCH = "-2";
+    String BLE_SEARCH = "-2";
 
-    public static final String BLE_NOT_SEARCH = "-1";
+    String BLE_NOT_SEARCH = "-1";
 
-    public static final String BLE_START_CONNECT = "0";
+    String BLE_START_CONNECT = "0";
 
-    public static final String BLE_CONNECT = "1";
+    String BLE_CONNECT = "1";
 
-    public static final String BLE_DISCONNECT = "-3";
+    String BLE_DISCONNECT = "-3";
 
-    public static final String BLE_CONNECTED = "2";
+    String BLE_CONNECTED = "2";
 
-    public static final String BLE_TONKEN = "3";
+    String BLE_TONKEN = "3";
 
-    public static final String BLE_OPEN_OK = "4";
+    String BLE_OPEN_OK = "4";
 
-    public static final String BLE_OPEN_FAIL = "5";
+    String BLE_OPEN_FAIL = "5";
 
-    public static final String BLE_CLOSE_NOT = "6";
+    String BLE_CLOSE_NOT = "6";
 
-    public static final String BLE_CLOSE_OK = "7";
+    String BLE_CLOSE_OK = "7";
 
-    public static final String BLE_SEARCH_XB = "8";
+    String BLE_SEARCH_XB = "8";
 
-    public static final String BLE_NOT_XB = "9";
+    String BLE_NOT_XB = "9";
 
-    public static final String BLE_HAVE_XB = "10";
+    String BLE_HAVE_XB = "10";
 
-    public static final String BLE_ZJ_START = "11";
+    String BLE_ZJ_START = "11";
 
 
     // 程序目录定义
-    public static class Directorys {
+    class Directorys {
         public static String SDCARD = Environment.getExternalStorageDirectory()
                 .toString();
         public static final String ROOT = SDCARD + File.separator

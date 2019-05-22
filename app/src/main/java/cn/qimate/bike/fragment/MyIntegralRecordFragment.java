@@ -86,8 +86,8 @@ public class MyIntegralRecordFragment extends BaseFragment implements View.OnCli
 
         footerLayout = footerView.findViewById(R.id.footer_Layout);
 
-        swipeRefreshLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.Layout_swipeParentLayout);
-        myList = (ListView)mRootView.findViewById(R.id.Layout_swipeListView);
+        swipeRefreshLayout = mRootView.findViewById(R.id.Layout_swipeParentLayout);
+        myList = mRootView.findViewById(R.id.Layout_swipeListView);
         myList.addFooterView(footerView);
 
         swipeRefreshLayout.setOnRefreshListener(this);

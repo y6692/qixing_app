@@ -106,8 +106,8 @@ public class ChangePasswordActivity extends SwipeBackActivity implements View.On
         }
 
         Md5Helper Md5Helper = new Md5Helper();
-        String oldpassword = Md5Helper.encode(password_old);
-        String password = Md5Helper.encode(password_new);
+        String oldpassword = cn.qimate.bike.core.common.Md5Helper.encode(password_old);
+        String password = cn.qimate.bike.core.common.Md5Helper.encode(password_new);
         RequestParams params = new RequestParams();
         params.put("oldpassword", oldpassword);
         params.put("password", password);

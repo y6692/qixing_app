@@ -76,7 +76,7 @@ public class RxIconRoundProgressBar extends RxBaseRoundProgressBar implements Vi
 
     @Override
     protected void initView() {
-        ivProgressIcon = (ImageView) findViewById(R.id.iv_progress_icon);
+        ivProgressIcon = findViewById(R.id.iv_progress_icon);
         ivProgressIcon.setOnClickListener(this);
     }
 
@@ -335,6 +335,6 @@ public class RxIconRoundProgressBar extends RxBaseRoundProgressBar implements Vi
     }
 
     public interface OnIconClickListener {
-        public void onIconClick();
+        void onIconClick();
     }
 }

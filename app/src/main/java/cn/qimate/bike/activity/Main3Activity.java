@@ -32,10 +32,10 @@ public class Main3Activity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main3);
 
-        title = (TextView) findViewById(R.id.mainUI_title);
+        title = findViewById(R.id.mainUI_title);
         title.setText("xxx8");
 
-        myWebView = (WebView) findViewById(R.id.myWebView);
+        myWebView = findViewById(R.id.myWebView);
         WebSettings mysettings = myWebView.getSettings();
         mysettings.setSupportZoom(true);
         mysettings.setBuiltInZoomControls(true);

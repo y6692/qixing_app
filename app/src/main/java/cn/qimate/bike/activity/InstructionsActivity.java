@@ -39,12 +39,12 @@ public class InstructionsActivity extends BaseActivity implements View.OnClickLi
 
     private void initView(){
 
-        mainLayout = (LinearLayout)findViewById(R.id.ui_fristView_mainLayout);
-        titleImage = (ImageView)findViewById(R.id.ui_fristView_title);
-        exImage_1 = (ImageView)findViewById(R.id.ui_fristView_exImage_1);
+        mainLayout = findViewById(R.id.ui_fristView_mainLayout);
+        titleImage = findViewById(R.id.ui_fristView_title);
+        exImage_1 = findViewById(R.id.ui_fristView_exImage_1);
 //        exImage_2 = (ImageView)findViewById(R.id.ui_fristView_exImage_2);
 //        exImage_3 = (ImageView)findViewById(R.id.ui_fristView_exImage_3);
-        closeBtn = (ImageView)findViewById(R.id.ui_fristView_closeBtn);
+        closeBtn = findViewById(R.id.ui_fristView_closeBtn);
 
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
         params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);

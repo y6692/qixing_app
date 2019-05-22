@@ -340,7 +340,7 @@ public class MyRadioGroup extends LinearLayout {
 		 * @param checkedId
 		 *            the unique identifier of the newly checked radio button
 		 */
-		public void onCheckedChanged(MyRadioGroup group, int checkedId);
+		void onCheckedChanged(MyRadioGroup group, int checkedId);
 	}
 
 	private class CheckedStateTracker implements CompoundButton.OnCheckedChangeListener {

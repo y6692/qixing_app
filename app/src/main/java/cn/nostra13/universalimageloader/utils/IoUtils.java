@@ -87,9 +87,8 @@ public final class IoUtils {
 		if (listener != null) {
 			boolean shouldContinue = listener.onBytesCopied(current, total);
 			if (!shouldContinue) {
-				if (100 * current / total < CONTINUE_LOADING_PERCENTAGE) {
-					return true; // if loaded more than 75% then continue loading anyway
-				}
+                // if loaded more than 75% then continue loading anyway
+                return 100 * current / total < CONTINUE_LOADING_PERCENTAGE;
 			}
 		}
 		return false;
@@ -120,7 +119,7 @@ public final class IoUtils {
 	}
 
 	/** Listener and controller for copy process */
-	public static interface CopyListener {
+	public interface CopyListener {
 		/**
 		 * @param current Loaded bytes
 		 * @param total   Total bytes for loading

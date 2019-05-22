@@ -26,9 +26,6 @@ public class JudgeDate {
 	}
 
 	public static boolean isNull(String str) {
-		if (str == null)
-			return true;
-		else
-			return false;
+        return str == null;
 	}
 }

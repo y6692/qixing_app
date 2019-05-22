@@ -67,6 +67,13 @@ android {
         javaMaxHeapSize "4g"
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+
+
 //    compileOptions {
 //        sourceCompatibility 1.8
 //        targetCompatibility 1.8
@@ -85,6 +92,8 @@ android {
 //            force 'com.android.support:support-v4:27.1.0'
 //        }
 //    }
+
+
 
 }
 
@@ -133,6 +142,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.4.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     implementation 'com.google.code.gson:gson:2.8.0'
+
     implementation(name:'bleLocker', ext:'aar')
 
 //    implementation 'com.jakewharton:butterknife:7.0.1'

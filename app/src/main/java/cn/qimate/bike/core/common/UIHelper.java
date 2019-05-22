@@ -39,42 +39,42 @@ public class UIHelper {
 			int drawID) {
 
 		openDialogGoActColse(baseActivity, context, clz, drawID, msgStr);
-	};
+	}
 
-	/**
+    /**
 	 * 关闭所有前页,跳转登录页面
 	 */
 	public static void ToastGoLoginClose(SwipeBackActivity baseActivity, Context context, String msgStr, int drawID) {
 
 		openDialogGoLoginColse(baseActivity, context, drawID, msgStr);
-	};
+	}
 
-	/**
+    /**
 	 * 关闭所有前页,跳转登录页面
 	 */
 	public static void ToastGoLoginClose(BaseActivity baseActivity, Context context, String msgStr, int drawID) {
 
 		openDialogGoLoginColse(baseActivity, context, drawID, msgStr);
-	};
+	}
 
-	/**
+    /**
 	 * 关闭当前页,跳转页面
 	 */
 	public static void ToastGoActClose(BaseActivity baseActivity, Context context, Class<?> clz, String msgStr,
 			int drawID) {
 
 		openDialogGoActColse(baseActivity, context, clz, drawID, msgStr);
-	};
+	}
 
-	/**
+    /**
 	 * 不关闭当前页,跳转页面
 	 */
 	public static void ToastGoAc(Context context, Class<?> clz, String msgStr, int drawID) {
 
 		openDialogGoAct(context, clz, drawID, msgStr);
-	};
+	}
 
-	/**
+    /**
 	 * 弹出Toast错误消息
 	 * 
 	 * @param msg
@@ -296,8 +296,7 @@ public class UIHelper {
 				confirmDialog.dismiss();
 				goToAct(context, clz);
 				baseActivity.finishMine();
-				;
-			}
+            }
 
 			@Override
 			public void doCancel() {

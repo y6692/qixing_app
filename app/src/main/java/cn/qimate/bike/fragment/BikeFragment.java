@@ -458,7 +458,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 if(isHidden) return;
 
                 try {
-                    Log.e("main===schoolRange1", "==="+carType);
+
 
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
@@ -466,6 +466,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                         if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
                             isContainsList.clear();
                         }
+
+                        Log.e("main===schoolRange1", jsonArray.length()+"==="+carType);
+
                         for (int i = 0; i < jsonArray.length(); i++) {
                             List<LatLng> list = new ArrayList<>();
                             for (int j = 0; j < jsonArray.getJSONArray(i).length(); j ++){
@@ -625,34 +628,34 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         marqueeLayout = activity.findViewById(R.id.mainUI_marqueeLayout);
 
-        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
-        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
+        titleImage = dialogView.findViewById(R.id.ui_fristView_title);
+        exImage_1 = dialogView.findViewById(R.id.ui_fristView_exImage_1);
 //        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
 //        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
-        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
+        closeBtn = dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
-        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
-        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+        advImageView = advDialogView.findViewById(R.id.ui_adv_image);
+        advCloseBtn = advDialogView.findViewById(R.id.ui_adv_closeBtn);
 
         LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
         params4.height = (int) (activity.getWindowManager().getDefaultDisplay().getWidth() * 0.8);
         advImageView.setLayoutParams(params4);
 
-        marquee = (TextView) activity.findViewById(R.id.mainUI_marquee);
+        marquee = activity.findViewById(R.id.mainUI_marquee);
 //        title = (TextView) activity.findViewById(R.id.mainUI_title);
 //        leftBtn = (ImageView) activity.findViewById(R.id.mainUI_leftBtn);
 //        rightBtn = (ImageView) activity.findViewById(R.id.mainUI_rightBtn);
-        myCommissionLayout =  (LinearLayout) activity.findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
-        myLocationLayout =  (LinearLayout) activity.findViewById(R.id.mainUI_myLocationLayout);
-        linkLayout = (LinearLayout) activity.findViewById(R.id.mainUI_linkServiceLayout);
-        myLocationBtn = (ImageView) activity.findViewById(R.id.mainUI_myLocation);
-        scanLock = (LinearLayout) activity.findViewById(R.id.mainUI_scanCode_lock);
-        linkBtn = (ImageView) activity.findViewById(R.id.mainUI_linkService_btn);
-        authBtn = (Button)activity.findViewById(R.id.mainUI_authBtn);
-        cartBtn = (Button)activity.findViewById(R.id.mainUI_cartBtn);
-        rechargeBtn = (Button)activity.findViewById(R.id.mainUI_rechargeBtn);
-        refreshLayout = (LinearLayout) activity.findViewById(R.id.mainUI_refreshLayout);
-        slideLayout = (LinearLayout)activity.findViewById(R.id.mainUI_slideLayout);
+        myCommissionLayout = activity.findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
+        myLocationLayout = activity.findViewById(R.id.mainUI_myLocationLayout);
+        linkLayout = activity.findViewById(R.id.mainUI_linkServiceLayout);
+        myLocationBtn = activity.findViewById(R.id.mainUI_myLocation);
+        scanLock = activity.findViewById(R.id.mainUI_scanCode_lock);
+        linkBtn = activity.findViewById(R.id.mainUI_linkService_btn);
+        authBtn = activity.findViewById(R.id.mainUI_authBtn);
+        cartBtn = activity.findViewById(R.id.mainUI_cartBtn);
+        rechargeBtn = activity.findViewById(R.id.mainUI_rechargeBtn);
+        refreshLayout = activity.findViewById(R.id.mainUI_refreshLayout);
+        slideLayout = activity.findViewById(R.id.mainUI_slideLayout);
 
         if(aMap==null){
             aMap = mapView.getMap();
@@ -2979,13 +2982,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         Log.e("main===onTouch", "===" + motionEvent.getAction());
 
 
-        if (motionEvent.getAction() == MotionEvent.ACTION_UP ||
+        isUp = motionEvent.getAction() == MotionEvent.ACTION_UP ||
                 motionEvent.getAction() == MotionEvent.ACTION_CANCEL || motionEvent.getAction() == MotionEvent.ACTION_OUTSIDE
-                || motionEvent.getActionMasked() == MotionEvent.ACTION_POINTER_UP){
-            isUp = true;
-        }else {
-            isUp = false;
-        }
+                || motionEvent.getActionMasked() == MotionEvent.ACTION_POINTER_UP;
     }
 
 
@@ -3060,8 +3059,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         // 获取自定义布局文件的视图
         View customView = getLayoutInflater().inflate(R.layout.pop_menu, null, false);
         // 创建PopupWindow宽度和高度
-        RelativeLayout pop_win_bg = (RelativeLayout) customView.findViewById(R.id.pop_win_bg);
-        ImageView iv_popup_window_back = (ImageView) customView.findViewById(R.id.popupWindow_back);
+        RelativeLayout pop_win_bg = customView.findViewById(R.id.pop_win_bg);
+        ImageView iv_popup_window_back = customView.findViewById(R.id.popupWindow_back);
         // 获取截图的Bitmap
         Bitmap bitmap = UtilScreenCapture.getDrawing(activity);
         if (bitmap != null) {
@@ -3084,10 +3083,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         popupwindow.setAnimationStyle(R.style.PopupAnimation);
         popupwindow.setOutsideTouchable(false);
 
-        LinearLayout feedbackLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_feedbackLayout);
-        LinearLayout helpLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_helpLayout);
-        final LinearLayout callLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_callLayout);
-        TextView cancleBtn = (TextView)customView.findViewById(R.id.pop_menu_cancleBtn);
+        LinearLayout feedbackLayout = customView.findViewById(R.id.pop_menu_feedbackLayout);
+        LinearLayout helpLayout = customView.findViewById(R.id.pop_menu_helpLayout);
+        final LinearLayout callLayout = customView.findViewById(R.id.pop_menu_callLayout);
+        TextView cancleBtn = customView.findViewById(R.id.pop_menu_cancleBtn);
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -3749,5 +3748,5 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             handleReceiver(context, intent);
 
         }
-    };
+    }
 }

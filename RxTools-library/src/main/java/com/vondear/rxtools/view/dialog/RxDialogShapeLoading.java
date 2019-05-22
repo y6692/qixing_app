@@ -46,7 +46,7 @@ public class RxDialogShapeLoading extends RxDialog {
 
     private void initView(Context context) {
         mDialogContentView = LayoutInflater.from(context).inflate(R.layout.dialog_shape_loading_view, null);
-        mLoadingView = (RxShapeLoadingView) mDialogContentView.findViewById(R.id.loadView);
+        mLoadingView = mDialogContentView.findViewById(R.id.loadView);
         setContentView(mDialogContentView);
     }
 

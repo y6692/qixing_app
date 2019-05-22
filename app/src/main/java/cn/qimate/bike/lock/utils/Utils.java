@@ -26,10 +26,7 @@ import cn.qimate.bike.base.BaseApplication;
 public class Utils {
 
     public static <T> boolean isEmpty(List<T> list) {
-        if (list == null || list.isEmpty()) {
-            return true;
-        }
-        return false;
+        return list == null || list.isEmpty();
     }
 
     /**

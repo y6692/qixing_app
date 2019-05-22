@@ -580,9 +580,7 @@ public class RxAppTool {
         List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
         if (!tasks.isEmpty()) {
             ComponentName topActivity = tasks.get(0).topActivity;
-            if (!topActivity.getPackageName().equals(context.getPackageName())) {
-                return true;
-            }
+            return !topActivity.getPackageName().equals(context.getPackageName());
         }
         return false;
     }

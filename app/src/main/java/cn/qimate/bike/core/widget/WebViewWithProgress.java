@@ -41,10 +41,10 @@ public class WebViewWithProgress extends RelativeLayout{
 	
 	public enum ProgressStyle{
 		Horizontal,
-		Circle;
-	};
-	
-	public WebViewWithProgress(Context context) {
+		Circle
+    }
+
+    public WebViewWithProgress(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
 		this.context = context;

@@ -33,7 +33,7 @@ public class MyScrollView extends ScrollView {
 	}
 
 	public interface OnScrollListener {
-		public void onScroll(int scrollY);
+		void onScroll(int scrollY);
 	}
 
 	// 是否要其弹性滑动

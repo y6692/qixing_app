@@ -95,7 +95,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         IntentFilter filter = new IntentFilter("data.broadcast.action");
         registerReceiver(mReceiver, filter);
 
-        mapView = (MapView) findViewById(R.id.mainUI_map);
+        mapView = findViewById(R.id.mainUI_map);
         mapView.onCreate(savedInstanceState);
 
         new Thread(new Runnable() {
@@ -280,8 +280,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         tab.setCurrentTab(0);
 
 
-        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
-        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
+        leftBtn = findViewById(R.id.mainUI_leftBtn);
+        rightBtn = findViewById(R.id.mainUI_rightBtn);
 
         leftBtn.setOnClickListener(this);
         rightBtn.setOnClickListener(this);

@@ -46,7 +46,7 @@ public class Wave extends SpriteContainer {
 
         @Override
         public ValueAnimator onCreateAnimation() {
-            float fractions[] = new float[]{0f, 0.2f, 0.4f, 1f};
+            float[] fractions = new float[]{0f, 0.2f, 0.4f, 1f};
             return new SpriteAnimatorBuilder(this).scaleY(fractions, 0.4f, 1f, 0.4f, 0.4f).
                     duration(1200).
                     easeInOut(fractions)

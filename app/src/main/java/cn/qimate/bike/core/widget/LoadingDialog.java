@@ -46,8 +46,8 @@ public class LoadingDialog extends Dialog {
 					num = 0;
 				}
 			}
-		};
-	};
+		}
+    };
 
 	public LoadingDialog(Context context) {
 		super(context, R.style.MyDialogStyle);
@@ -57,9 +57,9 @@ public class LoadingDialog extends Dialog {
 
 	private void init() {
 		setContentView(R.layout.common_dialog_loading_layout);
-		iv_route = (ImageView) findViewById(R.id.iv_route);
-		detail_tv = (TextView) findViewById(R.id.detail_tv);
-		tv_point = (TextView) findViewById(R.id.tv_point);
+		iv_route = findViewById(R.id.iv_route);
+		detail_tv = findViewById(R.id.detail_tv);
+		tv_point = findViewById(R.id.tv_point);
 //		initAnim();
 	}
 

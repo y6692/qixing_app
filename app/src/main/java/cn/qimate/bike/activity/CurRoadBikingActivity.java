@@ -396,11 +396,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         hintText = (TextView)findViewById(R.id.curRoadUI_biking_hintText);
 
-        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
+        titleImage = dialogView.findViewById(R.id.ui_fristView_title);
 //        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
 //        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
 //        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
-        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
+        closeBtn = dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
         mainLayout = (LinearLayout)findViewById(R.id.mainUI_title_mainLayout);
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
@@ -1616,7 +1616,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         ioBuffer.writeBytes(bb);
 
         int crc = (int) ByteUtil.crc32(getfdqId(bleid));
-        byte cc[] = ByteUtil.intToByteArray(crc);
+        byte[] cc = ByteUtil.intToByteArray(crc);
         ioBuffer.writeByte(cc[0] ^ cc[3]);
         ioBuffer.writeByte(cc[1] ^ cc[2]);
         ioBuffer.writeInt(0);
@@ -3336,8 +3336,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         // 获取自定义布局文件的视图
         View customView = getLayoutInflater().inflate(R.layout.pop_menu, null, false);
         // 创建PopupWindow宽度和高度
-        RelativeLayout pop_win_bg = (RelativeLayout) customView.findViewById(R.id.pop_win_bg);
-        ImageView iv_popup_window_back = (ImageView) customView.findViewById(R.id.popupWindow_back);
+        RelativeLayout pop_win_bg = customView.findViewById(R.id.pop_win_bg);
+        ImageView iv_popup_window_back = customView.findViewById(R.id.popupWindow_back);
         // 获取截图的Bitmap
         Bitmap bitmap = UtilScreenCapture.getDrawing(this);
         if (bitmap != null) {
@@ -3360,10 +3360,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         popupwindow.setAnimationStyle(R.style.PopupAnimation);
         popupwindow.setOutsideTouchable(false);
 
-        LinearLayout feedbackLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_feedbackLayout);
-        LinearLayout helpLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_helpLayout);
-        final LinearLayout callLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_callLayout);
-        TextView cancleBtn = (TextView)customView.findViewById(R.id.pop_menu_cancleBtn);
+        LinearLayout feedbackLayout = customView.findViewById(R.id.pop_menu_feedbackLayout);
+        LinearLayout helpLayout = customView.findViewById(R.id.pop_menu_helpLayout);
+        final LinearLayout callLayout = customView.findViewById(R.id.pop_menu_callLayout);
+        TextView cancleBtn = customView.findViewById(R.id.pop_menu_cancleBtn);
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -4123,7 +4123,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             handleReceiver(context, intent);
 
         }
-    };
+    }
 
 
-}
+    }

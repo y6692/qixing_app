@@ -24,9 +24,9 @@ public class ConfirmDialog extends Dialog {
 
 	public interface ClickListenerInterface {
 
-		public void doConfirm();
+		void doConfirm();
 
-		public void doCancel();
+		void doCancel();
 	}
 
 	public ConfirmDialog(Context context, int resImgID, String descStr) {
@@ -65,10 +65,10 @@ public class ConfirmDialog extends Dialog {
 		View view = inflater.inflate(R.layout.dialog_confirm, null);
 		setContentView(view);
 
-		ImageView resImage = (ImageView) view.findViewById(R.id.dialogConfirm_icon);
-		TextView tvDesc = (TextView) view.findViewById(R.id.dialogConfirm_descText);
-		Button sureButton = (Button) view.findViewById(R.id.dialogConfirm_sureButton);
-		Button cancelButton = (Button) view.findViewById(R.id.dialogConfirm_cancelButton);
+		ImageView resImage = view.findViewById(R.id.dialogConfirm_icon);
+		TextView tvDesc = view.findViewById(R.id.dialogConfirm_descText);
+		Button sureButton = view.findViewById(R.id.dialogConfirm_sureButton);
+		Button cancelButton = view.findViewById(R.id.dialogConfirm_cancelButton);
 
 		resImage.setImageResource(resImgID);
 		tvDesc.setText(descStr);
@@ -107,5 +107,5 @@ public class ConfirmDialog extends Dialog {
 			}
 		}
 
-	};
+	}
 }

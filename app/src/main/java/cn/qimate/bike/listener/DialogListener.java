@@ -1,5 +1,5 @@
 package cn.qimate.bike.listener;
 
 public interface DialogListener {
-	public void refreshActivity(Object object);
+	void refreshActivity(Object object);
 }

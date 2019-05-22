@@ -83,7 +83,7 @@ public class EddyStoneScanActivity extends Activity {
 //				startActivity(intent);
 //			}
 //		});
-		button = (Button) findViewById(R.id.button);
+		button = findViewById(R.id.button);
 		button.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -102,8 +102,8 @@ public class EddyStoneScanActivity extends Activity {
 			}
 		});
 
-		tv = (TextView) findViewById(R.id.tv);
-		Button button2 = (Button) findViewById(R.id.button2);
+		tv = findViewById(R.id.tv);
+		Button button2 = findViewById(R.id.button2);
 		button2.setOnClickListener(new View.OnClickListener() {
 
 			@Override

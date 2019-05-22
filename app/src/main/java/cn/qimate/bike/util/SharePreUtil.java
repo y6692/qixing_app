@@ -22,7 +22,7 @@ public class SharePreUtil {
             return sh;
         }
         SharePreUtil sh = new SharePreUtil();
-        sh.preferences = context.getSharedPreferences(fileName, context.MODE_PRIVATE);
+        sh.preferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         preferencesMap.put(fileName, sh);
         return sh;
     }

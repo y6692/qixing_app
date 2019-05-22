@@ -22,7 +22,7 @@ import java.util.Random;
  */
 public class RxShineView extends View {
     private static final String TAG = "ShineView";
-    static int colorRandom[] = new int[10];
+    static int[] colorRandom = new int[10];
     //default 10ms ,change to 25ms for saving cpu.
     private static long FRAME_REFRESH_DELAY = 25;
     RxShineAnimator mRxShineAnimator;

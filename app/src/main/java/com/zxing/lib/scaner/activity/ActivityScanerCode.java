@@ -380,9 +380,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         dialog.setContentView(dialogView);
         dialog.setCanceledOnTouchOutside(false);
 
-        bikeNumEdit = (EditText)dialogView.findViewById(R.id.pop_circlesMenu_bikeNumEdit);
-        positiveButton = (Button)dialogView.findViewById(R.id.pop_circlesMenu_positiveButton);
-        negativeButton = (Button)dialogView.findViewById(R.id.pop_circlesMenu_negativeButton);
+        bikeNumEdit = dialogView.findViewById(R.id.pop_circlesMenu_bikeNumEdit);
+        positiveButton = dialogView.findViewById(R.id.pop_circlesMenu_positiveButton);
+        negativeButton = dialogView.findViewById(R.id.pop_circlesMenu_negativeButton);
         positiveButton.setOnClickListener(this);
         negativeButton.setOnClickListener(this);
 
@@ -915,7 +915,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //        }
 
         int crc = (int) ByteUtil.crc32(getfdqId(bleid));
-        byte cc[] = ByteUtil.intToByteArray(crc);
+        byte[] cc = ByteUtil.intToByteArray(crc);
         ioBuffer.writeByte(cc[0] ^ cc[3]);
         ioBuffer.writeByte(cc[1] ^ cc[2]);
         ioBuffer.writeInt(0);

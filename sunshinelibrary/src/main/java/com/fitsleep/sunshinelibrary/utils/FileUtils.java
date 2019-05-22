@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -642,7 +643,7 @@ public class FileUtils {
         OutputStream os = null;
         try {
             os = new BufferedOutputStream(new FileOutputStream(file, append));
-            byte data[] = new byte[ConstUtils.KB];
+            byte[] data = new byte[ConstUtils.KB];
             int len;
             while ((len = is.read(data)) != -1) {
                 os.write(data, 0, len);
@@ -1125,7 +1126,7 @@ public class FileUtils {
                 fileName.createNewFile();
             }
             FileOutputStream outStream = new FileOutputStream(fileName.getAbsolutePath(), true);
-            OutputStreamWriter writer = new OutputStreamWriter(outStream, "utf-8");
+            OutputStreamWriter writer = new OutputStreamWriter(outStream, StandardCharsets.UTF_8);
             writer.write("command:"+s);
             writer.write("\n");
             writer.flush();

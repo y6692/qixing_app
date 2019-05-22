@@ -143,6 +143,6 @@ public class RechargeRecordAdapter  extends BaseViewAdapter<RechargeRecordBean>{
                 default:
                     break;
             }
-        };
+        }
     };
 }

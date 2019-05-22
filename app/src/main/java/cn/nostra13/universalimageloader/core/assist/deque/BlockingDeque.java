@@ -581,14 +581,14 @@ public interface BlockingDeque<E> extends BlockingQueue<E>, Deque<E> {
      *         is incompatible with this deque (optional)
      * @throws NullPointerException if the specified element is null (optional)
      */
-    public boolean contains(Object o);
+    boolean contains(Object o);
 
     /**
      * Returns the number of elements in this deque.
      *
      * @return the number of elements in this deque
      */
-    public int size();
+    int size();
 
     /**
      * Returns an iterator over the elements in this deque in proper sequence.

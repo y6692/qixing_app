@@ -303,7 +303,7 @@ public class WheelView extends View {
 			return;
 		}
 		// 可见的item数组
-		Object visibles[] = new Object[itemsVisible];
+		Object[] visibles = new Object[itemsVisible];
 		// 滚动的Y值高度除去每行Item的高度，得到滚动了多少个item，即change数
 		change = (int) (totalScrollY / itemHeight);
 		try {
@@ -455,7 +455,7 @@ public class WheelView extends View {
 		try {
 			Class<?> clz = item.getClass();
 			Method m = clz.getMethod(GETPICKERVIEWTEXT);
-			contentText = m.invoke(item, new Object[0]).toString();
+			contentText = m.invoke(item).toString();
 		} catch (NoSuchMethodException e) {
 		} catch (InvocationTargetException e) {
 		} catch (IllegalAccessException e) {

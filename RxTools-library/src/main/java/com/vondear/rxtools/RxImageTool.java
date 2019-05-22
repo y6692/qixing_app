@@ -80,7 +80,7 @@ public class RxImageTool {
                 rxDialog.cancel();
             }
         });
-        ImageView imageView = (ImageView) view.findViewById(R.id.page_item);
+        ImageView imageView = view.findViewById(R.id.page_item);
 
         imageView.setImageURI(uri);
 
@@ -965,15 +965,15 @@ public class RxImageTool {
         int wh = w * h;
         int div = radius + radius + 1;
 
-        int r[] = new int[wh];
-        int g[] = new int[wh];
-        int b[] = new int[wh];
+        int[] r = new int[wh];
+        int[] g = new int[wh];
+        int[] b = new int[wh];
         int rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
-        int vmin[] = new int[Math.max(w, h)];
+        int[] vmin = new int[Math.max(w, h)];
 
         int divsum = (div + 1) >> 1;
         divsum *= divsum;
-        int dv[] = new int[256 * divsum];
+        int[] dv = new int[256 * divsum];
         for (i = 0; i < 256 * divsum; i++) {
             dv[i] = (i / divsum);
         }

@@ -254,7 +254,7 @@ public class ColorPickerDialogBuilder {
                     if (initialColor[i] == null)
                         break;
                     LinearLayout colorLayout = (LinearLayout) View.inflate(context, R.layout.color_selector, null);
-                    ImageView colorImage = (ImageView) colorLayout.findViewById(R.id.image_preview);
+                    ImageView colorImage = colorLayout.findViewById(R.id.image_preview);
                     colorImage.setImageDrawable(new ColorDrawable(initialColor[i]));
                     colorPreview.addView(colorLayout);
                 }

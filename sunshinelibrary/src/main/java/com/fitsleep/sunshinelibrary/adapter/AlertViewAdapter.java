@@ -62,7 +62,7 @@ public class AlertViewAdapter extends BaseAdapter{
         private TextView tvAlert;
 
         public Holder(View view){
-            tvAlert = (TextView) view.findViewById(R.id.tvAlert);
+            tvAlert = view.findViewById(R.id.tvAlert);
         }
         public void UpdateUI(Context context,String data,int position){
             tvAlert.setText(data);

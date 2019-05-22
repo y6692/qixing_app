@@ -76,8 +76,8 @@ public abstract class Base2Activity extends AppCompatActivity {
         if (autoBindViews()) {
             mUnBinder = ButterKnife.bind(this);
         }
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        tvTitle = (TextView) findViewById(R.id.toolbar_title);
+        mToolbar = findViewById(R.id.toolbar);
+        tvTitle = findViewById(R.id.toolbar_title);
 
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);

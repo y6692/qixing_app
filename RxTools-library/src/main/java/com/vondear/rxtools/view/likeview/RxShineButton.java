@@ -218,7 +218,7 @@ public class RxShineButton extends RxPorterShapeImageView {
 
     public void showAnim() {
         if (activity != null) {
-            final ViewGroup rootView = (ViewGroup) activity.findViewById(Window.ID_ANDROID_CONTENT);
+            final ViewGroup rootView = activity.findViewById(Window.ID_ANDROID_CONTENT);
             mRxShineView = new RxShineView(activity, this, shineParams);
             rootView.addView(mRxShineView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             doShareAnim();
@@ -229,7 +229,7 @@ public class RxShineButton extends RxPorterShapeImageView {
 
     public void removeView(View view) {
         if (activity != null) {
-            final ViewGroup rootView = (ViewGroup) activity.findViewById(Window.ID_ANDROID_CONTENT);
+            final ViewGroup rootView = activity.findViewById(Window.ID_ANDROID_CONTENT);
             rootView.removeView(view);
         } else {
             Log.e(TAG, "Please init.");

@@ -31,7 +31,7 @@ public class ChasingDots extends SpriteContainer {
 
     @Override
     public ValueAnimator onCreateAnimation() {
-        float fractions[] = new float[]{0f, 1f};
+        float[] fractions = new float[]{0f, 1f};
         return new SpriteAnimatorBuilder(this).
                 rotate(fractions, 0, 360).
                 duration(2000).
@@ -66,7 +66,7 @@ public class ChasingDots extends SpriteContainer {
 
         @Override
         public ValueAnimator onCreateAnimation() {
-            float fractions[] = new float[]{0f, 0.5f, 1f};
+            float[] fractions = new float[]{0f, 0.5f, 1f};
             return new SpriteAnimatorBuilder(this).
                     scale(fractions, 0f, 1f, 0f).
                     duration(2000).

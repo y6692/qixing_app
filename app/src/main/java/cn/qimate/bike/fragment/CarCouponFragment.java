@@ -210,8 +210,8 @@ public class CarCouponFragment extends BaseFragment implements View.OnClickListe
         footerLayout = footerView.findViewById(R.id.footer_Layout);
 
 
-        swipeRefreshLayout = (SwipeRefreshLayout)getActivity().findViewById(R.id.Layout_swipeParentLayout);
-        listview = (ListView)getActivity().findViewById(R.id.Layout_swipeListView);
+        swipeRefreshLayout = getActivity().findViewById(R.id.Layout_swipeParentLayout);
+        listview = getActivity().findViewById(R.id.Layout_swipeListView);
         listview.addFooterView(footerView);
 
         swipeRefreshLayout.setOnRefreshListener(this);

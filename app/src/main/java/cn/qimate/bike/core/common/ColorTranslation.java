@@ -13,20 +13,20 @@ public class ColorTranslation {
 
 
 
-        int startInt = (Integer) startColor;
+        int startInt = startColor;
         int startA = (startInt >> 24) & 0xff;
         int startR = (startInt >> 16) & 0xff;
         int startG = (startInt >> 8) & 0xff;
         int startB = startInt & 0xff;
-        int endInt = (Integer) endColor;
+        int endInt = endColor;
         int endA = (endInt >> 24) & 0xff;
         int endR = (endInt >> 16) & 0xff;
         int endG = (endInt >> 8) & 0xff;
         int endB = endInt & 0xff;
-        return (int) ((startA + (int) (percentage * (endA - startA))) << 24)
-                | (int) ((startR + (int) (percentage * (endR - startR))) << 16)
-                | (int) ((startG + (int) (percentage * (endG - startG))) << 8)
-                | (int) ((startB + (int) (percentage * (endB - startB))));
+        return ((startA + (int) (percentage * (endA - startA))) << 24)
+                | ((startR + (int) (percentage * (endR - startR))) << 16)
+                | ((startG + (int) (percentage * (endG - startG))) << 8)
+                | (startB + (int) (percentage * (endB - startB)));
     }
 
 }

@@ -34,7 +34,7 @@ import java.util.List;
  * 点击取消按钮返回 －1，其他按钮从0开始算
  */
 public class AlertView {
-    public static enum Style{
+    public enum Style{
         ActionSheet,
         Alert
     }
@@ -108,12 +108,12 @@ public class AlertView {
     }
     protected void initViews(){
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        decorView = (ViewGroup) ((Activity)context).getWindow().getDecorView().findViewById(android.R.id.content);
+        decorView = ((Activity)context).getWindow().getDecorView().findViewById(android.R.id.content);
         rootView = (ViewGroup) layoutInflater.inflate(R.layout.layout_alertview, decorView, false);
         rootView.setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
         ));
-        contentContainer = (ViewGroup) rootView.findViewById(R.id.content_container);
+        contentContainer = rootView.findViewById(R.id.content_container);
         int margin_alert_left_right = 0;
         switch (style){
             case ActionSheet:
@@ -135,10 +135,10 @@ public class AlertView {
         }
     }
     protected void initHeaderView(ViewGroup viewGroup){
-        loAlertHeader = (ViewGroup) viewGroup.findViewById(R.id.loAlertHeader);
+        loAlertHeader = viewGroup.findViewById(R.id.loAlertHeader);
         //标题和消息
-        TextView tvAlertTitle = (TextView) viewGroup.findViewById(R.id.tvAlertTitle);
-        TextView tvAlertMsg = (TextView) viewGroup.findViewById(R.id.tvAlertMsg);
+        TextView tvAlertTitle = viewGroup.findViewById(R.id.tvAlertTitle);
+        TextView tvAlertMsg = viewGroup.findViewById(R.id.tvAlertMsg);
         if(title != null) {
             tvAlertTitle.setText(title);
         }else{
@@ -151,11 +151,11 @@ public class AlertView {
         }
     }
     protected void initListView(){
-        ListView alertButtonListView = (ListView) contentContainer.findViewById(R.id.alertButtonListView);
+        ListView alertButtonListView = contentContainer.findViewById(R.id.alertButtonListView);
         //把cancel作为footerView
         if(cancel != null && style == Style.Alert){
             View itemView = LayoutInflater.from(context).inflate(R.layout.item_alertbutton, null);
-            TextView tvAlert = (TextView) itemView.findViewById(R.id.tvAlert);
+            TextView tvAlert = itemView.findViewById(R.id.tvAlert);
             tvAlert.setText(cancel);
             tvAlert.setClickable(true);
             tvAlert.setTypeface(Typeface.DEFAULT_BOLD);
@@ -179,7 +179,7 @@ public class AlertView {
         initHeaderView(viewGroup);
 
         initListView();
-        TextView tvAlertCancel = (TextView) contentContainer.findViewById(R.id.tvAlertCancel);
+        TextView tvAlertCancel = contentContainer.findViewById(R.id.tvAlertCancel);
         if(cancel != null){
             tvAlertCancel.setVisibility(View.VISIBLE);
             tvAlertCancel.setText(cancel);
@@ -194,9 +194,9 @@ public class AlertView {
         int position = 0;
         //如果总数据小于等于HORIZONTAL_BUTTONS_MAXCOUNT，则是横向button
         if(mDatas.size()<=HORIZONTAL_BUTTONS_MAXCOUNT){
-            ViewStub viewStub = (ViewStub) contentContainer.findViewById(R.id.viewStubHorizontal);
+            ViewStub viewStub = contentContainer.findViewById(R.id.viewStubHorizontal);
             viewStub.inflate();
-            LinearLayout loAlertButtons = (LinearLayout) contentContainer.findViewById(R.id.loAlertButtons);
+            LinearLayout loAlertButtons = contentContainer.findViewById(R.id.loAlertButtons);
             for (int i = 0; i < mDatas.size(); i ++) {
                 //如果不是第一个按钮
                 if (i != 0){
@@ -207,7 +207,7 @@ public class AlertView {
                     loAlertButtons.addView(divier,params);
                 }
                 View itemView = LayoutInflater.from(context).inflate(R.layout.item_alertbutton, null);
-                TextView tvAlert = (TextView) itemView.findViewById(R.id.tvAlert);
+                TextView tvAlert = itemView.findViewById(R.id.tvAlert);
                 tvAlert.setClickable(true);
 
                 //设置点击效果
@@ -242,7 +242,7 @@ public class AlertView {
             }
         }
         else{
-            ViewStub viewStub = (ViewStub) contentContainer.findViewById(R.id.viewStubVertical);
+            ViewStub viewStub = contentContainer.findViewById(R.id.viewStubVertical);
             viewStub.inflate();
             initListView();
         }

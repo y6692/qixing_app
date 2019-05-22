@@ -200,7 +200,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
     private void LoginHttp(String telphone, String password) {
 
         Md5Helper Md5Helper = new Md5Helper();
-        String passwordmd5 = Md5Helper.encode(password);
+        String passwordmd5 = cn.qimate.bike.core.common.Md5Helper.encode(password);
 //        String passwordmd5 = "";
         RequestParams params = new RequestParams();
         params.add("telphone", telphone);

@@ -209,8 +209,8 @@ public class MerchantCouponFragment extends BaseFragment implements View.OnClick
         footerLayout = footerView.findViewById(R.id.footer_Layout);
 
 
-        swipeRefreshLayout = (SwipeRefreshLayout)getActivity().findViewById(R.id.Layout_merchantParentLayout);
-        listview = (ListView)getActivity().findViewById(R.id.Layout_merchantListView);
+        swipeRefreshLayout = getActivity().findViewById(R.id.Layout_merchantParentLayout);
+        listview = getActivity().findViewById(R.id.Layout_merchantListView);
         listview.addFooterView(footerView);
 
         swipeRefreshLayout.setOnRefreshListener(this);

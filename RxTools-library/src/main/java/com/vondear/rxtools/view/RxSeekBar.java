@@ -364,11 +364,7 @@ public class RxSeekBar extends View {
 
 
         public SeekBar(int position) {
-            if (position < 0) {
-                isLeft = true;
-            } else {
-                isLeft = false;
-            }
+            isLeft = position < 0;
         }
 
         /**

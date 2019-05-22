@@ -55,7 +55,7 @@ public class ThreeBounce extends SpriteContainer {
 
         @Override
         public ValueAnimator onCreateAnimation() {
-            float fractions[] = new float[]{0f, 0.4f, 0.8f, 1f};
+            float[] fractions = new float[]{0f, 0.4f, 0.8f, 1f};
             return new SpriteAnimatorBuilder(this).scale(fractions, 0f, 1f, 0f, 0f).
                     duration(1400).
                     easeInOut(fractions)

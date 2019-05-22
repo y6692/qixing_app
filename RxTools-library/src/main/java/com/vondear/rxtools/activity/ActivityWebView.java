@@ -55,12 +55,12 @@ public class ActivityWebView extends ActivityBase {
 
     private void initView() {
         // TODO Auto-generated method stub
-        mRxTextAutoZoom = (RxTextAutoZoom) findViewById(R.id.afet_tv_title);
-        llIncludeTitle = (LinearLayout) findViewById(R.id.ll_include_title);
-        tvTitle = (TextView) findViewById(R.id.tv_title);
-        pbWebBase = (ProgressBar) findViewById(R.id.pb_web_base);
-        webBase = (WebView) findViewById(R.id.web_base);
-        ivFinish = (ImageView) findViewById(R.id.iv_finish);
+        mRxTextAutoZoom = findViewById(R.id.afet_tv_title);
+        llIncludeTitle = findViewById(R.id.ll_include_title);
+        tvTitle = findViewById(R.id.tv_title);
+        pbWebBase = findViewById(R.id.pb_web_base);
+        webBase = findViewById(R.id.web_base);
+        ivFinish = findViewById(R.id.iv_finish);
         ivFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -103,9 +103,9 @@ public class BLEService {
 			if (status == BluetoothGatt.GATT_SUCCESS) {   //修改发送 字节数
 				System.out.println("MTUSize====" + mtu);
 		    }  
-		};
+		}
 
-		@Override
+        @Override
 		public void onServicesDiscovered(BluetoothGatt gatt, int status) {
 			if (status == BluetoothGatt.GATT_SUCCESS) {
 				gattService = bluetoothGatt.getService(serviceuuid);
@@ -162,9 +162,9 @@ public class BLEService {
 				sleep(100);
 			}*/
 
-		};
+		}
 
-		private IoBuffer ioBuffer = IoBuffer.allocate(258);
+        private IoBuffer ioBuffer = IoBuffer.allocate(258);
 
 		@Override
 		public void onCharacteristicChanged(BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic) {
@@ -184,8 +184,8 @@ public class BLEService {
 //						TextView textView = ((TextView)((BaseActivity)view).findViewById(R.id.readvalue));
 //						textView.setText(ioBuffer.toHexArray(data));
 
-						cc = ioBuffer.toHexArray(data);
-						Log.e("oCC===", data+"==="+ioBuffer.toHexArray(data));
+						cc = IoBuffer.toHexArray(data);
+						Log.e("oCC===", data+"==="+ IoBuffer.toHexArray(data));
 					}
 				});
 			}

@@ -60,7 +60,7 @@ public class StringUtils {
         if (isEmpty(string) || !Character.isLowerCase(string.charAt(0))) {
             return string;
         }
-        return String.valueOf((char) (string.charAt(0) - 32)) + string.substring(1);
+        return (char) (string.charAt(0) - 32) + string.substring(1);
     }
 
     /**
@@ -73,7 +73,7 @@ public class StringUtils {
         if (isEmpty(string) || !Character.isUpperCase(string.charAt(0))) {
             return string;
         }
-        return String.valueOf((char) (string.charAt(0) + 32)) + string.substring(1);
+        return (char) (string.charAt(0) + 32) + string.substring(1);
     }
 
     /**

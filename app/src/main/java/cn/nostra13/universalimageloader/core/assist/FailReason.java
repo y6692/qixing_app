@@ -43,7 +43,7 @@ public class FailReason {
 	}
 
 	/** Presents type of fail while image loading */
-	public static enum FailType {
+	public enum FailType {
 		/** Input/output error. Can be caused by network communication fail or error while caching image on file system. */
 		IO_ERROR,
 		/**

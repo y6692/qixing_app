@@ -86,7 +86,7 @@ public class FoldingCube extends SpriteContainer {
 
         @Override
         public ValueAnimator onCreateAnimation() {
-            float fractions[] = new float[]{0f, 0.1f, 0.25f, 0.75f, 0.9f, 1f};
+            float[] fractions = new float[]{0f, 0.1f, 0.25f, 0.75f, 0.9f, 1f};
             return new SpriteAnimatorBuilder(this).
                     alpha(fractions, 0, 0, 255, 255, 0, 0).
                     rotateX(fractions, -180, -180, 0, 0, 0, 0).

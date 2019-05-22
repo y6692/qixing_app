@@ -81,7 +81,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
             pvOptions.setCyclic(false, false, false);
             pvOptions.setSelectOptions(0, 0, 0);
             sexLayout.setClickable(true);
-        };
+        }
     };
 
     private Handler handler1 = new Handler() {
@@ -91,7 +91,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
             pvOptions1.setCyclic(false, false, false);
             pvOptions1.setSelectOptions(0, 0, 0);
             schoolLayout.setClickable(true);
-        };
+        }
     };
     private Handler handler2 = new Handler() {
         public void handleMessage(Message msg) {
@@ -100,7 +100,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
             pvOptions2.setCyclic(false, false, false);
             pvOptions2.setSelectOptions(0, 0, 0);
             classLayout.setClickable(true);
-        };
+        }
     };
 
     @Override

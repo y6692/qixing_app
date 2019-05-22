@@ -142,4 +142,14 @@
 
     <!--android:layout_below="@id/toolbar"-->
 
+    <Button
+        android:id="@+id/temporaryAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="40dp"
+        android:text="临时上锁"
+        />
+
 </RelativeLayout>

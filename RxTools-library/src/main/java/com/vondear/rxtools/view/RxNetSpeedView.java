@@ -60,17 +60,17 @@ public class RxNetSpeedView extends FrameLayout {
 
     private void initView(Context context, AttributeSet attrs) {
         LayoutInflater.from(context).inflate(R.layout.rx_netspeed_view, this);
-        rlLayoutBig = (RelativeLayout) findViewById(R.id.rlLayoutBig);
-        tvMobileTx = (TextView) findViewById(R.id.tvMobileTx);
-        tvMobileRx = (TextView) findViewById(R.id.tvMobileRx);
-        tvWlanTx = (TextView) findViewById(R.id.tvWlanTx);
-        tvWlanRx = (TextView) findViewById(R.id.tvWlanRx);
-        tvSum = (TextView) findViewById(R.id.tvSum);
+        rlLayoutBig = findViewById(R.id.rlLayoutBig);
+        tvMobileTx = findViewById(R.id.tvMobileTx);
+        tvMobileRx = findViewById(R.id.tvMobileRx);
+        tvWlanTx = findViewById(R.id.tvWlanTx);
+        tvWlanRx = findViewById(R.id.tvWlanRx);
+        tvSum = findViewById(R.id.tvSum);
 
-        MobileTx = (TextView) findViewById(R.id.MobileTx);
-        MobileRx = (TextView) findViewById(R.id.MobileRx);
-        WlanTx = (TextView) findViewById(R.id.WlanTx);
-        WlanRx = (TextView) findViewById(R.id.WlanRx);
+        MobileTx = findViewById(R.id.MobileTx);
+        MobileRx = findViewById(R.id.MobileRx);
+        WlanTx = findViewById(R.id.WlanTx);
+        WlanRx = findViewById(R.id.WlanRx);
 
         //获得这个控件对应的属性。
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.RxNetSpeedView);

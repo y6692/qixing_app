@@ -63,13 +63,7 @@ public class NetworkUtils {
 
         NetworkInfo ni = cm.getActiveNetworkInfo();
 
-        if (ni == null || !ni.isAvailable()) {
-
-            return false;
-
-        }
-
-        return true;
+        return ni != null && ni.isAvailable();
 
     }
 

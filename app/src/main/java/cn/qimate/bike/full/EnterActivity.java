@@ -38,8 +38,8 @@ public class EnterActivity extends BaseActivity implements OnViewChangeListener,
 
 		setContentView(R.layout.main_guide);
 		init();
-		enter_btn = (Button) this.findViewById(R.id.enter_btn);
-		enter_btn_1 = (Button) this.findViewById(R.id.enter_btn_1);
+		enter_btn = this.findViewById(R.id.enter_btn);
+		enter_btn_1 = this.findViewById(R.id.enter_btn_1);
 		enter_btn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				tz();
@@ -65,8 +65,8 @@ public class EnterActivity extends BaseActivity implements OnViewChangeListener,
 	}
 
 	private void init() {
-		mScrollLayout = (MyScrollLayout) findViewById(R.id.ScrollLayout);
-		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.llayout);
+		mScrollLayout = findViewById(R.id.ScrollLayout);
+		LinearLayout linearLayout = findViewById(R.id.llayout);
 		mViewCount = mScrollLayout.getChildCount();
 		mImageViews = new ImageView[mViewCount];
 		for (int i = 0; i < mViewCount; i++) {

@@ -89,10 +89,10 @@ public class RxShapeLoadingView extends FrameLayout {
 
         layoutParams.gravity = Gravity.CENTER;
 
-        mRxShapeView = (RxShapeView) view.findViewById(R.id.shapeLoadingView);
+        mRxShapeView = view.findViewById(R.id.shapeLoadingView);
 
-        mIndicationIm = (ImageView) view.findViewById(R.id.indication);
-        mLoadTextView = (TextView) view.findViewById(R.id.promptTV);
+        mIndicationIm = view.findViewById(R.id.indication);
+        mLoadTextView = view.findViewById(R.id.promptTV);
 
         if (mTextAppearance != -1) {
             mLoadTextView.setTextAppearance(getContext(), mTextAppearance);

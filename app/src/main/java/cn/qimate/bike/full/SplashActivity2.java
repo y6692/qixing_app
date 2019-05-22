@@ -142,7 +142,7 @@ public class SplashActivity2 extends BaseActivity {
 
 //        AdHub.initialize(this, app_id);
         // adUnitContainer
-        FrameLayout adsParent = (FrameLayout) this.findViewById(R.id.adsFl);
+        FrameLayout adsParent = this.findViewById(R.id.adsFl);
 
         // the observer of AD
         AdListener listener = new AdListener() {
@@ -269,7 +269,7 @@ public class SplashActivity2 extends BaseActivity {
                 String device_model = new Build().MODEL;
                 RequestParams params = new RequestParams();
                 Md5Helper Md5Helper = new Md5Helper();
-                String verify = Md5Helper.encode("7mateapp" + UUID);
+                String verify = cn.qimate.bike.core.common.Md5Helper.encode("7mateapp" + UUID);
                 params.put("verify", verify);
                 params.put("system_name", "Android");
                 params.put("system_version", system_version);
@@ -283,7 +283,7 @@ public class SplashActivity2 extends BaseActivity {
                     public void onSuccess(int statusCode, Header[] headers, String responseString) {
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                            if (result.getFlag().toString().equals("Success")) {
+                            if (result.getFlag().equals("Success")) {
 
                             }
                         } catch (Exception e) {

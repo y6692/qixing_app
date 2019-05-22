@@ -141,7 +141,7 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
 	}
 
 	public interface OnOptionsSelectListener {
-		public void onOptionsSelect(int options1, int option2, int options3);
+		void onOptionsSelect(int options1, int option2, int options3);
 	}
 
 	public void setOnoptionsSelectListener(OnOptionsSelectListener optionsSelectListener) {

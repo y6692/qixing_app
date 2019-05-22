@@ -104,9 +104,9 @@ public abstract class RxBaseRoundProgressBar extends LinearLayout {
         // Setup layout for sub class
         LayoutInflater.from(context).inflate(initLayout(), this);
         // Initial default view
-        layoutBackground = (LinearLayout) findViewById(R.id.layout_background);
-        layoutProgress = (LinearLayout) findViewById(R.id.layout_progress);
-        layoutSecondaryProgress = (LinearLayout) findViewById(R.id.layout_secondary_progress);
+        layoutBackground = findViewById(R.id.layout_background);
+        layoutProgress = findViewById(R.id.layout_progress);
+        layoutSecondaryProgress = findViewById(R.id.layout_secondary_progress);
 
         initView();
     }
@@ -471,6 +471,6 @@ public abstract class RxBaseRoundProgressBar extends LinearLayout {
     }
 
     public interface OnProgressChangedListener {
-        public void onProgressChanged(int viewId, float progress, boolean isPrimaryProgress, boolean isSecondaryProgress);
+        void onProgressChanged(int viewId, float progress, boolean isPrimaryProgress, boolean isSecondaryProgress);
     }
 }

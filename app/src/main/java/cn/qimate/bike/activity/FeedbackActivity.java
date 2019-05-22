@@ -427,9 +427,7 @@ public class FeedbackActivity
             case R.id.feedbackUI_type_Tag1:
                 if (isSelected1){
                     isSelected1 = false;
-                    if (TagsList.contains(Tag1.getText().toString())){
-                        TagsList.remove(Tag1.getText().toString());
-                    }
+                    TagsList.remove(Tag1.getText().toString());
                     Tag1.setTextColor(Color.parseColor("#666666"));
                     Tag1.setBackgroundResource(R.drawable.shape_feedback);
                 }else {
@@ -458,9 +456,7 @@ public class FeedbackActivity
             case R.id.feedbackUI_type_Tag2:
                 if (isSelected2){
                     isSelected2 = false;
-                    if (TagsList.contains(Tag2.getText().toString())){
-                        TagsList.remove(Tag2.getText().toString());
-                    }
+                    TagsList.remove(Tag2.getText().toString());
                     Tag2.setTextColor(Color.parseColor("#666666"));
                     Tag2.setBackgroundResource(R.drawable.shape_feedback);
                 }else {
@@ -489,9 +485,7 @@ public class FeedbackActivity
             case R.id.feedbackUI_type_Tag3:
                 if (isSelected3){
                     isSelected3 = false;
-                    if (TagsList.contains(Tag3.getText().toString())){
-                        TagsList.remove(Tag3.getText().toString());
-                    }
+                    TagsList.remove(Tag3.getText().toString());
                     Tag3.setTextColor(Color.parseColor("#666666"));
                     Tag3.setBackgroundResource(R.drawable.shape_feedback);
                 }else {
@@ -520,9 +514,7 @@ public class FeedbackActivity
             case R.id.feedbackUI_type_Tag4:
                 if (isSelected4){
                     isSelected4 = false;
-                    if (TagsList.contains(Tag4.getText().toString())){
-                        TagsList.remove(Tag4.getText().toString());
-                    }
+                    TagsList.remove(Tag4.getText().toString());
                     Tag4.setTextColor(Color.parseColor("#666666"));
                     Tag4.setBackgroundResource(R.drawable.shape_feedback);
                 }else {
@@ -551,9 +543,7 @@ public class FeedbackActivity
             case R.id.feedbackUI_type_Tag5:
                 if (isSelected5){
                     isSelected5 = false;
-                    if (TagsList.contains(Tag5.getText().toString())){
-                        TagsList.remove(Tag5.getText().toString());
-                    }
+                    TagsList.remove(Tag5.getText().toString());
                     Tag5.setTextColor(Color.parseColor("#666666"));
                     Tag5.setBackgroundResource(R.drawable.shape_feedback);
                 }else {
@@ -582,9 +572,7 @@ public class FeedbackActivity
             case R.id.feedbackUI_type_Tag6:
                 if (isSelected6){
                     isSelected6 = false;
-                    if (TagsList.contains(Tag6.getText().toString())){
-                        TagsList.remove(Tag6.getText().toString());
-                    }
+                    TagsList.remove(Tag6.getText().toString());
                     Tag6.setTextColor(Color.parseColor("#666666"));
                     Tag6.setBackgroundResource(R.drawable.shape_feedback);
                 }else {
@@ -613,9 +601,7 @@ public class FeedbackActivity
             case R.id.feedbackUI_type_Tag7:
                 if (isSelected7){
                     isSelected7 = false;
-                    if (TagsList.contains(Tag7.getText().toString())){
-                        TagsList.remove(Tag7.getText().toString());
-                    }
+                    TagsList.remove(Tag7.getText().toString());
                     Tag7.setTextColor(Color.parseColor("#666666"));
                     Tag7.setBackgroundResource(R.drawable.shape_feedback);
                 }else {
@@ -644,9 +630,7 @@ public class FeedbackActivity
             case R.id.feedbackUI_type_Tag8:
                 if (isSelected8){
                     isSelected8 = false;
-                    if (TagsList.contains(Tag8.getText().toString())){
-                        TagsList.remove(Tag8.getText().toString());
-                    }
+                    TagsList.remove(Tag8.getText().toString());
                     Tag8.setTextColor(Color.parseColor("#666666"));
                     Tag8.setBackgroundResource(R.drawable.shape_feedback);
                 }else {
@@ -675,9 +659,7 @@ public class FeedbackActivity
             case R.id.feedbackUI_type_Tag9:
                 if (isSelected9){
                     isSelected9 = false;
-                    if (TagsList.contains(Tag9.getText().toString())){
-                        TagsList.remove(Tag9.getText().toString());
-                    }
+                    TagsList.remove(Tag9.getText().toString());
                     Tag9.setTextColor(Color.parseColor("#666666"));
                     Tag9.setBackgroundResource(R.drawable.shape_feedback);
                 }else {
@@ -705,9 +687,7 @@ public class FeedbackActivity
             case R.id.feedbackUI_type_Tag10:
                 if (isSelected10){
                     isSelected10 = false;
-                    if (TagsList.contains(Tag10.getText().toString())){
-                        TagsList.remove(Tag10.getText().toString());
-                    }
+                    TagsList.remove(Tag10.getText().toString());
                     Tag10.setTextColor(Color.parseColor("#666666"));
                     Tag10.setBackgroundResource(R.drawable.shape_feedback);
                 }else {
