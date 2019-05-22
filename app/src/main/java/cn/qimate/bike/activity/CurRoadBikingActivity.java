@@ -1120,6 +1120,27 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         ToastUtil.showMessage(this, "biking====onDestroy");
 
+        if (customDialog != null){
+            customDialog.dismiss();
+        }
+        if (customDialog3 != null){
+            customDialog3.dismiss();
+        }
+        if (customDialog4 != null){
+            customDialog4.dismiss();
+        }
+        if (customDialog5 != null){
+            customDialog5.dismiss();
+        }
+        if (customDialog6 != null){
+            customDialog6.dismiss();
+        }
+        if (customDialog7 != null){
+            customDialog7.dismiss();
+        }
+        if (customDialog8 != null){
+            customDialog8.dismiss();
+        }
 
         if(null != mlocationClient){
             mlocationClient.onDestroy();
@@ -3182,9 +3203,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         IoBuffer ioBuffer = IoBuffer.allocate(20);
         ioBuffer.writeByte((byte) 0x83);
         ioBuffer.writeBytes(getfdqId(tel));
-//        ioBuffer.writeBytes(getfdqId("13188888888".trim().toUpperCase()));
+//        ioBuffer.writeBytes(getfdqId(tel.trim().toUpperCase()));
         bleService.write(toBody(ioBuffer.readableBytes()));
-//        SharePreUtil.getPreferences("FDQID").putString("ID", "13188888888");
+//        SharePreUtil.getPreferences("FDQID").putString("ID", tel);
 //        SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
     }
 
