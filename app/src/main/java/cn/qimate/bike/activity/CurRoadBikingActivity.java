@@ -3127,33 +3127,33 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             if (macList.size() > 0){
 //                flag = 2;
 
-                if(ccn==0){
-                    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                        ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-                        scrollToFinishActivity();
-                    }
+//                if(ccn==0){
+//                    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//                        ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+//                        scrollToFinishActivity();
+//                    }
+//
+//                    if (mBluetoothAdapter == null) {
+//                        ToastUtil.showMessageApp(context, "获取蓝牙失败");
+//                        scrollToFinishActivity();
+//                        return;
+//                    }
+//                    if (!mBluetoothAdapter.isEnabled()) {
+//                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                        startActivityForResult(enableBtIntent, 188);
+//                    }else{
+//                        Log.e("endBtn4===4_1", "==="+m_nowMac);
+//
+//                        bleService.connect(m_nowMac);
+//
+//                        cn=0;
+//                        checkConnect();
+//                    }
+//                }else{
+//                    closeEbike2();
+//                }
 
-                    if (mBluetoothAdapter == null) {
-                        ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                        scrollToFinishActivity();
-                        return;
-                    }
-                    if (!mBluetoothAdapter.isEnabled()) {
-                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(enableBtIntent, 188);
-                    }else{
-                        Log.e("endBtn4===4_1", "==="+m_nowMac);
-
-                        bleService.connect(m_nowMac);
-
-//                      bleService.sleep(2000);
-
-                        cn=0;
-                        checkConnect();
-                    }
-                }else{
-                    closeEbike2();
-                }
+                closeEbike2();
 
                 return;
             }
@@ -3161,34 +3161,34 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             if(BikeFragment.screen){
                 if (isContainsList.contains(true)){
 
-                    if(ccn==0){
-                        flag = 2;
-                        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                            ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-                            scrollToFinishActivity();
-                        }
+//                    if(ccn==0){
+//                        flag = 2;
+//                        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//                            ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+//                            scrollToFinishActivity();
+//                        }
+//
+//                        if (mBluetoothAdapter == null) {
+//                            ToastUtil.showMessageApp(context, "获取蓝牙失败");
+//                            scrollToFinishActivity();
+//                            return;
+//                        }
+//                        if (!mBluetoothAdapter.isEnabled()) {
+//                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                            startActivityForResult(enableBtIntent, 188);
+//                        }else{
+//                            Log.e("endBtn4===4_1", "==="+m_nowMac);
+//
+//                            bleService.connect(m_nowMac);
+//
+//                            cn=0;
+//                            checkConnect();
+//                        }
+//                    }else{
+//                        closeEbike2();
+//                    }
 
-                        if (mBluetoothAdapter == null) {
-                            ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                            scrollToFinishActivity();
-                            return;
-                        }
-                        if (!mBluetoothAdapter.isEnabled()) {
-                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                            startActivityForResult(enableBtIntent, 188);
-                        }else{
-                            Log.e("endBtn4===4_1", "==="+m_nowMac);
-
-                            bleService.connect(m_nowMac);
-
-//                          bleService.sleep(2000);
-
-                            cn=0;
-                            checkConnect();
-                        }
-                    }else{
-                        closeEbike2();
-                    }
+                    closeEbike2();
 
                 }else {
                     customDialog4.show();

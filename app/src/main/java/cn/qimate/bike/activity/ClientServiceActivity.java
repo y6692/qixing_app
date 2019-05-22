@@ -92,8 +92,8 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = new AMapLocationClientOption();
 
-    private TextView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6;
-    private LinearLayout ll_2;
+    private TextView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6,Tag7,Tag8,Tag9,Tag10,Tag11,Tag12;
+    private LinearLayout ll_2,ll_3,ll_4;
     private EditText restCauseEdit;
 
     private boolean isSelected1 = false;
@@ -102,6 +102,12 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     private boolean isSelected4 = false;
     private boolean isSelected5 = false;
     private boolean isSelected6 = false;
+    private boolean isSelected7 = false;
+    private boolean isSelected8 = false;
+    private boolean isSelected9 = false;
+    private boolean isSelected10 = false;
+    private boolean isSelected11 = false;
+    private boolean isSelected12 = false;
 
     private Context context;
     private LoadingDialog loadingDialog;
@@ -193,19 +199,31 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         Tag4 = (TextView)findViewById(R.id.feedbackUI_type_Tag4);
         Tag5 = (TextView)findViewById(R.id.feedbackUI_type_Tag5);
         Tag6 = (TextView)findViewById(R.id.feedbackUI_type_Tag6);
+        Tag7 = (TextView)findViewById(R.id.feedbackUI_type_Tag7);
+        Tag8 = (TextView)findViewById(R.id.feedbackUI_type_Tag8);
+        Tag9 = (TextView)findViewById(R.id.feedbackUI_type_Tag9);
+        Tag10 = (TextView)findViewById(R.id.feedbackUI_type_Tag10);
+        Tag11 = (TextView)findViewById(R.id.feedbackUI_type_Tag11);
+        Tag12 = (TextView)findViewById(R.id.feedbackUI_type_Tag12);
 
         ll_2 = (LinearLayout)findViewById(R.id.ll_2);
+        ll_3 = (LinearLayout)findViewById(R.id.ll_3);
+        ll_4 = (LinearLayout)findViewById(R.id.ll_4);
 
         if("4".equals(type)){
-            Tag1.setText("车辆故障");
-            Tag2.setText("车锁故障");
-            Tag3.setText("在还车点提示不在");
-            ll_2.setVisibility(View.GONE);
+            Tag1.setText("关锁失败");
+            Tag2.setText("在还车点提示不在");
+            Tag3.setText("电量低");
+            ll_2.setVisibility(View.VISIBLE);
+            ll_3.setVisibility(View.VISIBLE);
+            ll_4.setVisibility(View.GONE);
         }else{
             Tag1.setText("锁关不上");
             Tag2.setText("已关锁提示未关");
             Tag3.setText("蓝牙连接失败");
-            ll_2.setVisibility(View.VISIBLE);
+            ll_2.setVisibility(View.GONE);
+            ll_3.setVisibility(View.GONE);
+            ll_4.setVisibility(View.VISIBLE);
         }
 
         restCauseEdit = (EditText)findViewById(R.id.feedbackUI_restCause);
@@ -251,6 +269,12 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         Tag4.setOnClickListener(this);
         Tag5.setOnClickListener(this);
         Tag6.setOnClickListener(this);
+        Tag7.setOnClickListener(this);
+        Tag8.setOnClickListener(this);
+        Tag9.setOnClickListener(this);
+        Tag10.setOnClickListener(this);
+        Tag11.setOnClickListener(this);
+        Tag12.setOnClickListener(this);
 
         restCauseEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -354,15 +378,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
 
                 Log.e("TagsList===111", TagsList.size()+"==="+TagsList);
 
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    submitBtn.setEnabled(true);
-                }
+                pd();
                 break;
             case R.id.feedbackUI_type_Tag2:
                 if (isSelected2){
@@ -380,15 +396,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                     Tag2.setTextColor(Color.parseColor("#f57752"));
                     Tag2.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    submitBtn.setEnabled(true);
-                }
+                pd();
                 break;
             case R.id.feedbackUI_type_Tag3:
                 if (isSelected3){
@@ -406,15 +414,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                     Tag3.setTextColor(Color.parseColor("#f57752"));
                     Tag3.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    submitBtn.setEnabled(true);
-                }
+                pd();
                 break;
             case R.id.feedbackUI_type_Tag4:
                 if (isSelected4){
@@ -432,15 +432,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                     Tag4.setTextColor(Color.parseColor("#f57752"));
                     Tag4.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    submitBtn.setEnabled(true);
-                }
+                pd();
                 break;
             case R.id.feedbackUI_type_Tag5:
                 if (isSelected5){
@@ -458,15 +450,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                     Tag5.setTextColor(Color.parseColor("#f57752"));
                     Tag5.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    submitBtn.setEnabled(true);
-                }
+                pd();
                 break;
             case R.id.feedbackUI_type_Tag6:
                 if (isSelected6){
@@ -484,23 +468,151 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                     Tag6.setTextColor(Color.parseColor("#f57752"));
                     Tag6.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    submitBtn.setEnabled(true);
-                }
+                pd();
                 break;
-
+            case R.id.feedbackUI_type_Tag7:
+                if (isSelected7){
+                    isSelected7 = false;
+                    if (TagsList.contains(Tag7.getText().toString())){
+                        TagsList.remove(Tag7.getText().toString());
+                    }
+                    Tag7.setTextColor(Color.parseColor("#666666"));
+                    Tag7.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected7 = true;
+                    if (!TagsList.contains(Tag7.getText().toString())){
+                        TagsList.add(Tag7.getText().toString());
+                    }
+                    Tag7.setTextColor(Color.parseColor("#f57752"));
+                    Tag7.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
+            case R.id.feedbackUI_type_Tag8:
+                if (isSelected8){
+                    isSelected8 = false;
+                    if (TagsList.contains(Tag8.getText().toString())){
+                        TagsList.remove(Tag8.getText().toString());
+                    }
+                    Tag8.setTextColor(Color.parseColor("#666666"));
+                    Tag8.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected8 = true;
+                    if (!TagsList.contains(Tag8.getText().toString())){
+                        TagsList.add(Tag8.getText().toString());
+                    }
+                    Tag8.setTextColor(Color.parseColor("#f57752"));
+                    Tag8.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
+            case R.id.feedbackUI_type_Tag9:
+                if (isSelected9){
+                    isSelected9 = false;
+                    if (TagsList.contains(Tag9.getText().toString())){
+                        TagsList.remove(Tag9.getText().toString());
+                    }
+                    Tag9.setTextColor(Color.parseColor("#666666"));
+                    Tag9.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected9 = true;
+                    if (!TagsList.contains(Tag9.getText().toString())){
+                        TagsList.add(Tag9.getText().toString());
+                    }
+                    Tag9.setTextColor(Color.parseColor("#f57752"));
+                    Tag9.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
+            case R.id.feedbackUI_type_Tag10:
+                if (isSelected10){
+                    isSelected10 = false;
+                    if (TagsList.contains(Tag10.getText().toString())){
+                        TagsList.remove(Tag10.getText().toString());
+                    }
+                    Tag10.setTextColor(Color.parseColor("#666666"));
+                    Tag10.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected10 = true;
+                    if (!TagsList.contains(Tag10.getText().toString())){
+                        TagsList.add(Tag10.getText().toString());
+                    }
+                    Tag10.setTextColor(Color.parseColor("#f57752"));
+                    Tag10.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
+            case R.id.feedbackUI_type_Tag11:
+                if (isSelected11){
+                    isSelected11 = false;
+                    if (TagsList.contains(Tag11.getText().toString())){
+                        TagsList.remove(Tag11.getText().toString());
+                    }
+                    Tag11.setTextColor(Color.parseColor("#666666"));
+                    Tag11.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected11 = true;
+                    if (!TagsList.contains(Tag11.getText().toString())){
+                        TagsList.add(Tag11.getText().toString());
+                    }
+                    Tag11.setTextColor(Color.parseColor("#f57752"));
+                    Tag11.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
+            case R.id.feedbackUI_type_Tag12:
+                if (isSelected12){
+                    isSelected12 = false;
+                    if (TagsList.contains(Tag12.getText().toString())){
+                        TagsList.remove(Tag12.getText().toString());
+                    }
+                    Tag12.setTextColor(Color.parseColor("#666666"));
+                    Tag12.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected12 = true;
+                    if (!TagsList.contains(Tag12.getText().toString())){
+                        TagsList.add(Tag12.getText().toString());
+                    }
+                    Tag12.setTextColor(Color.parseColor("#f57752"));
+                    Tag12.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
 
             case R.id.ui_client_service_submitBtn:
                 submit();
                 break;
             default:
                 break;
+        }
+    }
+
+    private void pd(){
+
+//        if (isSelected6){
+//            isSelected6 = false;
+//            if (TagsList.contains(Tag6.getText().toString())){
+//                TagsList.remove(Tag6.getText().toString());
+//            }
+//            Tag6.setTextColor(Color.parseColor("#666666"));
+//            Tag6.setBackgroundResource(R.drawable.shape_feedback);
+//        }else {
+//            isSelected6 = true;
+//            if (!TagsList.contains(Tag6.getText().toString())){
+//                TagsList.add(Tag6.getText().toString());
+//            }
+//            Tag6.setTextColor(Color.parseColor("#f57752"));
+//            Tag6.setBackgroundResource(R.drawable.shape_feedback_selectd);
+//        }
+
+        if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+                restCauseEdit.getText().toString().trim() == null
+                        || "".equals(restCauseEdit.getText().toString().trim()))){
+            submitBtn.setEnabled(false);
+        }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+            submitBtn.setEnabled(false);
+        }else{
+            submitBtn.setEnabled(true);
         }
     }
 

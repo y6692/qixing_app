@@ -575,24 +575,37 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         if ("[]".equals(result.getData()) || 0 == result.getData().length()){
                             useCar(tokencode);
                         }else{
+
+//                            if()
+
                             EbikeInfoBean bean = JSON.parseObject(result.getData(), EbikeInfoBean.class);
 
-                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
-                            customBuilder.setMessage("电单车必须在校内停车线还车");
+                            Log.e("scan===ebikeInfo2", bean.getElectricity().substring(0, bean.getElectricity().length()-1)+"===="+responseString);
 
-                            customBuilder.setType(4).setElectricity(bean.getElectricity()).setMileage(bean.getMileage()).setFee(bean.getFee()).setTitle("这是一辆电单车").setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                    scrollToFinishActivity();
-                                }
-                            }).setPositiveButton("开锁", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
+                            if(Integer.parseInt(bean.getElectricity().substring(0, bean.getElectricity().length()-1))<=10){
+                                ToastUtil.showMessageApp(context, "电量低，请换辆车");
 
-                                    useCar(tokencode);
-                                }
-                            }).setHint(false);
-                            customBuilder.create().show();
+                                scrollToFinishActivity();
+                            }else {
+                                CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
+                                customBuilder.setMessage("电单车必须在校内停车线还车");
+
+                                customBuilder.setType(4).setElectricity(bean.getElectricity()).setMileage(bean.getMileage()).setFee(bean.getFee()).setTitle("这是一辆电单车").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                        scrollToFinishActivity();
+                                    }
+                                }).setPositiveButton("开锁", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+
+                                        useCar(tokencode);
+                                    }
+                                }).setHint(false);
+                                customBuilder.create().show();
+                            }
+
+
                         }
 
 

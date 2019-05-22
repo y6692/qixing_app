@@ -103,8 +103,8 @@ public class FeedbackActivity
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
     private EditText bikeCodeEdit;
-    private TextView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6,Tag7,Tag8,Tag9,Tag10;
-    private LinearLayout ll_2,ll_3;
+    private TextView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6,Tag7,Tag8,Tag9,Tag10,Tag11,Tag12,Tag13,Tag14;
+    private LinearLayout ll_2,ll_3,ll_4,ll_5;
     private EditText restCauseEdit;
     private EditText addressEdit;
     private PhotoGridviewAdapter myAdapter;
@@ -121,6 +121,12 @@ public class FeedbackActivity
     private boolean isSelected8 = false;
     private boolean isSelected9 = false;
     private boolean isSelected10 = false;
+    private boolean isSelected11 = false;
+    private boolean isSelected12 = false;
+    private boolean isSelected13 = false;
+    private boolean isSelected14 = false;
+
+
 
     private List<String> TagsList;
     private List<String> imageUrlList;
@@ -246,22 +252,32 @@ public class FeedbackActivity
         Tag8 = (TextView)findViewById(R.id.feedbackUI_type_Tag8);
         Tag9 = (TextView)findViewById(R.id.feedbackUI_type_Tag9);
         Tag10 = (TextView)findViewById(R.id.feedbackUI_type_Tag10);
+        Tag11 = (TextView)findViewById(R.id.feedbackUI_type_Tag11);
+        Tag12 = (TextView)findViewById(R.id.feedbackUI_type_Tag12);
+        Tag13 = (TextView)findViewById(R.id.feedbackUI_type_Tag13);
+        Tag14 = (TextView)findViewById(R.id.feedbackUI_type_Tag14);
 
         ll_2 = (LinearLayout)findViewById(R.id.ll_2);
         ll_3 = (LinearLayout)findViewById(R.id.ll_3);
+        ll_4 = (LinearLayout)findViewById(R.id.ll_4);
+        ll_5 = (LinearLayout)findViewById(R.id.ll_5);
 
         if("4".equals(type)){
-            Tag1.setText("车辆故障");
-            Tag2.setText("车锁故障");
-            Tag3.setText("在还车点提示不在");
-            ll_2.setVisibility(View.GONE);
-            ll_3.setVisibility(View.GONE);
+            Tag1.setText("关锁失败");
+            Tag2.setText("在还车点提示不在");
+            Tag3.setText("电量低");
+            ll_2.setVisibility(View.VISIBLE);
+            ll_3.setVisibility(View.VISIBLE);
+            ll_4.setVisibility(View.GONE);
+            ll_5.setVisibility(View.GONE);
         }else{
             Tag1.setText("锁未弹开");
             Tag2.setText("单车损坏");
             Tag3.setText("私锁私用");
-            ll_2.setVisibility(View.VISIBLE);
-            ll_3.setVisibility(View.VISIBLE);
+            ll_2.setVisibility(View.GONE);
+            ll_3.setVisibility(View.GONE);
+            ll_4.setVisibility(View.VISIBLE);
+            ll_5.setVisibility(View.VISIBLE);
         }
 
         bikeCodeEdit = (EditText)findViewById(R.id.feedbackUI_bikeCode);
@@ -284,6 +300,10 @@ public class FeedbackActivity
         Tag8.setOnClickListener(this);
         Tag9.setOnClickListener(this);
         Tag10.setOnClickListener(this);
+        Tag11.setOnClickListener(this);
+        Tag12.setOnClickListener(this);
+        Tag13.setOnClickListener(this);
+        Tag14.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
         bikeCodeEdit.addTextChangedListener(new TextWatcher() {
@@ -440,20 +460,7 @@ public class FeedbackActivity
                     Tag1.setTextColor(Color.parseColor("#f57752"));
                     Tag1.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+                pd();
                 break;
             case R.id.feedbackUI_type_Tag2:
                 if (isSelected2){
@@ -471,20 +478,7 @@ public class FeedbackActivity
                     Tag2.setTextColor(Color.parseColor("#f57752"));
                     Tag2.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+                pd();
                 break;
             case R.id.feedbackUI_type_Tag3:
                 if (isSelected3){
@@ -502,20 +496,7 @@ public class FeedbackActivity
                     Tag3.setTextColor(Color.parseColor("#f57752"));
                     Tag3.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+                pd();
                 break;
             case R.id.feedbackUI_type_Tag4:
                 if (isSelected4){
@@ -533,20 +514,7 @@ public class FeedbackActivity
                     Tag4.setTextColor(Color.parseColor("#f57752"));
                     Tag4.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+                pd();
                 break;
             case R.id.feedbackUI_type_Tag5:
                 if (isSelected5){
@@ -564,20 +532,7 @@ public class FeedbackActivity
                     Tag5.setTextColor(Color.parseColor("#f57752"));
                     Tag5.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+                pd();
                 break;
             case R.id.feedbackUI_type_Tag6:
                 if (isSelected6){
@@ -595,20 +550,7 @@ public class FeedbackActivity
                     Tag6.setTextColor(Color.parseColor("#f57752"));
                     Tag6.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+                pd();
                 break;
             case R.id.feedbackUI_type_Tag7:
                 if (isSelected7){
@@ -626,20 +568,7 @@ public class FeedbackActivity
                     Tag7.setTextColor(Color.parseColor("#f57752"));
                     Tag7.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+                pd();
                 break;
             case R.id.feedbackUI_type_Tag8:
                 if (isSelected8){
@@ -657,20 +586,7 @@ public class FeedbackActivity
                     Tag8.setTextColor(Color.parseColor("#f57752"));
                     Tag8.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+                pd();
                 break;
             case R.id.feedbackUI_type_Tag9:
                 if (isSelected9){
@@ -688,19 +604,7 @@ public class FeedbackActivity
                     Tag9.setTextColor(Color.parseColor("#f57752"));
                     Tag9.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null && !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+                pd();
                 break;
             case R.id.feedbackUI_type_Tag10:
                 if (isSelected10){
@@ -718,26 +622,103 @@ public class FeedbackActivity
                     Tag10.setTextColor(Color.parseColor("#f57752"));
                     Tag10.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+                pd();
                 break;
+            case R.id.feedbackUI_type_Tag11:
+                if (isSelected11){
+                    isSelected11 = false;
+                    if (TagsList.contains(Tag11.getText().toString())){
+                        TagsList.remove(Tag11.getText().toString());
+                    }
+                    Tag11.setTextColor(Color.parseColor("#666666"));
+                    Tag11.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected11 = true;
+                    if (!TagsList.contains(Tag11.getText().toString())){
+                        TagsList.add(Tag11.getText().toString());
+                    }
+                    Tag11.setTextColor(Color.parseColor("#f57752"));
+                    Tag11.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
+            case R.id.feedbackUI_type_Tag12:
+                if (isSelected12){
+                    isSelected12 = false;
+                    if (TagsList.contains(Tag12.getText().toString())){
+                        TagsList.remove(Tag12.getText().toString());
+                    }
+                    Tag12.setTextColor(Color.parseColor("#666666"));
+                    Tag12.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected12 = true;
+                    if (!TagsList.contains(Tag12.getText().toString())){
+                        TagsList.add(Tag12.getText().toString());
+                    }
+                    Tag12.setTextColor(Color.parseColor("#f57752"));
+                    Tag12.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
+            case R.id.feedbackUI_type_Tag13:
+                if (isSelected13){
+                    isSelected13 = false;
+                    if (TagsList.contains(Tag13.getText().toString())){
+                        TagsList.remove(Tag13.getText().toString());
+                    }
+                    Tag13.setTextColor(Color.parseColor("#666666"));
+                    Tag13.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected13 = true;
+                    if (!TagsList.contains(Tag13.getText().toString())){
+                        TagsList.add(Tag13.getText().toString());
+                    }
+                    Tag13.setTextColor(Color.parseColor("#f57752"));
+                    Tag13.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
+            case R.id.feedbackUI_type_Tag14:
+                if (isSelected14){
+                    isSelected14 = false;
+                    if (TagsList.contains(Tag14.getText().toString())){
+                        TagsList.remove(Tag14.getText().toString());
+                    }
+                    Tag14.setTextColor(Color.parseColor("#666666"));
+                    Tag14.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected14 = true;
+                    if (!TagsList.contains(Tag14.getText().toString())){
+                        TagsList.add(Tag14.getText().toString());
+                    }
+                    Tag14.setTextColor(Color.parseColor("#f57752"));
+                    Tag14.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
+
             case R.id.feedbackUI_submitBtn:
                 submit();
                 break;
             default:
                 break;
+        }
+    }
+
+    private void pd(){
+        if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+                restCauseEdit.getText().toString().trim() == null
+                        || "".equals(restCauseEdit.getText().toString().trim()))){
+            submitBtn.setEnabled(false);
+        }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+            submitBtn.setEnabled(false);
+        }else{
+            if (bikeCodeEdit.getText().toString().trim() != null &&
+                    !"".equals(bikeCodeEdit.getText().toString().trim())){
+                submitBtn.setEnabled(true);
+            }else {
+                submitBtn.setEnabled(false);
+            }
         }
     }
 

@@ -110,7 +110,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
-                            android:text="车辆故障"
+                            android:text="关锁失败"
                             android:padding="@dimen/dp10"
                             android:textColor="@color/tx_black_light"
                             android:textSize="@dimen/sp12"/>
@@ -119,7 +119,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
-                            android:text="车锁故障"
+                            android:text="在还车点提示不在"
                             android:padding="@dimen/dp10"
                             android:textColor="@color/tx_black_light"
                             android:textSize="@dimen/sp12"
@@ -129,22 +129,114 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
-                            android:text="在还车点提示不在"
+                            android:text="电量低"
                             android:padding="@dimen/dp10"
                             android:textColor="@color/tx_black_light"
                             android:textSize="@dimen/sp12"
                             android:layout_marginLeft="@dimen/dp10"/>
+
+
+
+
+
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/ll_2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp10"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_feedback"
+                            android:text="转把没电"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/tx_black_light"
+                            android:textSize="@dimen/sp12"
+                           />
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_feedback"
+                            android:text="脚踏损坏"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/tx_black_light"
+                            android:textSize="@dimen/sp12"
+                            android:layout_marginLeft="@dimen/dp10"/>
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_feedback"
+                            android:text="刹车失灵"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/tx_black_light"
+                            android:textSize="@dimen/sp12"
+                            android:layout_marginLeft="@dimen/dp10"/>
+
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp10"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_feedback"
+                            android:text="脚撑损坏"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/tx_black_light"
+                            android:textSize="@dimen/sp12"
+                            />
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_feedback"
+                            android:text="链条掉了"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/tx_black_light"
+                            android:textSize="@dimen/sp12"
+                            android:layout_marginLeft="@dimen/dp10"
+                            />
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag9"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_feedback"
+                            android:text="坐垫损坏"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/tx_black_light"
+                            android:textSize="@dimen/sp12"
+                            android:layout_marginLeft="@dimen/dp10"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_marginTop="@dimen/dp10">
 
                         <TextView
-                            android:id="@+id/feedbackUI_type_Tag4"
+                            android:id="@+id/feedbackUI_type_Tag10"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
@@ -153,7 +245,7 @@
                             android:textColor="@color/tx_black_light"
                             android:textSize="@dimen/sp12"/>
                         <TextView
-                            android:id="@+id/feedbackUI_type_Tag5"
+                            android:id="@+id/feedbackUI_type_Tag11"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
@@ -164,7 +256,7 @@
                             android:layout_marginLeft="@dimen/dp10"/>
 
                         <TextView
-                            android:id="@+id/feedbackUI_type_Tag6"
+                            android:id="@+id/feedbackUI_type_Tag12"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
