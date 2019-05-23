@@ -143,6 +143,15 @@
     <!--android:layout_below="@id/toolbar"-->
 
     <Button
+        android:id="@+id/btnQueryState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="100dp"
+        android:text="获取状态"/>
+
+    <Button
         android:id="@+id/temporaryAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
