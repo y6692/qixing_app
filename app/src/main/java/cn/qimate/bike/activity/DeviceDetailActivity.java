@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ import com.sofi.blelocker.library.protocol.IGetRecordResponse;
 import com.sofi.blelocker.library.protocol.IGetStatusResponse;
 import com.sofi.blelocker.library.protocol.IQueryOpenStateResponse;
 import com.sofi.blelocker.library.protocol.IQueryRunStateResponse;
+import com.sofi.blelocker.library.protocol.ITemporaryActionResponse;
 import com.sofi.blelocker.library.search.SearchRequest;
 import com.sofi.blelocker.library.search.SearchResult;
 import com.sofi.blelocker.library.search.response.SearchResponse;
@@ -53,16 +55,20 @@ import static com.sofi.blelocker.library.Constants.STATUS_CONNECTED;
 
 public class DeviceDetailActivity extends Activity implements View.OnClickListener{
     private static final String TAG = DeviceDetailActivity.class.getSimpleName();
-//    @BindView(R.id.layLock)
+    //    @BindView(R.id.layLock)
     RelativeLayout layLock;
-//    @BindView(R.id.tvName)
+    //    @BindView(R.id.tvName)
     TextView tvName;
-//    @BindView(R.id.tvState)
+    //    @BindView(R.id.tvState)
     TextView tvState;
-//    @BindView(R.id.tvOpen)
+    //    @BindView(R.id.tvOpen)
     TextView tvOpen;
 //    @BindView(R.id.tvLog)
 //    TextView tvLog;
+
+    Button btnQueryState;
+    Button temporaryAction;
+
     private String mac, name;
     private boolean mConnected = false;
     private String version = "";   //硬件版本号
@@ -78,12 +84,16 @@ public class DeviceDetailActivity extends Activity implements View.OnClickListen
         setContentView(R.layout.ac_ui_device_detail);
         ButterKnife.bind(this);
 
-        layLock = (RelativeLayout) findViewById(R.id.layLock);
-        tvName = (TextView) findViewById(R.id.tvName);
-        tvState = (TextView) findViewById(R.id.tvState);
-        tvOpen = (TextView) findViewById(R.id.tvOpen);
+        layLock = findViewById(R.id.layLock);
+        tvName = findViewById(R.id.tvName);
+        tvState = findViewById(R.id.tvState);
+        tvOpen = findViewById(R.id.tvOpen);
+        btnQueryState = findViewById(R.id.btnQueryState);
+        temporaryAction = findViewById(R.id.temporaryAction);
 
         layLock.setOnClickListener(this);
+        btnQueryState.setOnClickListener(this);
+        temporaryAction.setOnClickListener(this);
 
         bindData();
 //        bindView();
@@ -97,15 +107,18 @@ public class DeviceDetailActivity extends Activity implements View.OnClickListen
 //        setTitle("大门锁");
     }
 
-//    @Override
+    //    @Override
     protected void bindData() {
 //        if (getIntent() != null) {
 //            mac = getIntent().getStringExtra("mac");
 //            name = StringUtils.getBikeName(getIntent().getStringExtra("name"));
 //        }
 
-        mac = "A4:34:F1:7B:BF:A9";
-        name = "GpDTxe7<p";
+//        mac = "A4:34:F1:7B:BF:A9";
+        mac = "A4:34:F1:7B:BF:9A";
+        name = "GpDTxe7<a";
+
+//        connectDevice();
 
         ClientManager.getClient().registerConnectStatusListener(mac, mConnectStatusListener);
         ClientManager.getClient().notifyClose(mac, mCloseListener); //监听锁关闭事件
@@ -158,7 +171,8 @@ public class DeviceDetailActivity extends Activity implements View.OnClickListen
 //    }
 
 
-//    @OnClick({R.id.layLock})
+
+    //    @OnClick({R.id.layLock})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.layLock :
@@ -178,6 +192,13 @@ public class DeviceDetailActivity extends Activity implements View.OnClickListen
                     }
 
                 });
+                break;
+
+            case R.id.btnQueryState:
+                queryOpenState();
+                break;
+            case R.id.temporaryAction:
+                temporaryAction();
                 break;
 //            case R.id.btnScan:
 //                ClientManager.getClient().disconnect(mac);
@@ -352,7 +373,8 @@ public class DeviceDetailActivity extends Activity implements View.OnClickListen
     //与设备，开锁
     private void openBleLock(RRent.ResultBean resultBean) {
         UIHelper.showProgress(this, "open_bike_status");
-        ClientManager.getClient().openLock(mac, "18112348925", resultBean.getServerTime(),
+//        ClientManager.getClient().openLock(mac, "18112348925", resultBean.getServerTime(),
+        ClientManager.getClient().openLock(mac,"000000000000", resultBean.getServerTime(),
                 resultBean.getKeys(), resultBean.getEncryptionKey(), new IEmptyResponse(){
                     @Override
                     public void onResponseFail(int code) {
@@ -367,6 +389,26 @@ public class DeviceDetailActivity extends Activity implements View.OnClickListen
                         getBleRecord();
                     }
                 });
+    }
+
+    //与设备，临时停车
+    private void temporaryAction() {
+        UIHelper.showProgress(this, "temporaryAction");
+//        ClientManager.getClient().temporaryAction(mac, "18112348925", new ITemporaryActionResponse() {
+        ClientManager.getClient().temporaryAction(mac, "000000000000", new ITemporaryActionResponse() {
+            @Override
+            public void onResponseSuccess() {
+                UIHelper.dismiss();
+                UIHelper.showToast(DeviceDetailActivity.this, "临时停车成功");
+            }
+
+            @Override
+            public void onResponseFail(int code) {
+                Log.e(TAG, Code.toString(code));
+                UIHelper.dismiss();
+                UIHelper.showToast(DeviceDetailActivity.this, Code.toString(code));
+            }
+        });
     }
 
     //与设备，获取记录
@@ -467,7 +509,7 @@ public class DeviceDetailActivity extends Activity implements View.OnClickListen
         });
     }
 
-//    //与设备，蜂鸣器响
+    //    //与设备，蜂鸣器响
 //    private void buzzer() {
 //        UIHelper.showProgress(this, buzzer);
 //        ClientManager.getClient().buzzer(mac, new IEmptyResponse(){
@@ -486,13 +528,16 @@ public class DeviceDetailActivity extends Activity implements View.OnClickListen
 //                });
 //    }
 //
-//    //与设备，校准锁开关状态
-//    private void queryOpenState() {
-//        UIHelper.showProgress(this, R.string.collectState);
-//        ClientManager.getClient().queryOpenState(mac, new IQueryOpenStateResponse() {
-//            @Override
-//            public void onResponseSuccess(boolean open) {
-//                UIHelper.dismiss();
+    //与设备，校准锁开关状态
+    private void queryOpenState() {
+        UIHelper.showProgress(this, "collectState");
+        ClientManager.getClient().queryOpenState(mac, new IQueryOpenStateResponse() {
+            @Override
+            public void onResponseSuccess(boolean open) {
+                UIHelper.dismiss();
+
+                Log.e("queryOpenState===", "===="+open);
+
 //                if(open) {
 //                    Globals.bType = 1;
 //                    runOnUiThread(new Runnable() {
@@ -511,16 +556,16 @@ public class DeviceDetailActivity extends Activity implements View.OnClickListen
 //                        }
 //                    });
 //                }
-//            }
-//
-//            @Override
-//            public void onResponseFail(int code) {
-//                LOG.E(TAG, Code.toString(code));
-//                UIHelper.dismiss();
-//                UIHelper.showToast(DeviceDetailActivity.this, Code.toString(code));
-//            }
-//        });
-//    }
+            }
+
+            @Override
+            public void onResponseFail(int code) {
+                Log.e(TAG, Code.toString(code));
+                UIHelper.dismiss();
+                UIHelper.showToast(DeviceDetailActivity.this, Code.toString(code));
+            }
+        });
+    }
 //
 //    //与设备，获取锁运行状态
 //    private void queryRunState() {
@@ -720,6 +765,8 @@ public class DeviceDetailActivity extends Activity implements View.OnClickListen
     private final ICloseListener mCloseListener = new ICloseListener() {
         @Override
         public void onNotifyClose() {
+            Log.e("onNotifyClose===", "====");
+
             BluetoothLog.v(String.format(Locale.getDefault(), "DeviceDetailActivity onNotifyClose"));
             runOnUiThread(new Runnable() {
                 @Override
@@ -737,6 +784,8 @@ public class DeviceDetailActivity extends Activity implements View.OnClickListen
         public void onConnectStatusChanged(String mac, int status) {
             BluetoothLog.v(String.format(Locale.getDefault(), "DeviceDetailActivity onConnectStatusChanged %d in %s",
                     status, Thread.currentThread().getName()));
+
+            Log.e("ConnectStatus===", "===="+(status == STATUS_CONNECTED));
 
             Globals.isBleConnected = mConnected = (status == STATUS_CONNECTED);
             refreshData(mConnected);

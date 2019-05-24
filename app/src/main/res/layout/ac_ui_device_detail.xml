@@ -5,8 +5,8 @@
     android:layout_height="match_parent">
 
     <!--<include-->
-        <!--android:id="@+id/toolbar"-->
-        <!--layout="@layout/include_toolbar" />-->
+    <!--android:id="@+id/toolbar"-->
+    <!--layout="@layout/include_toolbar" />-->
 
     <!-- 底部菜单 -->
     <LinearLayout
@@ -20,113 +20,113 @@
         android:baselineAligned="false">
 
         <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="horizontal">-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal">-->
 
-            <!--<Button-->
-                <!--android:id="@+id/btnScan"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
-                <!--android:text="@string/bottom_scan"-->
-                <!--android:textColor="@color/color_black_primary"-->
-                <!--android:textSize="@dimen/bottom_tv_size" />-->
+        <!--<Button-->
+        <!--android:id="@+id/btnScan"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+        <!--android:text="@string/bottom_scan"-->
+        <!--android:textColor="@color/color_black_primary"-->
+        <!--android:textSize="@dimen/bottom_tv_size" />-->
 
-            <!--<Button-->
-                <!--android:id="@+id/btnBuzzer"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
-                <!--android:text="@string/bottom_buzzer"-->
-                <!--android:textColor="@color/color_black_primary"-->
-                <!--android:textSize="@dimen/bottom_tv_size" />-->
+        <!--<Button-->
+        <!--android:id="@+id/btnBuzzer"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+        <!--android:text="@string/bottom_buzzer"-->
+        <!--android:textColor="@color/color_black_primary"-->
+        <!--android:textSize="@dimen/bottom_tv_size" />-->
 
-            <!--<Button-->
-                <!--android:id="@+id/btnQueryOpenState"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
-                <!--android:text="@string/bottom_open_state"-->
-                <!--android:textColor="@color/color_black_primary"-->
-                <!--android:textSize="@dimen/bottom_tv_size" />-->
+        <!--<Button-->
+        <!--android:id="@+id/btnQueryOpenState"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+        <!--android:text="@string/bottom_open_state"-->
+        <!--android:textColor="@color/color_black_primary"-->
+        <!--android:textSize="@dimen/bottom_tv_size" />-->
 
-            <!--<Button-->
-                <!--android:id="@+id/btnQueryRunState"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
-                <!--android:text="@string/bottom_run_state"-->
-                <!--android:textColor="@color/color_black_primary"-->
-                <!--android:textSize="@dimen/bottom_tv_size" />-->
-
-        <!--</LinearLayout>-->
-
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="horizontal" >-->
-
-            <!--<Button-->
-                <!--android:id="@+id/btnGetConfig"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
-                <!--android:text="@string/bottom_get_config"-->
-                <!--android:textColor="@color/color_black_primary"-->
-                <!--android:textSize="@dimen/bottom_tv_size" />-->
-
-            <!--<Button-->
-                <!--android:id="@+id/btnGetRecord"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
-                <!--android:text="@string/bottom_record"-->
-                <!--android:textColor="@color/color_black_primary"-->
-                <!--android:textSize="@dimen/bottom_tv_size" />-->
-
-            <!--<Button-->
-                <!--android:id="@+id/btnLowPacketEnable"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
-                <!--android:text="@string/bottom_low_power_enable"-->
-                <!--android:textColor="@color/color_black_primary"-->
-                <!--android:textSize="@dimen/bottom_tv_size" />-->
+        <!--<Button-->
+        <!--android:id="@+id/btnQueryRunState"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+        <!--android:text="@string/bottom_run_state"-->
+        <!--android:textColor="@color/color_black_primary"-->
+        <!--android:textSize="@dimen/bottom_tv_size" />-->
 
         <!--</LinearLayout>-->
 
         <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="horizontal" >-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal" >-->
 
-            <!--<Button-->
-                <!--android:id="@+id/btnLowPacketDisable"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
-                <!--android:text="@string/bottom_low_power_disable"-->
-                <!--android:textColor="@color/color_black_primary"-->
-                <!--android:textSize="@dimen/bottom_tv_size" />-->
+        <!--<Button-->
+        <!--android:id="@+id/btnGetConfig"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+        <!--android:text="@string/bottom_get_config"-->
+        <!--android:textColor="@color/color_black_primary"-->
+        <!--android:textSize="@dimen/bottom_tv_size" />-->
 
-            <!--<Button-->
-                <!--android:id="@+id/btnUpdatekey"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
-                <!--android:text="@string/bottom_update_key"-->
-                <!--android:textColor="@color/color_black_primary"-->
-                <!--android:textSize="@dimen/bottom_tv_size" />-->
+        <!--<Button-->
+        <!--android:id="@+id/btnGetRecord"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+        <!--android:text="@string/bottom_record"-->
+        <!--android:textColor="@color/color_black_primary"-->
+        <!--android:textSize="@dimen/bottom_tv_size" />-->
 
-            <!--<Button-->
-                <!--android:id="@+id/btnExitFactory"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="@dimen/bottom_margin"-->
-                <!--android:text="@string/bottom_exit_factory"-->
-                <!--android:textColor="@color/color_black_primary"-->
-                <!--android:textSize="@dimen/bottom_tv_size" />-->
+        <!--<Button-->
+        <!--android:id="@+id/btnLowPacketEnable"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+        <!--android:text="@string/bottom_low_power_enable"-->
+        <!--android:textColor="@color/color_black_primary"-->
+        <!--android:textSize="@dimen/bottom_tv_size" />-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal" >-->
+
+        <!--<Button-->
+        <!--android:id="@+id/btnLowPacketDisable"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+        <!--android:text="@string/bottom_low_power_disable"-->
+        <!--android:textColor="@color/color_black_primary"-->
+        <!--android:textSize="@dimen/bottom_tv_size" />-->
+
+        <!--<Button-->
+        <!--android:id="@+id/btnUpdatekey"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+        <!--android:text="@string/bottom_update_key"-->
+        <!--android:textColor="@color/color_black_primary"-->
+        <!--android:textSize="@dimen/bottom_tv_size" />-->
+
+        <!--<Button-->
+        <!--android:id="@+id/btnExitFactory"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="@dimen/bottom_margin"-->
+        <!--android:text="@string/bottom_exit_factory"-->
+        <!--android:textColor="@color/color_black_primary"-->
+        <!--android:textSize="@dimen/bottom_tv_size" />-->
 
         <!--</LinearLayout>-->
 
@@ -141,5 +141,24 @@
         layout="@layout/ac_ui_device_detail_lock" />
 
     <!--android:layout_below="@id/toolbar"-->
+
+    <Button
+        android:id="@+id/btnQueryState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="100dp"
+        android:text="获取状态"/>
+
+    <Button
+        android:id="@+id/temporaryAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="40dp"
+        android:text="临时上锁"
+        />
 
 </RelativeLayout>
