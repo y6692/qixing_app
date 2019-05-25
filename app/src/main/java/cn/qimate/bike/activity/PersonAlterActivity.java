@@ -294,6 +294,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
         String bikenum = SharedPreferencesUrls.getInstance().getString("bikenum","");
         String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays","");
+        String ebike_specialdays = SharedPreferencesUrls.getInstance().getString("ebike_specialdays", "");
         if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
             settingImage.setVisibility(View.GONE);
             superVip.setVisibility(View.GONE);
@@ -302,7 +303,8 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
             settingImage.setVisibility(View.VISIBLE);
             initHttp();
             if (("0".equals(bikenum) || bikenum == null || "".equals(bikenum))
-                    && ("0".equals(specialdays) || specialdays == null || "".equals(specialdays))){
+                    && ("0".equals(specialdays) || specialdays == null || "".equals(specialdays))
+                    && ("0".equals(ebike_specialdays) || ebike_specialdays == null || "".equals(ebike_specialdays))){
                 superVip.setVisibility(View.GONE);
             }else {
                 superVip.setVisibility(View.VISIBLE);
