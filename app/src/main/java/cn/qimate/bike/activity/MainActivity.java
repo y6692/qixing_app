@@ -1,15 +1,19 @@
 package cn.qimate.bike.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -27,6 +31,8 @@ import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
+import com.sofi.blelocker.library.connect.listener.BluetoothStateListener;
+import com.sofi.blelocker.library.search.SearchRequest;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -38,6 +44,9 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.http.OkHttpClientManager;
+import cn.http.ResultCallback;
+import cn.http.rdata.RUserLogin;
 import cn.qimate.bike.R;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragmentActivity;
@@ -51,7 +60,11 @@ import cn.qimate.bike.fragment.BikeFragment;
 import cn.qimate.bike.fragment.EbikeFragment;
 import cn.qimate.bike.model.TabTopEntity;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.Globals;
 import cn.qimate.bike.util.ToastUtil;
+import okhttp3.Request;
+
+import static com.sofi.blelocker.library.Constants.STATUS_CONNECTED;
 
 @SuppressLint("NewApi")
 public class MainActivity extends BaseFragmentActivity implements View.OnClickListener{
@@ -118,6 +131,31 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         }else{
             changeTab(0);
         }
+
+
+        OkHttpClientManager.getInstance().UserLogin("99920170623", "123456", new ResultCallback<RUserLogin>() {
+            @Override
+            public void onError(Request request, Exception e) {
+                Log.e("UserLogin===", "====Error");
+//                UIHelper.showToast(this, e.getMessage());
+//                failLogin();
+            }
+
+            @Override
+            public void onResponse(RUserLogin rUserLogin) {
+                if (rUserLogin.getResult() < 0) {
+//                    failLogin();
+                    Log.e("UserLogin===", "====fail");
+                }
+                else {
+                    Globals.USERNAME = "99920170623";
+//                    Globals.BLE_NAME = "GpDTxe7<a";
+//                    successLogin();
+                    Log.e("UserLogin===", "====success");
+                }
+            }
+        });
+
     }
 
     protected Handler m_myHandler = new Handler(new Handler.Callback() {
@@ -211,6 +249,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         mapView.onResume();
 
+        ClientManager.getClient().registerBluetoothStateListener(mBluetoothStateListener);
 
 
 //        aMap = mapView.getMap();
@@ -220,6 +259,31 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         Log.e("main===onResume2", "===");
 
     }
+
+    private BluetoothStateListener mBluetoothStateListener = new BluetoothStateListener() {
+        @Override
+        public void onBluetoothStateChanged(boolean openOrClosed) {
+            if (openOrClosed) {
+//                searchDevice();
+
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+//                    .searchBluetoothClassicDevice(3000, 5)
+                            .searchBluetoothLeDevice(0)
+                            .build();
+
+//                    ClientManager.getClient().search(request, mSearchResponse);
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 188);
+                }
+            }
+            else {
+//                UIHelper.showAlertDialog(DeviceListActivity.this, R.string.ble_disable);
+                Log.e("mBluetoothStateL=", "===");
+            }
+        }
+    };
 
     @Override
     public void onDestroy() {
