@@ -348,8 +348,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //            mapView.onPause();
 //            mapView.setVisibility(View.GONE);
 
-
-
 //            deactivate();
         }else{
             //resume
@@ -677,27 +675,27 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
 //        exImage_3.setLayoutParams(params3);
 
-        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
-            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
-            WindowManager windowManager = activity.getWindowManager();
-            Display display = windowManager.getDefaultDisplay();
-            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-            dialog.getWindow().setAttributes(lp);
-            dialog.show();
-        }
-        else {
-//            initHttp();
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    m_myHandler.sendEmptyMessage(5);
-                }
-            }).start();
-        }
+//        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
+//            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
+//            WindowManager windowManager = activity.getWindowManager();
+//            Display display = windowManager.getDefaultDisplay();
+//            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+//            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+//            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+//            dialog.getWindow().setAttributes(lp);
+//            dialog.show();
+//        }
+//        else {
+////            initHttp();
+//
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    m_myHandler.sendEmptyMessage(5);
+//                }
+//            }).start();
+//        }
 //        exImage_1.setOnClickListener(myOnClickLister);
 //        exImage_2.setOnClickListener(myOnClickLister);
         closeBtn.setOnClickListener(myOnClickLister);

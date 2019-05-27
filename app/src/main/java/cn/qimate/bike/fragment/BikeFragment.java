@@ -188,29 +188,15 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private Button rechargeBtn;
     private int Tag = 0;
 
-    private Dialog dialog;
-    private View dialogView;
 
-    private ImageView titleImage;
-    private ImageView exImage_1;
-    private ImageView exImage_2;
-    private ImageView exImage_3;
 
-    private LinearLayout marqueeLayout;
-    private ImageView closeBtn;
-    private Dialog advDialog;
-    private ImageView advImageView;
-    private ImageView advCloseBtn;
-    private String imageUrl;
-    private String ad_link;
-    private String app_type;
-    private String app_id;
 
     private List<Marker> bikeMarkerList;
     private boolean isUp = false;
     private LinearLayout refreshLayout;
     private Button cartBtn;
     private LinearLayout slideLayout;
+    private LinearLayout marqueeLayout;
     private int imageWith = 0;
     private ValueAnimator animator = null;
 
@@ -238,6 +224,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private long p=-1;
     private boolean first3 = true;
 //    private boolean isStop = false;
+
+    private Dialog dialog;
 
     private TextView marquee;
     protected InternalReceiver internalReceiver = null;
@@ -618,26 +606,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         dialog.setContentView(dialogView);
         dialog.setCanceledOnTouchOutside(false);
 
-        advDialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
-        View advDialogView = LayoutInflater.from(context).inflate(R.layout.ui_adv_view, null);
-        advDialog.setContentView(advDialogView);
-        advDialog.setCanceledOnTouchOutside(false);
-
-        marqueeLayout = activity.findViewById(R.id.mainUI_marqueeLayout);
-
-        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
-        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
-//        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
-//        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
-        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
-
-        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
-        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
-
-        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
-        params4.height = (int) (activity.getWindowManager().getDefaultDisplay().getWidth() * 0.8);
-        advImageView.setLayoutParams(params4);
-
         marquee = (TextView) activity.findViewById(R.id.mainUI_marquee);
 //        title = (TextView) activity.findViewById(R.id.mainUI_title);
 //        leftBtn = (ImageView) activity.findViewById(R.id.mainUI_leftBtn);
@@ -653,6 +621,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         rechargeBtn = (Button)activity.findViewById(R.id.mainUI_rechargeBtn);
         refreshLayout = (LinearLayout) activity.findViewById(R.id.mainUI_refreshLayout);
         slideLayout = (LinearLayout)activity.findViewById(R.id.mainUI_slideLayout);
+        marqueeLayout = (LinearLayout)activity.findViewById(R.id.mainUI_marqueeLayout);
 
         if(aMap==null){
             aMap = mapView.getMap();
@@ -682,7 +651,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 //        leftBtn.setOnClickListener(this);
 //        rightBtn.setOnClickListener(this);
-        marqueeLayout.setOnClickListener(this);
+
         myLocationBtn.setOnClickListener(this);
         myCommissionLayout.setOnClickListener(this);
         myLocationLayout.setOnClickListener(this);
@@ -692,14 +661,12 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         authBtn.setOnClickListener(this);
         rechargeBtn.setOnClickListener(this);
         refreshLayout.setOnClickListener(this);
-        advImageView.setOnClickListener(this);
-        advCloseBtn.setOnClickListener(this);
+        marqueeLayout.setOnClickListener(this);
+
         cartBtn.setOnClickListener(this);
         slideLayout.setOnClickListener(this);
 
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
-        params.height = (int) (activity.getWindowManager().getDefaultDisplay().getWidth() * 0.16);
-        titleImage.setLayoutParams(params);
+
 
 //        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
 //        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
@@ -713,30 +680,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
 //        exImage_3.setLayoutParams(params3);
 
-        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
-            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
-            WindowManager windowManager = activity.getWindowManager();
-            Display display = windowManager.getDefaultDisplay();
-            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-            dialog.getWindow().setAttributes(lp);
-            dialog.show();
-        }
-        else {
-//            initHttp();
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    m_myHandler.sendEmptyMessage(5);
-                }
-            }).start();
-        }
-//        exImage_1.setOnClickListener(myOnClickLister);
-//        exImage_2.setOnClickListener(myOnClickLister);
-        closeBtn.setOnClickListener(myOnClickLister);
 
 
 
@@ -903,73 +847,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    /**
-     * 获取广告
-     * */
-    private void initHttp(){
-        RequestParams params = new RequestParams();
-        params.put("adsid","11");
-        if (SharedPreferencesUrls.getInstance().getString("uid","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("uid",""))){
-            params.put("uid",SharedPreferencesUrls.getInstance().getString("uid",""));
-        }
-        if (SharedPreferencesUrls.getInstance().getString("access_token","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("access_token",""))){
-            params.put("access_token",SharedPreferencesUrls.getInstance().getString("access_token",""));
-        }
-        HttpHelper.get(context, Urls.getIndexAd, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
-            }
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        JSONArray jsonArray = new JSONArray(result.getData());
-                        for (int i = 0; i < jsonArray.length();i++){
-                            imageUrl = jsonArray.getJSONObject(i).getString("ad_file");
-                            ad_link = jsonArray.getJSONObject(i).getString("ad_link");
-                            app_type = jsonArray.getJSONObject(i).getString("app_type");
-                            app_id = jsonArray.getJSONObject(i).getString("app_id");
-                            ad_link = jsonArray.getJSONObject(i).getString("ad_link");
 
-                        }
-
-//                        m_myHandler.sendEmptyMessage(5);
-
-                        if (!SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",false)){
-                            if (imageUrl != null && !"".equals(imageUrl)){
-                                WindowManager windowManager = activity.getWindowManager();
-                                Display display = windowManager.getDefaultDisplay();
-                                WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
-                                lp.width = (int) (display.getWidth() * 0.8);
-                                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                                advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-                                advDialog.getWindow().setAttributes(lp);
-                                advDialog.show();
-                                // 加载图片
-                                Glide.with(context).load(imageUrl).into(advImageView);
-                            }
-                        }
-                    }
-                }catch (Exception e){
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-            }
-        });
-    }
 
     protected Handler m_myHandler = new Handler(new Handler.Callback() {
         @Override
@@ -1062,24 +940,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     animMarker();
                     break;
 
-                case 5:
-                    initHttp();
 
-//                    if (!SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",false)){
-//                        if (imageUrl != null && !"".equals(imageUrl)){
-//                            WindowManager windowManager = getWindowManager();
-//                            Display display = windowManager.getDefaultDisplay();
-//                            WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
-//                            lp.width = (int) (display.getWidth() * 0.8);
-//                            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-//                            advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-//                            advDialog.getWindow().setAttributes(lp);
-//                            advDialog.show();
-//                            // 加载图片
-//                            Glide.with(context).load(imageUrl).into(advImageView);
-//                        }
-//                    }
-                    break;
 
                 case 0x99://搜索超时
                     BaseApplication.getInstance().getIBLE().connect(m_nowMac, BikeFragment.this);
@@ -1950,17 +1811,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     }
                 }
                 break;
-            case R.id.ui_adv_image:
 
-                Log.e("main===", "ui_adv==="+app_type+"==="+app_id+"==="+ad_link);
 
-                UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
-                break;
-            case R.id.ui_adv_closeBtn:
-                if (advDialog != null && advDialog.isShowing()) {
-                    advDialog.dismiss();
-                }
-                break;
             case R.id.mainUI_cartBtn:
                 intent = new Intent(context, PayMontCartActivity.class);
                 intent.putExtra("carType",1);
@@ -2883,32 +2735,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 
 
-    private View.OnClickListener myOnClickLister = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-//                case R.id.ui_fristView_exImage_1:
-//                    if (dialog != null && dialog.isShowing()) {
-//                        dialog.dismiss();
-//                    }
-//                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
-//                    break;
-//                case R.id.ui_fristView_exImage_2:
-//                    if (dialog != null && dialog.isShowing()) {
-//                        dialog.dismiss();
-//                    }
-//                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
-//                    break;
-                case R.id.ui_fristView_closeBtn:
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
+
 
 
 

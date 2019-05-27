@@ -2,6 +2,7 @@ package cn.qimate.bike.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,13 +16,17 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.alibaba.fastjson.JSON;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.CameraUpdate;
@@ -29,10 +34,14 @@ import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.bumptech.glide.Glide;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.sofi.blelocker.library.connect.listener.BluetoothStateListener;
 import com.sofi.blelocker.library.search.SearchRequest;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -47,17 +56,22 @@ import butterknife.ButterKnife;
 import cn.http.OkHttpClientManager;
 import cn.http.ResultCallback;
 import cn.http.rdata.RUserLogin;
+import cn.loopj.android.http.RequestParams;
+import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragmentActivity;
 import cn.qimate.bike.core.common.AppManager;
+import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.UpdateManager;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
+import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.fragment.BikeFragment;
 import cn.qimate.bike.fragment.EbikeFragment;
+import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.TabTopEntity;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.Globals;
@@ -98,6 +112,27 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     public AMap aMap;
     public BitmapDescriptor successDescripter;
     public MapView mapView;
+
+    private LoadingDialog loadingDialog;
+
+    private Dialog dialog;
+    private View dialogView;
+
+    private ImageView titleImage;
+    private ImageView exImage_1;
+    private ImageView exImage_2;
+    private ImageView exImage_3;
+
+    private String imageUrl;
+    private String ad_link;
+    private String app_type;
+    private String app_id;
+
+
+    private ImageView closeBtn;
+    private Dialog advDialog;
+    private ImageView advImageView;
+    private ImageView advCloseBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +193,84 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     }
 
+    private void initView() {
+
+        tab = findViewById(R.id.tab);
+
+        tab.setTabData(mTabEntities, MainActivity.this, R.id.fl_change, mFragments);
+        tab.setCurrentTab(0);
+
+
+        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
+        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
+
+        loadingDialog = new LoadingDialog(context);
+        loadingDialog.setCancelable(false);
+        loadingDialog.setCanceledOnTouchOutside(false);
+
+        dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_frist_view, null);
+        dialog.setContentView(dialogView);
+        dialog.setCanceledOnTouchOutside(false);
+
+        advDialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+        View advDialogView = LayoutInflater.from(context).inflate(R.layout.ui_adv_view, null);
+        advDialog.setContentView(advDialogView);
+        advDialog.setCanceledOnTouchOutside(false);
+
+
+
+        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
+        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
+//        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
+//        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
+        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
+
+        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
+        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+
+        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
+        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+        advImageView.setLayoutParams(params4);
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
+        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
+        titleImage.setLayoutParams(params);
+
+        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
+            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
+            WindowManager windowManager = getWindowManager();
+            Display display = windowManager.getDefaultDisplay();
+            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+            dialog.getWindow().setAttributes(lp);
+            dialog.show();
+        }
+        else {
+//            initHttp();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    m_myHandler.sendEmptyMessage(5);
+                }
+            }).start();
+        }
+//        exImage_1.setOnClickListener(myOnClickLister);
+//        exImage_2.setOnClickListener(myOnClickLister);
+
+
+        leftBtn.setOnClickListener(this);
+        rightBtn.setOnClickListener(this);
+
+        advImageView.setOnClickListener(this);
+        advCloseBtn.setOnClickListener(this);
+        closeBtn.setOnClickListener(myOnClickLister);
+
+    }
+
     protected Handler m_myHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message mes) {
@@ -168,12 +281,101 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                     getNetTime();
 
                     break;
+
+                case 5:
+                    initHttp();
+
+//                    if (!SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",false)){
+//                        if (imageUrl != null && !"".equals(imageUrl)){
+//                            WindowManager windowManager = getWindowManager();
+//                            Display display = windowManager.getDefaultDisplay();
+//                            WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
+//                            lp.width = (int) (display.getWidth() * 0.8);
+//                            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//                            advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+//                            advDialog.getWindow().setAttributes(lp);
+//                            advDialog.show();
+//                            // 加载图片
+//                            Glide.with(context).load(imageUrl).into(advImageView);
+//                        }
+//                    }
+                    break;
+
                 default:
                     break;
             }
             return false;
         }
     });
+
+    /**
+     * 获取广告
+     * */
+    private void initHttp(){
+        RequestParams params = new RequestParams();
+        params.put("adsid","11");
+        if (SharedPreferencesUrls.getInstance().getString("uid","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("uid",""))){
+            params.put("uid",SharedPreferencesUrls.getInstance().getString("uid",""));
+        }
+        if (SharedPreferencesUrls.getInstance().getString("access_token","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("access_token",""))){
+            params.put("access_token",SharedPreferencesUrls.getInstance().getString("access_token",""));
+        }
+        HttpHelper.get(context, Urls.getIndexAd, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+                        JSONArray jsonArray = new JSONArray(result.getData());
+                        for (int i = 0; i < jsonArray.length();i++){
+                            imageUrl = jsonArray.getJSONObject(i).getString("ad_file");
+                            ad_link = jsonArray.getJSONObject(i).getString("ad_link");
+                            app_type = jsonArray.getJSONObject(i).getString("app_type");
+                            app_id = jsonArray.getJSONObject(i).getString("app_id");
+                            ad_link = jsonArray.getJSONObject(i).getString("ad_link");
+
+                        }
+
+//                        m_myHandler.sendEmptyMessage(5);
+
+                        if (!SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",false)){
+                            if (imageUrl != null && !"".equals(imageUrl)){
+                                WindowManager windowManager = getWindowManager();
+                                Display display = windowManager.getDefaultDisplay();
+                                WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
+                                lp.width = (int) (display.getWidth() * 0.8);
+                                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                                advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+                                advDialog.getWindow().setAttributes(lp);
+                                advDialog.show();
+                                // 加载图片
+                                Glide.with(context).load(imageUrl).into(advImageView);
+                            }
+                        }
+                    }
+                }catch (Exception e){
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
+
 
     //获取网络时间
     private void getNetTime() {
@@ -336,20 +538,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         }
     }
 
-    private void initView() {
 
-        tab = findViewById(R.id.tab);
-
-        tab.setTabData(mTabEntities, MainActivity.this, R.id.fl_change, mFragments);
-        tab.setCurrentTab(0);
-
-
-        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
-        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
-
-        leftBtn.setOnClickListener(this);
-        rightBtn.setOnClickListener(this);
-    }
 
     public void changeTab(int index) {
         tab.setCurrentTab(index);
@@ -378,11 +567,49 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 }
                 UIHelper.goToAct(context, PersonAlterActivity.class);
                 break;
+            case R.id.ui_adv_closeBtn:
+                if (advDialog != null && advDialog.isShowing()) {
+                    advDialog.dismiss();
+                }
+                break;
+            case R.id.ui_adv_image:
+
+                Log.e("main===", "ui_adv==="+app_type+"==="+app_id+"==="+ad_link);
+
+                UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
+                break;
 
             default:
                 break;
         }
     }
+
+    private View.OnClickListener myOnClickLister = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+//                case R.id.ui_fristView_exImage_1:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
+//                    break;
+//                case R.id.ui_fristView_exImage_2:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
+//                    break;
+                case R.id.ui_fristView_closeBtn:
+                    if (dialog != null && dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

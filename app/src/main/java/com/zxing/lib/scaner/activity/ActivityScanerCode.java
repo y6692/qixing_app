@@ -927,13 +927,18 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         @Override
         public void onDeviceFounded(SearchResult device) {
-            ClientManager.getClient().stopSearch();
 
             Log.e("scan===","DeviceListActivity.onDeviceFounded " + device.device.getAddress());
 
-            connectDevice();
+            if(m_nowMac.equals(device.device.getAddress())){
+                ClientManager.getClient().stopSearch();
 
-            ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+                connectDevice();
+
+                ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+            }
+
+
 
 //            if (!mDevices.contains(device)) {
 //                mDevices.add(device);

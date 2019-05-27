@@ -281,6 +281,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         type = "5";
 
+        ClientManager.getClient().stopSearch();
+        ClientManager.getClient().disconnect(m_nowMac);
+        ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
 
         //注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
         IntentFilter filter = new IntentFilter("data.broadcast.action");
@@ -3290,8 +3295,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                     cn=0;
                                     closeLock2();
-
-
                                 }
                             }, 500);
 
@@ -4251,14 +4254,18 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         @Override
         public void onDeviceFounded(SearchResult device) {
-            ClientManager.getClient().stopSearch();
 
-            Log.e("biking===","DeviceListActivity.onDeviceFounded " + device.device.getAddress());
+            Log.e("biking===","DeviceListActivity.onDeviceFounded " + device.device.getAddress()+"==="+m_nowMac);
 
-            connectDevice();
+            if(m_nowMac.equals(device.device.getAddress())){
+                ClientManager.getClient().stopSearch();
 
-            ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
-            ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+                connectDevice();
+
+                ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+                ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+            }
+
         }
 
         @Override
