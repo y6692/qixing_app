@@ -587,25 +587,23 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         dialog.setContentView(dialogView);
         dialog.setCanceledOnTouchOutside(false);
 
-        advDialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
-        View advDialogView = LayoutInflater.from(context).inflate(R.layout.ui_adv_view, null);
-        advDialog.setContentView(advDialogView);
-        advDialog.setCanceledOnTouchOutside(false);
-
-        marqueeLayout = activity.findViewById(R.id.mainUI_marqueeLayout2);
-
-        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
-        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
-//        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
-//        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
-        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
-
-        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
-        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
-
-        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
-        params4.height = (int) (activity.getWindowManager().getDefaultDisplay().getWidth() * 0.8);
-        advImageView.setLayoutParams(params4);
+//        advDialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+//        View advDialogView = LayoutInflater.from(context).inflate(R.layout.ui_adv_view, null);
+//        advDialog.setContentView(advDialogView);
+//        advDialog.setCanceledOnTouchOutside(false);
+//
+//        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
+//        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
+////        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
+////        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
+//        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
+//
+//        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
+//        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+//
+//        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
+//        params4.height = (int) (activity.getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+//        advImageView.setLayoutParams(params4);
 
         marquee = (TextView) activity.findViewById(R.id.mainUI_marquee2);
 //        title = (TextView) activity.findViewById(R.id.mainUI_title);
@@ -622,6 +620,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         rechargeBtn = (Button)activity.findViewById(R.id.mainUI_rechargeBtn2);
         refreshLayout = (LinearLayout) activity.findViewById(R.id.mainUI_refreshLayout2);
         slideLayout = (LinearLayout)activity.findViewById(R.id.mainUI_slideLayout2);
+        marqueeLayout = activity.findViewById(R.id.mainUI_marqueeLayout2);
 
         if(aMap==null){
             aMap = mapView.getMap();
@@ -654,14 +653,15 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         authBtn.setOnClickListener(this);
         rechargeBtn.setOnClickListener(this);
         refreshLayout.setOnClickListener(this);
-        advImageView.setOnClickListener(this);
-        advCloseBtn.setOnClickListener(this);
         cartBtn.setOnClickListener(this);
         slideLayout.setOnClickListener(this);
 
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
-        params.height = (int) (activity.getWindowManager().getDefaultDisplay().getWidth() * 0.16);
-        titleImage.setLayoutParams(params);
+//        advImageView.setOnClickListener(this);
+//        advCloseBtn.setOnClickListener(this);
+
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
+//        params.height = (int) (activity.getWindowManager().getDefaultDisplay().getWidth() * 0.16);
+//        titleImage.setLayoutParams(params);
 
 //        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
 //        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
@@ -698,7 +698,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //        }
 //        exImage_1.setOnClickListener(myOnClickLister);
 //        exImage_2.setOnClickListener(myOnClickLister);
-        closeBtn.setOnClickListener(myOnClickLister);
+//        closeBtn.setOnClickListener(myOnClickLister);
 
 
 

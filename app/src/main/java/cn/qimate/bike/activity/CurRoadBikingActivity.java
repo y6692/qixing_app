@@ -76,12 +76,15 @@ import com.sofi.blelocker.library.connect.options.BleConnectOptions;
 import com.sofi.blelocker.library.model.BleGattProfile;
 import com.sofi.blelocker.library.protocol.ICloseListener;
 import com.sofi.blelocker.library.protocol.IConnectResponse;
+import com.sofi.blelocker.library.protocol.IEmptyResponse;
 import com.sofi.blelocker.library.protocol.IGetStatusResponse;
 import com.sofi.blelocker.library.protocol.IQueryOpenStateResponse;
+import com.sofi.blelocker.library.protocol.ITemporaryActionResponse;
 import com.sofi.blelocker.library.search.SearchRequest;
 import com.sofi.blelocker.library.search.SearchResult;
 import com.sofi.blelocker.library.search.response.SearchResponse;
 import com.sofi.blelocker.library.utils.BluetoothLog;
+import com.sofi.blelocker.library.utils.StringUtils;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
@@ -97,6 +100,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import cn.http.OkHttpClientManager;
+import cn.http.ResultCallback;
+import cn.http.rdata.RRent;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
@@ -126,6 +132,7 @@ import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
+import okhttp3.Request;
 
 import static cn.qimate.bike.core.common.Urls.schoolrangeList;
 import static com.sofi.blelocker.library.Constants.STATUS_CONNECTED;
@@ -406,8 +413,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private final BleConnectStatusListener mConnectStatusListener = new BleConnectStatusListener() {
         @Override
         public void onConnectStatusChanged(String mac, int status) {
-            BluetoothLog.v(String.format(Locale.getDefault(), "DeviceDetailActivity onConnectStatusChanged %d in %s",
-                    status, Thread.currentThread().getName()));
+            BluetoothLog.v(String.format(Locale.getDefault(), "DeviceDetailActivity onConnectStatusChanged %d in %s", status, Thread.currentThread().getName()));
 
             Log.e("ConnectStatus===biking", (status == STATUS_CONNECTED)+"===="+m_nowMac);
 
@@ -416,6 +422,105 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //            connectDeviceIfNeeded();
         }
     };
+
+    //监听当前连接状态
+    private final BleConnectStatusListener mConnectStatusListener2 = new BleConnectStatusListener() {
+        @Override
+        public void onConnectStatusChanged(String mac, int status) {
+            BluetoothLog.v(String.format(Locale.getDefault(), "DeviceDetailActivity onConnectStatusChanged %d in %s", status, Thread.currentThread().getName()));
+
+            Log.e("ConnectStatus2===biking", (status == STATUS_CONNECTED)+"===="+m_nowMac);
+
+            ClientManager.getClient().getStatus(mac, new IGetStatusResponse() {
+                @Override
+                public void onResponseSuccess(String version, String keySerial, String macKey, String vol) {
+//                    cn.qimate.bike.util.UIHelper.dismiss();
+                    queryStatusServer(version, keySerial, macKey, vol);
+                }
+
+                @Override
+                public void onResponseFail(int code) {
+                    Log.e("getStatus===", Code.toString(code));
+//                    cn.qimate.bike.util.UIHelper.dismiss();
+                    ToastUtil.showMessageApp(context, Code.toString(code));
+                }
+
+            });
+
+        }
+    };
+
+    //获取服务器的加密信息
+    private void queryStatusServer(String version, String keySerial, String macKey, String vol) {
+        Log.e("queryStatusServer===", "version:" + version + " keySerial:" + keySerial + " macKey:" + macKey + " vol:" + vol);
+//        this.version = version;
+        int timestamp = (int) StringUtils.getCurrentTimestamp();
+
+//        UIHelper.showProgress(this, "get_bike_server");
+        OkHttpClientManager.getInstance().Rent(macKey, keySerial, timestamp, new ResultCallback<RRent>() {
+
+            @Override
+            public void onResponse(RRent rRent) {
+
+                if (rRent.getResult() >= 0) {
+                    RRent.ResultBean resultBean = rRent.getInfo();
+                    openBleLock(resultBean);
+                }
+                else {
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    ToastUtil.showMessageApp(context, ""+rRent.getResult());
+                }
+            }
+
+            @Override
+            public void onError(Request request, Exception e) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+
+                ToastUtil.showMessageApp(context, e.getMessage());
+            }
+
+        });
+    }
+
+    //与设备，开锁
+    private void openBleLock(RRent.ResultBean resultBean) {
+//        UIHelper.showProgress(this, "open_bike_status");
+//        ClientManager.getClient().openLock(mac, "18112348925", resultBean.getServerTime(),
+        ClientManager.getClient().openLock(m_nowMac,"000000000000", resultBean.getServerTime(),
+                resultBean.getKeys(), resultBean.getEncryptionKey(), new IEmptyResponse(){
+                    @Override
+                    public void onResponseFail(int code) {
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+
+                        Log.e("openLock===Fail", Code.toString(code));
+                        ToastUtil.showMessageApp(context, Code.toString(code));
+                    }
+
+                    @Override
+                    public void onResponseSuccess() {
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+
+                        Log.e("openLock===Success", "===");
+
+                        ToastUtil.showMessageApp(context, "开锁成功");
+                        SharedPreferencesUrls.getInstance().putString("tempStat","0");
+
+//                        ClientManager.getClient().stopSearch();
+//                        ClientManager.getClient().disconnect(m_nowMac);
+//                      ClientManager.getClient().unnotifyClose(mac, mCloseListener);
+//                        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener2);
+
+                    }
+                });
+    }
 
     //监听锁关闭事件
     private final ICloseListener mCloseListener = new ICloseListener() {
@@ -426,7 +531,12 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 //            submit(uid, access_token);
 
-
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    lookPsdBtn.setText("开锁用车");
+                }
+            });
 
             BluetoothLog.v(String.format("DeviceDetailActivity onNotifyClose"));
 //            runOnUiThread(new Runnable() {
@@ -1021,7 +1131,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 m_nowMac = bean.getMacinfo();
                                 m_nowMac = "A4:34:F1:7B:BF:9A";
 
-                                if ("4".equals(bean.getType())){
+                                if ("4".equals(type)){
 
                                     ebikeInfoLayout.setVisibility(View.VISIBLE);
 
@@ -1047,6 +1157,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                         ebikeInfoThread.start();
                                     }
 
+                                    if("0".equals(SharedPreferencesUrls.getInstance().getString("tempStat","0"))){
+                                        lookPsdBtn.setText("临时上锁");
+                                    }else{
+                                        lookPsdBtn.setText("开锁用车");
+                                    }
+
+
+                                }else if ("5".equals(type)){
                                     if("0".equals(SharedPreferencesUrls.getInstance().getString("tempStat","0"))){
                                         lookPsdBtn.setText("临时上锁");
                                     }else{
@@ -1397,6 +1515,35 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             }
         }
     };
+
+    //泺平锁临时上锁
+    private void temporaryAction() {
+//        UIHelper.showProgress(this, R.string.temporaryAction);
+        if (loadingDialog != null && !loadingDialog.isShowing()) {
+            loadingDialog.setTitle("正在加载");
+            loadingDialog.show();
+        }
+        ClientManager.getClient().temporaryAction(m_nowMac, "000000000000", new ITemporaryActionResponse() {
+            @Override
+            public void onResponseSuccess() {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+
+                m_myHandler.sendEmptyMessage(7);
+
+
+            }
+
+            @Override
+            public void onResponseFail(int code) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, Code.toString(code));
+            }
+        });
+    }
 
     void checkConnectCloseTemp(){
         m_myHandler.postDelayed(new Runnable() {
@@ -1838,7 +1985,12 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                    cn = 0;
 //                    temporaryLock();
 
-                    closeEbikeTemp();
+                    if("4".equals(type)){
+                        closeEbikeTemp();
+                    }else{
+                        temporaryAction();
+                    }
+
 
 //                    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
 //                        ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
@@ -1869,16 +2021,58 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                     Log.e("biking===lookPsdBtn", "onClick==="+m_nowMac);
 
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("正在加载");
-                        loadingDialog.show();
-                    }
+//                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                        loadingDialog.setTitle("正在加载");
+//                        loadingDialog.show();
+//                    }
 
 //                    bleService.connect(m_nowMac);
 //                    cn = 0;
 //                    openLock();
 
-                    openEbike();
+                    if("4".equals(type)){
+                        openEbike();
+                    }else{
+                        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                            ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+                            scrollToFinishActivity();
+                        }
+                        //蓝牙锁
+                        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+
+                        mBluetoothAdapter = bluetoothManager.getAdapter();
+
+                        if (mBluetoothAdapter == null) {
+                            ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                            scrollToFinishActivity();
+                            return;
+                        }
+                        if (!mBluetoothAdapter.isEnabled()) {
+                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            startActivityForResult(enableBtIntent, 188);
+                        } else {
+                            if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                loadingDialog.setTitle("正在加载");
+                                loadingDialog.show();
+                            }
+
+                            if (!TextUtils.isEmpty(m_nowMac)) {
+
+                                SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+                                        .searchBluetoothLeDevice(0)
+                                        .build();
+
+                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                    return;
+                                }
+                                ClientManager.getClient().search(request, mSearchResponse2);
+
+
+
+                            }
+                        }
+                    }
+
 
 //                    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
 //                        ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
@@ -3080,6 +3274,12 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 submit(uid, access_token);
                 break;
 
+            case 7:
+
+                ToastUtil.showMessageApp(context,"关锁成功5");
+                SharedPreferencesUrls.getInstance().putString("tempStat","1");
+                break;
+
             case 9:
                 break;
             case 0x99://搜索超时
@@ -4264,6 +4464,65 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                 ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
                 ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+            }
+
+        }
+
+        @Override
+        public void onSearchStopped() {
+            Log.e("biking===","DeviceListActivity.onSearchStopped");
+
+        }
+
+        @Override
+        public void onSearchCanceled() {
+            Log.e("biking===","DeviceListActivity.onSearchCanceled");
+
+        }
+    };
+
+    private final SearchResponse mSearchResponse2 = new SearchResponse() {
+        @Override
+        public void onSearchStarted() {
+            Log.e("biking===","DeviceListActivity.onSearchStarted");
+        }
+
+        @Override
+        public void onDeviceFounded(SearchResult device) {
+
+            Log.e("biking===","DeviceListActivity.onDeviceFounded2 " + device.device.getAddress()+"==="+m_nowMac);
+
+            if(m_nowMac.equals(device.device.getAddress())){
+                ClientManager.getClient().stopSearch();
+
+                ClientManager.getClient().getStatus(m_nowMac, new IGetStatusResponse() {
+                    @Override
+                    public void onResponseSuccess(String version, String keySerial, String macKey, String vol) {
+//                    cn.qimate.bike.util.UIHelper.dismiss();
+                        queryStatusServer(version, keySerial, macKey, vol);
+                    }
+
+                    @Override
+                    public void onResponseFail(int code) {
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+
+                        Log.e("getStatus===", Code.toString(code));
+                        ToastUtil.showMessageApp(context, Code.toString(code));
+                    }
+
+                });
+
+
+
+//                connectDevice();
+
+//                ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+//                ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener2);
+//                ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+
+                Log.e("biking===","DeviceListActivity.onDeviceFounded2_2 " + device.device.getAddress()+"==="+m_nowMac);
             }
 
         }
