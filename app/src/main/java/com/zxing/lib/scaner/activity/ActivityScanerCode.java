@@ -702,7 +702,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             bleid = jsonObject.getString("bleid");
                             type = jsonObject.getString("type");
 
-                            type = "5";
+//                            type = "5";
 
                             if ("1".equals(type)) {          //机械锁
                                 UIHelper.goToAct(context, CurRoadStartActivity.class);

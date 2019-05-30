@@ -340,9 +340,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //            aMap.clear();
 //            mapView.onPause();
 //            mapView.setVisibility(View.GONE);
-
-
 //            deactivate();
+
+//            aMap.clear();
         }else{
             //resume
 
@@ -351,27 +351,27 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             pOptions.clear();
             isContainsList.clear();
             aMap.clear();
+            aMap.reloadMap();
 
+//
+//            aMap = mapView.getMap();
             setUpMap();
 
 //            m_myHandler.sendEmptyMessage(4);
 
-//            aMap.setMapType(AMap.MAP_TYPE_NAVI);
-//            aMap.getUiSettings().setZoomControlsEnabled(false);
-//            aMap.getUiSettings().setMyLocationButtonEnabled(false);
-//            aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
-//            aMap.getUiSettings().setLogoBottomMargin(-50);
-//
-//            CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
-//            aMap.moveCamera(cameraUpdate);
-
             aMap.setOnMapTouchListener(this);
+            aMap.setOnCameraChangeListener(this);
 //            setUpLocationStyle();
 
-
-
-            if(myLocation!=null){
-            }
+//            if (mlocationClient != null) {
+//                mlocationClient.setLocationListener(this);
+//                mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+//                mLocationOption.setInterval(2 * 1000);
+//                mLocationOption.setLocationCacheEnable(false);
+////              mLocationOption.setOnceLocationLatest(true);
+//                mlocationClient.setLocationOption(mLocationOption);
+//                mlocationClient.startLocation();
+//            }
 
             if(centerMarker!=null){
                 centerMarker.remove();
@@ -500,6 +500,70 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 }
             }
         });
+    }
+
+    public void onCameraChangeFinish(CameraPosition cameraPosition) {
+        Log.e("main===ChangeFinish_B", isContainsList.contains(true) + "》》》" + cameraPosition.target.latitude + "===" + macList.size()+">>>"+isUp + "===" + cameraPosition.target.latitude);
+
+
+        if (isUp  && !isHidden){
+            initNearby(cameraPosition.target.latitude, cameraPosition.target.longitude);
+
+            if (centerMarker != null) {
+//				animMarker();
+                m_myHandler.sendEmptyMessage(4);
+            }
+        }
+
+        if (macList.size() != 0) {
+            macList.clear();
+        }
+
+    }
+
+
+
+    private void animMarker() {
+        isMovingMarker = false;
+        if (animator != null) {
+            animator.start();
+            return;
+        }
+        animator = ValueAnimator.ofFloat(mapView.getHeight() / 2, mapView.getHeight() / 2 - 30);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.setDuration(150);
+        animator.setRepeatCount(1);
+        animator.setRepeatMode(ValueAnimator.REVERSE);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                Float value = (Float) animation.getAnimatedValue();
+                centerMarker.setPositionByPixels(mapView.getWidth() / 2, Math.round(value));
+            }
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                centerMarker.setIcon(successDescripter);
+            }
+        });
+        animator.start();
+    }
+
+    private void setMovingMarker() {
+        if (isMovingMarker)
+            return;
+
+        isMovingMarker = true;
+        centerMarker.setPositionByPixels(mapView.getWidth() / 2, mapView.getHeight() / 2);
+        centerMarker.setIcon(successDescripter);
+    }
+
+
+    public void onCameraChange(CameraPosition cameraPosition) {
+        if (centerMarker != null) {
+            setMovingMarker();
+        }
     }
 
     /**附近车接口 */
@@ -1870,73 +1934,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
         return "";
     }
-
-
-
-    public void onCameraChangeFinish(CameraPosition cameraPosition) {
-        Log.e("main===ChangeFinish_B", isContainsList.contains(true) + "》》》" + near + "===" + macList.size()+">>>"+isUp + "===" + cameraPosition.target.latitude);
-
-
-        if (isUp  && !isHidden){
-            initNearby(cameraPosition.target.latitude, cameraPosition.target.longitude);
-
-            if (centerMarker != null) {
-//				animMarker();
-                m_myHandler.sendEmptyMessage(4);
-            }
-        }
-
-        if (macList.size() != 0) {
-            macList.clear();
-        }
-
-    }
-
-
-
-    private void animMarker() {
-        isMovingMarker = false;
-        if (animator != null) {
-            animator.start();
-            return;
-        }
-        animator = ValueAnimator.ofFloat(mapView.getHeight() / 2, mapView.getHeight() / 2 - 30);
-        animator.setInterpolator(new DecelerateInterpolator());
-        animator.setDuration(150);
-        animator.setRepeatCount(1);
-        animator.setRepeatMode(ValueAnimator.REVERSE);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                Float value = (Float) animation.getAnimatedValue();
-                centerMarker.setPositionByPixels(mapView.getWidth() / 2, Math.round(value));
-            }
-        });
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                centerMarker.setIcon(successDescripter);
-            }
-        });
-        animator.start();
-    }
-
-    private void setMovingMarker() {
-        if (isMovingMarker)
-            return;
-
-        isMovingMarker = true;
-        centerMarker.setIcon(successDescripter);
-    }
-
-
-    public void onCameraChange(CameraPosition cameraPosition) {
-        if (centerMarker != null) {
-            setMovingMarker();
-        }
-    }
-
-
 
     private void stopXB() {
         if (!"1".equals(type)) {

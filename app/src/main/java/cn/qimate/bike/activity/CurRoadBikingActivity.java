@@ -286,7 +286,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         type = SharedPreferencesUrls.getInstance().getString("type", "");
         bleid = SharedPreferencesUrls.getInstance().getString("bleid", "");
 
-        type = "5";
+//        type = "5";
 
         ClientManager.getClient().stopSearch();
         ClientManager.getClient().disconnect(m_nowMac);
@@ -1119,7 +1119,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             password = bean.getPassword();
                             type = bean.getType();
 
-                            type = "5";
+//                            type = "5";
 
 //                            hintText.setText("校内地图红色区域关锁，并点击结束");
 
@@ -1129,7 +1129,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             }else {
                                 hintText.setText("还车须至校园地图"+("4".equals(type)?"绿色":"红色")+"区域，距车1米内点击结束！");
                                 m_nowMac = bean.getMacinfo();
-                                m_nowMac = "A4:34:F1:7B:BF:9A";
+
 
                                 if ("4".equals(type)){
 
@@ -1165,6 +1165,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 
                                 }else if ("5".equals(type)){
+                                    m_nowMac = "A4:34:F1:7B:BF:9A";
+
+
                                     if("0".equals(SharedPreferencesUrls.getInstance().getString("tempStat","0"))){
                                         lookPsdBtn.setText("临时上锁");
                                     }else{
@@ -2066,8 +2069,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                     return;
                                 }
                                 ClientManager.getClient().search(request, mSearchResponse2);
-
-
 
                             }
                         }
