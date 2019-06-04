@@ -929,6 +929,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 BaseApplication.getInstance().getIBLE().getLockStatus();
                 break;
             case Config.OPEN_ACTION:
+                isStop = true;
+
                 if (loadingDialog != null && loadingDialog.isShowing()){
                     loadingDialog.dismiss();
                 }

@@ -1192,7 +1192,7 @@ public class FeedbackActivity
                         }
                     }
 //                    Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                    // 下面这句指定调用相机拍照后的照片存储的路径
+                    // 下面这句指定调用相机拍照后的照片存储的路径
 //                    takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
 //                            Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
 //                    startActivityForResult(takeIntent, REQUESTCODE_TAKE);

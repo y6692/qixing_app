@@ -948,9 +948,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         tz = 0;
 
         JPushInterface.onResume(context);
-        if(mapView!=null){
-            mapView.onResume();
-        }
+//        if(mapView!=null){
+//            mapView.onResume();
+//        }
 
 //        if (aMap != null) {
 //            setUpMap();
@@ -2969,28 +2969,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     }
 
-//    private void addChooseMarker() {
-//        // 加入自定义标签
-//        MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation).icon(successDescripter);
-//        centerMarker = aMap.addMarker(centerMarkerOption);
-//        centerMarker.setPositionByPixels(mapView.getWidth() / 2, mapView.getHeight() / 2);
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                CameraUpdate update = CameraUpdateFactory.zoomTo(15f);
-//                aMap.animateCamera(update, 1000, new AMap.CancelableCallback() {
-//                    @Override
-//                    public void onFinish() {
-//                        aMap.setOnCameraChangeListener(MainActivity.this);
-//                    }
-//
-//                    @Override
-//                    public void onCancel() {
-//                    }
-//                });
-//            }
-//        }, 1000);
-//    }
 
     /**
      * 添加Circle
@@ -3442,11 +3420,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     /**
      * 方法必须重写
      */
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        mapView.onSaveInstanceState(outState);
-//    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
 
 
     private void setUpLocationStyle() {

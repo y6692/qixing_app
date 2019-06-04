@@ -375,6 +375,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
             if(centerMarker!=null){
                 centerMarker.remove();
+                centerMarker=null;
             }
             if(mCircle!=null){
                 mCircle.remove();
@@ -391,12 +392,16 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             schoolRange();
 
             if(referLatitude!=0 && referLongitude!=0){
+                myLocation = new LatLng(referLatitude, referLongitude);
+
                 initNearby(referLatitude, referLongitude);
 
-                myLocation = new LatLng(referLatitude, referLongitude);
                 addChooseMarker();
                 addCircle(myLocation, accuracy);
             }
+
+//            mapView.onResume();
+
 
 //            if (mlocationClient != null) {
 //                mlocationClient.setLocationListener(this);
@@ -744,10 +749,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
 //        exImage_3.setLayoutParams(params3);
 
-
-
-
-
     }
 
     @Override
@@ -1056,6 +1057,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             //设置为高精度定位模式
             mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
 
+            // 关闭缓存机制
+            mLocationOption.setLocationCacheEnable(false);
+
             //设置是否只定位一次,默认为false
             mLocationOption.setOnceLocation(false);
             //设置是否强制刷新WIFI，默认为强制刷新
@@ -1131,6 +1135,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     } else {
                         centerMarker.remove();
                         mCircle.remove();
+                        centerMarker=null;
 
                         if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
                             isContainsList.clear();
@@ -2738,50 +2743,32 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     private void addChooseMarker() {
         // 加入自定义标签
-        MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation).icon(successDescripter);
-        centerMarker = aMap.addMarker(centerMarkerOption);
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
-                aMap.moveCamera(CameraUpdateFactory.changeLatLng(myLocation));
-                aMap.animateCamera(update, 1000, new AMap.CancelableCallback() {
-                    @Override
-                    public void onFinish() {
-					    aMap.setOnCameraChangeListener(BikeFragment.this);
-                    }
 
-                    @Override
-                    public void onCancel() {
+        if(centerMarker == null){
+            MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation).icon(successDescripter);
+            centerMarker = aMap.addMarker(centerMarkerOption);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
+                    aMap.moveCamera(CameraUpdateFactory.changeLatLng(myLocation));
+                    aMap.animateCamera(update, 1000, new AMap.CancelableCallback() {
+                        @Override
+                        public void onFinish() {
+                            aMap.setOnCameraChangeListener(BikeFragment.this);
+                        }
 
-                    }
-                });
-            }
-        }, 1000);
+                        @Override
+                        public void onCancel() {
+
+                        }
+                    });
+                }
+            }, 1000);
+        }
+
     }
 
-//    private void addChooseMarker() {
-//        // 加入自定义标签
-//        MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation).icon(successDescripter);
-//        centerMarker = aMap.addMarker(centerMarkerOption);
-//        centerMarker.setPositionByPixels(mapView.getWidth() / 2, mapView.getHeight() / 2);
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                CameraUpdate update = CameraUpdateFactory.zoomTo(15f);
-//                aMap.animateCamera(update, 1000, new AMap.CancelableCallback() {
-//                    @Override
-//                    public void onFinish() {
-//                        aMap.setOnCameraChangeListener(MainActivity.this);
-//                    }
-//
-//                    @Override
-//                    public void onCancel() {
-//                    }
-//                });
-//            }
-//        }, 1000);
-//    }
 
     /**
      * 添加Circle
@@ -3244,11 +3231,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     /**
      * 方法必须重写
      */
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        mapView.onSaveInstanceState(outState);
-//    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
 
 
     private void setUpLocationStyle() {

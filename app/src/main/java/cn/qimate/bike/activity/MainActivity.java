@@ -159,13 +159,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //        initLocation();
 //        AppApplication.getApp().scan();
 
-        type = SharedPreferencesUrls.getInstance().getString("type", "");
 
-        if("4".equals(type)){
-            changeTab(1);
-        }else{
-            changeTab(0);
-        }
 
 
         OkHttpClientManager.getInstance().UserLogin("99920170623", "123456", new ResultCallback<RUserLogin>() {
@@ -447,9 +441,21 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     @Override protected void onResume() {
         super.onResume();
-        Log.e("main===onResume", "===");
+
 
         mapView.onResume();
+
+        type = SharedPreferencesUrls.getInstance().getString("type", "");
+
+        Log.e("main===onResume", "==="+type);
+
+        if("4".equals(type)){
+            changeTab(0);
+            changeTab(1);
+        }else{
+            changeTab(1);
+            changeTab(0);
+        }
 
         ClientManager.getClient().registerBluetoothStateListener(mBluetoothStateListener);
 
