@@ -6,60 +6,30 @@
 
 
     <color name="ui_backgroud">#f7f7f7</color>
-    <color name="half_color">#30000000</color>
     <color name="blue">#00c1f8</color>
-    <color name="blue_light">#44beff</color>
     <color name="red_bg">#e84c3d</color>
     <color name="white">#ffffff</color>
     <color name="gray">#a0a0a0</color>
-    <color name="blue_bg">#01bdfc</color>
     <color name="gray_bg">#ebf0f1</color>
-    <color name="tx_black_light_light">#999999</color>
     <color name="tx_black_light">#666666</color>
     <color name="tx_black">#333333</color>
-    <color name="divider_color">#dddddd</color>
     <color name="tx_gray">#858585</color>
     <color name="tx_gray_light">#a5a5a5</color>
-    <color name="tx_blue_light">#05c2f8</color>
-    <color name="tx_yellow_light">#f6ca07</color>
     <color name="red">#ff0000</color>
-    <color name="red_light">#fca7a0</color>
     <color name="black">#000</color>
-    <color name="ui_search_work_background">#e6ecee</color>
-	<color name="line_color">#F0EFED</color>
-	<color name="msgBtnBck">#01D396</color>
-    <color name="ui_main2">#f57752</color>
+    <color name="line_color">#F0EFED</color>
     <color name="ui_main">#ff0000</color>
 
     <color name="personitem_normal">#ffffff</color>
     <color name="personitem_pressed">#e3e3e3</color>
     <color name="transparent">#00000000</color>
-    <color name="dialog_color">#081a44</color>
-    
-    <color name="result_view">#b0000000</color>
-    <color name="viewfinder_mask">#60000000</color>
-    <color name="possible_result_points">#c0ffff00</color>
-    <color name="viewfinder_frame">#ff000000</color>
 
-    <color name="drop_down_selected">#7B1FA2</color>
-    <color name="drop_down_unselected">#111111</color>
-
-    <color name="mask_color">#88888888</color>
-    <color name="check_bg">#f2f2f2</color>
-    <color name="un_press_color">#9C27B0</color>
-    
     <color name="main_theme_color">#0195ff</color>
-    <color name="de_title_bg">#0195ff</color>
     <!--actionbar-->
-    <color name="de_actionbar_bg">#0195ff</color>
-     <!---->
-    <color name="de_action_color">#3498DB</color>
-    <color name="de_action_white">@android:color/white</color>
-    <color name="de_transparent">#00000000</color>
+    <!---->
 
     <color name="ml_white">#ffffffff</color>
     <color name="ml_gray">#ff9e9e9e</color>
-    <color name="ml_blue">#ff239efe</color>
     <color name="ml_red">#ffff0000</color>
 
     <color name="pickerview_timebtn_nor">#057dff</color>

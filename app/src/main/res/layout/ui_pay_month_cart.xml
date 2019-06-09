@@ -290,7 +290,6 @@
                         android:background="@drawable/shape_feedback_edit">
 
                         <LinearLayout
-                            android:id="@+id/ui_payMonth_cart_type1Layout2"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/dp60"
                             android:layout_weight="1"
@@ -341,7 +340,6 @@
                         android:layout_marginLeft="@dimen/dp5">
 
                         <LinearLayout
-                            android:id="@+id/ui_payMonth_cart_type2Layout2"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/dp60"
                             android:layout_weight="1"

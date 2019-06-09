@@ -7,12 +7,8 @@
     <string name="footer_text02">正在加载中，请您稍等...</string>
     <string name="footer_text03">已无更多</string>
     <string name="footer_text04">刷新失败，请重试</string>
-    <string name="footer_text05">暂无信息</string>
-
-    <string name="fetching">获取中……</string>
 
     <string name="scan_tips">将二维码放入框内, 即可自动扫描</string>
     <string name="pickerview_cancel">取消</string>
     <string name="pickerview_submit">确定</string>
-    <string name="title_activity_main3">Main3Activity</string>
 </resources>

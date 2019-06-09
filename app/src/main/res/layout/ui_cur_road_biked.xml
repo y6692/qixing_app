@@ -153,7 +153,6 @@
                                 android:text="状态："/>
 
                             <TextView
-                                android:id="@+id/curRoadUI_biked_state"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="待支付"
@@ -193,7 +192,6 @@
                                     android:textColor="#f86961" />
 
                                 <TextView
-                                    android:id="@+id/curRoadUI_biked_timeUnit"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textColor="@color/tx_black"
@@ -311,7 +309,6 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:id="@+id/curRoadUI_biked_baImage"
                             android:layout_width="@dimen/dp40"
                             android:layout_height="match_parent"
                             android:scaleType="centerInside"

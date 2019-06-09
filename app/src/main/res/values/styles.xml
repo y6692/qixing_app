@@ -42,27 +42,6 @@
     </style>
 
     <!-- 加载对话框样式 -->
-    <style name="CustomDialog" parent="@android:style/Theme.Dialog">
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <!-- 是否浮现在activity之上 -->
-        <item name="android:windowIsTranslucent">false</item>
-        <!-- 半透明 -->
-        <item name="android:windowNoTitle">true</item>
-        <!-- 无标题 -->
-        <item name="android:windowBackground">@drawable/dialog_progress_shape</item>
-        <!-- 背景透明 -->
-        <item name="android:backgroundDimEnabled">false</item>
-        <!-- 模糊 -->
-        <item name="android:backgroundDimAmount">0.6</item>
-    </style>
-
-    <style name="CustomProgressDialog" parent="@style/CustomDialog">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:backgroundDimEnabled">true</item>
-    </style>
 
     <style name="Dialog" parent="android:style/Theme.Dialog">
         <item name="android:windowBackground">@null</item>
@@ -107,20 +86,6 @@
         <item name="android:windowExitAnimation">@anim/slide_up_exit</item>
     </style>
 
-    <style name="SignBoardDialog">
-        <item name="android:windowFrame">@null</item>
- <!-- 边框 -->
-        <item name="android:windowIsFloating">true</item>
- <!-- 是否浮现在activity之上 -->
-        <item name="android:windowIsTranslucent">false</item>
- <!-- 半透明 -->
-        <item name="android:windowNoTitle">true</item>
- <!-- 无标题 -->
-        <item name="android:windowBackground">@color/white</item>
- <!-- 背景透明 -->
-        <item name="android:backgroundDimEnabled">false</item>
- <!-- 模糊 -->
-    </style>
     <!-- 选择照片底部弹出层 -->
     <style name="PopupAnimation" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
@@ -130,18 +95,5 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="AnimBottom" parent="@android:style/Animation">
-        <item name="android:windowEnterAnimation">@anim/push_bottom_out</item>
-        <item name="android:windowExitAnimation">@anim/push_bottom_in</item>
-    </style>
-
-    <style name="AppBlackTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-    </style>
     <!-- 没有标题样式 -->
-    <style name="no_title" parent="@android:style/Theme.Dialog">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowNoTitle">true</item>
-    </style>
 </resources>

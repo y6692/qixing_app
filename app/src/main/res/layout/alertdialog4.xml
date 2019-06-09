@@ -56,7 +56,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/content2"
         android:orientation="horizontal"
         android:background="@drawable/border"
         android:layout_width="fill_parent"
@@ -139,7 +138,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/content3"
         android:orientation="horizontal"
         android:background="@drawable/border"
         android:layout_width="fill_parent"

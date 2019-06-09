@@ -41,7 +41,6 @@
 
     <Button
         android:layout_weight="1"
-        android:id="@+id/btn_click_one"
         android:layout_width="0dp"
         android:layout_height="43dp"
         android:layout_marginLeft="-3dp"

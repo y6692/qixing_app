@@ -5,7 +5,6 @@
     android:background="@color/white">
 
     <LinearLayout
-        android:id="@+id/layProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -14,7 +13,6 @@
         android:orientation="horizontal">
 
         <ProgressBar
-            android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="?android:attr/progressBarStyle" />

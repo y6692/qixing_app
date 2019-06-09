@@ -65,7 +65,6 @@
           />
 
       <TextView
-          android:id="@+id/tv_coupon_"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textSize="@dimen/sp15"
@@ -96,7 +95,6 @@
           />
 
       <TextView
-          android:id="@+id/tv_date"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textSize="@dimen/sp15"
@@ -156,7 +154,6 @@
           />
 
       <TextView
-          android:id="@+id/tv_tel"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textSize="@dimen/sp15"
@@ -187,7 +184,6 @@
           />
 
       <TextView
-          android:id="@+id/tv_service"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textSize="@dimen/sp15"
@@ -217,7 +213,6 @@
           />
 
       <TextView
-          android:id="@+id/tv_use"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textSize="@dimen/sp15"

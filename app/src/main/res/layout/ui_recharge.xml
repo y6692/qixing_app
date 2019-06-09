@@ -148,7 +148,6 @@
                     android:layout_marginTop="@dimen/dp10">
 
                     <ImageView
-                        android:id="@+id/rechargeUI_dealImage"
                         android:layout_width="@dimen/dp30"
                         android:layout_height="@dimen/dp30"
                         android:src="@drawable/recharge_selected"

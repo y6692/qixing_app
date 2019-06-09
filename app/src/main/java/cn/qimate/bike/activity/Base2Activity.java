@@ -71,21 +71,21 @@ public abstract class Base2Activity extends AppCompatActivity {
         return true;
     }
 
-    @CallSuper
-    protected void bindView() {
-        if (autoBindViews()) {
-            mUnBinder = ButterKnife.bind(this);
-        }
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        tvTitle = (TextView) findViewById(R.id.toolbar_title);
-
-        if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
-        }
-        if(getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-    }
+//    @CallSuper
+//    protected void bindView() {
+//        if (autoBindViews()) {
+//            mUnBinder = ButterKnife.bind(this);
+//        }
+//        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+//        tvTitle = (TextView) findViewById(R.id.toolbar_title);
+//
+//        if (mToolbar != null) {
+//            setSupportActionBar(mToolbar);
+//        }
+//        if(getSupportActionBar() != null) {
+//            getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        }
+//    }
 
     protected void bindData() {
 

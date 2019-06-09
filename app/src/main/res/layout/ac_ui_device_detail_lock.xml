@@ -15,7 +15,6 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/tvLog"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
@@ -42,7 +41,6 @@
             android:layout_centerHorizontal="true">
 
             <ImageView
-                android:id="@+id/ivLock"
                 android:layout_width="240dp"
                 android:layout_height="240dp"
                 android:layout_centerHorizontal="true"

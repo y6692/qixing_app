@@ -223,7 +223,6 @@
                 android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/tv_stop"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/dp30"
                     android:text="临时停车"
@@ -247,7 +246,6 @@
                     android:gravity="right|center_vertical">
 
                     <TextView
-                        android:id="@+id/tv_role"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="临时停车说明"
