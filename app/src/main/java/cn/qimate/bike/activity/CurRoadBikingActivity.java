@@ -1441,6 +1441,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     BroadcastReceiver broadcastReceiver1 = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.e("biking=bReceiver1", "==="+m_nowMac);
+
             getCurrentorderBiking(SharedPreferencesUrls.getInstance().getString("uid",""), SharedPreferencesUrls.getInstance().getString("access_token",""));
             getFeedbackStatus();
         }
@@ -3182,18 +3184,21 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                 stopXB();
 
-                Log.e("biking===3", type+"===" + BaseApplication.getInstance().getIBLE().getConnectStatus());
+                Log.e("biking===3", type+"==="+macList.size()+"==="+isContainsList.contains(true));
 
-                if("4".equals(type)){
-                    endBtn4();
-                }else if("5".equals(type)){
-                    endBtn5();
-                }else{
-                    if (lockLoading != null && lockLoading.isShowing()){
-                        lockLoading.dismiss();
-                    }
 
-                    if(macList.size()>0 || isContainsList.contains(true)){
+                if (lockLoading != null && lockLoading.isShowing()){
+                    lockLoading.dismiss();
+                }
+
+                if(macList.size()>0 || isContainsList.contains(true)){
+//                if(!isContainsList.contains(true)){
+
+                    if("4".equals(type)){
+                        endBtn4();
+                    }else if("5".equals(type)){
+                        endBtn5();
+                    }else{
                         if(BaseApplication.getInstance().getIBLE().getConnectStatus()){
                             if("3".equals(type)){
                                 endBtn3();
@@ -3243,18 +3248,16 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                             connect();
                         }
-
-                    }else{
-    //                    if("3".equals(type)){
-    //                        customDialog4.show();
-    //                    }else{
-    //                        customDialog3.show();
-    //                    }
-                        customDialog3.show();
-
-                        clickCountDeal();
                     }
+
+                }else{
+                    customDialog3.show();
+
+                    clickCountDeal();
                 }
+
+
+
 
                 break;
 

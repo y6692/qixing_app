@@ -11,6 +11,10 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
@@ -20,7 +24,7 @@ import cn.qimate.bike.R;
 /**
  * Created by Administrator on 2015/4/30.
  */
-public class MLImageView extends ImageView {
+public class MLImageView extends AppCompatImageView {
     private Paint mPressPaint;
 
     private int mWidth;
@@ -83,6 +87,7 @@ public class MLImageView extends ImageView {
         setWillNotDraw(false);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onDraw(Canvas canvas) {
 //        super.onDraw(canvas);
@@ -103,6 +108,7 @@ public class MLImageView extends ImageView {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void drawDrawable(Canvas canvas, Bitmap bitmap) {
         // 画笔
         Paint paint = new Paint();
@@ -113,12 +119,13 @@ public class MLImageView extends ImageView {
         //Paint 的 Xfermode，PorterDuff.Mode.SRC_IN 取两层图像的交集部门, 只显示上层图像。
         PorterDuffXfermode xfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
         // 标志
-        int saveFlags = Canvas.MATRIX_SAVE_FLAG
-                | Canvas.CLIP_SAVE_FLAG
-                | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG
-                | Canvas.FULL_COLOR_LAYER_SAVE_FLAG
-                | Canvas.CLIP_TO_LAYER_SAVE_FLAG;
-        canvas.saveLayer(0, 0, mWidth, mHeight, null, saveFlags);
+//        int saveFlags = Canvas.MATRIX_SAVE_FLAG
+//                | Canvas.CLIP_SAVE_FLAG
+//                | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG
+//                | Canvas.FULL_COLOR_LAYER_SAVE_FLAG
+//                | Canvas.CLIP_TO_LAYER_SAVE_FLAG;
+//        canvas.saveLayer(0, 0, mWidth, mHeight, null, saveFlags);
+        canvas.saveLayer(0, 0, mWidth, mHeight, null);
 
         if (mShapeType == 0) {
             // 画遮罩，画出来就是一个和空间大小相匹配的圆
