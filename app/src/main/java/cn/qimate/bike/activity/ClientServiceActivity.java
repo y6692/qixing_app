@@ -63,6 +63,8 @@ import java.util.Map;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.nostra13.universalimageloader.core.ImageLoader;
+import cn.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
+import cn.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.base.BaseViewHolder;
@@ -148,6 +150,8 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
 
     private TextView tv;
     private String type = "";
+
+    private boolean isComplete = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -751,7 +755,30 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                     imageView.setVisibility(View.GONE);
                 }
             } else {
-                ImageLoader.getInstance().displayImage(Urls.host + imageUrlList.get(position), imageView);
+//                ImageLoader.getInstance().displayImage(Urls.host + imageUrlList.get(position), imageView);
+
+                if(!isComplete){
+                    ImageLoader.getInstance().displayImage(Urls.host + imageUrlList.get(position), imageView, new SimpleImageLoadingListener(){
+
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                            Log.e("Complete===", "==="+isComplete);
+
+                            isComplete = true;
+
+                            if (loadingDialog != null) {
+                                loadingDialog.dismiss();
+                            }
+                        }
+
+                    }, new ImageLoadingProgressListener(){
+
+                        @Override
+                        public void onProgressUpdate(String imageUri, View view, int current, int total) {
+                            Log.e("Update===", "==="+current);
+                        }
+                    });
+                }
             }
             notifyDataSetChanged();
             return convertView;
@@ -972,9 +999,6 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
                     try {
                         // 返回数据示例，根据需求和后台数据灵活处理
                         JSONObject jsonObject = new JSONObject(resultStr);
@@ -996,12 +1020,20 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                                 submitBtn.setEnabled(true);
                             }
 
+                            isComplete = false;
                             myAdapter.notifyDataSetChanged();
                         } else {
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+
                             Toast.makeText(context, jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
                         }
 
                     } catch (JSONException e) {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
                     }
 
                     break;

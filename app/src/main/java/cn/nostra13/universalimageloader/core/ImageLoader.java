@@ -15,10 +15,12 @@
  *******************************************************************************/
 package cn.nostra13.universalimageloader.core;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import cn.nostra13.universalimageloader.cache.disc.DiskCache;
@@ -37,6 +39,7 @@ import cn.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
 import cn.nostra13.universalimageloader.utils.ImageSizeUtils;
 import cn.nostra13.universalimageloader.utils.L;
 import cn.nostra13.universalimageloader.utils.MemoryCacheUtils;
+import cn.qimate.bike.core.widget.LoadingDialog;
 
 /**
  * Singletone for image loading and displaying at {@link ImageView ImageViews}<br />
@@ -46,6 +49,7 @@ import cn.nostra13.universalimageloader.utils.MemoryCacheUtils;
  * @since 1.0.0
  */
 public class ImageLoader {
+	private static LoadingDialog loadingDialog;
 
 	public static final String TAG = ImageLoader.class.getSimpleName();
 
@@ -79,6 +83,27 @@ public class ImageLoader {
 
 	protected ImageLoader() {
 	}
+
+//	public static ImageLoader getInstance(Context context) {
+//		if (instance == null) {
+//			synchronized (ImageLoader.class) {
+//				if (instance == null) {
+//					Log.e("instance===", "==="+instance);
+//
+//					instance = new ImageLoader(context);
+//				}
+//			}
+//		}
+//		return instance;
+//	}
+//
+//	protected ImageLoader(Context context) {
+//		loadingDialog = new LoadingDialog(context);
+//		loadingDialog.setCancelable(false);
+//		loadingDialog.setCanceledOnTouchOutside(false);
+//	}
+
+
 
 	/**
 	 * Initializes ImageLoader instance with configuration.<br />
@@ -364,6 +389,10 @@ public class ImageLoader {
 			ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
 		displayImage(uri, new ImageViewAware(imageView), options, listener, progressListener);
 	}
+	public void displayImage(String uri, ImageView imageView, ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
+		displayImage(uri, new ImageViewAware(imageView), null, listener, progressListener);
+	}
+
 
 	/**
 	 * Adds load image task to execution pool. Image will be returned with
@@ -754,6 +783,10 @@ public class ImageLoader {
 		@Override
 		public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
 			this.loadedImage = loadedImage;
+
+			Log.e("loadingDialog===", ""+loadingDialog);
+
+
 		}
 
 		public Bitmap getLoadedBitmap() {

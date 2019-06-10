@@ -64,6 +64,8 @@ import java.util.Map;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.nostra13.universalimageloader.core.ImageLoader;
+import cn.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
+import cn.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.base.BaseApplication;
@@ -155,6 +157,8 @@ public class FeedbackActivity
 
     public static boolean isForeground = false;
     private String type = "";
+
+    private boolean isComplete = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -887,9 +891,36 @@ public class FeedbackActivity
                     imageView.setVisibility(View.GONE);
                 }
             } else {
-                ImageLoader.getInstance().displayImage(Urls.host + imageUrlList.get(position), imageView);
+                Log.e("ImageLoader===", "==="+isComplete);
+
+                if(!isComplete){
+                    ImageLoader.getInstance().displayImage(Urls.host + imageUrlList.get(position), imageView, new SimpleImageLoadingListener(){
+
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                            Log.e("Complete===", "==="+isComplete);
+
+                            isComplete = true;
+
+                            if (loadingDialog != null) {
+                                loadingDialog.dismiss();
+                            }
+                        }
+
+                    }, new ImageLoadingProgressListener(){
+
+                        @Override
+                        public void onProgressUpdate(String imageUri, View view, int current, int total) {
+                            Log.e("Update===", "==="+current);
+                        }
+                    });
+                }
+
             }
             notifyDataSetChanged();
+
+
+
             return convertView;
         }
 
@@ -1110,9 +1141,7 @@ public class FeedbackActivity
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
+
                     try {
                         // 返回数据示例，根据需求和后台数据灵活处理
                         JSONObject jsonObject = new JSONObject(resultStr);
@@ -1123,6 +1152,8 @@ public class FeedbackActivity
                             option.inSampleSize = 1;
                             imageUrlList.add(jsonObject.optString("data"));
                             ToastUtil.showMessageApp(context, "图片上传成功");
+
+                            Log.e("picture===", "==="+imageUrlList);
 
                             if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
                                     restCauseEdit.getText().toString().trim() == null
@@ -1139,12 +1170,19 @@ public class FeedbackActivity
                                 }
                             }
 
+                            isComplete = false;
                             myAdapter.notifyDataSetChanged();
                         } else {
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
                             ToastUtil.showMessageApp(context, jsonObject.optString("msg"));
                         }
 
                     } catch (JSONException e) {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
                     }
 
                     break;

@@ -125,7 +125,10 @@ public class MLImageView extends AppCompatImageView {
 //                | Canvas.FULL_COLOR_LAYER_SAVE_FLAG
 //                | Canvas.CLIP_TO_LAYER_SAVE_FLAG;
 //        canvas.saveLayer(0, 0, mWidth, mHeight, null, saveFlags);
-        canvas.saveLayer(0, 0, mWidth, mHeight, null);
+//        canvas.saveLayer(0, 0, mWidth, mHeight, null);
+
+        int LAYER_FLAGS = Canvas.ALL_SAVE_FLAG;
+        canvas.saveLayerAlpha(0, 0, mWidth, mHeight, 0xff, LAYER_FLAGS);
 
         if (mShapeType == 0) {
             // 画遮罩，画出来就是一个和空间大小相匹配的圆
