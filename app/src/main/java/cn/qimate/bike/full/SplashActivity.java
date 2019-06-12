@@ -465,7 +465,7 @@ public class SplashActivity extends BaseActivity {
 	private void initHttp() {
 
 		if (NetworkUtils.getNetWorkType(context) == NetworkUtils.NONETWORK) {
-			loadingImage.setBackgroundResource(R.drawable.enter_bg);
+//			loadingImage.setBackgroundResource(R.drawable.enter_bg);
 			Toast.makeText(context, "暂无网络连接，请连接网络", Toast.LENGTH_SHORT).show();
 		} else {
 			RequestParams params = new RequestParams();
@@ -473,7 +473,7 @@ public class SplashActivity extends BaseActivity {
 			HttpHelper.get(context, Urls.getIndexAd, params, new TextHttpResponseHandler() {
 				@Override
 				public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-					loadingImage.setBackgroundResource(R.drawable.enter_bg);
+//					loadingImage.setBackgroundResource(R.drawable.enter_bg);
 				}
 
 				@Override
@@ -496,7 +496,7 @@ public class SplashActivity extends BaseActivity {
 								Log.e("splash===initHttp", imageUrl+"==="+ad_link+"==="+app_type);
 							}
 							if (imageUrl == null || "".equals(imageUrl)) {
-								loadingImage.setBackgroundResource(R.drawable.enter_bg);
+//								loadingImage.setBackgroundResource(R.drawable.enter_bg);
 							} else {
 								// 加载图片
 								Glide.with(context).load(imageUrl).into(loadingImage);

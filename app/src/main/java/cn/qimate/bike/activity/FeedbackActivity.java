@@ -160,6 +160,9 @@ public class FeedbackActivity
 
     private boolean isComplete = false;
 
+    private ImageView imageView;
+    private int pos;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -840,91 +843,7 @@ public class FeedbackActivity
         });
     }
 
-    public class PhotoGridviewAdapter extends BaseAdapter {
 
-        private LayoutInflater inflater;
-        private boolean shape;
-
-        public boolean isShape() {
-            return shape;
-        }
-
-        public void setShape(boolean shape) {
-            this.shape = shape;
-        }
-
-        public PhotoGridviewAdapter(Context context) {
-
-            inflater = LayoutInflater.from(context);
-        }
-
-        @Override
-        public int getCount() {
-            if (imageUrlList.size() < MAX) {
-                return (imageUrlList.size() + 1);
-            } else {
-                return MAX;
-            }
-        }
-
-        @Override
-        public Object getItem(int position) {
-
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = inflater.inflate(R.layout.item_photo_mygridview, parent, false);
-            }
-            ImageView imageView = BaseViewHolder.get(convertView, R.id.item_photo_gridView_image);
-            if (position == imageUrlList.size()) {
-                imageView.setImageResource(R.drawable.icon_addpic_focused);
-                if (MAX == position) {
-                    imageView.setVisibility(View.GONE);
-                }
-            } else {
-                Log.e("ImageLoader===", "==="+isComplete);
-
-                if(!isComplete){
-                    ImageLoader.getInstance().displayImage(Urls.host + imageUrlList.get(position), imageView, new SimpleImageLoadingListener(){
-
-                        @Override
-                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                            Log.e("Complete===", "==="+isComplete);
-
-                            isComplete = true;
-
-                            if (loadingDialog != null) {
-                                loadingDialog.dismiss();
-                            }
-                        }
-
-                    }, new ImageLoadingProgressListener(){
-
-                        @Override
-                        public void onProgressUpdate(String imageUri, View view, int current, int total) {
-                            Log.e("Update===", "==="+current);
-                        }
-                    });
-                }
-
-            }
-            notifyDataSetChanged();
-
-
-
-            return convertView;
-        }
-
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1187,12 +1106,161 @@ public class FeedbackActivity
 
                     break;
 
+                case 1:
+                    pos = 0;
+
+                    ImageLoader.getInstance().displayImage(Urls.host + imageUrlList.get(pos), imageView, new SimpleImageLoadingListener(){
+
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                            Log.e("Complete===", "==="+isComplete);
+
+                            isComplete = true;
+
+                            if (loadingDialog != null) {
+                                loadingDialog.dismiss();
+                            }
+                        }
+
+                    }, new ImageLoadingProgressListener(){
+
+                        @Override
+                        public void onProgressUpdate(String imageUri, View view, int current, int total) {
+                            Log.e("Update===", "==="+current);
+                        }
+                    });
+
+                    break;
+
                 default:
                     break;
             }
             return false;
         }
     });
+
+    public class PhotoGridviewAdapter extends BaseAdapter {
+
+        private LayoutInflater inflater;
+        private boolean shape;
+
+        public boolean isShape() {
+            return shape;
+        }
+
+        public void setShape(boolean shape) {
+            this.shape = shape;
+        }
+
+        public PhotoGridviewAdapter(Context context) {
+
+            inflater = LayoutInflater.from(context);
+        }
+
+//        public void clearAll() {
+//            imageUrlList.clear();
+//        }
+//
+//
+//        public void addALL(List lists){
+//            if(lists==null||lists.size()==0){
+//                return ;
+//            }
+//            imageUrlList.addAll(lists);
+//        }
+
+        @Override
+        public int getCount() {
+            if (imageUrlList.size() < MAX) {
+                return (imageUrlList.size() + 1);
+            } else {
+                return MAX;
+            }
+        }
+
+        @Override
+        public Object getItem(int position) {
+
+            return position;
+        }
+
+        @Override
+        public long getItemId(int position) {
+
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+//            pos = position;
+//
+//            int childCount = parent.getChildCount();
+//
+//            Log.e("ImageLoader===", position+"==="+imageUrlList.size()+"==="+childCount);
+//
+//            if (position == 0 && convertView != null) {
+//                return convertView;
+//            }
+//
+//            Log.e("ImageLoader===2", position+"==="+imageUrlList.size()+"==="+isComplete);
+
+            Log.e("ImageLoader===3", position+"==="+imageUrlList.size()+"==="+isComplete+"==="+convertView);
+
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.item_photo_mygridview, parent, false);
+            }
+
+//            if(isComplete) return convertView;
+
+            ImageView imageView = BaseViewHolder.get(convertView, R.id.item_photo_gridView_image);
+            if (position == imageUrlList.size()) {
+                imageView.setImageResource(R.drawable.icon_addpic_focused);
+                if (MAX == position) {
+                    imageView.setVisibility(View.GONE);
+                }
+            } else {
+
+
+                if(!isComplete){
+
+                    ImageLoader.getInstance().displayImage(Urls.host + imageUrlList.get(position), imageView, new SimpleImageLoadingListener(){
+
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                            Log.e("Complete===", "==="+isComplete);
+
+                            isComplete = true;
+
+                            if (loadingDialog != null) {
+                                loadingDialog.dismiss();
+                            }
+                        }
+
+                    }, new ImageLoadingProgressListener(){
+
+                        @Override
+                        public void onProgressUpdate(String imageUri, View view, int current, int total) {
+                            Log.e("Update===", "==="+current);
+                        }
+                    });
+
+//                    isComplete = true;
+//
+//                    if (loadingDialog != null) {
+//                        loadingDialog.dismiss();
+//                    }
+
+//                    mHandler.sendEmptyMessage(1);
+
+                }
+            }
+            notifyDataSetChanged();
+
+            return convertView;
+        }
+
+    }
 
     // 为弹出窗口实现监听类
     private View.OnClickListener itemsOnClick = new View.OnClickListener() {
