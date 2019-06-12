@@ -72,8 +72,10 @@ import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import butterknife.OnClick;
@@ -104,6 +106,7 @@ import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.EbikeInfoBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.AESUtil;
 import cn.qimate.bike.util.ByteUtil;
 import cn.qimate.bike.util.Globals;
 import cn.qimate.bike.util.IoBuffer;
@@ -225,6 +228,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     //    BLEService bleService = new BLEService();
     private String tel = "13188888888";
     private String bleid = "";
+
+    private String keySource = "";
+    //密钥索引
+    int encryptionKey= 0;
+    //开锁密钥
+    String keys = null;
+    //服务器时间戳，精确到秒，用于锁同步时间
+    long serverTime;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -702,7 +713,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             bleid = jsonObject.getString("bleid");
                             type = jsonObject.getString("type");
 
-//                            type = "5";
+                            if(BaseApplication.getInstance().isTest()){
+                                type = "5";
+                            }
+
 
                             if ("1".equals(type)) {          //机械锁
                                 UIHelper.goToAct(context, CurRoadStartActivity.class);
@@ -842,7 +856,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                             } else if ("5".equals(type)) {
                                 codenum = jsonObject.getString("codenum");
-                                m_nowMac = "A4:34:F1:7B:BF:9A";
+
+                                if(BaseApplication.getInstance().isTest()){
+//                                    m_nowMac = "A4:34:F1:7B:BF:9A";
+                                    m_nowMac = "3C:A3:08:AE:BE:24";
+                                }
+
 
                                 if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
@@ -928,7 +947,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         @Override
         public void onDeviceFounded(SearchResult device) {
 
-            Log.e("scan===","DeviceListActivity.onDeviceFounded " + device.device.getAddress());
+            Log.e("scan===onDeviceFounded",device.device.getName() + "===" + device.device.getAddress());
 
             if(m_nowMac.equals(device.device.getAddress())){
                 ClientManager.getClient().stopSearch();
@@ -1004,42 +1023,106 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //        this.version = version;
         int timestamp = (int) StringUtils.getCurrentTimestamp();
 
+        Log.e("scan===qSS", macKey+"==="+keySerial+"==="+timestamp);
+
+        keySource = keySerial;
+
+        rent();
+
 //        UIHelper.showProgress(this, "get_bike_server");
-        OkHttpClientManager.getInstance().Rent(macKey, keySerial, timestamp, new ResultCallback<RRent>() {
+//        OkHttpClientManager.getInstance().Rent(macKey, "9A88005D", 1560316059, new ResultCallback<RRent>() {
+//        OkHttpClientManager.getInstance().Rent(macKey, keySerial, timestamp, new ResultCallback<RRent>() {
+//
+//            @Override
+//            public void onResponse(RRent rRent) {
+////                UIHelper.dismiss();
+//                if (rRent.getResult() >= 0) {
+//
+//                    getCurrentorder2(uid, access_token);
+//
+//
+//                    RRent.ResultBean resultBean = rRent.getInfo();
+//                    openBleLock(resultBean);
+//                }
+//                else {
+////                    UIHelper.showToast(DeviceDetailActivity.this, ""+rRent.getResult());
+//                    ToastUtil.showMessageApp(context, ""+rRent.getResult());
+//                }
+//            }
+//
+//            @Override
+//            public void onError(Request request, Exception e) {
+////                UIHelper.dismiss();
+////                UIHelper.showToast(DeviceDetailActivity.this, e.getMessage());
+//                ToastUtil.showMessageApp(context, e.getMessage());
+//            }
+//
+//        });
+    }
 
-            @Override
-            public void onResponse(RRent rRent) {
-//                UIHelper.dismiss();
-                if (rRent.getResult() >= 0) {
+    private void rent(){
+//        Map<String, Object> result = new HashMap();
+//
+//        //APP蓝牙搜到的锁号
+//        String lockNo = params.getString("MAC");
+//        //APP通过蓝牙命令从锁获取到的8位随机数
+//        String keySource = params.getString("keySource");
+//        //命令发起时间戳
+//        long timestamp = params.getLong("timestamp");
+//
+//        //根据锁号查找到锁实体类
+//        LockInfo lockInfo = getLockInfoModel(lockNo);
+//        String secretKey = lockInfo.getSecretKey();
+//        String secretKey = "NDQzMDMyMzYzOTM5MzkzMzQxNDQzMzQxMzMzOTMyMzE0NTM3NDEzMzQzMzU0NTM4MzYzMDM1Mzk0MzAw";
+        String secretKey = "eralHInialHInitwokPs5138m9pleBLEPeri4herzat4on8L0P1functP1functi7onSim9pInit2ali";
 
-                    getCurrentorder2(uid, access_token);
+        //AES加解密密钥
+        String pwd = null;
+
+        Random random = new Random();
+        //随机数取80位密钥中，前64位的某一位
+        encryptionKey = random.nextInt(secretKey.length()-16);
+        //从随机数位数开始截取16位字符作为AES加解密密钥
+        pwd = secretKey.substring(encryptionKey, encryptionKey+16);
+        encryptionKey = encryptionKey + 128;
+
+        //补8个0，AES加密需要16位数据
+        keySource = keySource.toUpperCase()+"00000000";
+        //加密
+        byte[] encryptResultStr = AESUtil.encrypt(keySource.getBytes(), pwd);
+        //转成hexString
+        keys = AESUtil.bytesToHexString(encryptResultStr).toUpperCase();
+        //服务器时间戳，精确到秒，用于锁同步时间
+        serverTime = Calendar.getInstance().getTimeInMillis()/1000;
+
+        Log.e("rent===", encryptionKey+"==="+pwd);
 
 
-                    RRent.ResultBean resultBean = rRent.getInfo();
-                    openBleLock(resultBean);
-                }
-                else {
-//                    UIHelper.showToast(DeviceDetailActivity.this, ""+rRent.getResult());
-                    ToastUtil.showMessageApp(context, ""+rRent.getResult());
-                }
-            }
+        getCurrentorder2(uid, access_token);
 
-            @Override
-            public void onError(Request request, Exception e) {
-//                UIHelper.dismiss();
-//                UIHelper.showToast(DeviceDetailActivity.this, e.getMessage());
-                ToastUtil.showMessageApp(context, e.getMessage());
-            }
+        openBleLock(null);
 
-        });
+//        //密钥索引
+//        result.put("encryptionKey", encryptionKey);
+//        //开锁密钥
+//        result.put("keys", keys);
+//        //返回服务器时间戳
+//        result.put("serverTime", serverTime);
+//        return result;
     }
 
     //与设备，开锁
     private void openBleLock(RRent.ResultBean resultBean) {
 //        UIHelper.showProgress(this, "open_bike_status");
 //        ClientManager.getClient().openLock(mac, "18112348925", resultBean.getServerTime(),
-        ClientManager.getClient().openLock(m_nowMac,"000000000000", resultBean.getServerTime(),
-                resultBean.getKeys(), resultBean.getEncryptionKey(), new IEmptyResponse(){
+
+//        Log.e("scan===openBleLock", resultBean.getServerTime()+"==="+resultBean.getKeys()+"==="+resultBean.getEncryptionKey());
+
+        Log.e("scan===openBleLock", serverTime+"==="+keys+"==="+encryptionKey);
+
+        ClientManager.getClient().openLock(m_nowMac,"000000000000", (int) serverTime, keys, encryptionKey, new IEmptyResponse(){
+//        ClientManager.getClient().openLock(m_nowMac,"000000000000", 1560316059, "EFD72E14D4F1CAA9F919B6FE0066579F", 179, new IEmptyResponse(){
+//        ClientManager.getClient().openLock(m_nowMac,"000000000000", resultBean.getServerTime(), resultBean.getKeys(), resultBean.getEncryptionKey(), new IEmptyResponse(){
                     @Override
                     public void onResponseFail(int code) {
                         Log.e("openLock===Fail", Code.toString(code));
@@ -1051,7 +1134,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     @Override
                     public void onResponseSuccess() {
 //                        UIHelper.dismiss();
-//                        getBleRecord();
+                        getBleRecord();
 
                         Log.e("openLock===Success", "===");
 
@@ -1079,6 +1162,68 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     }
                 });
     }
+
+    //与设备，获取记录
+    private void getBleRecord() {
+        ClientManager.getClient().getRecord(m_nowMac, new IGetRecordResponse() {
+            @Override
+            public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp,
+                                          String transType, String mackey, String index, String cap, String vol) {
+                Log.e("getBleRecord===", "Success===");
+
+                deleteBleRecord(bikeTradeNo);
+            }
+
+            @Override
+            public void onResponseSuccessEmpty() {
+//                ToastUtil.showMessageApp(context, "record empty");
+                Log.e("getBleRecord===", "Success===Empty");
+            }
+
+            @Override
+            public void onResponseFail(int code) {
+                Log.e("getBleRecord===", Code.toString(code));
+                ToastUtil.showMessageApp(context, Code.toString(code));
+            }
+        });
+    }
+
+    //与设备，删除记录
+    private void deleteBleRecord(String tradeNo) {
+//        UIHelper.showProgress(this, R.string.delete_bike_record);
+        ClientManager.getClient().deleteRecord(m_nowMac, tradeNo, new IGetRecordResponse() {
+            @Override
+            public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp, String transType, String mackey, String index, String cap, String vol) {
+
+                Log.e("scan===deleteBleRecord", "Success===");
+
+                deleteBleRecord(bikeTradeNo);
+            }
+
+            @Override
+            public void onResponseSuccessEmpty() {
+//                UIHelper.dismiss();
+                Log.e("scan===deleteBleRecord", "Success===Empty");
+
+                SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
+                SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
+                SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
+                SharedPreferencesUrls.getInstance().putString("type", type);
+                SharedPreferencesUrls.getInstance().putString("tempStat","0");
+                SharedPreferencesUrls.getInstance().putString("bleid",bleid);
+
+                UIHelper.goToAct(context, CurRoadBikingActivity.class);
+                scrollToFinishActivity();
+            }
+
+            @Override
+            public void onResponseFail(int code) {
+                Log.e("scan===deleteBleRecord", Code.toString(code));
+                ToastUtil.showMessageApp(context, Code.toString(code));
+            }
+        });
+    }
+
 
     //连接设备
     private void connectDevice() {
@@ -1111,30 +1256,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         });
     }
 
-    //与设备，获取记录
-    private void getBleRecord() {
-        ToastUtil.showMessageApp(context, "get_bike_record");
-        ClientManager.getClient().getRecord(m_nowMac, new IGetRecordResponse() {
-            @Override
-            public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp,
-                                          String transType, String mackey, String index, String cap, String vol) {
-//                UIHelper.dismiss();
-//                uploadRecordServer(phone, bikeTradeNo, timestamp, transType, mackey, index, cap, vol);
-            }
 
-            @Override
-            public void onResponseSuccessEmpty() {
-//                UIHelper.dismiss();
-                ToastUtil.showMessageApp(context, "record empty");
-            }
-
-            @Override
-            public void onResponseFail(int code) {
-//                UIHelper.dismiss();
-                ToastUtil.showMessageApp(context, Code.toString(code));
-            }
-        });
-    }
 
     private void refreshData(boolean refresh) {
 //        if (refresh) {
@@ -1689,7 +1811,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
-                        Log.e("scan===", "getCurrentorder===="+result.getData());
+                        Log.e("scan===", "getCurrentorder===="+result.getData()+"==="+type);
 
                         if ("[]".equals(result.getData()) || 0 == result.getData().length()){
                             addOrderbluelock();
@@ -1700,15 +1822,18 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                             ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
 
-                            SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
-                            SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
-                            SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
-                            SharedPreferencesUrls.getInstance().putString("type", type);
-                            SharedPreferencesUrls.getInstance().putString("tempStat","0");
-                            SharedPreferencesUrls.getInstance().putString("bleid",bleid);
+                            if(!"5".equals(type)){
+                                SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
+                                SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
+                                SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
+                                SharedPreferencesUrls.getInstance().putString("type", type);
+                                SharedPreferencesUrls.getInstance().putString("tempStat","0");
+                                SharedPreferencesUrls.getInstance().putString("bleid",bleid);
 
-                            UIHelper.goToAct(context, CurRoadBikingActivity.class);
-                            scrollToFinishActivity();
+                                UIHelper.goToAct(context, CurRoadBikingActivity.class);
+                                scrollToFinishActivity();
+                            }
+
                         }
                     } else {
                         ToastUtil.showMessageApp(context,result.getMsg());
@@ -1741,7 +1866,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             params.put("access_token",access_token);
             params.put("codenum", codenum);
 
-            Log.e("scan===lock", uid + "===" + access_token + "===" + codenum);
+            ;
 
             if (quantity != null && !"".equals(quantity)){
                 params.put("quantity",quantity);
@@ -1762,6 +1887,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                         if (result.getFlag().equals("Success")) {
 
+                            Log.e("scan===addOrderbluelock", "===" + type);
+
                             CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
                             oid = bean.getOid();
 
@@ -1773,15 +1900,18 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
                                 Log.e("scan===OPEN_ACTION", m_nowMac+"===="+isOpen);
 
-                                SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
-                                SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
-                                SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
-                                SharedPreferencesUrls.getInstance().putString("type", type);
-                                SharedPreferencesUrls.getInstance().putString("tempStat","0");
-                                SharedPreferencesUrls.getInstance().putString("bleid",bleid);
+                                if(!"5".equals(type)){
+                                    SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
+                                    SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
+                                    SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
+                                    SharedPreferencesUrls.getInstance().putString("type", type);
+                                    SharedPreferencesUrls.getInstance().putString("tempStat","0");
+                                    SharedPreferencesUrls.getInstance().putString("bleid",bleid);
 
-                                UIHelper.goToAct(context, CurRoadBikingActivity.class);
-                                scrollToFinishActivity();
+                                    UIHelper.goToAct(context, CurRoadBikingActivity.class);
+                                    scrollToFinishActivity();
+                                }
+
                             }else{
 
 

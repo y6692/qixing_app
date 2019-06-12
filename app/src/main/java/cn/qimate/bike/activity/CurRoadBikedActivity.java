@@ -139,6 +139,11 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     protected void onDestroy() {
         isForeground = false;
         super.onDestroy();
+
+        if (broadcastReceiver != null) {
+            unregisterReceiver(broadcastReceiver);
+            broadcastReceiver = null;
+        }
     }
 
     private void initView(){

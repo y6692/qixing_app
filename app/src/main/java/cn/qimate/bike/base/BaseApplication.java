@@ -54,6 +54,7 @@ public class BaseApplication extends Application {
 	private PackageInfo packageInfo;
 	private IBLE bleManager;
 	private boolean debug = false;
+	private boolean test = false;
 
 	public static  BaseApplication getInstance() {
 		return app;
@@ -65,6 +66,14 @@ public class BaseApplication extends Application {
 
 	public void setDebug(boolean debug) {
 		this.debug = debug;
+	}
+
+	public boolean isTest() {
+		return test;
+	}
+
+	public void setTest(boolean test) {
+		this.test = test;
 	}
 
 	@Override
@@ -81,6 +90,7 @@ public class BaseApplication extends Application {
 		BluetoothContext.set(this);
 
 		setDebug(false);
+		setTest(true);
 
 //		registerReceiver(broadcastReceiver2, Config.initFilter());
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);

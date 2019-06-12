@@ -286,12 +286,15 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         type = SharedPreferencesUrls.getInstance().getString("type", "");
         bleid = SharedPreferencesUrls.getInstance().getString("bleid", "");
 
-//        type = "5";
+        if(BaseApplication.getInstance().isTest()){
+            type = "5";
+        }
 
-        ClientManager.getClient().stopSearch();
-        ClientManager.getClient().disconnect(m_nowMac);
-        ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
-        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+//        ClientManager.getClient().stopSearch();
+//        ClientManager.getClient().disconnect(m_nowMac);
+//        ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+//        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
 
 
         //注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
@@ -490,6 +493,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private void openBleLock(RRent.ResultBean resultBean) {
 //        UIHelper.showProgress(this, "open_bike_status");
 //        ClientManager.getClient().openLock(mac, "18112348925", resultBean.getServerTime(),
+
+        Log.e("openBleLock===", resultBean.getServerTime()+"==="+resultBean.getKeys()+"==="+resultBean.getEncryptionKey());
+
         ClientManager.getClient().openLock(m_nowMac,"000000000000", resultBean.getServerTime(),
                 resultBean.getKeys(), resultBean.getEncryptionKey(), new IEmptyResponse(){
                     @Override
@@ -529,6 +535,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
             Log.e("onNotifyClose===", "====");
 
+            ToastUtil.showMessageApp(context,"锁已关闭");
+
 //            submit(uid, access_token);
 
             runOnUiThread(new Runnable() {
@@ -538,7 +546,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }
             });
 
-            BluetoothLog.v(String.format("DeviceDetailActivity onNotifyClose"));
+//            BluetoothLog.v(String.format("DeviceDetailActivity onNotifyClose"));
 //            runOnUiThread(new Runnable() {
 //                @Override
 //                public void run() {
@@ -1121,7 +1129,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             password = bean.getPassword();
                             type = bean.getType();
 
-//                            type = "5";
+                            if(BaseApplication.getInstance().isTest()){
+                                type = "5";
+                            }
 
 //                            hintText.setText("校内地图红色区域关锁，并点击结束");
 
@@ -1167,8 +1177,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 
                                 }else if ("5".equals(type)){
-                                    m_nowMac = "A4:34:F1:7B:BF:9A";
-
+                                    if(BaseApplication.getInstance().isTest()){
+//                                        m_nowMac = "A4:34:F1:7B:BF:9A";
+                                        m_nowMac = "3C:A3:08:AE:BE:24";
+                                    }
 
                                     if("0".equals(SharedPreferencesUrls.getInstance().getString("tempStat","0"))){
                                         lookPsdBtn.setText("临时上锁");
@@ -2733,6 +2745,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     }
 
     private void queryOpenState() {
+        Log.e("queryOpenState===0", "====");
+
 //        UIHelper.showProgress(this, R.string.collectState);
         ClientManager.getClient().queryOpenState(m_nowMac, new IQueryOpenStateResponse() {
             @Override
@@ -2742,6 +2756,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 Log.e("queryOpenState===", "===="+open);
 
                 if(open) {
+                    ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
                 }else {
 
@@ -4461,7 +4476,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         @Override
         public void onDeviceFounded(SearchResult device) {
 
-            Log.e("biking===","DeviceListActivity.onDeviceFounded " + device.device.getAddress()+"==="+m_nowMac);
+            Log.e("biking=onDeviceFounded",device.device.getName() + "===" + device.device.getAddress()+"==="+m_nowMac);
 
             if(m_nowMac.equals(device.device.getAddress())){
                 ClientManager.getClient().stopSearch();
