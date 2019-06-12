@@ -1139,6 +1139,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         Log.e("openLock===Fail", Code.toString(code));
 //                        UIHelper.dismiss();
 //                        UIHelper.showToast(DeviceDetailActivity.this, Code.toString(code));
+
+//                        getBleRecord();
+
                         ToastUtil.showMessageApp(context, Code.toString(code));
                     }
 

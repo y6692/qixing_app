@@ -77,6 +77,7 @@ import com.sofi.blelocker.library.model.BleGattProfile;
 import com.sofi.blelocker.library.protocol.ICloseListener;
 import com.sofi.blelocker.library.protocol.IConnectResponse;
 import com.sofi.blelocker.library.protocol.IEmptyResponse;
+import com.sofi.blelocker.library.protocol.IGetRecordResponse;
 import com.sofi.blelocker.library.protocol.IGetStatusResponse;
 import com.sofi.blelocker.library.protocol.IQueryOpenStateResponse;
 import com.sofi.blelocker.library.protocol.ITemporaryActionResponse;
@@ -96,8 +97,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.UUID;
 
 import cn.http.OkHttpClientManager;
@@ -124,6 +127,7 @@ import cn.qimate.bike.model.EbikeInfoBean;
 import cn.qimate.bike.model.NearbyBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.AESUtil;
 import cn.qimate.bike.util.ByteUtil;
 import cn.qimate.bike.util.Globals;
 import cn.qimate.bike.util.IoBuffer;
@@ -272,6 +276,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
     private String tel = "13188888888";
     private String bleid = "";
+
+    private String keySource = "";
+    //密钥索引
+    int encryptionKey= 0;
+    //开锁密钥
+    String keys = null;
+    //服务器时间戳，精确到秒，用于锁同步时间
+    long serverTime;
 
     @Override
     @TargetApi(23)
@@ -494,10 +506,12 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //        UIHelper.showProgress(this, "open_bike_status");
 //        ClientManager.getClient().openLock(mac, "18112348925", resultBean.getServerTime(),
 
-        Log.e("openBleLock===", resultBean.getServerTime()+"==="+resultBean.getKeys()+"==="+resultBean.getEncryptionKey());
+//        Log.e("openBleLock===", resultBean.getServerTime()+"==="+resultBean.getKeys()+"==="+resultBean.getEncryptionKey());
 
-        ClientManager.getClient().openLock(m_nowMac,"000000000000", resultBean.getServerTime(),
-                resultBean.getKeys(), resultBean.getEncryptionKey(), new IEmptyResponse(){
+        Log.e("biking===openBleLock", serverTime+"==="+keys+"==="+encryptionKey);
+
+        ClientManager.getClient().openLock(m_nowMac,"000000000000", (int) serverTime, keys, encryptionKey, new IEmptyResponse(){
+//        ClientManager.getClient().openLock(m_nowMac,"000000000000", resultBean.getServerTime(), resultBean.getKeys(), resultBean.getEncryptionKey(), new IEmptyResponse(){
                     @Override
                     public void onResponseFail(int code) {
                         if (loadingDialog != null && loadingDialog.isShowing()){
@@ -514,10 +528,12 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             loadingDialog.dismiss();
                         }
 
+                        getBleRecord();
+
                         Log.e("openLock===Success", "===");
 
                         ToastUtil.showMessageApp(context, "开锁成功");
-                        SharedPreferencesUrls.getInstance().putString("tempStat","0");
+//                        SharedPreferencesUrls.getInstance().putString("tempStat","0");
 
 //                        ClientManager.getClient().stopSearch();
 //                        ClientManager.getClient().disconnect(m_nowMac);
@@ -526,6 +542,57 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                     }
                 });
+    }
+
+    //与设备，获取记录
+    private void getBleRecord() {
+        ClientManager.getClient().getRecord(m_nowMac, new IGetRecordResponse() {
+            @Override
+            public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp,
+                                          String transType, String mackey, String index, String cap, String vol) {
+                Log.e("biking===getBleRecord", "Success===");
+
+                deleteBleRecord(bikeTradeNo);
+            }
+
+            @Override
+            public void onResponseSuccessEmpty() {
+//                ToastUtil.showMessageApp(context, "record empty");
+                Log.e("biking===getBleRecord", "Success===Empty");
+            }
+
+            @Override
+            public void onResponseFail(int code) {
+                Log.e("biking===getBleRecord", Code.toString(code));
+                ToastUtil.showMessageApp(context, Code.toString(code));
+            }
+        });
+    }
+
+    //与设备，删除记录
+    private void deleteBleRecord(String tradeNo) {
+//        UIHelper.showProgress(this, R.string.delete_bike_record);
+        ClientManager.getClient().deleteRecord(m_nowMac, tradeNo, new IGetRecordResponse() {
+            @Override
+            public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp, String transType, String mackey, String index, String cap, String vol) {
+
+                Log.e("biking=deleteBleRecord", "Success===");
+
+                deleteBleRecord(bikeTradeNo);
+            }
+
+            @Override
+            public void onResponseSuccessEmpty() {
+//                UIHelper.dismiss();
+                Log.e("biking=deleteBleRecord", "Success===Empty");
+            }
+
+            @Override
+            public void onResponseFail(int code) {
+                Log.e("biking=deleteBleRecord", Code.toString(code));
+                ToastUtil.showMessageApp(context, Code.toString(code));
+            }
+        });
     }
 
     //监听锁关闭事件
@@ -539,12 +606,12 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 //            submit(uid, access_token);
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    lookPsdBtn.setText("开锁用车");
-                }
-            });
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    lookPsdBtn.setText("开锁用车");
+//                }
+//            });
 
 //            BluetoothLog.v(String.format("DeviceDetailActivity onNotifyClose"));
 //            runOnUiThread(new Runnable() {
@@ -1185,12 +1252,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                         }
                                     }
 
-                                    if("0".equals(SharedPreferencesUrls.getInstance().getString("tempStat","0"))){
-                                        lookPsdBtn.setText("临时上锁");
-                                    }else{
-                                        lookPsdBtn.setText("开锁用车");
-                                    }
-
+                                    lookPsdBtn.setText("再次开锁");
 
                                 }else{
                                     lookPsdBtn.setText("再次开锁");
@@ -1985,7 +2047,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 customBuilder.create().show();
                 break;
             case R.id.curRoadUI_biking_lookPsdBtn:
-                if ("查看密码".equals(lookPsdBtn.getText().toString().trim())){
+                String tvAgain = lookPsdBtn.getText().toString().trim();
+                if ("查看密码".equals(tvAgain)){
                     customBuilder = new CustomDialog.Builder(this);
                     customBuilder.setTitle("查看密码").setMessage("解锁码："+password)
                             .setPositiveButton("取消", new DialogInterface.OnClickListener() {
@@ -1994,7 +2057,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         }
                     });
                     customBuilder.create().show();
-                }else if ("临时上锁".equals(lookPsdBtn.getText().toString().trim())){
+                }else if ("临时上锁".equals(tvAgain)){
 
                     Log.e("biking===lookPsdBtn", "onClick==="+m_nowMac);
 
@@ -2039,7 +2102,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                    }
 
 
-                }else if ("开锁用车".equals(lookPsdBtn.getText().toString().trim())){
+                }else if ("开锁用车".equals(tvAgain)){
 
                     Log.e("biking===lookPsdBtn", "onClick==="+m_nowMac);
 
@@ -2118,11 +2181,45 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //
 //                    }
 
-                }else {
+                }else if ("再次开锁".equals(tvAgain)){
                     flag = 1;
 
                     if("3".equals(type)){
                         openAgain();
+                    }else if("5".equals(type)){
+                        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                            ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+                            scrollToFinishActivity();
+                        }
+                        //蓝牙锁
+                        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+                        mBluetoothAdapter = bluetoothManager.getAdapter();
+
+                        if (mBluetoothAdapter == null) {
+                            ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                            scrollToFinishActivity();
+                            return;
+                        }
+                        if (!mBluetoothAdapter.isEnabled()) {
+                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            startActivityForResult(enableBtIntent, 188);
+                        } else {
+                            if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                loadingDialog.setTitle("正在加载");
+                                loadingDialog.show();
+                            }
+
+                            if (!TextUtils.isEmpty(m_nowMac)) {
+                                SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+                                        .searchBluetoothLeDevice(0)
+                                        .build();
+
+                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                    return;
+                                }
+                                ClientManager.getClient().search(request, mSearchResponse2);
+                            }
+                        }
                     }else{
                         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                             ToastUtil.showMessageApp(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0");
@@ -3300,7 +3397,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
             case 7:
 
-                ToastUtil.showMessageApp(context,"关锁成功5");
+                ToastUtil.showMessageApp(context,"关锁成功");
                 SharedPreferencesUrls.getInstance().putString("tempStat","1");
                 break;
 
@@ -4513,7 +4610,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         @Override
         public void onDeviceFounded(SearchResult device) {
-
             Log.e("biking===","DeviceListActivity.onDeviceFounded2 " + device.device.getAddress()+"==="+m_nowMac);
 
             if(m_nowMac.equals(device.device.getAddress())){
@@ -4522,8 +4618,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 ClientManager.getClient().getStatus(m_nowMac, new IGetStatusResponse() {
                     @Override
                     public void onResponseSuccess(String version, String keySerial, String macKey, String vol) {
-//                    cn.qimate.bike.util.UIHelper.dismiss();
-                        queryStatusServer(version, keySerial, macKey, vol);
+//                        queryStatusServer(version, keySerial, macKey, vol);
+
+                        keySource = keySerial;
+                        rent();
                     }
 
                     @Override
@@ -4563,6 +4661,54 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         }
     };
+
+    private void rent(){
+//        //根据锁号查找到锁实体类
+//        LockInfo lockInfo = getLockInfoModel(lockNo);
+//        String secretKey = lockInfo.getSecretKey();
+
+        String secretKey = "";
+
+        if("3C:A3:08:AE:BE:24".equals(m_nowMac)){
+            secretKey = "eralHInialHInitwokPs5138m9pleBLEPeri4herzat4on8L0P1functP1functi7onSim9pInit2ali"; //"3C:A3:08:AE:BE:24";
+        }else{
+            secretKey = "NDQzMDMyMzYzOTM5MzkzMzQxNDQzMzQxMzMzOTMyMzE0NTM3NDEzMzQzMzU0NTM4MzYzMDM1Mzk0MzAw";  // "A4:34:F1:7B:BF:9A";
+        }
+
+//        String secretKey = "NDQzMDMyMzYzOTM5MzkzMzQxNDQzMzQxMzMzOTMyMzE0NTM3NDEzMzQzMzU0NTM4MzYzMDM1Mzk0MzAw";
+//        String secretKey = "eralHInialHInitwokPs5138m9pleBLEPeri4herzat4on8L0P1functP1functi7onSim9pInit2ali";
+
+        //AES加解密密钥
+        String pwd = null;
+
+        Random random = new Random();
+        //随机数取80位密钥中，前64位的某一位
+        encryptionKey = random.nextInt(secretKey.length()-16);
+        //从随机数位数开始截取16位字符作为AES加解密密钥
+        pwd = secretKey.substring(encryptionKey, encryptionKey+16);
+        encryptionKey = encryptionKey + 128;
+
+        //补8个0，AES加密需要16位数据
+        keySource = keySource.toUpperCase()+"00000000";
+        //加密
+        byte[] encryptResultStr = AESUtil.encrypt(keySource.getBytes(), pwd);
+        //转成hexString
+        keys = AESUtil.bytesToHexString(encryptResultStr).toUpperCase();
+        //服务器时间戳，精确到秒，用于锁同步时间
+        serverTime = Calendar.getInstance().getTimeInMillis()/1000;
+
+        Log.e("rent===", encryptionKey+"==="+pwd);
+
+        openBleLock(null);
+
+//        //密钥索引
+//        result.put("encryptionKey", encryptionKey);
+//        //开锁密钥
+//        result.put("keys", keys);
+//        //返回服务器时间戳
+//        result.put("serverTime", serverTime);
+//        return result;
+    }
 
     private void initSite(){
         RequestParams params = new RequestParams();
