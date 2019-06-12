@@ -159,31 +159,23 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //        initLocation();
 //        AppApplication.getApp().scan();
 
-
-
-
-        OkHttpClientManager.getInstance().UserLogin("99920170623", "123456", new ResultCallback<RUserLogin>() {
-            @Override
-            public void onError(Request request, Exception e) {
-                Log.e("UserLogin===", "====Error");
-//                UIHelper.showToast(this, e.getMessage());
-//                failLogin();
-            }
-
-            @Override
-            public void onResponse(RUserLogin rUserLogin) {
-                if (rUserLogin.getResult() < 0) {
-//                    failLogin();
-                    Log.e("UserLogin===", "====fail");
-                }
-                else {
-                    Globals.USERNAME = "99920170623";
-//                    Globals.BLE_NAME = "GpDTxe7<a";
-//                    successLogin();
-                    Log.e("UserLogin===", "====success");
-                }
-            }
-        });
+//        OkHttpClientManager.getInstance().UserLogin("99920170623", "123456", new ResultCallback<RUserLogin>() {
+//            @Override
+//            public void onError(Request request, Exception e) {
+//                Log.e("UserLogin===", "====Error");
+//            }
+//
+//            @Override
+//            public void onResponse(RUserLogin rUserLogin) {
+//                if (rUserLogin.getResult() < 0) {
+//                    Log.e("UserLogin===", "====fail");
+//                }
+//                else {
+//                    Globals.USERNAME = "99920170623";
+//                    Log.e("UserLogin===", "====success");
+//                }
+//            }
+//        });
 
     }
 

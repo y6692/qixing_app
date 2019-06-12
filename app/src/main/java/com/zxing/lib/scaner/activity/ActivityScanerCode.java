@@ -712,6 +712,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                             bleid = jsonObject.getString("bleid");
                             type = jsonObject.getString("type");
+                            codenum = jsonObject.getString("codenum");
+                            m_nowMac = jsonObject.getString("macinfo");
 
                             if(BaseApplication.getInstance().isTest()){
                                 type = "5";
@@ -722,8 +724,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 UIHelper.goToAct(context, CurRoadStartActivity.class);
                                 scrollToFinishActivity();
                             } else if ("2".equals(type)) {    //蓝牙锁
-                                codenum = jsonObject.getString("codenum");
-                                m_nowMac = jsonObject.getString("macinfo");
+
                                 if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                                     scrollToFinishActivity();
@@ -756,8 +757,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     }
                                 }
                             } else if ("3".equals(type)) {    //3合1锁
-                                codenum = jsonObject.getString("codenum");
-                                m_nowMac = jsonObject.getString("macinfo");
 
                                 if ("200".equals(jsonObject.getString("code"))) {
                                     Log.e("useBike===", "====" + jsonObject);
@@ -786,8 +785,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     }
                                 }
                             } else if ("4".equals(type)) {
-                                codenum = jsonObject.getString("codenum");
-                                m_nowMac = jsonObject.getString("macinfo");
 
                                 if ("200".equals(jsonObject.getString("code"))) {
                                     Log.e("useBike===4", "====" + jsonObject);
@@ -855,11 +852,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 }
 
                             } else if ("5".equals(type)) {
-                                codenum = jsonObject.getString("codenum");
 
                                 if(BaseApplication.getInstance().isTest()){
-//                                    m_nowMac = "A4:34:F1:7B:BF:9A";
-                                    m_nowMac = "3C:A3:08:AE:BE:24";
+                                    if("40001101".equals(codenum)){
+                                        m_nowMac = "3C:A3:08:AE:BE:24";
+                                    }else{
+                                        m_nowMac = "A4:34:F1:7B:BF:9A";
+                                    }
+
                                 }
 
 
@@ -900,8 +900,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                             return;
                                         }
                                         ClientManager.getClient().search(request, mSearchResponse);
-
-
 
                                     }
                                 }
@@ -995,17 +993,21 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
             Log.e("ConnectStatus===", "===="+(status == STATUS_CONNECTED));
 
+//            keySource = "9A88005D";
+//            rent();
+
             ClientManager.getClient().getStatus(mac, new IGetStatusResponse() {
                 @Override
                 public void onResponseSuccess(String version, String keySerial, String macKey, String vol) {
-//                    cn.qimate.bike.util.UIHelper.dismiss();
-                    queryStatusServer(version, keySerial, macKey, vol);
+//                    queryStatusServer(version, keySerial, macKey, vol);
+
+                    keySource = keySerial;
+                    rent();
                 }
 
                 @Override
                 public void onResponseFail(int code) {
                     Log.e("getStatus===", Code.toString(code));
-//                    cn.qimate.bike.util.UIHelper.dismiss();
                     ToastUtil.showMessageApp(context, Code.toString(code));
                 }
 
@@ -1073,8 +1075,17 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //        //根据锁号查找到锁实体类
 //        LockInfo lockInfo = getLockInfoModel(lockNo);
 //        String secretKey = lockInfo.getSecretKey();
+
+        String secretKey = "";
+
+        if("40001101".equals(codenum)){
+            secretKey = "eralHInialHInitwokPs5138m9pleBLEPeri4herzat4on8L0P1functP1functi7onSim9pInit2ali"; //"3C:A3:08:AE:BE:24";
+        }else{
+            secretKey = "NDQzMDMyMzYzOTM5MzkzMzQxNDQzMzQxMzMzOTMyMzE0NTM3NDEzMzQzMzU0NTM4MzYzMDM1Mzk0MzAw";  // "A4:34:F1:7B:BF:9A";
+        }
+
 //        String secretKey = "NDQzMDMyMzYzOTM5MzkzMzQxNDQzMzQxMzMzOTMyMzE0NTM3NDEzMzQzMzU0NTM4MzYzMDM1Mzk0MzAw";
-        String secretKey = "eralHInialHInitwokPs5138m9pleBLEPeri4herzat4on8L0P1functP1functi7onSim9pInit2ali";
+//        String secretKey = "eralHInialHInitwokPs5138m9pleBLEPeri4herzat4on8L0P1functP1functi7onSim9pInit2ali";
 
         //AES加解密密钥
         String pwd = null;

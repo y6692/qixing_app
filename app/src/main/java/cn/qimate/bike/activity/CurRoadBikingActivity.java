@@ -1178,8 +1178,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                 }else if ("5".equals(type)){
                                     if(BaseApplication.getInstance().isTest()){
-//                                        m_nowMac = "A4:34:F1:7B:BF:9A";
-                                        m_nowMac = "3C:A3:08:AE:BE:24";
+                                        if("40001101".equals(bikeCode)){
+                                            m_nowMac = "3C:A3:08:AE:BE:24"; //"3C:A3:08:AE:BE:24";
+                                        }else{
+                                            m_nowMac = "A4:34:F1:7B:BF:9A";  // "A4:34:F1:7B:BF:9A";
+                                        }
                                     }
 
                                     if("0".equals(SharedPreferencesUrls.getInstance().getString("tempStat","0"))){
