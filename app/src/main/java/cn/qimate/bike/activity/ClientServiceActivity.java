@@ -748,6 +748,9 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.item_photo_mygridview, parent, false);
             }
+
+            if(!((MyGridView) parent).isOnMeasure()) return convertView;
+
             ImageView imageView = BaseViewHolder.get(convertView, R.id.item_photo_gridView_image);
             if (position == imageUrlList.size()) {
                 imageView.setImageResource(R.drawable.icon_addpic_focused);

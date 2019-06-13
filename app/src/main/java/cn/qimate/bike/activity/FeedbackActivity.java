@@ -1193,6 +1193,8 @@ public class FeedbackActivity
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
+
+
 //            pos = position;
 //
 //            int childCount = parent.getChildCount();
@@ -1205,13 +1207,14 @@ public class FeedbackActivity
 //
 //            Log.e("ImageLoader===2", position+"==="+imageUrlList.size()+"==="+isComplete);
 
-            Log.e("ImageLoader===3", position+"==="+imageUrlList.size()+"==="+isComplete+"==="+convertView);
 
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.item_photo_mygridview, parent, false);
             }
 
-//            if(isComplete) return convertView;
+            if(!((MyGridView) parent).isOnMeasure()) return convertView;
+
+            Log.e("ImageLoader===3", position+"==="+imageUrlList.size()+"==="+isComplete+"==="+convertView+"==="+((MyGridView) parent).isOnMeasure());
 
             ImageView imageView = BaseViewHolder.get(convertView, R.id.item_photo_gridView_image);
             if (position == imageUrlList.size()) {
@@ -1245,17 +1248,9 @@ public class FeedbackActivity
                         }
                     });
 
-//                    isComplete = true;
-//
-//                    if (loadingDialog != null) {
-//                        loadingDialog.dismiss();
-//                    }
-
-//                    mHandler.sendEmptyMessage(1);
-
                 }
             }
-            notifyDataSetChanged();
+//            notifyDataSetChanged();
 
             return convertView;
         }
