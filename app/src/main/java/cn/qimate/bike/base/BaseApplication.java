@@ -90,7 +90,8 @@ public class BaseApplication extends Application {
 		BluetoothContext.set(this);
 
 		setDebug(false);
-		setTest(true);
+//		setTest(true);
+		setTest(false);
 
 //		registerReceiver(broadcastReceiver2, Config.initFilter());
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);

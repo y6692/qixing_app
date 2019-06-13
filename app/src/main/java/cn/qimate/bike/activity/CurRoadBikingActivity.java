@@ -315,17 +315,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
             ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
         }else{
-            registerReceiver(Config.initFilter());
-            GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+//            registerReceiver(Config.initFilter());
+//            GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
         }
 
         Log.e("biking===onCreate2", m_nowMac+"==="+type+"==="+bleid);
-
-//        ClientManager.getClient().stopSearch();
-//        ClientManager.getClient().disconnect(m_nowMac);
-//        ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
-//        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
-
 
         //注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
         IntentFilter filter = new IntentFilter("data.broadcast.action");
@@ -474,90 +468,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 bleService.view = context;
                 bleService.showValue = true;
 
-//                if("5".equals(type)){
-//                    SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
-//                            .searchBluetoothLeDevice(0)
-//                            .build();
-//
-//                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                        return;
-//                    }
-//                    ClientManager.getClient().search(request, mSearchResponse);
-//
-//                }
-
-//                connectDevice();
-//                ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
-//                ClientManager.getClient().notifyClose(m_nowMac, mCloseListener); //监听锁关闭事件
-
-//                    if (n > 0) {
-//                        startXB();
-//
-//                        if (lockLoading != null && !lockLoading.isShowing()) {
-//                            lockLoading.setTitle("还车点确认中");
-//                            lockLoading.show();
-//                        }
-//
-//                        new Thread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                try {
-//                                    int n = 0;
-//                                    while (macList.size() == 0) {
-//                                        Thread.sleep(1000);
-//                                        n++;
-//
-//                                        Log.e("main===", "n====" + n);
-//
-//                                        if (n >= 6) break;
-//                                    }
-//                                } catch (InterruptedException e) {
-//                                    e.printStackTrace();
-//                                }
-//
-//                                m_myHandler.sendEmptyMessage(3);
-//                            }
-//                        }).start();
-//                    } else {
-//                        n++;
-//
-//                        if (lockLoading != null && !lockLoading.isShowing()) {
-//                            lockLoading.setTitle("正在连接");
-//                            lockLoading.show();
-//                        }
-//
-//                        isStop = false;
-//                        m_myHandler.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                if (lockLoading != null && lockLoading.isShowing()) {
-//                                    lockLoading.dismiss();
-//                                }
-//
-//                                Log.e("biking===", "3===" + isStop);
-//
-//                                if (!isStop) {
-//                                    stopScan = true;
-//                                    BaseApplication.getInstance().getIBLE().refreshCache();
-//                                    BaseApplication.getInstance().getIBLE().close();
-//                                    BaseApplication.getInstance().getIBLE().disconnect();
-//
-//                                    if ("3".equals(type)) {
-//                                        if (first3) {
-//                                            first3 = false;
-//                                            customDialog4.show();
-//                                        } else {
-//                                            carClose();
-//                                        }
-//                                    } else {
-//                                        customDialog3.show();
-//                                    }
-//                                }
-//                            }
-//                        }, 10 * 1000);
-//
-//                        connect();
-//                    }
 
                 if (loadingDialog != null && !loadingDialog.isShowing()) {
                     loadingDialog.setTitle("正在唤醒车锁");
@@ -565,6 +475,15 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }
 
                 connect();
+
+                if ("5".equals(type)) {
+//                    connectDevice();
+//                    ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+//                    ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+                }else{
+                    registerReceiver(Config.initFilter());
+                    GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+                }
 
             }
 
@@ -575,9 +494,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         ToastUtil.showMessage(this, "biking===="+internalReceiver);
 
         closeBroadcast();
-
-
-
 
 
 
@@ -1450,11 +1366,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         Log.e("biking====onDestroy", "==="+m_nowMac);
 
+        if("5".equals(type)){
+            ClientManager.getClient().stopSearch();
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+            ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+        }else{
+            BaseApplication.getInstance().getIBLE().stopScan();
+        }
 
-//        ClientManager.getClient().stopSearch();
-        ClientManager.getClient().disconnect(m_nowMac);
-        ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
-        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+
 
 //        if(BaseApplication.getInstance().getIBLE().isEnable()){
 //            BaseApplication.getInstance().getIBLE().refreshCache();
@@ -4903,9 +4825,15 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         BaseApplication.getInstance().getIBLE().stopScan();
         m_myHandler.sendEmptyMessage(0x99);
+//
+//        BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
+
         BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
             @Override
             public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
+
+                Log.e("biking===connect", device.getAddress()+"==="+m_nowMac);
+
                 if (device==null || TextUtils.isEmpty(device.getAddress()) || stopScan){
                     stopScan = false;
 
@@ -4914,8 +4842,13 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     return;
                 }
                 if (m_nowMac.equalsIgnoreCase(device.getAddress())){
-                    m_myHandler.removeMessages(0x99);
+
+                    Log.e("biking====", "connect===3==="+stopScan);
+
                     BaseApplication.getInstance().getIBLE().stopScan();
+
+                    m_myHandler.removeMessages(0x99);
+
                     BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
                 }
             }
