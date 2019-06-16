@@ -869,7 +869,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
         aMap.getUiSettings().setLogoBottomMargin(-50);
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
+        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(25f);// 设置缩放监听
         aMap.moveCamera(cameraUpdate);
         successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
         bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.ebike_icon);
@@ -1529,7 +1529,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         screen = false;
         change = false;
 
-        Log.e("main===", "main====onStop");
+        Log.e("ebikefrag===", "===onStop");
 
 //		closeBroadcast();
 //

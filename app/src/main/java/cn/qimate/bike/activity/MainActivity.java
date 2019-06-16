@@ -362,6 +362,24 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         });
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        Log.e("main===", "===onStop");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        Log.e("main===", "===onDestroy");
+
+        if (mapView != null) {
+            mapView.onDestroy();
+        }
+    }
+
 
     //获取网络时间
     private void getNetTime() {
@@ -485,15 +503,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         }
     };
 
-    @Override
-    public void onDestroy() {
 
-        super.onDestroy();
-
-        if (mapView != null) {
-            mapView.onDestroy();
-        }
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

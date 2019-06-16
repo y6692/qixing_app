@@ -108,6 +108,7 @@ import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.AESUtil;
 import cn.qimate.bike.util.ByteUtil;
+import cn.qimate.bike.util.Constants;
 import cn.qimate.bike.util.Globals;
 import cn.qimate.bike.util.IoBuffer;
 import cn.qimate.bike.util.PublicWay;
@@ -663,12 +664,16 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
     void useCar(String result) {
 
+        Log.e("scan===useCar0", "===" + result);
+
         final String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
         if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
             ToastUtil.showMessageApp(context, "请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
         } else {
+            Log.e("scan===useCar1", "===" + result);
+
             RequestParams params = new RequestParams();
             params.put("uid", uid);
             params.put("access_token", access_token);
@@ -691,6 +696,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     if (loadingDialog != null && loadingDialog.isShowing()) {
                         loadingDialog.dismiss();
                     }
+
+                    Log.e("scan===useCar2", "===");
 
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
@@ -720,10 +727,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             }
 
 
-                            if ("1".equals(type)) {          //机械锁
+                            if ("1".equals(type)) {          //单车机械锁
                                 UIHelper.goToAct(context, CurRoadStartActivity.class);
                                 scrollToFinishActivity();
-                            } else if ("2".equals(type)) {    //蓝牙锁
+                            } else if ("2".equals(type)) {    //单车蓝牙锁
 
                                 if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
@@ -756,7 +763,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                         connect();
                                     }
                                 }
-                            } else if ("3".equals(type)) {    //3合1锁
+                            } else if ("3".equals(type)) {    //单车3合1锁
 
                                 if ("200".equals(jsonObject.getString("code"))) {
                                     Log.e("useBike===", "====" + jsonObject);
@@ -784,7 +791,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                         }
                                     }
                                 }
-                            } else if ("4".equals(type)) {
+                            } else if ("4".equals(type)) {   //行运兔电单车3合1锁
 
                                 if ("200".equals(jsonObject.getString("code"))) {
                                     Log.e("useBike===4", "====" + jsonObject);
@@ -830,36 +837,20 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                         checkConnect();
 
-//                                        bleService.sleep(2000);
-//
-//                                        Log.e("scan===4_2", "==="+m_nowMac);
-//
-//                                        bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
-//
-//                                        bleService.sleep(500);
-//
-//                                        Log.e("scan===4_3", "==="+m_nowMac);
-//
-//                                        button8();
-//                                        button9();
-//
-//                                        button3();
-//
-//                                        getCurrentorder2(uid, access_token);
-//
-//                                        Log.e("scan===4_4", "==="+m_nowMac);
                                     }
                                 }
 
-                            } else if ("5".equals(type)) {
+                            } else if ("5".equals(type)) {      //泺平单车蓝牙锁
 
                                 if(BaseApplication.getInstance().isTest()){
                                     if("40001101".equals(codenum)){
-                                        m_nowMac = "3C:A3:08:AE:BE:24";
+//                                        m_nowMac = "3C:A3:08:AE:BE:24";
+                                        m_nowMac = "3C:A3:08:CD:9F:47";
+                                    }else if("50007528".equals(codenum)){
+
                                     }else{
                                         m_nowMac = "A4:34:F1:7B:BF:9A";
                                     }
-
                                 }
 
 
@@ -1078,11 +1069,13 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         String secretKey = "";
 
-        if("40001101".equals(codenum)){
-            secretKey = "eralHInialHInitwokPs5138m9pleBLEPeri4herzat4on8L0P1functP1functi7onSim9pInit2ali"; //"3C:A3:08:AE:BE:24";
-        }else{
-            secretKey = "NDQzMDMyMzYzOTM5MzkzMzQxNDQzMzQxMzMzOTMyMzE0NTM3NDEzMzQzMzU0NTM4MzYzMDM1Mzk0MzAw";  // "A4:34:F1:7B:BF:9A";
-        }
+//        if("3C:A3:08:AE:BE:24".equals(m_nowMac)){
+//            secretKey = "eralHInialHInitwokPs5138m9pleBLEPeri4herzat4on8L0P1functP1functi7onSim9pInit2ali"; //40001101==="3C:A3:08:AE:BE:24";
+//        }else{
+//            secretKey = "NDQzMDMyMzYzOTM5MzkzMzQxNDQzMzQxMzMzOTMyMzE0NTM3NDEzMzQzMzU0NTM4MzYzMDM1Mzk0MzAw";  // "A4:34:F1:7B:BF:9A";
+//        }
+
+        secretKey = Constants.keyMap.get(m_nowMac);
 
 //        String secretKey = "NDQzMDMyMzYzOTM5MzkzMzQxNDQzMzQxMzMzOTMyMzE0NTM3NDEzMzQzMzU0NTM4MzYzMDM1Mzk0MzAw";
 //        String secretKey = "eralHInialHInitwokPs5138m9pleBLEPeri4herzat4on8L0P1functP1functi7onSim9pInit2ali";

@@ -25,7 +25,9 @@ import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -43,6 +45,7 @@ import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.ActionCenterActivity;
 import cn.qimate.bike.activity.CrashHandler;
 import cn.qimate.bike.activity.Main4Activity;
 import cn.qimate.bike.activity.MainActivity;
@@ -60,10 +63,12 @@ import cn.qimate.bike.util.ToastUtil;
 /**
  * 实时开屏，广告实时请求并且立即展现
  */
-public class SplashActivity2 extends BaseActivity {
+public class SplashActivity2 extends BaseActivity implements View.OnClickListener{
 
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = new AMapLocationClientOption();
+
+    SplashAd splashAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,12 +142,14 @@ public class SplashActivity2 extends BaseActivity {
 		initLocation();
 
 
+
 //        String app_id = "2597";
         String splashAdUnitId = "7502";
 
 //        AdHub.initialize(this, app_id);
         // adUnitContainer
         FrameLayout adsParent = (FrameLayout) this.findViewById(R.id.adsFl);
+
 
         // the observer of AD
         AdListener listener = new AdListener() {
@@ -167,20 +174,28 @@ public class SplashActivity2 extends BaseActivity {
 
             @Override
             public void onAdClosed() {
-                Log.i("SplashActivity", "onAdClosed");
+                Log.e("SplashActivity", "onAdClosed");
                 jumpWhenCanClick(); // 跳转至您的应用主界面
 //                Toast.makeText(SplashActivity2.this, "onAdClosed", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdClicked() {
-                Log.i("SplashActivity", "onAdClick");
+                Log.e("SplashActivity", "onAdClick");
                 // 设置开屏可接受点击时，该回调可用
+
             }
         };
-        SplashAd splashAd = new SplashAd(this, adsParent, listener, splashAdUnitId);
+
+        splashAd = new SplashAd(this, adsParent, listener, splashAdUnitId);
         splashAd.setCloseButtonPadding(10, 20, 10, 10);
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+        }
     }
 
     // 初始化极光
@@ -335,6 +350,8 @@ public class SplashActivity2 extends BaseActivity {
         registerReceiver(mMessageReceiver, filter);
     }
 
+
+
     public class MessageReceiver extends BroadcastReceiver {
 
         @Override
@@ -398,6 +415,8 @@ public class SplashActivity2 extends BaseActivity {
             SharedPreferencesUrls.getInstance().putInt("version", getVersion());
             UIHelper.goToAct(this, EnterActivity.class);
         }
+
+        Log.e("jump===", "===");
 
 //        UIHelper.goToAct(this, EnterActivity.class);
 //        UIHelper.goToAct(this, Main4Activity.class);
