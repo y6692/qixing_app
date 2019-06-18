@@ -124,6 +124,7 @@ import cn.qimate.bike.fragment.BikeFragment;
 import cn.qimate.bike.jpush.ServiceReceiver;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.EbikeInfoBean;
+import cn.qimate.bike.model.KeyBean;
 import cn.qimate.bike.model.NearbyBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
@@ -4622,7 +4623,58 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }
     };
 
-    private void rent(){
+    protected void rent(){
+
+        Log.e("rent===000",m_nowMac+"==="+keySource);
+
+        RequestParams params = new RequestParams();
+        params.put("macinfo", m_nowMac);
+        params.put("keySource",keySource);
+        HttpHelper.get(this, Urls.rent, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在提交");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.e("rent===","==="+responseString);
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+                        KeyBean bean = JSON.parseObject(result.getData(), KeyBean.class);
+
+                        encryptionKey = bean.getEncryptionKey();
+                        keys = bean.getKeys();
+                        serverTime = bean.getServerTime();
+
+                        Log.e("rent===", m_nowMac+"==="+encryptionKey+"==="+keys);
+
+                        openBleLock(null);
+                    }else {
+                        ToastUtil.showMessageApp(context, result.getMsg());
+                    }
+                }catch (Exception e){
+
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+
+            }
+        });
+    }
+
+    private void rent2(){
 //        //根据锁号查找到锁实体类
 //        LockInfo lockInfo = getLockInfoModel(lockNo);
 //        String secretKey = lockInfo.getSecretKey();
@@ -4659,7 +4711,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         //服务器时间戳，精确到秒，用于锁同步时间
         serverTime = Calendar.getInstance().getTimeInMillis()/1000;
 
-        Log.e("rent===", encryptionKey+"==="+pwd);
+        Log.e("rent===", encryptionKey+"==="+keys+"==="+pwd);
 
         openBleLock(null);
 

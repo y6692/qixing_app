@@ -141,7 +141,7 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
         registerMessageReceiver();
 		initLocation();
 
-
+//        jump();
 
 //        String app_id = "2597";
         String splashAdUnitId = "7502";

@@ -176,4 +176,6 @@ public class Urls {
 	public static String alipayBike = host + "?g=App&m=AlipayBike&a=alipay";
 	/**微信支付单车费用接口*/
 	public static String wxpayBike = host + "?g=App&m=WxpayBike&a=wxpay";
+	/**泺平锁加密接口*/
+	public static String rent = host + "?g=App&m=Index&a=rent";
 }

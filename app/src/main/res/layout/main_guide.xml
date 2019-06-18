@@ -39,7 +39,7 @@
                 android:layout_height="@dimen/dp35"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/dp160"
+                android:layout_marginBottom="@dimen/dp60"
                 android:textColor="@color/ui_main"
                 android:textSize="@dimen/sp16"
                 android:text="立即体验"

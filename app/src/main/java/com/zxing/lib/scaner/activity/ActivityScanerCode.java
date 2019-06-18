@@ -102,8 +102,10 @@ import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.fragment.BikeFragment;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.EbikeInfoBean;
+import cn.qimate.bike.model.KeyBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.AESUtil;
@@ -992,6 +994,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 public void onResponseSuccess(String version, String keySerial, String macKey, String vol) {
 //                    queryStatusServer(version, keySerial, macKey, vol);
 
+                    Log.e("getStatus===", "===="+macKey);
+
                     keySource = keySerial;
                     rent();
                 }
@@ -1053,7 +1057,62 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //        });
     }
 
-    private void rent(){
+
+    protected void rent(){
+
+        Log.e("rent===000",m_nowMac+"==="+keySource);
+
+        RequestParams params = new RequestParams();
+        params.put("macinfo", m_nowMac);
+        params.put("keySource",keySource);
+        HttpHelper.get(this, Urls.rent, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在提交");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.e("rent===","==="+responseString);
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+                        KeyBean bean = JSON.parseObject(result.getData(), KeyBean.class);
+
+                        encryptionKey = bean.getEncryptionKey();
+                        keys = bean.getKeys();
+                        serverTime = bean.getServerTime();
+
+                        Log.e("rent===", m_nowMac+"==="+encryptionKey+"==="+keys);
+
+                        getCurrentorder2(uid, access_token);
+
+                        openBleLock(null);
+                    }else {
+                        ToastUtil.showMessageApp(context, result.getMsg());
+                    }
+                }catch (Exception e){
+
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+
+            }
+        });
+    }
+
+
+    private void rent2(){
 //        Map<String, Object> result = new HashMap();
 //
 //        //APP蓝牙搜到的锁号
@@ -1086,6 +1145,13 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         Random random = new Random();
         //随机数取80位密钥中，前64位的某一位
         encryptionKey = random.nextInt(secretKey.length()-16);
+
+//        encryptionKey = 39;
+//
+//        keySource = "8A090B0A";
+
+        Log.e("rent===000", keySource+"==="+secretKey+"==="+encryptionKey+"==="+keys+"==="+pwd);
+
         //从随机数位数开始截取16位字符作为AES加解密密钥
         pwd = secretKey.substring(encryptionKey, encryptionKey+16);
         encryptionKey = encryptionKey + 128;
@@ -1099,8 +1165,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         //服务器时间戳，精确到秒，用于锁同步时间
         serverTime = Calendar.getInstance().getTimeInMillis()/1000;
 
-        Log.e("rent===", encryptionKey+"==="+pwd);
 
+        Log.e("rent===", m_nowMac+"==="+random+"==="+secretKey+"==="+encryptionKey+"==="+keys+"==="+pwd);
 
         getCurrentorder2(uid, access_token);
 
