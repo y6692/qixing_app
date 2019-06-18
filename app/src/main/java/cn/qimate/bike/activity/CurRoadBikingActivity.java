@@ -493,6 +493,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     }
 
                     connect();
+
+                    closeBroadcast();
+                    registerReceiver(Config.initFilter());
+                    GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
                 }
 
             }
@@ -502,17 +506,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }
 
         ToastUtil.showMessage(this, "biking===="+internalReceiver);
-
-        closeBroadcast();
-
-        if ("5".equals(type)) {
-//                    connectDevice();
-//                    ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
-//                    ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
-        }else{
-            registerReceiver(Config.initFilter());
-            GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
-        }
 
         getFeedbackStatus();
 
