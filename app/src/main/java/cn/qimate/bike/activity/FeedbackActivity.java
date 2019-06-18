@@ -172,6 +172,7 @@ public class FeedbackActivity
         imageUrlList = new ArrayList<>();
 
         type = SharedPreferencesUrls.getInstance().getString("type", "");
+        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
@@ -207,6 +208,8 @@ public class FeedbackActivity
     protected void onResume() {
         isForeground = true;
         super.onResume();
+
+        ClientManager.getClient().disconnect("A4:34:F1:7B:BF:9A");
 
         Log.e("feedback===","feedback===onResume");
     }
@@ -741,7 +744,7 @@ public class FeedbackActivity
                         BaseApplication.getInstance().getIBLE().refreshCache();
                         BaseApplication.getInstance().getIBLE().close();
                         BaseApplication.getInstance().getIBLE().disconnect();
-                        BaseApplication.getInstance().getIBLE().disableBluetooth();
+//                        BaseApplication.getInstance().getIBLE().disableBluetooth();
                     }
 
                     break;

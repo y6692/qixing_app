@@ -178,12 +178,12 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
             case R.id.mainUI_title_backBtn:
                 scrollToFinishActivity();
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        m_myHandler.sendEmptyMessage(1);
-                    }
-                }).start();
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        m_myHandler.sendEmptyMessage(1);
+//                    }
+//                }).start();
 
 
                 break;
@@ -339,12 +339,12 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    m_myHandler.sendEmptyMessage(1);
-                }
-            }).start();
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    m_myHandler.sendEmptyMessage(1);
+//                }
+//            }).start();
 
             scrollToFinishActivity();
 
@@ -366,7 +366,7 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
                         BaseApplication.getInstance().getIBLE().refreshCache();
                         BaseApplication.getInstance().getIBLE().close();
                         BaseApplication.getInstance().getIBLE().disconnect();
-                        BaseApplication.getInstance().getIBLE().disableBluetooth();
+//                        BaseApplication.getInstance().getIBLE().disableBluetooth();
                     }
 
                     break;

@@ -997,7 +997,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     Log.e("getStatus===", "===="+macKey);
 
                     keySource = keySerial;
-                    rent();
+                    rent2();
                 }
 
                 @Override
@@ -2169,7 +2169,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     BaseApplication.getInstance().getIBLE().refreshCache();
                     BaseApplication.getInstance().getIBLE().close();
                     BaseApplication.getInstance().getIBLE().disconnect();
-                    BaseApplication.getInstance().getIBLE().disableBluetooth();
+//                    BaseApplication.getInstance().getIBLE().disableBluetooth();
                     scrollToFinishActivity();
 
                     break;

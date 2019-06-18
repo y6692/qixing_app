@@ -300,7 +300,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         type = SharedPreferencesUrls.getInstance().getString("type", "");
         bleid = SharedPreferencesUrls.getInstance().getString("bleid", "");
 
-        Log.e("biking===onCreate", m_nowMac+"==="+type+"==="+bleid);
+
 
         if(BaseApplication.getInstance().isTest()){
             type = "5";
@@ -313,10 +313,22 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         }
 
+        Log.e("biking===onCreate", m_nowMac+"==="+type+"==="+bleid);
+
         if ("5".equals(type)) {
             connectDevice();
             ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
             ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+
+//            SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+//                    .searchBluetoothLeDevice(0)
+//                    .build();
+//
+//            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                return;
+//            }
+//            ClientManager.getClient().search(request, mSearchResponse);
+
         }else{
 //            registerReceiver(Config.initFilter());
 //            GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
@@ -330,6 +342,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         mapView = (MapView) findViewById(R.id.curRoadUI_biking_map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
+
 
         isContainsList = new ArrayList<>();
         pOptions = new ArrayList<>();
@@ -398,6 +411,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 });
         customDialog8 = customBuilder.create();
 
+
 //        customBuilder = new CustomDialog.Builder(context);
 //        customBuilder.setTitle("温馨提示").setMessage("不在还车点，请至校内地图红色区域停车")
 //                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
@@ -421,6 +435,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         super.onResume();
         mapView.onResume();
+
 
 //        Log.e("biking===", "biking====flagm==="+flagm);
 
@@ -471,15 +486,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 bleService.view = context;
                 bleService.showValue = true;
 
+                if (!"5".equals(type)) {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("正在唤醒车锁");
+                        loadingDialog.show();
+                    }
 
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在唤醒车锁");
-                    loadingDialog.show();
+                    connect();
                 }
-
-                connect();
-
-
 
             }
 
@@ -501,6 +515,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }
 
         getFeedbackStatus();
+
     }
 
     /**
@@ -1418,6 +1433,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             ClientManager.getClient().disconnect(m_nowMac);
             ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
             ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+            Log.e("biking====onDestroy1", "==="+m_nowMac);
+
         }else{
             BaseApplication.getInstance().getIBLE().stopScan();
         }
@@ -3403,11 +3421,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             case 5:
 
 
-                if(BaseApplication.getInstance().getIBLE().isEnable()){
+                if(!"5".equals(type) && BaseApplication.getInstance().getIBLE().isEnable()){
                     BaseApplication.getInstance().getIBLE().refreshCache();
                     BaseApplication.getInstance().getIBLE().close();
                     BaseApplication.getInstance().getIBLE().disconnect();
-                    BaseApplication.getInstance().getIBLE().disableBluetooth();
+//                    BaseApplication.getInstance().getIBLE().disableBluetooth();
                 }
                 break;
 
