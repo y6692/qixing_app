@@ -315,24 +315,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         Log.e("biking===onCreate", m_nowMac+"==="+type+"==="+bleid);
 
-        if ("5".equals(type)) {
-            connectDevice();
-            ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
-            ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
 
-//            SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
-//                    .searchBluetoothLeDevice(0)
-//                    .build();
-//
-//            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                return;
-//            }
-//            ClientManager.getClient().search(request, mSearchResponse);
-
-        }else{
-//            registerReceiver(Config.initFilter());
-//            GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
-        }
 
         Log.e("biking===onCreate2", m_nowMac+"==="+type+"==="+bleid);
 
@@ -486,7 +469,21 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 bleService.view = context;
                 bleService.showValue = true;
 
-                if (!"5".equals(type)) {
+                if ("5".equals(type)) {
+                    connectDevice();
+                    ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+                    ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+
+//                    SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+//                            .searchBluetoothLeDevice(0)
+//                            .build();
+//
+//                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                        return;
+//                    }
+//                    ClientManager.getClient().search(request, mSearchResponse);
+
+                }else{
                     if (loadingDialog != null && !loadingDialog.isShowing()) {
                         loadingDialog.setTitle("正在唤醒车锁");
                         loadingDialog.show();
@@ -1427,27 +1424,13 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
             ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
 
-            Log.e("biking====onDestroy1", "==="+m_nowMac);
-
         }else{
             BaseApplication.getInstance().getIBLE().stopScan();
         }
 
 
-
-
-//        if(BaseApplication.getInstance().getIBLE().isEnable()){
-//            BaseApplication.getInstance().getIBLE().refreshCache();
-//            BaseApplication.getInstance().getIBLE().close();
-//            BaseApplication.getInstance().getIBLE().disconnect();
-//            BaseApplication.getInstance().getIBLE().disableBluetooth();
-//        }
-
-
-
         super.onDestroy();
         mapView.onDestroy();
-
 
 
         ToastUtil.showMessage(this, "biking====onDestroy==="+m_nowMac);
@@ -1477,7 +1460,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         if(null != mlocationClient){
             mlocationClient.onDestroy();
         }
-
 
 
         stopXB();
@@ -2144,14 +2126,33 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                             if (!TextUtils.isEmpty(m_nowMac)) {
 
-                                SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
-                                        .searchBluetoothLeDevice(0)
-                                        .build();
+//                                SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+//                                        .searchBluetoothLeDevice(0)
+//                                        .build();
+//
+//                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                                    return;
+//                                }
+//                                ClientManager.getClient().search(request, mSearchResponse2);
 
-                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                    return;
-                                }
-                                ClientManager.getClient().search(request, mSearchResponse2);
+                                ClientManager.getClient().getStatus(m_nowMac, new IGetStatusResponse() {
+                                    @Override
+                                    public void onResponseSuccess(String version, String keySerial, String macKey, String vol) {
+                                        keySource = keySerial;
+                                        rent();
+                                    }
+
+                                    @Override
+                                    public void onResponseFail(int code) {
+                                        if (loadingDialog != null && loadingDialog.isShowing()){
+                                            loadingDialog.dismiss();
+                                        }
+
+                                        Log.e("getStatus===", Code.toString(code));
+                                        ToastUtil.showMessageApp(context, Code.toString(code));
+                                    }
+
+                                });
 
                             }
                         }
@@ -4515,14 +4516,18 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                        bleService.view = context;
 //                        bleService.showValue = true;
                     }else if("5".equals(type)){
-                        SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
-                                .searchBluetoothLeDevice(0)
-                                .build();
+//                        SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+//                                .searchBluetoothLeDevice(0)
+//                                .build();
+//
+//                        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                            return;
+//                        }
+//                        ClientManager.getClient().search(request, mSearchResponse);
 
-                        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            return;
-                        }
-                        ClientManager.getClient().search(request, mSearchResponse);
+                        connectDevice();
+                        ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+                        ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
 
                     }else{
                         if (loadingDialog != null && !loadingDialog.isShowing()) {
