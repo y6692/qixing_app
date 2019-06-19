@@ -35,6 +35,7 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.sofi.blelocker.library.connect.listener.BluetoothStateListener;
@@ -338,18 +339,27 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
 //                        m_myHandler.sendEmptyMessage(5);
 
+                        Log.e("initHttp===", "==="+imageUrl);
+
                         if (!SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",false)){
                             if (imageUrl != null && !"".equals(imageUrl)){
                                 WindowManager windowManager = getWindowManager();
                                 Display display = windowManager.getDefaultDisplay();
                                 WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
                                 lp.width = (int) (display.getWidth() * 0.8);
+//                                lp.width = (int) (display.getWidth() * 0.4);
+//                                lp.height= (int) (display.getWidth() * 0.4);
+//                                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
                                 lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
                                 advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
                                 advDialog.getWindow().setAttributes(lp);
                                 advDialog.show();
                                 // 加载图片
-                                Glide.with(context).load(imageUrl).into(advImageView);
+                                if(imageUrl.endsWith(".gif")){
+                                    Glide.with(context).load(imageUrl).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(advImageView);
+                                }else{
+                                    Glide.with(context).load(imageUrl).into(advImageView);
+                                }
                             }
                         }
                     }
