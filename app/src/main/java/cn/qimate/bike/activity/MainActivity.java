@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Display;
@@ -153,6 +154,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 m_myHandler.sendEmptyMessage(1);
             }
         }).start();
+
+        Log.e("main===onCreate", "===");
 
         initData();
         initView();
@@ -460,22 +463,18 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     }
 
     @Override protected void onResume() {
-        super.onResume();
+        type = SharedPreferencesUrls.getInstance().getString("type", "");
 
+
+
+
+        super.onResume();
 
         mapView.onResume();
 
-        type = SharedPreferencesUrls.getInstance().getString("type", "");
-
         Log.e("main===onResume", "==="+type);
 
-        if("4".equals(type)){
-            changeTab(0);
-            changeTab(1);
-        }else{
-            changeTab(1);
-            changeTab(0);
-        }
+
 
         ClientManager.getClient().registerBluetoothStateListener(mBluetoothStateListener);
 
@@ -519,6 +518,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
+
+        Log.e("main===onSIS", "==="+type);
     }
 
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -559,7 +560,21 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
 
     public void changeTab(int index) {
+
+
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.commitAllowingStateLoss();
         tab.setCurrentTab(index);
+
+
+
+//        if (dialogTag == null) {
+//            dialogParent.setCancelable(false);
+//            transaction.add(dialogParent, "dialog_event");
+//            transaction.commitAllowingStateLoss();
+//        }
+//        transaction.show(ebikeFragment);
+
     }
 
     private void initListener() {

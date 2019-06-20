@@ -945,6 +945,13 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         isForeground = true;
         super.onResume();
 
+        Log.e("main===ebike", "main====onResume==="+type);
+
+        if(!"4".equals(type)){
+            ((MainActivity)getActivity()).changeTab(0);
+//            return;
+        }
+
         tz = 0;
 
         JPushInterface.onResume(context);
@@ -978,7 +985,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         type = SharedPreferencesUrls.getInstance().getString("type", "");
 
         ToastUtil.showMessage(context, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + ">>>" + m_nowMac);
-        Log.e("main===ebike", "main====onResume==="+first+"==="+mBluetoothAdapter+"==="+mLeScanCallback);
+
 
         closeBroadcast();
 //        try {
@@ -1427,7 +1434,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                 }
 
-                                Log.e("main===", "getStatus====" + bean.getStatus());
+                                Log.e("main===ebike", "getStatus====" + bean.getStatus());
 
                                 if ("1".equals(bean.getStatus())) {
                                     SharedPreferencesUrls.getInstance().putBoolean("isStop", false);

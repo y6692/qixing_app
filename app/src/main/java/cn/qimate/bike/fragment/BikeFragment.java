@@ -331,9 +331,15 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
 
-        Log.e("onHiddenChanged===bike", hidden+"==="+pOptions.size()+"==="+referLatitude);
+        Log.e("onHiddenChanged===bike", hidden+"==="+type+"==="+referLatitude);
 
         isHidden = hidden;
+
+
+//        else{
+//            changeTab(1);
+//            changeTab(0);
+//        }
 
         if(hidden){
             //pause
@@ -682,7 +688,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         myCommissionLayout =  (LinearLayout) activity.findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
         myLocationLayout =  (LinearLayout) activity.findViewById(R.id.mainUI_myLocationLayout);
         linkLayout = (LinearLayout) activity.findViewById(R.id.mainUI_linkServiceLayout);
-        myLocationBtn = (ImageView) activity.findViewById(R.id.mainUI_myLocation);
         scanLock = (LinearLayout) activity.findViewById(R.id.mainUI_scanCode_lock);
         linkBtn = (ImageView) activity.findViewById(R.id.mainUI_linkService_btn);
         authBtn = (Button)activity.findViewById(R.id.mainUI_authBtn);
@@ -721,7 +726,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //        leftBtn.setOnClickListener(this);
 //        rightBtn.setOnClickListener(this);
 
-        myLocationBtn.setOnClickListener(this);
         myCommissionLayout.setOnClickListener(this);
         myLocationLayout.setOnClickListener(this);
         linkLayout.setOnClickListener(this);
@@ -756,6 +760,16 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         isForeground = true;
         super.onResume();
 
+        Log.e("main===bike", "main====onResume==="+type);
+
+        if("4".equals(type)){
+            ((MainActivity)getActivity()).changeTab(1);
+//            return;
+        }
+//        else{
+//            ((MainActivity)getActivity()).changeTab(0);
+//        }
+
         tz = 0;
 
         JPushInterface.onResume(context);
@@ -789,7 +803,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         type = SharedPreferencesUrls.getInstance().getString("type", "");
 
         ToastUtil.showMessage(context, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + ">>>" + m_nowMac);
-        Log.e("main===bike", "main====onResume==="+first+"==="+mBluetoothAdapter+"==="+mLeScanCallback);
+
 
         closeBroadcast();
 //        try {
@@ -1270,7 +1284,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                 }
 
-                                Log.e("main===", "getStatus====" + bean.getStatus());
+                                Log.e("main===bike", "getStatus====" + bean.getStatus());
 
                                 if ("1".equals(bean.getStatus())) {
                                     SharedPreferencesUrls.getInstance().putBoolean("isStop", false);
@@ -1737,7 +1751,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 context.startActivity(intent);
                 break;
             case R.id.mainUI_myLocationLayout:
-            case R.id.mainUI_myLocation:
                 if (myLocation != null) {
                     CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
                     aMap.animateCamera(update);

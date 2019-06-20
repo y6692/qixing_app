@@ -261,6 +261,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
 
             case R.id.curRoadUI_biked_payBalanceLayout:
                 if (Double.parseDouble(user_money) < Double.parseDouble(prices)){
+                    flag = 0;
                     Toast.makeText(context,"当前余额不足,请先充值!",Toast.LENGTH_SHORT).show();
                     UIHelper.goToAct(context,RechargeActivity.class);
                 }else {

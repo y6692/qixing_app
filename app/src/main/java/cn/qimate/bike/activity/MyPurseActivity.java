@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,9 +27,14 @@ import com.zxing.lib.scaner.activity.ActivityScanerCode;
 
 import org.apache.http.Header;
 
+import java.util.Set;
+
+import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.base.BaseApplication;
+import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
@@ -38,6 +45,7 @@ import cn.qimate.bike.core.widget.MLImageView;
 import cn.qimate.bike.model.EbikeInfoBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMonthIndexBean;
+import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 /**
@@ -45,6 +53,9 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
  */
 
 public class MyPurseActivity extends SwipeBackActivity implements View.OnClickListener{
+
+    private static final int MSG_SET_ALIAS = 1001;
+    private static final int MSG_SET_TAGS = 1002;
 
     private Context context;
     private LoadingDialog loadingDialog;
@@ -94,7 +105,7 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
         headLayout = (RelativeLayout)findViewById(R.id.myPurseUI_headLayout);
         header = (MLImageView)findViewById(R.id.myPurseUI_headImage);
         money = (TextView)findViewById(R.id.myPurseUI_money);
-        money.setText(SharedPreferencesUrls.getInstance().getString("money",""));
+
         rechargeBtn = (TextView)findViewById(R.id.myPurseUI_rechargeBtn);
         activationBtn = (Button)findViewById(R.id.myPurseUI_activationNum_btn);
         monthCardBike = (Button)findViewById(R.id.myPurseUI_monthCard_bike);
@@ -134,6 +145,99 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
         userMonthIndex();
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.e("myPurse===onResume", "===");
+
+        RefreshLogin();
+    }
+
+
+    public void RefreshLogin() {
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+        String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
+        if (access_token == null || "".equals(access_token) || uid == null || "".equals(uid)) {
+            setAlias("");
+        } else {
+            RequestParams params = new RequestParams();
+            params.add("uid", uid);
+            params.add("access_token", access_token);
+            HttpHelper.post(AppManager.getAppManager().currentActivity(), Urls.accesslogin, params,
+                    new TextHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                if (result.getFlag().equals("Success")) {
+                                    UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+                                    // 极光标记别名
+
+                                    Log.e("RefreshLogin===", bean.getSpecialdays()+"==="+bean.getEbike_specialdays());
+
+                                    SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
+                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
+                                    SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
+                                    SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
+                                    SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
+                                    SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
+                                    SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
+                                    SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
+                                    SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
+                                    SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
+                                    SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
+                                    SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+
+                                    money.setText(bean.getMoney());
+                                } else {
+                                    if (BaseApplication.getInstance().getIBLE() != null){
+                                        if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                                            BaseApplication.getInstance().getIBLE().refreshCache();
+                                            BaseApplication.getInstance().getIBLE().close();
+                                            BaseApplication.getInstance().getIBLE().stopScan();
+                                        }
+                                    }
+                                    SharedPreferencesUrls.getInstance().putString("uid", "");
+                                    SharedPreferencesUrls.getInstance().putString("access_token","");
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString,
+                                              Throwable throwable) {
+                        }
+                    });
+        }
+    }
+
+    // 极光推送===================================================================
+    private void setAlias(String uid) {
+        // 调用JPush API设置Alias
+        mHandler.sendMessage(mHandler.obtainMessage(MSG_SET_ALIAS, uid));
+    }
+
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(android.os.Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case MSG_SET_ALIAS:
+                    JPushInterface.setAliasAndTags(getApplicationContext(), (String) msg.obj, null, null);
+                    break;
+
+                case MSG_SET_TAGS:
+                    JPushInterface.setAliasAndTags(getApplicationContext(), null, (Set<String>) msg.obj, null);
+                    break;
+
+                default:
+            }
+        }
+    };
 
     @Override
     public void onClick(View v) {

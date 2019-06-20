@@ -369,7 +369,7 @@
                 android:layout_marginBottom="@dimen/dp10"
                 android:layout_alignParentLeft="true"
                 android:layout_above="@id/curRoadUI_biking_myLocationLayout"
-                android:layout_marginLeft="@dimen/dp15"
+                android:layout_marginLeft="@dimen/dp10"
                 android:gravity="center"
                 android:background="@drawable/back_bd"
                 android:visibility="gone">

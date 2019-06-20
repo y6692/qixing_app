@@ -860,7 +860,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                         SharedPreferencesUrls.getInstance().putString("money", "");
                         SharedPreferencesUrls.getInstance().putString("bikenum", "");
                         SharedPreferencesUrls.getInstance().putString("iscert", "");
-                        setAlias("");
+//                        setAlias("");
                         Toast.makeText(context, "恭喜您,您已安全退出!", Toast.LENGTH_SHORT).show();
                         scrollToFinishActivity();
                     } else {
