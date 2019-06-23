@@ -350,10 +350,11 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                                 Display display = windowManager.getDefaultDisplay();
                                 WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
                                 lp.width = (int) (display.getWidth() * 0.8);
+//                                lp.height= (int) (display.getHeight() * 0.4);
 //                                lp.width = (int) (display.getWidth() * 0.4);
-//                                lp.height= (int) (display.getWidth() * 0.4);
+
 //                                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-                                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//                                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
                                 advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
                                 advDialog.getWindow().setAttributes(lp);
                                 advDialog.show();

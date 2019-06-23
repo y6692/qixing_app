@@ -842,7 +842,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     }
                                 }
 
-                            } else if ("5".equals(type)) {      //泺平单车蓝牙锁
+                            } else if ("5".equals(type) || "6".equals(type)) {      //泺平单车蓝牙锁
 
                                 if(BaseApplication.getInstance().isTest()){
                                     if("40001101".equals(codenum)){
@@ -851,6 +851,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     }else if("50007528".equals(codenum)){
 
                                     }else{
+                                        type = "6";
                                         m_nowMac = "A4:34:F1:7B:BF:9A";
                                     }
                                 }
@@ -997,7 +998,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     Log.e("getStatus===", "===="+macKey);
 
                     keySource = keySerial;
-                    rent2();
+                    rent();
                 }
 
                 @Override
