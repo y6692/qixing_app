@@ -2100,6 +2100,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.e("broadcastReceiver===2", "==="+intent);
+
             getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
             getFeedbackStatus();
         }

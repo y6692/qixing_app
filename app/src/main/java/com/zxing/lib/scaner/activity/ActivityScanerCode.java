@@ -1200,7 +1200,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //                        UIHelper.dismiss();
 //                        UIHelper.showToast(DeviceDetailActivity.this, Code.toString(code));
 
-//                        getBleRecord();
+                        getBleRecord();
 
                         ToastUtil.showMessageApp(context, Code.toString(code));
                     }
