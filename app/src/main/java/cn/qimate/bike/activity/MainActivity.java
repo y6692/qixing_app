@@ -142,8 +142,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         setContentView(R.layout.ui_main);
         ButterKnife.bind(this);
 
-        IntentFilter filter = new IntentFilter("data.broadcast.action");
-        registerReceiver(mReceiver, filter);
+//        IntentFilter filter = new IntentFilter("data.broadcast.action");
+//        registerReceiver(mReceiver, filter);
 
         mapView = (MapView) findViewById(R.id.mainUI_map);
         mapView.onCreate(savedInstanceState);

@@ -1557,12 +1557,13 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     if (result.getFlag().equals("Success")) {
 //						ToastUtil.showMessageApp(context,"数据更新成功==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
 
+                        Log.e("biking=", "getFeedbackStatus==="+result.data+"==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
+
                         if("2".equals(result.data) && !SharedPreferencesUrls.getInstance().getBoolean("isStop",true)){
                             customDialog.show();
                         }else{
                             customDialog.dismiss();
                         }
-
 
                     } else {
                         ToastUtil.showMessageApp(context, result.getMsg());

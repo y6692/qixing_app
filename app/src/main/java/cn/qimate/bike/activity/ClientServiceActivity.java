@@ -224,7 +224,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         }else{
             Tag1.setText("锁关不上");
             Tag2.setText("已关锁提示未关");
-            Tag3.setText("蓝牙连接失败");
+            Tag3.setVisibility(View.GONE);
             ll_2.setVisibility(View.GONE);
             ll_3.setVisibility(View.GONE);
             ll_4.setVisibility(View.VISIBLE);

@@ -1420,7 +1420,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                 m_nowMac = bean.getMacinfo();
 
-                                Log.e("main===", "getMacinfo====" + bean.getMacinfo());
+                                Log.e("main===ebike", "getMacinfo====" + bean.getMacinfo());
 
                                 if (!"".equals(m_nowMac)) {
                                     oid = bean.getOid();
@@ -2797,6 +2797,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
 //						ToastUtil.showMessageApp(context,"数据更新成功==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
+
+                        Log.e("getFeedbackStatus===2", result.data +"===" + SharedPreferencesUrls.getInstance().getBoolean("isStop", true));
 
                         if ("2".equals(result.data) && !SharedPreferencesUrls.getInstance().getBoolean("isStop", true)) {
                             customDialog.show();
