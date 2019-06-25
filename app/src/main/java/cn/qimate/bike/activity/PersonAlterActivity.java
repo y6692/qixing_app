@@ -213,15 +213,15 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
         dialog.setContentView(dialogView);
         dialog.setCanceledOnTouchOutside(false);
 
-        titleImage = dialogView.findViewById(R.id.ui_fristView_title);
+//        titleImage = dialogView.findViewById(R.id.ui_fristView_title);
         exImage_1 = dialogView.findViewById(R.id.ui_fristView_exImage_1);
 //        exImage_2 = dialogView.findViewById(R.id.ui_fristView_exImage_2);
 //        exImage_3 = dialogView.findViewById(R.id.ui_fristView_exImage_3);
         closeBtn = dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
-        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
-        titleImage.setLayoutParams(params);
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
+//        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
+//        titleImage.setLayoutParams(params);
 
 //        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
 //        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;

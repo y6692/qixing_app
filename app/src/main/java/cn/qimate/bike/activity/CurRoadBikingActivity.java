@@ -844,7 +844,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         hintText = (TextView)findViewById(R.id.curRoadUI_biking_hintText);
 
-        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
+//        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
 //        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
 //        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
 //        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
@@ -904,9 +904,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         siteDescripter = BitmapDescriptorFactory.fromResource(R.drawable.site_mark_icon);
         setUpLocationStyle();
 
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
-        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
-        titleImage.setLayoutParams(params);
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
+//        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
+//        titleImage.setLayoutParams(params);
 
 //        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
 //        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;

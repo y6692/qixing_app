@@ -210,7 +210,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
 
 
-        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
+//        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
         exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
 //        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
 //        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
@@ -223,9 +223,9 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
         advImageView.setLayoutParams(params4);
 
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
-        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
-        titleImage.setLayoutParams(params);
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
+//        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
+//        titleImage.setLayoutParams(params);
 
         if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
             SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);

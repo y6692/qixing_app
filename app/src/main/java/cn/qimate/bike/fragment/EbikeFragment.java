@@ -857,6 +857,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         refreshLayout = (LinearLayout) activity.findViewById(R.id.mainUI_refreshLayout2);
         slideLayout = (LinearLayout)activity.findViewById(R.id.mainUI_slideLayout2);
         marqueeLayout = activity.findViewById(R.id.mainUI_marqueeLayout2);
+        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
         if(aMap==null){
             aMap = mapView.getMap();
@@ -891,6 +892,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         refreshLayout.setOnClickListener(this);
         cartBtn.setOnClickListener(this);
         slideLayout.setOnClickListener(this);
+        closeBtn.setOnClickListener(myOnClickLister);
 
 //        advImageView.setOnClickListener(this);
 //        advCloseBtn.setOnClickListener(this);
@@ -936,9 +938,34 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //        exImage_2.setOnClickListener(myOnClickLister);
 //        closeBtn.setOnClickListener(myOnClickLister);
 
-
-
     }
+
+    private View.OnClickListener myOnClickLister = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+//                case R.id.ui_fristView_exImage_1:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
+//                    break;
+//                case R.id.ui_fristView_exImage_2:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
+//                    break;
+                case R.id.ui_fristView_closeBtn:
+                    if (dialog != null && dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onResume() {
@@ -2911,37 +2938,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
-
-
-
-
-
-    private View.OnClickListener myOnClickLister = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-//                case R.id.ui_fristView_exImage_1:
-//                    if (dialog != null && dialog.isShowing()) {
-//                        dialog.dismiss();
-//                    }
-//                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
-//                    break;
-//                case R.id.ui_fristView_exImage_2:
-//                    if (dialog != null && dialog.isShowing()) {
-//                        dialog.dismiss();
-//                    }
-//                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
-//                    break;
-                case R.id.ui_fristView_closeBtn:
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
 
 

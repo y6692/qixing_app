@@ -166,6 +166,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //    private ImageView leftBtn, rightBtn;
     private ImageView myLocationBtn, linkBtn;
     private LinearLayout scanLock, myCommissionLayout, myLocationLayout, linkLayout;
+    private ImageView closeBtn;
 
     protected AMap aMap;
     protected BitmapDescriptor successDescripter;
@@ -696,6 +697,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         refreshLayout = (LinearLayout) activity.findViewById(R.id.mainUI_refreshLayout);
         slideLayout = (LinearLayout)activity.findViewById(R.id.mainUI_slideLayout);
         marqueeLayout = (LinearLayout)activity.findViewById(R.id.mainUI_marqueeLayout);
+        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
         if(aMap==null){
             aMap = mapView.getMap();
@@ -735,6 +737,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         rechargeBtn.setOnClickListener(this);
         refreshLayout.setOnClickListener(this);
         marqueeLayout.setOnClickListener(this);
+        closeBtn.setOnClickListener(myOnClickLister);
 
         cartBtn.setOnClickListener(this);
         slideLayout.setOnClickListener(this);
@@ -754,6 +757,33 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //        exImage_3.setLayoutParams(params3);
 
     }
+
+    private View.OnClickListener myOnClickLister = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+//                case R.id.ui_fristView_exImage_1:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
+//                    break;
+//                case R.id.ui_fristView_exImage_2:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
+//                    break;
+                case R.id.ui_fristView_closeBtn:
+                    if (dialog != null && dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onResume() {
@@ -2246,8 +2276,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                     if (loadingDialog != null && loadingDialog.isShowing()){
                                         loadingDialog.dismiss();
 
-
-
                                         if(!isConnect){
                                             ToastUtil.showMessage(context, "连接失败，请重启手机蓝牙后再结束用车");
                                         }
@@ -2926,14 +2954,17 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                         UIHelper.goToAct(context,FeedbackActivity.class);
                         break;
                     case R.id.pop_menu_helpLayout:
-                        WindowManager windowManager = activity.getWindowManager();
-                        Display display = windowManager.getDefaultDisplay();
-                        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-                        lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//                        WindowManager windowManager = activity.getWindowManager();
+//                        Display display = windowManager.getDefaultDisplay();
+//                        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+//                        lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+//                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
                         dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-                        dialog.getWindow().setAttributes(lp);
+//                        dialog.getWindow().setAttributes(lp);
                         dialog.show();
+
+
+
                         break;
                     case R.id.pop_menu_callLayout:
                         if (Build.VERSION.SDK_INT >= 23) {
