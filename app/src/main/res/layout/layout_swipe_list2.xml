@@ -3,15 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/Layout_swipeParentLayout">
-
-	<!--android:layout_width="match_parent"-->
-	<!--android:layout_height="match_parent"-->
-
+    android:id="@+id/Layout_swipeParentLayout2">
+    
     <ListView
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+    	android:layout_width="match_parent"
+   		android:layout_height="match_parent" 
    		android:divider="@null"
-        android:id="@+id/Layout_swipeListView"
+        android:id="@+id/Layout_swipeListView2"
 		android:scrollbars="none"/>
 </android.support.v4.widget.SwipeRefreshLayout>

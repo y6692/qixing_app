@@ -114,6 +114,8 @@ import cn.qimate.bike.activity.MyPurseActivity;
 import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.activity.PersonAlterActivity;
 import cn.qimate.bike.activity.RealNameAuthActivity;
+import cn.qimate.bike.activity.ServiceCenter0Activity;
+import cn.qimate.bike.activity.ServiceCenterActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.ble.utils.ParseLeAdvData;
@@ -3101,8 +3103,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.pop_menu_feedbackLayout:
-                        SharedPreferencesUrls.getInstance().putString("type", "4");
-                        UIHelper.goToAct(context,FeedbackActivity.class);
+                        UIHelper.goToAct(context, ServiceCenter0Activity.class);
                         break;
                     case R.id.pop_menu_helpLayout:
                         WindowManager windowManager = activity.getWindowManager();
@@ -3115,46 +3116,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                         dialog.show();
                         break;
                     case R.id.pop_menu_callLayout:
-                        if (Build.VERSION.SDK_INT >= 23) {
-                            int checkPermission = activity.checkSelfPermission(Manifest.permission.CALL_PHONE);
-                            if (checkPermission != PERMISSION_GRANTED) {
-                                if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
-                                    requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
-                                } else {
-                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开拨打电话权限！")
-                                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
-                                                }
-                                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                            requestPermissions(
-                                                    new String[] { Manifest.permission.CALL_PHONE }, 0);
-                                        }
-                                    });
-                                    customBuilder.create().show();
-                                }
-                                return;
-                            }
-                        }
-                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                        customBuilder.setTitle("温馨提示").setMessage("确认拨打" + "0519-86999222" + "吗?")
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                                Intent intent=new Intent();
-                                intent.setAction(Intent.ACTION_CALL);
-                                intent.setData(Uri.parse("tel:" + "0519-86999222"));
-                                startActivity(intent);
-                            }
-                        });
-                        customBuilder.create().show();
+                        UIHelper.goToAct(context, ServiceCenterActivity.class);
                         break;
                     case R.id.pop_menu_cancleBtn:
 

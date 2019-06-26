@@ -3949,7 +3949,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.pop_menu_feedbackLayout:
-                        UIHelper.goToAct(context,FeedbackActivity.class);
+                        UIHelper.goToAct(context, ServiceCenter0Activity.class);
                         break;
                     case R.id.pop_menu_helpLayout:
                         WindowManager windowManager = getWindowManager();
@@ -3962,46 +3962,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         dialog.show();
                         break;
                     case R.id.pop_menu_callLayout:
-                        if (Build.VERSION.SDK_INT >= 23) {
-                            int checkPermission = CurRoadBikingActivity.this.checkSelfPermission(Manifest.permission.CALL_PHONE);
-                            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-                                if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
-                                    requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
-                                } else {
-                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(CurRoadBikingActivity.this);
-                                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开拨打电话权限！")
-                                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
-                                                }
-                                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                            CurRoadBikingActivity.this.requestPermissions(
-                                                    new String[] { Manifest.permission.CALL_PHONE }, 0);
-                                        }
-                                    });
-                                    customBuilder.create().show();
-                                }
-                                return;
-                            }
-                        }
-                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(CurRoadBikingActivity.this);
-                        customBuilder.setTitle("温馨提示").setMessage("确认拨打" + "0519-86999222" + "吗?")
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                                Intent intent=new Intent();
-                                intent.setAction(Intent.ACTION_CALL);
-                                intent.setData(Uri.parse("tel:" + "0519-86999222"));
-                                startActivity(intent);
-                            }
-                        });
-                        customBuilder.create().show();
+                        UIHelper.goToAct(context, ServiceCenterActivity.class);
                         break;
                     case R.id.pop_menu_cancleBtn:
 
