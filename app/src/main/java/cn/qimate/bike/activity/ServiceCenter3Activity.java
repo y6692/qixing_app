@@ -12,10 +12,12 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -183,11 +185,33 @@ public class ServiceCenter3Activity extends SwipeBackActivity implements View.On
             e.printStackTrace();
         }
 
+        setListViewHeight(myList);
+
         backImg.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
         footerLayout.setOnClickListener(this);
 
+    }
 
+    private void setListViewHeight(ListView listView){
+        ListAdapter listAdapter = listView.getAdapter(); //得到ListView 添加的适配器
+        if(listAdapter == null){
+            return;
+        }
+
+        View itemView = listAdapter.getView(0, null, listView); //获取其中的一项
+        //进行这一项的测量，为什么加这一步，具体分析可以参考 https://www.jianshu.com/p/dbd6afb2c890这篇文章
+        itemView.measure(0,0);
+        int itemHeight = itemView.getMeasuredHeight(); //一项的高度
+        int itemCount = listAdapter.getCount();//得到总的项数
+        LinearLayout.LayoutParams layoutParams = null; //进行布局参数的设置
+
+        Log.e("setListViewHeight===", itemHeight+"==="+itemCount);
+
+        layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT ,itemHeight*(itemCount-1));
+        listView.setLayoutParams(layoutParams);
+
+        swipeRefreshLayout.setLayoutParams(layoutParams);
     }
 
     @Override

@@ -191,9 +191,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private Button rechargeBtn;
     private int Tag = 0;
 
-
-
-
     private List<Marker> bikeMarkerList;
     private boolean isUp = false;
     private LinearLayout refreshLayout;
@@ -1152,14 +1149,14 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 if (0.0 != amapLocation.getLatitude() && 0.0 != amapLocation.getLongitude()) {
                     String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude", "");
                     String longitude = SharedPreferencesUrls.getInstance().getString("biking_longitude", "");
-                    if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)) {
-                        if (AMapUtils.calculateLineDistance(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)
-                        ), new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude())) > 10) {
-                            SharedPreferencesUrls.getInstance().putString("biking_latitude", "" + amapLocation.getLatitude());
-                            SharedPreferencesUrls.getInstance().putString("biking_longitude", "" + amapLocation.getLongitude());
-                            addMaplocation(amapLocation.getLatitude(), amapLocation.getLongitude());
-                        }
-                    }
+//                    if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)) {
+//                        if (AMapUtils.calculateLineDistance(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)
+//                        ), new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude())) > 10) {
+//                            SharedPreferencesUrls.getInstance().putString("biking_latitude", "" + amapLocation.getLatitude());
+//                            SharedPreferencesUrls.getInstance().putString("biking_longitude", "" + amapLocation.getLongitude());
+//                            addMaplocation(amapLocation.getLatitude(), amapLocation.getLongitude());
+//                        }
+//                    }
                     if (mListener != null) {
                         mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
                     }

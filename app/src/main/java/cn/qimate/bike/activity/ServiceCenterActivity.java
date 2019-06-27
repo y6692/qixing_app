@@ -201,9 +201,6 @@ public class ServiceCenterActivity extends SwipeBackActivity implements View.OnC
         myList.setAdapter(myHotAdapter);
         setListViewHeight(myList);
 
-
-
-
         footerView2 = LayoutInflater.from(context).inflate(R.layout.footer_item, null);
         footerViewType201 = footerView2.findViewById(R.id.footer_Layout_type01);// 点击加载更多
         footerViewType202 = footerView2.findViewById(R.id.footer_Layout_type02);// 正在加载，请您稍等
@@ -346,7 +343,7 @@ public class ServiceCenterActivity extends SwipeBackActivity implements View.OnC
             initHttp();
         } else {
             swipeRefreshLayout.setRefreshing(false);
-//            swipeRefreshLayout2.setRefreshing(false);
+            swipeRefreshLayout2.setRefreshing(false);
         }
     }
 

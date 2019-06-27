@@ -75,6 +75,7 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polygon;
 import com.amap.api.maps.model.PolygonOptions;
+import com.amap.api.maps.model.PolylineOptions;
 import com.bumptech.glide.Glide;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
@@ -250,6 +251,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     public List<String> macList;
     public List<String> macList2;
     public List<Polygon> pOptions;
+    public List<LatLng> centerList = new ArrayList<LatLng>();
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback;
     private int n=0;
@@ -258,6 +260,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     private boolean isHidden;
 
     private Bundle savedIS;
+    private JSONArray arraySchoolRange;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_ebike, null);
@@ -425,12 +428,10 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void schoolRange(){
-        if(isHidden) return;
-
         Log.e("main===schoolRange2", "===");
 
         RequestParams params = new RequestParams();
-        params.put("type", 2);
+        params.put("type", 1);
 
         HttpHelper.get(context, Urls.schoolRange, params, new TextHttpResponseHandler() {
             @Override
@@ -455,14 +456,14 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
-                        JSONArray jsonArray = new JSONArray(result.getData());
+                        arraySchoolRange = new JSONArray(result.getData());
                         if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
                             isContainsList.clear();
                         }
-                        for (int i = 0; i < jsonArray.length(); i++) {
+                        for (int i = 0; i < arraySchoolRange.length(); i++) {
                             List<LatLng> list = new ArrayList<>();
-                            for (int j = 0; j < jsonArray.getJSONArray(i).length(); j ++){
-                                JSONObject jsonObject = jsonArray.getJSONArray(i).getJSONObject(j);
+                            for (int j = 0; j < arraySchoolRange.getJSONArray(i).length(); j ++){
+                                JSONObject jsonObject = arraySchoolRange.getJSONArray(i).getJSONObject(j);
                                 LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")),
                                         Double.parseDouble(jsonObject.getString("longitude")));
                                 list.add(latLng);
@@ -473,7 +474,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
 //                                    .strokeColor(Color.argb(160, 255, 0, 0))
 //                                    .fillColor(Color.argb(160, 255, 0, 0)));
-
 //                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
 //                                    .strokeColor(Color.argb(160, 0, 0, 255))
 //                                    .fillColor(Color.argb(160, 0, 0, 255)));
@@ -482,15 +482,21 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                     .strokeColor(Color.argb(255, 0, 255, 0))
                                     .fillColor(Color.argb(255, 0, 255, 0)));
 
+//                            polygon.setZIndex();
+//                            getCenterPoint(list);
+
                             if(!isHidden){
                                 pOptions.add(polygon);
 
-//                            Log.e("pOptions===Ebike", "==="+pOptions.size());
+//                              Log.e("pOptions===Ebike", "==="+pOptions.size());
 
                                 isContainsList.add(polygon.contains(myLocation));
                             }
 
                         }
+
+//                        minPolygon();
+
                     }else {
                         ToastUtil.showMessageApp(context,result.getMsg());
                     }
@@ -502,6 +508,10 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             }
         });
     }
+
+
+
+
 
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
@@ -521,14 +531,14 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 if (0.0 != amapLocation.getLatitude() && 0.0 != amapLocation.getLongitude()) {
                     String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude", "");
                     String longitude = SharedPreferencesUrls.getInstance().getString("biking_longitude", "");
-                    if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)) {
-                        if (AMapUtils.calculateLineDistance(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)
-                        ), new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude())) > 10) {
-                            SharedPreferencesUrls.getInstance().putString("biking_latitude", "" + amapLocation.getLatitude());
-                            SharedPreferencesUrls.getInstance().putString("biking_longitude", "" + amapLocation.getLongitude());
-                            addMaplocation(amapLocation.getLatitude(), amapLocation.getLongitude());
-                        }
-                    }
+//                    if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)) {
+//                        if (AMapUtils.calculateLineDistance(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)
+//                        ), new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude())) > 10) {
+//                            SharedPreferencesUrls.getInstance().putString("biking_latitude", "" + amapLocation.getLatitude());
+//                            SharedPreferencesUrls.getInstance().putString("biking_longitude", "" + amapLocation.getLongitude());
+//                            addMaplocation(amapLocation.getLatitude(), amapLocation.getLongitude());
+//                        }
+//                    }
                     if (mListener != null) {
                         mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
                     }
@@ -548,7 +558,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                         Log.e("main===Changed_EB2", isContainsList.contains(true) + "》》》" + amapLocation.getAccuracy() + "===" + macList.size() + "===" + type);
 
                         centerMarker.remove();
-                        centerMarker=null;
+                        centerMarker = null;
                         mCircle.remove();
 
                         if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {

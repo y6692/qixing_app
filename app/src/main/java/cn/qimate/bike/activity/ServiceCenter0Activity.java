@@ -333,7 +333,7 @@ public class ServiceCenter0Activity extends SwipeBackActivity implements View.On
             initHttp();
         } else {
             swipeRefreshLayout.setRefreshing(false);
-//            swipeRefreshLayout2.setRefreshing(false);
+            swipeRefreshLayout2.setRefreshing(false);
         }
     }
 
