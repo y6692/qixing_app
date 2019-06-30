@@ -407,7 +407,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             if(referLatitude!=0 && referLongitude!=0){
                 myLocation = new LatLng(referLatitude, referLongitude);
 
-                initNearby(referLatitude, referLongitude);
+//                initNearby(referLatitude, referLongitude);
 //                aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
 
                 addChooseMarker();
@@ -471,28 +471,17 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                             Polygon polygon = null;
                             PolygonOptions pOption = new PolygonOptions();
                             pOption.addAll(list);
-//                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
-//                                    .strokeColor(Color.argb(160, 255, 0, 0))
-//                                    .fillColor(Color.argb(160, 255, 0, 0)));
-//                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
-//                                    .strokeColor(Color.argb(160, 0, 0, 255))
-//                                    .fillColor(Color.argb(160, 0, 0, 255)));
 
                             polygon = aMap.addPolygon(pOption.strokeWidth(2)
                                     .strokeColor(Color.argb(255, 0, 255, 0))
                                     .fillColor(Color.argb(255, 0, 255, 0)));
 
-//                            polygon.setZIndex();
-//                            getCenterPoint(list);
 
                             if(!isHidden){
                                 pOptions.add(polygon);
 
-//                              Log.e("pOptions===Ebike", "==="+pOptions.size());
-
                                 isContainsList.add(polygon.contains(myLocation));
                             }
-
                         }
 
 //                        minPolygon();
@@ -552,7 +541,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                         mFirstFix = false;
                         schoolRange();
-                        initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
+//                        initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
                         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
                     } else {
                         Log.e("main===Changed_EB2", isContainsList.contains(true) + "》》》" + amapLocation.getAccuracy() + "===" + macList.size() + "===" + type);
@@ -661,7 +650,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         Log.e("main===ChangeFinish_Eb", isContainsList.contains(true) + "》》》" + cameraPosition.target.latitude + "===" + centerMarker);
 
         if (isUp && !isHidden){
-            initNearby(cameraPosition.target.latitude, cameraPosition.target.longitude);
+//            initNearby(cameraPosition.target.latitude, cameraPosition.target.longitude);
 
             if (centerMarker != null) {
 //				animMarker();
@@ -882,7 +871,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
         aMap.getUiSettings().setLogoBottomMargin(-50);
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(25f);// 设置缩放监听
+        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18f);// 设置缩放监听
         aMap.moveCamera(cameraUpdate);
         successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
         bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.ebike_icon);
@@ -2964,8 +2953,12 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
-                    aMap.moveCamera(CameraUpdateFactory.changeLatLng(myLocation));
+
+                    CameraUpdate update = CameraUpdateFactory.zoomTo(18f);// 设置缩放监听
+//                    aMap.moveCamera(update);
+
+//                    CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
+//                    aMap.moveCamera(CameraUpdateFactory.changeLatLng(myLocation));
                     aMap.animateCamera(update, 1000, new AMap.CancelableCallback() {
                         @Override
                         public void onFinish() {

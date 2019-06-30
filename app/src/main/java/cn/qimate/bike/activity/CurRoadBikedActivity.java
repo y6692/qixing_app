@@ -239,7 +239,8 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
 //                        if (Double.parseDouble(prices) <= Double.parseDouble(user_money)
 //                                && Double.parseDouble(prices) <= 5){
                         if (Double.parseDouble(prices) <= Double.parseDouble(user_money)){
-                            paySubmit();
+                            m_myHandler.sendEmptyMessage(0);
+//                            paySubmit();
                         }
                     } else {
                         Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
@@ -396,6 +397,20 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
         });
 
     }
+
+    Handler m_myHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message mes) {
+            switch (mes.what) {
+                case 0:
+                    paySubmit();
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        }
+    });
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {

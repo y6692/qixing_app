@@ -78,6 +78,7 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polygon;
 import com.amap.api.maps.model.PolygonOptions;
+import com.amap.api.maps.model.PolylineOptions;
 import com.bumptech.glide.Glide;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
@@ -172,6 +173,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     protected AMap aMap;
     protected BitmapDescriptor successDescripter;
+    protected BitmapDescriptor freeDescripter;
     private MapView mapView;
     //	private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
@@ -400,7 +402,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             if(referLatitude!=0 && referLongitude!=0){
                 myLocation = new LatLng(referLatitude, referLongitude);
 
-                initNearby(referLatitude, referLongitude);
+//                initNearby(referLatitude, referLongitude);
 
                 addChooseMarker();
                 addCircle(myLocation, accuracy);
@@ -457,8 +459,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 if(isHidden) return;
 
                 try {
-                    Log.e("main===schoolRange1", "==="+carType);
-
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
                         JSONArray jsonArray = new JSONArray(result.getData());
@@ -467,38 +467,71 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                         }
                         for (int i = 0; i < jsonArray.length(); i++) {
                             List<LatLng> list = new ArrayList<>();
+                            List<LatLng> list2 = new ArrayList<>();
+                            int flag=0;
+
+//                            Log.e("main===schoolRange1", i+"==="+jsonArray.length()+"==="+jsonArray.getJSONArray(i).length());
+
                             for (int j = 0; j < jsonArray.getJSONArray(i).length(); j ++){
+
                                 JSONObject jsonObject = jsonArray.getJSONArray(i).getJSONObject(j);
-                                LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")),
-                                        Double.parseDouble(jsonObject.getString("longitude")));
-                                list.add(latLng);
+
+//                                Log.e("main===schoolRange1", "221==="+jsonObject.getInt("is_yhq"));
+
+                                LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
+
+
+//                                Log.e("main===schoolRange1", "222==="+Integer.parseInt(jsonObject.getString("is_yhq")));
+
+                                if(jsonObject.getInt("is_yhq")==0){
+                                    flag=0;
+                                    list.add(latLng);
+
+//                                    Log.e("main===schoolRange1", "222==="+jsonObject.getInt("is_yhq"));
+                                }else{
+                                    flag=1;
+                                    list2.add(latLng);
+
+//                                    MarkerOptions centerMarkerOption = new MarkerOptions().position(latLng).icon(freeDescripter);
+//                                    aMap.addMarker(centerMarkerOption);
+
+//                                    Log.e("main===schoolRange1", "223==="+jsonObject.getInt("is_yhq"));
+                                }
                             }
+
+//                            Log.e("main===schoolRange1", "333==="+list2+"==="+flag);
+
                             Polygon polygon = null;
                             PolygonOptions pOption = new PolygonOptions();
-                            pOption.addAll(list);
-                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
-                                    .strokeColor(Color.argb(160, 255, 0, 0))
-                                    .fillColor(Color.argb(160, 255, 0, 0)));
+                            if(flag==0){
+                                pOption.addAll(list);
+                                polygon = aMap.addPolygon(pOption.strokeWidth(2)
+                                        .strokeColor(Color.argb(160, 255, 0, 0))
+                                        .fillColor(Color.argb(160, 255, 0, 0)));
+//                                polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                        .strokeColor(Color.argb(160, 0, 0, 255))
+//                                        .fillColor(Color.argb(160, 0, 0, 255)));
+                            }else{
+                                pOption.addAll(list2);
+                                polygon = aMap.addPolygon(pOption.strokeWidth(2)
+                                        .strokeColor(Color.argb(255, 255, 80, 23))
+                                        .fillColor(Color.argb(51, 255, 80, 23)));
+//                                polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                        .strokeColor(Color.argb(160, 255, 0, 0))
+//                                        .fillColor(Color.argb(160, 255, 0, 0)));
 
-//                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
-//                                    .strokeColor(Color.argb(160, 0, 0, 255))
-//                                    .fillColor(Color.argb(160, 0, 0, 255)));
+                                getCenterPoint(list2);
+                            }
 
-//                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
-//                                    .strokeColor(Color.argb(255, 0, 255, 0))
-//                                    .fillColor(Color.argb(255, 0, 255, 0)));
+
 
                             if(!isHidden){
                                 pOptions.add(polygon);
 
                                 isContainsList.add(polygon.contains(myLocation));
                             }else{
-                                Log.e("pOptions===Bike", isContainsList.size()+"==="+pOptions.size());
+//                                Log.e("pOptions===Bike", isContainsList.size()+"==="+pOptions.size());
                             }
-
-
-
-
 
                         }
                     }else {
@@ -513,12 +546,77 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         });
     }
 
+    public LatLng getCenterPoint(List<LatLng> list) {
+        double x = 0.0;
+        double y = 0.0;
+        for (int i = 0; i < list.size(); i++) {
+            x = x + list.get(i).longitude;
+            y = y + list.get(i).latitude;
+        }
+        x = x / list.size();
+        y = y / list.size();
+
+        MarkerOptions centerMarkerOption = new MarkerOptions().position(new LatLng(y, x)).icon(freeDescripter);
+        aMap.addMarker(centerMarkerOption);
+
+//        centerList.add(new LatLng(y, x));
+
+//        Log.e("getCenterPoint===2", x+"==="+y);
+
+        return new LatLng(y, x);
+    }
+
+    public LatLng minPolygon(List<LatLng> centerList) {
+        double s=0;
+        double s1=0;
+
+        double x = 0;
+        double y = 0;
+
+        for (int i = 0; i < centerList.size(); i++) {
+
+            Log.e("minPolygon===", centerList.get(i).latitude+"==="+referLatitude+">>>"+centerList.get(i).longitude+"==="+referLongitude);
+
+            s1 = (centerList.get(i).latitude-referLatitude)*(centerList.get(i).latitude-referLatitude) + (centerList.get(i).longitude-referLongitude)*(centerList.get(i).longitude-referLongitude);
+
+            if(i==0 || s1<s){
+                s = s1;
+
+                x = centerList.get(i).longitude;
+                y = centerList.get(i).latitude;
+            }else{
+                continue;
+            }
+        }
+
+
+
+//        PolylineOptions pOption = new PolylineOptions();
+//
+//        pOption.setDottedLine(true);
+//        pOption.setDottedLineType(1);
+//        pOption.width(20);
+//        pOption.color(Color.argb(255, 0, 0, 255));
+//        pOption.useGradient(true);
+//        pOption.add(new LatLng(referLatitude, referLongitude));
+//        pOption.add(new LatLng(y, x));
+//
+//        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(30);// 设置缩放监听
+//        aMap.moveCamera(cameraUpdate);
+//
+//        polyline = aMap.addPolyline(pOption);
+//
+//        Log.e("minPolygon===2", "==="+s);
+
+        return null;
+    }
+
     public void onCameraChangeFinish(CameraPosition cameraPosition) {
         Log.e("main===ChangeFinish_B", isContainsList.contains(true) + "》》》" + cameraPosition.target.latitude + "===" + macList.size()+">>>"+isUp + "===" + cameraPosition.target.latitude);
 
 
         if (isUp  && !isHidden){
-            initNearby(cameraPosition.target.latitude, cameraPosition.target.longitude);
+//            initNearby(cameraPosition.target.latitude, cameraPosition.target.longitude);
 
             if (centerMarker != null) {
 //				animMarker();
@@ -630,11 +728,15 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                             for (int i = 0; i < array.length(); i++){
                                 NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
                                 // 加入自定义标签
+
+//                                Log.e("initNearby===Bike", bean.getLatitude()+"==="+bean.getLongitude());
+
                                 MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(
                                         Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
                                 Marker bikeMarker = aMap.addMarker(bikeMarkerOption);
                                 bikeMarkerList.add(bikeMarker);
                             }
+
                         }
                     } else {
                         ToastUtils.show(result.getMsg());
@@ -716,9 +818,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
         aMap.getUiSettings().setLogoBottomMargin(-50);
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(25f);// 设置缩放监听
+        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18f);// 设置缩放监听
         aMap.moveCamera(cameraUpdate);
         successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
+        freeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.free_icon);
         bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
 
         aMap.setOnMapTouchListener(this);
@@ -1173,7 +1276,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                         mFirstFix = false;
                         schoolRange();
-                        initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
+//                        initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
                         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
                     } else {
                         centerMarker.remove();
@@ -1784,6 +1887,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
                     aMap.animateCamera(update);
                 }
+
                 break;
             case R.id.mainUI_scanCode_lock:
 
@@ -2794,8 +2898,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
-                    aMap.moveCamera(CameraUpdateFactory.changeLatLng(myLocation));
+//                    CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
+//                    aMap.moveCamera(CameraUpdateFactory.changeLatLng(myLocation));
+                    CameraUpdate update = CameraUpdateFactory.zoomTo(18f);
                     aMap.animateCamera(update, 1000, new AMap.CancelableCallback() {
                         @Override
                         public void onFinish() {

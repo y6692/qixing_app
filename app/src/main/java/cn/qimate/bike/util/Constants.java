@@ -34,5 +34,6 @@ public class Constants {
         keyMap.put("3C:A3:08:AE:BE:24", "eralHInialHInitwokPs5138m9pleBLEPeri4herzat4on8L0P1functP1functi7onSim9pInit2ali");
         keyMap.put("3C:A3:08:CB:9D:50", "ri4heraln8L0P1functi7onS4on8L0P1functi7ozat4on8L0P1functpleBLEPeri4heraleralHIni");
         keyMap.put("3C:A3:08:CD:9F:47", "9pleBLEPL0P1functi7onSimn8L0P1functi7onSzat4on8L0P1functeBLEPeri4heralHIBLEPeri4");
+        keyMap.put("A4:34:F1:7B:BF:31", "MzE0NjQ2NDM0MTM2NDMzNzM2MzQzMjQyNDMzMzQyMzYzMzM1MzAzMTQyMzY0MzQxMzgzMDMxMzQzMjAw");
     }
 }

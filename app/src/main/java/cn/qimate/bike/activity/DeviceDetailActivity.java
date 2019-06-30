@@ -416,10 +416,10 @@ public class DeviceDetailActivity extends Activity implements View.OnClickListen
         UIHelper.showProgress(this, "get_bike_record");
         ClientManager.getClient().getRecord(mac, new IGetRecordResponse() {
             @Override
-            public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp,
-                                          String transType, String mackey, String index, String cap, String vol) {
+            public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp, String transType, String mackey, String index, int Major, int Minor, String vol) {
                 UIHelper.dismiss();
-                uploadRecordServer(phone, bikeTradeNo, timestamp, transType, mackey, index, cap, vol);
+//                uploadRecordServer(phone, bikeTradeNo, timestamp, transType, mackey, index, cap, vol);
+                deleteBleRecord(bikeTradeNo);
             }
 
             @Override
@@ -439,39 +439,40 @@ public class DeviceDetailActivity extends Activity implements View.OnClickListen
 
     //与服务器，上传记录
     private String tradeNo = "";
-    private void uploadRecordServer(String phone, String bikeTradeNo, String timestamp, String transType,
-                                    String mackey, String index, String cap, String vol) {
-        UIHelper.showProgress(this, "upload_record_server");
-        tradeNo = bikeTradeNo;
-        OkHttpClientManager.getInstance().BikeTradeRecord(phone, StringUtils.decodeTradeNo(bikeTradeNo),
-                timestamp, transType, mackey, index, cap, vol, "", "", new ResultCallback<RetData>() {
-                    @Override
-                    public void onResponse(RetData retData) {
-                        UIHelper.dismiss();
-                        if (retData.getResult() >= 0) {
-                            deleteBleRecord();
-                        }
-                        else {
-                            UIHelper.showToast(DeviceDetailActivity.this, ""+retData.getResult());
-                        }
-                    }
-
-                    @Override
-                    public void onError(Request request, Exception e) {
-                        UIHelper.dismiss();
-                        UIHelper.showToast(DeviceDetailActivity.this, e.getMessage());
-                    }
-                });
-    }
+//    private void uploadRecordServer(String phone, String bikeTradeNo, String timestamp, String transType,
+//                                    String mackey, String index, String cap, String vol) {
+//        UIHelper.showProgress(this, "upload_record_server");
+//        tradeNo = bikeTradeNo;
+//        OkHttpClientManager.getInstance().BikeTradeRecord(phone, StringUtils.decodeTradeNo(bikeTradeNo),
+//                timestamp, transType, mackey, index, cap, vol, "", "", new ResultCallback<RetData>() {
+//                    @Override
+//                    public void onResponse(RetData retData) {
+//                        UIHelper.dismiss();
+//                        if (retData.getResult() >= 0) {
+//                            deleteBleRecord(bikeTradeNo);
+//                        }
+//                        else {
+//                            UIHelper.showToast(DeviceDetailActivity.this, ""+retData.getResult());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(Request request, Exception e) {
+//                        UIHelper.dismiss();
+//                        UIHelper.showToast(DeviceDetailActivity.this, e.getMessage());
+//                    }
+//                });
+//    }
 
     //与设备，删除记录
-    private void deleteBleRecord() {
+    private void deleteBleRecord(String tradeNo) {
         UIHelper.showProgress(this, "delete_bike_record");
         ClientManager.getClient().deleteRecord(mac, tradeNo, new IGetRecordResponse() {
             @Override
-            public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp, String transType, String mackey, String index, String cap, String vol) {
+            public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp, String transType, String mackey, String index, int Major, int Minor, String vol) {
                 UIHelper.dismiss();
-                uploadRecordServer(phone, bikeTradeNo, timestamp, transType, mackey, index, cap, vol);
+//                uploadRecordServer(phone, bikeTradeNo, timestamp, transType, mackey, index, cap, vol);
+                deleteBleRecord(bikeTradeNo);
             }
 
             @Override
