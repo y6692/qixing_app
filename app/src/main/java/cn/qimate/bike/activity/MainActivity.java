@@ -148,12 +148,14 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         mapView = (MapView) findViewById(R.id.mainUI_map);
         mapView.onCreate(savedInstanceState);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                m_myHandler.sendEmptyMessage(1);
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        }).start();
+
+        m_myHandler.sendEmptyMessage(1);
 
         Log.e("main===onCreate", "===");
 
@@ -326,51 +328,57 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 UIHelper.ToastError(context, throwable.toString());
             }
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        JSONArray jsonArray = new JSONArray(result.getData());
-                        for (int i = 0; i < jsonArray.length();i++){
-                            imageUrl = jsonArray.getJSONObject(i).getString("ad_file");
-                            ad_link = jsonArray.getJSONObject(i).getString("ad_link");
-                            app_type = jsonArray.getJSONObject(i).getString("app_type");
-                            app_id = jsonArray.getJSONObject(i).getString("app_id");
-                            ad_link = jsonArray.getJSONObject(i).getString("ad_link");
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                JSONArray jsonArray = new JSONArray(result.getData());
+                                for (int i = 0; i < jsonArray.length();i++){
+                                    imageUrl = jsonArray.getJSONObject(i).getString("ad_file");
+                                    ad_link = jsonArray.getJSONObject(i).getString("ad_link");
+                                    app_type = jsonArray.getJSONObject(i).getString("app_type");
+                                    app_id = jsonArray.getJSONObject(i).getString("app_id");
+                                    ad_link = jsonArray.getJSONObject(i).getString("ad_link");
 
-                        }
+                                }
 
 //                        m_myHandler.sendEmptyMessage(5);
 
-                        Log.e("initHttp===", "==="+imageUrl);
+                                Log.e("initHttp===", "==="+imageUrl);
 
-                        if (!SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",false)){
-                            if (imageUrl != null && !"".equals(imageUrl)){
-                                WindowManager windowManager = getWindowManager();
-                                Display display = windowManager.getDefaultDisplay();
-                                WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
-                                lp.width = (int) (display.getWidth() * 1);
+                                if (!SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",false)){
+                                    if (imageUrl != null && !"".equals(imageUrl)){
+                                        WindowManager windowManager = getWindowManager();
+                                        Display display = windowManager.getDefaultDisplay();
+                                        WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
+                                        lp.width = (int) (display.getWidth() * 1);
 //                                lp.height= (int) (display.getHeight() * 0.4);
 //                                lp.width = (int) (display.getWidth() * 0.4);
 //                                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
 //                                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                                advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-                                advDialog.getWindow().setAttributes(lp);
-                                advDialog.show();
-                                // 加载图片
-                                if(imageUrl.endsWith(".gif")){
-                                    Glide.with(context).load(imageUrl).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(advImageView);
-                                }else{
-                                    Glide.with(context).load(imageUrl).into(advImageView);
+                                        advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+                                        advDialog.getWindow().setAttributes(lp);
+                                        advDialog.show();
+                                        // 加载图片
+                                        if(imageUrl.endsWith(".gif")){
+                                            Glide.with(context).load(imageUrl).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(advImageView);
+                                        }else{
+                                            Glide.with(context).load(imageUrl).into(advImageView);
+                                        }
+                                    }
                                 }
                             }
+                        }catch (Exception e){
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
                         }
                     }
-                }catch (Exception e){
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
+                });
+
             }
         });
     }
