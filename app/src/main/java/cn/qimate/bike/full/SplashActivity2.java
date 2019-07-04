@@ -169,13 +169,20 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
             public void onAdFailedToLoad(int errorCode) {
                 Log.i("SplashActivity", "onAdFailedToLoad");
 //                Toast.makeText(SplashActivity2.this, "onAdFailedToLoad", Toast.LENGTH_SHORT).show();
-                jump();
             }
 
             @Override
             public void onAdClosed() {
-                Log.e("SplashActivity", "onAdClosed");
-                jumpWhenCanClick(); // 跳转至您的应用主界面
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("SplashActivity", "onAdClosed");
+                        jumpWhenCanClick();
+                    }
+                });
+
+                 // 跳转至您的应用主界面
 //                Toast.makeText(SplashActivity2.this, "onAdClosed", Toast.LENGTH_SHORT).show();
             }
 

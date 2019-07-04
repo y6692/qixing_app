@@ -289,7 +289,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         //注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
         filter = new IntentFilter("data.broadcast.action");
-//        registerReceiver(filter);
         activity.registerReceiver(broadcastReceiver, filter);
 
         initView();
@@ -934,7 +933,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //            ToastUtil.showMessage(this, "eee====" + e);
 //        }
 
-        getFeedbackStatus();
+        if(!isHidden){
+            getFeedbackStatus();
+        }
+
 
         String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
@@ -2064,11 +2066,20 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
         @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.e("broadcastReceiver===1", "==="+intent);
+        public void onReceive(Context context, final Intent intent) {
+            m_myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if(!isHidden){
+                        Log.e("broadcastReceiver===1", "==="+intent);
 
-            getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
-            getFeedbackStatus();
+                        getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
+                        getFeedbackStatus();
+                    }
+                }
+            });
+
+
         }
     };
 
