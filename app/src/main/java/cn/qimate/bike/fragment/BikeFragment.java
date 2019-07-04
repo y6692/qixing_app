@@ -162,7 +162,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     static private final int REQUEST_CODE_ASK_PERMISSIONS = 101;
     private final static int SCANNIN_GREQUEST_CODE = 1;
     private LoadingDialog lockLoading;
-    private LoadingDialog loadingDialog;
     private LoadingDialog loadingDialog1;
     public static boolean isForeground = false;
 
@@ -291,13 +290,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         //注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
         filter = new IntentFilter("data.broadcast.action");
         activity.registerReceiver(broadcastReceiver, filter);
-
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                m_myHandler.sendEmptyMessage(1);
-//            }
-//        }).start();
 
         initView();
 
@@ -441,17 +433,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         HttpHelper.get(context, Urls.schoolRange, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -509,8 +495,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                     if(flag==0){
                                         pOption.addAll(list);
                                         polygon = aMap.addPolygon(pOption.strokeWidth(2)
-                                                .strokeColor(Color.argb(160, 255, 0, 0))
-                                                .fillColor(Color.argb(160, 255, 0, 0)));
+                                                .strokeColor(Color.argb(255, 228, 59, 74))
+                                                .fillColor(Color.argb(75, 230, 0, 18)));
 //                                polygon = aMap.addPolygon(pOption.strokeWidth(2)
 //                                        .strokeColor(Color.argb(160, 0, 0, 255))
 //                                        .fillColor(Color.argb(160, 0, 0, 255)));
@@ -518,7 +504,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                         pOption.addAll(list2);
                                         polygon = aMap.addPolygon(pOption.strokeWidth(2)
                                                 .strokeColor(Color.argb(255, 255, 80, 23))
-                                                .fillColor(Color.argb(51, 255, 80, 23)));
+                                                .fillColor(Color.argb(75, 255, 80, 23)));
 //                                polygon = aMap.addPolygon(pOption.strokeWidth(2)
 //                                        .strokeColor(Color.argb(160, 255, 0, 0))
 //                                        .fillColor(Color.argb(160, 255, 0, 0)));
@@ -695,17 +681,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         HttpHelper.get(context, Urls.nearby, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -1157,8 +1137,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     animMarker();
                     break;
 
-
-
                 case 0x99://搜索超时
                     BaseApplication.getInstance().getIBLE().connect(m_nowMac, BikeFragment.this);
                     break;
@@ -1376,18 +1354,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -2132,18 +2103,13 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         HttpHelper.post(context, Urls.backBikescan, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在提交");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在提交");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, final String responseString) {
                 m_myHandler.post(new Runnable() {
@@ -2238,17 +2204,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         HttpHelper.post(context, Urls.carClose, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -2787,18 +2747,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -3146,17 +3099,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -3225,17 +3172,28 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             HttpHelper.get(context, Urls.useinfo, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    if (loadingDialog1 != null && !loadingDialog1.isShowing()) {
-                        loadingDialog1.setTitle("正在提交");
-                        loadingDialog1.show();
-                    }
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (loadingDialog1 != null && !loadingDialog1.isShowing()) {
+                                loadingDialog1.setTitle("正在提交");
+                                loadingDialog1.show();
+                            }
+                        }
+                    });
+
                 }
                 @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (loadingDialog1 != null && loadingDialog1.isShowing()) {
-                        loadingDialog1.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
+                public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (loadingDialog1 != null && loadingDialog1.isShowing()) {
+                                loadingDialog1.dismiss();
+                            }
+                            UIHelper.ToastError(context, throwable.toString());
+                        }
+                    });
                 }
 
                 @Override
@@ -3372,34 +3330,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             });
         }
     }
-
-
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            try{
-//                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-//                customBuilder.setTitle("温馨提示").setMessage("确认退出吗?")
-//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                dialog.cancel();
-//                            }
-//                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.cancel();
-//                        AppManager.getAppManager().AppExit(context);
-//                    }
-//                });
-//                customBuilder.create().show();
-//                return true;
-//            }catch (Exception e){
-//
-//            }
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
-
-
 
 
     /**

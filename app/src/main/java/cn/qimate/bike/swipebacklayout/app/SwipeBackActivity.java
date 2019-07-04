@@ -28,7 +28,9 @@ import cn.qimate.bike.ble.BLEService;
 import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
+import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
+import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.swipebacklayout.SwipeBackLayout;
@@ -40,6 +42,8 @@ public class SwipeBackActivity extends BaseFragmentActivity implements SwipeBack
 	private SwipeBackLayout mSwipeBackLayout;
 
 	public BLEService bleService = new BLEService();
+
+	protected LoadingDialog loadingDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +53,12 @@ public class SwipeBackActivity extends BaseFragmentActivity implements SwipeBack
 		mHelper = new SwipeBackActivityHelper(this);
 		mHelper.onActivityCreate();
 		// 修改状态栏颜色，4.4+生效
-		if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
-			// 透明状态栏
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-			// 透明导航栏
-//			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-		}
+//		if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
+//			// 透明状态栏
+//			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//			// 透明导航栏
+////			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//		}
 
 		mSwipeBackLayout = getSwipeBackLayout();
 		mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
@@ -130,6 +134,32 @@ public class SwipeBackActivity extends BaseFragmentActivity implements SwipeBack
 		Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		long[] pattern = { 0, duration };
 		vibrator.vibrate(pattern, -1);
+	}
+
+	public void onStartCommon(final String title) {
+		m_myHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (loadingDialog != null && !loadingDialog.isShowing()) {
+					loadingDialog.setTitle(title);
+					loadingDialog.show();
+				}
+			}
+		});
+
+	}
+
+	public void onFailureCommon(final String s) {
+		m_myHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (loadingDialog != null && loadingDialog.isShowing()){
+					loadingDialog.dismiss();
+				}
+				UIHelper.ToastError(context, s);
+			}
+		});
+
 	}
 
 }

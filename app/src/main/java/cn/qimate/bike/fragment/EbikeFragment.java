@@ -158,7 +158,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     static private final int REQUEST_CODE_ASK_PERMISSIONS = 101;
     private final static int SCANNIN_GREQUEST_CODE = 1;
     private LoadingDialog lockLoading;
-    private LoadingDialog loadingDialog;
     private LoadingDialog loadingDialog1;
     public static boolean isForeground = false;
 
@@ -436,17 +435,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         HttpHelper.get(context, Urls.schoolRange, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -476,8 +469,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                     pOption.addAll(list);
 
                                     polygon = aMap.addPolygon(pOption.strokeWidth(2)
-                                            .strokeColor(Color.argb(255, 0, 255, 0))
-                                            .fillColor(Color.argb(255, 0, 255, 0)));
+                                            .strokeColor(Color.argb(255, 48, 191, 186))
+//                                            .strokeColor(Color.argb(255, 18, 237, 226))
+                                            .fillColor(Color.argb(75, 18, 237, 226)));
+
+//                                    .strokeColor(Color.argb(255, 48, 191, 186))
 
 
                                     if(!isHidden){
@@ -741,17 +737,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         HttpHelper.get(context, Urls.nearby, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -1354,18 +1344,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -2121,17 +2104,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         HttpHelper.post(context, Urls.backBikescan, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在提交");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在提交");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
@@ -2220,17 +2197,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         HttpHelper.post(context, Urls.carClose, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -2763,18 +2734,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -3112,17 +3076,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -3191,17 +3149,27 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             HttpHelper.get(context, Urls.useinfo, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    if (loadingDialog1 != null && !loadingDialog1.isShowing()) {
-                        loadingDialog1.setTitle("正在提交");
-                        loadingDialog1.show();
-                    }
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (loadingDialog1 != null && !loadingDialog1.isShowing()) {
+                                loadingDialog1.setTitle("正在提交");
+                                loadingDialog1.show();
+                            }
+                        }
+                    });
                 }
                 @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (loadingDialog1 != null && loadingDialog1.isShowing()) {
-                        loadingDialog1.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
+                public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (loadingDialog1 != null && loadingDialog1.isShowing()) {
+                                loadingDialog1.dismiss();
+                            }
+                            UIHelper.ToastError(context, throwable.toString());
+                        }
+                    });
                 }
 
                 @Override
@@ -3340,34 +3308,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     }
 
 
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            try{
-//                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-//                customBuilder.setTitle("温馨提示").setMessage("确认退出吗?")
-//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                dialog.cancel();
-//                            }
-//                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.cancel();
-//                        AppManager.getAppManager().AppExit(context);
-//                    }
-//                });
-//                customBuilder.create().show();
-//                return true;
-//            }catch (Exception e){
-//
-//            }
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
-
-
-
-
     /**
      * 方法必须重写
      */
@@ -3393,9 +3333,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         myLocationStyle.strokeColor(android.R.color.transparent);
         aMap.setMyLocationStyle(myLocationStyle);
     }
-
-
-
 
 
     private void addMaplocation(double latitude,double longitude){
@@ -3432,66 +3369,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             });
         }
     }
-
-
-
-//    private void schoolrangeList(){
-//        RequestParams params = new RequestParams();
-//        HttpHelper.get(context, schoolrangeList, params, new TextHttpResponseHandler() {
-//            @Override
-//            public void onStart() {
-//                if (loadingDialog != null && !loadingDialog.isShowing()) {
-//                    loadingDialog.setTitle("正在加载");
-//                    loadingDialog.show();
-//                }
-//            }
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
-//                UIHelper.ToastError(context, throwable.toString());
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                try {
-//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-//                    if (result.getFlag().equals("Success")) {
-//                        JSONArray jsonArray = new JSONArray(result.getData());
-//                        if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
-//                            isContainsList.clear();
-//                        }
-//                        for (int i = 0; i < jsonArray.length(); i++) {
-//                            List<LatLng> list = new ArrayList<>();
-//                            for (int j = 0; j < jsonArray.getJSONArray(i).length(); j ++){
-//                                JSONObject jsonObject = jsonArray.getJSONArray(i).getJSONObject(j);
-//                                LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")),
-//                                        Double.parseDouble(jsonObject.getString("longitude")));
-//                                list.add(latLng);
-//                            }
-//                            Polygon polygon = null;
-//                            PolygonOptions pOption = new PolygonOptions();
-//                            pOption.addAll(list);
-//                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
-//                                    .strokeColor(Color.argb(160, 255, 0, 0))
-//                                    .fillColor(Color.argb(160, 255, 0, 0)));
-//                            pOptions.add(polygon);
-//                            isContainsList.add(polygon.contains(myLocation));
-//                        }
-//                    }else {
-//                        ToastUtil.showMessageApp(context,result.getMsg());
-//                    }
-//                }catch (Exception e){
-//                }
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
-//            }
-//        });
-//    }
-
-
 
 
     @Override

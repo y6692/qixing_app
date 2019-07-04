@@ -100,6 +100,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 
 	private TelephonyManager tm;
 	protected Context context;
+	protected LoadingDialog loadingDialog;
 
 	public static String m_nowMac = "";  //"A8:1B:6A:B4:E7:C9"
 	public static String oid = "";
@@ -147,12 +148,12 @@ public class BaseFragmentActivity extends AppCompatActivity
 		// 添加Activity到堆栈
 		AppManager.getAppManager().addActivity(this);
 		// 修改状态栏颜色，4.4+生效
-		if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
-			// 透明状态栏
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-			// 透明导航栏
-//			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-		}
+//		if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
+//			// 透明状态栏
+//			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//			// 透明导航栏
+////			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//		}
 
 //		ToastUtil.showMessage(this, "===="+m_nowMac);
 
@@ -426,6 +427,32 @@ class MainHandler extends Handler {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void onStartCommon(final String title) {
+		m_myHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (loadingDialog != null && !loadingDialog.isShowing()) {
+					loadingDialog.setTitle(title);
+					loadingDialog.show();
+				}
+			}
+		});
+
+	}
+
+	public void onFailureCommon(final String s) {
+		m_myHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (loadingDialog != null && loadingDialog.isShowing()){
+					loadingDialog.dismiss();
+				}
+				UIHelper.ToastError(context, s);
+			}
+		});
+
 	}
 
 }

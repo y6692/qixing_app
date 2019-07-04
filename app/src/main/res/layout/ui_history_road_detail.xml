@@ -227,7 +227,8 @@
                     android:text="查看地图轨迹"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp16"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:visibility="gone"/>
 
                 <RelativeLayout
                     android:id="@+id/history_roadDetailUI_imagesLayout"

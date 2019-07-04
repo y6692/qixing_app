@@ -10,9 +10,9 @@ package cn.qimate.bike.core.common;
 public class Urls {
 
 	public static String HTTP = "http://";
-//	public static String host = HTTP + "app.7mate.cn";
+	public static String host = HTTP + "app.7mate.cn";
 //	public static String host = HTTP + "test.7mate.cn";
-	public static String host = HTTP + "uat.7mate.cn";
+//	public static String host = HTTP + "uat.7mate.cn";
 //  public static String host = HTTP + "192.168.206.10:8345";
 	/***上传坐标*/
 	public static String locationHost = HTTP + "106.14.188.246";

@@ -1,19 +1,25 @@
 package cn.qimate.bike.base;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
+import com.zxing.lib.scaner.activity.ActivityScanerCode;
 
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
+import cn.qimate.bike.core.common.UIHelper;
+import cn.qimate.bike.core.widget.LoadingDialog;
 
 public class BaseFragment extends Fragment implements OnConnectionListener {
 
@@ -24,6 +30,9 @@ public class BaseFragment extends Fragment implements OnConnectionListener {
 	public String uid;
 	public String access_token;
 	public Boolean userlogin = false;
+
+	protected LoadingDialog loadingDialog;
+	protected Context context;
 
 //	protected AMap aMap;
 //	protected BitmapDescriptor successDescripter;
@@ -51,6 +60,8 @@ public class BaseFragment extends Fragment implements OnConnectionListener {
 		oid = SharedPreferencesUrls.getInstance().getString("oid", "");
 		osn = SharedPreferencesUrls.getInstance().getString("osn", "");
 		type = SharedPreferencesUrls.getInstance().getString("type", "");
+
+		context = getActivity();
 
 		RefreshLogin();
 	}
@@ -108,6 +119,45 @@ public class BaseFragment extends Fragment implements OnConnectionListener {
 			}
 		}
 	};
+
+	public void onStartCommon(final String title) {
+		m_myHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (loadingDialog != null && !loadingDialog.isShowing()) {
+					loadingDialog.setTitle(title);
+					loadingDialog.show();
+				}
+			}
+		});
+
+	}
+
+	public void onFailureCommon(final String s) {
+		m_myHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (loadingDialog != null && loadingDialog.isShowing()){
+					loadingDialog.dismiss();
+				}
+				UIHelper.ToastError(context, s);
+			}
+		});
+
+	}
+
+	Handler m_myHandler = new Handler(new Handler.Callback() {
+		@Override
+		public boolean handleMessage(Message mes) {
+			switch (mes.what) {
+				case 0:
+					break;
+				default:
+					break;
+			}
+			return false;
+		}
+	});
 	
 	//用户已经登录过没有退出刷新登录
 	public void RefreshLogin(){

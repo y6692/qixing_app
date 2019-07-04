@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="229dp"
+        android:layout_height="296dp"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/ui_test_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/discount_bg"
+            android:layout_gravity="center_horizontal"/>
+
+
+        <TextView
+            android:id="@+id/ui_test_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="104dp"
+            android:text="普通用户不在在优惠区各学校计费是否正确"
+            android:textSize="14sp"
+            android:textColor="#E60012"
+            />
+
+        <LinearLayout
+            android:id="@+id/ui_test_confirm"
+            android:layout_width="113dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="225dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal"
+            android:background="@drawable/btn_bcg_confirm"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            >
+            <TextView
+                android:id="@+id/tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="知道了"
+                android:textSize="15sp"
+                android:textColor="#E60012"
+                android:layout_centerInParent="true"
+                />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</LinearLayout>

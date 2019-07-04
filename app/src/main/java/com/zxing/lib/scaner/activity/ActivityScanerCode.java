@@ -212,7 +212,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         mScanerListener = scanerListener;
     }
 
-    private LoadingDialog loadingDialog;
+
     volatile String m_nowMac = "";
     private String codenum = "";
     // 输入法
@@ -588,18 +588,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         HttpHelper.get(this, Urls.ebikeInfo, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -685,24 +678,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             HttpHelper.post(context, Urls.useCar, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("正在连接");
-                        loadingDialog.show();
-                    }
+                    onStartCommon("正在连接");
                 }
-
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
-
-                    Log.e("scan===useCar2", "===");
-
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-
-                    Log.e("scan===useCar", "Fail===" + result);
-                    UIHelper.ToastError(context, throwable.toString());
+                    onFailureCommon(throwable.toString());
                 }
 
                 @Override
@@ -802,15 +782,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                             ToastUtil.showMessageApp(context, "恭喜您,开锁成功!");
 
-                                            SharedPreferencesUrls.getInstance().putBoolean("isStop", false);
-                                            SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
-                                            SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
-                                            SharedPreferencesUrls.getInstance().putString("type", type);
-                                            SharedPreferencesUrls.getInstance().putString("tempStat", "0");
-                                            SharedPreferencesUrls.getInstance().putString("bleid", bleid);
-
-                                            UIHelper.goToAct(context, CurRoadBikingActivity.class);
-                                            scrollToFinishActivity();
+                                            tzEnd();
 
                                         } else {
                                             if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -928,6 +900,19 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 }
             });
         }
+    }
+
+    void tzEnd(){
+        SharedPreferencesUrls.getInstance().putBoolean("isStop", false);
+        SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
+        SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
+        SharedPreferencesUrls.getInstance().putString("type", type);
+        SharedPreferencesUrls.getInstance().putString("tempStat", "0");
+        SharedPreferencesUrls.getInstance().putString("bleid", bleid);
+        SharedPreferencesUrls.getInstance().putInt("major", 0);
+
+        UIHelper.goToAct(context, CurRoadBikingActivity.class);
+        scrollToFinishActivity();
     }
 
     private final SearchResponse mSearchResponse = new SearchResponse() {
@@ -1087,18 +1072,13 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         HttpHelper.get(this, Urls.rent, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在提交");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在提交");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, final String responseString) {
 
@@ -1279,6 +1259,22 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp, String transType, String mackey, String index, int Major, int Minor, String vol) {
                 Log.e("getBleRecord===", transType + "==Major:"+ Major +"---Minor:"+Minor);
                 deleteBleRecord(bikeTradeNo);
+
+//                if (loadingDialog != null && loadingDialog.isShowing()){
+//                    loadingDialog.dismiss();
+//                }
+//
+//                ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
+//
+//                SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
+//                SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
+//                SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
+//                SharedPreferencesUrls.getInstance().putString("type", type);
+//                SharedPreferencesUrls.getInstance().putString("tempStat","0");
+//                SharedPreferencesUrls.getInstance().putString("bleid",bleid);
+//
+//                UIHelper.goToAct(context, CurRoadBikingActivity.class);
+//                scrollToFinishActivity();
             }
 
             @Override
@@ -1322,15 +1318,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                 ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
 
-                SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
-                SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
-                SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
-                SharedPreferencesUrls.getInstance().putString("type", type);
-                SharedPreferencesUrls.getInstance().putString("tempStat","0");
-                SharedPreferencesUrls.getInstance().putString("bleid",bleid);
-
-                UIHelper.goToAct(context, CurRoadBikingActivity.class);
-                scrollToFinishActivity();
+                tzEnd();
             }
 
             @Override
@@ -1510,17 +1498,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         HttpHelper.post(this, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("开锁中");
-                    loadingDialog.show();
-                }
+                onStartCommon("开锁中");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -1576,15 +1558,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                     ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
 
-                                    SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
-                                    SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
-                                    SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
-                                    SharedPreferencesUrls.getInstance().putString("type", type);
-                                    SharedPreferencesUrls.getInstance().putString("tempStat","0");
-                                    SharedPreferencesUrls.getInstance().putString("bleid",bleid);
-
-                                    UIHelper.goToAct(context, CurRoadBikingActivity.class);
-                                    scrollToFinishActivity();
+                                    tzEnd();
                                 }
                             } else {
                                 ToastUtil.showMessageApp(context,result.getMsg());
@@ -1838,15 +1812,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
                         Log.e("scan===", "OPEN_ACTION===="+isOpen);
 
-                        SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
-                        SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
-                        SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
-                        SharedPreferencesUrls.getInstance().putString("type", type);
-                        SharedPreferencesUrls.getInstance().putString("tempStat","0");
-                        SharedPreferencesUrls.getInstance().putString("bleid",bleid);
-
-                        UIHelper.goToAct(context, CurRoadBikingActivity.class);
-                        scrollToFinishActivity();
+                        tzEnd();
                     }
                     break;
                 case Config.CLOSE_ACTION:
@@ -1879,17 +1845,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         HttpHelper.post(this, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("开锁中");
-                    loadingDialog.show();
-                }
+                onStartCommon("开锁中");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -1913,15 +1873,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
 
                                     if(!"5".equals(type)){
-                                        SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
-                                        SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
-                                        SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
-                                        SharedPreferencesUrls.getInstance().putString("type", type);
-                                        SharedPreferencesUrls.getInstance().putString("tempStat","0");
-                                        SharedPreferencesUrls.getInstance().putString("bleid",bleid);
-
-                                        UIHelper.goToAct(context, CurRoadBikingActivity.class);
-                                        scrollToFinishActivity();
+                                        tzEnd();
                                     }
                                 }
                             } else {
@@ -1962,12 +1914,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
             HttpHelper.post(context, Urls.addOrderbluelock, params, new TextHttpResponseHandler() {
                 @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
+                public void onStart() {
+                    onStartCommon("正在加载");
                 }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    onFailureCommon(throwable.toString());
+                }
+
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, final String responseString) {
@@ -2010,15 +1964,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                                             ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
                                                             Log.e("scan===", "OPEN_ACTION===="+isOpen);
 
-                                                            SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
-                                                            SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
-                                                            SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
-                                                            SharedPreferencesUrls.getInstance().putString("type", type);
-                                                            SharedPreferencesUrls.getInstance().putString("tempStat","0");
-                                                            SharedPreferencesUrls.getInstance().putString("bleid",bleid);
-
-                                                            UIHelper.goToAct(context, CurRoadBikingActivity.class);
-                                                            scrollToFinishActivity();
+                                                            tzEnd();
                                                         }else{
                                                             closeEbike();
                                                         }
@@ -2066,11 +2012,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             }
                         }
                     });
-
-
                 }
             });
-
         }
     }
 
@@ -2085,17 +2028,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         HttpHelper.post(this, Urls.closeEbike, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -2144,17 +2081,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         HttpHelper.post(context, Urls.backBikescan, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在提交");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在提交");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
             @Override
             public void onSuccess(int statusCode, Header[] headers, final String responseString) {
@@ -2243,5 +2174,30 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         }
     });
 
+//    public void onStartCommon(final String title) {
+//        m_myHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                    loadingDialog.setTitle(title);
+//                    loadingDialog.show();
+//                }
+//            }
+//        });
+//
+//    }
+//
+//    public void onFailureCommon(final String s) {
+//        m_myHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (loadingDialog != null && loadingDialog.isShowing()){
+//                    loadingDialog.dismiss();
+//                }
+//                UIHelper.ToastError(context, s);
+//            }
+//        });
+//
+//    }
 
 }

@@ -55,6 +55,7 @@ public class BaseApplication extends Application {
 	private IBLE bleManager;
 	private boolean debug = false;
 	private boolean test = false;
+	private boolean testLog = false;
 
 	public static  BaseApplication getInstance() {
 		return app;
@@ -76,6 +77,14 @@ public class BaseApplication extends Application {
 		this.test = test;
 	}
 
+	public boolean isTestLog() {
+		return testLog;
+	}
+
+	public void setTestLog(boolean testLog) {
+		this.testLog = testLog;
+	}
+
 	@Override
 	protected void attachBaseContext(Context base) {
 		super.attachBaseContext(base);
@@ -90,6 +99,8 @@ public class BaseApplication extends Application {
 		BluetoothContext.set(this);
 
 		setDebug(false);
+//		setTestLog(true);
+		setTestLog(false);
 //		setTest(true);
 		setTest(false);
 

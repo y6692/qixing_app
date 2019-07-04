@@ -115,7 +115,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     public BitmapDescriptor successDescripter;
     public MapView mapView;
 
-    private LoadingDialog loadingDialog;
 
     private Dialog dialog;
     private View dialogView;
@@ -221,9 +220,9 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
         advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
 
-        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
-        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
-        advImageView.setLayoutParams(params4);
+//        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
+//        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+//        advImageView.setLayoutParams(params4);
 
 //        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
 //        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
@@ -277,20 +276,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 case 5:
                     initHttp();
 
-//                    if (!SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",false)){
-//                        if (imageUrl != null && !"".equals(imageUrl)){
-//                            WindowManager windowManager = getWindowManager();
-//                            Display display = windowManager.getDefaultDisplay();
-//                            WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
-//                            lp.width = (int) (display.getWidth() * 0.8);
-//                            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-//                            advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-//                            advDialog.getWindow().setAttributes(lp);
-//                            advDialog.show();
-//                            // 加载图片
-//                            Glide.with(context).load(imageUrl).into(advImageView);
-//                        }
-//                    }
                     break;
 
                 default:
@@ -315,17 +300,11 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         HttpHelper.get(context, Urls.getIndexAd, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
             @Override
             public void onSuccess(int statusCode, Header[] headers, final String responseString) {
@@ -353,12 +332,12 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                                     if (imageUrl != null && !"".equals(imageUrl)){
                                         WindowManager windowManager = getWindowManager();
                                         Display display = windowManager.getDefaultDisplay();
+
+                                        Log.e("display===", "==="+display.getWidth());
+
                                         WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
                                         lp.width = (int) (display.getWidth() * 1);
-//                                lp.height= (int) (display.getHeight() * 0.4);
-//                                lp.width = (int) (display.getWidth() * 0.4);
-//                                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-//                                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
                                         advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
                                         advDialog.getWindow().setAttributes(lp);
                                         advDialog.show();
