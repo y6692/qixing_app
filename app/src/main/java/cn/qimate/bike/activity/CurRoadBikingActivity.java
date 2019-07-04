@@ -5005,7 +5005,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                         }
                                     }
 
-                                    Log.e("main===schoolRange1", "333==="+list2+"==="+flag);
+//                                    Log.e("main===schoolRange1", "333==="+list2+"==="+flag);
 
                                     Polygon polygon = null;
                                     PolygonOptions pOption = new PolygonOptions();
@@ -5819,7 +5819,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
     @Override
     public void onCameraChangeFinish(CameraPosition cameraPosition) {
-        Log.e("main===ChangeFinish_B", isContainsList.contains(true) + "》》》" + cameraPosition.target.latitude + "===" + macList.size()+">>>"+ cameraPosition.target.latitude);
+        Log.e("biking===ChangeFinish_B", isContainsList.contains(true) + "》》》" + cameraPosition.target.latitude + "===" + macList.size()+">>>"+ cameraPosition.target.latitude);
 
 
         if (isUp){

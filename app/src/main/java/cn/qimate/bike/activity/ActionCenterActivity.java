@@ -170,42 +170,54 @@ public class ActionCenterActivity extends SwipeBackActivity implements View.OnCl
                 setFooterType(1);
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                UIHelper.ToastError(context, throwable.toString());
-                swipeRefreshLayout.setRefreshing(false);
-                isRefresh = false;
-                setFooterType(3);
-                setFooterVisibility();
+            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        UIHelper.ToastError(context, throwable.toString());
+                        swipeRefreshLayout.setRefreshing(false);
+                        isRefresh = false;
+                        setFooterType(3);
+                        setFooterVisibility();
+                    }
+                });
+
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if ("Success".equals(result.getFlag())){
-                        JSONArray array = new JSONArray(result.getData());
-                        for (int i = 0; i < array.length(); i++) {
-                            ActionCenterBean bean = JSON.parseObject(array.getJSONObject(i).toString(), ActionCenterBean.class);
-                            datas.add(bean);
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if ("Success".equals(result.getFlag())){
+                                JSONArray array = new JSONArray(result.getData());
+                                for (int i = 0; i < array.length(); i++) {
+                                    ActionCenterBean bean = JSON.parseObject(array.getJSONObject(i).toString(), ActionCenterBean.class);
+                                    datas.add(bean);
+                                }
+                                if (array.length() == 0 && showPage == 1) {
+                                    setFooterType(4);// 暂无数据
+                                    return;
+                                } else if (array.length() < GlobalConfig.PAGE_SIZE && showPage == 1 && array.length() >= 1) {
+                                    setFooterType(5);
+                                } else if (array.length() < GlobalConfig.PAGE_SIZE) {
+                                    setFooterType(2);// 数据已全部加载
+                                } else if (array.length() == GlobalConfig.PAGE_SIZE) {
+                                    setFooterType(0);// 点击加载更多
+                                }
+                            } else {
+                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                        } finally {
+                            isRefresh = false;
+                            swipeRefreshLayout.setRefreshing(false);
                         }
-                        if (array.length() == 0 && showPage == 1) {
-                            setFooterType(4);// 暂无数据
-                            return;
-                        } else if (array.length() < GlobalConfig.PAGE_SIZE && showPage == 1 && array.length() >= 1) {
-                            setFooterType(5);
-                        } else if (array.length() < GlobalConfig.PAGE_SIZE) {
-                            setFooterType(2);// 数据已全部加载
-                        } else if (array.length() == GlobalConfig.PAGE_SIZE) {
-                            setFooterType(0);// 点击加载更多
-                        }
-                    } else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
                     }
-                } catch (Exception e) {
-                } finally {
-                    isRefresh = false;
-                    swipeRefreshLayout.setRefreshing(false);
-                }
+                });
+
             }
         });
     }

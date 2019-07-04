@@ -186,70 +186,70 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
         HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
-                        bikeCode.setText("行程编号:"+bean.getOsn());
-                        bikeNum.setText(bean.getCodenum());
-                        startTime.setText(bean.getSt_time());
-                        endTime.setText(bean.getEd_time());
-                        timeText.setText(bean.getTotal_mintues());
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
+                                bikeCode.setText("行程编号:"+bean.getOsn());
+                                bikeNum.setText(bean.getCodenum());
+                                startTime.setText(bean.getSt_time());
+                                endTime.setText(bean.getEd_time());
+                                timeText.setText(bean.getTotal_mintues());
 
-                        if(bean.getIs_super_member()==1){
-                            rl_time.setVisibility(View.VISIBLE);
-                            payOtherLayout.setVisibility(View.VISIBLE);
+                                if(bean.getIs_super_member()==1){
+                                    rl_time.setVisibility(View.VISIBLE);
+                                    payOtherLayout.setVisibility(View.VISIBLE);
 
-                            tv_time.setText(""+(Integer.parseInt(bean.getTotal_mintues())-60));
-                        }else{
-                            rl_time.setVisibility(View.GONE);
-                            payOtherLayout.setVisibility(View.GONE);
-                        }
+                                    tv_time.setText(""+(Integer.parseInt(bean.getTotal_mintues())-60));
+                                }else{
+                                    rl_time.setVisibility(View.GONE);
+                                    payOtherLayout.setVisibility(View.GONE);
+                                }
 
 
-                        if (bean.getPrices() != null && !"".equals(bean.getPrices())){
-                            prices = bean.getPrices();
-                        }else {
-                            prices = "0.00";
-                        }
-                        moneyText.setText(prices);
-                        if (bean.getUser_money() != null && !"".equals(bean.getUser_money())){
-                            user_money = bean.getUser_money();
-                        }else {
-                            user_money = "0.00";
-                        }
-                        balanceText.setText(user_money);
-                        oid = bean.getOid();
-                        osn = bean.getOsn();
+                                if (bean.getPrices() != null && !"".equals(bean.getPrices())){
+                                    prices = bean.getPrices();
+                                }else {
+                                    prices = "0.00";
+                                }
+                                moneyText.setText(prices);
+                                if (bean.getUser_money() != null && !"".equals(bean.getUser_money())){
+                                    user_money = bean.getUser_money();
+                                }else {
+                                    user_money = "0.00";
+                                }
+                                balanceText.setText(user_money);
+                                oid = bean.getOid();
+                                osn = bean.getOsn();
 //                        if (Double.parseDouble(prices) <= Double.parseDouble(user_money)
 //                                && Double.parseDouble(prices) <= 5){
-                        if (Double.parseDouble(prices) <= Double.parseDouble(user_money)){
-                            m_myHandler.sendEmptyMessage(0);
+                                if (Double.parseDouble(prices) <= Double.parseDouble(user_money)){
+                                    m_myHandler.sendEmptyMessage(0);
 //                            paySubmit();
+                                }
+                            } else {
+                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
                         }
-                    } else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
                     }
-                } catch (Exception e) {
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
+                });
+
             }
         });
     }
@@ -349,7 +349,13 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     }
 
     public void alipayBikeAction(final String osn,String uid,String access_token) {
-        Toast.makeText(context, "正在调起支付宝支付...", Toast.LENGTH_LONG).show();
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "正在调起支付宝支付...", Toast.LENGTH_LONG).show();
+            }
+        });
+
 
         Log.e("alipayBike===000", uid+"==="+access_token+"==="+osn);
 
@@ -359,40 +365,52 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
         params.put("osn", osn);
         HttpHelper.get(context, Urls.alipayBike, params, new TextHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                    Log.e("alipayBikeAction===", "==="+responseString);
+                            Log.e("alipayBikeAction===", "==="+responseString);
 
-                    if (result.getFlag().equals("Success")) {
-                        final String payInfo = result.getData();
-                        Runnable payRunnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                // 构造PayTask 对象
-                                PayTask alipay = new PayTask(CurRoadBikedActivity.this);
-                                // 调用支付接口，获取支付结果
-                                String result = alipay.pay(payInfo, true);
-                                Message msg = new Message();
-                                msg.what = SDK_PAY_FLAG;
-                                msg.obj = result;
-                                mHandler.sendMessage(msg);
+                            if (result.getFlag().equals("Success")) {
+                                final String payInfo = result.getData();
+                                Runnable payRunnable = new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // 构造PayTask 对象
+                                        PayTask alipay = new PayTask(CurRoadBikedActivity.this);
+                                        // 调用支付接口，获取支付结果
+                                        String result = alipay.pay(payInfo, true);
+                                        Message msg = new Message();
+                                        msg.what = SDK_PAY_FLAG;
+                                        msg.obj = result;
+                                        mHandler.sendMessage(msg);
+                                    }
+                                };
+                                // 必须异步调用
+                                Thread payThread = new Thread(payRunnable);
+                                payThread.start();
+                            } else {
+                                UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
                             }
-                        };
-                        // 必须异步调用
-                        Thread payThread = new Thread(payRunnable);
-                        payThread.start();
-                    } else {
-                        UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                });
+
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                UIHelper.ToastError(context, throwable.toString());
+            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        UIHelper.ToastError(context, throwable.toString());
+                    }
+                });
+
             }
         });
 
@@ -461,48 +479,60 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
         params.put("osn", osn);
         HttpHelper.get(context, Urls.wxpayBike, params, new TextHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
-                        api.registerApp("wx86d98ec252f67d07");
-                        JSONObject jsonObject = new JSONObject(result.getData());
-                        PayReq req = new PayReq();
-                        req.appId = jsonObject.getString("appid");// wpay.getAppid();//
-                        // 微信appId
-                        req.packageValue = jsonObject.getString("package");// wpay.getPackageValue();//
-                        // 包
-                        req.extData = "app data"; // optional
-                        req.timeStamp = jsonObject.getString("timestamp");// wpay.getTimeStamp();//
-                        // 时间戳
-                        req.partnerId = jsonObject.getString("partnerid");// wpay.getPartnerId();//
-                        // 商户号"
-                        req.prepayId = jsonObject.getString("prepayid");// wpay.getPrepayId();//
-                        // 预支付订单号
-                        req.nonceStr = jsonObject.getString("noncestr");// wpay.getNonceStr();//
-                        // 随机字符串
-                        req.sign = jsonObject.getString("sign");// wpay.getSign();//
-                        // 后台返回的签名
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
+                                api.registerApp("wx86d98ec252f67d07");
+                                JSONObject jsonObject = new JSONObject(result.getData());
+                                PayReq req = new PayReq();
+                                req.appId = jsonObject.getString("appid");// wpay.getAppid();//
+                                // 微信appId
+                                req.packageValue = jsonObject.getString("package");// wpay.getPackageValue();//
+                                // 包
+                                req.extData = "app data"; // optional
+                                req.timeStamp = jsonObject.getString("timestamp");// wpay.getTimeStamp();//
+                                // 时间戳
+                                req.partnerId = jsonObject.getString("partnerid");// wpay.getPartnerId();//
+                                // 商户号"
+                                req.prepayId = jsonObject.getString("prepayid");// wpay.getPrepayId();//
+                                // 预支付订单号
+                                req.nonceStr = jsonObject.getString("noncestr");// wpay.getNonceStr();//
+                                // 随机字符串
+                                req.sign = jsonObject.getString("sign");// wpay.getSign();//
+                                // 后台返回的签名
 
-                        flag=1;
-                        // 调微信支付
-                        if (api.isWXAppInstalled() && api.isWXAppSupportAPI()) {
-                            api.sendReq(req);
-                        } else {
-                            Toast.makeText(context, "请下载最新版微信App", Toast.LENGTH_LONG).show();
+                                flag=1;
+                                // 调微信支付
+                                if (api.isWXAppInstalled() && api.isWXAppSupportAPI()) {
+                                    api.sendReq(req);
+                                } else {
+                                    Toast.makeText(context, "请下载最新版微信App", Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } else {
-                        UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                });
+
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                UIHelper.ToastError(context, throwable.toString());
+            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        UIHelper.ToastError(context, throwable.toString());
+                    }
+                });
+
             }
         });
     }
@@ -522,37 +552,55 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
             HttpHelper.post(context, Urls.orderPaybalance, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    if (payLoadingDialog != null && !payLoadingDialog.isShowing()) {
-                        payLoadingDialog.setTitle("正在加载");
-                        payLoadingDialog.show();
-                    }
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (payLoadingDialog != null && !payLoadingDialog.isShowing()) {
+                                payLoadingDialog.setTitle("正在加载");
+                                payLoadingDialog.show();
+                            }
+                        }
+                    });
+
                 }
                 @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (payLoadingDialog != null && payLoadingDialog.isShowing()){
-                        payLoadingDialog.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
+                public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (payLoadingDialog != null && payLoadingDialog.isShowing()){
+                                payLoadingDialog.dismiss();
+                            }
+                            UIHelper.ToastError(context, throwable.toString());
+                        }
+                    });
+
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                        if (result.getFlag().equals("Success")) {
-                            Toast.makeText(context,"恭喜您,支付成功!",Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(context,HistoryRoadDetailActivity.class);
-                            intent.putExtra("oid",oid);
-                            startActivity(intent);
-                            scrollToFinishActivity();
-                        } else {
-                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                if (result.getFlag().equals("Success")) {
+                                    Toast.makeText(context,"恭喜您,支付成功!",Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(context,HistoryRoadDetailActivity.class);
+                                    intent.putExtra("oid",oid);
+                                    startActivity(intent);
+                                    scrollToFinishActivity();
+                                } else {
+                                    Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                            }
+                            if (payLoadingDialog != null && payLoadingDialog.isShowing()){
+                                payLoadingDialog.dismiss();
+                            }
                         }
-                    } catch (Exception e) {
-                    }
-                    if (payLoadingDialog != null && payLoadingDialog.isShowing()){
-                        payLoadingDialog.dismiss();
-                    }
+                    });
+
                 }
             });
         }

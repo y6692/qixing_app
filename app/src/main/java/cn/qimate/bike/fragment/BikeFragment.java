@@ -245,7 +245,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private int n=0;
     private float accuracy = 29.0f;
 
-    private boolean isHidden;
+    private boolean isHidden = true;
 
     private int carType = 1;
 
@@ -289,6 +289,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         //注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
         filter = new IntentFilter("data.broadcast.action");
+//        registerReceiver(filter);
         activity.registerReceiver(broadcastReceiver, filter);
 
         initView();
@@ -424,6 +425,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     private void schoolRange(){
         if(isHidden) return;
+
+//        pOptions
 
         Log.e("main===schoolRange0", "==="+carType);
 
@@ -1259,7 +1262,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                         Log.e("main===Changed>>>1", "》》》");
 
                         mFirstFix = false;
-                        schoolRange();
+//                        schoolRange();
 //                        initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
                         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
                     } else {

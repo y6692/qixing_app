@@ -210,45 +210,45 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
         HttpHelper.get(context, Urls.myOrderdetail, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        HistoryRoadDetailBean bean = JSON.parseObject(result.getData(), HistoryRoadDetailBean.class);
-                        if ("2".equals(bean.getIspay())){
-                            payState.setText("支付成功");
-                        }else {
-                            payState.setText("未支付");
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                HistoryRoadDetailBean bean = JSON.parseObject(result.getData(), HistoryRoadDetailBean.class);
+                                if ("2".equals(bean.getIspay())){
+                                    payState.setText("支付成功");
+                                }else {
+                                    payState.setText("未支付");
+                                }
+                                codeText.setText("行程编号:"+bean.getOsn());
+                                bikeNum.setText(bean.getCodenum());
+                                st_time.setText(bean.getSt_time());
+                                ed_time.setText(bean.getEd_time());
+                                total_mintues.setText(bean.getTotal_mintues());
+                                prices.setText(bean.getPrices());
+                            } else {
+                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        codeText.setText("行程编号:"+bean.getOsn());
-                        bikeNum.setText(bean.getCodenum());
-                        st_time.setText(bean.getSt_time());
-                        ed_time.setText(bean.getEd_time());
-                        total_mintues.setText(bean.getTotal_mintues());
-                        prices.setText(bean.getPrices());
-                    } else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
+                });
+
             }
         });
     }
@@ -272,11 +272,23 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
 
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在载入");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                        UIHelper.ToastError(context, throwable.toString());
+                        initBanner();
+                    }
+                });
+            }
+
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
@@ -304,14 +316,7 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
                 }
             }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
-                initBanner();
-            }
+
         });
     }
     private void initBanner() {

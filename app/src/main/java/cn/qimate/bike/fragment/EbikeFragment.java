@@ -256,7 +256,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     private int n=0;
     private float accuracy = 29.0f;
 
-    private boolean isHidden;
+    private boolean isHidden = true;
 
     private Bundle savedIS;
     private JSONArray arraySchoolRange;
@@ -298,8 +298,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         activity.registerReceiver(mScreenReceiver, filter);
 
         //注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
-        filter = new IntentFilter("data.broadcast.action");
-        activity.registerReceiver(broadcastReceiver, filter);
+//        filter = new IntentFilter("data.broadcast.action");
+//        activity.registerReceiver(broadcastReceiver, filter);
 
 //        new Thread(new Runnable() {
 //            @Override
@@ -542,7 +542,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                         Log.e("main===Changed_EB1", isContainsList.contains(true) + "》》》" + amapLocation.getAccuracy() + "===" + macList.size() + "===" + type);
 
                         mFirstFix = false;
-                        schoolRange();
+//                        schoolRange();
 //                        initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
                         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
                     } else {

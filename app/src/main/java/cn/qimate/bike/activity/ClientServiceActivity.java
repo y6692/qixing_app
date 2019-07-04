@@ -653,12 +653,24 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
             content = other + "。";
         }
         if (content == null || "".equals(content)){
-            ToastUtil.showMessageApp(context,"请选择问题类型或者描述问题");
+            m_myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    ToastUtil.showMessageApp(context,"请选择问题类型或者描述问题");
+                }
+            });
+
             return;
         }
 
         if (imageUrlList.size() == 0 || imageUrlList.isEmpty()){
-            Toast.makeText(context,"至少上传一张图片",Toast.LENGTH_SHORT).show();
+            m_myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context,"至少上传一张图片",Toast.LENGTH_SHORT).show();
+                }
+            });
+
             return;
         }
 
@@ -671,35 +683,35 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         HttpHelper.post(context, Urls.feedback, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在提交");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在提交");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        Toast.makeText(context,"提交成功，工作人员将很快处理。",Toast.LENGTH_SHORT).show();
-                        scrollToFinishActivity();
-                    } else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                Toast.makeText(context,"提交成功，工作人员将很快处理。",Toast.LENGTH_SHORT).show();
+                                scrollToFinishActivity();
+                            } else {
+                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
+                });
+
             }
         });
     }
@@ -790,31 +802,33 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        switch (requestCode) {
-            case REQUESTCODE_PICK:// 直接从相册获取
-                if (data != null){
-                    try {
-                        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
-                            if (imageUri != null) {
-                                urlpath = getRealFilePath(context, data.getData());
-                                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                                    loadingDialog.setTitle("请稍等");
-                                    loadingDialog.show();
-                                }
-                                new Thread(uploadImageRunnable).start();
-                            }
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                switch (requestCode) {
+                    case REQUESTCODE_PICK:// 直接从相册获取
+                        if (data != null){
+                            try {
+                                if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                                    if (imageUri != null) {
+                                        urlpath = getRealFilePath(context, data.getData());
+                                        if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                            loadingDialog.setTitle("请稍等");
+                                            loadingDialog.show();
+                                        }
+                                        new Thread(uploadImageRunnable).start();
+                                    }
 //                            }
-                        }else {
-                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+                                }else {
+                                    Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (NullPointerException e) {
+                                e.printStackTrace();// 用户点击取消操作
+                            }
                         }
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();// 用户点击取消操作
-                    }
-                }
-                break;
-            case REQUESTCODE_TAKE:// 调用相机拍照
+                        break;
+                    case REQUESTCODE_TAKE:// 调用相机拍照
 //                if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
 //                    File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
 //                    if (Uri.fromFile(temp) != null) {
@@ -830,27 +844,30 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
 //                    Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
 //                }
 
-                if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
-                    File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
-                    if (Uri.fromFile(temp) != null) {
-                        urlpath = getRealFilePath(context, Uri.fromFile(temp));
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("请稍等");
-                            loadingDialog.show();
+                        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
+                            if (Uri.fromFile(temp) != null) {
+                                urlpath = getRealFilePath(context, Uri.fromFile(temp));
+                                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                    loadingDialog.setTitle("请稍等");
+                                    loadingDialog.show();
+                                }
+                                new Thread(uploadImageRunnable).start();
+                            }
+                        }else {
+                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                         }
-                        new Thread(uploadImageRunnable).start();
-                    }
-                }else {
-                    Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
-                }
 
-                break;
-            case REQUESTCODE_CUTTING:// 取得裁剪后的图片
-                if (data != null) {
-                    setPicToView(data);
+                        break;
+                    case REQUESTCODE_CUTTING:// 取得裁剪后的图片
+                        if (data != null) {
+                            setPicToView(data);
+                        }
+                        break;
                 }
-                break;
-        }
+            }
+        });
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -1143,37 +1160,40 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
 
     @SuppressLint("NewApi")
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 0:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    initView();
-                }else {
-                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里定位权限！")
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+    public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults) {
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                switch (requestCode) {
+                    case 0:
+                        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                            initView();
+                        }else {
+                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里定位权限！")
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                            finishMine();
+                                        }
+                                    }).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
+                                    Intent localIntent = new Intent();
+                                    localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                                    localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+                                    startActivity(localIntent);
                                     finishMine();
                                 }
-                            }).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            Intent localIntent = new Intent();
-                            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-                            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
-                            startActivity(localIntent);
-                            finishMine();
+                            });
+                            customBuilder.create().show();
                         }
-                    });
-                    customBuilder.create().show();
-                }
-                break;
-            case 101:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission Granted
-                    if (permissions[0].equals(Manifest.permission.CAMERA)) {
+                        break;
+                    case 101:
+                        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                            // Permission Granted
+                            if (permissions[0].equals(Manifest.permission.CAMERA)) {
 
 //                        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
 //                            Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -1193,54 +1213,57 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
 //                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
 //                        }
 
-                        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
-                            Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                                    Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                            File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);
-                            if(!file.getParentFile().exists()){
-                                file.getParentFile().mkdirs();
-                            }
+                                    File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);
+                                    if(!file.getParentFile().exists()){
+                                        file.getParentFile().mkdirs();
+                                    }
 
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(ClientServiceActivity.this,
-                                        BuildConfig.APPLICATION_ID + ".fileprovider",
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                        takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(ClientServiceActivity.this,
+                                                BuildConfig.APPLICATION_ID + ".fileprovider",
 //                                        "com.vondear.rxtools.fileprovider",
-                                        file));
+                                                file));
 
-                            }else {
-                                // 下面这句指定调用相机拍照后的照片存储的路径
-                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                                    }else {
+                                        // 下面这句指定调用相机拍照后的照片存储的路径
+                                        takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                                    }
+                                    startActivityForResult(takeIntent, REQUESTCODE_TAKE);
+                                }else {
+                                    Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+                                }
                             }
-                            startActivityForResult(takeIntent, REQUESTCODE_TAKE);
-                        }else {
-                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } else {
-                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        } else {
+                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                            finishMine();
+                                        }
+                                    }).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
+                                    Intent localIntent = new Intent();
+                                    localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                                    localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+                                    startActivity(localIntent);
                                     finishMine();
                                 }
-                            }).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            Intent localIntent = new Intent();
-                            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-                            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
-                            startActivity(localIntent);
-                            finishMine();
+                            });
+                            customBuilder.create().show();
                         }
-                    });
-                    customBuilder.create().show();
+                        break;
+                    default:
+                        onRequestPermissionsResult(requestCode, permissions, grantResults);
                 }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
+            }
+        });
+
     }
 
     @Override
