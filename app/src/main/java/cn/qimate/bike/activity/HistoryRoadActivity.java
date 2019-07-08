@@ -131,6 +131,15 @@ public class HistoryRoadActivity extends SwipeBackActivity implements View.OnCli
             myAdapter.notifyDataSetChanged();
         }
     }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+
+        m_myHandler.removeCallbacks(null);
+    }
+
     @Override
     public void onRefresh() {
         showPage = 1;

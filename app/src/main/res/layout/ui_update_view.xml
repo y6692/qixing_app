@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:gravity="center">
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:id="@+id/ui_fristView_exImage_1"
+            android:layout_width="297dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/update_view" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:text="发现新版本"
+            android:textColor="#4D0D07"
+            android:textSize="21sp"
+            android:layout_centerHorizontal="true"
+            />
+
+        <TextView
+            android:id="@+id/ui_update_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="90dp"
+            android:text="V1.3.2"
+            android:textColor="#4D0D07"
+            android:textSize="12sp"
+            android:layout_centerHorizontal="true"
+            />
+
+
+        <cn.qimate.bike.core.widget.MyScrollView
+            android:layout_width="217dp"
+            android:layout_height="89dp"
+            android:layout_marginTop="118dp"
+            android:layout_centerHorizontal="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/ui_update_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text=""
+                    android:textColor="#4D0D07"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="4dp"
+                    />
+            </LinearLayout>
+        </cn.qimate.bike.core.widget.MyScrollView>
+
+
+
+        <RelativeLayout
+            android:id="@+id/ui_update_confirmLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="212dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                
+                android:layout_width="86dp"
+                android:layout_height="86dp"
+                android:src="@drawable/update_btn"
+                />
+
+            <TextView
+                android:layout_width="36dp"
+                android:layout_height="wrap_content"
+                android:text="立即升级"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:layout_centerInParent="true"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/ui_update_closeLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="314dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+                android:id="@+id/ui_update_closeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="以后再说"
+                android:textColor="#F32815"
+                android:textSize="14sp"
+                android:layout_centerHorizontal="true"
+                android:autoLink="all"
+                />
+            
+            <View
+                android:layout_width="56dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="22dp"
+                android:background="#F32815"
+                />
+            
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

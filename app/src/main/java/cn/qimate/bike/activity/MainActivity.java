@@ -252,7 +252,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //        exImage_1.setOnClickListener(myOnClickLister);
 //        exImage_2.setOnClickListener(myOnClickLister);
 
-
         leftBtn.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
 
@@ -320,11 +319,10 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                                     ad_link = jsonArray.getJSONObject(i).getString("ad_link");
                                     app_type = jsonArray.getJSONObject(i).getString("app_type");
                                     app_id = jsonArray.getJSONObject(i).getString("app_id");
-                                    ad_link = jsonArray.getJSONObject(i).getString("ad_link");
 
                                 }
 
-//                        m_myHandler.sendEmptyMessage(5);
+//                              m_myHandler.sendEmptyMessage(5);
 
                                 Log.e("initHttp===", "==="+imageUrl);
 
@@ -410,12 +408,12 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                     if (SharedPreferencesUrls.getInstance().getString("date","") != null &&
                             !"".equals(SharedPreferencesUrls.getInstance().getString("date",""))){
                         if (!format.equals(SharedPreferencesUrls.getInstance().getString("date",""))){
-                            UpdateManager.getUpdateManager().checkAppUpdate(context, true);
+                            UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, true);
                             SharedPreferencesUrls.getInstance().putString("date",""+format);
                         }
                     }else {
                         // 版本更新
-                        UpdateManager.getUpdateManager().checkAppUpdate(context, true);
+                        UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, true);
                         SharedPreferencesUrls.getInstance().putString("date",""+format);
                     }
                 }
@@ -427,22 +425,19 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
             Log.e("getNetTime==1_2", "==="+SharedPreferencesUrls.getInstance().getString("date",""));
 
-            if (SharedPreferencesUrls.getInstance().getString("date","") != null &&
-                    !"".equals(SharedPreferencesUrls.getInstance().getString("date",""))){
-
+            if (SharedPreferencesUrls.getInstance().getString("date","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("date",""))){
                 Log.e("getNetTime==2", "==="+date);
 
                 if (!date.equals(SharedPreferencesUrls.getInstance().getString("date",""))){
                     Log.e("getNetTime==2_2", "===");
 
-                    UpdateManager.getUpdateManager().checkAppUpdate(context, true);
+                    UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, true);
                     SharedPreferencesUrls.getInstance().putString("date",""+date);
                 }
             }else {
-
                 Log.e("getNetTime==23", "===");
                 // 版本更新
-                UpdateManager.getUpdateManager().checkAppUpdate(context, true);
+                UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, true);
                 SharedPreferencesUrls.getInstance().putString("date",""+date);
             }
             e.printStackTrace();
@@ -451,9 +446,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     @Override protected void onResume() {
         type = SharedPreferencesUrls.getInstance().getString("type", "");
-
-
-
 
         super.onResume();
 

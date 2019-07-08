@@ -6,6 +6,7 @@ package cn.qimate.bike.model;
 
 public class CurRoadBikingBean {
 
+    private String orderid;
     private String oid;
     private String osn;
     private String prices;
@@ -21,6 +22,14 @@ public class CurRoadBikingBean {
     private String macinfo;
     private String tokencode;
     private int is_super_member;
+
+    public String getOrderid() {
+        return orderid;
+    }
+
+    public void setOrderid(String orderid) {
+        this.orderid = orderid;
+    }
 
     public int getIs_super_member() {
         return is_super_member;

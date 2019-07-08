@@ -14,6 +14,7 @@ import org.apache.http.Header;
 import com.alibaba.fastjson.JSON;
 import com.vondear.rxtools.RxAppTool;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -33,11 +34,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +71,7 @@ public class UpdateManager {
 
 	private static UpdateManager updateManager;
 
+	private Activity mActivity;
 	private Context mContext;
 	// 通知对话框
 	private Dialog noticeDialog;
@@ -103,6 +108,9 @@ public class UpdateManager {
 	// 更新提示对话框
 	private Dialog updateDialog;
 
+	private RelativeLayout confirmLayout;
+	private RelativeLayout closeLayout;
+
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -138,8 +146,9 @@ public class UpdateManager {
 	 * @param isShowMsg
 	 *            是否显示提示消息
 	 */
-	public void checkAppUpdate(final Context context, final boolean isShowMsg) {
+	public void checkAppUpdate(Activity activity, final Context context, final boolean isShowMsg) {
 		mContext = context;
+		mActivity = activity;
 		loadingDialog = new LoadingDialog(context);
 		loadingDialog.setCancelable(false);
 		loadingDialog.setCanceledOnTouchOutside(false);
@@ -220,30 +229,52 @@ public class UpdateManager {
 	 * 显示版本更新通知对话框
 	 */
 	private void showNoticeDialog() {
-		Builder builder = new Builder(mContext);
-		builder.setTitle("软件版本更新");
-		builder.setMessage(mUpdate.getUpdateDesc());
-		builder.setOnKeyListener(keylistener).setCancelable(false);
+
+//		Builder builder = new Builder(mContext);
+//		builder.setTitle("软件版本更新");
+//		builder.setMessage(mUpdate.getUpdateDesc());
+//		builder.setOnKeyListener(keylistener).setCancelable(false);
+
+		noticeDialog = new Dialog(mContext, R.style.Theme_AppCompat_Dialog);
+		View noticeDialogView = LayoutInflater.from(mContext).inflate(R.layout.ui_update_view, null);
+		noticeDialog.setContentView(noticeDialogView);
+		noticeDialog.setCanceledOnTouchOutside(false);
+
+		confirmLayout = (RelativeLayout)noticeDialogView.findViewById(R.id.ui_update_confirmLayout);
+		closeLayout = (RelativeLayout)noticeDialogView.findViewById(R.id.ui_update_closeLayout);
+
+		TextView version = (TextView)noticeDialogView.findViewById(R.id.ui_update_version);
+		TextView text = (TextView)noticeDialogView.findViewById(R.id.ui_update_text);
+		version.setText("V"+mUpdate.getAppVersion());
+		text.setText(mUpdate.getUpdateDesc());
+
+
 		if ("2".equals(mUpdate.isForce())) {
 			showDownloadDialog();
 		} else {
-			builder.setPositiveButton("立即更新", new OnClickListener() {
+			confirmLayout.setOnClickListener(new View.OnClickListener(){
+
 				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-					// showDownloadDialog();
+				public void onClick(View v) {
+					noticeDialog.dismiss();
 					showDialog();
 				}
 			});
 
-			builder.setNegativeButton("以后再说", new OnClickListener() {
+			closeLayout.setOnClickListener(new View.OnClickListener(){
+
 				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
+				public void onClick(View v) {
+					noticeDialog.dismiss();
 				}
 			});
+
 		}
-		noticeDialog = builder.create();
+
+		WindowManager windowManager =mActivity.getWindowManager();
+		Display display = windowManager.getDefaultDisplay();
+		WindowManager.LayoutParams lp = noticeDialog.getWindow().getAttributes();
+		noticeDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
 		noticeDialog.show();
 
 		Log.e("showNoticeDialog===", "===");

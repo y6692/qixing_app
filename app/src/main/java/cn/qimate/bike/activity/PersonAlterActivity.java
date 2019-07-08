@@ -318,52 +318,57 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
 
     }
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        switch (requestCode) {
-            case REQUESTCODE_PICK:// 直接从相册获取
-                if (data != null) {
-                    try {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                switch (requestCode) {
+                    case REQUESTCODE_PICK:// 直接从相册获取
+                        if (data != null) {
+                            try {
+                                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                        File imgUri = new File(GetImagePath.getPath(context, data.getData()));
+                                        Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", imgUri);
+                                        startPhotoZoom(dataUri);
+                                    } else {
+                                        startPhotoZoom(data.getData());
+                                    }
+                                } else {
+                                    Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (NullPointerException e) {
+                                e.printStackTrace();// 用户点击取消操作
+                            }
+                        }
+                        break;
+                    case REQUESTCODE_TAKE:// 调用相机拍照
+//                File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
+//                startPhotoZoom(Uri.fromFile(temp));
                         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                File imgUri = new File(GetImagePath.getPath(context, data.getData()));
-                                Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", imgUri);
-                                startPhotoZoom(dataUri);
+                                //通过FileProvider创建一个content类型的Uri
+                                Uri inputUri = FileProvider.getUriForFile(context,
+                                        BuildConfig.APPLICATION_ID + ".provider",
+                                        new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME));
+                                startPhotoZoom(inputUri);//设置输入类型
                             } else {
-                                startPhotoZoom(data.getData());
+                                File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
+                                startPhotoZoom(Uri.fromFile(temp));
                             }
                         } else {
                             Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
                         }
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();// 用户点击取消操作
-                    }
+                        break;
+                    case REQUESTCODE_CUTTING:// 取得裁剪后的图片
+                        if (data != null) {
+                            setPicToView(data);
+                        }
+                        break;
                 }
-                break;
-            case REQUESTCODE_TAKE:// 调用相机拍照
-//                File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
-//                startPhotoZoom(Uri.fromFile(temp));
-                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        //通过FileProvider创建一个content类型的Uri
-                        Uri inputUri = FileProvider.getUriForFile(context,
-                                BuildConfig.APPLICATION_ID + ".provider",
-                                new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME));
-                        startPhotoZoom(inputUri);//设置输入类型
-                    } else {
-                        File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
-                        startPhotoZoom(Uri.fromFile(temp));
-                    }
-                } else {
-                    Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case REQUESTCODE_CUTTING:// 取得裁剪后的图片
-                if (data != null) {
-                    setPicToView(data);
-                }
-                break;
-        }
+            }
+        });
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -634,56 +639,62 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
 
     @SuppressLint("NewApi")
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 101:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission Granted
-                    if (permissions[0].equals(Manifest.permission.CAMERA)) {
+    public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults) {
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                switch (requestCode) {
+                    case 101:
+                        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                            // Permission Granted
+                            if (permissions[0].equals(Manifest.permission.CAMERA)) {
 
-                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                            Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(PersonAlterActivity.this,
-                                        BuildConfig.APPLICATION_ID + ".provider",
-                                        new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
-                                takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                            } else {
-                                // 下面这句指定调用相机拍照后的照片存储的路径
-                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                                        Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+                                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                                    Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                        takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(PersonAlterActivity.this,
+                                                BuildConfig.APPLICATION_ID + ".provider",
+                                                new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+                                        takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                        takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                    } else {
+                                        // 下面这句指定调用相机拍照后的照片存储的路径
+                                        takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                                                Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+                                    }
+                                    startActivityForResult(takeIntent, REQUESTCODE_TAKE);
+                                } else {
+                                    Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                            startActivityForResult(takeIntent, REQUESTCODE_TAKE);
                         } else {
-                            Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } else {
-                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                            finishMine();
+                                        }
+                                    }).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
+                                    Intent localIntent = new Intent();
+                                    localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                                    localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+                                    startActivity(localIntent);
                                     finishMine();
                                 }
-                            }).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            Intent localIntent = new Intent();
-                            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-                            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
-                            startActivity(localIntent);
-                            finishMine();
+                            });
+                            customBuilder.create().show();
                         }
-                    });
-                    customBuilder.create().show();
+                        break;
+                    default:
+                        onRequestPermissionsResult(requestCode, permissions, grantResults);
                 }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
+            }
+        });
+
     }
 
     @Override
@@ -816,7 +827,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                 break;
             case R.id.personUI_bottom_checkUpdataLayout:
                 // 版本更新
-                UpdateManager.getUpdateManager().checkAppUpdate(context, true);
+                UpdateManager.getUpdateManager().checkAppUpdate(this, context, true);
                 break;
             default:
                 break;
@@ -831,47 +842,46 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
         HttpHelper.post(context, Urls.logout, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在提交");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在提交");
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        SharedPreferencesUrls.getInstance().putString("uid", "");
-                        SharedPreferencesUrls.getInstance().putString("access_token", "");
-                        SharedPreferencesUrls.getInstance().putString("nickname", "");
-                        SharedPreferencesUrls.getInstance().putString("realname", "");
-                        SharedPreferencesUrls.getInstance().putString("sex", "");
-                        SharedPreferencesUrls.getInstance().putString("headimg", "");
-                        SharedPreferencesUrls.getInstance().putString("points", "");
-                        SharedPreferencesUrls.getInstance().putString("money", "");
-                        SharedPreferencesUrls.getInstance().putString("bikenum", "");
-                        SharedPreferencesUrls.getInstance().putString("iscert", "");
-//                        setAlias("");
-                        Toast.makeText(context, "恭喜您,您已安全退出!", Toast.LENGTH_SHORT).show();
-                        scrollToFinishActivity();
-                    } else {
-                        Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                SharedPreferencesUrls.getInstance().putString("uid", "");
+                                SharedPreferencesUrls.getInstance().putString("access_token", "");
+                                SharedPreferencesUrls.getInstance().putString("nickname", "");
+                                SharedPreferencesUrls.getInstance().putString("realname", "");
+                                SharedPreferencesUrls.getInstance().putString("sex", "");
+                                SharedPreferencesUrls.getInstance().putString("headimg", "");
+                                SharedPreferencesUrls.getInstance().putString("points", "");
+                                SharedPreferencesUrls.getInstance().putString("money", "");
+                                SharedPreferencesUrls.getInstance().putString("bikenum", "");
+                                SharedPreferencesUrls.getInstance().putString("iscert", "");
+//                              setAlias("");
+                                Toast.makeText(context, "恭喜您,您已安全退出!", Toast.LENGTH_SHORT).show();
+                                scrollToFinishActivity();
+                            } else {
+                                Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
+                });
+
             }
         });
     }
@@ -883,53 +893,52 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
         HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        if ("[]".equals(result.getData()) || 0 == result.getData().length()) {
-                            SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
-                            Toast.makeText(context, "暂无当前行程", Toast.LENGTH_SHORT).show();
-                        } else {
-                            CurRoadBikingBean bean = JSON.parseObject(result.getData(), CurRoadBikingBean.class);
-                            if ("1".equals(bean.getStatus())) {
-                                SharedPreferencesUrls.getInstance().putBoolean("isStop", false);
-                                UIHelper.goToAct(context, CurRoadBikingActivity.class);
-                                if (loadingDialog != null && loadingDialog.isShowing()) {
-                                    loadingDialog.dismiss();
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                if ("[]".equals(result.getData()) || 0 == result.getData().length()) {
+                                    SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
+                                    Toast.makeText(context, "暂无当前行程", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    CurRoadBikingBean bean = JSON.parseObject(result.getData(), CurRoadBikingBean.class);
+                                    if ("1".equals(bean.getStatus())) {
+                                        SharedPreferencesUrls.getInstance().putBoolean("isStop", false);
+                                        UIHelper.goToAct(context, CurRoadBikingActivity.class);
+                                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                                            loadingDialog.dismiss();
+                                        }
+                                    } else {
+                                        SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
+                                        UIHelper.goToAct(context, CurRoadBikedActivity.class);
+                                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                                            loadingDialog.dismiss();
+                                        }
+                                    }
                                 }
                             } else {
-                                SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
-                                UIHelper.goToAct(context, CurRoadBikedActivity.class);
-                                if (loadingDialog != null && loadingDialog.isShowing()) {
-                                    loadingDialog.dismiss();
-                                }
+                                Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } else {
-                        Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
+                });
+
             }
         });
     }
@@ -945,54 +954,54 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
             HttpHelper.get(context, Urls.userIndex, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("正在加载");
-                        loadingDialog.show();
-                    }
+                    onStartCommon("正在加载");
                 }
-
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
+                    onFailureCommon(throwable.toString());
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                        if (result.getFlag().equals("Success")) {
-                            UserIndexBean bean = JSON.parseObject(result.getData(), UserIndexBean.class);
-//                            myPurse.setText(bean.getMoney());
-                            myIntegral.setText(bean.getPoints());
-                            userName.setText(bean.getTelphone());
-                            if (bean.getHeadimg() != null && !"".equals(bean.getHeadimg())) {
-                                if ("gif".equalsIgnoreCase(bean.getHeadimg().substring(bean.getHeadimg().lastIndexOf(".") + 1,
-                                        bean.getHeadimg().length()))) {
-                                    Glide.with(PersonAlterActivity.this).load(Urls.host + bean.getHeadimg())
-                                            .asGif().centerCrop().into(headerImageView);
-                                } else {
-                                    Glide.with(PersonAlterActivity.this).load(Urls.host + bean.getHeadimg())
-                                            .asBitmap().centerCrop().into(headerImageView);
-                                }
-                            }
-                            if ("2".equals(bean.getIscert())) {
-                                authState.setVisibility(View.VISIBLE);
-                            } else {
-                                authState.setVisibility(View.GONE);
-                            }
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                if (result.getFlag().equals("Success")) {
+                                    UserIndexBean bean = JSON.parseObject(result.getData(), UserIndexBean.class);
+//                                  myPurse.setText(bean.getMoney());
+                                    myIntegral.setText(bean.getPoints());
+                                    userName.setText(bean.getTelphone());
+                                    if (bean.getHeadimg() != null && !"".equals(bean.getHeadimg())) {
+                                        if ("gif".equalsIgnoreCase(bean.getHeadimg().substring(bean.getHeadimg().lastIndexOf(".") + 1,
+                                                bean.getHeadimg().length()))) {
+                                            Glide.with(PersonAlterActivity.this).load(Urls.host + bean.getHeadimg())
+                                                    .asGif().centerCrop().into(headerImageView);
+                                        } else {
+                                            Glide.with(PersonAlterActivity.this).load(Urls.host + bean.getHeadimg())
+                                                    .asBitmap().centerCrop().into(headerImageView);
+                                        }
+                                    }
+                                    if ("2".equals(bean.getIscert())) {
+                                        authState.setVisibility(View.VISIBLE);
+                                    } else {
+                                        authState.setVisibility(View.GONE);
+                                    }
 
-                        } else {
-                            Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
+                    });
+
+
                 }
             });
         } else {
@@ -1022,33 +1031,33 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
             HttpHelper.get(context, Urls.account_rules, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("正在加载");
-                        loadingDialog.show();
-                    }
+                    onStartCommon("正在加载");
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
+                    onFailureCommon(throwable.toString());
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                        if (result.getFlag().equals("Success")) {
-                            rule = result.getData();
-                        }else {
-                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                if (result.getFlag().equals("Success")) {
+                                    rule = result.getData();
+                                }else {
+                                    Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                                }
+                            }catch (Exception e){
+                            }
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
                         }
-                    }catch (Exception e){
-                    }
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
+                    });
+
                 }
             });
         }

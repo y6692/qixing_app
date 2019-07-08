@@ -207,40 +207,38 @@ public class RegisterActivity extends SwipeBackActivity implements View.OnClickL
         HttpHelper.post(context, Urls.sendcode, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("请稍等");
-                    loadingDialog.show();
-                }
+                onStartCommon("请稍等");
             }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        num = 60;
-                        isCode = true;
-                        codeBtn.setText(num + "秒");
-                        codeBtn.setEnabled(false);
-                        // 开始60秒倒计时
-                        handler.sendEmptyMessageDelayed(1, 1000);
-                    } else {
-                        Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-            }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                num = 60;
+                                isCode = true;
+                                codeBtn.setText(num + "秒");
+                                codeBtn.setEnabled(false);
+                                // 开始60秒倒计时
+                                handler.sendEmptyMessageDelayed(1, 1000);
+                            } else {
+                                Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
             }
         });
     }
@@ -262,50 +260,50 @@ public class RegisterActivity extends SwipeBackActivity implements View.OnClickL
         HttpHelper.post(context, Urls.register, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("请稍等");
-                    loadingDialog.show();
-                }
+                onStartCommon("请稍等");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
-                        // 极光标记别名
-                        setAlias(bean.getUid());
-                        SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
-                        SharedPreferencesUrls.getInstance().putString("access_token",
-                                bean.getAccess_token());
-                        SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
-                        SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
-                        SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
-                        SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
-                        SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
-                        SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
-                        SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
-                        SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
-                        SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
-                        Toast.makeText(context,"恭喜您,注册成功",Toast.LENGTH_SHORT).show();
-                        scrollToFinishActivity();
-                    } else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+                                // 极光标记别名
+                                setAlias(bean.getUid());
+                                SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
+                                SharedPreferencesUrls.getInstance().putString("access_token",
+                                        bean.getAccess_token());
+                                SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
+                                SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
+                                SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
+                                SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
+                                SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
+                                SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
+                                SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
+                                SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
+                                SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+                                Toast.makeText(context,"恭喜您,注册成功",Toast.LENGTH_SHORT).show();
+                                scrollToFinishActivity();
+                            } else {
+                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
+                });
+
             }
         });
     }

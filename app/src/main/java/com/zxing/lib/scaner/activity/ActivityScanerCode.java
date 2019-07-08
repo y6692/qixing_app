@@ -820,7 +820,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                         if(BaseApplication.getInstance().isTest()){
                                             if("40001101".equals(codenum)){
-//                                        m_nowMac = "3C:A3:08:AE:BE:24";
+//                                                  m_nowMac = "3C:A3:08:AE:BE:24";
                                                 m_nowMac = "3C:A3:08:CD:9F:47";
                                             }else if("50007528".equals(codenum)){
 
@@ -829,7 +829,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                                 m_nowMac = "A4:34:F1:7B:BF:9A";
                                             }
 
-//                                    m_nowMac = "A4:34:F1:7B:BF:31";
+//                                              m_nowMac = "A4:34:F1:7B:BF:31";
                                         }
 
 
@@ -903,6 +903,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     }
 
     void tzEnd(){
+
+        Log.e("tzEnd===", oid+"==="+type);
+
         SharedPreferencesUrls.getInstance().putBoolean("isStop", false);
         SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
         SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
@@ -988,12 +991,72 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     Log.e("getStatus===", "===="+macKey);
                     keySource = keySerial;
 
+
+
+
                     m_myHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            rent();
+
+                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
+                            if (0 == Tag){
+                                customBuilder.setMessage("扫码成功,是否开锁?");
+                            }else {
+                                customBuilder.setMessage("输号成功,是否开锁?");
+                            }
+                            customBuilder.setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+
+                                    BaseApplication.getInstance().getIBLE().refreshCache();
+                                    BaseApplication.getInstance().getIBLE().close();
+                                    BaseApplication.getInstance().getIBLE().disconnect();
+//                                  BaseApplication.getInstance().getIBLE().disableBluetooth();
+                                    scrollToFinishActivity();
+
+                                }
+                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+
+                                    Log.e("scan===", "scan====1");
+
+                                    rent();
+
+                                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                        loadingDialog.setTitle("开锁中");
+                                        loadingDialog.show();
+                                    }
+
+                                    m_myHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                                loadingDialog.dismiss();
+                                            }
+
+                                            String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+                                            String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+
+                                            Log.e("scan===2", oid+"===="+referLatitude+"===="+isFinishing());
+
+                                            if(!isFinishing()){
+                                                submit(uid, access_token);
+                                            }
+                                        }
+                                    }, 10 * 1000);
+
+                                    Log.e("scan===", "scan===="+loadingDialog);
+
+                                }
+                            }).setHint(false);
+                            customBuilder.create().show();
+
                         }
                     });
+
+
 
                 }
 
@@ -1388,7 +1451,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     if(cn<15){
                         checkConnect();
                     }else{
-                        Toast.makeText(context,"扫码唤醒失败，换辆车试试吧！",5 * 1000).show();
+                        Toast.makeText(context,"扫码唤醒失败，换辆车试试吧！",Toast.LENGTH_LONG).show();
                         scrollToFinishActivity();
                     }
 
@@ -1775,11 +1838,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     String uid = SharedPreferencesUrls.getInstance().getString("uid","");
                                     String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
-//                                    Log.e("scan===1", BaseApplication.getInstance().getIBLE().getLockStatus()+"===="+oid+"===="+referLatitude);
+                                    Log.e("scan===2", oid+"===="+referLatitude);
+
+                                    if(!isFinishing()){
+                                        submit(uid, access_token);
+                                    }
 
 //                                    if (BaseApplication.getInstance().getIBLE().getLockStatus()){
-                                        Log.e("scan===2", oid+"===="+referLatitude);
-                                        submit(uid, access_token);
+
 //                                    }
                                 }
                             }, 10 * 1000);
@@ -1872,7 +1938,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                     ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
 
-                                    if(!"5".equals(type)){
+                                    if(!"5".equals(type) && !"6".equals(type)){
                                         tzEnd();
                                     }
                                 }
@@ -1922,7 +1988,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     onFailureCommon(throwable.toString());
                 }
 
-
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, final String responseString) {
 
@@ -1932,11 +1997,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             try {
                                 ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                                 if (result.getFlag().equals("Success")) {
-
-                                    Log.e("scan===addOrderbluelock", "===" + type);
-
                                     CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
-                                    oid = bean.getOid();
+                                    oid = bean.getOrderid();
+
+                                    Log.e("scan===addOrderbluelock", oid + "===" + type);
 
                                     if("4".equals(type)){
                                         bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
@@ -1978,22 +2042,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                     }else if("5".equals(type) || "6".equals(type)){
 
-                                        m_myHandler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                openBleLock(null);
-                                            }
-                                        });
+                                        openBleLock(null);
 
                                     }else{
                                         Log.e("scan===lock1", "===");
 
-                                        m_myHandler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                BaseApplication.getInstance().getIBLE().openLock();
-                                            }
-                                        });
+                                        BaseApplication.getInstance().getIBLE().openLock();
 
                                         Log.e("scan===lock2", "===");
                                     }

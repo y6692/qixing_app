@@ -231,52 +231,50 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
         HttpHelper.post(context, Urls.loginNormal, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在登录");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在登录");
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
-                        // 极光标记别名
-                        setAlias(bean.getUid());
-                        SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
-                        SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
-                        SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
-                        SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
-                        SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
-                        SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
-                        SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
-                        SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
-                        SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
-                        SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
-                        SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
-                        Toast.makeText(context, "恭喜您,登录成功", Toast.LENGTH_SHORT).show();
-                        scrollToFinishActivity();
-                    } else {
-                        Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
-                }
 
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+                                // 极光标记别名
+                                setAlias(bean.getUid());
+                                SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
+                                SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
+                                SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
+                                SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
+                                SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
+                                SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
+                                SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
+                                SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
+                                SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
+                                SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
+                                SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+                                Toast.makeText(context, "恭喜您,登录成功", Toast.LENGTH_SHORT).show();
+                                scrollToFinishActivity();
+                            } else {
+                                Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+                        }
+                    }
+                });
             }
         });
     }

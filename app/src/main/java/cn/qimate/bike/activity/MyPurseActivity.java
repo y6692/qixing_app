@@ -168,48 +168,53 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
             HttpHelper.post(AppManager.getAppManager().currentActivity(), Urls.accesslogin, params,
                     new TextHttpResponseHandler() {
                         @Override
-                        public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                            try {
-                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                                if (result.getFlag().equals("Success")) {
-                                    UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
-                                    // 极光标记别名
+                        public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                            m_myHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                        if (result.getFlag().equals("Success")) {
+                                            UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+                                            // 极光标记别名
 
-                                    Log.e("RefreshLogin===", bean.getSpecialdays()+"==="+bean.getEbike_specialdays());
+                                            Log.e("RefreshLogin===", bean.getSpecialdays()+"==="+bean.getEbike_specialdays());
 
-                                    SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
-                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
-                                    SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
-                                    SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
-                                    SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
-                                    SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
-                                    SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
-                                    SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
-                                    SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
-                                    SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
-                                    SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
-                                    SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+                                            SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
+                                            SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
+                                            SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
+                                            SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
+                                            SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
+                                            SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
+                                            SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
+                                            SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
+                                            SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
+                                            SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
+                                            SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
+                                            SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
 
-                                    money.setText(bean.getMoney());
-                                } else {
-                                    if (BaseApplication.getInstance().getIBLE() != null){
-                                        if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
-                                            BaseApplication.getInstance().getIBLE().refreshCache();
-                                            BaseApplication.getInstance().getIBLE().close();
-                                            BaseApplication.getInstance().getIBLE().stopScan();
+                                            money.setText(bean.getMoney());
+                                        } else {
+                                            if (BaseApplication.getInstance().getIBLE() != null){
+                                                if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                                                    BaseApplication.getInstance().getIBLE().refreshCache();
+                                                    BaseApplication.getInstance().getIBLE().close();
+                                                    BaseApplication.getInstance().getIBLE().stopScan();
+                                                }
+                                            }
+                                            SharedPreferencesUrls.getInstance().putString("uid", "");
+                                            SharedPreferencesUrls.getInstance().putString("access_token","");
                                         }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
-                                    SharedPreferencesUrls.getInstance().putString("uid", "");
-                                    SharedPreferencesUrls.getInstance().putString("access_token","");
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            });
+
                         }
 
                         @Override
-                        public void onFailure(int statusCode, Header[] headers, String responseString,
-                                              Throwable throwable) {
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                         }
                     });
         }
@@ -367,67 +372,67 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
             HttpHelper.post(context, Urls.userMonthIndex, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("正在提交");
-                        loadingDialog.show();
-                    }
+                    onStartCommon("正在提交");
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
+                    onFailureCommon(throwable.toString());
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                        if (result.getFlag().equals("Success")) {
-//                            Toast.makeText(context,"获取成功",Toast.LENGTH_SHORT).show();
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                if (result.getFlag().equals("Success")) {
+//                                  Toast.makeText(context,"获取成功",Toast.LENGTH_SHORT).show();
 
-                            UserMonthIndexBean bean = JSON.parseObject(result.getData(), UserMonthIndexBean.class);
+                                    UserMonthIndexBean bean = JSON.parseObject(result.getData(), UserMonthIndexBean.class);
 
-                            bike_open_state = bean.getBike_open_state();
+                                    bike_open_state = bean.getBike_open_state();
 
-                            if("0".equals(bike_open_state)){
-                                monthCardBike.setVisibility(View.GONE);
-                                monthCardEbike.setVisibility(View.GONE);
+                                    if("0".equals(bike_open_state)){
+                                        monthCardBike.setVisibility(View.GONE);
+                                        monthCardEbike.setVisibility(View.GONE);
 
-//                                monthCardBike.setVisibility(View.VISIBLE);
-//                                monthCardEbike.setVisibility(View.GONE);
+//                                      monthCardBike.setVisibility(View.VISIBLE);
+//                                      monthCardEbike.setVisibility(View.GONE);
 
-//                                monthCardBike.setVisibility(View.VISIBLE);
-//                                monthCardEbike.setVisibility(View.VISIBLE);
-                            }else if("1".equals(bike_open_state)){
-                                monthCardBike.setVisibility(View.VISIBLE);
-                                monthCardEbike.setVisibility(View.GONE);
-                            }else if("2".equals(bike_open_state)){
-                                monthCardBike.setVisibility(View.GONE);
-                                monthCardEbike.setVisibility(View.VISIBLE);
-                            }else if("3".equals(bike_open_state)){
-                                monthCardBike.setVisibility(View.VISIBLE);
-                                monthCardEbike.setVisibility(View.VISIBLE);
+//                                      monthCardBike.setVisibility(View.VISIBLE);
+//                                      monthCardEbike.setVisibility(View.VISIBLE);
+                                    }else if("1".equals(bike_open_state)){
+                                        monthCardBike.setVisibility(View.VISIBLE);
+                                        monthCardEbike.setVisibility(View.GONE);
+                                    }else if("2".equals(bike_open_state)){
+                                        monthCardBike.setVisibility(View.GONE);
+                                        monthCardEbike.setVisibility(View.VISIBLE);
+                                    }else if("3".equals(bike_open_state)){
+                                        monthCardBike.setVisibility(View.VISIBLE);
+                                        monthCardEbike.setVisibility(View.VISIBLE);
+                                    }
+
+                                    bike_img_url = bean.getBike_img_url();
+                                    ebike_img_url = bean.getEbike_img_url();
+
+                                    bike_desc = bean.getBike_desc();
+                                    ebike_desc = bean.getEbike_desc();
+
+                                    if (dialog.isShowing()) {
+                                        dialog.dismiss();
+                                    }
+                                }else {
+                                    Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                                }
+                            }catch (Exception e){
                             }
-
-                            bike_img_url = bean.getBike_img_url();
-                            ebike_img_url = bean.getEbike_img_url();
-
-                            bike_desc = bean.getBike_desc();
-                            ebike_desc = bean.getEbike_desc();
-
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
                             }
-                        }else {
-                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
                         }
-                    }catch (Exception e){
-                    }
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
+                    });
+
                 }
             });
         }
@@ -448,36 +453,36 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
             HttpHelper.post(context, Urls.activation, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("正在提交");
-                        loadingDialog.show();
-                    }
+                    onStartCommon("正在提交");
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
+                    onFailureCommon(throwable.toString());
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                        if (result.getFlag().equals("Success")) {
-                            Toast.makeText(context,"恭喜您，兑换成功",Toast.LENGTH_SHORT).show();
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                if (result.getFlag().equals("Success")) {
+                                    Toast.makeText(context,"恭喜您，兑换成功",Toast.LENGTH_SHORT).show();
+                                    if (dialog.isShowing()) {
+                                        dialog.dismiss();
+                                    }
+                                }else {
+                                    Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                                }
+                            }catch (Exception e){
                             }
-                        }else {
-                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
                         }
-                    }catch (Exception e){
-                    }
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
+                    });
+
                 }
             });
         }

@@ -379,6 +379,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             }
             if(mCircle!=null){
                 mCircle.remove();
+                mCircle = null;
             }
 
 
@@ -1063,9 +1064,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     BaseApplication.getInstance().getIBLE().connect(m_nowMac, BikeFragment.this);
                     break;
                 case 1:
-//                    mapView.onCreate(savedIS);
-                    getNetTime();
-
                     break;
                 case 2:
                     if (lockLoading != null && lockLoading.isShowing()){
@@ -1194,7 +1192,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
             // 关闭缓存机制
             mLocationOption.setLocationCacheEnable(false);
-
             //设置是否只定位一次,默认为false
             mLocationOption.setOnceLocation(false);
             //设置是否强制刷新WIFI，默认为强制刷新
@@ -1270,7 +1267,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     } else {
                         centerMarker.remove();
                         mCircle.remove();
-                        centerMarker=null;
+                        centerMarker = null;
+                        mCircle = null;
 
                         if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
                             isContainsList.clear();
@@ -2943,15 +2941,16 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
      * @param radius  半径
      */
     private void addCircle(LatLng latlng, double radius) {
-        CircleOptions options = new CircleOptions();
-        options.strokeWidth(1f);
-        options.fillColor(FILL_COLOR);
-        options.strokeColor(STROKE_COLOR);
-        options.center(latlng);
-        options.radius(radius);
-        mCircle = aMap.addCircle(options);
+        if(mCircle == null){
+            CircleOptions options = new CircleOptions();
+            options.strokeWidth(1f);
+            options.fillColor(FILL_COLOR);
+            options.strokeColor(STROKE_COLOR);
+            options.center(latlng);
+            options.radius(radius);
+            mCircle = aMap.addCircle(options);
+        }
     }
-
 
     public void onTouch(MotionEvent motionEvent) {
         Log.e("main===onTouch", "===" + motionEvent.getAction());
@@ -3609,62 +3608,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         });
 
     }
-
-
-
-
-    //获取网络时间
-    private void getNetTime() {
-
-        Log.e("getNetTime==", "===");
-
-        URL url = null;//取得资源对象
-        final DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-        try {
-//			url = new URL("http://www.baidu.com");
-            url = new URL("http://www.ntsc.ac.cn");//中国科学院国家授时中心
-            //url = new URL("http://www.bjtime.cn");
-            URLConnection uc = url.openConnection();//生成连接对象
-            uc.connect(); //发出连接
-            long ld = uc.getDate(); //取得网站日期时间
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(ld);
-            final String format = formatter.format(calendar.getTime());
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (SharedPreferencesUrls.getInstance().getString("date","") != null &&
-                            !"".equals(SharedPreferencesUrls.getInstance().getString("date",""))){
-                        if (!format.equals(SharedPreferencesUrls.getInstance().getString("date",""))){
-                            UpdateManager.getUpdateManager().checkAppUpdate(context, true);
-                            SharedPreferencesUrls.getInstance().putString("date",""+format);
-                        }
-                    }else {
-                        // 版本更新
-                        UpdateManager.getUpdateManager().checkAppUpdate(context, true);
-                        SharedPreferencesUrls.getInstance().putString("date",""+format);
-                    }
-                }
-            });
-        } catch (Exception e) {
-            String date = formatter.format(new Date());
-            if (SharedPreferencesUrls.getInstance().getString("date","") != null &&
-                    !"".equals(SharedPreferencesUrls.getInstance().getString("date",""))){
-                if (!date.equals(SharedPreferencesUrls.getInstance().getString("date",""))){
-                    UpdateManager.getUpdateManager().checkAppUpdate(context, true);
-                    SharedPreferencesUrls.getInstance().putString("date",""+date);
-                }
-            }else {
-                // 版本更新
-                UpdateManager.getUpdateManager().checkAppUpdate(context, true);
-                SharedPreferencesUrls.getInstance().putString("date",""+date);
-            }
-            e.printStackTrace();
-        }
-    }
-
-
-
 
 
 

@@ -388,10 +388,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
             if(centerMarker!=null){
                 centerMarker.remove();
-                centerMarker=null;
+                centerMarker = null;
             }
             if(mCircle!=null){
                 mCircle.remove();
+                mCircle = null;
             }
 
             if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
@@ -430,7 +431,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         Log.e("main===schoolRange2", "===");
 
         RequestParams params = new RequestParams();
-        params.put("type", 1);
+        params.put("type", 2);
 
         HttpHelper.get(context, Urls.schoolRange, params, new TextHttpResponseHandler() {
             @Override
@@ -470,20 +471,15 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                     polygon = aMap.addPolygon(pOption.strokeWidth(2)
                                             .strokeColor(Color.argb(255, 48, 191, 186))
-//                                            .strokeColor(Color.argb(255, 18, 237, 226))
                                             .fillColor(Color.argb(75, 18, 237, 226)));
-
-//                                    .strokeColor(Color.argb(255, 48, 191, 186))
-
 
                                     if(!isHidden){
                                         pOptions.add(polygon);
-
                                         isContainsList.add(polygon.contains(myLocation));
                                     }
                                 }
 
-//                        minPolygon();
+//                              minPolygon();
 
                             }else {
                                 ToastUtil.showMessageApp(context,result.getMsg());
@@ -551,6 +547,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                         centerMarker.remove();
                         centerMarker = null;
                         mCircle.remove();
+                        mCircle = null;
 
                         if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
                             isContainsList.clear();
@@ -1150,9 +1147,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                     BaseApplication.getInstance().getIBLE().connect(m_nowMac, EbikeFragment.this);
                     break;
                 case 1:
-//                    mapView.onCreate(savedIS);
-                    getNetTime();
-
                     break;
                 case 2:
                     if (lockLoading != null && lockLoading.isShowing()){
@@ -2930,13 +2924,15 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
      * @param radius  半径
      */
     private void addCircle(LatLng latlng, double radius) {
-        CircleOptions options = new CircleOptions();
-        options.strokeWidth(1f);
-        options.fillColor(FILL_COLOR);
-        options.strokeColor(STROKE_COLOR);
-        options.center(latlng);
-        options.radius(radius);
-        mCircle = aMap.addCircle(options);
+        if(mCircle == null){
+            CircleOptions options = new CircleOptions();
+            options.strokeWidth(1f);
+            options.fillColor(FILL_COLOR);
+            options.strokeColor(STROKE_COLOR);
+            options.center(latlng);
+            options.radius(radius);
+            mCircle = aMap.addCircle(options);
+        }
     }
 
 
@@ -3511,59 +3507,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
 
     }
-
-
-
-
-    //获取网络时间
-    private void getNetTime() {
-        URL url = null;//取得资源对象
-        final DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-        try {
-//			url = new URL("http://www.baidu.com");
-            url = new URL("http://www.ntsc.ac.cn");//中国科学院国家授时中心
-            //url = new URL("http://www.bjtime.cn");
-            URLConnection uc = url.openConnection();//生成连接对象
-            uc.connect(); //发出连接
-            long ld = uc.getDate(); //取得网站日期时间
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(ld);
-            final String format = formatter.format(calendar.getTime());
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (SharedPreferencesUrls.getInstance().getString("date","") != null &&
-                            !"".equals(SharedPreferencesUrls.getInstance().getString("date",""))){
-                        if (!format.equals(SharedPreferencesUrls.getInstance().getString("date",""))){
-                            UpdateManager.getUpdateManager().checkAppUpdate(context, true);
-                            SharedPreferencesUrls.getInstance().putString("date",""+format);
-                        }
-                    }else {
-                        // 版本更新
-                        UpdateManager.getUpdateManager().checkAppUpdate(context, true);
-                        SharedPreferencesUrls.getInstance().putString("date",""+format);
-                    }
-                }
-            });
-        } catch (Exception e) {
-            String date = formatter.format(new Date());
-            if (SharedPreferencesUrls.getInstance().getString("date","") != null &&
-                    !"".equals(SharedPreferencesUrls.getInstance().getString("date",""))){
-                if (!date.equals(SharedPreferencesUrls.getInstance().getString("date",""))){
-                    UpdateManager.getUpdateManager().checkAppUpdate(context, true);
-                    SharedPreferencesUrls.getInstance().putString("date",""+date);
-                }
-            }else {
-                // 版本更新
-                UpdateManager.getUpdateManager().checkAppUpdate(context, true);
-                SharedPreferencesUrls.getInstance().putString("date",""+date);
-            }
-            e.printStackTrace();
-        }
-    }
-
-
-
 
 
 

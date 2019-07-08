@@ -406,6 +406,8 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
         super.onDestroy();
 
         unregisterReceiver(mMessageReceiver);
+
+        m_myHandler.removeCallbacksAndMessages(null);
     }
 
     /**

@@ -93,16 +93,22 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
     }
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
-            if("1".equals(gamestatus)){
-                UIHelper.goToAct(context,MainActivity.class);
-            }else{
-                Intent intent2 = new Intent(context, WebviewActivity.class);
-                intent2.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
-                intent2.putExtra("title", "活动详情");
-                startActivity(intent2);
-            }
-            scrollToFinishActivity();
+        public void onReceive(final Context context, Intent intent) {
+            m_myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if("1".equals(gamestatus)){
+                        UIHelper.goToAct(context,MainActivity.class);
+                    }else{
+                        Intent intent2 = new Intent(context, WebviewActivity.class);
+                        intent2.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
+                        intent2.putExtra("title", "活动详情");
+                        startActivity(intent2);
+                    }
+                    scrollToFinishActivity();
+                }
+            });
+
         }
     };
     private void initView(){
@@ -320,88 +326,106 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
             HttpHelper.post(context, Urls.monthcard, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("正在提交");
-                        loadingDialog.show();
-                    }
+                    onStartCommon("正在提交");
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
+                    onFailureCommon(throwable.toString());
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                        Log.e("userPay===", "==="+carType);
+                                Log.e("userPay===", "==="+carType);
 
-                        if (result.getFlag().equals("Success")) {
-                            osn = result.getData();
-                            if ("1".equals(paytype)){
-                                show_alipay(osn,uid,access_token);
-                            }else if("2".equals(paytype)){
-                                show_wxpay(osn,uid,access_token);
-                            }else {
-                                banlancePay(osn,uid,access_token);
+                                if (result.getFlag().equals("Success")) {
+                                    osn = result.getData();
+                                    if ("1".equals(paytype)){
+                                        show_alipay(osn,uid,access_token);
+                                    }else if("2".equals(paytype)){
+                                        show_wxpay(osn,uid,access_token);
+                                    }else {
+                                        banlancePay(osn,uid,access_token);
+                                    }
+                                } else {
+                                    Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        } else {
-                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
+                    });
+
                 }
             });
         }
     }
 
     public void show_alipay(final String osn,String uid,String access_token) {
-        Toast.makeText(context, "正在调起支付宝支付...", Toast.LENGTH_LONG).show();
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "正在调起支付宝支付...", Toast.LENGTH_LONG).show();
+            }
+        });
+
         RequestParams params = new RequestParams();
         params.put("uid",uid);
         params.put("access_token",access_token);
         params.put("osn", osn);
         HttpHelper.get(context, Urls.monthAlipay, params, new TextHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        final String payInfo = result.getData();
-                        Runnable payRunnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                // 构造PayTask 对象
-                                PayTask alipay = new PayTask(PayMontCartActivity.this);
-                                // 调用支付接口，获取支付结果
-                                String result = alipay.pay(payInfo, true);
-                                Message msg = new Message();
-                                msg.what = SDK_PAY_FLAG;
-                                msg.obj = result;
-                                mHandler.sendMessage(msg);
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                final String payInfo = result.getData();
+                                Runnable payRunnable = new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // 构造PayTask 对象
+                                        PayTask alipay = new PayTask(PayMontCartActivity.this);
+                                        // 调用支付接口，获取支付结果
+                                        String result = alipay.pay(payInfo, true);
+                                        Message msg = new Message();
+                                        msg.what = SDK_PAY_FLAG;
+                                        msg.obj = result;
+                                        mHandler.sendMessage(msg);
+                                    }
+                                };
+                                // 必须异步调用
+                                Thread payThread = new Thread(payRunnable);
+                                payThread.start();
+                            } else {
+                                UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
                             }
-                        };
-                        // 必须异步调用
-                        Thread payThread = new Thread(payRunnable);
-                        payThread.start();
-                    } else {
-                        UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                });
+
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                UIHelper.ToastError(context, throwable.toString());
+            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        UIHelper.ToastError(context, throwable.toString());
+                    }
+                });
+
             }
         });
     }
@@ -446,53 +470,71 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
 
     public void show_wxpay(final String osn,String uid,String access_token) {
         SharedPreferencesUrls.getInstance().putBoolean("isTreasure",false);
-        Toast.makeText(context, "正在调起微信支付...", Toast.LENGTH_LONG).show();
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "正在调起微信支付...", Toast.LENGTH_LONG).show();
+            }
+        });
+
         RequestParams params = new RequestParams();
         params.put("uid",uid);
         params.put("access_token",access_token);
         params.add("osn", osn);
         HttpHelper.get(context, Urls.wxpay, params, new TextHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
-                        api.registerApp("wx86d98ec252f67d07");
-                        JSONObject jsonObject = new JSONObject(result.getData());
-                        PayReq req = new PayReq();
-                        req.appId = jsonObject.getString("appid");// wpay.getAppid();//
-                        // 微信appId
-                        req.packageValue = jsonObject.getString("package");// wpay.getPackageValue();//
-                        // 包
-                        req.extData = "app data"; // optional
-                        req.timeStamp = jsonObject.getString("timestamp");// wpay.getTimeStamp();//
-                        // 时间戳
-                        req.partnerId = jsonObject.getString("partnerid");// wpay.getPartnerId();//
-                        // 商户号"
-                        req.prepayId = jsonObject.getString("prepayid");// wpay.getPrepayId();//
-                        // 预支付订单号
-                        req.nonceStr = jsonObject.getString("noncestr");// wpay.getNonceStr();//
-                        // 随机字符串
-                        req.sign = jsonObject.getString("sign");// wpay.getSign();//
-                        // 后台返回的签名
-                        // 调微信支付
-                        if (api.isWXAppInstalled() && api.isWXAppSupportAPI()) {
-                            api.sendReq(req);
-                        } else {
-                            Toast.makeText(context, "请下载最新版微信App", Toast.LENGTH_LONG).show();
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
+                                api.registerApp("wx86d98ec252f67d07");
+                                JSONObject jsonObject = new JSONObject(result.getData());
+                                PayReq req = new PayReq();
+                                req.appId = jsonObject.getString("appid");// wpay.getAppid();//
+                                // 微信appId
+                                req.packageValue = jsonObject.getString("package");// wpay.getPackageValue();//
+                                // 包
+                                req.extData = "app data"; // optional
+                                req.timeStamp = jsonObject.getString("timestamp");// wpay.getTimeStamp();//
+                                // 时间戳
+                                req.partnerId = jsonObject.getString("partnerid");// wpay.getPartnerId();//
+                                // 商户号"
+                                req.prepayId = jsonObject.getString("prepayid");// wpay.getPrepayId();//
+                                // 预支付订单号
+                                req.nonceStr = jsonObject.getString("noncestr");// wpay.getNonceStr();//
+                                // 随机字符串
+                                req.sign = jsonObject.getString("sign");// wpay.getSign();//
+                                // 后台返回的签名
+                                // 调微信支付
+                                if (api.isWXAppInstalled() && api.isWXAppSupportAPI()) {
+                                    api.sendReq(req);
+                                } else {
+                                    Toast.makeText(context, "请下载最新版微信App", Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } else {
-                        UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                });
+
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                UIHelper.ToastError(context, throwable.toString());
+            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        UIHelper.ToastError(context, throwable.toString());
+                    }
+                });
+
             }
         });
     }
@@ -506,56 +548,53 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
         HttpHelper.post(context, Urls.payMonth, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()){
-                    loadingDialog.show();
-                    loadingDialog.setTitle("正在提交");
-                }
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        Toast.makeText(context, "恭喜您,支付成功", Toast.LENGTH_SHORT).show();
-
-                        if("1".equals(gamestatus)){
-                            UIHelper.goToAct(context,MainActivity.class);
-                        }else{
-                            Intent intent = new Intent(context, WebviewActivity.class);
-                            intent.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
-                            intent.putExtra("title", "活动详情");
-                            startActivity(intent);
-                        }
-
-//                        http://www.7mate.cn/Home/Games/index.html?from=singlemessage
-
-                        scrollToFinishActivity();
-                    } else {
-                        UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }finally {
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                }
+                onStartCommon("正在提交");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                Toast.makeText(context, "恭喜您,支付成功", Toast.LENGTH_SHORT).show();
+
+                                if("1".equals(gamestatus)){
+                                    UIHelper.goToAct(context,MainActivity.class);
+                                }else{
+                                    Intent intent = new Intent(context, WebviewActivity.class);
+                                    intent.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
+                                    intent.putExtra("title", "活动详情");
+                                    startActivity(intent);
+                                }
+
+                                scrollToFinishActivity();
+                            } else {
+                                UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }finally {
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+                        }
+                    }
+                });
+
+            }
+
         });
     }
     //获取月卡配置接口
     public void UserMonth() {
-
         Log.e("UserMonth===000", carType+"==="+SharedPreferencesUrls.getInstance().getString("uid","")+"==="+SharedPreferencesUrls.getInstance().getString("access_token",""));
-
 
         RequestParams params = new RequestParams();
         params.put("uid",SharedPreferencesUrls.getInstance().getString("uid",""));
@@ -564,58 +603,61 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
         HttpHelper.get(context, Urls.userMonth,params,new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()){
-                    loadingDialog.show();
-                    loadingDialog.setTitle("正在提交");
-                }
-            }
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        PayMonthCartBean bean = JSON.parseObject(result.getData(),PayMonthCartBean.class);
-
-                        Log.e("UserMonth===", SharedPreferencesUrls.getInstance().getString("uid","")+"==="+SharedPreferencesUrls.getInstance().getString("access_token","")+"==="+bean.getMonth_money_original());
-
-                        type1Text.setText(bean.getMonth_money()+"元");
-                        type1Text2.setText(bean.getMonth_money_original()+"元");
-                        type1Text3.setText(bean.getMonth_money_discount());
-                        days1Text.setText("("+bean.getMonth_day()+"天不限次)");
-
-                        type2Text.setText(bean.getQuarter_money()+"元");
-                        type2Text2.setText(bean.getQuarter_money_original()+"元");
-                        type2Text3.setText(bean.getQuarter_money_discount());
-                        days2Text.setText("("+bean.getQuarter_day()+"天不限次)");
-
-                        type3Text.setText(bean.getWeek_money()+"元");
-                        days3Text.setText("("+bean.getWeek_day()+"天不限次)");
-
-                        moneyText.setText(type2Text.getText().toString().trim());
-                        daysText.setText(days2Text.getText().toString().trim());
-
-                        gamestatus = bean.getGamestatus();
-
-                        Log.e("userMonth===", "==="+bean.getGamestatus());
-
-                    } else {
-                        UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }finally {
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                }
+                onStartCommon("正在提交");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
+
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                PayMonthCartBean bean = JSON.parseObject(result.getData(),PayMonthCartBean.class);
+
+                                Log.e("UserMonth===", SharedPreferencesUrls.getInstance().getString("uid","")+"==="+SharedPreferencesUrls.getInstance().getString("access_token","")+"==="+bean.getMonth_money_original());
+
+                                type1Text.setText(bean.getMonth_money()+"元");
+                                type1Text2.setText(bean.getMonth_money_original()+"元");
+                                type1Text3.setText(bean.getMonth_money_discount());
+                                days1Text.setText("("+bean.getMonth_day()+"天不限次)");
+
+                                type2Text.setText(bean.getQuarter_money()+"元");
+                                type2Text2.setText(bean.getQuarter_money_original()+"元");
+                                type2Text3.setText(bean.getQuarter_money_discount());
+                                days2Text.setText("("+bean.getQuarter_day()+"天不限次)");
+
+                                type3Text.setText(bean.getWeek_money()+"元");
+                                days3Text.setText("("+bean.getWeek_day()+"天不限次)");
+
+                                moneyText.setText(type2Text.getText().toString().trim());
+                                daysText.setText(days2Text.getText().toString().trim());
+
+                                gamestatus = bean.getGamestatus();
+
+                                Log.e("userMonth===", "==="+bean.getGamestatus());
+
+                            } else {
+                                UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }finally {
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+                        }
+                    }
+                });
+
+            }
+
         });
     }
     @Override
