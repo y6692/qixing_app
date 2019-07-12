@@ -167,6 +167,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     protected AMap aMap;
     protected BitmapDescriptor successDescripter;
+    private BitmapDescriptor bikeDescripter_red;
+    private BitmapDescriptor bikeDescripter_yellow;
+    private BitmapDescriptor bikeDescripter_green;
     private MapView mapView;
     //	private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
@@ -407,7 +410,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             if(referLatitude!=0 && referLongitude!=0){
                 myLocation = new LatLng(referLatitude, referLongitude);
 
-//                initNearby(referLatitude, referLongitude);
+                initNearby(referLatitude, referLongitude);
 //                aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
 
                 addChooseMarker();
@@ -539,7 +542,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                         mFirstFix = false;
 //                        schoolRange();
-//                        initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
+                        initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
                         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
                     } else {
                         Log.e("main===Changed_EB2", isContainsList.contains(true) + "》》》" + amapLocation.getAccuracy() + "===" + macList.size() + "===" + type);
@@ -649,7 +652,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         Log.e("main===ChangeFinish_Eb", isContainsList.contains(true) + "》》》" + cameraPosition.target.latitude + "===" + centerMarker);
 
         if (isUp && !isHidden){
-//            initNearby(cameraPosition.target.latitude, cameraPosition.target.longitude);
+            initNearby(cameraPosition.target.latitude, cameraPosition.target.longitude);
 
             if (centerMarker != null) {
 //				animMarker();
@@ -766,8 +769,14 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                             for (int i = 0; i < array.length(); i++){
                                 NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
                                 // 加入自定义标签
+//                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(
+//                                        Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
+
                                 MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(
-                                        Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
+                                        Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude())))
+                                        .icon("1".equals(bean.getQuantity_level())?bikeDescripter_green:"2".equals(bean.getQuantity_level())?bikeDescripter_yellow:bikeDescripter_red);
+
+
                                 Marker bikeMarker = aMap.addMarker(bikeMarkerOption);
                                 bikeMarkerList.add(bikeMarker);
                             }
@@ -868,6 +877,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         aMap.moveCamera(cameraUpdate);
         successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
         bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.ebike_icon);
+        bikeDescripter_red = BitmapDescriptorFactory.fromResource(R.drawable.ebike_red_icon);
+        bikeDescripter_yellow = BitmapDescriptorFactory.fromResource(R.drawable.ebike_yellow_icon);
+        bikeDescripter_green = BitmapDescriptorFactory.fromResource(R.drawable.ebike_green_icon);
 
         aMap.setOnMapTouchListener(this);
         setUpLocationStyle();

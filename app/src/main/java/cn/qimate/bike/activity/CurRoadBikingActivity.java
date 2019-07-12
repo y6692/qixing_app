@@ -321,6 +321,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     String test_xinbiao = "";
     private boolean isUp = false;
 
+    private PolylineOptions mPolyoptions;
+
     @Override
     @TargetApi(23)
     protected void onCreate(Bundle savedInstanceState) {
@@ -612,6 +614,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         initSite();
 
+        mPolyoptions = new PolylineOptions();
+        mPolyoptions.width(40f);
+        mPolyoptions.setCustomTexture(BitmapDescriptorFactory.fromResource(R.drawable.grasp_trace_line));
+
         uid = SharedPreferencesUrls.getInstance().getString("uid","");
         access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
@@ -694,7 +700,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     }
 
 
-        @Override
+    @Override
     protected void onResume() {
         isForeground = true;
         isStop = false;
@@ -1441,7 +1447,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                     Log.e("getCurrentBiking===", SharedPreferencesUrls.getInstance().getString("tempStat","0")+"==="+type+"==="+oid);
 
-//                            hintText.setText("校内地图红色区域关锁，并点击结束");
+//                                  hintText.setText("校内地图红色区域关锁，并点击结束");
 
                                     if ("1".equals(bean.getType())){
                                         hintText.setText("还车须至校园地图"+("4".equals(type)?"绿色":"红色")+"区域，关锁并拨乱密码后点击结束！");
@@ -3273,7 +3279,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     }
 
     protected void submit(String uid,String access_token){
-        Log.e("submit===", macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
+        Log.e("submit===", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
 
         if(BaseApplication.getInstance().isTestLog()){
             m_myHandler.post(new Runnable() {
@@ -3314,7 +3320,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             params.put("xinbiao_name", "");
             params.put("xinbiao_mac", macList.size() > 0?macList.get(0):"");
 
-            if (macList2.size() > 0){
+            if(major!=0){
+                Log.e("submit===221", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
+                params.put("back_type", "iBeacon_Lo");
+            }else if(macList.size() > 0){
+                Log.e("submit===222", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
+                params.put("back_type", "iBeacon_Pho");
+            }else if(isContainsList.contains(true)){
+                params.put("back_type", "GPS");
+            }
+
+            if (macList.size() > 0){
                 params.put("xinbiao", macList.get(0));
             }
             HttpHelper.post(this, Urls.backBikescan, params, new TextHttpResponseHandler() {
@@ -4212,24 +4228,44 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
             if (amapLocation != null && amapLocation.getErrorCode() == 0) {
                 if (0.0 != amapLocation.getLatitude() && 0.0 != amapLocation.getLongitude()){
-                    String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude","");
-                    String longitude = SharedPreferencesUrls.getInstance().getString("biking_longitude","");
+                    String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude","0.0");
+                    String longitude = SharedPreferencesUrls.getInstance().getString("biking_longitude","0.0");
 
-//                    if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)){
-//                        if (AMapUtils.calculateLineDistance(new LatLng(
-//                                Double.parseDouble(latitude),Double.parseDouble(longitude)
-//                        ), new LatLng(amapLocation.getLatitude(),amapLocation.getLongitude())) > 10){
-//                            SharedPreferencesUrls.getInstance().putString("biking_latitude",""+amapLocation.getLatitude());
-//                            SharedPreferencesUrls.getInstance().putString("biking_longitude",""+amapLocation.getLongitude());
-//                            addMaplocation(amapLocation.getLatitude(),amapLocation.getLongitude());
-//                        }
-//                    }
                     if (mListener != null) {
                         mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
                     }
                     referLatitude = amapLocation.getLatitude();
                     referLongitude = amapLocation.getLongitude();
                     myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
+
+//                    Log.e("biking===Changed2", latitude+"==="+amapLocation.getLatitude());
+
+//                    if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)){
+//                        macText.setText(latitude+"==="+amapLocation.getLatitude()+"==="+AMapUtils.calculateLineDistance(new LatLng(
+//                                Double.parseDouble(latitude),Double.parseDouble(longitude)
+//                        ), new LatLng(amapLocation.getLatitude(),amapLocation.getLongitude())));
+//                    }
+
+
+                    if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)){
+
+                        if (AMapUtils.calculateLineDistance(new LatLng(
+                                Double.parseDouble(latitude),Double.parseDouble(longitude)
+                        ), new LatLng(amapLocation.getLatitude(),amapLocation.getLongitude())) > 10){
+
+                            SharedPreferencesUrls.getInstance().putString("biking_latitude",""+amapLocation.getLatitude());
+                            SharedPreferencesUrls.getInstance().putString("biking_longitude",""+amapLocation.getLongitude());
+//                            addMaplocation(amapLocation.getLatitude(),amapLocation.getLongitude());
+
+                            mPolyoptions.add(myLocation);
+
+                            if (mPolyoptions.getPoints().size() > 1) {
+                                aMap.addPolyline(mPolyoptions);
+                            }
+
+                        }
+                    }
+
                     if (mFirstFix) {
                         mFirstFix = false;
                         schoolRange();
@@ -4520,8 +4556,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 Log.e("biking===", "closeEbike===="+result.getData());
 
                                 if ("0".equals(result.getData())){
+                                    ToastUtil.showMessageApp(context,"关锁成功");
+
                                     m_myHandler.sendEmptyMessage(6);
-//                            submit(uid, access_token);
+//                                  submit(uid, access_token);
                                 } else {
                                     ToastUtil.showMessageApp(context,"关锁失败");
 

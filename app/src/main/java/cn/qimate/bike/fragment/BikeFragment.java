@@ -395,7 +395,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             if(referLatitude!=0 && referLongitude!=0){
                 myLocation = new LatLng(referLatitude, referLongitude);
 
-//                initNearby(referLatitude, referLongitude);
+                initNearby(referLatitude, referLongitude);
 
                 addChooseMarker();
                 addCircle(myLocation, accuracy);
@@ -611,7 +611,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 
         if (isUp  && !isHidden){
-//            initNearby(cameraPosition.target.latitude, cameraPosition.target.longitude);
+            initNearby(cameraPosition.target.latitude, cameraPosition.target.longitude);
 
             if (centerMarker != null) {
 //				animMarker();
@@ -1262,7 +1262,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                         mFirstFix = false;
 //                        schoolRange();
-//                        initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
+                        initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
                         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
                     } else {
                         centerMarker.remove();
@@ -1481,9 +1481,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //		}
 
         JPushInterface.onPause(context);
-		if(mapView!=null){
-            mapView.onPause();
-        }
+//		if(mapView!=null){
+//            mapView.onPause();
+//        }
 
 //		deactivate();
 //		mFirstFix = false;

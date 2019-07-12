@@ -8,6 +8,7 @@ public class NearbyBean {
 
     private String latitude;
     private String longitude;
+    private String quantity_level;
 
     public String getLatitude() {
         return latitude;
@@ -23,5 +24,13 @@ public class NearbyBean {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public String getQuantity_level() {
+        return quantity_level;
+    }
+
+    public void setQuantity_level(String quantity_level) {
+        this.quantity_level = quantity_level;
     }
 }

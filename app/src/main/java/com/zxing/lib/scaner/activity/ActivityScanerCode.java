@@ -225,6 +225,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private int num = 30;//扫描时间
     private boolean isStop = false;
     private boolean isOpen = false;
+    private boolean isClose = true;
+    private boolean isFinish = false;
     private int n = 0;
     private int cn = 0;
 
@@ -988,11 +990,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 @Override
                 public void onResponseSuccess(String version, String keySerial, String macKey, String vol) {
 //                    queryStatusServer(version, keySerial, macKey, vol);
+
+                    quantity = vol+"";
+
                     Log.e("getStatus===", "===="+macKey);
                     keySource = keySerial;
-
-
-
 
                     m_myHandler.post(new Runnable() {
                         @Override
@@ -1041,7 +1043,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                             Log.e("scan===2", oid+"===="+referLatitude+"===="+isFinishing());
 
-                                            if(!isFinishing()){
+                                            if(!isFinishing() && !isFinish){
                                                 submit(uid, access_token);
                                             }
                                         }
@@ -1777,11 +1779,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         loadingDialog.dismiss();
                     }
 
-                    if(isOpen){
-                        break;
-                    }else{
-                        isOpen=true;
-                    }
+//                    if(isOpen){
+//                        break;
+//                    }else{
+//                        isOpen=true;
+//                    }
 
                     m_myHandler.postDelayed(new Runnable() {
                         @Override
@@ -1838,14 +1840,13 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     String uid = SharedPreferencesUrls.getInstance().getString("uid","");
                                     String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
-                                    Log.e("scan===2", oid+"===="+referLatitude);
+                                    Log.e("scan===2", isFinish+"===="+isOpen+"===="+oid+"===="+referLatitude);
 
-                                    if(!isFinishing()){
+                                    if(!isFinishing() && !isFinish){
                                         submit(uid, access_token);
                                     }
 
 //                                    if (BaseApplication.getInstance().getIBLE().getLockStatus()){
-
 //                                    }
                                 }
                             }, 10 * 1000);
@@ -1875,9 +1876,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         ToastUtil.showMessageApp(context,"开锁失败,请重试");
                         scrollToFinishActivity();
                     } else {
+                        isOpen = true;
+
                         ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
                         Log.e("scan===", "OPEN_ACTION===="+isOpen);
 
+                        isFinish = true;
                         tzEnd();
                     }
                     break;
@@ -1908,6 +1912,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         RequestParams params = new RequestParams();
         params.put("uid",uid);
         params.put("access_token",access_token);
+
+
+
         HttpHelper.post(this, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -1930,7 +1937,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 Log.e("scan===", "getCurrentorder===="+result.getData()+"==="+type);
 
                                 if ("[]".equals(result.getData()) || 0 == result.getData().length()){
+
                                     addOrderbluelock();
+
                                 }else {
                                     if (loadingDialog != null && loadingDialog.isShowing()){
                                         loadingDialog.dismiss();
@@ -1973,6 +1982,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             params.put("uid",uid);
             params.put("access_token",access_token);
             params.put("codenum", codenum);
+
+            Log.e("addOrderbluelock==", "==="+quantity);
 
             if (quantity != null && !"".equals(quantity)){
                 params.put("quantity",quantity);
