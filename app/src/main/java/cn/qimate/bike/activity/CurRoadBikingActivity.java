@@ -3255,7 +3255,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                 if ("0".equals(result.getData())){
                                     m_myHandler.sendEmptyMessage(6);
-//                            submit(uid, access_token);
+//                                  submit(uid, access_token);
                                 } else {
                                     ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
@@ -3978,6 +3978,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                 closeEbike2();
 
+//                bleService.connect(m_nowMac);
+//                cn = 0;
+//
+//                closeLock3();
+
                 return;
             }
 
@@ -4551,15 +4556,15 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                             if (result.getFlag().equals("Success")) {
-//                        ToastUtil.showMessage(context,"数据更新成功");
+//                              ToastUtil.showMessage(context,"数据更新成功");
 
                                 Log.e("biking===", "closeEbike===="+result.getData());
 
                                 if ("0".equals(result.getData())){
                                     ToastUtil.showMessageApp(context,"关锁成功");
 
-                                    m_myHandler.sendEmptyMessage(6);
-//                                  submit(uid, access_token);
+//                                    m_myHandler.sendEmptyMessage(6);
+                                    submit(uid, access_token);
                                 } else {
                                     ToastUtil.showMessageApp(context,"关锁失败");
 

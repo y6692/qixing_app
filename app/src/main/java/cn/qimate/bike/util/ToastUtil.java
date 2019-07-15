@@ -14,6 +14,8 @@
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import cn.qimate.bike.base.BaseApplication;
@@ -35,6 +37,7 @@ public class ToastUtil {
 
     public static void showMessageApp(final Context context, final String msg) {
         showMessage(context, msg, Toast.LENGTH_SHORT);
+//        showMessage(context, msg, Toast.LENGTH_LONG);
     }
 
     public static void showNetErrorMessage() {
@@ -49,6 +52,7 @@ public class ToastUtil {
         showMessage(context, msg, Toast.LENGTH_SHORT);
     }
 
+    private static View view;
     /**
      * 显示一个文本并且设置时长
      * @param msg
@@ -62,14 +66,35 @@ public class ToastUtil {
             @Override
             public void run() {
                 synchronized (synObj) { //加上同步是为了每个toast只要有机会显示出来
+//                    if (toast != null) {
+//
+//                        Log.e("toast===1", "==="+context);
+//
+//                        toast.cancel();
+//                        toast = null;
+//                    }
+//
+//                    if (toast == null){
+//                        Log.e("toast===2", "==="+context);
+//
+//                        toast = Toast.makeText(context, msg, len);
+//                        toast.show();
+//                    }
+
                     if (toast != null) {
-                        //toast.cancel();
-                        toast.setText(msg);
-                        toast.setDuration(len);
-                    } else {
-//                        toast = Toast.makeText(AppApplication.getContext(), msg, len);
-                        toast = Toast.makeText(context, msg, len);
+
+                        Log.e("toast===1", "==="+context);
+
+                        toast.cancel();
+                        toast = null;
+
+
+                    }else{
+                        Log.e("toast===2", "==="+context);
+
                     }
+
+                    toast = Toast.makeText(context, msg, len);
                     toast.show();
                 }
             }

@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -242,6 +243,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     //服务器时间戳，精确到秒，用于锁同步时间
     long serverTime;
 
+    private CameraManager mCameraManager;
+    private Camera mCamera;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -290,11 +295,17 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //            button4();
 
             //关闭二维码扫描
-            if (handler != null) {
+//            if (handler != null) {
                 handler.quitSynchronously();
-                handler = null;
-            }
-            CameraManager.get().closeDriver();
+//                handler = null;
+//            }
+//            CameraManager.get().closeDriver();
+
+
+            releaseCamera();
+            mCameraManager.closeDriver();
+
+            bikeNumEdit.setText("");
 
             WindowManager windowManager = getWindowManager();
             Display display = windowManager.getDefaultDisplay();
@@ -307,6 +318,21 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             manager.showSoftInput(view, InputMethodManager.RESULT_SHOWN);
             manager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
+    }
+
+    private void releaseCamera() {
+        if (mCamera != null) {
+
+            Log.e("0===releaseCamera", "==="+mCamera);
+
+            mCamera.stopPreview();
+//            previewing = false;
+            mCamera.setPreviewCallback(null);
+            Log.e("1===releaseCamera", "==="+mCamera);
+            mCamera.release();
+            Log.e("2===releaseCamera", "==="+mCamera);
+            mCamera = null;
         }
     }
 
@@ -381,11 +407,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         }
 
         super.onPause();
-        if (handler != null) {
-            handler.quitSynchronously();
-            handler = null;
-        }
-        CameraManager.get().closeDriver();
+//        if (handler != null) {
+//            handler.quitSynchronously();
+//            handler = null;
+//        }
+        releaseCamera();
+        mCameraManager.closeDriver();
     }
 
     @Override
@@ -395,10 +422,20 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }
+
+        Log.e("scan===onDestroy", m_nowMac+"==="+type);
+
+        if("5".equals(type)  || "6".equals(type)){
+            ClientManager.getClient().stopSearch();
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+        }
+
         super.onDestroy();
 
 
-        Log.e("scan===onDestroy", "===");
+
 
         if (broadcastReceiver != null) {
             unregisterReceiver(broadcastReceiver);
@@ -436,8 +473,31 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.pop_circlesMenu_positiveButton:
                 String bikeNum = bikeNumEdit.getText().toString().trim();
+
+                Log.e("bikeNum===", "==="+bikeNum);
+
+
+
                 if (bikeNum == null || "".equals(bikeNum)) {
-                    ToastUtil.showMessageApp(this, "请输入单车编号");
+
+                    ToastUtil.showMessageApp(context, "请输入单车编号");
+
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            m_myHandler.post(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    ToastUtil.showMessageApp(context, "请输入单车编号");
+//                                }
+//                            });
+//                        }
+//                    }).start();
+
+
+
+//                    ToastUtil.showMessageApp(this, "请输入单车编号1");
+//                    ToastUtil.showMessageApp(this, "请输入单车编号2");
                     return;
                 }
                 InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -453,11 +513,27 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 break;
 
             case R.id.pop_circlesMenu_negativeButton:
+
+                Log.e("bikeNum===2", "==="+type);
+
                 InputMethodManager manager1 = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 manager1.hideSoftInputFromWindow(v.getWindowToken(), 0); // 隐藏
+
+//                if("5".equals(type)  || "6".equals(type)){
+//                    ClientManager.getClient().stopSearch();
+//                    ClientManager.getClient().disconnect(m_nowMac);
+//                    ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+//
+//                }else{
+//                    BaseApplication.getInstance().getIBLE().refreshCache();
+//                    BaseApplication.getInstance().getIBLE().close();
+//                    BaseApplication.getInstance().getIBLE().disconnect();
+//                }
+
                 BaseApplication.getInstance().getIBLE().refreshCache();
                 BaseApplication.getInstance().getIBLE().close();
                 BaseApplication.getInstance().getIBLE().disconnect();
+
                 if (dialog!=null && dialog.isShowing()) {
                     dialog.dismiss();
                 }
@@ -505,19 +581,21 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         if (mFlashing) {
             mFlashing = false;
             // 开闪光灯
-            CameraManager.get().openLight();
+            mCameraManager.openLight();
         } else {
             mFlashing = true;
             // 关闪光灯
-            CameraManager.get().offLight();
+            mCameraManager.offLight();
         }
 
     }
 
     private void initCamera(SurfaceHolder surfaceHolder) {
         try {
-            CameraManager.get().openDriver(surfaceHolder);
-            Point point = CameraManager.get().getCameraResolution();
+            mCameraManager = CameraManager.get();
+            mCameraManager.openDriver(surfaceHolder);
+            mCamera = mCameraManager.getCamera();
+            Point point = mCameraManager.getCameraResolution();
             AtomicInteger width = new AtomicInteger(point.y);
             AtomicInteger height = new AtomicInteger(point.x);
             int cropWidth = mCropLayout.getWidth() * width.get() / mContainer.getWidth();
@@ -933,6 +1011,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
             Log.e("scan===onDeviceFounded",device.device.getName() + "===" + device.device.getAddress());
 
+//            bike:GpDTxe8DGN412
+//
+//            bike:LUPFKsrUyR405
+//            bike:LUPFKsrUyK405
+//            bike:L6OsRAiviK289===E8:EB:11:02:2B:E2
+
             m_myHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -1010,10 +1094,22 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
 
-                                    BaseApplication.getInstance().getIBLE().refreshCache();
-                                    BaseApplication.getInstance().getIBLE().close();
-                                    BaseApplication.getInstance().getIBLE().disconnect();
+                                    if("5".equals(type)  || "6".equals(type)){
+                                        ClientManager.getClient().stopSearch();
+                                        ClientManager.getClient().disconnect(m_nowMac);
+                                        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+                                    }else{
+                                        BaseApplication.getInstance().getIBLE().refreshCache();
+                                        BaseApplication.getInstance().getIBLE().close();
+                                        BaseApplication.getInstance().getIBLE().disconnect();
+                                    }
+
+//                                    BaseApplication.getInstance().getIBLE().refreshCache();
+//                                    BaseApplication.getInstance().getIBLE().close();
+//                                    BaseApplication.getInstance().getIBLE().disconnect();
 //                                  BaseApplication.getInstance().getIBLE().disableBluetooth();
+
                                     scrollToFinishActivity();
 
                                 }
@@ -1030,24 +1126,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                         loadingDialog.show();
                                     }
 
-                                    m_myHandler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
 
-                                            if (loadingDialog != null && loadingDialog.isShowing()){
-                                                loadingDialog.dismiss();
-                                            }
-
-                                            String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-                                            String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-
-                                            Log.e("scan===2", oid+"===="+referLatitude+"===="+isFinishing());
-
-                                            if(!isFinishing() && !isFinish){
-                                                submit(uid, access_token);
-                                            }
-                                        }
-                                    }, 10 * 1000);
 
                                     Log.e("scan===", "scan===="+loadingDialog);
 
@@ -1731,6 +1810,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
             @Override
             public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
+
+
+//                Log.e("connect===", device.getName()+"==="+device.getAddress());
+
                 if (device==null||TextUtils.isEmpty(device.getAddress()))return;
                 if (m_nowMac.equalsIgnoreCase(device.getAddress())){
                     m_myHandler.removeMessages(0x99);
@@ -1828,28 +1911,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 loadingDialog.show();
                             }
 
-                            m_myHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-//                                    ToastUtil.showMessage(context, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus());
 
-                                    if (loadingDialog != null && loadingDialog.isShowing()){
-                                        loadingDialog.dismiss();
-                                    }
-
-                                    String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-                                    String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-
-                                    Log.e("scan===2", isFinish+"===="+isOpen+"===="+oid+"===="+referLatitude);
-
-                                    if(!isFinishing() && !isFinish){
-                                        submit(uid, access_token);
-                                    }
-
-//                                    if (BaseApplication.getInstance().getIBLE().getLockStatus()){
-//                                    }
-                                }
-                            }, 10 * 1000);
 
 //                          BaseApplication.getInstance().getIBLE().getLockStatus();
 
@@ -2055,10 +2117,49 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                         openBleLock(null);
 
+                                        m_myHandler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                                    loadingDialog.dismiss();
+                                                }
+
+                                                String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+                                                String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+
+                                                Log.e("scan===21", isFinish+"===="+isOpen+"===="+oid+"===="+referLatitude);
+
+                                                if(!isFinishing() && !isFinish){
+                                                    submit(uid, access_token);
+                                                }
+                                            }
+                                        }, 10 * 1000);
+
                                     }else{
                                         Log.e("scan===lock1", "===");
 
                                         BaseApplication.getInstance().getIBLE().openLock();
+
+                                        m_myHandler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                                    loadingDialog.dismiss();
+                                                }
+
+                                                String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+                                                String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+
+                                                Log.e("scan===22", isFinish+"===="+isOpen+"===="+oid+"===="+referLatitude);
+
+                                                if(!isFinishing() && !isFinish){
+                                                    submit(uid, access_token);
+                                                }
+
+                                            }
+                                        }, 10 * 1000);
 
                                         Log.e("scan===lock2", "===");
                                     }
@@ -2159,14 +2260,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     @Override
                     public void run() {
                         try {
-                            Log.e("scan===","结束用车:"+responseString);
+                            Log.e("scan===submit","结束用车:"+type+"==="+responseString);
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
                             if (result.getFlag().equals("Success")) {
                                 SharedPreferencesUrls.getInstance().putString("m_nowMac","");
                                 SharedPreferencesUrls.getInstance().putString("oid","");
                                 SharedPreferencesUrls.getInstance().putString("osn","");
-                                SharedPreferencesUrls.getInstance().putString("type","");
+                                SharedPreferencesUrls.getInstance().putString("type",type);
                                 SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
                                 SharedPreferencesUrls.getInstance().putString("biking_latitude","");
                                 SharedPreferencesUrls.getInstance().putString("biking_longitude","");
