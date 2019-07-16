@@ -666,9 +666,15 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 if ("5".equals(type)  || "6".equals(type)) {
 //                    ClientManager.getClient().disconnect(m_nowMac);
 
-                    connectDevice();
-                    ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
-                    ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            connectDevice();
+                            ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+                            ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+
+                        }
+                    }, 2 * 1000);
 
 //                    SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
 //                            .searchBluetoothLeDevice(0)

@@ -26,6 +26,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -169,6 +170,8 @@ public class ScanCaptureAct extends SwipeBackActivity implements View.OnClickLis
 //		} catch (Exception e) {
 //			Toast.makeText(this, "eee===="+e, Toast.LENGTH_SHORT).show();
 //		}
+
+		Log.e("SCA====onResume", mCamera+"==="+previewCb+"==="+autoFocusCB);
 
 		initViews();
 		playBeep = true;
@@ -329,6 +332,9 @@ public class ScanCaptureAct extends SwipeBackActivity implements View.OnClickLis
 
 	public void onPause() {
 		super.onPause();
+
+		Log.e("SCA====onPause", mCamera+"==="+previewCb+"==="+autoFocusCB);
+
 		releaseCamera();
 		mCameraManager.closeDriver();
 	}

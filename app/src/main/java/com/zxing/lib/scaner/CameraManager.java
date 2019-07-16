@@ -129,6 +129,11 @@ public final class CameraManager {
             configManager.setDesiredCameraParameters(camera);
             FlashlightManager.enableFlashlight();
         }
+//        else {
+//            System.out.println("wanggsx openDriver camera != null");
+//            camera.setPreviewDisplay(holder);//此处为新增方法
+//        }
+
     }
 
     /**
