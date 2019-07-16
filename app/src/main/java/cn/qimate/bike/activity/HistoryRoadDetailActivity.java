@@ -188,9 +188,9 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
 
                 break;
             case R.id.history_roadDetailUI_submitBtn:
-                Intent intent = new Intent(context,MapTaceActivity.class);
-                intent.putExtra("oid",oid);
-                startActivity(intent);
+//                Intent intent = new Intent(context,MapTaceActivity.class);
+//                intent.putExtra("oid",oid);
+//                startActivity(intent);
                 break;
         }
     }
