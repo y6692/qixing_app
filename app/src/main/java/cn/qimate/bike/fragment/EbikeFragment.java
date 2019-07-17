@@ -259,7 +259,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     private int n=0;
     private float accuracy = 29.0f;
 
-    private boolean isHidden = true;
+    private boolean isHidden = false;
 
     private Bundle savedIS;
     private JSONArray arraySchoolRange;
@@ -277,7 +277,10 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
 //        aMap = ((MainActivity)activity).aMap;
 //        successDescripter = ((MainActivity)activity).successDescripter;
-        mapView = ((MainActivity)activity).mapView;
+//        mapView = ((MainActivity)activity).mapView;
+
+//        mapView = ((UseBikeFragment)getParentFragment()).mapView;
+        mapView = getActivity().findViewById(R.id.mainUI_map);
 
         WindowManager.LayoutParams winParams = activity.getWindow().getAttributes();
         winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
@@ -867,6 +870,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             setUpMap();
         }
 
+        Log.e("EBF===initView", "===");
+
         aMap.setMapType(AMap.MAP_TYPE_NAVI);
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -980,10 +985,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         Log.e("main===ebike", "main====onResume==="+type);
 
-        if(!"4".equals(type)){
-            ((MainActivity)getActivity()).changeTab(0);
-//            return;
-        }
+//        if(!"4".equals(type)){
+//            ((MainActivity)getActivity()).changeTab(0);
+//        }
 
         tz = 0;
 

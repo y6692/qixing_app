@@ -1,0 +1,145 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:orientation="vertical"
+    android:background="@color/white"
+    >
+
+  <!--<include-->
+      <!--layout="@layout/ui_main_title"/>-->
+
+  <RelativeLayout
+      android:id="@+id/mainUI_titleLayout"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/dp40"
+      android:background="@drawable/title_gradient"
+      android:layout_alignParentTop="true"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true">
+
+
+    <TextView
+        android:id="@+id/mainUI_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="商家券"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp18"/>
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@id/mainUI_title_mainLayout">
+
+
+
+    <LinearLayout
+        android:id="@+id/ll_1"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:orientation="horizontal"
+        android:fitsSystemWindows="true"
+        android:clipToPadding="true"
+        android:layout_marginTop="18dp"
+        android:layout_marginLeft="@dimen/dp20"
+        android:layout_marginRight="19dp"
+
+        >
+
+      <cn.qimate.bike.core.widget.ClearEditText
+          android:id="@+id/changePsdUI_oldPsd"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:background="@drawable/shape_feedback_edit2"
+          android:paddingLeft="@dimen/dp10"
+          android:drawableRight="@drawable/delete_selector"
+          android:hint="请输入您的优惠码"
+          android:inputType="textPassword"
+          android:textSize="@dimen/sp15"
+          android:gravity="center_vertical"
+          android:textColorHint="#7D7D7D"
+          android:textColor="@color/tx_black_light"/>
+
+      <Button
+          android:id="@+id/btn_click_one"
+          android:layout_width="88dp"
+          android:layout_height="match_parent"
+          android:background="@color/red"
+          android:text="立即兑换"
+          android:textColor="@color/white"
+          android:textSize="@dimen/sp15"
+          android:gravity="center"
+          />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_2"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_below="@id/ll_1"
+        >
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
+          android:layout_weight="1"
+          android:background="@color/white"
+          android:orientation="horizontal"
+          >
+
+        <!--<android.support.design.widget.TabLayout-->
+            <!--android:id="@+id/tab"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--app:tabGravity="fill"-->
+            <!--app:tabIndicatorColor="#E60012"-->
+            <!--app:tabMode="fixed"-->
+            <!--app:tabSelectedTextColor="#E60012"-->
+            <!--app:tabTextColor="#333333"-->
+            <!--app:tabTextAppearance="@style/TabLayoutTextStyle"-->
+            <!--/>-->
+
+      </RelativeLayout>
+
+      <!--<View style="@style/divider_1px"/>-->
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_below="@id/ll_2"
+        >
+
+      <android.support.v4.view.ViewPager
+          android:id="@+id/vp"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
+
+    </LinearLayout>
+
+
+
+  </RelativeLayout>
+
+
+
+</LinearLayout>

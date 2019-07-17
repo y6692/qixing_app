@@ -17,11 +17,14 @@ import com.zxing.lib.scaner.activity.ActivityScanerCode;
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.swipebacklayout.SwipeBackLayout;
+import cn.qimate.bike.swipebacklayout.app.SwipeBackActivityBase;
 
-public class BaseFragment extends Fragment implements OnConnectionListener {
+public class BaseFragment extends Fragment implements OnConnectionListener, SwipeBackActivityBase {
 
 	private static final int MSG_SET_ALIAS = 1001;
 	private static final int MSG_SET_TAGS = 1002;
@@ -158,6 +161,25 @@ public class BaseFragment extends Fragment implements OnConnectionListener {
 			return false;
 		}
 	});
+
+	@Override
+	public SwipeBackLayout getSwipeBackLayout() {
+		return null;
+	}
+
+	@Override
+	public void setSwipeBackEnable(boolean enable) {
+
+	}
+
+	@Override
+	public void scrollToFinishActivity() {
+		finishMine();
+	}
+
+	public void finishMine() {
+		AppManager.getAppManager().finishActivity(getActivity());
+	}
 	
 	//用户已经登录过没有退出刷新登录
 	public void RefreshLogin(){

@@ -245,7 +245,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private int n=0;
     private float accuracy = 29.0f;
 
-    private boolean isHidden = true;
+    private boolean isHidden = false;
 
     private int carType = 1;
 
@@ -254,6 +254,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_bike, null);
         unbinder = ButterKnife.bind(this, v);
+
         return v;
     }
 
@@ -262,9 +263,18 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         context = getActivity();
         activity = getActivity();
 
+
+
+
 //        aMap = ((MainActivity)activity).aMap;
 //        successDescripter = ((MainActivity)activity).successDescripter;
-        mapView = ((MainActivity)activity).mapView;
+//        mapView = ((MainActivity)activity).mapView;
+
+
+//        mapView = ((UseBikeFragment)(getParentFragment())).mapView;
+        mapView = getActivity().findViewById(R.id.mainUI_map);
+
+        Log.e("BF===", mapView+"==="+getParentFragment());
 
         WindowManager.LayoutParams winParams = activity.getWindow().getAttributes();
         winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
@@ -692,50 +702,57 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(isHidden) return;
 
-                if(isHidden) return;
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                JSONArray array = new JSONArray(result.getData());
 
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        JSONArray array = new JSONArray(result.getData());
+                                Log.e("initNearby===Bike", "==="+array.length());
 
-                        Log.e("initNearby===Bike", "==="+array.length());
+                                for (Marker marker : bikeMarkerList){
+                                    if (marker != null){
+                                        marker.remove();
+                                    }
+                                }
+                                if (!bikeMarkerList.isEmpty() || 0 != bikeMarkerList.size()){
+                                    bikeMarkerList.clear();
+                                }
+                                if (0 == array.length()){
+                                    ToastUtils.show("附近没有单车");
+                                }else {
+                                    for (int i = 0; i < array.length(); i++){
+                                        NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
+                                        // 加入自定义标签
 
-                        for (Marker marker : bikeMarkerList){
-                            if (marker != null){
-                                marker.remove();
+                                        Log.e("initNearby===Bike#", bean.getLatitude()+"==="+bean.getLongitude());
+
+                                        MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(
+                                                Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
+                                        Marker bikeMarker = aMap.addMarker(bikeMarkerOption);
+                                        bikeMarkerList.add(bikeMarker);
+                                    }
+
+                                }
+
+                                Log.e("initNearby===Bike@", "==="+array.length());
+                            } else {
+                                ToastUtils.show(result.getMsg());
                             }
-                        }
-                        if (!bikeMarkerList.isEmpty() || 0 != bikeMarkerList.size()){
-                            bikeMarkerList.clear();
-                        }
-                        if (0 == array.length()){
-                            ToastUtils.show("附近没有单车");
-                        }else {
-                            for (int i = 0; i < array.length(); i++){
-                                NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
-                                // 加入自定义标签
-
-//                                Log.e("initNearby===Bike", bean.getLatitude()+"==="+bean.getLongitude());
-
-                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(
-                                        Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
-                                Marker bikeMarker = aMap.addMarker(bikeMarkerOption);
-                                bikeMarkerList.add(bikeMarker);
-                            }
+                        } catch (Exception e) {
 
                         }
-                    } else {
-                        ToastUtils.show(result.getMsg());
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
                     }
-                } catch (Exception e) {
+                });
 
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
             }
         });
     }
@@ -800,6 +817,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //            aMap = mapView.getMap();
 //            setUpMap();
 //        }
+
+        Log.e("BF===initView", "===");
 
         aMap.setMapType(AMap.MAP_TYPE_NAVI);
         aMap.getUiSettings().setZoomControlsEnabled(false);
@@ -883,10 +902,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         Log.e("main===bike", "main====onResume==="+type);
 
-        if("4".equals(type)){
-            ((MainActivity)getActivity()).changeTab(1);
-//            return;
-        }
+//        if("4".equals(type)){
+//            ((MainActivity)getActivity()).changeTab(1);
+//        }
 //        else{
 //            ((MainActivity)getActivity()).changeTab(0);
 //        }
@@ -1048,6 +1066,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             }
 
         }
+
     }
 
 
@@ -1151,6 +1170,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     });
 
     private void setUpMap() {
+
+        Log.e("BF===setUpMap", "===");
+
         aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
