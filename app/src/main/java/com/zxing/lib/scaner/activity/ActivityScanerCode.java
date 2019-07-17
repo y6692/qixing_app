@@ -63,6 +63,7 @@ import com.vondear.rxtools.RxBeepTool;
 import com.vondear.rxtools.RxPhotoTool;
 import com.vondear.rxtools.interfaces.OnRxScanerListener;
 import com.vondear.rxtools.view.dialog.RxDialogSure;
+import com.zbar.lib.camera.CameraPreview;
 import com.zxing.lib.scaner.CameraManager;
 import com.zxing.lib.scaner.CaptureActivityHandler;
 import com.zxing.lib.scaner.decoding.InactivityTimer;
@@ -246,6 +247,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private CameraManager mCameraManager;
     private Camera mCamera;
 
+    private boolean previewing = true;
+//    boolean first=true;
+
+    SurfaceView surfaceView;
+    SurfaceHolder surfaceHolder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -276,72 +282,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         CameraManager.init(mActivity);
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
+
+        mCameraManager = CameraManager.get();
+
+        surfaceView = (SurfaceView) findViewById(R.id.capture_preview);
+
     }
-
-    public void btn(View view) {
-        int viewId = view.getId();
-        if (viewId == R.id.top_mask) {
-            light();
-
-//            bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
-//            Log.e("light===4_3", "===");
-//            button3();
-
-        } else if (viewId == R.id.top_back) {
-            scrollToFinishActivity();
-        } else if (viewId == R.id.top_openpicture) {
-            RxPhotoTool.openLocalImage(mActivity);
-        } else if (viewId == R.id.loca_show_btnBikeNum) {
-//            button4();
-
-            //关闭二维码扫描
-//            if (handler != null) {
-                handler.quitSynchronously();
-//                handler = null;
-//            }
-//            CameraManager.get().closeDriver();
-
-
-            releaseCamera();
-            mCameraManager.closeDriver();
-
-            bikeNumEdit.setText("");
-
-            WindowManager windowManager = getWindowManager();
-            Display display = windowManager.getDefaultDisplay();
-            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-            lp.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setAttributes(lp);
-            dialog.getWindow().setWindowAnimations(R.style.dialogWindowAnim);
-            dialog.show();
-            InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            manager.showSoftInput(view, InputMethodManager.RESULT_SHOWN);
-            manager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        }
-    }
-
-    private void releaseCamera() {
-        if (mCamera != null) {
-
-            Log.e("0===releaseCamera", "==="+mCamera);
-
-            mCamera.stopPreview();
-//            previewing = false;
-            mCamera.setPreviewCallback(null);
-            Log.e("1===releaseCamera", "==="+mCamera);
-            mCamera.release();
-            Log.e("2===releaseCamera", "==="+mCamera);
-            mCamera = null;
-        }
-    }
-
-    @Override
-    public void oncall() {
-        super.oncall();
-        button9();
-    }
-
 
     @SuppressWarnings("deprecation")
     @Override
@@ -370,35 +316,187 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //            ToastUtil.showMessage(this, "eee===="+e);
 //        }
 
-        SurfaceView surfaceView = (SurfaceView) findViewById(R.id.capture_preview);
-        SurfaceHolder surfaceHolder = surfaceView.getHolder();
-        if (hasSurface) {
+
+//        if(surfaceView != null) return;
+
+
+//        surfaceView.clearAnimation();
+
+        Log.e("surface===0", "==="+hasSurface);
+
+        if (!hasSurface) {
             //Camera初始化
-            initCamera(surfaceHolder);
-        } else {
-            surfaceHolder.addCallback(new SurfaceHolder.Callback() {
-                @Override
-                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+//            initCamera(surfaceHolder);
+//            resetCamera(surfaceHolder);
 
-                }
+            if(surfaceHolder==null){
+                surfaceHolder = surfaceView.getHolder();
 
-                @Override
-                public void surfaceCreated(SurfaceHolder holder) {
-                    if (!hasSurface) {
-                        hasSurface = true;
-                        initCamera(holder);
+                surfaceHolder.addCallback(new SurfaceHolder.Callback() {
+                    @Override
+                    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
                     }
-                }
 
-                @Override
-                public void surfaceDestroyed(SurfaceHolder holder) {
-                    hasSurface = false;
+                    @Override
+                    public void surfaceCreated(SurfaceHolder holder) {
+                        Log.e("surface===1", "==="+hasSurface);
 
-                }
-            });
-            surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+                        if (!hasSurface) {
+                            hasSurface = true;
+
+                            initCamera(holder);
+                        }
+                    }
+
+                    @Override
+                    public void surfaceDestroyed(SurfaceHolder holder) {
+                        Log.e("surface===2", "==="+hasSurface);
+
+                        hasSurface = false;
+
+                    }
+                });
+                surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+            }
+
+
+
+        } else {
+            initCamera(surfaceHolder);
+        }
+
+
+//        try {
+//
+//            mCamera = Camera.open();
+//
+//            mCamera.setPreviewDisplay(surfaceHolder);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+    }
+
+    private void releaseCamera() {
+        if (mCamera != null) {
+
+            Log.e("0===releaseCamera", "==="+mCamera);
+
+//            mCamera.setPreviewCallback(null);
+            mCamera.stopPreview();
+
+            previewing = false;
+            mCamera.setPreviewCallback(null);
+            Log.e("1===releaseCamera", "==="+mCamera);
+            mCamera.release();
+            Log.e("2===releaseCamera", "==="+mCamera);
+            mCamera = null;
         }
     }
+
+    private void resetCamera(SurfaceHolder surfaceHolder){
+        Log.e("===resetCamera", "==="+mCamera);
+
+        previewing = true;
+
+        try {
+
+            mCameraManager.openDriver(surfaceHolder);
+            mCamera = mCameraManager.getCamera();
+            Point point = mCameraManager.getCameraResolution();
+            AtomicInteger width = new AtomicInteger(point.y);
+            AtomicInteger height = new AtomicInteger(point.x);
+            int cropWidth = mCropLayout.getWidth() * width.get() / mContainer.getWidth();
+            int cropHeight = mCropLayout.getHeight() * height.get() / mContainer.getHeight();
+            setCropWidth(cropWidth);
+            setCropHeight(cropHeight);
+        } catch (IOException | RuntimeException ioe) {
+            return;
+        }
+
+        if (handler == null) {
+            handler = new CaptureActivityHandler(ActivityScanerCode.this);
+        }
+
+//        Log.e("111====resetCamera", mCamera+"==="+previewCb+"==="+autoFocusCB);
+//
+//        surfaceView.r
+//        mPreview = new CameraPreview(context, mCamera, previewCb, autoFocusCB);
+//        scanPreview.addView(mPreview);
+    }
+
+    private void initCamera(SurfaceHolder surfaceHolder) {
+        try {
+            mCameraManager = CameraManager.get();
+            mCameraManager.openDriver(surfaceHolder);
+            mCamera = mCameraManager.getCamera();
+            Point point = mCameraManager.getCameraResolution();
+            AtomicInteger width = new AtomicInteger(point.y);
+            AtomicInteger height = new AtomicInteger(point.x);
+            int cropWidth = mCropLayout.getWidth() * width.get() / mContainer.getWidth();
+            int cropHeight = mCropLayout.getHeight() * height.get() / mContainer.getHeight();
+            setCropWidth(cropWidth);
+            setCropHeight(cropHeight);
+        } catch (IOException | RuntimeException ioe) {
+            return;
+        }
+        if (handler == null) {
+            handler = new CaptureActivityHandler(ActivityScanerCode.this);
+        }
+    }
+
+    public void btn(View view) {
+        int viewId = view.getId();
+        if (viewId == R.id.top_mask) {
+            light();
+
+//            bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
+//            Log.e("light===4_3", "===");
+//            button3();
+
+        } else if (viewId == R.id.top_back) {
+            scrollToFinishActivity();
+        } else if (viewId == R.id.top_openpicture) {
+            RxPhotoTool.openLocalImage(mActivity);
+        } else if (viewId == R.id.loca_show_btnBikeNum) {
+//            button4();
+
+            //关闭二维码扫描
+//            if (handler != null) {
+//                handler.quitSynchronously();
+//                handler = null;
+//            }
+//            CameraManager.get().closeDriver();
+
+
+//            releaseCamera();
+//            mCameraManager.closeDriver();
+
+            bikeNumEdit.setText("");
+
+            WindowManager windowManager = getWindowManager();
+            Display display = windowManager.getDefaultDisplay();
+            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+            lp.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            dialog.getWindow().setAttributes(lp);
+            dialog.getWindow().setWindowAnimations(R.style.dialogWindowAnim);
+            dialog.show();
+            InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            manager.showSoftInput(view, InputMethodManager.RESULT_SHOWN);
+            manager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
+    }
+
+
+
+    @Override
+    public void oncall() {
+        super.oncall();
+        button9();
+    }
+
 
     @Override
     protected void onPause() {
@@ -406,12 +504,22 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             loadingDialog.dismiss();
         }
 
+//        hasSurface = false;
+
+        Log.e("scan===onPause", "===");
+
         super.onPause();
-//        if (handler != null) {
-//            handler.quitSynchronously();
-//            handler = null;
+        if (handler != null) {
+            handler.quitSynchronously();
+            handler = null;
+        }
+
+//        if(!first){
+//            releaseCamera();
 //        }
-        releaseCamera();
+
+
+//        releaseCamera();
         mCameraManager.closeDriver();
     }
 
@@ -429,12 +537,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             ClientManager.getClient().stopSearch();
             ClientManager.getClient().disconnect(m_nowMac);
             ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
-
+        }else{
+            BaseApplication.getInstance().getIBLE().stopScan();
+            BaseApplication.getInstance().getIBLE().refreshCache();
+            BaseApplication.getInstance().getIBLE().close();
+            BaseApplication.getInstance().getIBLE().disconnect();
         }
 
         super.onDestroy();
-
-
 
 
         if (broadcastReceiver != null) {
@@ -590,25 +700,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
     }
 
-    private void initCamera(SurfaceHolder surfaceHolder) {
-        try {
-            mCameraManager = CameraManager.get();
-            mCameraManager.openDriver(surfaceHolder);
-            mCamera = mCameraManager.getCamera();
-            Point point = mCameraManager.getCameraResolution();
-            AtomicInteger width = new AtomicInteger(point.y);
-            AtomicInteger height = new AtomicInteger(point.x);
-            int cropWidth = mCropLayout.getWidth() * width.get() / mContainer.getWidth();
-            int cropHeight = mCropLayout.getHeight() * height.get() / mContainer.getHeight();
-            setCropWidth(cropWidth);
-            setCropHeight(cropHeight);
-        } catch (IOException | RuntimeException ioe) {
-            return;
-        }
-        if (handler == null) {
-            handler = new CaptureActivityHandler(ActivityScanerCode.this);
-        }
-    }
+
 
     //--------------------------------------打开本地图片识别二维码 start---------------------------------
     private void initDialogResult(Result result) {
@@ -616,9 +708,19 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     }
 
     public void handleDecode(Result result) {
+        if(!previewing) return;
+
         inactivityTimer.onActivity();
         //扫描成功之后的振动与声音提示
         RxBeepTool.playBeep(mActivity, vibrate);
+
+
+//        mCamera.setPreviewCallback(null);
+//        mCamera.stopPreview();
+//
+//        releaseCamera();
+
+
         String result1 = result.getText();
         if (mScanerListener == null) {
             initDialogResult(result);
@@ -790,6 +892,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     if(BaseApplication.getInstance().isTest()){
                                         type = "5";
                                     }
+
+//                                    m_nowMac = "40:19:79:40:90:03";
 
                                     if ("1".equals(type)) {          //单车机械锁
                                         UIHelper.goToAct(context, CurRoadStartActivity.class);
@@ -1811,8 +1915,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             @Override
             public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
 
-
-//                Log.e("connect===", device.getName()+"==="+device.getAddress());
+//                Log.e("connect===", m_nowMac+"==="+device.getName()+"==="+device.getAddress());
 
                 if (device==null||TextUtils.isEmpty(device.getAddress()))return;
                 if (m_nowMac.equalsIgnoreCase(device.getAddress())){
@@ -2324,7 +2427,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     loadingDialog.dismiss();
                                 }
 //                                Toast.makeText(context,"请重启软件，开启定位服务,输编号用车",5 * 1000).show();
-                                Toast.makeText(context,"扫码唤醒失败，换辆车试试吧！",5 * 1000).show();
+                                Toast.makeText(context,"扫码唤醒失败，换辆车试试吧！",Toast.LENGTH_LONG).show();
                                 BaseApplication.getInstance().getIBLE().refreshCache();
                                 BaseApplication.getInstance().getIBLE().close();
                                 BaseApplication.getInstance().getIBLE().disconnect();
