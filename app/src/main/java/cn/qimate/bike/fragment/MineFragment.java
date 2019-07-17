@@ -76,7 +76,6 @@ import cn.qimate.bike.activity.SettingActivity;
 import cn.qimate.bike.activity.SuperVipActivity;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.core.common.BitmapUtils1;
-import cn.qimate.bike.core.common.DisplayUtil;
 import cn.qimate.bike.core.common.GetImagePath;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;

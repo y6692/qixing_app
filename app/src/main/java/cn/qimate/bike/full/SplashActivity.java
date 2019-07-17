@@ -2,8 +2,6 @@ package cn.qimate.bike.full;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,14 +16,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,33 +31,19 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.bumptech.glide.Glide;
-import com.ly.adpoymer.model.ServerParam;
-import com.sunshine.blelibrary.config.Config;
-import com.sunshine.blelibrary.config.LockType;
-import com.sunshine.blelibrary.utils.GlobalParameterUtils;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
 
 import java.lang.ref.WeakReference;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
-import cn.qimate.bike.activity.BannerActivity;
 import cn.qimate.bike.activity.CrashHandler;
-import cn.qimate.bike.activity.InterstitialActivity;
-import cn.qimate.bike.activity.Main2Activity;
-import cn.qimate.bike.activity.Main3Activity;
-import cn.qimate.bike.activity.Main4Activity;
 import cn.qimate.bike.activity.MainActivity;
-import cn.qimate.bike.activity.WebActivity;
 import cn.qimate.bike.base.BaseActivity;
-import cn.qimate.bike.base.BaseApplication;
-import cn.qimate.bike.base.BaseFragmentActivity;
 import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.Md5Helper;
@@ -74,8 +54,6 @@ import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.util.ToastUtil;
-
-import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 
 @SuppressLint("NewApi")
 public class SplashActivity extends BaseActivity {

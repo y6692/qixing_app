@@ -10,7 +10,6 @@
 package cn.qimate.bike.full;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,7 +26,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -35,7 +33,6 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.hubcloud.adhubsdk.AdHub;
 import com.hubcloud.adhubsdk.AdListener;
 import com.hubcloud.adhubsdk.SplashAd;
 
@@ -45,9 +42,7 @@ import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
-import cn.qimate.bike.activity.ActionCenterActivity;
 import cn.qimate.bike.activity.CrashHandler;
-import cn.qimate.bike.activity.Main4Activity;
 import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.base.BaseActivity;
 import cn.qimate.bike.core.common.HttpHelper;

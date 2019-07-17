@@ -47,7 +47,7 @@ public class MyReceiver extends BroadcastReceiver {
 
 			//打开自定义的Activity
 			if (!BikeFragment.isForeground){
-				goAct(bundle,context,MainActivity.class);
+				goAct(bundle,context, MainActivity.class);
 			}
 		} else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
 			Log.d(TAG, "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));

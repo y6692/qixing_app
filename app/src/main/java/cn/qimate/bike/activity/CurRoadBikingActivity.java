@@ -691,7 +691,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         loadingDialog.show();
                     }
 
-                    connect();
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            connect();
+
+                        }
+                    }, 2 * 1000);
+
 
                     closeBroadcast();
                     registerReceiver(Config.initFilter());
@@ -1649,6 +1656,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         }else{
             BaseApplication.getInstance().getIBLE().stopScan();
+            BaseApplication.getInstance().getIBLE().refreshCache();
+            BaseApplication.getInstance().getIBLE().close();
+            BaseApplication.getInstance().getIBLE().disconnect();
         }
 
 

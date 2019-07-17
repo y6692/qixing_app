@@ -287,12 +287,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         surfaceView = (SurfaceView) findViewById(R.id.capture_preview);
 
-
-
     }
-
-
-
 
     @SuppressWarnings("deprecation")
     @Override
@@ -542,6 +537,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             ClientManager.getClient().stopSearch();
             ClientManager.getClient().disconnect(m_nowMac);
             ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+        }else{
+            BaseApplication.getInstance().getIBLE().stopScan();
+            BaseApplication.getInstance().getIBLE().refreshCache();
+            BaseApplication.getInstance().getIBLE().close();
+            BaseApplication.getInstance().getIBLE().disconnect();
         }
 
         super.onDestroy();
@@ -1909,8 +1909,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
      * 3. 搜索不到就执行直接连接设备
      */
     protected void connect() {
-//        BaseApplication.getInstance().getIBLE().stopScan();
-//        m_myHandler.sendEmptyMessage(0x99);
+        BaseApplication.getInstance().getIBLE().stopScan();
+        m_myHandler.sendEmptyMessage(0x99);
         BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
             @Override
             public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
@@ -1919,7 +1919,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                 if (device==null||TextUtils.isEmpty(device.getAddress()))return;
                 if (m_nowMac.equalsIgnoreCase(device.getAddress())){
-//                    m_myHandler.removeMessages(0x99);
+                    m_myHandler.removeMessages(0x99);
                     BaseApplication.getInstance().getIBLE().stopScan();
                     BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
                 }
@@ -2427,7 +2427,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     loadingDialog.dismiss();
                                 }
 //                                Toast.makeText(context,"请重启软件，开启定位服务,输编号用车",5 * 1000).show();
-                                Toast.makeText(context,"扫码唤醒失败，换辆车试试吧！",5 * 1000).show();
+                                Toast.makeText(context,"扫码唤醒失败，换辆车试试吧！",Toast.LENGTH_LONG).show();
                                 BaseApplication.getInstance().getIBLE().refreshCache();
                                 BaseApplication.getInstance().getIBLE().close();
                                 BaseApplication.getInstance().getIBLE().disconnect();

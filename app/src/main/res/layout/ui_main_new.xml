@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:orientation="vertical">
+
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/mainUI_titleLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/dp40"-->
+        <!--android:background="@color/ui_main">-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/mainUI_leftBtn"-->
+            <!--android:layout_width="@dimen/dp45"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@null"-->
+            <!--android:src="@drawable/main_left_icon"-->
+            <!--android:padding="8dp"-->
+            <!--android:layout_alignParentLeft="true"/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/mainUI_title"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:text="7MA出行"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="@dimen/sp16"/>-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/mainUI_rightBtn"-->
+            <!--android:layout_width="@dimen/dp45"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@null"-->
+            <!--android:src="@drawable/main_right_icon"-->
+            <!--android:padding="@dimen/dp10"-->
+            <!--android:layout_alignParentRight="true"/>-->
+    <!--</RelativeLayout>-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical">-->
+        <!--<View android:layout_width="match_parent"-->
+            <!--android:layout_height="1px"-->
+            <!--android:background="#dcdcdc"></View>-->
+        <!--<com.flyco.tablayout.CommonTabLayout-->
+            <!--android:id="@+id/tab_top"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:background="#ffffff"-->
+            <!--app:tl_indicator_color="#E60012"-->
+            <!--app:tl_indicator_height="1dp"-->
+            <!--app:tl_textSelectColor="@color/red"-->
+            <!--app:tl_textUnselectColor="#66000000"-->
+            <!--app:tl_textsize="16sp"-->
+            <!--app:tl_underline_color="#DDDDDD"-->
+            <!--app:tl_underline_height="0dp"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@color/ui_backgroud"-->
+        <!--android:layout_below="@id/mainUI_titleLayout">-->
+
+
+
+
+        <!--<com.amap.api.maps.MapView-->
+            <!--android:id="@+id/mainUI_map"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_alignParentStart="true">-->
+        <!--</com.amap.api.maps.MapView>-->
+
+
+        <!--<FrameLayout-->
+            <!--android:id="@+id/fl_change"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="1">-->
+        <!--</FrameLayout>-->
+    <!--</RelativeLayout>-->
+
+
+    <FrameLayout
+        android:id="@+id/fl_change"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <View android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#dcdcdc"></View>
+        <com.flyco.tablayout.CommonTabLayout
+            android:id="@+id/tab"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#ffffff"
+            app:tl_iconHeight="25dp"
+            app:tl_iconWidth="25dp"
+            app:tl_indicator_color="@color/white"
+            app:tl_indicator_height="0dp"
+            app:tl_textSelectColor="@color/red"
+            app:tl_textUnselectColor="#66000000"
+            app:tl_textsize="10sp"
+            app:tl_underline_color="#DDDDDD"
+            app:tl_underline_height="1dp"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>

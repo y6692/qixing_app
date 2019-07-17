@@ -1,7 +1,6 @@
 package cn.qimate.bike.activity;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +13,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,7 +34,6 @@ import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.alipay.PayResult;
-import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.DensityUtils;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
@@ -98,7 +95,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                 @Override
                 public void run() {
                     if("1".equals(gamestatus)){
-                        UIHelper.goToAct(context,MainActivity.class);
+                        UIHelper.goToAct(context, MainActivity.class);
                     }else{
                         Intent intent2 = new Intent(context, WebviewActivity.class);
                         intent2.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
@@ -443,7 +440,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                         Toast.makeText(context, "恭喜您,支付成功", Toast.LENGTH_SHORT).show();
 
                         if("1".equals(gamestatus)){
-                            UIHelper.goToAct(context,MainActivity.class);
+                            UIHelper.goToAct(context, MainActivity.class);
                         }else{
                             Intent intent = new Intent(context, WebviewActivity.class);
                             intent.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
@@ -566,7 +563,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                                 Toast.makeText(context, "恭喜您,支付成功", Toast.LENGTH_SHORT).show();
 
                                 if("1".equals(gamestatus)){
-                                    UIHelper.goToAct(context,MainActivity.class);
+                                    UIHelper.goToAct(context, MainActivity.class);
                                 }else{
                                     Intent intent = new Intent(context, WebviewActivity.class);
                                     intent.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");

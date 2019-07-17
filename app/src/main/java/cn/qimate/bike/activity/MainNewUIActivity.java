@@ -7,14 +7,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Display;
@@ -22,19 +20,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.alibaba.fastjson.JSON;
-import com.amap.api.maps.AMap;
-import com.amap.api.maps.AMapOptions;
-import com.amap.api.maps.CameraUpdate;
-import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.MapView;
-import com.amap.api.maps.model.BitmapDescriptor;
-import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.flyco.tablayout.CommonTabLayout;
@@ -53,15 +41,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.http.OkHttpClientManager;
-import cn.http.ResultCallback;
-import cn.http.rdata.RUserLogin;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
-import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragmentActivity;
 import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.HttpHelper;
@@ -71,19 +54,15 @@ import cn.qimate.bike.core.common.UpdateManager;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
-import cn.qimate.bike.fragment.BikeFragment;
-import cn.qimate.bike.fragment.EbikeFragment;
+import cn.qimate.bike.fragment.MineFragment;
+import cn.qimate.bike.fragment.NearFragment;
+import cn.qimate.bike.fragment.PurseFragment;
+import cn.qimate.bike.fragment.UseBikeFragment;
 import cn.qimate.bike.model.ResultConsel;
-import cn.qimate.bike.model.TabTopEntity;
-import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
-import cn.qimate.bike.util.Globals;
-import cn.qimate.bike.util.ToastUtil;
-import okhttp3.Request;
-
-import static com.sofi.blelocker.library.Constants.STATUS_CONNECTED;
+import cn.qimate.bike.model.TabEntity;
 
 @SuppressLint("NewApi")
-public class MainActivity extends BaseFragmentActivity implements View.OnClickListener{
+public class MainNewUIActivity extends BaseFragmentActivity implements View.OnClickListener{
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -93,27 +72,35 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     public static final String KEY_EXTRAS = "extras";
 
     //    @BindView(R.id.fl_change) FrameLayout flChange;
-//    @BindView(R.id.tab)
-    CommonTabLayout tab;
+
 //    @BindView(R.id.ll_tab) LinearLayout llTab;
 
+    CommonTabLayout tab;
+
     private Context mContext;
-    private ImageView leftBtn, rightBtn;
+
+
+
+
     private ArrayList<Fragment> mFragments = new ArrayList<>();
     private ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
-    private String[] mTitles = { "单车", "电单车"};
-    //    private int[] mIconUnselectIds = {
-//            R.drawable.bike, R.drawable.near, R.drawable.purse, R.drawable.mine
-//    };
-//    private int[] mIconSelectIds = {
-//            R.drawable.bike2, R.drawable.near2, R.drawable.purse2, R.drawable.mine2
-//    };
-    private BikeFragment bikeFragment;
-    private EbikeFragment ebikeFragment;
+    private String[] mTitles = { "用车", "周边", "钱包", "我的" };
+    private int[] mIconUnselectIds = {
+            R.drawable.bike, R.drawable.near, R.drawable.purse, R.drawable.mine
+    };
+    private int[] mIconSelectIds = {
+            R.drawable.bike2, R.drawable.near2, R.drawable.purse2, R.drawable.mine2
+    };
 
-    public AMap aMap;
-    public BitmapDescriptor successDescripter;
-    public MapView mapView;
+//    private BikeFragment bikeFragment;
+//    private EbikeFragment ebikeFragment;
+
+    private UseBikeFragment useBikeFragment;
+    private NearFragment nearFragment;
+    private PurseFragment purseFragment;
+    private MineFragment mineFragment;
+
+
 
 
     private Dialog dialog;
@@ -144,8 +131,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //        IntentFilter filter = new IntentFilter("data.broadcast.action");
 //        registerReceiver(mReceiver, filter);
 
-        mapView = (MapView) findViewById(R.id.mainUI_map);
-        mapView.onCreate(savedInstanceState);
+
 
 //        new Thread(new Runnable() {
 //            @Override
@@ -160,7 +146,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         initData();
         initView();
-        initListener();
 //        initLocation();
 //        AppApplication.getApp().scan();
 
@@ -184,16 +169,45 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     }
 
+    private void initData() {
+        mContext = this;
+        useBikeFragment = new UseBikeFragment();
+        nearFragment = new NearFragment();
+        purseFragment = new PurseFragment();
+        mineFragment = new MineFragment();
+
+//        ebikeFragment = new EbikeFragment();
+//        mFragments_top.add(bikeFragment);
+//        mFragments_top.add(ebikeFragment);
+
+        mFragments.add(useBikeFragment);
+        mFragments.add(nearFragment);
+        mFragments.add(purseFragment);
+        mFragments.add(mineFragment);
+
+        Log.e("main===initData", "===");
+
+//        for (int i = 0; i < mTitles_top.length; i++) {
+//            mTabEntities_top.add(new TabTopEntity(mTitles_top[i]));
+//        }
+
+        for (int i = 0; i < mTitles.length; i++) {
+            mTabEntities.add(new TabEntity(mTitles[i], mIconSelectIds[i], mIconUnselectIds[i]));
+        }
+    }
+
     private void initView() {
 
-        tab = findViewById(R.id.tab);
+//        tabTop = findViewById(R.id.tab_top);
+//        tabTop.setTabData(mTabEntities_top, MainActivity.this, R.id.fl_change, mFragments_top);
+//        tabTop.setCurrentTab(0);
 
-        tab.setTabData(mTabEntities, MainActivity.this, R.id.fl_change, mFragments);
+        tab = findViewById(R.id.tab);
+        tab.setTabData(mTabEntities, MainNewUIActivity.this, R.id.fl_change, mFragments);
         tab.setCurrentTab(0);
 
 
-        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
-        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
+
 
         loadingDialog = new LoadingDialog(context);
         loadingDialog.setCancelable(false);
@@ -252,8 +266,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //        exImage_1.setOnClickListener(myOnClickLister);
 //        exImage_2.setOnClickListener(myOnClickLister);
 
-        leftBtn.setOnClickListener(this);
-        rightBtn.setOnClickListener(this);
+
 
         advImageView.setOnClickListener(this);
         advCloseBtn.setOnClickListener(this);
@@ -373,9 +386,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         Log.e("main===", "===onDestroy");
 
-        if (mapView != null) {
-            mapView.onDestroy();
-        }
+
     }
 
 
@@ -408,12 +419,12 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                     if (SharedPreferencesUrls.getInstance().getString("date","") != null &&
                             !"".equals(SharedPreferencesUrls.getInstance().getString("date",""))){
                         if (!format.equals(SharedPreferencesUrls.getInstance().getString("date",""))){
-                            UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, true);
+                            UpdateManager.getUpdateManager().checkAppUpdate(MainNewUIActivity.this, context, true);
                             SharedPreferencesUrls.getInstance().putString("date",""+format);
                         }
                     }else {
                         // 版本更新
-                        UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, true);
+                        UpdateManager.getUpdateManager().checkAppUpdate(MainNewUIActivity.this, context, true);
                         SharedPreferencesUrls.getInstance().putString("date",""+format);
                     }
                 }
@@ -431,13 +442,13 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 if (!date.equals(SharedPreferencesUrls.getInstance().getString("date",""))){
                     Log.e("getNetTime==2_2", "===");
 
-                    UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, true);
+                    UpdateManager.getUpdateManager().checkAppUpdate(MainNewUIActivity.this, context, true);
                     SharedPreferencesUrls.getInstance().putString("date",""+date);
                 }
             }else {
                 Log.e("getNetTime==23", "===");
                 // 版本更新
-                UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, true);
+                UpdateManager.getUpdateManager().checkAppUpdate(MainNewUIActivity.this, context, true);
                 SharedPreferencesUrls.getInstance().putString("date",""+date);
             }
             e.printStackTrace();
@@ -449,7 +460,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         super.onResume();
 
-        mapView.onResume();
+
 
         Log.e("main===onResume", "==="+type);
 
@@ -481,7 +492,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
 //                    ClientManager.getClient().search(request, mSearchResponse);
                 } else {
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 188);
+                    ActivityCompat.requestPermissions(MainNewUIActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 188);
                 }
             }
             else {
@@ -493,13 +504,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
 
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
 
-        Log.e("main===onSIS", "==="+type);
-    }
 
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         private String action = null;
@@ -522,19 +527,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         }
     };
 
-    private void initData() {
-        mContext = this;
-        bikeFragment = new BikeFragment();
-        ebikeFragment = new EbikeFragment();
-        mFragments.add(bikeFragment);
-        mFragments.add(ebikeFragment);
 
-        Log.e("main===initData", "===");
-
-        for (int i = 0; i < mTitles.length; i++) {
-            mTabEntities.add(new TabTopEntity(mTitles[i]));
-        }
-    }
 
 
 
@@ -556,9 +549,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     }
 
-    private void initListener() {
-    }
-
 
 
     @Override
@@ -566,19 +556,19 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         switch (view.getId()){
-            case R.id.mainUI_leftBtn:
-                UIHelper.goToAct(context, ActionCenterActivity.class);
-
-                break;
-            case R.id.mainUI_rightBtn:
-                if (SharedPreferencesUrls.getInstance().getString("uid","") == null || "".equals(
-                        SharedPreferencesUrls.getInstance().getString("access_token",""))){
-                    UIHelper.goToAct(context, LoginActivity.class);
-                    ToastUtil.showMessageApp(context,"请先登录你的账号");
-                    return;
-                }
-                UIHelper.goToAct(context, PersonAlterActivity.class);
-                break;
+//            case R.id.mainUI_leftBtn:
+//                UIHelper.goToAct(context, ActionCenterActivity.class);
+//
+//                break;
+//            case R.id.mainUI_rightBtn:
+//                if (SharedPreferencesUrls.getInstance().getString("uid","") == null || "".equals(
+//                        SharedPreferencesUrls.getInstance().getString("access_token",""))){
+//                    UIHelper.goToAct(context, LoginActivity.class);
+//                    ToastUtil.showMessageApp(context,"请先登录你的账号");
+//                    return;
+//                }
+//                UIHelper.goToAct(context, PersonAlterActivity.class);
+//                break;
             case R.id.ui_adv_closeBtn:
                 if (advDialog != null && advDialog.isShowing()) {
                     advDialog.dismiss();
