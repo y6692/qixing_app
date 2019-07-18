@@ -244,9 +244,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         context = getActivity();
         activity = getActivity();
 
-
-
-
 //        aMap = ((MainActivity)activity).aMap;
 //        successDescripter = ((MainActivity)activity).successDescripter;
 //        mapView = ((MainActivity)activity).mapView;

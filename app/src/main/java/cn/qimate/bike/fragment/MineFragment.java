@@ -23,6 +23,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -199,6 +200,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+
+        Log.e("MF===onHiddenChanged", "==="+hidden);
+
         if(hidden){
             //pause
         }else{

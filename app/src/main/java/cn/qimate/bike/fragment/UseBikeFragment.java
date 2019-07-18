@@ -105,8 +105,6 @@ public class UseBikeFragment extends BaseFragment implements View.OnClickListene
 
         unbinder = ButterKnife.bind(this, v);
 
-
-
         return v;
     }
 
@@ -151,12 +149,11 @@ public class UseBikeFragment extends BaseFragment implements View.OnClickListene
 
     private void initView(){
 
-        leftBtn = (ImageView) getActivity().findViewById(R.id.mainUI_leftBtn);
-        rightBtn = (ImageView) getActivity().findViewById(R.id.mainUI_rightBtn);
+        leftBtn = getActivity().findViewById(R.id.mainUI_leftBtn);
+        rightBtn = getActivity().findViewById(R.id.mainUI_rightBtn);
 
         leftBtn.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
-
 
 //        openGPSSettings();
 //
@@ -212,7 +209,7 @@ public class UseBikeFragment extends BaseFragment implements View.OnClickListene
         mFragments.add(ebikeFragment);
 
         tab = (CommonTabLayout) getActivity().findViewById(R.id.tab);
-        tab.setTabData(mTabEntities, getActivity(), R.id.fl_change, mFragments);
+        tab.setTabData(mTabEntities, getActivity(), R.id.fl_change2, mFragments);
 //        tab.setTabData(mTabEntities);
         tab.setCurrentTab(0);
 
