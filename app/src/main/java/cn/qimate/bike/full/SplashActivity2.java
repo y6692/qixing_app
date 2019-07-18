@@ -281,7 +281,15 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
-                String UUID = tm.getDeviceId();
+
+                String UUID = "";
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    UUID = tm.getImei();
+                } else {
+                    UUID = tm.getDeviceId();
+                }
+
+//                String UUID = tm.getDeviceId();
                 String system_version = Build.VERSION.RELEASE;
                 String device_model = new Build().MODEL;
                 RequestParams params = new RequestParams();
