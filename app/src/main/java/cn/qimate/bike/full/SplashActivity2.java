@@ -134,6 +134,8 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
             }
         }
 
+        Log.e("init===", "==="+locationOption);
+
 		if (null == locationOption) {
 			locationOption = new AMapLocationClientOption();
 		}
@@ -212,6 +214,8 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
     }
 
     private void initLocation() {
+        PostDeviceInfo(1.0, 1.0);
+
         if (NetworkUtils.getNetWorkType(context) != NetworkUtils.NONETWORK) {
             //初始化client
             locationClient = new AMapLocationClient(this.getApplicationContext());
@@ -248,30 +252,32 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
             if (null != loc) {
 //				Toast.makeText(context,"===="+loc.getLongitude(),Toast.LENGTH_SHORT).show();
 
-                if (0.0 != loc.getLongitude() && 0.0 != loc.getLongitude()) {
-                    PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
-                } else {
-                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(SplashActivity2.this);
-                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                    finishMine();
-                                }
-                            }).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            Intent localIntent = new Intent();
-                            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-                            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
-                            startActivity(localIntent);
-                            finishMine();
-                        }
-                    });
-                    customBuilder.create().show();
-                    return;
-                }
+//                PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
+
+//                if (0.0 != loc.getLongitude() && 0.0 != loc.getLongitude()) {
+//                    PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
+//                } else {
+//                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(SplashActivity2.this);
+//                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
+//                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.cancel();
+//                                    finishMine();
+//                                }
+//                            }).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.cancel();
+//                            Intent localIntent = new Intent();
+//                            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+//                            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+//                            startActivity(localIntent);
+//                            finishMine();
+//                        }
+//                    });
+//                    customBuilder.create().show();
+//                    return;
+//                }
             } else {
                 Toast.makeText(context, "定位失败", Toast.LENGTH_SHORT).show();
                 finishMine();
@@ -286,12 +292,12 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
-                String UUID = tm.getDeviceId();
-                String system_version = Build.VERSION.RELEASE;
-                String device_model = new Build().MODEL;
+                final String UUID = tm.getDeviceId();
+                final String system_version = Build.VERSION.RELEASE;
+                final String device_model = new Build().MODEL;
                 RequestParams params = new RequestParams();
                 Md5Helper Md5Helper = new Md5Helper();
-                String verify = Md5Helper.encode("7mateapp" + UUID);
+                final String verify = Md5Helper.encode("7mateapp" + UUID);
                 params.put("verify", verify);
                 params.put("system_name", "Android");
                 params.put("system_version", system_version);
@@ -300,17 +306,26 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
                 params.put("longitude", ""+longitude);
                 params.put("latitude", ""+latitude);
                 params.put("UUID", UUID);
+
+
+
                 HttpHelper.post(context, Urls.DevicePostUrl, params, new TextHttpResponseHandler() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                        try {
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                            if (result.getFlag().toString().equals("Success")) {
-
+                    public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                        m_myHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                    if (result.getFlag().toString().equals("Success")) {
+                                        Toast.makeText(context,"设备号==="+UUID+">>>"+verify+">>>"+system_version+">>>"+device_model, Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        });
+
                     }
 
                     @Override
