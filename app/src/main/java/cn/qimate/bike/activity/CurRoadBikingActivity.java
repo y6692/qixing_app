@@ -6,9 +6,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -25,8 +23,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
-import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -47,7 +43,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.alipay.sdk.app.PayTask;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -85,15 +80,12 @@ import com.sofi.blelocker.library.protocol.IGetRecordResponse;
 import com.sofi.blelocker.library.protocol.IGetStatusResponse;
 import com.sofi.blelocker.library.protocol.IQueryOpenStateResponse;
 import com.sofi.blelocker.library.protocol.ITemporaryActionResponse;
-import com.sofi.blelocker.library.search.SearchRequest;
 import com.sofi.blelocker.library.search.SearchResult;
 import com.sofi.blelocker.library.search.response.SearchResponse;
-import com.sofi.blelocker.library.utils.BluetoothLog;
 import com.sofi.blelocker.library.utils.StringUtils;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
-import com.sunshine.blelibrary.inter.OnDeviceSearchListener;
 import com.sunshine.blelibrary.utils.ConvertUtils;
 import com.sunshine.blelibrary.utils.GlobalParameterUtils;
 
@@ -104,7 +96,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
 
@@ -127,7 +118,6 @@ import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.core.widget.MyScrollView;
 import cn.qimate.bike.fragment.BikeFragment;
-import cn.qimate.bike.jpush.ServiceReceiver;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.EbikeInfoBean;
 import cn.qimate.bike.model.KeyBean;
@@ -146,7 +136,6 @@ import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
 import okhttp3.Request;
 
-import static cn.qimate.bike.core.common.Urls.schoolrangeList;
 import static com.sofi.blelocker.library.Constants.STATUS_CONNECTED;
 
 /**
@@ -4864,7 +4853,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     public void initmPopupWindowView() {
 
         // 获取自定义布局文件的视图
-        View customView = getLayoutInflater().inflate(R.layout.pop_menu, null, false);
+        View customView = getLayoutInflater().inflate(R.layout.pop_menu2, null, false);
         // 创建PopupWindow宽度和高度
         RelativeLayout pop_win_bg = (RelativeLayout) customView.findViewById(R.id.pop_win_bg);
         ImageView iv_popup_window_back = (ImageView) customView.findViewById(R.id.popupWindow_back);

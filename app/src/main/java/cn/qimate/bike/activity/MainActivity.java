@@ -526,9 +526,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     };
 
 
-
-
-
     public void changeTab(int index) {
 
 

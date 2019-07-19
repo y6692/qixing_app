@@ -3,8 +3,8 @@
 
     <item
         android:drawable="@drawable/light"
-        android:width="50dp"
-        android:height="50dp"
+        android:width="49dp"
+        android:height="49dp"
         />
 
 </layer-list >

@@ -15,10 +15,9 @@
     <RelativeLayout
         android:id="@+id/rl_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp90"
+        android:layout_height="@dimen/dp40"
         android:layout_alignParentTop="true"
-        android:background="@drawable/scan_mask"
-        android:paddingTop="@dimen/dp15">
+        android:background="@drawable/scan_mask">
 
         <ImageView
             android:layout_width="40dp"
@@ -44,13 +43,12 @@
 
         <ImageView
             android:id="@+id/top_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/dp10"
-            android:alpha="0.5"
+            android:layout_marginLeft="16dp"
             android:onClick="btn"
-            android:src="@drawable/s_left_jiantou"
+            android:src="@drawable/close"
             android:layout_centerVertical="true"/>
 
         <TextView
@@ -123,25 +121,27 @@
         android:contentDescription="@string/app_name"/>
 
     <TextView
-        android:layout_marginTop="@dimen/dp25"
+        android:layout_marginTop="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/ll_scan_help"
         android:layout_centerHorizontal="true"
-        android:text="将二维码图片对准扫描框即可自动扫描"
+        android:text="对准车上的二维码"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/sp16"/>
+        android:textSize="@dimen/sp12"/>
 
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/capture_crop_layout"
+        android:background="@color/black"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="117dp"
+        android:paddingTop="28dp"
         android:onClick="btn"
         android:weightSum="2">
         <TextView
@@ -152,9 +152,9 @@
             android:layout_weight="1"
             android:drawableTop="@drawable/top_hand"
             android:gravity="center"
-            android:src="@drawable/code_icon"
-            android:text="手动输车号"
-            android:textColor="#DBD5D5"
+            android:text="输入编号开锁"
+            android:textSize="12sp"
+            android:textColor="@color/white"
             android:onClick="btn"
             />
 
@@ -166,9 +166,9 @@
             android:layout_weight="1"
             android:drawableTop="@drawable/top_light"
             android:gravity="center"
-            android:src="@drawable/linecode_icon"
-            android:text="手电筒"
-            android:textColor="#DBD5D5"
+            android:text="打开手电筒"
+            android:textSize="12sp"
+            android:textColor="@color/white"
             android:onClick="btn"
             />
     </LinearLayout>
