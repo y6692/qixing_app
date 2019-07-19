@@ -3,8 +3,10 @@ package cn.qimate.bike.activity;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -195,6 +197,7 @@ public class RegisterActivity extends SwipeBackActivity implements View.OnClickL
      * 发送验证码
      *
      * */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendCode(String telphone) {
 
         RequestParams params = new RequestParams();
@@ -202,7 +205,18 @@ public class RegisterActivity extends SwipeBackActivity implements View.OnClickL
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        params.add("UUID", tm.getDeviceId());
+
+        String UUID = tm.getDeviceId();
+
+        if("".equals(UUID)){
+            UUID = tm.getImei();
+        }
+
+        if("".equals(UUID)){
+            UUID = tm.getMeid();
+        }
+
+        params.add("UUID", UUID);
         params.add("type", "1");
         HttpHelper.post(context, Urls.sendcode, params, new TextHttpResponseHandler() {
             @Override
@@ -244,6 +258,7 @@ public class RegisterActivity extends SwipeBackActivity implements View.OnClickL
     }
 
     // 注册处理
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void RegisterHttp(String telphone, String telcode, String password) {
 
         Md5Helper Md5Helper = new Md5Helper();
@@ -255,7 +270,17 @@ public class RegisterActivity extends SwipeBackActivity implements View.OnClickL
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        params.put("UUID", tm.getDeviceId());
+        String UUID = tm.getDeviceId();
+
+        if("".equals(UUID)){
+            UUID = tm.getImei();
+        }
+
+        if("".equals(UUID)){
+            UUID = tm.getMeid();
+        }
+
+        params.add("UUID", UUID);
 
         HttpHelper.post(context, Urls.register, params, new TextHttpResponseHandler() {
             @Override

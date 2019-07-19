@@ -5,6 +5,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.KeyguardManager;
@@ -35,7 +36,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,6 +51,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.amap.api.location.AMapLocation;
@@ -57,10 +61,12 @@ import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapOptions;
+import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
@@ -72,19 +78,30 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polygon;
 import com.amap.api.maps.model.PolygonOptions;
+import com.amap.api.maps.model.PolylineOptions;
+import com.bumptech.glide.Glide;
+import com.flyco.tablayout.CommonTabLayout;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
 import com.sunshine.blelibrary.inter.OnDeviceSearchListener;
+import com.zbar.lib.ScanCaptureAct;
 import com.zxing.lib.scaner.activity.ActivityScanerCode;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.jpush.android.api.JPushInterface;
@@ -99,6 +116,7 @@ import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.activity.HistoryRoadDetailActivity;
 import cn.qimate.bike.activity.InsureanceActivity;
 import cn.qimate.bike.activity.LoginActivity;
+import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.activity.MyPurseActivity;
 import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.activity.PersonAlterActivity;
@@ -109,9 +127,11 @@ import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.ble.utils.ParseLeAdvData;
 import cn.qimate.bike.core.common.AppManager;
+import cn.qimate.bike.core.common.DisplayUtil;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
+import cn.qimate.bike.core.common.UpdateManager;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
@@ -226,16 +246,17 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private int n=0;
     private float accuracy = 29.0f;
 
-    private boolean isHidden = false;
+    private boolean isHidden = true;
 
     private int carType = 1;
 
     private Bundle savedIS;
 
+    CommonTabLayout tab;
+
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_bike, null);
         unbinder = ButterKnife.bind(this, v);
-
         return v;
     }
 
@@ -248,11 +269,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //        successDescripter = ((MainActivity)activity).successDescripter;
 //        mapView = ((MainActivity)activity).mapView;
 
-
-//        mapView = ((UseBikeFragment)(getParentFragment())).mapView;
-        mapView = getActivity().findViewById(R.id.mainUI_map);
-
-        Log.e("BF===", mapView+"==="+getParentFragment());
+        mapView = activity.findViewById(R.id.mainUI_map);
 
         WindowManager.LayoutParams winParams = activity.getWindow().getAttributes();
         winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
@@ -680,57 +697,50 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(isHidden) return;
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
 
-                        try {
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                            if (result.getFlag().equals("Success")) {
-                                JSONArray array = new JSONArray(result.getData());
+                if(isHidden) return;
 
-                                Log.e("initNearby===Bike", "==="+array.length());
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+                        JSONArray array = new JSONArray(result.getData());
 
-                                for (Marker marker : bikeMarkerList){
-                                    if (marker != null){
-                                        marker.remove();
-                                    }
-                                }
-                                if (!bikeMarkerList.isEmpty() || 0 != bikeMarkerList.size()){
-                                    bikeMarkerList.clear();
-                                }
-                                if (0 == array.length()){
-                                    ToastUtils.show("附近没有单车");
-                                }else {
-                                    for (int i = 0; i < array.length(); i++){
-                                        NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
-                                        // 加入自定义标签
+                        Log.e("initNearby===Bike", "==="+array.length());
 
-                                        Log.e("initNearby===Bike#", bean.getLatitude()+"==="+bean.getLongitude());
-
-                                        MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(
-                                                Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
-                                        Marker bikeMarker = aMap.addMarker(bikeMarkerOption);
-                                        bikeMarkerList.add(bikeMarker);
-                                    }
-
-                                }
-
-                                Log.e("initNearby===Bike@", "==="+array.length());
-                            } else {
-                                ToastUtils.show(result.getMsg());
+                        for (Marker marker : bikeMarkerList){
+                            if (marker != null){
+                                marker.remove();
                             }
-                        } catch (Exception e) {
+                        }
+                        if (!bikeMarkerList.isEmpty() || 0 != bikeMarkerList.size()){
+                            bikeMarkerList.clear();
+                        }
+                        if (0 == array.length()){
+                            ToastUtils.show("附近没有单车");
+                        }else {
+                            for (int i = 0; i < array.length(); i++){
+                                NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
+                                // 加入自定义标签
+
+//                                Log.e("initNearby===Bike", bean.getLatitude()+"==="+bean.getLongitude());
+
+                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(
+                                        Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
+                                Marker bikeMarker = aMap.addMarker(bikeMarkerOption);
+                                bikeMarkerList.add(bikeMarker);
+                            }
 
                         }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
+                    } else {
+                        ToastUtils.show(result.getMsg());
                     }
-                });
+                } catch (Exception e) {
 
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
             }
         });
     }
@@ -767,6 +777,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         dialog.setContentView(dialogView);
         dialog.setCanceledOnTouchOutside(false);
 
+        tab = getActivity().findViewById(R.id.tab);
+
         marquee = (TextView) activity.findViewById(R.id.mainUI_marquee);
 //        title = (TextView) activity.findViewById(R.id.mainUI_title);
 //        leftBtn = (ImageView) activity.findViewById(R.id.mainUI_leftBtn);
@@ -795,8 +807,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //            aMap = mapView.getMap();
 //            setUpMap();
 //        }
-
-        Log.e("BF===initView", "===");
 
         aMap.setMapType(AMap.MAP_TYPE_NAVI);
         aMap.getUiSettings().setZoomControlsEnabled(false);
@@ -880,9 +890,12 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         Log.e("main===bike", "main====onResume==="+type);
 
-//        if("4".equals(type)){
-//            ((MainActivity)getActivity()).changeTab(1);
-//        }
+        if("4".equals(type)){
+
+            tab.setCurrentTab(1);
+//            ((UseBikeFragment)getParentFragment()).changeTab(1);
+//            return;
+        }
 //        else{
 //            ((MainActivity)getActivity()).changeTab(0);
 //        }
@@ -1044,7 +1057,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             }
 
         }
-
     }
 
 
@@ -1148,9 +1160,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     });
 
     private void setUpMap() {
-
-        Log.e("BF===setUpMap", "===");
-
         aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false

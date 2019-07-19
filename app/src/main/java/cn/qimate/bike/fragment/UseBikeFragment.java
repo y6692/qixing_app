@@ -208,7 +208,7 @@ public class UseBikeFragment extends BaseFragment implements View.OnClickListene
         mFragments.add(bikeFragment);
         mFragments.add(ebikeFragment);
 
-        tab = (CommonTabLayout) getActivity().findViewById(R.id.tab);
+        tab = getActivity().findViewById(R.id.tab);
         tab.setTabData(mTabEntities, getActivity(), R.id.fl_change2, mFragments);
 //        tab.setTabData(mTabEntities);
         tab.setCurrentTab(0);
@@ -266,6 +266,12 @@ public class UseBikeFragment extends BaseFragment implements View.OnClickListene
 //        aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);// 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
 ////        aMap.setLoadOfflineData(true);
 //    }
+
+    public void changeTab(int index) {
+
+        tab.setCurrentTab(index);
+
+    }
 
     private void setUpLocationStyle() {
         MyLocationStyle myLocationStyle = new MyLocationStyle();

@@ -10,6 +10,7 @@
 package cn.qimate.bike.full;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,12 +21,14 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -33,6 +36,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.hubcloud.adhubsdk.AdHub;
 import com.hubcloud.adhubsdk.AdListener;
 import com.hubcloud.adhubsdk.SplashAd;
 
@@ -42,7 +46,9 @@ import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.ActionCenterActivity;
 import cn.qimate.bike.activity.CrashHandler;
+import cn.qimate.bike.activity.Main4Activity;
 import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.base.BaseActivity;
 import cn.qimate.bike.core.common.HttpHelper;
@@ -129,6 +135,8 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
             }
         }
 
+        Log.e("init===", "==="+locationOption);
+
 		if (null == locationOption) {
 			locationOption = new AMapLocationClientOption();
 		}
@@ -207,6 +215,8 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
     }
 
     private void initLocation() {
+//        PostDeviceInfo(1.0, 1.0);
+
         if (NetworkUtils.getNetWorkType(context) != NetworkUtils.NONETWORK) {
             //初始化client
             locationClient = new AMapLocationClient(this.getApplicationContext());
@@ -238,10 +248,13 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
     }
 
     AMapLocationListener locationListener = new AMapLocationListener() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onLocationChanged(AMapLocation loc) {
             if (null != loc) {
 //				Toast.makeText(context,"===="+loc.getLongitude(),Toast.LENGTH_SHORT).show();
+
+//                PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
 
                 if (0.0 != loc.getLongitude() && 0.0 != loc.getLongitude()) {
                     PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
@@ -274,6 +287,7 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
         }
     };
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void PostDeviceInfo(double latitude, double longitude) {
         if (NetworkUtils.getNetWorkType(context) != NetworkUtils.NONETWORK) {
             try {
@@ -282,19 +296,28 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
                     return;
                 }
 
-                String UUID = "";
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                String UUID = tm.getDeviceId();
+
+                if("".equals(UUID)){
                     UUID = tm.getImei();
-                } else {
-                    UUID = tm.getDeviceId();
                 }
 
-//                String UUID = tm.getDeviceId();
-                String system_version = Build.VERSION.RELEASE;
-                String device_model = new Build().MODEL;
+                if("".equals(UUID)){
+                    UUID = tm.getMeid();
+                }
+
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                    UUID = tm.getImei();
+//                } else {
+//                    UUID = tm.getDeviceId();
+//                }
+
+
+                final String system_version = Build.VERSION.RELEASE;
+                final String device_model = new Build().MODEL;
                 RequestParams params = new RequestParams();
                 Md5Helper Md5Helper = new Md5Helper();
-                String verify = Md5Helper.encode("7mateapp" + UUID);
+                final String verify = Md5Helper.encode("7mateapp" + UUID);
                 params.put("verify", verify);
                 params.put("system_name", "Android");
                 params.put("system_version", system_version);
@@ -303,17 +326,26 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
                 params.put("longitude", ""+longitude);
                 params.put("latitude", ""+latitude);
                 params.put("UUID", UUID);
+
+//                Toast.makeText(context,"设备号==="+UUID+">>>"+verify+">>>"+system_version+">>>"+device_model, Toast.LENGTH_SHORT).show();
+
+
                 HttpHelper.post(context, Urls.DevicePostUrl, params, new TextHttpResponseHandler() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                        try {
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                            if (result.getFlag().toString().equals("Success")) {
-
+                    public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                        m_myHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                    if (result.getFlag().toString().equals("Success")) {
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        });
+
                     }
 
                     @Override
@@ -409,6 +441,12 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
         super.onDestroy();
 
         unregisterReceiver(mMessageReceiver);
+
+        if (locationClient != null) {
+            locationClient.stopLocation();
+            locationClient.onDestroy();
+        }
+        locationClient = null;
 
         m_myHandler.removeCallbacksAndMessages(null);
     }

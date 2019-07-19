@@ -58,10 +58,12 @@ import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapOptions;
+import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
@@ -73,6 +75,9 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polygon;
 import com.amap.api.maps.model.PolygonOptions;
+import com.amap.api.maps.model.PolylineOptions;
+import com.bumptech.glide.Glide;
+import com.flyco.tablayout.CommonTabLayout;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
 import com.sunshine.blelibrary.inter.OnDeviceSearchListener;
@@ -82,7 +87,13 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -100,6 +111,7 @@ import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.activity.HistoryRoadDetailActivity;
 import cn.qimate.bike.activity.InsureanceActivity;
 import cn.qimate.bike.activity.LoginActivity;
+import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.activity.MyPurseActivity;
 import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.activity.PersonAlterActivity;
@@ -110,9 +122,11 @@ import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.ble.utils.ParseLeAdvData;
 import cn.qimate.bike.core.common.AppManager;
+import cn.qimate.bike.core.common.DisplayUtil;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
+import cn.qimate.bike.core.common.UpdateManager;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
@@ -130,6 +144,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.Context.KEYGUARD_SERVICE;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static cn.qimate.bike.activity.CurRoadBikingActivity.bytes2hex03;
+import static cn.qimate.bike.core.common.Urls.schoolrangeList;
 
 @SuppressLint("NewApi")
 public class EbikeFragment extends BaseFragment implements View.OnClickListener, LocationSource,
@@ -245,10 +260,12 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     private int n=0;
     private float accuracy = 29.0f;
 
-    private boolean isHidden = false;
+    private boolean isHidden = true;
 
     private Bundle savedIS;
     private JSONArray arraySchoolRange;
+
+    CommonTabLayout tab;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_ebike, null);
@@ -265,8 +282,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //        successDescripter = ((MainActivity)activity).successDescripter;
 //        mapView = ((MainActivity)activity).mapView;
 
-//        mapView = ((UseBikeFragment)getParentFragment()).mapView;
-        mapView = getActivity().findViewById(R.id.mainUI_map);
+        mapView = activity.findViewById(R.id.mainUI_map);
 
         WindowManager.LayoutParams winParams = activity.getWindow().getAttributes();
         winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
@@ -833,6 +849,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //        params4.height = (int) (activity.getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 //        advImageView.setLayoutParams(params4);
 
+        tab = getActivity().findViewById(R.id.tab);
+
         marquee = (TextView) activity.findViewById(R.id.mainUI_marquee2);
 //        title = (TextView) activity.findViewById(R.id.mainUI_title);
 //        leftBtn = (ImageView) activity.findViewById(R.id.mainUI_leftBtn);
@@ -855,8 +873,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             aMap = mapView.getMap();
             setUpMap();
         }
-
-        Log.e("EBF===initView", "===");
 
         aMap.setMapType(AMap.MAP_TYPE_NAVI);
         aMap.getUiSettings().setZoomControlsEnabled(false);
@@ -971,9 +987,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         Log.e("main===ebike", "main====onResume==="+type);
 
-//        if(!"4".equals(type)){
-//            ((MainActivity)getActivity()).changeTab(0);
-//        }
+        if(!"4".equals(type)){
+            tab.setCurrentTab(1);
+//            ((UseBikeFragment)getParentFragment()).changeTab(0);
+//            return;
+        }
 
         tz = 0;
 
