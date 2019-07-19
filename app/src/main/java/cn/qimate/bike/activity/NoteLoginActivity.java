@@ -195,7 +195,17 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
             return;
         }
 
-        params.add("UUID", tm.getDeviceId());
+        String UUID = tm.getDeviceId();
+
+        if("".equals(UUID)){
+            UUID = tm.getImei();
+        }
+
+        if("".equals(UUID)){
+            UUID = tm.getMeid();
+        }
+
+        params.add("UUID", UUID);
 
 //        if (tm.getDeviceId() != null) {
 //            params.add("UUID", tm.getDeviceId());
@@ -320,7 +330,17 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        params.add("UUID", tm.getDeviceId());
+        String UUID = tm.getDeviceId();
+
+        if("".equals(UUID)){
+            UUID = tm.getImei();
+        }
+
+        if("".equals(UUID)){
+            UUID = tm.getMeid();
+        }
+
+        params.add("UUID", UUID);
 
         HttpHelper.post(context, Urls.loginCode, params, new TextHttpResponseHandler() {
             @Override

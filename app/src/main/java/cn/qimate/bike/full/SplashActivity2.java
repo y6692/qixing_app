@@ -21,6 +21,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -214,7 +215,7 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
     }
 
     private void initLocation() {
-        PostDeviceInfo(1.0, 1.0);
+//        PostDeviceInfo(1.0, 1.0);
 
         if (NetworkUtils.getNetWorkType(context) != NetworkUtils.NONETWORK) {
             //初始化client
@@ -247,6 +248,7 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
     }
 
     AMapLocationListener locationListener = new AMapLocationListener() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onLocationChanged(AMapLocation loc) {
             if (null != loc) {
@@ -254,30 +256,30 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
 
 //                PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
 
-//                if (0.0 != loc.getLongitude() && 0.0 != loc.getLongitude()) {
-//                    PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
-//                } else {
-//                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(SplashActivity2.this);
-//                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
-//                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    dialog.cancel();
-//                                    finishMine();
-//                                }
-//                            }).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.cancel();
-//                            Intent localIntent = new Intent();
-//                            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-//                            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
-//                            startActivity(localIntent);
-//                            finishMine();
-//                        }
-//                    });
-//                    customBuilder.create().show();
-//                    return;
-//                }
+                if (0.0 != loc.getLongitude() && 0.0 != loc.getLongitude()) {
+                    PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
+                } else {
+                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(SplashActivity2.this);
+                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    finishMine();
+                                }
+                            }).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            Intent localIntent = new Intent();
+                            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+                            startActivity(localIntent);
+                            finishMine();
+                        }
+                    });
+                    customBuilder.create().show();
+                    return;
+                }
             } else {
                 Toast.makeText(context, "定位失败", Toast.LENGTH_SHORT).show();
                 finishMine();
@@ -285,6 +287,7 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
         }
     };
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void PostDeviceInfo(double latitude, double longitude) {
         if (NetworkUtils.getNetWorkType(context) != NetworkUtils.NONETWORK) {
             try {
@@ -292,7 +295,24 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
-                final String UUID = tm.getDeviceId();
+
+                String UUID = tm.getDeviceId();
+
+                if("".equals(UUID)){
+                    UUID = tm.getImei();
+                }
+
+                if("".equals(UUID)){
+                    UUID = tm.getMeid();
+                }
+
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                    UUID = tm.getImei();
+//                } else {
+//                    UUID = tm.getDeviceId();
+//                }
+
+
                 final String system_version = Build.VERSION.RELEASE;
                 final String device_model = new Build().MODEL;
                 RequestParams params = new RequestParams();
@@ -307,6 +327,7 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
                 params.put("latitude", ""+latitude);
                 params.put("UUID", UUID);
 
+//                Toast.makeText(context,"设备号==="+UUID+">>>"+verify+">>>"+system_version+">>>"+device_model, Toast.LENGTH_SHORT).show();
 
 
                 HttpHelper.post(context, Urls.DevicePostUrl, params, new TextHttpResponseHandler() {
@@ -318,7 +339,6 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
                                 try {
                                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                                     if (result.getFlag().toString().equals("Success")) {
-                                        Toast.makeText(context,"设备号==="+UUID+">>>"+verify+">>>"+system_version+">>>"+device_model, Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -421,6 +441,12 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
         super.onDestroy();
 
         unregisterReceiver(mMessageReceiver);
+
+        if (locationClient != null) {
+            locationClient.stopLocation();
+            locationClient.onDestroy();
+        }
+        locationClient = null;
 
         m_myHandler.removeCallbacksAndMessages(null);
     }
