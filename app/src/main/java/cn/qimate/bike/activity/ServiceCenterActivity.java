@@ -70,7 +70,7 @@ public class ServiceCenterActivity extends SwipeBackActivity implements View.OnC
     private LoadingDialog loadingDialog;
     private LinearLayout ll_back;
     private TextView title;
-    private TextView rightBtn;
+    private ImageView rightBtn;
 
     private TextView nameEdit;
     private TextView phoneNum;
@@ -141,12 +141,12 @@ public class ServiceCenterActivity extends SwipeBackActivity implements View.OnC
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-//        ll_back = (LinearLayout) findViewById(R.id.ll_back);
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.mainUI_title_backBtn);
+//        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("客服中心");
-        rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
-        rightBtn.setText("拨打客服电话");
+        rightBtn = (ImageView) findViewById(R.id.mainUI_title_rightBtn);
+//        rightBtn.setText("拨打客服电话");
 
         // list投资列表
         footerView = LayoutInflater.from(context).inflate(R.layout.footer_item, null);
@@ -247,7 +247,7 @@ public class ServiceCenterActivity extends SwipeBackActivity implements View.OnC
         myList2.setAdapter(myCommonAdapter);
 
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
         footerLayout.setOnClickListener(this);
 

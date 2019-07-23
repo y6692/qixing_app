@@ -13,8 +13,59 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include
-            layout="@layout/ui_main_title"/>
+        <!--<include-->
+            <!--layout="@layout/ui_main_title"/>-->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp40"
+            android:background="@drawable/title_gradient2">
+
+            <LinearLayout
+                android:id="@+id/mainUI_title_backBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/back_image"/>
+
+                <TextView
+                    android:layout_marginLeft="-10dp"
+                    android:id="@+id/tv_left"
+                    android:textSize="@dimen/sp16"
+                    android:text="返回"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/mainUI_title_titleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp18"
+                android:textColor="@color/white"
+                android:layout_centerInParent="true"/>
+
+            <ImageView
+                android:id="@+id/mainUI_title_rightBtn"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/service_top_icon"
+                android:layout_marginRight="16dp"/>
+        </RelativeLayout>
 
         <cn.qimate.bike.core.widget.MyScrollView
             android:layout_width="match_parent"
@@ -54,7 +105,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="7dp"
                             android:textColor="#333333"
-                            android:textSize="@dimen/sp18"
+                            android:textSize="17sp"
                             android:text=""/>
 
                     </LinearLayout>

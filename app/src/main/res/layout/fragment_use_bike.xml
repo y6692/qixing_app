@@ -52,13 +52,13 @@
         <com.flyco.tablayout.CommonTabLayout
             android:id="@+id/tab"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="34dp"
             android:background="#ffffff"
-            app:tl_indicator_color="#E60012"
+            app:tl_indicator_color="#F93F17"
             app:tl_indicator_height="1dp"
-            app:tl_textSelectColor="@color/red"
-            app:tl_textUnselectColor="#66000000"
-            app:tl_textsize="16sp"
+            app:tl_textSelectColor="#F83816"
+            app:tl_textUnselectColor="#666666"
+            app:tl_textsize="14sp"
             app:tl_underline_color="#DDDDDD"
             app:tl_underline_height="0dp"/>
     </LinearLayout>

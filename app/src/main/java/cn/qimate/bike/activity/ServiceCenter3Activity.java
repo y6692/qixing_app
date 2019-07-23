@@ -63,7 +63,7 @@ public class ServiceCenter3Activity extends SwipeBackActivity implements View.On
     private LoadingDialog loadingDialog;
     private LinearLayout ll_back;
     private TextView title;
-    private TextView rightBtn;
+    private ImageView rightBtn;
     private TextView tv_title;
 
     private TextView nameEdit;
@@ -126,12 +126,12 @@ public class ServiceCenter3Activity extends SwipeBackActivity implements View.On
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-//        ll_back = (LinearLayout) findViewById(R.id.ll_back);
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.mainUI_title_backBtn);
+//        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("客服中心");
-        rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
-        rightBtn.setText("问题反馈");
+        rightBtn = (ImageView) findViewById(R.id.mainUI_title_rightBtn);
+//        rightBtn.setText("问题反馈");
 
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_title.setText(title2);
@@ -187,7 +187,7 @@ public class ServiceCenter3Activity extends SwipeBackActivity implements View.On
 
         setListViewHeight(myList);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
         footerLayout.setOnClickListener(this);
 
