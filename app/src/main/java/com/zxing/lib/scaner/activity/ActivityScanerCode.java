@@ -438,12 +438,17 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             int cropHeight = mCropLayout.getHeight() * height.get() / mContainer.getHeight();
             setCropWidth(cropWidth);
             setCropHeight(cropHeight);
-        } catch (IOException | RuntimeException ioe) {
-            return;
-        }
-        if (handler == null) {
+
+//            if (handler == null) {
+//                handler = new CaptureActivityHandler(ActivityScanerCode.this);
+//            }
+
             handler = new CaptureActivityHandler(ActivityScanerCode.this);
+        } catch (Exception ioe) {
+            Log.e("initCamera===scan_e", "===="+ioe);
+//            return;
         }
+
     }
 
     public void btn(View view) {
@@ -511,7 +516,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         super.onPause();
         if (handler != null) {
             handler.quitSynchronously();
-            handler = null;
+//            handler = null;
         }
 
 //        if(!first){
