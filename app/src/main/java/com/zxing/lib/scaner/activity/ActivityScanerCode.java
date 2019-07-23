@@ -509,10 +509,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         Log.e("scan===onPause", "===");
 
         super.onPause();
-        if (handler != null) {
-            handler.quitSynchronously();
-            handler = null;
-        }
+//        if (handler != null) {
+//            handler.quitSynchronously();
+//            handler = null;
+//        }
 
 //        if(!first){
 //            releaseCamera();
@@ -520,7 +520,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
 
 //        releaseCamera();
-        mCameraManager.closeDriver();
+//        mCameraManager.closeDriver();
     }
 
     @Override
@@ -682,7 +682,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     }
 
     public void setCropHeight(int cropHeight) {
-        this.mCropHeight = cropHeight;
+        mCropHeight = cropHeight;
         CameraManager.FRAME_HEIGHT = mCropHeight;
     }
 
@@ -719,7 +719,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //        mCamera.stopPreview();
 //
 //        releaseCamera();
-
+        Log.e("===", "====");
 
         String result1 = result.getText();
         if (mScanerListener == null) {
@@ -2408,6 +2408,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     BaseApplication.getInstance().getIBLE().close();
                     BaseApplication.getInstance().getIBLE().disconnect();
 //                    BaseApplication.getInstance().getIBLE().disableBluetooth();
+
                     scrollToFinishActivity();
 
                     break;
