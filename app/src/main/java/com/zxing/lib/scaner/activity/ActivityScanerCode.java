@@ -509,10 +509,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         Log.e("scan===onPause", "===");
 
         super.onPause();
-//        if (handler != null) {
-//            handler.quitSynchronously();
-//            handler = null;
-//        }
+        if (handler != null) {
+            handler.quitSynchronously();
+            handler = null;
+        }
 
 //        if(!first){
 //            releaseCamera();
@@ -520,7 +520,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
 
 //        releaseCamera();
-//        mCameraManager.closeDriver();
+        mCameraManager.closeDriver();
     }
 
     @Override
