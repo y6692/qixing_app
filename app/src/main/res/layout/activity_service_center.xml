@@ -81,7 +81,6 @@
                         android:layout_alignParentRight="true"
                         android:gravity="center_vertical">
 
-
                         <ImageView
                             android:layout_width="8dp"
                             android:layout_height="14dp"
