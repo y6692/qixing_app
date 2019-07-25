@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:background="#F5F5F5"
+    >
+
+  <include
+      layout="@layout/ui_main_title"/>
+
+  <!--<RelativeLayout-->
+      <!--android:id="@+id/mainUI_titleLayout"-->
+      <!--android:layout_width="match_parent"-->
+      <!--android:layout_height="@dimen/dp40"-->
+      <!--android:background="@drawable/title_gradient"-->
+      <!--android:layout_alignParentTop="true"-->
+      <!--android:layout_alignParentLeft="true"-->
+      <!--android:layout_alignParentStart="true">-->
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/ll_back"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:clickable="true"-->
+        <!--android:gravity="center_vertical">-->
+
+      <!--<ImageView-->
+          <!--android:id="@+id/mainUI_title_backBtn"-->
+          <!--android:paddingLeft="14dp"-->
+          <!--android:paddingRight="12dp"-->
+          <!--android:paddingTop="12dp"-->
+          <!--android:paddingBottom="12dp"-->
+          <!--android:layout_width="wrap_content"-->
+          <!--android:layout_height="wrap_content"-->
+          <!--android:src="@drawable/back_image"/>-->
+
+      <!--<TextView-->
+          <!--android:layout_marginLeft="-10dp"-->
+          <!--android:id="@+id/tv_left"-->
+          <!--android:textSize="@dimen/sp16"-->
+          <!--android:text="返回"-->
+          <!--android:textColor="@color/white"-->
+          <!--android:layout_width="wrap_content"-->
+          <!--android:layout_height="wrap_content" />-->
+    <!--</LinearLayout>-->
+
+    <!--<ImageView-->
+        <!--android:visibility="gone"-->
+        <!--android:id="@+id/mainUI_leftBtn"-->
+        <!--android:layout_width="@dimen/dp45"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@null"-->
+        <!--android:src="@drawable/main_left_icon"-->
+        <!--android:padding="8dp"-->
+        <!--android:layout_alignParentLeft="true"/>-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/mainUI_title"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:text="输入编号开锁"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="@dimen/sp18"/>-->
+  <!--</RelativeLayout>-->
+
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="490dp"
+      android:layout_marginTop="13dp"
+      android:layout_marginLeft="10dp"
+      android:layout_marginRight="10dp"
+      android:background="@drawable/block_bcg"
+      android:orientation="vertical"
+      >
+
+    <ImageView
+        android:layout_width="105dp"
+        android:layout_height="74dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginBottom="58dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/bike3"/>
+
+
+    <cn.qimate.bike.core.widget.ClearEditText
+        android:id="@+id/et_bike_num"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:background="@drawable/shape_feedback_edit3"
+        android:paddingLeft="29dp"
+        android:drawableRight="@drawable/delete_selector"
+        android:hint="请输入车牌号"
+        android:textSize="@dimen/sp15"
+        android:gravity="center_vertical"
+        android:textColorHint="#7D7D7D"
+        android:textColor="@color/tx_black_light"/>
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="22dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        >
+
+      <ImageView
+          android:layout_width="14dp"
+          android:layout_height="14dp"
+          android:src="@drawable/warn2"/>
+
+      <TextView
+          android:id="@+id/curRoadUI_biking_hintText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="9dp"
+          android:text="若因输错车辆号造成自行车丢失，您将承担高达1000元的赔偿责任"
+          android:textSize="@dimen/sp13"
+          android:textColor="#A2A2A2"
+          />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/mainUI_scanCode_lock"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@drawable/btn_bcg_scan_gradient"
+        >
+
+      <TextView
+          android:id="@+id/tv_endBtn"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="立即用车"
+          android:textSize="@dimen/sp15"
+          android:textColor="@color/white"
+          />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="47dp"
+        android:onClick="btn">
+
+
+      <ImageView
+          android:layout_width="42dp"
+          android:layout_height="42dp"
+          android:layout_marginLeft="25dp"
+          android:src="@drawable/scan2"/>
+
+      <ImageView
+          android:layout_width="42dp"
+          android:layout_height="42dp"
+          android:layout_alignParentRight="true"
+          android:layout_marginRight="25dp"
+          android:src="@drawable/light2"/>
+
+    </RelativeLayout>
+
+
+
+  </LinearLayout>
+
+
+
+
+</LinearLayout>

@@ -64,4 +64,10 @@
             android:paddingRight="@dimen/dp10"
             android:paddingLeft="@dimen/dp10"/>
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:background="#EEEEEE" />
+
 </LinearLayout>

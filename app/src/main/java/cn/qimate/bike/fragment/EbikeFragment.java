@@ -97,6 +97,7 @@ import cn.qimate.bike.activity.ActionCenterActivity;
 import cn.qimate.bike.activity.CouponActivity;
 import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadBikingActivity;
+import cn.qimate.bike.activity.FaultReportActivity;
 import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.activity.HistoryRoadDetailActivity;
 import cn.qimate.bike.activity.InsureanceActivity;
@@ -105,6 +106,7 @@ import cn.qimate.bike.activity.MyPurseActivity;
 import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.activity.PersonAlterActivity;
 import cn.qimate.bike.activity.RealNameAuthActivity;
+import cn.qimate.bike.activity.ReportViolationActivity;
 import cn.qimate.bike.activity.ServiceCenter0Activity;
 import cn.qimate.bike.activity.ServiceCenterActivity;
 import cn.qimate.bike.base.BaseApplication;
@@ -974,7 +976,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         Log.e("main===ebike", "main====onResume==="+type);
 
         if(!"4".equals(type)){
-            tab.setCurrentTab(1);
+            tab.setCurrentTab(0);
 //            ((UseBikeFragment)getParentFragment()).changeTab(0);
 //            return;
         }
@@ -3050,17 +3052,21 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.pop_menu_feedbackLayout:
-                        UIHelper.goToAct(context, ServiceCenter0Activity.class);
+//                        UIHelper.goToAct(context, ServiceCenter0Activity.class);
+                        UIHelper.goToAct(context, FaultReportActivity.class);
                         break;
                     case R.id.pop_menu_helpLayout:
-                        WindowManager windowManager = activity.getWindowManager();
-                        Display display = windowManager.getDefaultDisplay();
-                        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-                        lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                        dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-                        dialog.getWindow().setAttributes(lp);
-                        dialog.show();
+//                        WindowManager windowManager = activity.getWindowManager();
+//                        Display display = windowManager.getDefaultDisplay();
+//                        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+//                        lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+//                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//                        dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+//                        dialog.getWindow().setAttributes(lp);
+//                        dialog.show();
+
+                        UIHelper.goToAct(context, ReportViolationActivity.class);
+
                         break;
                     case R.id.pop_menu_callLayout:
                         UIHelper.goToAct(context, ServiceCenterActivity.class);

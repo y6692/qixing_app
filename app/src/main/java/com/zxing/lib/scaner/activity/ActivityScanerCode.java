@@ -478,22 +478,99 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //            releaseCamera();
 //            mCameraManager.closeDriver();
 
-            bikeNumEdit.setText("");
+//            bikeNumEdit.setText("");
+//
+//            WindowManager windowManager = getWindowManager();
+//            Display display = windowManager.getDefaultDisplay();
+//            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+//            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+//            lp.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+//            dialog.getWindow().setAttributes(lp);
+//            dialog.getWindow().setWindowAnimations(R.style.dialogWindowAnim);
+//            dialog.show();
+//            InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+//            manager.showSoftInput(view, InputMethodManager.RESULT_SHOWN);
+//            manager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
-            WindowManager windowManager = getWindowManager();
-            Display display = windowManager.getDefaultDisplay();
-            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-            lp.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setAttributes(lp);
-            dialog.getWindow().setWindowAnimations(R.style.dialogWindowAnim);
-            dialog.show();
-            InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            manager.showSoftInput(view, InputMethodManager.RESULT_SHOWN);
-            manager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+//            UIHelper.goToAct(context, BikeNumActivity.class);
+
+            Intent intent = new Intent(context, BikeNumActivity.class);
+            startActivityForResult(intent,0);
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.e("onActivityResult===",resultCode+"==="+requestCode);
+
+        if(resultCode == RESULT_OK)
+        {
+            switch (requestCode) {
+                case 0:
+                    if (data != null) {
+                        String bikeNum = data.getExtras().getString("bikeNum");
+//                    endtime = data.getExtras().getString("endtime");
+//
+//                    tv_day.setText("日期范围："+begintime+" 到 "+endtime);
+//
+//                    Log.e("onActivityResult===",begintime+"==="+endtime);
+//
+//                    String codenum = codeNumEdit.getText().toString().trim();
+//                    if (codenum == null || "".equals(codenum)){
+//                        Toast.makeText(context,"请输入车辆编号",Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+
+                        Tag = 1;
+
+                        ebikeInfo(bikeNum);
+                    }
+                    break;
+                case 288:{
+                    break;
+                }
+                case 188:{
+                    if (null != loadingDialog && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("正在唤醒车锁");
+                        loadingDialog.show();
+                    }
+
+                    if (!TextUtils.isEmpty(m_nowMac)) {
+                        if("4".equals(type)){
+                            bleService.connect(m_nowMac);
+                            checkConnect();
+
+                        }else if("5".equals(type)){
+                            SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+                                    .searchBluetoothLeDevice(0)
+                                    .build();
+
+                            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                return;
+                            }
+                            ClientManager.getClient().search(request, mSearchResponse);
+
+                        }else{
+                            connect();
+                        }
+
+                    }
+                    break;
+                }
+                default:{
+                    break;
+                }
+            }
+        }else if( requestCode == 188){
+            ToastUtil.showMessageApp(this, "需要打开蓝牙");
+            scrollToFinishActivity();
+        }
+    }
 
 
     @Override
@@ -1834,55 +1911,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == RESULT_OK)
-        {
-            switch (requestCode) {
-                case 288:{
-                    break;
-                }
-                case 188:{
-                    if (null != loadingDialog && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
 
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("正在唤醒车锁");
-                        loadingDialog.show();
-                    }
-
-                    if (!TextUtils.isEmpty(m_nowMac)) {
-                        if("4".equals(type)){
-                            bleService.connect(m_nowMac);
-                            checkConnect();
-
-                        }else if("5".equals(type)){
-                            SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
-                                    .searchBluetoothLeDevice(0)
-                                    .build();
-
-                            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                return;
-                            }
-                            ClientManager.getClient().search(request, mSearchResponse);
-
-                        }else{
-                            connect();
-                        }
-
-                    }
-                    break;
-                }
-                default:{
-                    break;
-                }
-            }
-        }else if( requestCode == 188){
-            ToastUtil.showMessageApp(this, "需要打开蓝牙");
-            scrollToFinishActivity();
-        }
-    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
