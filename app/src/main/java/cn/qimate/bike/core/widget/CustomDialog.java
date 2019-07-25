@@ -238,6 +238,8 @@ public class CustomDialog extends Dialog {
 					layout = inflater.inflate(R.layout.alertdialog4, null);
 				}else if(type==5){
 					layout = inflater.inflate(R.layout.alertdialog5, null);
+				}else if(type==6){
+					layout = inflater.inflate(R.layout.alertdialog6, null);
 				}else{
 					layout = inflater.inflate(R.layout.alertdialog, null);
 				}

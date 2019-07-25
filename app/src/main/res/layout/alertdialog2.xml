@@ -1,46 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:minWidth="240dip"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="187dp"
+    android:background="@drawable/dialog_bcg">
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#f57752"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:orientation="vertical"
+        >
 
         <TextView
             android:id="@+id/title"
-            style="@style/DialogText.Title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:padding="@dimen/dp10"
-            android:textColor="#ffffff" />
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="您还未完善保险信息"
+            />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/content"
         android:orientation="vertical"
-        android:background="@drawable/border2"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        >
+        android:layout_marginLeft="21dp"
+        android:layout_marginRight="21dp"
+        android:layout_marginBottom="14dp"
+        android:gravity="center">
+
 
         <TextView
-            style="@style/DialogText"
             android:id="@+id/message"
-            android:paddingBottom="@dimen/dp15"
-            android:paddingTop="@dimen/dp15"
-            android:gravity="center"
-            android:lineSpacingExtra="5dp"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/dp5"
-            android:paddingRight="@dimen/dp5"/>
+            android:gravity="left"
+            android:lineSpacingExtra="5dp"
+            android:textColor="#333333"
+            android:textSize="15sp"
+            android:text="本次骑行将正常结算，您的账户将在客服核实后恢复正常。"
+            android:lines="3"
+            />
 
         <TextView
             android:id="@+id/hintText"
@@ -49,9 +53,67 @@
             android:text="注:该车须至校内还车"
             android:textColor="@color/red"
             android:textSize="@dimen/sp14"
-            android:layout_marginBottom="@dimen/dp10"
             android:visibility="gone"/>
+
     </LinearLayout>
 
-
 </LinearLayout>
+
+
+
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:orientation="vertical"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:minWidth="240dip"-->
+    <!--android:layout_height="wrap_content">-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="#f57752"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/title"-->
+            <!--style="@style/DialogText.Title"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--android:padding="@dimen/dp10"-->
+            <!--android:textColor="#ffffff" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:background="@drawable/border2"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center"-->
+        <!--&gt;-->
+
+        <!--<TextView-->
+            <!--style="@style/DialogText"-->
+            <!--android:id="@+id/message"-->
+            <!--android:paddingBottom="@dimen/dp15"-->
+            <!--android:paddingTop="@dimen/dp15"-->
+            <!--android:gravity="center"-->
+            <!--android:lineSpacingExtra="5dp"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingLeft="@dimen/dp5"-->
+            <!--android:paddingRight="@dimen/dp5"/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/hintText"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="注:该车须至校内还车"-->
+            <!--android:textColor="@color/red"-->
+            <!--android:textSize="@dimen/sp14"-->
+            <!--android:layout_marginBottom="@dimen/dp10"-->
+            <!--android:visibility="gone"/>-->
+    <!--</LinearLayout>-->
+
+
+<!--</LinearLayout>-->

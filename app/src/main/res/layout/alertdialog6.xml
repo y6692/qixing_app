@@ -1,27 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:minWidth="240dip"
+    android:layout_width="match_parent"
     android:layout_height="187dp"
     android:background="@drawable/dialog_bcg">
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="62dp"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:gravity="center"
         >
 
         <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:gravity="bottom"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:text="您还未完善保险信息"
+            android:text="需支付"
             />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:gravity="center"
+            android:textColor="#E60012"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:text="39.9"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:gravity="bottom"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="元"
+            />
+
     </LinearLayout>
 
     <LinearLayout
@@ -29,16 +50,16 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:paddingLeft="21dp"
+        android:paddingRight="21dp"
         android:gravity="center">
 
 
         <TextView
             android:id="@+id/message"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="21dp"
-            android:paddingRight="21dp"
-            android:gravity="center|left"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:lineSpacingExtra="5dp"
             android:textColor="#333333"
             android:textSize="15sp"
@@ -59,7 +80,7 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="68dp"
         android:layout_marginTop="9dp"
         android:layout_marginLeft="15dp"
@@ -68,31 +89,27 @@
 
         <Button
             android:id="@+id/negativeButton"
-            android:layout_width="0dip"
+            android:layout_width="127dp"
             android:layout_height="40dp"
-            android:layout_weight="1"
-            android:layout_marginRight="0dp"
+            android:layout_marginRight="8dp"
             android:background="@drawable/block_bcg2"
             android:textSize="18sp"
             android:textColor="#E60012"
             android:singleLine="true"
             android:text="晚点再说"
-            android:gravity="center"
-            style="?android:attr/borderlessButtonStyle"/>
+            android:gravity="center"/>
 
         <Button
             android:id="@+id/positiveButton"
-            android:layout_width="0dip"
+            android:layout_width="127dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="16dp"
-            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
             android:background="@drawable/block_bcg1_2"
             android:singleLine="true"
             android:textSize="18sp"
             android:textColor="@color/white"
             android:text="直接用车"
-            android:gravity="center"
-            style="?android:attr/borderlessButtonStyle"/>
+            android:gravity="center"/>
 
     </LinearLayout>
 
