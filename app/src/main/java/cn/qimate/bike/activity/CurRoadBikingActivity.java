@@ -177,8 +177,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private TextView time;
     private TextView electricity;
     private TextView mileage;
-    private Button lookPsdBtn;
-    private Button endBtn;
+    private LinearLayout ll_lookPsdBtn;
+    private LinearLayout ll_endBtn;
+    private TextView lookPsdBtn;
 
     private AMap aMap;
     private MapView mapView;
@@ -316,7 +317,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     @TargetApi(23)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_cur_road_biking);
+        setContentView(R.layout.activity_cur_road_biking);
         context = this;
 //        instance = this;
         BikeFragment.tz = 0;
@@ -509,9 +510,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         mainLayout = (LinearLayout)findViewById(R.id.mainUI_title_mainLayout);
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
-        title = (TextView) findViewById(R.id.mainUI_title_titleText);
+        title = (TextView) findViewById(R.id.curRoadUI_title);
         title.setText("骑行中");
-        rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
+        rightBtn = (TextView)findViewById(R.id.curRoadUI_rightBtn);
         rightBtn.setText("无法结束用车?");
         RelativeLayout.LayoutParams params4 = (RelativeLayout.LayoutParams)rightBtn.getLayoutParams();
         params4.setMargins(0,DisplayUtil.dip2px(context,8),DisplayUtil.dip2px(context,10),DisplayUtil.dip2px(context,8));
@@ -539,8 +540,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         ebikeInfoLayout = (LinearLayout)findViewById(R.id.curRoadUI_biking_ebikeInfoLayout);
         electricity = (TextView)findViewById(R.id.curRoadUI_biking_electricity);
         mileage = (TextView)findViewById(R.id.curRoadUI_biking_mileage);
-        lookPsdBtn = (Button)findViewById(R.id.curRoadUI_biking_lookPsdBtn);
-        endBtn = (Button)findViewById(R.id.curRoadUI_biking_endBtn);
+        ll_lookPsdBtn = (LinearLayout)findViewById(R.id.curRoadUI_biking_lookPsdBtn);
+        lookPsdBtn = (TextView)findViewById(R.id.tv_lookPsdBtn);
+        ll_endBtn = (LinearLayout)findViewById(R.id.curRoadUI_biking_endBtn);
         linkServiceBtn = (ImageView)findViewById(R.id.curRoadUI_biking_linkService_btn);
         myLocationBtn = (ImageView)findViewById(R.id.curRoadUI_biking_myLocation);
         linkServiceLayout = (LinearLayout)findViewById(R.id.curRoadUI_biking_linkServiceLayout);
@@ -584,10 +586,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //        exImage_3.setLayoutParams(params3);
 
         backImg.setOnClickListener(this);
-        lookPsdBtn.setOnClickListener(this);
+        ll_lookPsdBtn.setOnClickListener(this);
         switcher.setOnClickListener(this);
         roleLayout.setOnClickListener(this);
-        endBtn.setOnClickListener(this);
+        ll_endBtn.setOnClickListener(this);
         linkServiceBtn.setOnClickListener(this);
         myLocationBtn.setOnClickListener(this);
         myLocationLayout.setOnClickListener(this);
@@ -4889,17 +4891,21 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.pop_menu_feedbackLayout:
-                        UIHelper.goToAct(context, ServiceCenter0Activity.class);
+//                        UIHelper.goToAct(context, ServiceCenter0Activity.class);
+                        UIHelper.goToAct(context, FaultReportActivity.class);
                         break;
                     case R.id.pop_menu_helpLayout:
-                        WindowManager windowManager = getWindowManager();
-                        Display display = windowManager.getDefaultDisplay();
-                        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-                        lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                        dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-                        dialog.getWindow().setAttributes(lp);
-                        dialog.show();
+//                        WindowManager windowManager = getWindowManager();
+//                        Display display = windowManager.getDefaultDisplay();
+//                        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+//                        lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+//                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//                        dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+//                        dialog.getWindow().setAttributes(lp);
+//                        dialog.show();
+
+                        UIHelper.goToAct(context, ReportViolationActivity.class);
+
                         break;
                     case R.id.pop_menu_callLayout:
                         UIHelper.goToAct(context, ServiceCenterActivity.class);

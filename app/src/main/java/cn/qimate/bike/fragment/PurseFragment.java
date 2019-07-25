@@ -22,6 +22,7 @@ import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.CurRoadBikedActivity;
+import cn.qimate.bike.activity.RechargeActivity;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
@@ -116,9 +117,10 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener{
 ////                scrollToFinishActivity();
 //                break;
 //
-//            case R.id.rl_balance:
+            case R.id.rl_balance:
 //                UIHelper.goToAct(context, BalanceActivity.class);
-//                break;
+                UIHelper.goToAct(context, RechargeActivity.class);
+                break;
 //
 //            case R.id.rl_coupon:
 ////                ((MainActivity)getActivity()).changeTab(1);

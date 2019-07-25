@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/RxTools-library/RxTools-library.iml" filepath="$PROJECT_DIR$/RxTools-library/RxTools-library.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library2/library2.iml" filepath="$PROJECT_DIR$/library2/library2.iml" />
       <module fileurl="file://$PROJECT_DIR$/pullzoomview/pullzoomview.iml" filepath="$PROJECT_DIR$/pullzoomview/pullzoomview.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/qixing_app.iml" filepath="$PROJECT_DIR$/.idea/qixing_app.iml" />
       <module fileurl="file://$PROJECT_DIR$/sunshinelibrary/sunshinelibrary.iml" filepath="$PROJECT_DIR$/sunshinelibrary/sunshinelibrary.iml" />

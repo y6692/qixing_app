@@ -114,6 +114,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.0'
     implementation project(':pullzoomview')
     implementation project(':library')
+    implementation project(':library2')
     implementation project(':LongshTabStripLibrary')
     implementation project(':RxTools-library')
     implementation files('libs/httpmime-4.2.5.jar')

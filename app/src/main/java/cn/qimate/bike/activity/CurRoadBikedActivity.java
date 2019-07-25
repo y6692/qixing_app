@@ -3,6 +3,7 @@ package cn.qimate.bike.activity;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
@@ -42,6 +43,7 @@ import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
+import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
@@ -62,8 +64,11 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     private Context context;
     private LoadingDialog loadingDialog;
     private LoadingDialog payLoadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
+    private TextView rightBtn;
+
+    private CustomDialog customDialog;
 
     private TextView bikeCode;
     private TextView bikeNum;
@@ -96,7 +101,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_cur_road_biked);
+        setContentView(R.layout.activity_unpay_route);
         context = this;
         SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
 
@@ -120,6 +125,8 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     protected void onResume() {
         isForeground = true;
         super.onResume();
+
+        Log.e("CurRoadBiked===onRes", user_money+"==="+prices+"==="+flag);
 
         if(flag==1) return;
 
@@ -156,9 +163,21 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
         payLoadingDialog.setCancelable(false);
         payLoadingDialog.setCanceledOnTouchOutside(false);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setTitle("计费规则").setMessage("0.5元/半小时，不满半小时按半小时算，每天封顶5元。")
+                .setNegativeButton("我知道了", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        customDialog = customBuilder.create();
+
+
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
-        title.setText("当前行程");
+        title.setText("待支付行程");
+        rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
+        rightBtn.setText("计费规则");
 
         bikeCode = (TextView)findViewById(R.id.curRoadUI_biked_code);
         bikeNum = (TextView)findViewById(R.id.curRoadUI_biked_num);
@@ -168,11 +187,13 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
         rl_time = (RelativeLayout)findViewById(R.id.rl_time);
         tv_time = (TextView)findViewById(R.id.tv_time);
         moneyText = (TextView)findViewById(R.id.curRoadUI_biked_money);
-        balanceText = (TextView)findViewById(R.id.curRoadUI_biked_balance);
+//        balanceText = (TextView)findViewById(R.id.curRoadUI_biked_balance);
         payBalanceLayout = (LinearLayout) findViewById(R.id.curRoadUI_biked_payBalanceLayout);
         payOtherLayout = (LinearLayout) findViewById(R.id.curRoadUI_biked_payOtherLayout);
 
-        backImg.setOnClickListener(this);
+//        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
+        rightBtn.setOnClickListener(this);
         payBalanceLayout.setOnClickListener(this);
         payOtherLayout.setOnClickListener(this);
     }
@@ -200,13 +221,16 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                     public void run() {
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("CurRoadBiked===", "==="+responseString);
+
                             if (result.getFlag().equals("Success")) {
                                 CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
-                                bikeCode.setText("行程编号:"+bean.getOsn());
+//                                bikeCode.setText("行程编号:"+bean.getOsn());
                                 bikeNum.setText(bean.getCodenum());
                                 startTime.setText(bean.getSt_time());
                                 endTime.setText(bean.getEd_time());
-                                timeText.setText(bean.getTotal_mintues());
+//                                timeText.setText(bean.getTotal_mintues());
 
                                 if(bean.getIs_super_member()==1){
                                     rl_time.setVisibility(View.VISIBLE);
@@ -230,7 +254,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                                 }else {
                                     user_money = "0.00";
                                 }
-                                balanceText.setText(user_money);
+//                                balanceText.setText(user_money);
                                 oid = bean.getOid();
                                 osn = bean.getOsn();
 //                        if (Double.parseDouble(prices) <= Double.parseDouble(user_money)
@@ -261,10 +285,13 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                 break;
 
             case R.id.curRoadUI_biked_payBalanceLayout:
+
+                Log.e("CurRoadBiked===onCli", user_money+"==="+prices);
+
                 if (Double.parseDouble(user_money) < Double.parseDouble(prices)){
                     flag = 0;
                     Toast.makeText(context,"当前余额不足,请先充值!",Toast.LENGTH_SHORT).show();
-                    UIHelper.goToAct(context,RechargeActivity.class);
+                    UIHelper.goToAct(context, RechargeActivity.class);
                 }else {
                     paySubmit();
                 }
@@ -586,7 +613,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                                 ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                                 if (result.getFlag().equals("Success")) {
                                     Toast.makeText(context,"恭喜您,支付成功!",Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(context,HistoryRoadDetailActivity.class);
+                                    Intent intent = new Intent(context, RouteDetailActivity.class);
                                     intent.putExtra("oid",oid);
                                     startActivity(intent);
                                     scrollToFinishActivity();
