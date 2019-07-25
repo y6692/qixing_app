@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ui_main"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F5F5F5">
+
+
+        <LinearLayout
+            android:id="@+id/ll_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/ui_main_title"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="11dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:background="@color/white">
+
+
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:id="@+id/ui_insurance_remarkLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:src="@drawable/warn3" />
+
+                        <TextView
+                            android:id="@+id/ui_insurance_remarkText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:text="身份证认证被驳回，请重新完善"
+                            android:textColor="#333333"
+                            android:textSize="@dimen/sp14" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="47dp"
+
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/sp17"
+                            android:textColor="#333333"
+                            android:text="真实姓名"/>
+
+                        <cn.qimate.bike.core.widget.ClearEditText
+                            android:id="@+id/ui_insurance_realNameText"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|right"
+                            android:background="@null"
+                            android:drawableRight="@drawable/delete_selector"
+                            android:hint="请填写您的真实姓名"
+                            android:inputType="numberDecimal"
+                            android:maxLength="11"
+                            android:paddingBottom="0dp"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="0dp"
+                            android:textColorHint="#999999"
+                            android:textSize="@dimen/sp17"
+                            android:textColor="@color/tx_black"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#EEEEEE"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="47dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/sp17"
+                            android:textColor="#333333"
+                            android:text="身份证号"/>
+
+                        <cn.qimate.bike.core.widget.ClearEditText
+                            android:id="@+id/ui_insurance_certificateNumEdit"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|right"
+                            android:background="@null"
+                            android:drawableRight="@drawable/delete_selector"
+                            android:hint="请填写您的身份证号码"
+                            android:inputType="numberDecimal"
+                            android:maxLength="11"
+                            android:paddingBottom="0dp"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="0dp"
+                            android:textColorHint="#999999"
+                            android:textSize="@dimen/sp17"
+                            android:textColor="@color/tx_black"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="246dp"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:background="@color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/sp17"
+                            android:textColor="#333333"
+                            android:text="请拍摄并上传身份证"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="119dp"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="119dp"
+                            android:layout_weight="1"
+                            android:layout_marginRight="12dp"
+                            android:orientation="vertical"
+                            android:background="@drawable/shape_identity"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:id="@+id/ui_insurance_certificateImage"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:paddingTop="19dp"
+                                android:paddingBottom="19dp"
+                                android:src="@drawable/identity_card_icon1"/>
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="119dp"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="12dp"
+                            android:orientation="vertical"
+                            android:background="@drawable/shape_identity"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:id="@+id/ui_insurance_certificateImage2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:paddingTop="19dp"
+                                android:paddingBottom="19dp"
+                                android:src="@drawable/identity_card_icon2"/>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginRight="12dp"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="点击上传带头像的一面"
+                                android:textSize="@dimen/sp12"
+                                android:textColor="#666666"
+                                />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="12dp"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="点击上传带国徽的一面"
+                                android:textSize="@dimen/sp12"
+                                android:textColor="#666666"
+                                />
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp12"
+                        android:layout_marginTop="16dp"
+                        android:textColor="#999999"
+                        android:text="注：认证信息仅用于购买骑行保险，我们将严格保密。"
+                        android:lineSpacingExtra="@dimen/dp5" />
+
+
+
+                </LinearLayout>
+
+                <!--<cn.qimate.bike.core.widget.MyScrollView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:scrollbars="none"-->
+                    <!--&gt;-->
+
+                <!--</cn.qimate.bike.core.widget.MyScrollView>-->
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ui_insurance_submitBtn"
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_below="@+id/ll_1"
+            android:background="@drawable/btn_bcg_scan_gradient"
+            android:gravity="center"
+            >
+            <TextView
+                android:id="@+id/tv_insurance_submitBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="提交"
+                android:textSize="@dimen/sp18"
+                android:textColor="@color/white"
+                android:layout_centerInParent="true"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ui_insurance_submitBtn"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="37dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/ui_insurance_dealImage"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/check_identity_icon"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="11dp"
+                android:text="我已经阅读"
+                android:textSize="@dimen/sp13"
+                android:textColor="#999999"/>
+            <TextView
+                android:id="@+id/ui_insurance_dealText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="骑行保险说明"
+                android:paddingLeft="@dimen/dp5"
+                android:textColor="#E60113"
+                android:textSize="@dimen/sp13"/>
+        </LinearLayout>
+
+
+        <include layout="@layout/ui_main_task" />
+    </RelativeLayout>
+</LinearLayout>

@@ -1843,8 +1843,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                 UIHelper.goToAct(context, ActionCenterActivity.class);
 
-//                UIHelper.goToAct(context,RealNameAuthActivity.class);
-
 
                 break;
             case R.id.mainUI_rightBtn:

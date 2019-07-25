@@ -11,8 +11,9 @@
     <dimen name="sp12">12sp</dimen>
     <dimen name="sp10">10sp</dimen>
     <dimen name="sp8">8sp</dimen>
-    <dimen name="sp16">16sp</dimen>
     <dimen name="sp15">15sp</dimen>
+    <dimen name="sp16">16sp</dimen>
+    <dimen name="sp17">17sp</dimen>
     
     <dimen name="dp5">5dp</dimen>
     <dimen name="dp10">10dp</dimen>

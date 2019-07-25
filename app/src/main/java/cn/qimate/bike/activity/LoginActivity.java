@@ -2,27 +2,24 @@ package cn.qimate.bike.activity;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
-import android.text.Editable;
-import android.text.Selection;
-import android.text.Spannable;
-import android.text.TextWatcher;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,20 +36,21 @@ import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.core.common.HttpHelper;
-import cn.qimate.bike.core.common.Md5Helper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.StringUtil;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
+import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.text.TextUtils.isEmpty;
 
 /**
- * Created by Administrator on 2017/2/15 0015.
+ * Created by Administrator1 on 2017/2/16.
  */
 
 public class LoginActivity extends SwipeBackActivity implements View.OnClickListener {
@@ -62,99 +60,72 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
-    private TextView rightBtn;
 
     private LinearLayout headLayout;
     private EditText userNameEdit;
-    private EditText passwordEdit;
-    private Button loginBtn;
-    private TextView noteLogin;
-    private TextView findPsd;
-    private ImageView checkBox;
-    private boolean isHidepsd = true;
+    private EditText codeEdit;
+    private TextView codeBtn;
+    private LinearLayout loginBtn;
+    private TextView service;
 
+    private boolean isCode;
+    private int num;
     private TelephonyManager tm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_login);
+        setContentView(R.layout.activity_login);
         context = this;
         initView();
     }
 
     private void initView() {
 
+        tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+
         loadingDialog = new LoadingDialog(context);
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
+//        title = (TextView) findViewById(R.id.mainUI_title_titleText);
+//        title.setText("登录");
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
-        title = (TextView) findViewById(R.id.mainUI_title_titleText);
-        title.setText("登录");
-        rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
-        rightBtn.setText("注册");
+//        headLayout = (LinearLayout) findViewById(R.id.noteLoginUI_headLayout);
+//        headLayout = (LinearLayout) findViewById(R.id.noteLoginUI_headLayout);
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) headLayout.getLayoutParams();
+//        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.4);
+//        headLayout.setLayoutParams(params);
 
-        headLayout = (LinearLayout) findViewById(R.id.loginUI_headLayout);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) headLayout.getLayoutParams();
-        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.4);
-        headLayout.setLayoutParams(params);
+        userNameEdit = (EditText) findViewById(R.id.noteLoginUI_userName);
+        codeEdit = (EditText) findViewById(R.id.noteLoginUI_phoneNum_code);
 
-        userNameEdit = (EditText) findViewById(R.id.loginUI_userName);
-        passwordEdit = (EditText) findViewById(R.id.LoginUI_password);
-        loginBtn = (Button) findViewById(R.id.loginUI_btn);
-        noteLogin = (TextView) findViewById(R.id.loginUI_noteLogin);
-        findPsd = (TextView) findViewById(R.id.loginUI_findPsd);
-        checkBox = (ImageView) findViewById(R.id.LoginUI_checkBox);
-
-        if (SharedPreferencesUrls.getInstance().getString("userName", "") != null &&
-                !"".equals(SharedPreferencesUrls.getInstance().getString("userName", ""))) {
+        if (SharedPreferencesUrls.getInstance().getString("userName", "") != null && !"".equals(
+                SharedPreferencesUrls.getInstance().getString("userName", ""))) {
             userNameEdit.setText(SharedPreferencesUrls.getInstance().getString("userName", ""));
         }
-        userNameEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        codeBtn = (TextView) findViewById(R.id.noteLoginUI_noteCode);
+        loginBtn = (LinearLayout) findViewById(R.id.noteLoginUI_btn);
+        service = (TextView) findViewById(R.id.noteLoginUI_service);
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (StringUtil.isPhoner(userNameEdit.getText().toString().trim())) {
-                    SharedPreferencesUrls.getInstance().putString("userName", userNameEdit.getText().toString().trim());
-                }
-            }
-        });
-
-        backImg.setOnClickListener(this);
-        rightBtn.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
+        codeBtn.setOnClickListener(this);
         loginBtn.setOnClickListener(this);
-        noteLogin.setOnClickListener(this);
-        findPsd.setOnClickListener(this);
-        checkBox.setOnClickListener(this);
+        service.setOnClickListener(this);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onClick(View v) {
+        String telphone = userNameEdit.getText().toString();
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
-            case R.id.mainUI_title_rightBtn:
-                UIHelper.goToAct(context, RegisterActivity.class);
-                scrollToFinishActivity();
-                break;
-            case R.id.loginUI_btn:
-                String telphone = userNameEdit.getText().toString();
-                String password = passwordEdit.getText().toString();
+            case R.id.noteLoginUI_noteCode:
                 if (telphone == null || "".equals(telphone)) {
                     Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
                     return;
@@ -163,122 +134,319 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                     Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (password == null || "".equals(password)) {
-                    Toast.makeText(context, "请输入您的密码", Toast.LENGTH_SHORT).show();
+                sendCode(telphone);
+                break;
+            case R.id.noteLoginUI_btn:
+                String code = codeEdit.getText().toString();
+                if (telphone == null || "".equals(telphone)) {
+                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                LoginHttp(telphone, password);
-                break;
-            case R.id.loginUI_noteLogin:
-                UIHelper.goToAct(context, NoteLoginActivity.class);
-                scrollToFinishActivity();
-                break;
-            case R.id.loginUI_findPsd:
-                UIHelper.goToAct(context, FindPsdActivity.class);
-                break;
-            case R.id.LoginUI_checkBox:
-                if (isHidepsd) {
-                    isHidepsd = false;
-                    checkBox.setImageResource(R.drawable.checkbox_pressed);
-                    // 设置EditText文本为可见的
-                    passwordEdit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                } else {
-                    isHidepsd = true;
-                    checkBox.setImageResource(R.drawable.checkbox_normal);
-                    passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                if (!StringUtil.isPhoner(telphone)) {
+                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-                // 切换后将EditText光标置于末尾
-                CharSequence charSequence = passwordEdit.getText();
-                if (charSequence instanceof Spannable) {
-                    Spannable spanText = (Spannable) charSequence;
-                    Selection.setSelection(spanText, charSequence.length());
+                if (code == null || "".equals(code)) {
+                    Toast.makeText(context, "请输入您的验证码", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                loginHttp(telphone, code);
+                break;
+
+            case R.id.noteLoginUI_service:
+                if (Build.VERSION.SDK_INT >= 23) {
+                    int checkPermission = checkSelfPermission(Manifest.permission.CALL_PHONE);
+                    if (checkPermission != PERMISSION_GRANTED) {
+                        if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
+                            requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
+                        } else {
+                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开拨打电话权限！")
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                        }
+                                    }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.M)
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
+                                }
+                            });
+                            customBuilder.create().show();
+                        }
+                        return;
+                    }
+                }
+                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                customBuilder.setTitle("温馨提示").setMessage("确认拨打" + "0519-86999222" + "吗?")
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        Intent intent=new Intent();
+                        intent.setAction(Intent.ACTION_CALL);
+                        intent.setData(Uri.parse("tel:" + "0519-86999222"));
+                        startActivity(intent);
+                    }
+                });
+                customBuilder.create().show();
                 break;
         }
     }
 
-    private void LoginHttp(String telphone, String password) {
+    private String getMyUUID() {
 
-        Md5Helper Md5Helper = new Md5Helper();
-        String passwordmd5 = Md5Helper.encode(password);
-//        String passwordmd5 = "";
+        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+
+        final String tmDevice, tmSerial, tmPhone, androidId;
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return "";
+        }
+        tmDevice = "" + tm.getDeviceId();
+
+        tmSerial = "" + tm.getSimSerialNumber();
+
+        androidId = "" + Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+
+        String uniqueId = deviceUuid.toString();
+
+        Log.d("debug", "uuid=" + uniqueId);
+
+        return uniqueId;
+
+    }
+
+    /**
+     * 发送验证码
+     *
+     * */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void sendCode(String telphone) {
+
         RequestParams params = new RequestParams();
         params.add("telphone", telphone);
-        params.add("password", passwordmd5);
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//            return;
+
+//        params.put("UUID", getMyUUID());
+//        params.put("UUID", getDeviceId());
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        params.add("UUID", tm.getDeviceId());
+
+//        if (tm.getDeviceId() != null) {
+//            params.add("UUID", tm.getDeviceId());
+//        } else {
+////            params.add("UUID", Settings.Secure.getString(context.getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID));
+//            params.add("UUID", tm.getImei());
 //        }
 //
-//        Log.e("LoginHttp===", tm.getDeviceId() + "===" + tm.getSubscriberId());
+//        params.add("UUID", tm.getImei());
+
+
+//        try {
+////            final TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+//            if(tm.getDeviceId() == null || tm.getDeviceId().equals("")) {
+//                if (Build.VERSION.SDK_INT >= 23) {
+//                    params.add("UUID", tm.getDeviceId(0));
+//                }
+//            }else{
+//                params.add("UUID", tm.getDeviceId());
+//            }
+//        }catch (Exception e){
 //
-//        String id;
-//        if (tm.getDeviceId() != null && !"".equals(tm.getDeviceId())) {
-////            id = tm.getDeviceId();
-//
-//            id = tm.getSubscriberId();
-//
-//            id = "";
-//
-//        } else {
-//            id = Settings.Secure.getString(context.getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 //        }
 
-        params.add("UUID", "1");
+//        Log.e("UUID", tm.getDeviceId(0) + "====" + tm.getDeviceId(1) + "====" + tm.getImei(0) + "====" + tm.getImei(1));
+
+//        params.add("UUID", tm.getImei(0));
+
+
 //        params.add("UUID", getDeviceId());
 
-//        params.add("UUID", tm.getDeviceId());
+//        final String tmDevice, tmSerial, tmPhone, androidId;
+//        tmDevice = "" + tm.getDeviceId();
+//        tmSerial = "" + tm.getSimSerialNumber();
+//        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+//
+//        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+//        String uniqueId = deviceUuid.toString();
 
-        HttpHelper.post(context, Urls.loginNormal, params, new TextHttpResponseHandler() {
+//        String m_szDevIDShort = "86" + //we make this look like a valid IMEI
+//
+//                Build.BOARD.length()%10 +
+//                Build.BRAND.length()%10 +
+//                Build.CPU_ABI.length()%10 +
+//                Build.DEVICE.length()%10 +
+//                Build.DISPLAY.length()%10 +
+//                Build.HOST.length()%10 +
+//                Build.ID.length()%10 +
+//                Build.MANUFACTURER.length()%10 +
+//                Build.MODEL.length()%10 +
+//                Build.PRODUCT.length()%10 +
+//                Build.TAGS.length()%10 +
+//                Build.TYPE.length()%10 +
+//                Build.USER.length()%10 ;
+
+//        params.add("UUID", tm.getImei());
+//
+//        Log.e("UUID", tm.getDeviceId() + "====" + m_szDevIDShort + "====" + UUID.randomUUID().toString());
+
+        params.add("type", "2");
+        HttpHelper.post(context, Urls.sendcode, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                onStartCommon("正在登录");
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("请稍等");
+                    loadingDialog.show();
+                }
             }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+
+                        handler.sendEmptyMessage(2);
+
+                        // 开始60秒倒计时
+                        handler.sendEmptyMessageDelayed(1, 1000);
+                    } else {
+                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                }
+            }
+
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
-            }
-
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                            if (result.getFlag().equals("Success")) {
-                                UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
-                                // 极光标记别名
-                                setAlias(bean.getUid());
-                                SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
-                                SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
-                                SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
-                                SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
-                                SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
-                                SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
-                                SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
-                                SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
-                                SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
-                                SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
-                                SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
-                                Toast.makeText(context, "恭喜您,登录成功", Toast.LENGTH_SHORT).show();
-                                scrollToFinishActivity();
-                            } else {
-                                Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            if (loadingDialog != null && loadingDialog.isShowing()) {
-                                loadingDialog.dismiss();
-                            }
-                        }
-                    }
-                });
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
             }
         });
     }
 
+    private void loginHttp(String telphone,String telcode) {
+
+        RequestParams params = new RequestParams();
+        params.put("telphone", telphone);
+        params.put("telcode", telcode);
+
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//            return;
+//        }
+//
+//        String id;
+//        if (tm.getDeviceId() != null && !"".equals(tm.getDeviceId())) {
+//            id = tm.getDeviceId();
+//        } else {
+//            id = Settings.Secure.getString(context.getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+//        }
+//
+//        params.add("UUID", id);
+//
+//        params.put("UUID", getDeviceId());
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        params.add("UUID", tm.getDeviceId());
+
+        HttpHelper.post(context, Urls.loginCode, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在登录");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+                        UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+                        // 极光标记别名
+                        setAlias(bean.getUid());
+                        SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
+                        SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
+                        SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
+                        SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
+                        SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
+                        SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
+                        SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
+                        SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
+                        SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
+                        SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+                        Toast.makeText(context,"恭喜您,登录成功",Toast.LENGTH_SHORT).show();
+                        scrollToFinishActivity();
+                    } else {
+                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                }
+            }
+        });
+    }
+
+    public static String getUniqueID() {
+        //获得独一无二的Psuedo ID
+        String serial = null;
+
+        String m_szDevIDShort = "35" +
+                Build.BOARD.length() % 10 + Build.BRAND.length() % 10 +
+
+                Build.CPU_ABI.length() % 10 + Build.DEVICE.length() % 10 +
+
+                Build.DISPLAY.length() % 10 + Build.HOST.length() % 10 +
+
+                Build.ID.length() % 10 + Build.MANUFACTURER.length() % 10 +
+
+                Build.MODEL.length() % 10 + Build.PRODUCT.length() % 10 +
+
+                Build.TAGS.length() % 10 + Build.TYPE.length() % 10 +
+
+                Build.USER.length() % 10; //13 位
+
+        try {
+            serial = Build.class.getField("SERIAL").get(null).toString();
+            //API>=9 使用serial号
+            return new UUID(m_szDevIDShort.hashCode(), serial.hashCode()).toString();
+        } catch (Exception exception) {
+            //serial需要一个初始化
+            serial = "serial"; // 随便一个初始化
+        }
+        //使用硬件信息拼凑出来的15位号码
+        return new UUID(m_szDevIDShort.hashCode(), serial.hashCode()).toString();
+    }
 
     public String getDeviceId() {
         StringBuilder deviceId = new StringBuilder();
@@ -330,19 +498,27 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
         return deviceId.toString();
     }
 
-//    public static String getUUID(Context context){
-//        SharedPreferences mShare = getSysShare(context, "sysCacheMap");
-//        if(mShare != null){
-//            uuid = mShare.getString("uuid", "");
-//        }
-//        if(isEmpty(uuid)){
-//            uuid = UUID.randomUUID().toString();
-//            saveSysMap(context, "sysCacheMap", "uuid", uuid);
-//        }
-//        Log.e(tag, "getUUID : " + uuid);
-//        return uuid;
-//    }
-
+    Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            if (msg.what == 1) {
+                if (num != 1) {
+                    codeBtn.setText((--num) + "秒");
+                } else {
+                    codeBtn.setText("重新获取");
+                    codeBtn.setEnabled(true);
+                    isCode = false;
+                }
+                if (isCode) {
+                    handler.sendEmptyMessageDelayed(1, 1000);
+                }
+            }else{
+                num = 60;
+                isCode = true;
+                codeBtn.setText(num + "秒");
+                codeBtn.setEnabled(false);
+            }
+        };
+    };
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

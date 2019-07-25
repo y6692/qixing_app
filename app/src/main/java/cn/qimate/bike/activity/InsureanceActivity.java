@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.vondear.rxtools.RxFileTool;
 
 import org.apache.http.Header;
 import org.json.JSONException;
@@ -90,27 +91,31 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
     private boolean isAgree = true;
     private String cardfile = "";
 
-    private ImageView backBtn;
+    private LinearLayout ll_back;
     private TextView titleText;
-    private TextView realNameText;
+    private EditText realNameText;
     private EditText certificateNumEdit;
     private TextView certificateNumText;
     private ImageView certificateImage;
+    private ImageView certificateImage2;
     private ImageView dealImage;
     private TextView dealText;
-    private Button submitBtn;
+    private LinearLayout submitBtn;
+    private TextView tv_submitBtn;
+    private LinearLayout remarkLayout;
     private TextView remarkText;
     private ImageView iv_popup_window_back;
     private RelativeLayout rl_popup_window;
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
     private boolean isBack = true;
+    private int photo = 1;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_insurance);
+        setContentView(R.layout.activity_identity_card_auth);
         ButterKnife.bind(this);
         context = this;
         isBack = getIntent().getExtras().getBoolean("isBack");
@@ -118,21 +123,22 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
     }
 
     private void init() {
-
-
         loadingDialog = new LoadingDialog(context);
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backBtn = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         titleText = (TextView)findViewById(R.id.mainUI_title_titleText);
-        realNameText = (TextView)findViewById(R.id.ui_insurance_realNameText);
+        realNameText = (EditText)findViewById(R.id.ui_insurance_realNameText);
         certificateNumEdit = (EditText)findViewById(R.id.ui_insurance_certificateNumEdit);
-        certificateNumText = (TextView)findViewById(R.id.ui_insurance_certificateNumText);
+//        certificateNumText = (TextView)findViewById(R.id.ui_insurance_certificateNumText);
         certificateImage = (ImageView)findViewById(R.id.ui_insurance_certificateImage);
+        certificateImage2 = (ImageView)findViewById(R.id.ui_insurance_certificateImage2);
         dealImage = (ImageView)findViewById(R.id.ui_insurance_dealImage);
-        dealText = (TextView)findViewById(R.id.ui_insurance_dealText);
-        submitBtn = (Button)findViewById(R.id.ui_insurance_submitBtn);
+//        dealText = (TextView)findViewById(R.id.ui_insurance_dealText);
+        submitBtn = (LinearLayout)findViewById(R.id.ui_insurance_submitBtn);
+        tv_submitBtn = (TextView)findViewById(R.id.tv_insurance_submitBtn);
+        remarkLayout = (LinearLayout)findViewById(R.id.ui_insurance_remarkLayout);
         remarkText = (TextView)findViewById(R.id.ui_insurance_remarkText);
 
         iv_popup_window_back = (ImageView)findViewById(R.id.popupWindow_back);
@@ -141,36 +147,37 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
         pickPhotoBtn = (Button)findViewById(R.id.pickPhotoBtn);
         cancelBtn = (Button)findViewById(R.id.cancelBtn);
 
-        titleText.setText("骑行保险");
+        titleText.setText("实名认证");
 
         imageUri = Uri.parse("file:///sdcard/temp.jpg");
 
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) certificateImage.getLayoutParams();
-        params.height = (DisplayUtil.getWindowWidth(this) - DisplayUtil.dip2px(context, 20)) *
-                540 / 856;
-        certificateImage.setLayoutParams(params);
-        initListener();
-        initHttp();
-    }
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) certificateImage.getLayoutParams();
+//        params.height = (DisplayUtil.getWindowWidth(this) - DisplayUtil.dip2px(context, 20)) *
+//                540 / 856;
+//        certificateImage.setLayoutParams(params);
+//        certificateImage2.setLayoutParams(params);
 
-    private void initListener() {
 
-        backBtn.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         certificateImage.setOnClickListener(this);
+        certificateImage2.setOnClickListener(this);
         dealImage.setOnClickListener(this);
-        dealText.setOnClickListener(this);
+//        dealText.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
         takePhotoBtn.setOnClickListener(itemsOnClick);
         pickPhotoBtn.setOnClickListener(itemsOnClick);
         cancelBtn.setOnClickListener(itemsOnClick);
+
+        initHttp();
     }
+
 
     @Override
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 if (isBack){
                     scrollToFinishActivity();
                 }else {
@@ -185,15 +192,20 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
                 }
                 break;
             case R.id.ui_insurance_certificateImage:
+                photo = 1;
+                clickPopupWindow();
+                break;
+            case R.id.ui_insurance_certificateImage2:
+                photo = 2;
                 clickPopupWindow();
                 break;
             case R.id.ui_insurance_dealImage:
                 if (isAgree){
                     isAgree = false;
-                    dealImage.setImageResource(R.drawable.recharge_normal);
+                    dealImage.setImageResource(R.drawable.check_icon1);
                 }else {
                     isAgree = true;
-                    dealImage.setImageResource(R.drawable.recharge_selected);
+                    dealImage.setImageResource(R.drawable.check_identity_icon);
                 }
                 break;
             case R.id.ui_insurance_dealText:
@@ -278,36 +290,39 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
                                 switch (Integer.parseInt(bean.getCardcheck())){
                                     case 1:
                                         submitBtn.setEnabled(true);
-                                        submitBtn.setText("提 交");
+                                        tv_submitBtn.setText("提 交");
                                         dealImage.setEnabled(true);
                                         isAgree = false;
-                                        dealImage.setImageResource(R.drawable.recharge_normal);
+                                        dealImage.setImageResource(R.drawable.check_icon1);
                                         certificateNumEdit.setEnabled(true);
                                         certificateNumEdit.setVisibility(View.VISIBLE);
-                                        certificateNumText.setVisibility(View.GONE);
+//                                        certificateNumText.setVisibility(View.GONE);
                                         certificateImage.setEnabled(true);
+                                        remarkLayout.setVisibility(View.GONE);
                                         break;
                                     case 2:
                                         submitBtn.setEnabled(false);
-                                        submitBtn.setText("已通过");
+                                        tv_submitBtn.setText("已通过");
                                         dealImage.setEnabled(false);
                                         isAgree = true;
                                         certificateNumEdit.setEnabled(false);
                                         certificateImage.setEnabled(false);
                                         certificateNumEdit.setVisibility(View.GONE);
-                                        certificateNumText.setVisibility(View.VISIBLE);
-                                        dealImage.setImageResource(R.drawable.recharge_selected);
+//                                        certificateNumText.setVisibility(View.VISIBLE);
+                                        dealImage.setImageResource(R.drawable.check_identity_icon);
+                                        remarkLayout.setVisibility(View.GONE);
                                         break;
                                     case 3:
                                         submitBtn.setEnabled(true);
                                         isAgree = false;
                                         certificateNumEdit.setEnabled(true);
                                         certificateImage.setEnabled(true);
-                                        dealImage.setImageResource(R.drawable.recharge_normal);
-                                        submitBtn.setText("被驳回");
-                                        remarkText.setText("*"+bean.getRemark()+"*");
+                                        dealImage.setImageResource(R.drawable.check_icon1);
+                                        tv_submitBtn.setText("被驳回");
+                                        remarkLayout.setVisibility(View.VISIBLE);
+                                        remarkText.setText(bean.getRemark());
                                         certificateNumEdit.setVisibility(View.VISIBLE);
-                                        certificateNumText.setVisibility(View.GONE);
+//                                        certificateNumText.setVisibility(View.GONE);
                                         break;
                                     default:
                                         break;
@@ -380,7 +395,7 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
             case REQUESTCODE_PICK:// 直接从相册获取
                 if (data != null){
                     try {
-                        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                             if (imageUri != null) {
                                 urlpath = getRealFilePath(context, data.getData());
                                 if (loadingDialog != null && !loadingDialog.isShowing()) {
@@ -411,7 +426,7 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
 //                }else {
 //                    Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
 //                }
-                if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                     File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
                     if (Uri.fromFile(temp) != null) {
                         urlpath = getRealFilePath(context, Uri.fromFile(temp));
@@ -537,7 +552,12 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
                             option.inSampleSize = 1;
                             cardfile = jsonObject.optString("data");
                             Log.e("Test","RRRRR:"+cardfile);
-                            ImageLoader.getInstance().displayImage(Urls.host + cardfile, certificateImage);
+                            if(photo==1){
+                                ImageLoader.getInstance().displayImage(Urls.host + cardfile, certificateImage);
+                            }else{
+                                ImageLoader.getInstance().displayImage(Urls.host + cardfile, certificateImage2);
+                            }
+
                             Toast.makeText(context, "照片上传成功", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(context, jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
@@ -592,7 +612,7 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
                             return;
                         }
                     }
-                    if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                         Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                         File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);
@@ -615,7 +635,7 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
                     break;
                 // 相册选择图片
                 case R.id.pickPhotoBtn:
-                    if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                         Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
                         // 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
                         pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
@@ -657,7 +677,7 @@ public class InsureanceActivity extends SwipeBackActivity implements View.OnClic
 //                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
 //                        }
 
-                        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                             Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                             File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);

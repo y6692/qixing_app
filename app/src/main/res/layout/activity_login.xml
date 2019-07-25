@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical" >
+
+    <!--<include layout="@layout/ui_main_title" />-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp40"
+        android:background="@drawable/title_gradient"
+        >
+
+        <LinearLayout
+            android:id="@+id/ll_back"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_marginLeft="16dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/close_login"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <cn.qimate.bike.core.widget.MyScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/loginUI_headLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="73dp"
+                        android:layout_height="73dp"
+                        android:src="@drawable/login_icon" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:layout_marginTop="80dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:background="@drawable/shape_feedback_edit_login"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <cn.qimate.bike.core.widget.ClearEditText
+                        android:id="@+id/noteLoginUI_userName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:drawableRight="@drawable/delete_selector"
+                        android:hint="请输入手机号"
+                        android:inputType="numberDecimal"
+                        android:maxLength="11"
+                        android:paddingBottom="0dp"
+                        android:paddingLeft="19dp"
+                        android:paddingRight="0dp"
+                        android:textColorHint="#999999"
+                        android:textSize="@dimen/sp17"
+                        android:textColor="@color/tx_black"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_feedback_edit_login">
+
+                    <cn.qimate.bike.core.widget.ClearEditText
+                        android:id="@+id/noteLoginUI_phoneNum_code"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:drawableRight="@drawable/delete_selector"
+                        android:hint="请输入验证码"
+                        android:inputType="numberDecimal"
+                        android:maxLength="6"
+                        android:paddingBottom="0dp"
+                        android:paddingLeft="19dp"
+                        android:paddingRight="0dp"
+                        android:textColorHint="#7D7D7D"
+                        android:textSize="@dimen/sp17"
+                        android:textColor="@color/tx_black"/>
+
+                    <TextView
+                        android:id="@+id/noteLoginUI_noteCode"
+                        android:layout_width="102dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginBottom="1dp"
+                        android:layout_alignParentRight="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp14"
+                        android:text="发送验证码"
+                        android:gravity="center"
+                        android:background="@drawable/shape_feedback_edit_login2"/>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="56dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#B3B3B3"
+                            android:textSize="@dimen/sp14"
+                            android:text="收不到验证码？"
+                            />
+
+                        <TextView
+                            android:id="@+id/noteLoginUI_service"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#E60012"
+                            android:textSize="@dimen/sp14"
+                            android:text="联系客服"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+
+                <LinearLayout
+                    android:id="@+id/noteLoginUI_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/btn_bcg_scan_gradient"
+                    android:gravity="center"
+                    android:layout_alignParentBottom="true"
+                    >
+                    <TextView
+                        android:id="@+id/tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="登录"
+                        android:textSize="@dimen/sp18"
+                        android:textColor="@color/white"
+                        android:layout_centerInParent="true"
+                        />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="56dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#B3B3B3"
+                        android:textSize="@dimen/sp14"
+                        android:text="登录即代表同意"
+                        android:layout_alignParentRight="true"/>
+
+                    <TextView
+                        android:id="@+id/noteLoginUI_serviceProtocol"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#E60012"
+                        android:textSize="@dimen/sp14"
+                        android:text="《服务协议》"
+                        android:layout_alignParentRight="true"/>
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+        </cn.qimate.bike.core.widget.MyScrollView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_height"
+            android:background="#a3a2a2" />
+    </LinearLayout>
+</LinearLayout>
