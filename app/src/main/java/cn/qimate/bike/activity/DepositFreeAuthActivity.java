@@ -86,7 +86,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
     private LoadingDialog loadingDialog;
     private LinearLayout ll_back;
     private TextView title;
-    private TextView rightBtn;
+    private ImageView rightBtn;
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
     private RelativeLayout schoolLayout,sexLatout,classLayout;
@@ -192,8 +192,8 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("免押金认证");
-        rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
-        rightBtn.setText("联系客服");
+        rightBtn = (ImageView)findViewById(R.id.mainUI_title_rightBtn);
+//        rightBtn.setText("联系客服");
 
         takePhotoBtn = (Button)findViewById(R.id.takePhotoBtn);
         pickPhotoBtn = (Button)findViewById(R.id.pickPhotoBtn);

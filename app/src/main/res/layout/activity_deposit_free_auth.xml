@@ -7,14 +7,65 @@
     android:fitsSystemWindows="true"
     android:clipToPadding="true">
 
-    <include
-        layout="@layout/ui_main_title"/>
+    <!--<include-->
+        <!--layout="@layout/ui_main_title"/>-->
+
+    <RelativeLayout
+        android:id="@+id/mainUI_title_mainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp40"
+        android:background="@drawable/title_gradient"
+        >
+
+        <LinearLayout
+            android:id="@+id/ll_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="11dp"
+                android:paddingBottom="11dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/zjt"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/mainUI_title_titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="@dimen/sp18"
+            android:textColor="@color/black"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:id="@+id/mainUI_title_rightBtn"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/service_top_icon2"
+            android:layout_marginRight="16dp"/>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:layout_below="@+id/mainUI_title_mainLayout"
+        android:background="#EEEEEE" />
 
     <cn.qimate.bike.core.widget.MyScrollView
         android:id="@+id/ll_1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/mainUI_title_mainLayout">
+        android:layout_below="@+id/view_line">
 
         <LinearLayout
 
@@ -27,7 +78,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="348dp"
+                android:layout_height="305dp"
                 android:background="@color/white"
                 android:paddingTop="16dp"
                 android:orientation="vertical">
@@ -35,7 +86,7 @@
                 <LinearLayout
                     android:id="@+id/ui_realNameAuth_headLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="40dp"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:background="@drawable/block_bcg14"
@@ -43,18 +94,18 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="19dp"
+                        android:layout_width="22dp"
                         android:layout_height="22dp"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="9dp"
                         android:src="@drawable/identity_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="11dp"
+                        android:layout_marginLeft="5dp"
                         android:text="首次认证通过可享受免费用车体验"
                         android:textColor="#E60012"
-                        android:textSize="@dimen/sp15" />
+                        android:textSize="@dimen/sp16" />
 
                 </LinearLayout>
 
@@ -67,9 +118,9 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="55dp"
-                        android:paddingLeft="19dp"
-                        android:paddingRight="20dp">
+                        android:layout_height="46dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -77,7 +128,7 @@
                             android:layout_centerVertical="true"
                             android:text="姓名"
                             android:textColor="@color/tx_black"
-                            android:textSize="@dimen/sp18" />
+                            android:textSize="@dimen/sp17" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -93,25 +144,24 @@
                                 android:background="@null"
                                 android:drawableRight="@drawable/delete_selector"
                                 android:gravity="center_vertical|right"
-                                android:hint="填写真实姓名"
+                                android:hint="请填写您的真实姓名"
                                 android:textColor="@color/tx_black"
-                                android:textColorHint="#A0A0A0"
-                                android:textSize="@dimen/sp15" />
+                                android:textColorHint="#999999"
+                                android:textSize="@dimen/sp17" />
                         </LinearLayout>
                     </RelativeLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/line_height"
-                        android:layout_marginLeft="13dp"
-                        android:layout_marginRight="13dp"
-                        android:background="#DDDDDD" />
+                        android:layout_marginLeft="17dp"
+                        android:background="#EEEEEE" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="55dp"
-                        android:paddingLeft="19dp"
-                        android:paddingRight="20dp">
+                        android:layout_height="46dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -119,7 +169,7 @@
                             android:layout_centerVertical="true"
                             android:text="学号"
                             android:textColor="@color/tx_black"
-                            android:textSize="@dimen/sp18" />
+                            android:textSize="@dimen/sp17" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -135,26 +185,25 @@
                                 android:background="@null"
                                 android:drawableRight="@drawable/delete_selector"
                                 android:gravity="center_vertical|right"
-                                android:hint="填写学号"
+                                android:hint="请填写您的学号"
                                 android:textColor="@color/tx_black"
-                                android:textColorHint="#A0A0A0"
-                                android:textSize="@dimen/sp15" />
+                                android:textColorHint="#999999"
+                                android:textSize="@dimen/sp17" />
                         </LinearLayout>
                     </RelativeLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/line_height"
-                        android:layout_marginLeft="13dp"
-                        android:layout_marginRight="13dp"
-                        android:background="#DDDDDD" />
+                        android:layout_marginLeft="17dp"
+                        android:background="#EEEEEE" />
 
                     <RelativeLayout
                         android:id="@+id/ui_realNameAuth_schoolLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="55dp"
-                        android:paddingLeft="19dp"
-                        android:paddingRight="20dp">
+                        android:layout_height="46dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -162,7 +211,7 @@
                             android:layout_centerVertical="true"
                             android:text="学校"
                             android:textColor="@color/tx_black"
-                            android:textSize="@dimen/sp18" />
+                            android:textSize="@dimen/sp17" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -175,33 +224,32 @@
                                 android:id="@+id/ui_realNameAuth_schoolText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="选择学校"
+                                android:hint="请选择您的学校"
                                 android:textColor="@color/tx_black"
-                                android:textColorHint="#A0A0A0"
-                                android:textSize="@dimen/sp15" />
+                                android:textColorHint="#999999"
+                                android:textSize="@dimen/sp17" />
 
                         </LinearLayout>
                     </RelativeLayout>
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/line_height"
-                        android:layout_marginLeft="13dp"
-                        android:layout_marginRight="13dp"
-                        android:background="#DDDDDD" />
+                        android:layout_marginLeft="17dp"
+                        android:background="#EEEEEE" />
 
 
                     <RelativeLayout
                         android:id="@+id/ui_realNameAuth_classLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="55dp"
-                        android:paddingLeft="19dp"
-                        android:paddingRight="20dp">
+                        android:layout_height="46dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/tx_black"
-                            android:textSize="@dimen/sp18"
+                            android:textSize="@dimen/sp17"
                             android:text="入学时间"
                             android:layout_centerVertical="true"
                             android:layout_alignParentLeft="true"/>
@@ -218,10 +266,10 @@
                                 android:id="@+id/ui_realNameAuth_class"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:textSize="@dimen/sp15"
+                                android:textSize="@dimen/sp17"
                                 android:textColor="@color/tx_black"
-                                android:hint="选择入学时间"
-                                android:textColorHint="#A0A0A0"
+                                android:hint="请选择您的入学时间"
+                                android:textColorHint="#999999"
                                 android:gravity="center_vertical|right"
                                 android:background="@null"/>
 
@@ -230,16 +278,15 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/line_height"
-                        android:layout_marginLeft="13dp"
-                        android:layout_marginRight="13dp"
-                        android:background="#DDDDDD" />
+                        android:layout_marginLeft="17dp"
+                        android:background="#EEEEEE" />
 
                     <RelativeLayout
                         android:id="@+id/ui_realNameAuth_sexLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="55dp"
-                        android:paddingLeft="19dp"
-                        android:paddingRight="20dp">
+                        android:layout_height="46dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -247,7 +294,7 @@
                             android:layout_centerVertical="true"
                             android:text="学制"
                             android:textColor="@color/tx_black"
-                            android:textSize="@dimen/sp18" />
+                            android:textSize="@dimen/sp17" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -261,10 +308,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="right"
-                                android:hint="选择学制"
+                                android:hint="请选择您的学制"
                                 android:textColor="@color/tx_black"
-                                android:textColorHint="#A0A0A0"
-                                android:textSize="@dimen/sp15" />
+                                android:textColorHint="#999999"
+                                android:textSize="@dimen/sp17" />
 
                         </LinearLayout>
                     </RelativeLayout>
@@ -275,24 +322,24 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="244dp"
-                android:layout_marginTop="12dp"
+                android:layout_height="288dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="13dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/sp18"
+                        android:textSize="@dimen/sp17"
                         android:textColor="#333333"
                         android:text="上传证件"/>
 
@@ -300,33 +347,42 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
-                        android:textSize="@dimen/sp15"
-                        android:textColor="#7D7D7D"
-                        android:text="学生证、校园卡、录取通知书均可"/>
+                        android:textSize="@dimen/sp13"
+                        android:textColor="#999999"
+                        android:text="证件头像、学号清晰"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="115dp"
-                    android:layout_marginTop="19dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_height="119dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="115dp"
+                        android:layout_height="119dp"
                         android:layout_weight="1"
-                        android:layout_marginRight="12dp"
+                        android:layout_marginRight="8dp"
                         android:orientation="vertical"
+                        android:background="@drawable/block_bcg2_2"
                         android:gravity="center">
 
                         <ImageView
                             android:id="@+id/ui_realNameAuth_uploadImage"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/identity_card_pic1"/>
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:src="@drawable/camera_icon"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="13dp"
+                            android:textSize="@dimen/sp12"
+                            android:textColor="#666666"
+                            android:text="上传证件照片"/>
 
                     </LinearLayout>
 
@@ -335,15 +391,24 @@
                         android:layout_width="0dp"
                         android:layout_height="115dp"
                         android:layout_weight="1"
-                        android:layout_marginLeft="12dp"
+                        android:layout_marginLeft="8dp"
                         android:orientation="vertical"
+                        android:background="@drawable/block_bcg2_2"
                         android:gravity="center">
 
                         <ImageView
                             android:id="@+id/ui_realNameAuth_uploadImage2"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/identity_card_pic2"/>
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:src="@drawable/camera_icon"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="13dp"
+                            android:textSize="@dimen/sp12"
+                            android:textColor="#666666"
+                            android:text="上传手持证件照片"/>
 
 
                     </LinearLayout>
@@ -353,89 +418,54 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="13dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="17dp"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginRight="12dp"
-                        android:orientation="vertical"
-                        android:gravity="center">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/sp15"
-                            android:textColor="#333333"
-                            android:text="证件照片"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:textSize="@dimen/sp13"
-                            android:textColor="#7D7D7D"
-                            android:text="证件头像、学号清晰"/>
-
-                    </LinearLayout>
+                        android:textSize="@dimen/sp12"
+                        android:textColor="#999999"
+                        android:text="注：学生证、校园卡、录取通知书均可"/>
 
 
-                    <LinearLayout
-                        android:layout_width="0dp"
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line_height"
+                    android:layout_marginTop="21dp"
+                    android:background="#EEEEEE" />
+
+                <LinearLayout
+                    android:id="@+id/ui_realNameAuth_submitBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp40"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:background="@drawable/btn_bcg_scan_gradient"
+                    android:gravity="center"
+                    >
+                    <TextView
+                        android:id="@+id/tv_insurance_submitBtn"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="12dp"
-                        android:orientation="vertical"
-                        android:gravity="center">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/sp15"
-                            android:textColor="#333333"
-                            android:text="手持证件照片"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:textSize="@dimen/sp13"
-                            android:textColor="#7D7D7D"
-                            android:text="证件头像、学号清晰"/>
-
-                    </LinearLayout>
-
+                        android:text="提交"
+                        android:textSize="@dimen/sp18"
+                        android:textColor="@color/white"
+                        android:layout_centerInParent="true"
+                        />
                 </LinearLayout>
 
             </LinearLayout>
 
 
 
-            <LinearLayout
-                android:id="@+id/ui_realNameAuth_submitBtn"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp40"
-                android:layout_marginTop="19dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:background="@drawable/btn_bcg_scan_gradient"
-                android:gravity="center"
-                >
-                <TextView
-                    android:id="@+id/tv_insurance_submitBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="提交"
-                    android:textSize="@dimen/sp18"
-                    android:textColor="@color/white"
-                    android:layout_centerInParent="true"
-                    />
-            </LinearLayout>
+
 
 
         </LinearLayout>

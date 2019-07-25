@@ -7,8 +7,59 @@
     android:clipToPadding="true"
     android:orientation="vertical">
 
-    <include
-        layout="@layout/ui_main_title"/>
+    <!--<include-->
+        <!--layout="@layout/ui_main_title"/>-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp40"
+        android:background="@drawable/title_gradient"
+        >
+
+        <LinearLayout
+            android:id="@+id/ll_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="11dp"
+                android:paddingBottom="11dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/zjt"/>
+
+        </LinearLayout>
+
+
+
+        <TextView
+            android:id="@+id/mainUI_title_titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="@dimen/sp18"
+            android:textColor="@color/black"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:id="@+id/mainUI_title_rightBtn"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/service_top_icon2"
+            android:layout_marginRight="16dp"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:background="#EEEEEE" />
 
     <cn.qimate.bike.core.widget.MyScrollView
         android:layout_width="match_parent"
@@ -22,7 +73,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="271dp"
+                android:layout_height="276dp"
                 android:fitsSystemWindows="true"
                 android:clipToPadding="true"
                 android:background="@color/white"
@@ -32,35 +83,37 @@
                     android:id="@+id/rl_selectLayout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp100"
-                    android:layout_marginTop="27dp"
-                    android:layout_marginLeft="22dp"
-                    android:layout_marginRight="23dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:background="@drawable/block_bcg15"
                     >
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingLeft="42dp"
+                        android:paddingLeft="30dp"
                         android:orientation="vertical"
                         android:gravity="center_vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:textSize="23sp"
-                            android:textColor="#E60012"
-                            android:text="随时可退"
+                            android:textSize="29sp"
+                            android:textColor="@color/white"
+                            android:text="交200元押金"
                             />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="15sp"
-                            android:textColor="#707070"
-                            android:text="交200元押金"
+                            android:layout_marginTop="2dp"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:text="随时可退"
                             />
+
+
 
                     </LinearLayout>
 
@@ -78,14 +131,6 @@
                             android:src="@drawable/corner_icon"
                             />
 
-                        <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="11dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginLeft="25dp"
-                            android:src="@drawable/select_icon"
-                            />
-
                     </RelativeLayout>
 
                 </RelativeLayout>
@@ -94,25 +139,24 @@
                     android:id="@+id/rl_selectLayout2"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp100"
-                    android:layout_marginTop="19dp"
-                    android:layout_marginLeft="22dp"
-                    android:layout_marginRight="23dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:background="@drawable/block_bcg15_2"
                     >
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingLeft="42dp"
+                        android:paddingLeft="30dp"
                         android:orientation="vertical"
                         android:gravity="center_vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:textSize="23sp"
-                            android:textColor="#E60012"
+                            android:textSize="29sp"
+                            android:textColor="@color/white"
                             android:text="师生免押金认证"
                             />
 
@@ -134,14 +178,6 @@
                             android:src="@drawable/corner_icon"
                             />
 
-                        <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="11dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginLeft="25dp"
-                            android:src="@drawable/select_icon"
-                            />
-
                     </RelativeLayout>
 
                 </RelativeLayout>
@@ -152,7 +188,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="162dp"
+                android:layout_height="140dp"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
                 android:background="@color/white">
@@ -160,45 +196,45 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="17dp"
-                    android:layout_marginLeft="34dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
                     android:text="支付方式"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp15"
+                    android:textSize="@dimen/sp17"
                     />
 
                 <RelativeLayout
                     android:id="@+id/realNameAuthUI_WeChatTypeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="19dp">
+                    android:layout_marginTop="17dp">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
-                        android:layout_marginLeft="34dp"
+                        android:layout_marginLeft="16dp"
                         android:layout_centerVertical="true"
                         android:gravity="center_vertical">
 
                         <ImageView
-                            android:layout_width="38dp"
-                            android:layout_height="31dp"
-                            android:src="@drawable/wechat_logo"/>
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:src="@drawable/wechat_logo2"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
-                            android:textSize="@dimen/sp15"
+                            android:layout_marginLeft="12dp"
+                            android:textSize="@dimen/sp17"
                             android:textColor="@color/tx_black"
                             android:text="微信支付"/>
                     </LinearLayout>
 
                     <ImageView
                         android:id="@+id/realNameAuthUI_WeChatTypeImage"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginRight="31dp"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_marginRight="16dp"
                         android:src="@drawable/pay_type_selected"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
@@ -209,34 +245,34 @@
                     android:id="@+id/realNameAuthUI_alipayTypeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp"
+                    android:layout_marginTop="18dp"
                     >
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="37dp"
+                        android:layout_marginLeft="16dp"
                         android:layout_centerVertical="true"
                         android:gravity="center_vertical">
 
                         <ImageView
-                            android:layout_width="33dp"
-                            android:layout_height="33dp"
-                            android:src="@drawable/alipay_logo"/>
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:src="@drawable/alipay_logo2"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="18dp"
-                            android:textSize="@dimen/sp15"
+                            android:layout_marginLeft="12dp"
+                            android:textSize="@dimen/sp17"
                             android:textColor="@color/tx_black"
                             android:text="支付宝支付"/>
                     </LinearLayout>
 
                     <ImageView
                         android:id="@+id/realNameAuthUI_alipayTypeImage"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginRight="31dp"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_marginRight="16dp"
                         android:src="@drawable/pay_type_normal"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
@@ -247,7 +283,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="131dp"
+                android:layout_height="146dp"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
                 android:background="@color/white">
@@ -255,20 +291,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="13dp"
-                    android:layout_marginLeft="34dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
                     android:text="推荐套餐"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp15"
+                    android:textSize="@dimen/sp17"
                     />
 
                 <RelativeLayout
                     android:id="@+id/realNameAuthUI_cartLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="66dp"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginLeft="22dp"
-                    android:layout_marginRight="23dp"
+                    android:layout_height="74dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:background="@drawable/block_bcg2">
 
                     <LinearLayout
@@ -278,23 +314,23 @@
                         <LinearLayout
                             android:layout_width="102dp"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="1dp"
-                            android:layout_marginBottom="1dp"
-                            android:layout_marginLeft="1dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
+                            android:layout_marginLeft="2dp"
                             android:background="@drawable/block_bcg7_2"
                             android:gravity="center">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="@dimen/sp20"
-                                android:textColor="#FF5017"
+                                android:textSize="21sp"
+                                android:textColor="#E60012"
                                 android:text="19.90"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="22dp"
-                                android:textSize="@dimen/sp13"
+                                android:textSize="@dimen/sp15"
                                 android:textColor="#333333"
                                 android:text="元"
                                 android:gravity="bottom"/>
@@ -304,14 +340,14 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="18dp"
+                            android:layout_marginLeft="20dp"
                             android:gravity="center_vertical"
                             android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="@dimen/sp15"
+                                android:textSize="@dimen/sp16"
                                 android:textColor="#333333"
                                 android:textStyle="bold"
                                 android:text="30天不限次用车"/>
@@ -319,7 +355,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="@dimen/sp13"
+                                android:textSize="@dimen/sp14"
                                 android:textColor="#333333"
                                 android:text="快速享受骑行"
                                 android:gravity="bottom"/>
@@ -330,9 +366,9 @@
 
                     <ImageView
                         android:id="@+id/realNameAuthUI_cartImage"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginRight="13dp"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_marginRight="16dp"
                         android:src="@drawable/pay_type_selected"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
@@ -357,22 +393,23 @@
     <LinearLayout
         android:id="@+id/realNameAuthUI_payLayout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:background="@color/white"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="11"
+            android:layout_weight="1"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
             android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center_vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:textSize="@dimen/sp15"
                 android:textColor="#333333"
                 android:text="总计："
@@ -399,16 +436,15 @@
 
         <LinearLayout
             android:id="@+id/ui_realNameAuth_submitBtn"
-            android:layout_width="0dp"
+            android:layout_width="130dp"
             android:layout_height="match_parent"
-            android:layout_weight="9"
-            android:background="@drawable/title_gradient"
+            android:background="@drawable/title_gradient2"
             android:gravity="center">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp15"
+                android:textSize="@dimen/sp17"
                 android:textColor="@color/white"
                 android:text="立即支付"
 
