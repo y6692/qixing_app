@@ -16,13 +16,10 @@
         android:orientation="vertical"
         android:background="@color/ui_backgroud">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp5"
-            android:background="@color/white"/>
         <include
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="7dp"
             layout="@layout/layout_swipe_list" />
     </LinearLayout>
 </LinearLayout>

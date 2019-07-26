@@ -23,6 +23,10 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.MarkerOptions;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
@@ -95,6 +99,9 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
     private String[] imageStrs;
     private List<BannerBean> datas;
 
+    private BitmapDescriptor originDescripter;
+    private BitmapDescriptor terminusDescripter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,6 +152,10 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
         imagesLayout = (RelativeLayout)findViewById(R.id.history_roadDetailUI_imagesLayout);
         gallery = (MyPagerGalleryView)findViewById(R.id.history_roadDetailUI_gallery);
         pointLayout = (LinearLayout)findViewById(R.id.history_roadDetailUI_pointLayout);
+
+        originDescripter = BitmapDescriptorFactory.fromResource(R.drawable.origin_icon);
+        terminusDescripter = BitmapDescriptorFactory.fromResource(R.drawable.terminus_icon);
+
 //
 //        freeDaysText = (TextView) findViewById(R.id.history_roadDetailUI_freeDaysText);
 //        if ("0".equals(SharedPreferencesUrls.getInstance().getString("specialdays","0.00"))
@@ -175,7 +186,7 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
         rightBtn.setOnClickListener(this);
 //        submitBtn.setOnClickListener(this);
 
-//        initHttp();
+        initHttp();
         initBannerHttp();
     }
 
@@ -326,26 +337,23 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
             HttpHelper.get(context, Urls.myOrdermap, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("正在加载");
-                        loadingDialog.show();
-                    }
+                    onStartCommon("正在加载");
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
+                    onFailureCommon(throwable.toString());
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                        if (result.getFlag().equals("Success")) {
-                            if (result.getData() != null && !"".equals(result.getData())){
-                                MapTraceBean bean = JSON.parseObject(result.getData(), MapTraceBean.class);
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                if (result.getFlag().equals("Success")) {
+                                    if (result.getData() != null && !"".equals(result.getData())){
+                                        MapTraceBean bean = JSON.parseObject(result.getData(), MapTraceBean.class);
 //                                if ("2".equals(bean.getShow_status())){
 //                                    Toast.makeText(context,"无行车轨迹",Toast.LENGTH_SHORT).show();
 //                                    scrollToFinishActivity();
@@ -354,17 +362,17 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
 //                                if (!latLngs.isEmpty() || 0 != latLngs.size()){
 //                                    latLngs.clear();
 //                                }
-//                                // 加入自定义标签
-//                                MarkerOptions originMarkerOption = new MarkerOptions().position(new LatLng(
-//                                        Double.parseDouble(bean.getLat_start()),Double.parseDouble(bean.getLng_start()))).icon(originDescripter);
-//                                mAMap.addMarker(originMarkerOption);
-//                                MarkerOptions terminusMarkerOption = new MarkerOptions().position(new LatLng(
-//                                        Double.parseDouble(bean.getLat_end()),Double.parseDouble(bean.getLng_end()))).icon(terminusDescripter);
-//                                mAMap.addMarker(terminusMarkerOption);
-//                                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(
-//                                        new LatLng(Double.parseDouble(bean.getLat_start()),
-//                                                Double.parseDouble(bean.getLng_start())), 18);// 设置缩放监听
-//                                mAMap.moveCamera(cameraUpdate);
+//                                      // 加入自定义标签
+                                        MarkerOptions originMarkerOption = new MarkerOptions().position(new LatLng(
+                                                Double.parseDouble(bean.getLat_start()),Double.parseDouble(bean.getLng_start()))).icon(originDescripter);
+                                        mAMap.addMarker(originMarkerOption);
+                                        MarkerOptions terminusMarkerOption = new MarkerOptions().position(new LatLng(
+                                                Double.parseDouble(bean.getLat_end()),Double.parseDouble(bean.getLng_end()))).icon(terminusDescripter);
+                                        mAMap.addMarker(terminusMarkerOption);
+                                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(
+                                                new LatLng(Double.parseDouble(bean.getLat_start()),
+                                                        Double.parseDouble(bean.getLng_start())), 18);// 设置缩放监听
+                                        mAMap.moveCamera(cameraUpdate);
 //                                ImageLoader.getInstance().displayImage(Urls.host + bean.getHeadimgurl(),heading);
 //                                telText.setText(bean.getTelphone());
 //                                distanceText.setText(bean.getDistance());
@@ -372,24 +380,27 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
 //
 //                                Log.e("url===", "==="+bean.getShare_url());
 //
-                                if (bean.getShare_url().indexOf(Urls.HTTP) == -1){
-                                    image = new UMImage(context, Urls.host+bean.getShare_url());
-                                }else {
-                                    image = new UMImage(context, bean.getShare_url());
+                                        if (bean.getShare_url().indexOf(Urls.HTTP) == -1){
+                                            image = new UMImage(context, Urls.host+bean.getShare_url());
+                                        }else {
+                                            image = new UMImage(context, bean.getShare_url());
+                                        }
+                                    }else {
+                                        Toast.makeText(context,"无历史行驶轨迹",Toast.LENGTH_SHORT).show();
+                                        scrollToFinishActivity();
+                                    }
+                                } else {
+                                    Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
                                 }
-                            }else {
-                                Toast.makeText(context,"无历史行驶轨迹",Toast.LENGTH_SHORT).show();
-                                scrollToFinishActivity();
+                            } catch (Exception e) {
+                                Log.e("Test","异常:"+e);
                             }
-                        } else {
-                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
                         }
-                    } catch (Exception e) {
-                        Log.e("Test","异常:"+e);
-                    }
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
+                    });
+
                 }
             });
         }
@@ -410,45 +421,45 @@ public class RouteDetailActivity extends SwipeBackActivity implements View.OnCli
         HttpHelper.get(context, Urls.myOrderdetail, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        HistoryRoadDetailBean bean = JSON.parseObject(result.getData(), HistoryRoadDetailBean.class);
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                HistoryRoadDetailBean bean = JSON.parseObject(result.getData(), HistoryRoadDetailBean.class);
 //                        if ("2".equals(bean.getIspay())){
 //                            payState.setText("支付成功");
 //                        }else {
 //                            payState.setText("未支付");
 //                        }
 //                        codeText.setText("行程编号:"+bean.getOsn());
-                        bikeNum.setText(bean.getCodenum());
-                        st_time.setText(bean.getSt_time());
+                                bikeNum.setText(bean.getCodenum());
+                                st_time.setText(bean.getSt_time());
 //                        ed_time.setText(bean.getEd_time());
-                        total_mintues.setText(bean.getTotal_mintues());
-                        prices.setText(bean.getPrices());
-                    } else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                                total_mintues.setText(bean.getTotal_mintues());
+                                prices.setText(bean.getPrices());
+                            } else {
+                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
+                });
+
             }
         });
     }

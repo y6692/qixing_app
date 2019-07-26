@@ -114,7 +114,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            intent = new Intent(context, HistoryRoadDetailActivity.class);
+            intent = new Intent(context, RouteDetailActivity.class);
             intent.putExtra("oid", oid);
             startActivity(intent);
             scrollToFinishActivity();
@@ -474,7 +474,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
 
                     if (TextUtils.equals(resultStatus, "9000")) {
                         Toast.makeText(context, "恭喜您,支付成功", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(context,HistoryRoadDetailActivity.class);
+                        Intent intent = new Intent(context,RouteDetailActivity.class);
                         intent.putExtra("oid",oid);
                         startActivity(intent);
                         scrollToFinishActivity();

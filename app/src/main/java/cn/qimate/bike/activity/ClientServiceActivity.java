@@ -94,8 +94,8 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = new AMapLocationClientOption();
 
-    private TextView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6,Tag7,Tag8,Tag9,Tag10,Tag11,Tag12;
-    private LinearLayout ll_2,ll_3,ll_4;
+    private TextView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6,Tag7,Tag8,Tag9,Tag10,Tag11,Tag12,Tag13,Tag14,Tag15,Tag16;
+    private LinearLayout ll_1,ll_2,ll_3,ll_4;
     private EditText restCauseEdit;
 
     private boolean isSelected1 = false;
@@ -110,10 +110,14 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     private boolean isSelected10 = false;
     private boolean isSelected11 = false;
     private boolean isSelected12 = false;
+    private boolean isSelected13 = false;
+    private boolean isSelected14 = false;
+    private boolean isSelected15 = false;
+    private boolean isSelected16 = false;
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
@@ -121,7 +125,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
 
     private PhotoGridviewAdapter myAdapter;
     private MyGridView photoMyGridview;
-    private Button submitBtn;
+    private LinearLayout submitBtn;
 
     private List<String> TagsList;
     private List<String> imageUrlList;
@@ -156,7 +160,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_client_service);
+        setContentView(R.layout.activity_client_service);
         context = this;
 
         type = SharedPreferencesUrls.getInstance().getString("type", "");
@@ -209,22 +213,29 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         Tag10 = (TextView)findViewById(R.id.feedbackUI_type_Tag10);
         Tag11 = (TextView)findViewById(R.id.feedbackUI_type_Tag11);
         Tag12 = (TextView)findViewById(R.id.feedbackUI_type_Tag12);
+        Tag13 = (TextView)findViewById(R.id.feedbackUI_type_Tag13);
+        Tag14 = (TextView)findViewById(R.id.feedbackUI_type_Tag14);
+        Tag15 = (TextView)findViewById(R.id.feedbackUI_type_Tag15);
+        Tag16 = (TextView)findViewById(R.id.feedbackUI_type_Tag16);
 
+        ll_1 = (LinearLayout)findViewById(R.id.ll_1);
         ll_2 = (LinearLayout)findViewById(R.id.ll_2);
         ll_3 = (LinearLayout)findViewById(R.id.ll_3);
         ll_4 = (LinearLayout)findViewById(R.id.ll_4);
 
         if("4".equals(type)){
-            Tag1.setText("关锁失败");
-            Tag2.setText("在还车点提示不在");
-            Tag3.setText("电量低");
+//            Tag1.setText("关锁失败");
+//            Tag2.setText("在还车点提示不在");
+//            Tag3.setText("电量低");
+            ll_1.setVisibility(View.VISIBLE);
             ll_2.setVisibility(View.VISIBLE);
             ll_3.setVisibility(View.VISIBLE);
             ll_4.setVisibility(View.GONE);
         }else{
-            Tag1.setText("锁关不上");
-            Tag2.setText("已关锁提示未关");
-            Tag3.setVisibility(View.GONE);
+//            Tag1.setText("锁关不上");
+//            Tag2.setText("已关锁提示未关");
+//            Tag3.setVisibility(View.GONE);
+            ll_1.setVisibility(View.GONE);
             ll_2.setVisibility(View.GONE);
             ll_3.setVisibility(View.GONE);
             ll_4.setVisibility(View.VISIBLE);
@@ -232,7 +243,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
 
         restCauseEdit = (EditText)findViewById(R.id.feedbackUI_restCause);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("问题反馈");
         imageUri = Uri.parse("file:///sdcard/temp.jpg");
@@ -242,13 +253,14 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         takePhotoBtn = (Button)findViewById(R.id.takePhotoBtn);
         pickPhotoBtn = (Button)findViewById(R.id.pickPhotoBtn);
         cancelBtn = (Button)findViewById(R.id.cancelBtn);
-        tv = (TextView)findViewById(R.id.tv);
+//        tv = (TextView)findViewById(R.id.tv);
 
-        if("4".equals(type)){
-            tv.setText("还车提示：校内地图绿色区域关锁，并点击结束");
-        }else{
-            tv.setText("还车提示：校内地图红色区域关锁，并点击结束");
-        }
+//        tv.setText("单车编号："+);
+//        if("4".equals(type)){
+//            tv.setText("还车提示：校内地图绿色区域关锁，并点击结束");
+//        }else{
+//            tv.setText("还车提示：校内地图红色区域关锁，并点击结束");
+//        }
 
         pickPhotoBtn.setVisibility(View.GONE);
         takePhotoBtn.setOnClickListener(itemsOnClick);
@@ -259,12 +271,12 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         codeNum.setText("车辆编号："+getIntent().getExtras().getString("bikeCode"));
 
         photoMyGridview = (MyGridView)findViewById(R.id.ui_client_service_photoGridView);
-        submitBtn = (Button)findViewById(R.id.ui_client_service_submitBtn);
+        submitBtn = (LinearLayout)findViewById(R.id.ui_client_service_submitBtn);
 
         myAdapter = new PhotoGridviewAdapter(context);
         photoMyGridview.setAdapter(myAdapter);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
         Tag1.setOnClickListener(this);
@@ -279,6 +291,10 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         Tag10.setOnClickListener(this);
         Tag11.setOnClickListener(this);
         Tag12.setOnClickListener(this);
+        Tag13.setOnClickListener(this);
+        Tag14.setOnClickListener(this);
+        Tag15.setOnClickListener(this);
+        Tag16.setOnClickListener(this);
 
         restCauseEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -579,6 +595,78 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                     }
                     Tag12.setTextColor(Color.parseColor("#f57752"));
                     Tag12.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
+            case R.id.feedbackUI_type_Tag13:
+                if (isSelected13){
+                    isSelected13 = false;
+                    if (TagsList.contains(Tag13.getText().toString())){
+                        TagsList.remove(Tag13.getText().toString());
+                    }
+                    Tag13.setTextColor(Color.parseColor("#666666"));
+                    Tag13.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected13 = true;
+                    if (!TagsList.contains(Tag13.getText().toString())){
+                        TagsList.add(Tag13.getText().toString());
+                    }
+                    Tag13.setTextColor(Color.parseColor("#f57752"));
+                    Tag13.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
+            case R.id.feedbackUI_type_Tag14:
+                if (isSelected14){
+                    isSelected14 = false;
+                    if (TagsList.contains(Tag14.getText().toString())){
+                        TagsList.remove(Tag14.getText().toString());
+                    }
+                    Tag14.setTextColor(Color.parseColor("#666666"));
+                    Tag14.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected14 = true;
+                    if (!TagsList.contains(Tag14.getText().toString())){
+                        TagsList.add(Tag14.getText().toString());
+                    }
+                    Tag14.setTextColor(Color.parseColor("#f57752"));
+                    Tag14.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
+            case R.id.feedbackUI_type_Tag15:
+                if (isSelected15){
+                    isSelected15 = false;
+                    if (TagsList.contains(Tag15.getText().toString())){
+                        TagsList.remove(Tag15.getText().toString());
+                    }
+                    Tag15.setTextColor(Color.parseColor("#666666"));
+                    Tag15.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected15 = true;
+                    if (!TagsList.contains(Tag15.getText().toString())){
+                        TagsList.add(Tag15.getText().toString());
+                    }
+                    Tag15.setTextColor(Color.parseColor("#f57752"));
+                    Tag15.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
+            case R.id.feedbackUI_type_Tag16:
+                if (isSelected16){
+                    isSelected16 = false;
+                    if (TagsList.contains(Tag16.getText().toString())){
+                        TagsList.remove(Tag16.getText().toString());
+                    }
+                    Tag16.setTextColor(Color.parseColor("#666666"));
+                    Tag16.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected16 = true;
+                    if (!TagsList.contains(Tag16.getText().toString())){
+                        TagsList.add(Tag16.getText().toString());
+                    }
+                    Tag16.setTextColor(Color.parseColor("#f57752"));
+                    Tag16.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
                 pd();
                 break;

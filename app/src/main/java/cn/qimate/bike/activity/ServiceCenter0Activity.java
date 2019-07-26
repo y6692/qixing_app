@@ -579,7 +579,7 @@ public class ServiceCenter0Activity extends SwipeBackActivity implements View.On
 
             case R.id.mainUI_title_rightBtn:
                 SharedPreferencesUrls.getInstance().putString("type", "1");
-                UIHelper.goToAct(context,FeedbackActivity.class);
+                UIHelper.goToAct(context, FaultReportActivity.class);
                 break;
 
 

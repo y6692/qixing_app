@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ui_main"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/ui_main_title"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <cn.qimate.bike.core.widget.MyScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="19dp"
+                    android:paddingRight="19dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="19dp"
+                        android:paddingBottom="7dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="24dp"
+                            android:text="遇到什么问题？"
+                            android:textSize="@dimen/sp18"
+                            android:textColor="@color/tx_black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="19dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/ui_client_service_codeNum"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="单车编号：20189565"
+                            android:textColor="#7D7D7D"
+                            android:textSize="@dimen/sp14"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/line_height"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="21dp"
+                        android:layout_marginLeft="-7dp"
+                        android:layout_marginRight="-7dp"
+                        android:background="#DDDDDD"/>
+
+                    <LinearLayout
+                        android:id="@+id/ll_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="43dp"
+                            android:background="@drawable/shape_feedback"
+                            android:text="关锁失败"
+                            android:gravity="center"
+                            android:paddingLeft="@dimen/dp10"
+                            android:paddingRight="@dimen/dp10"
+                            android:textSize="@dimen/sp14"
+                            android:textColor="@color/tx_black"
+                            android:layout_marginRight="9dp"
+                            />
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="43dp"
+                            android:background="@drawable/shape_feedback"
+                            android:text="在还车点提示不在"
+                            android:gravity="center"
+                            android:paddingLeft="@dimen/dp10"
+                            android:paddingRight="@dimen/dp10"
+                            android:textSize="@dimen/sp14"
+                            android:textColor="@color/tx_black"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"/>
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="43dp"
+                            android:background="@drawable/shape_feedback"
+                            android:text="电量低"
+                            android:gravity="center"
+                            android:paddingLeft="@dimen/dp10"
+                            android:paddingRight="@dimen/dp10"
+                            android:textSize="@dimen/sp14"
+                            android:textColor="@color/tx_black"
+                            android:layout_marginLeft="9dp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="43dp"
+                            android:background="@drawable/shape_feedback"
+                            android:text="转把没电"
+                            android:gravity="center"
+                            android:paddingLeft="@dimen/dp10"
+                            android:paddingRight="@dimen/dp10"
+                            android:textSize="@dimen/sp14"
+                            android:textColor="@color/tx_black"
+                            android:layout_marginRight="9dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="43dp"
+                            android:background="@drawable/shape_feedback"
+                            android:text="脚踏损坏"
+                            android:gravity="center"
+                            android:paddingLeft="@dimen/dp10"
+                            android:paddingRight="@dimen/dp10"
+                            android:textSize="@dimen/sp14"
+                            android:textColor="@color/tx_black"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"/>
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="43dp"
+                            android:background="@drawable/shape_feedback"
+                            android:text="刹车失灵"
+                            android:gravity="center"
+                            android:paddingLeft="@dimen/dp10"
+                            android:paddingRight="@dimen/dp10"
+                            android:textSize="@dimen/sp14"
+                            android:textColor="@color/tx_black"
+                            android:layout_marginLeft="9dp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="43dp"
+                            android:background="@drawable/shape_feedback"
+                            android:text="脚撑损坏"
+                            android:gravity="center"
+                            android:paddingLeft="@dimen/dp10"
+                            android:paddingRight="@dimen/dp10"
+                            android:textSize="@dimen/sp14"
+                            android:textColor="@color/tx_black"
+                            android:layout_marginRight="9dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="43dp"
+                            android:background="@drawable/shape_feedback"
+                            android:text="链条掉了"
+                            android:gravity="center"
+                            android:paddingLeft="@dimen/dp10"
+                            android:paddingRight="@dimen/dp10"
+                            android:textSize="@dimen/sp14"
+                            android:textColor="@color/tx_black"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag9"
+                            android:layout_width="wrap_content"
+                            android:layout_height="43dp"
+                            android:background="@drawable/shape_feedback"
+                            android:text="坐垫损坏"
+                            android:gravity="center"
+                            android:paddingLeft="@dimen/dp10"
+                            android:paddingRight="@dimen/dp10"
+                            android:textSize="@dimen/sp14"
+                            android:textColor="@color/tx_black"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/feedbackUI_type_Tag10"
+                                android:layout_width="0dp"
+                                android:layout_height="43dp"
+                                android:layout_weight="1"
+                                android:layout_marginRight="9dp"
+                                android:background="@drawable/shape_feedback"
+                                android:text="锁车弹开"
+                                android:gravity="center"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"/>
+                            <TextView
+                                android:id="@+id/feedbackUI_type_Tag11"
+                                android:layout_width="0dp"
+                                android:layout_height="43dp"
+                                android:layout_weight="1"
+                                android:layout_marginLeft="9dp"
+                                android:background="@drawable/shape_feedback"
+                                android:text="车辆故障"
+                                android:gravity="center"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="18dp">
+
+                            <TextView
+                                android:id="@+id/feedbackUI_type_Tag12"
+                                android:layout_width="0dp"
+                                android:layout_height="43dp"
+                                android:layout_weight="1"
+                                android:layout_marginRight="9dp"
+                                android:background="@drawable/shape_feedback"
+                                android:text="锁手动关不上"
+                                android:gravity="center"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"/>
+                            <TextView
+                                android:id="@+id/feedbackUI_type_Tag13"
+                                android:layout_width="0dp"
+                                android:layout_height="43dp"
+                                android:layout_weight="1"
+                                android:layout_marginLeft="9dp"
+                                android:background="@drawable/shape_feedback"
+                                android:text="已关锁提示未关锁"
+                                android:gravity="center"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="18dp">
+
+                            <TextView
+                                android:id="@+id/feedbackUI_type_Tag14"
+                                android:layout_width="0dp"
+                                android:layout_height="43dp"
+                                android:layout_weight="1"
+                                android:layout_marginRight="9dp"
+                                android:background="@drawable/shape_feedback"
+                                android:text="提示不在停车点"
+                                android:gravity="center"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"/>
+                            <TextView
+                                android:id="@+id/feedbackUI_type_Tag15"
+                                android:layout_width="0dp"
+                                android:layout_height="43dp"
+                                android:layout_weight="1"
+                                android:layout_marginLeft="9dp"
+                                android:background="@drawable/shape_feedback"
+                                android:text="蓝牙连接不上"
+                                android:gravity="center"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="18dp"
+                            android:weightSum="2">
+
+                            <TextView
+                                android:id="@+id/feedbackUI_type_Tag16"
+                                android:layout_width="0dp"
+                                android:layout_height="43dp"
+                                android:layout_weight="1"
+                                android:layout_marginRight="18dp"
+                                android:background="@drawable/shape_feedback"
+                                android:text="其他"
+                                android:gravity="center"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"/>
+                        </LinearLayout>
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/feedbackUI_type_Tag10"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="43dp"-->
+                            <!--android:background="@drawable/shape_feedback"-->
+                            <!--android:text="蓝牙连接失败"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="@dimen/dp10"-->
+                            <!--android:paddingRight="@dimen/dp10"-->
+                            <!--android:textSize="@dimen/sp14"-->
+                            <!--android:textColor="@color/tx_black_light"/>-->
+                        <!--<TextView-->
+                            <!--android:id="@+id/feedbackUI_type_Tag11"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="43dp"-->
+                            <!--android:background="@drawable/shape_feedback"-->
+                            <!--android:text="一直在加载"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="@dimen/dp10"-->
+                            <!--android:paddingRight="@dimen/dp10"-->
+                            <!--android:textSize="@dimen/sp14"-->
+                            <!--android:textColor="@color/tx_black_light"-->
+                            <!--android:layout_marginLeft="@dimen/dp10"/>-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/feedbackUI_type_Tag12"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="43dp"-->
+                            <!--android:background="@drawable/shape_feedback"-->
+                            <!--android:text="其他"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="@dimen/dp10"-->
+                            <!--android:paddingRight="@dimen/dp10"-->
+                            <!--android:textSize="@dimen/sp14"-->
+                            <!--android:textColor="@color/tx_black_light"-->
+                            <!--android:layout_marginLeft="@dimen/dp10"/>-->
+
+
+                    </LinearLayout>
+
+
+
+
+                    <cn.qimate.bike.core.widget.ClearEditText
+                        android:id="@+id/feedbackUI_restCause"
+                        android:layout_width="match_parent"
+                        android:layout_height="78dp"
+                        android:layout_marginTop="23dp"
+                        android:background="@drawable/shape_feedback"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="13dp"
+                        android:drawableRight="@drawable/delete_selector"
+                        android:hint="请描述您遇到的问题和详细地址"
+                        android:textSize="@dimen/sp14"
+                        android:textColor="@color/tx_black_light"
+                        android:textColorHint="#7D7D7D"
+                        android:gravity="top|left"
+                        android:lineSpacingExtra="2dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="上传照片工作人员会更快处理哦！"
+                        android:textColor="#7D7D7D"
+                        android:textSize="@dimen/sp14"
+                        android:layout_marginTop="@dimen/dp15"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingTop="@dimen/dp15">
+
+                        <cn.qimate.bike.core.widget.MyGridView
+                            android:id="@+id/ui_client_service_photoGridView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:horizontalSpacing="2dp"
+                            android:listSelector="@android:color/transparent"
+                            android:numColumns="4"
+                            android:scrollbars="none"
+                            android:stretchMode="columnWidth"
+                            android:verticalSpacing="2dp"
+                            android:paddingTop="@dimen/dp10"
+                            android:paddingBottom="@dimen/dp10"
+                            android:descendantFocusability="blocksDescendants"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ui_client_service_submitBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="21dp"
+                        android:layout_marginRight="21dp"
+                        android:layout_marginBottom="26dp"
+                        android:orientation="horizontal"
+                        android:background="@drawable/btn_bcg_scan_gradient"
+                        android:gravity="center"
+                        android:layout_alignParentBottom="true"
+                        >
+                        <TextView
+                            android:id="@+id/tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="7dp"
+                            android:text="提交"
+                            android:textSize="@dimen/sp18"
+                            android:textColor="@color/white"
+                            android:layout_centerInParent="true"
+                            />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+            </cn.qimate.bike.core.widget.MyScrollView>
+        </LinearLayout>
+    </LinearLayout>
+
+    <include
+        layout="@layout/ui_main_task"/>
+</RelativeLayout>

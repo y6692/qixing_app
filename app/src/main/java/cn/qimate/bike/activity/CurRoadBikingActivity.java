@@ -1778,7 +1778,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                             if (result.getFlag().equals("Success")) {
-//						ToastUtil.showMessageApp(context,"数据更新成功==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
+//						        ToastUtil.showMessageApp(context,"数据更新成功==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
 
                                 Log.e("biking=", "getFeedbackStatus==="+result.data+"==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
 
@@ -2308,7 +2308,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             case R.id.mainUI_title_backBtn:
                 scrollToFinishActivity();
                 break;
-            case R.id.mainUI_title_rightBtn:
+            case R.id.curRoadUI_rightBtn:
                 Intent intent = new Intent(context,ClientServiceActivity.class);
                 intent.putExtra("bikeCode",bikeCode);
                 startActivity(intent);
@@ -2623,7 +2623,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             case R.id.ui_discount_confirm:
                 if(tz == 3){
                     BikeFragment.tz = 2;
-                    intent = new Intent(context, HistoryRoadDetailActivity.class);
+                    intent = new Intent(context, RouteDetailActivity.class);
                     intent.putExtra("oid",oid);
                     startActivity(intent);
                 }else if(tz == 4){
@@ -2714,10 +2714,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                             ToastUtil.showMessageApp(context, result.getMsg());
                                             if ("已为您免单,欢迎反馈问题".equals(result.getMsg())){
                                                 BikeFragment.tz = 1;
-                                                UIHelper.goToAct(context, FeedbackActivity.class);
+                                                UIHelper.goToAct(context, FaultReportActivity.class);
                                             }else {
                                                 BikeFragment.tz = 2;
-                                                Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
+                                                Intent intent = new Intent(context, RouteDetailActivity.class);
                                                 intent.putExtra("oid",oid);
                                                 startActivity(intent);
                                             }
@@ -3404,10 +3404,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                         ToastUtil.showMessageApp(context, result.getMsg());
                                         if ("已为您免单,欢迎反馈问题".equals(result.getMsg())){
                                             BikeFragment.tz = 1;
-                                            UIHelper.goToAct(context, FeedbackActivity.class);
+                                            UIHelper.goToAct(context, FaultReportActivity.class);
                                         }else {
                                             BikeFragment.tz = 2;
-                                            Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
+                                            Intent intent = new Intent(context, RouteDetailActivity.class);
                                             intent.putExtra("oid",oid);
                                             startActivity(intent);
                                         }

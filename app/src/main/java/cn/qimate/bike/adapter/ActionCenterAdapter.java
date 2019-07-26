@@ -47,19 +47,19 @@ public class ActionCenterAdapter extends BaseViewAdapter<ActionCenterBean>{
         if (null == convertView) {
             convertView = inflater.inflate(R.layout.item_action_center, null);
         }
-        View line = BaseViewHolder.get(convertView,R.id.item_actionCenter_line);
-        RelativeLayout layout = BaseViewHolder.get(convertView,R.id.item_actionCenter_Layout);
+//        View line = BaseViewHolder.get(convertView,R.id.item_actionCenter_line);
+//        RelativeLayout layout = BaseViewHolder.get(convertView,R.id.item_actionCenter_Layout);
         ImageView imageview = BaseViewHolder.get(convertView,R.id.item_actionCenter_imageview);
         TextView title = BaseViewHolder.get(convertView,R.id.item_actionCenter_title);
         // 设置广告高度为屏幕高度0.6倍
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
-        params.height = (int) (((Activity)getContext()).getWindowManager().getDefaultDisplay().getWidth() * 0.4);
-        layout.setLayoutParams(params);
-        if (0 == position){
-            line.setVisibility(View.GONE);
-        }else {
-            line.setVisibility(View.VISIBLE);
-        }
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
+//        params.height = (int) (((Activity)getContext()).getWindowManager().getDefaultDisplay().getWidth() * 0.4);
+//        layout.setLayoutParams(params);
+//        if (0 == position){
+//            line.setVisibility(View.GONE);
+//        }else {
+//            line.setVisibility(View.VISIBLE);
+//        }
         ActionCenterBean bean = getDatas().get(position);
         Log.e("Test",Urls.host+bean.getAc_thumb());
         if (bean.getAc_thumb() != null && !"".equals(bean.getAc_thumb())){

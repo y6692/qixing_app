@@ -106,6 +106,7 @@ import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.activity.PersonAlterActivity;
 import cn.qimate.bike.activity.RealNameAuthActivity;
 import cn.qimate.bike.activity.ReportViolationActivity;
+import cn.qimate.bike.activity.RouteDetailActivity;
 import cn.qimate.bike.activity.ServiceCenter0Activity;
 import cn.qimate.bike.activity.ServiceCenterActivity;
 import cn.qimate.bike.base.BaseApplication;
@@ -926,7 +927,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //            ToastUtil.showMessage(this, "eee====" + e);
 //        }
 
-        if(!isHidden){
+        if(!isHidden && !"4".equals(type)){
             getFeedbackStatus();
         }
 
@@ -2058,7 +2059,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             m_myHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if(!isHidden){
+                    if(!isHidden && !"4".equals(type)){
                         Log.e("broadcastReceiver===1", "==="+intent);
 
                         getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
@@ -2151,14 +2152,14 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //								}
 
                                         tz = 1;
-                                        UIHelper.goToAct(context, FeedbackActivity.class);
+                                        UIHelper.goToAct(context, FaultReportActivity.class);
 //								UIHelper.goToAct(context, Main2Activity.class);
 //                              scrollToFinishActivity();
 
                                         Log.e("base===","base===Feedback");
                                     }else {
                                         tz = 2;
-                                        Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
+                                        Intent intent = new Intent(context, RouteDetailActivity.class);
                                         intent.putExtra("oid",oid);
                                         startActivity(intent);
 
@@ -2699,15 +2700,15 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                 }
                             }
-                        } else if (tz == 1 && !FeedbackActivity.isForeground) {
-                            UIHelper.goToAct(context, FeedbackActivity.class);
+                        } else if (tz == 1 && !FaultReportActivity.isForeground) {
+                            UIHelper.goToAct(context, FaultReportActivity.class);
                             Log.e("main===", "main===Feedback");
-                        } else if (tz == 2 && !HistoryRoadDetailActivity.isForeground) {
-                            Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
+                        } else if (tz == 2 && !RouteDetailActivity.isForeground) {
+                            Intent intent = new Intent(context, RouteDetailActivity.class);
                             intent.putExtra("oid", oid);
                             startActivity(intent);
                             Log.e("main===", "main===HistoryRoadDetail");
-                        } else if (tz == 3 && !CurRoadBikedActivity.isForeground && !HistoryRoadDetailActivity.isForeground) {
+                        } else if (tz == 3 && !CurRoadBikedActivity.isForeground && !RouteDetailActivity.isForeground) {
                             UIHelper.goToAct(context, CurRoadBikedActivity.class);
                             Log.e("main===", "main===CurRoadBiked");
                         }

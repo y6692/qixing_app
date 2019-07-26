@@ -72,6 +72,7 @@ import cn.qimate.bike.activity.InsureanceActivity;
 import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.activity.MyMessageActivity;
+import cn.qimate.bike.activity.MyRouteActivity;
 import cn.qimate.bike.activity.ServiceCenterActivity;
 import cn.qimate.bike.activity.SettingActivity;
 import cn.qimate.bike.activity.SuperVipActivity;
@@ -108,7 +109,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
     private LoadingDialog loadingDialog;
     private PullToZoomScrollViewEx scrollView;
-    private TextView rightBtn;
+    private ImageView rightBtn;
     private ImageView backImage;
     private ImageView settingImage;
     private ImageView headerImageView;
@@ -238,7 +239,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         pickPhotoBtn.setOnClickListener(itemsOnClick);
         cancelBtn.setOnClickListener(itemsOnClick);
 
-        rightBtn = (TextView) getActivity().findViewById(R.id.personUI_rightBtn);
+        rightBtn = (ImageView) getActivity().findViewById(R.id.personUI_rightBtn);
         backImage = getActivity().findViewById(R.id.personUI_backImage);
         settingImage = getActivity().findViewById(R.id.personUI_title_settingBtn);
         headerImageView = getActivity().findViewById(R.id.personUI_bottom_header);
@@ -857,9 +858,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             case R.id.personUI_bottom_myPurseLayout:
                 ((MainActivity)getActivity()).changeTab(2);
                 break;
-//            case R.id.personUI_bottom_myRouteLayout:
-//                UIHelper.goToAct(context, MyRouteActivity.class);
-//                break;
+            case R.id.personUI_bottom_myRouteLayout:
+                UIHelper.goToAct(context, MyRouteActivity.class);
+                break;
             case R.id.personUI_bottom_actionCenterLayout:
                 UIHelper.goToAct(context, ActionCenterActivity.class);
                 break;

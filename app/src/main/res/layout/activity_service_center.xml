@@ -37,14 +37,6 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/back_image"/>
 
-                <TextView
-                    android:layout_marginLeft="-10dp"
-                    android:id="@+id/tv_left"
-                    android:textSize="@dimen/sp16"
-                    android:text="返回"
-                    android:textColor="@color/white"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 

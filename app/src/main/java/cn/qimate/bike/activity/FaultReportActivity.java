@@ -146,6 +146,8 @@ public class FaultReportActivity extends SwipeBackActivity implements View.OnCli
     private boolean isComplete = false;
     private String type = "";
 
+    public static boolean isForeground = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1256,7 +1258,16 @@ public class FaultReportActivity extends SwipeBackActivity implements View.OnCli
     }
 
     @Override
+    protected void onResume() {
+        isForeground = true;
+        super.onResume();
+
+        Log.e("FRA===","===onResume");
+    }
+
+    @Override
     protected void onDestroy() {
+        isForeground = false;
         super.onDestroy();
         destroyLocation();
     }

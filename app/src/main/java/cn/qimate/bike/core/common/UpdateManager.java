@@ -155,7 +155,7 @@ public class UpdateManager {
 
 		Log.e("checkAppUpdate==0", "===");
 
-		getCurrentVersion();
+		getCurrentVersion(mContext);
 
 		Log.e("checkAppUpdate==1", "===");
 
@@ -216,13 +216,17 @@ public class UpdateManager {
 	/**
 	 * 获取当前客户端版本信息
 	 */
-	private void getCurrentVersion() {
+	public String getCurrentVersion(Context context) {
 		try {
-			PackageInfo info = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
+			PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
 			curVersionName = info.versionName;
+
+
 		} catch (NameNotFoundException e) {
 			e.printStackTrace(System.err);
 		}
+
+		return curVersionName;
 	}
 
 	/**
@@ -425,7 +429,6 @@ public class UpdateManager {
 	/**
 	 * 下载apk
 	 *
-	 * @param url
 	 */
 	private void downloadApk() {
 		downLoadThread = new Thread(mdownApkRunnable);
@@ -440,7 +443,6 @@ public class UpdateManager {
 	/**
 	 * 安装apk
 	 *
-	 * @param url
 	 */
 	private void installApk() {
 		File apkfile = new File(apkFilePath);
