@@ -149,7 +149,7 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 
 	}
 
-	Handler m_myHandler = new Handler(new Handler.Callback() {
+	protected Handler m_myHandler = new Handler(new Handler.Callback() {
 		@Override
 		public boolean handleMessage(Message mes) {
 			switch (mes.what) {

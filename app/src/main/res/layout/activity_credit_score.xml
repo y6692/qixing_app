@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:melove="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/personUI_mainLayout"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:background="@color/white">
+
+    <include
+        layout="@layout/ui_main_title"/>
+
+    <cn.qimate.bike.core.widget.MyScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/mainUI_title_mainLayout"
+        android:scrollbars="none"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="284dp"
+                android:orientation="horizontal"
+                >
+
+                <ImageView
+                    android:id="@+id/iv_score"
+                    android:layout_width="230dp"
+                    android:layout_height="224dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/credit_pic1"/>
+
+                <LinearLayout
+                    android:layout_width="151dp"
+                    android:layout_height="151dp"
+                    android:orientation="vertical"
+                    android:layout_centerInParent="true"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="45dp"
+                        android:textColor="#E60012"
+                        android:textSize="33sp"
+                        android:textStyle="bold"
+                        android:text="650"/>
+
+                    <TextView
+                        android:id="@+id/tv_points_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="22dp"
+                        android:layout_marginTop="-5dp"
+                        android:textColor="#E60012"
+                        android:textSize="@dimen/sp16"
+                        android:text="信用良好"/>
+
+                    <TextView
+                        android:id="@+id/tv_evaluation_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="6dp"
+                        android:textColor="#A2A2A2"
+                        android:textSize="@dimen/sp10"
+                        android:text="评估时间：2019-2-20"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:textSize="@dimen/sp13"
+                    android:textColor="#999999"
+                    android:text="规范用车，文明出行哦"/>
+
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rl_rule"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/block_bcg8"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp17"
+                        android:text="信用分规则"
+                        android:layout_centerVertical="true"/>
+
+                    <TextView
+                        android:id="@+id/settingUI_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="4dp"
+                        android:textSize="@dimen/sp14"
+                        android:textColor="#999999"
+                        android:text="信用分用于规范你的用车行为"/>
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="9dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/yjt4"
+                        android:layout_marginRight="16dp"/>
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_marginLeft="32dp"
+                    android:textSize="@dimen/sp17"
+                    android:textColor="#333333"
+                    android:text="严重影响信用分的行为"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_scan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    >
+
+                    <ImageView
+                        android:layout_width="76dp"
+                        android:layout_height="76dp"
+                        android:src="@drawable/creditout_icon1"/>
+
+                    <TextView
+                        android:id="@+id/loca_show_btnBikeNum"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="私占车辆"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp14"
+                        android:onClick="btn"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    >
+
+                    <ImageView
+                        android:layout_width="76dp"
+                        android:layout_height="76dp"
+                        android:src="@drawable/creditout_icon2"/>
+
+                    <TextView
+                        android:id="@+id/loca_show_btnBikeNum2"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="破坏二维码"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp14"
+                        android:onClick="btn"
+                        />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    >
+
+                    <ImageView
+                        android:layout_width="76dp"
+                        android:layout_height="76dp"
+                        android:src="@drawable/creditout_icon3"/>
+
+                    <TextView
+                        android:id="@+id/loca_show_btnBikeNum3"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="违规停车"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp14"
+                        android:onClick="btn"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </cn.qimate.bike.core.widget.MyScrollView>
+
+
+
+</RelativeLayout>
+
+
+
+

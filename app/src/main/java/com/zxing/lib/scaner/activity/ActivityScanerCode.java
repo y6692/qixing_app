@@ -1276,7 +1276,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             }else {
                                 customBuilder.setMessage("输号成功,是否开锁?");
                             }
-                            customBuilder.setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            customBuilder.setHint(false).setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
 
@@ -1312,12 +1312,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                         loadingDialog.show();
                                     }
 
-
-
                                     Log.e("scan===", "scan===="+loadingDialog);
 
                                 }
-                            }).setHint(false);
+                            });
                             customBuilder.create().show();
 
                         }

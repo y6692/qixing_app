@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,12 +42,13 @@ public class ChangePhoneNumActivity extends SwipeBackActivity implements View.On
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
+    private LinearLayout ll_back;
     private TextView title;
 
     private EditText phoneNumEdit;
     private EditText noteCodeEdit;
-    private Button codeBtn;
+    private TextView tv_phoneNum;
+    private TextView codeBtn;
     private Button submitBtn;
     private TelephonyManager tm;
 
@@ -69,28 +71,32 @@ public class ChangePhoneNumActivity extends SwipeBackActivity implements View.On
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
-        title.setText("修改手机号");
+        title.setText("改绑手机");
+
+        tv_phoneNum = (TextView) findViewById(R.id.tv_phoneNum);
+        tv_phoneNum.setText("当前绑定手机："+getIntent().getStringExtra("phoneNum"));
 
         phoneNumEdit = (EditText) findViewById(R.id.change_phoneNumUI_phoneNum);
         noteCodeEdit = (EditText) findViewById(R.id.change_phoneNumUI_code);
 
-        codeBtn = (Button) findViewById(R.id.change_phoneNumUI_noteCode);
+        codeBtn = (TextView) findViewById(R.id.change_phoneNumUI_noteCode);
         submitBtn = (Button) findViewById(R.id.change_phoneNumUI_submitBtn);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         codeBtn.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onClick(View v) {
         String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
         String telphone = phoneNumEdit.getText().toString();
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_back:
                 scrollToFinishActivity();
                 break;
             case R.id.change_phoneNumUI_noteCode:

@@ -3,6 +3,7 @@ package cn.qimate.bike.core.widget;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -279,6 +280,8 @@ public class CustomDialog extends Dialog {
 			// set the dialog title
 			((TextView) layout.findViewById(R.id.title)).setText(title);
 
+			Log.e("CD===", isHint+"==="+type);
+
 			if(type==4){
 				TextView tv_electricity = ((TextView) layout.findViewById(R.id.electricity));
 				TextView tv_mileage = ((TextView) layout.findViewById(R.id.mileage));
@@ -294,8 +297,11 @@ public class CustomDialog extends Dialog {
 				ImageLoader.getInstance().displayImage(img_url, iv_img_url, options);
 
 			}else{
+				Log.e("CD===2", isHint+"==="+type);
+
 				TextView hintText = ((TextView) layout.findViewById(R.id.hintText));
 				if (isHint){
+					Log.e("CD===3", isHint+"==="+type);
 					hintText.setVisibility(View.GONE);
 				}else {
 					hintText.setVisibility(View.VISIBLE);

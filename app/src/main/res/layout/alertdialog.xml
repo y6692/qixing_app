@@ -28,7 +28,7 @@
         android:id="@+id/content"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:gravity="center">
 
 
@@ -52,8 +52,7 @@
             android:layout_height="wrap_content"
             android:text="注:该车须至校内还车"
             android:textColor="@color/red"
-            android:textSize="@dimen/sp14"
-            android:visibility="gone"/>
+            android:textSize="@dimen/sp14"/>
 
     </LinearLayout>
 

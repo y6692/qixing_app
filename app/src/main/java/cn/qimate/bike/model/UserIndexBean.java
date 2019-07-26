@@ -17,6 +17,9 @@ public class UserIndexBean {
     private String money;
     private String iscert;
     private String headimg;
+    private int uid;
+    private int regtime;
+    private int member_card_status;
 
     public String getTelphone() {
         return telphone;
@@ -104,5 +107,29 @@ public class UserIndexBean {
 
     public void setHeadimg(String headimg) {
         this.headimg = headimg;
+    }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
+
+    public int getRegtime() {
+        return regtime;
+    }
+
+    public void setRegtime(int regtime) {
+        this.regtime = regtime;
+    }
+
+    public int getMember_card_status() {
+        return member_card_status;
+    }
+
+    public void setMember_card_status(int member_card_status) {
+        this.member_card_status = member_card_status;
     }
 }

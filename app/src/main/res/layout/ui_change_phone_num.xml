@@ -18,27 +18,49 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_change_phone"
+            android:layout_height="175dp"
+            android:background="@color/white"
             android:orientation="vertical"
-            android:layout_marginLeft="@dimen/dp10"
-            android:layout_marginRight="@dimen/dp10"
-            android:layout_marginTop="@dimen/dp15">
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:layout_width="99dp"
+                android:layout_height="99dp"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/change_phone_icon"/>
+
+            <TextView
+                android:id="@+id/tv_phoneNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="当前绑定手机：+86184****0614"
+                android:textColor="#E60012"
+                android:textSize="@dimen/sp13"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/dp10">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp45"
+                android:layout_height="47dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/dp10"
-                android:paddingRight="@dimen/dp10">
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="新手机号码："
+                    android:text="手机号"
                     android:textColor="@color/tx_black"
-                    android:textSize="@dimen/sp16"/>
+                    android:textSize="@dimen/sp17"/>
 
                 <cn.qimate.bike.core.widget.ClearEditText
                     android:id="@+id/change_phoneNumUI_phoneNum"
@@ -46,14 +68,14 @@
                     android:layout_height="match_parent"
                     android:background="@null"
                     android:drawableRight="@drawable/delete_selector"
-                    android:hint="请输入新手机号码"
+                    android:hint="请输入手机号"
                     android:inputType="numberDecimal"
                     android:maxLength="11"
                     android:paddingBottom="0dp"
-                    android:paddingLeft="@dimen/dp5"
+                    android:paddingLeft="39dp"
                     android:paddingRight="0dp"
-                    android:textColorHint="#A3A3A3"
-                    android:textSize="@dimen/sp16"
+                    android:textColorHint="#CCCCCC"
+                    android:textSize="@dimen/sp17"
                     android:textColor="@color/tx_black"/>
             </LinearLayout>
             <View
@@ -63,18 +85,18 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp45"
+                android:layout_height="47dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/dp10"
-                android:paddingRight="@dimen/dp10">
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="短信验证码："
+                    android:text="验证码"
                     android:textColor="@color/tx_black"
-                    android:textSize="@dimen/sp16"/>
+                    android:textSize="@dimen/sp17"/>
 
                 <cn.qimate.bike.core.widget.ClearEditText
                     android:id="@+id/change_phoneNumUI_code"
@@ -82,18 +104,23 @@
                     android:layout_height="match_parent"
                     android:background="@null"
                     android:drawableRight="@drawable/delete_selector"
-                    android:hint="请输入短信验证码"
+                    android:hint="请输入验证码"
                     android:inputType="numberDecimal"
                     android:maxLength="6"
                     android:paddingBottom="0dp"
-                    android:paddingLeft="@dimen/dp5"
+                    android:paddingLeft="39dp"
                     android:paddingRight="0dp"
-                    android:textColorHint="#A3A3A3"
-                    android:textSize="@dimen/sp16"
+                    android:textColorHint="#CCCCCC"
+                    android:textSize="@dimen/sp17"
                     android:textColor="@color/tx_black"
                     android:layout_weight="1"/>
 
-                <Button
+                <View
+                    android:layout_width="@dimen/line_height"
+                    android:layout_height="22dp"
+                    android:background="#DDDDDD"/>
+
+                <TextView
                     android:id="@+id/change_phoneNumUI_noteCode"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -101,10 +128,9 @@
                     android:layout_marginTop="@dimen/dp5"
                     android:layout_marginBottom="@dimen/dp5"
                     android:maxHeight="0dp"
-                    android:background="#fb6758"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp14"
-                    android:text="获取验证码"
+                    android:textColor="#E60012"
+                    android:textSize="@dimen/sp17"
+                    android:text="发送验证码"
                     android:gravity="center"/>
             </LinearLayout>
         </LinearLayout>
@@ -112,15 +138,15 @@
         <Button
             android:id="@+id/change_phoneNumUI_submitBtn"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp45"
-            android:layout_marginLeft="@dimen/dp15"
-            android:layout_marginRight="@dimen/dp15"
+            android:layout_height="47dp"
+            android:layout_marginLeft="@dimen/dp20"
+            android:layout_marginRight="@dimen/dp20"
             android:layout_marginTop="@dimen/dp30"
-            android:background="@drawable/btn_bcg"
+            android:background="@drawable/btn_bcg_scan_gradient"
             android:maxHeight="0dp"
-            android:text="确认"
+            android:text="完成"
             android:textColor="@color/white"
-            android:textSize="@dimen/sp16"
+            android:textSize="@dimen/sp18"
             android:gravity="center"/>
     </LinearLayout>
 </LinearLayout>

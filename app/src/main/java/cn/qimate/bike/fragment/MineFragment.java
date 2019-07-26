@@ -65,6 +65,7 @@ import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.ActionCenterActivity;
 import cn.qimate.bike.activity.ChangePasswordPhoneActivity;
+import cn.qimate.bike.activity.CreditScoreActivity;
 import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadBikingActivity;
 import cn.qimate.bike.activity.HistoryRoadActivity;
@@ -73,6 +74,7 @@ import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.activity.MyMessageActivity;
 import cn.qimate.bike.activity.MyRouteActivity;
+import cn.qimate.bike.activity.PersonInfoActivity;
 import cn.qimate.bike.activity.ServiceCenterActivity;
 import cn.qimate.bike.activity.SettingActivity;
 import cn.qimate.bike.activity.SuperVipActivity;
@@ -88,6 +90,7 @@ import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.img.NetUtil;
 import cn.qimate.bike.model.CurRoadBikingBean;
+import cn.qimate.bike.model.PointsBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserIndexBean;
 import cn.qimate.bike.util.UtilAnim;
@@ -115,6 +118,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private ImageView headerImageView;
     private ImageView authState;
     private TextView userName;
+    private TextView userName2;
     private LinearLayout curRouteLayout, hisRouteLayout;
     private RelativeLayout myPurseLayout, myRouteLayout, actionCenterLayout, serviceCenterLayout, settingLayout, myIntegralLayout, myMsgLayout, changePsdLayout,
             helpCenterLayout, aboutUsLayout,billing_ruleLayout,questionLayout,insuranceLayout;
@@ -245,6 +249,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         headerImageView = getActivity().findViewById(R.id.personUI_bottom_header);
         authState = getActivity().findViewById(R.id.personUI_bottom_authState);
         userName = getActivity().findViewById(R.id.personUI_userName);
+        userName2 = getActivity().findViewById(R.id.personUI_userName2);
         superVip = getActivity().findViewById(R.id.personUI_superVip);
         myIntegral = getActivity().findViewById(R.id.personUI_bottom_myIntegral);
 
@@ -326,8 +331,75 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //        exImage_2.setOnClickListener(myOnClickLister);
         closeBtn.setOnClickListener(myOnClickLister);
         billRule();
+        initHttp2();
     }
 
+    private void initHttp2(){
+
+        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid != null && !"".equals(uid) && access_token != null && !"".equals(access_token)){
+            RequestParams params = new RequestParams();
+            params.put("uid",uid);
+            params.put("access_token",access_token);
+            HttpHelper.get(context, Urls.points, params, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    onStartCommon("正在加载");
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    onFailureCommon(throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                if (result.getFlag().equals("Success")) {
+                                    PointsBean bean = JSON.parseObject(result.getData(), PointsBean.class);
+
+//                                    tv_score.setText(bean.getPoints());
+//                                    tv_points_title.setText(bean.getPoints_title());
+//                                    tv_evaluation_time.setText("评估时间："+bean.getEvaluation_time());
+
+                                    int score = Integer.parseInt(bean.getPoints_grade());
+
+                                    if(score==1){
+                                        userName2.setText("不足为骑");
+                                    }else if(score==2){
+                                        userName2.setText("出骑制胜");
+                                    }else if(score==3){
+                                        userName2.setText("骑乐无穷");
+                                    }else if(score==4){
+                                        userName2.setText("骑行天下");
+                                    }else if(score==5){
+                                        userName2.setText("骑天大圣");
+                                    }
+
+                                } else {
+                                    Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+                        }
+                    });
+
+
+                }
+            });
+        }else {
+            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context, LoginActivity.class);
+        }
+    }
 
     private View.OnClickListener myOnClickLister = new View.OnClickListener() {
         @Override
@@ -841,10 +913,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             case R.id.personUI_title_settingBtn:
                 UIHelper.goToAct(context, SettingActivity.class);
                 break;
-//            case R.id.personUI_bottom_header:
-////                clickPopupWindow();
+            case R.id.personUI_bottom_header:
+
+                Log.e("userName2===", "==="+userName2.getText().toString());
+
+                Intent intent = new Intent(context, PersonInfoActivity.class);
+                intent.putExtra("userName2", userName2.getText().toString());
+                startActivity(intent);
+
 //                UIHelper.goToAct(context, PersonInfoActivity.class);
-//                break;
+                break;
             case R.id.personUI_bottom_curRouteLayout:
                 getCurrentorder(uid, access_token);
                 break;
@@ -871,9 +949,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 UIHelper.goToAct(context, SettingActivity.class);
                 break;
 
-//            case R.id.personUI_bottom_myIntegralLayout:
-//                UIHelper.goToAct(context, CreditScoreActivity.class);
-//                break;
+            case R.id.personUI_bottom_myIntegralLayout:
+                UIHelper.goToAct(context, CreditScoreActivity.class);
+                break;
             case R.id.personUI_bottom_myMsgLayout:
                 UIHelper.goToAct(context, MyMessageActivity.class);
                 break;
@@ -928,7 +1006,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             case R.id.personUI_bottom_billing_insuranceLayout:
                 Intent intent1 = new Intent(context, InsureanceActivity.class);
                 intent1.putExtra("isBack",true);
-                context.startActivity(intent1);
+                startActivity(intent1);
                 break;
             case R.id.personUI_bottom_checkUpdataLayout:
                 // 版本更新
@@ -1085,14 +1163,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                             myIntegral.setText(bean.getPoints());
                             userName.setText(bean.getTelphone());
                             if (bean.getHeadimg() != null && !"".equals(bean.getHeadimg())) {
-                                if ("gif".equalsIgnoreCase(bean.getHeadimg().substring(bean.getHeadimg().lastIndexOf(".") + 1,
-                                        bean.getHeadimg().length()))) {
-                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg())
-                                            .asGif().centerCrop().into(headerImageView);
-                                } else {
-                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg())
-                                            .asBitmap().centerCrop().into(headerImageView);
-                                }
+//                                if ("gif".equalsIgnoreCase(bean.getHeadimg().substring(bean.getHeadimg().lastIndexOf(".") + 1,
+//                                        bean.getHeadimg().length()))) {
+//                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg())
+//                                            .asGif().centerCrop().into(headerImageView);
+//                                } else {
+//                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg())
+//                                            .asBitmap().centerCrop().into(headerImageView);
+//                                }
                             }
                             if ("2".equals(bean.getIscert())) {
                                 authState.setVisibility(View.VISIBLE);

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/ui_main_title"/>
+
+    <LinearLayout
+        android:id="@+id/ll_1"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="28dp"
+        android:layout_marginLeft="@dimen/dp20"
+        android:layout_marginRight="19dp"
+        >
+
+        <cn.qimate.bike.core.widget.ClearEditText
+            android:id="@+id/changePsdUI_oldPsd"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shape_feedback_edit2"
+            android:paddingLeft="12dp"
+            android:drawableLeft="@drawable/date_icon"
+            android:drawableRight="@drawable/delete_selector"
+            android:drawablePadding="13dp"
+            android:hint="201902"
+            android:inputType="textPassword"
+            android:textSize="@dimen/sp15"
+            android:gravity="center_vertical"
+            android:textColorHint="#7D7D7D"
+            android:textColor="@color/tx_black_light"/>
+
+        <Button
+            android:id="@+id/btn_click_one"
+            android:layout_width="83dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/block_bcg9"
+            android:text="查询"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp15"
+            android:gravity="center"
+            />
+
+    </LinearLayout>
+
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        layout="@layout/layout_swipe_list" />
+
+</LinearLayout>

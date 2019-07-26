@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <!-- 填充颜色 -->
-    <solid android:color="#F5F5F5" />
+    <solid android:color="#F7F7F7" />
 
 
     <!-- 矩形的圆角半径 -->
