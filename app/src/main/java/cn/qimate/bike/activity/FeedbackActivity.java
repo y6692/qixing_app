@@ -209,7 +209,7 @@ public class FeedbackActivity
         isForeground = true;
         super.onResume();
 
-        ClientManager.getClient().disconnect("A4:34:F1:7B:BF:9A");
+//        ClientManager.getClient().disconnect("A4:34:F1:7B:BF:9A");
 
         Log.e("feedback===","feedback===onResume");
     }

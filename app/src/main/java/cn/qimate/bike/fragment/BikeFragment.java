@@ -936,7 +936,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //            ToastUtil.showMessage(this, "eee====" + e);
 //        }
 
-        if(!isHidden){
+        if(!isHidden && !"4".equals(type)){
             getFeedbackStatus();
         }
 
@@ -2070,7 +2070,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             m_myHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if(!isHidden){
+                    if(!isHidden && !"4".equals(type)){
                         Log.e("broadcastReceiver===1", "==="+intent);
 
                         getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
