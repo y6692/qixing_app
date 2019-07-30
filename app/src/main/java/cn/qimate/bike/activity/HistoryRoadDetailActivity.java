@@ -146,14 +146,14 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
             freeDaysText.setVisibility(View.GONE);
         }else {
             freeDaysText.setVisibility(View.VISIBLE);
-            if("4".equals(type)){
+            if("4".equals(type) || "7".equals(type)){
                 freeDaysText.setText("电单车剩余免费"+ SharedPreferencesUrls.getInstance().getString("specialdays","0.00") +"天，每次前一个小时免费");
             }else{
                 freeDaysText.setText("单车剩余免费"+ SharedPreferencesUrls.getInstance().getString("specialdays","0.00") +"天，每次前一个小时免费");
             }
         }
 
-        if("4".equals(type)){
+        if("4".equals(type) || "7".equals(type)){
             tv.setText("还车须至校内地图绿色区域，封顶20元/天");
         }else{
             tv.setText("还车须至校内地图红色区域，封顶5元/天");

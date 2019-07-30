@@ -19,6 +19,7 @@ android {
         versionCode 36
         versionName "1.7.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
 
         multiDexEnabled true
 
@@ -143,6 +144,12 @@ dependencies {
     //    implementation files('libs/alisdk-ut-4.jar')
     implementation files('libs/AMap_Location_V4.6.0_20190423.jar')
     implementation files('libs/Android_Map3D_SDK_V6.9.0_20190530.jar')
+    implementation(name: 'XiaoanBleSdk_V1.0.3', ext: 'aar')
+
+    implementation ("com.github.hotchemi:permissionsdispatcher:3.3.1")
+            {
+        exclude group: 'com.android.support'
+    }
 }
 
 afterEvaluate {

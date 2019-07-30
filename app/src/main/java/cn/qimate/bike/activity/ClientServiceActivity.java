@@ -214,7 +214,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         ll_3 = (LinearLayout)findViewById(R.id.ll_3);
         ll_4 = (LinearLayout)findViewById(R.id.ll_4);
 
-        if("4".equals(type)){
+        if("4".equals(type) || "7".equals(type)){
             Tag1.setText("关锁失败");
             Tag2.setText("在还车点提示不在");
             Tag3.setText("电量低");
@@ -244,7 +244,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         cancelBtn = (Button)findViewById(R.id.cancelBtn);
         tv = (TextView)findViewById(R.id.tv);
 
-        if("4".equals(type)){
+        if("4".equals(type) || "7".equals(type)){
             tv.setText("还车提示：校内地图绿色区域关锁，并点击结束");
         }else{
             tv.setText("还车提示：校内地图红色区域关锁，并点击结束");
@@ -679,7 +679,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         params.put("desc_img",imageUrlList);
         params.put("latitude", latitude);
         params.put("longitude",longitude);
-        params.put("type", "4".equals(type)?2:1);
+        params.put("type", ("4".equals(type) || "7".equals(type))?2:1);
         HttpHelper.post(context, Urls.feedback, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {

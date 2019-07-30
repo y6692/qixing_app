@@ -272,7 +272,7 @@ public class FeedbackActivity
         ll_4 = (LinearLayout)findViewById(R.id.ll_4);
         ll_5 = (LinearLayout)findViewById(R.id.ll_5);
 
-        if("4".equals(type)){
+        if("4".equals(type) || "7".equals(type)){
             Tag1.setText("关锁失败");
             Tag2.setText("在还车点提示不在");
             Tag3.setText("电量低");
@@ -818,7 +818,7 @@ public class FeedbackActivity
         params.put("desc_img",imageUrlList);
         params.put("latitude", latitude);
         params.put("longitude",longitude);
-        params.put("type", "4".equals(type)?2:1);
+        params.put("type", ("4".equals(type) || "7".equals(type))?2:1);
         HttpHelper.post(context, Urls.feedback, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {

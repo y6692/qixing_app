@@ -982,7 +982,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         Log.e("main===ebike", "main====onResume==="+type);
 
-        if(!"4".equals(type)){
+        if(!"4".equals(type) && !"7".equals(type)){
             ((MainActivity)getActivity()).changeTab(0);
 //            return;
         }
@@ -1030,7 +1030,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //            ToastUtil.showMessage(this, "eee====" + e);
 //        }
 
-        if(!isHidden && "4".equals(type)){
+        if(!isHidden && ("4".equals(type) || "7".equals(type))){
             getFeedbackStatus();
         }
 
@@ -2074,7 +2074,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             m_myHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if(!isHidden && "4".equals(type)){
+                    if(!isHidden && ("4".equals(type) || "7".equals(type))){
                         Log.e("broadcastReceiver===2", "==="+intent);
 
                         getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
