@@ -2035,15 +2035,20 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
      * */
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(final Context context, Intent intent) {
-            String action = intent.getAction();
-            String data = intent.getStringExtra("data");
-            switch (action) {
-                case Config.TOKEN_ACTION:
+        public void onReceive(final Context context, final Intent intent) {
 
-                    if (null != loadingDialog && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
+            m_myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+
+                    String action = intent.getAction();
+                    String data = intent.getStringExtra("data");
+                    switch (action) {
+                        case Config.TOKEN_ACTION:
+
+                            if (null != loadingDialog && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
 
 //                    if(isOpen){
 //                        break;
@@ -2051,104 +2056,96 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //                        isOpen=true;
 //                    }
 
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            BaseApplication.getInstance().getIBLE().getBattery();
-                        }
-                    }, 1000);
-
-                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
-                    if (0 == Tag){
-                        customBuilder.setMessage("扫码成功,是否开锁?");
-                    }else {
-                        customBuilder.setMessage("输号成功,是否开锁?");
-                    }
-                    customBuilder.setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-
-                            new Thread(new Runnable() {
+                            m_myHandler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
+                                    BaseApplication.getInstance().getIBLE().getBattery();
+                                }
+                            }, 1000);
+
+                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
+                            if (0 == Tag){
+                                customBuilder.setMessage("扫码成功,是否开锁?");
+                            }else {
+                                customBuilder.setMessage("输号成功,是否开锁?");
+                            }
+                            customBuilder.setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+
                                     m_myHandler.sendEmptyMessage(1);
+
                                 }
-                            }).start();
+                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
 
-                        }
-                    }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
+                                    Log.e("scan===", "scan====1");
 
-                            Log.e("scan===", "scan====1");
-
-                            m_myHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
                                     getCurrentorder2(uid, access_token);
-                                }
-                            });
 
-                            if (loadingDialog != null && !loadingDialog.isShowing()) {
-                                loadingDialog.setTitle("开锁中");
-                                loadingDialog.show();
+                                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                        loadingDialog.setTitle("开锁中");
+                                        loadingDialog.show();
+                                    }
+
+//                                  BaseApplication.getInstance().getIBLE().getLockStatus();
+
+                                    Log.e("scan===", "scan===="+loadingDialog);
+
+                                }
+                            }).setHint(false);
+                            customBuilder.create().show();
+
+                            break;
+                        case Config.BATTERY_ACTION:
+                            if (!TextUtils.isEmpty(data)) {
+                                quantity = String.valueOf(Integer.parseInt(data, 16));
+                            }else {
+                                quantity = "";
+                            }
+                            break;
+                        case Config.OPEN_ACTION:
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
                             }
 
+                            if (TextUtils.isEmpty(data)) {
+                                ToastUtil.showMessageApp(context,"开锁失败,请重试");
+                                scrollToFinishActivity();
+                            } else {
+                                isOpen = true;
 
+                                ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
+                                Log.e("scan===", "OPEN_ACTION===="+isOpen);
 
-//                          BaseApplication.getInstance().getIBLE().getLockStatus();
+                                isFinish = true;
+                                tzEnd();
+                            }
+                            break;
+                        case Config.CLOSE_ACTION:
+                            if (TextUtils.isEmpty(data)) {
+                            } else {
+                            }
 
-                            Log.e("scan===", "scan===="+loadingDialog);
+                            break;
+                        case Config.LOCK_STATUS_ACTION:
+                            if (TextUtils.isEmpty(data)) {
+                            } else {
+                            }
 
-                        }
-                    }).setHint(false);
-                    customBuilder.create().show();
+                            break;
+                        case Config.LOCK_RESULT:
+                            if (TextUtils.isEmpty(data)) {
+                            } else {
+                            }
 
-                    break;
-                case Config.BATTERY_ACTION:
-                    if (!TextUtils.isEmpty(data)) {
-                        quantity = String.valueOf(Integer.parseInt(data, 16));
-                    }else {
-                        quantity = "";
+                            break;
                     }
-                    break;
-                case Config.OPEN_ACTION:
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
+                }
+            });
 
-                    if (TextUtils.isEmpty(data)) {
-                        ToastUtil.showMessageApp(context,"开锁失败,请重试");
-                        scrollToFinishActivity();
-                    } else {
-                        isOpen = true;
 
-                        ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
-                        Log.e("scan===", "OPEN_ACTION===="+isOpen);
-
-                        isFinish = true;
-                        tzEnd();
-                    }
-                    break;
-                case Config.CLOSE_ACTION:
-                    if (TextUtils.isEmpty(data)) {
-                    } else {
-                    }
-
-                    break;
-                case Config.LOCK_STATUS_ACTION:
-                    if (TextUtils.isEmpty(data)) {
-                    } else {
-                    }
-
-                    break;
-                case Config.LOCK_RESULT:
-                    if (TextUtils.isEmpty(data)) {
-                    } else {
-                    }
-
-                    break;
-            }
         }
     };
 
@@ -2579,20 +2576,45 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         m_myHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-//                apiClient.setAcc(false, new BleCallback() {
-//                    @Override
-//                    public void onResponse(final Response response) {
-//                        Log.e("acc===", response.toString());
-//                    }
-//                });
 
-                getCurrentorder2(uid, access_token);
+                CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
+                if (0 == Tag){
+                    customBuilder.setMessage("扫码成功,是否开锁?");
+                }else {
+                    customBuilder.setMessage("输号成功,是否开锁?");
+                }
+                customBuilder.setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
 
+                        if (apiClient != null) {
+                            apiClient.onDestroy();
+                        }
+
+                        scrollToFinishActivity();
+
+                    }
+                }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+
+                        Log.e("scan===", "scan====1");
+
+                        getCurrentorder2(uid, access_token);
+
+                        if (loadingDialog != null && !loadingDialog.isShowing()) {
+                            loadingDialog.setTitle("开锁中");
+                            loadingDialog.show();
+                        }
+
+                        Log.e("scan===", "scan===="+loadingDialog);
+
+                    }
+                }).setHint(false);
+                customBuilder.create().show();
 
             }
         }, 1 * 1000);
-
-
 
     }
 

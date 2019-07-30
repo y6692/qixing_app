@@ -4651,11 +4651,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             SharedPreferencesUrls.getInstance().putString("biking_longitude",""+amapLocation.getLongitude());
 //                            addMaplocation(amapLocation.getLatitude(),amapLocation.getLongitude());
 
-                            mPolyoptions.add(myLocation);
-
-                            if (mPolyoptions.getPoints().size() > 1) {
-                                aMap.addPolyline(mPolyoptions);
-                            }
+//                            mPolyoptions.add(myLocation);
+//
+//                            if (mPolyoptions.getPoints().size() > 1) {
+//                                aMap.addPolyline(mPolyoptions);
+//                            }
 
                         }
                     }
