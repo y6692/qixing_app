@@ -337,6 +337,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private Polyline polyline2;
 
     private XiaoanBleApiClient apiClient;
+    private int xa_state = 0;
+    private boolean isConnect = false;
 
     @Override
     @TargetApi(23)
@@ -711,7 +713,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     builder.setScanResultCallback(this);
                     apiClient = builder.build();
 
-
+                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
                 }else{
                     if (loadingDialog != null && !loadingDialog.isShowing()) {
                         loadingDialog.setTitle("正在唤醒车锁");
@@ -1922,9 +1924,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 } else {
                                     ToastUtil.showMessageApp(context,"关锁失败");
 
-                                    bleService.connect(m_nowMac);
-                                    cn = 0;
-
                                     closeLock_XA();
                                 }
                             } else {
@@ -1999,6 +1998,64 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //        }, 2 * 1000);
     }
 
+    void closeLock_XA_temp() {
+
+        apiClient.setDefend(true, new BleCallback() {
+            @Override
+            public void onResponse(final Response response) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("biking_defend===ct" + type, response.toString());
+
+                        if(response.code==0){
+                            lookPsdBtn.setText("再次开锁");
+                            ToastUtil.showMessageApp(context,"关锁成功");
+
+                            SharedPreferencesUrls.getInstance().putString("tempStat","1");
+                        }else{
+                            ToastUtil.showMessageApp(context,"关锁失败");
+                        }
+
+
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    void openLock_XA_temp() {
+
+        apiClient.setDefend(false, new BleCallback() {
+            @Override
+            public void onResponse(final Response response) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("biking_defend===ot" + type, response.toString());
+
+                        if(response.code==0){
+                            lookPsdBtn.setText("临时上锁");
+                            ToastUtil.showMessageApp(context,"开锁成功");
+
+                            SharedPreferencesUrls.getInstance().putString("tempStat","0");
+                        }else{
+                            ToastUtil.showMessageApp(context,"开锁失败");
+                        }
+
+
+
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+    }
 
     @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.BLUETOOTH})
     public void connectDevice(String imei) {
@@ -2009,37 +2066,42 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
     @Override
     public void onConnect(BluetoothDevice bluetoothDevice) {
-//        isConnect = true;
+        isConnect = true;
         Log.e("biking===Xiaoan", "===Connect");
 
-
-
-        m_myHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+        if(xa_state>0){
+            m_myHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
 //                apiClient.setAcc(false, new BleCallback() {
 //                    @Override
 //                    public void onResponse(final Response response) {
 //                        Log.e("acc===", response.toString());
 //                    }
 //                });
-
 //                getCurrentorder2(uid, access_token);
 
-                if (lockLoading != null && lockLoading.isShowing()){
-                    lockLoading.dismiss();
+                    if (lockLoading != null && lockLoading.isShowing()){
+                        lockLoading.dismiss();
+                    }
+
+                    if(xa_state==1){
+                        closeEbike_XA();
+                    }else if(xa_state==2){
+                        closeLock_XA_temp();
+                    }else if(xa_state==3){
+                        openLock_XA_temp();
+                    }
+
                 }
-
-                closeEbike_XA();
-
-            }
-        }, 1 * 1000);
+            }, 1 * 1000);
+        }
 
     }
 
     @Override
     public void onDisConnect(BluetoothDevice bluetoothDevice) {
-//        isConnect = false;
+        isConnect = false;
         Log.e("biking===Xiaoan", "===DisConnect");
 
     }
@@ -2102,6 +2164,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     }
 
     public void closeEbikeTemp(){
+
         RequestParams params = new RequestParams();
         params.put("uid",uid);
         params.put("access_token",access_token);
@@ -2154,10 +2217,26 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 } else {
                                     ToastUtil.showMessageApp(context,"关锁失败");
 
-                                    bleService.connect(m_nowMac);
-                                    cn = 0;
+                                    if("4".equals(type)){
+                                        bleService.connect(m_nowMac);
+                                        cn = 0;
 
-                                    temporaryLock();
+                                        temporaryLock();
+                                    }else{
+
+                                        if(isConnect){
+                                            closeLock_XA_temp();
+                                        }else{
+                                            xa_state = 2;
+
+                                            XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                                            builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+                                            builder.setScanResultCallback(CurRoadBikingActivity.this);
+                                            apiClient = builder.build();
+
+                                            CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+                                        }
+                                    }
 
                                 }
                             } else {
@@ -2358,26 +2437,26 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             } else {
                                 ToastUtil.showMessageApp(context,"开锁失败");
 
-                                bleService.connect(m_nowMac);
+                                if ("4".equals(type)) {
+                                    bleService.connect(m_nowMac);
 
-                                cn=0;
+                                    cn=0;
 
-                                openLock();
+                                    openLock();
+                                }else{
+                                    if(isConnect){
+                                        openLock_XA_temp();
+                                    }else{
+                                        xa_state = 3;
 
+                                        XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                                        builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+                                        builder.setScanResultCallback(CurRoadBikingActivity.this);
+                                        apiClient = builder.build();
 
-//                        bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
-//
-//                        m_myHandler.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                Log.e("openLock===4_3", "==="+m_nowMac);
-//
-//                                button9();
-//                                button3();
-//
-//                                openLock2();
-//                            }
-//                        }, 500);
+                                        CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+                                    }
+                                }
 
                                 ToastUtil.showMessageApp(context,result.getMsg());
                             }
@@ -4364,22 +4443,37 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             if (macList.size() > 0){
 //                flag = 2;
 
-//                String imei = "866039040791940";
-                CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(this, deviceuuid);
+                if(isConnect){
+                    closeEbike_XA();
+                }else{
+                    xa_state = 1;
 
-//                closeEbike_XA();
+                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                    builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+                    builder.setScanResultCallback(CurRoadBikingActivity.this);
+                    apiClient = builder.build();
 
-//                bleService.connect(m_nowMac);
-//                cn = 0;
-//
-//                closeLock3();
+                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+                }
+
 
                 return;
             }
 
             if (isContainsList.contains(true)){
 
-                closeEbike_XA();
+                if(isConnect){
+                    closeEbike_XA();
+                }else{
+                    xa_state = 1;
+
+                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                    builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+                    builder.setScanResultCallback(CurRoadBikingActivity.this);
+                    apiClient = builder.build();
+
+                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+                }
 
             }else {
 //                customDialog4.show();
@@ -5842,6 +5936,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 builder.setBleStateChangeListener(CurRoadBikingActivity.this);
                                 builder.setScanResultCallback(CurRoadBikingActivity.this);
                                 apiClient = builder.build();
+
+                                CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
                             }else{
                                 if (loadingDialog != null && !loadingDialog.isShowing()) {
                                     loadingDialog.setTitle("正在唤醒车锁");
