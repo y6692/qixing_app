@@ -20,6 +20,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -72,8 +73,11 @@ import com.amap.api.maps.model.Polygon;
 import com.amap.api.maps.model.PolygonOptions;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
+import com.aprbrother.aprilbeaconscansdk.Beacon;
+import com.aprbrother.aprilbeaconscansdk.ScanManager;
 import com.aprilbrother.aprilbrothersdk.BeaconManager;
 import com.aprilbrother.aprilbrothersdk.EddyStone;
+import com.jsoniter.JsonIterator;
 import com.sofi.blelocker.library.Code;
 import com.sofi.blelocker.library.connect.listener.BleConnectStatusListener;
 import com.sofi.blelocker.library.connect.options.BleConnectOptions;
@@ -137,8 +141,10 @@ import cn.qimate.bike.jpush.ServiceReceiver;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.EbikeInfoBean;
 import cn.qimate.bike.model.KeyBean;
+import cn.qimate.bike.model.LocationBean;
 import cn.qimate.bike.model.NearbyBean;
 import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.model.ResultConsel2;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.AESUtil;
 import cn.qimate.bike.util.ByteUtil;
@@ -184,7 +190,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private static final int REQUEST_CODE_ASK_PERMISSIONS = 101;
     public static boolean isForeground = false;
     private Context context;
-    private  LoadingDialog loadingDialog;
+//    private  LoadingDialog loadingDialog;
     private  LoadingDialog loadingDialog2;
     private  LoadingDialog lockLoading;
     private LinearLayout mainLayout;
@@ -340,6 +346,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private int xa_state = 0;
     private boolean isConnect = false;
 
+    private ScanManager scanManager;
+    private boolean isGPS_Lo = false;
+
+    List<LatLng> listPoint = new ArrayList<>();
+
     @Override
     @TargetApi(23)
     protected void onCreate(Bundle savedInstanceState) {
@@ -489,9 +500,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-//        loadingDialog2 = new LoadingDialog(this);
-//        loadingDialog2.setCancelable(false);
-//        loadingDialog2.setCanceledOnTouchOutside(false);
+        loadingDialog2 = new LoadingDialog(this);
+        loadingDialog2.setCancelable(false);
+        loadingDialog2.setCanceledOnTouchOutside(false);
 
         lockLoading = new LoadingDialog(this);
         lockLoading.setCancelable(false);
@@ -663,10 +674,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 mBluetoothAdapter = bluetoothManager.getAdapter();
             }
 
-            BLEService.bluetoothAdapter = mBluetoothAdapter;
 
-            bleService.view = context;
-            bleService.showValue = true;
 
             if (mBluetoothAdapter == null) {
                 ToastUtil.showMessageApp(context, "获取蓝牙失败");
@@ -680,12 +688,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 startActivityForResult(enableBtIntent, 188);
             } else {
 
-                BLEService.bluetoothAdapter = mBluetoothAdapter;
 
-                bleService.view = context;
-                bleService.showValue = true;
 
-                if ("5".equals(type)  || "6".equals(type)) {
+                if("4".equals(type)){
+                    BLEService.bluetoothAdapter = mBluetoothAdapter;
+
+                    bleService.view = context;
+                    bleService.showValue = true;
+                }else if ("5".equals(type)  || "6".equals(type)) {
 //                    ClientManager.getClient().disconnect(m_nowMac);
 
                     m_myHandler.postDelayed(new Runnable() {
@@ -837,7 +847,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     @Override
                     public void run() {
                         Log.e("connectDevice===", Code.toString(code));
-                        ToastUtil.showMessageApp(context, Code.toString(code));
+//                        ToastUtil.showMessageApp(context, Code.toString(code));
                     }
                 });
             }
@@ -895,7 +905,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 public void onResponseFail(int code) {
                     Log.e("getStatus===", Code.toString(code));
 //                    cn.qimate.bike.util.UIHelper.dismiss();
-                    ToastUtil.showMessageApp(context, Code.toString(code));
+//                    ToastUtil.showMessageApp(context, Code.toString(code));
                 }
 
             });
@@ -971,7 +981,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 }
 
                                 Log.e("openLock===Fail", Code.toString(code));
-                                ToastUtil.showMessageApp(context, Code.toString(code));
+//                                ToastUtil.showMessageApp(context, Code.toString(code));
                             }
                         });
 
@@ -1082,7 +1092,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     @Override
                     public void run() {
                         Log.e("getBleRecord===", Code.toString(code));
-                        ToastUtil.showMessageApp(context, Code.toString(code));
+//                        ToastUtil.showMessageApp(context, Code.toString(code));
                     }
                 });
 
@@ -1138,7 +1148,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     @Override
                     public void run() {
                         Log.e("biking=deleteBleRecord", Code.toString(code));
-                        ToastUtil.showMessageApp(context, Code.toString(code));
+//                        ToastUtil.showMessageApp(context, Code.toString(code));
                     }
                 });
 
@@ -1231,24 +1241,24 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         }
 
                         ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备连接成功");
-                        switch (flag){
-                            case 0:
-                                break;
-                            case 1:
-                                //开锁
-                                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                                    loadingDialog.setTitle("正在开锁");
-                                    loadingDialog.show();
-                                }
-                                BaseApplication.getInstance().getIBLE().openLock();
-                                break;
-                            case 2:
-                                macList2 = new ArrayList<> (macList);
-                                BaseApplication.getInstance().getIBLE().getLockStatus();
-                                break;
-                            default:
-                                break;
-                        }
+//                        switch (flag){
+//                            case 0:
+//                                break;
+//                            case 1:
+//                                //开锁
+//                                if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                                    loadingDialog.setTitle("正在开锁");
+//                                    loadingDialog.show();
+//                                }
+//                                BaseApplication.getInstance().getIBLE().openLock();
+//                                break;
+//                            case 2:
+//                                macList2 = new ArrayList<> (macList);
+//                                BaseApplication.getInstance().getIBLE().getLockStatus();
+//                                break;
+//                            default:
+//                                break;
+//                        }
                         flag = 0;
                         break;
                     case Config.BATTERY_ACTION:
@@ -1306,54 +1316,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                             Log.e("biking===", "biking2===锁已关闭" + macList2.size());
 
-//                    //锁已关闭
-//                    if (mBluetoothAdapter == null) {
-//                        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-//                        mBluetoothAdapter = bluetoothManager.getAdapter();
-//                    }
-//
-//                    if (mBluetoothAdapter == null) {
-//                        ToastUtil.showMessageApp(CurRoadBikingActivity.this, "获取蓝牙失败");
-//                        scrollToFinishActivity();
-//                        return;
-//                    }
-//
-//                    if (!mBluetoothAdapter.isEnabled()) {
-//                        flagm = 1;
-//                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                        startActivityForResult(enableBtIntent, 188);
-//                    }else{
-//
-//                        if(!isEndBtn) break;
-//
-//                        m_myHandler.sendEmptyMessage(6);
-//
-//                        Log.e("biking===", "biking2===锁已关闭"+macList2.size());
-//
-////                        if("3".equals(type)){
-////                            if (!isContainsList.contains(true) && macList2.size() <= 0) {
-////                                customDialog4.show();
-////                            } else {
-////                                submit(uid, access_token);
-////                            }
-////                        }else{
-////                        }
-//
-////                        if (!isContainsList.contains(true) && macList2.size() <= 0) {
-////                            customDialog3.show();
-////
-////                            clickCountDeal();
-////                        } else {
-////                            m_myHandler.sendEmptyMessage(6);
-////                        }
-//                    }
-
                         } else {
                             //锁已开启
                             ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
                             clickCountDeal();
-
                         }
                         break;
                     case Config.LOCK_RESULT:
@@ -1880,28 +1847,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         HttpHelper.post(this, Urls.closeEbike, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("正在加载");
-                            loadingDialog.show();
-                        }
-                    }
-                });
+                onStartCommon("正在加载");
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        UIHelper.ToastError(context, throwable.toString());
-                    }
-                });
-
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -1911,12 +1861,19 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     public void run() {
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("biking===", "closeEbike_XA0===="+responseString);
+
                             if (result.getFlag().equals("Success")) {
 //                              ToastUtil.showMessage(context,"数据更新成功");
 
-                                Log.e("biking===", "closeEbike_XA===="+result.getData());
+                                Log.e("biking===", "closeEbike_XA1===="+result.getData());
 
                                 if ("0".equals(result.getData())){
+                                    if (loadingDialog != null && loadingDialog.isShowing()){
+                                        loadingDialog.dismiss();
+                                    }
+
                                     ToastUtil.showMessageApp(context,"关锁成功");
 
 //                                    m_myHandler.sendEmptyMessage(6);
@@ -1927,13 +1884,20 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                     closeLock_XA();
                                 }
                             } else {
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
+
+                                Log.e("biking===", "closeEbike_XA2===="+result.getData());
+
                                 ToastUtil.showMessageApp(context,result.getMsg());
                             }
                         } catch (Exception e) {
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
                         }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
+
                     }
                 });
 
@@ -1950,8 +1914,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     @Override
                     public void run() {
                         Log.e("biking_defend==="+type, response.toString());
-                        macList2 = new ArrayList<> (macList);
-                        submit(uid, access_token);
+
+                        if(response.code==0){
+
+                            macList2 = new ArrayList<> (macList);
+                            submit(uid, access_token);
+
+                        }else if(response.code==6){
+                            ToastUtil.showMessageApp(context,"车辆未停止，请停止后再试");
+                        }else{
+                            ToastUtil.showMessageApp(context,"关锁失败");
+                        }
 
                         if (loadingDialog != null && loadingDialog.isShowing()){
                             loadingDialog.dismiss();
@@ -2172,29 +2145,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         HttpHelper.post(this, Urls.closeEbike, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("正在加载");
-                            loadingDialog.show();
-                        }
-                    }
-                });
-
+                onStartCommon("正在加载");
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        UIHelper.ToastError(context, throwable.toString());
-                    }
-                });
-
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -2205,7 +2160,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                             if (result.getFlag().equals("Success")) {
-//                        ToastUtil.showMessage(context,"数据更新成功");
 
                                 Log.e("biking===", "closeEbike===="+result.getData());
 
@@ -2233,6 +2187,26 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                             builder.setBleStateChangeListener(CurRoadBikingActivity.this);
                                             builder.setScanResultCallback(CurRoadBikingActivity.this);
                                             apiClient = builder.build();
+
+                                            m_myHandler.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (lockLoading != null && lockLoading.isShowing()){
+                                                        lockLoading.dismiss();
+
+                                                        if(!isConnect){
+                                                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+                                                                    .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int which) {
+                                                                            dialog.cancel();
+                                                                        }
+                                                                    });
+                                                            customBuilder.create().show();
+                                                        }
+                                                    }
+                                                }
+                                            }, 10 * 1000);
 
                                             CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
                                         }
@@ -2609,7 +2583,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         if (loadingDialog != null && loadingDialog.isShowing()){
                             loadingDialog.dismiss();
                         }
-                        UIHelper.ToastError(context, Code.toString(code));
+//                        UIHelper.ToastError(context, Code.toString(code));
                     }
                 });
 
@@ -2861,8 +2835,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                    endBtn5();
                     queryOpenState();
 
-
-                }else{
+                }
+                else if("7".equals(type)){
+                    location();
+                }
+                else{
                     startXB();
 
                     if (lockLoading != null && !lockLoading.isShowing()){
@@ -2870,20 +2847,22 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         lockLoading.show();
                     }
 
+                    minPoint();
+
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             try {
                                 int n=0;
-                                while(macList.size() == 0){
-//                            while(macList.size() < 1000){
+                                while(macList.size() == 0 && !isContainsList.contains(true)){
+//                              while(macList.size() < 1000){
 
-                                    Thread.sleep(1000);
+                                    Thread.sleep(100);
                                     n++;
 
                                     Log.e("biking===","biking=n=="+n);
 
-                                    if(n>=11) break;
+                                    if(n>=101) break;
 
                                 }
                             } catch (InterruptedException e) {
@@ -2924,6 +2903,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 if (mlocationClient != null) {
                     mlocationClient.startLocation();
                 }
+
+                schoolRange();
 
                 break;
             case R.id.curRoadUI_biking_slideLayout:
@@ -3107,6 +3088,118 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }
     }
 
+    private void location(){
+        Log.e("biking===location0", "===="+bikeCode);
+
+        RequestParams params = new RequestParams();
+        params.put("uid", uid);
+        params.put("access_token",access_token);
+        params.put("tokencode", bikeCode);
+//        params.put("version", "");
+        HttpHelper.get(this, Urls.location, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (loadingDialog != null && !loadingDialog.isShowing()) {
+                            loadingDialog.setTitle("正在加载");
+                            loadingDialog.show();
+                        }
+                    }
+                });
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                        UIHelper.ToastError(context, throwable.toString());
+                    }
+                });
+
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                ToastUtil.showMessageApp(context,"电量更新成功");
+
+                                LocationBean bean = JSON.parseObject(result.getData(), LocationBean.class);
+
+                                if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                                    isContainsList.clear();
+                                }
+                                for ( int i = 0; i < pOptions.size(); i++){
+                                    isContainsList.add(pOptions.get(i).contains(new LatLng(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()))));
+                                }
+
+                                minPoint();
+
+                                Log.e("biking===location", bean.getLatitude()+"===="+bean.getLongitude()+"===="+isContainsList.contains(true));
+
+                                if(isContainsList.contains(true)){
+                                    isGPS_Lo = true;
+
+                                    submit(uid, access_token);
+                                }else{
+                                    isGPS_Lo = false;
+
+                                    startXB();
+
+                                    if (lockLoading != null && !lockLoading.isShowing()){
+                                        lockLoading.setTitle("还车点确认中");
+                                        lockLoading.show();
+                                    }
+
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                int n=0;
+                                                while(macList.size() == 0){
+
+                                                    Thread.sleep(100);
+                                                    n++;
+
+                                                    Log.e("biking===","biking=n=="+n);
+
+                                                    if(n>=101) break;
+
+                                                }
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            m_myHandler.sendEmptyMessage(3);
+                                        }
+                                    }).start();
+                                }
+
+                            } else {
+                                ToastUtil.showMessageApp(context, result.getMsg());
+                            }
+                        } catch (Exception e) {
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
     protected void onStart() {
         super.onStart();
 //        screen = true;
@@ -3122,6 +3215,60 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             mlocationClient.setLocationOption(mLocationOption);
             mlocationClient.startLocation();
         }
+
+        scanManager = new ScanManager(this);
+//        scanManager.setUuid("00000000-0000-0000-0000-000000000000");//添加需要扫描的uuid 只有符合的才会返回 不设置返回所有
+//        scanManager.setMajor(222);//添加需要扫描的beacon的major 只有符合的major才会返回 不设置返回所有
+//        scanManager.setMinor(111);//添加需要扫描的beacon的minor 只有符合的minor才会返回 不设置返回所有
+        scanManager.setScanPeriod(100);//设置beacon扫描 反馈结果时间间隔  时间越久 扫描丢失率越低 默认3000ms
+//        scanManager.startScan();//启动扫描
+//        scanManager.stopScan();//停止扫描
+//        scanManager.setScanListener(new ScanManager.MyScanListener());//设置扫描监听 监听扫描返回数据
+        scanManager.setScanListener(new ScanManager.MyScanListener() {
+            @Override
+            public void onScanListenre(ArrayList<Beacon> beacons) {
+                Log.e("biking===scanM", "---beacons.size = " + beacons.size());
+
+                for (Beacon beacon : beacons) {
+
+                    Log.e("biking===scanM", beacon.getRssi()+"=====" + beacon.getMacAddress());
+
+                    macList.add(""+beacon.getMacAddress());
+
+                    scan = true;
+                }
+
+//                myBeacons.clear();
+//                myBeacons.addAll(beacons);
+//                ComparatorBeaconByRssi com = new ComparatorBeaconByRssi();
+//                Collections.sort(myBeacons, com);
+//                adapter.replaceWith(myBeacons);
+            }
+        });
+
+        manager = new BeaconManager(this);
+        manager.setEddyStoneListener(new BeaconManager.EddyStoneListener() {
+
+            @Override
+            public void onEddyStoneDiscovered(EddyStone eddyStone) {
+                refreshList(eddyStone);
+            }
+
+            private void refreshList(EddyStone eddyStone) {
+
+                k++;
+
+                Log.e("EddyStoneListener===", k+"==="+eddyStone.getName()+"==="+eddyStone.getMacAddress()+"==="+eddyStone.getMajor()+"==="+eddyStone.getMinor()+"==="+eddyStone.getUuid()+"==="+eddyStone.getUrl()+"==="+eddyStone.getModel());
+
+                if (eddyStone.getName()!=null && eddyStone.getName().contains("abeacon") && !macList.contains(eddyStone.getMacAddress())) {
+//                    macList.add(""+eddyStone.getMacAddress());
+                }
+
+                scan = true;
+
+            }
+        });
+
 
         mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
             @Override
@@ -3145,7 +3292,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         tv_test_xinbiao.setText(test_xinbiao);
 
                         if ("BC01".equals(device.getName()) && !macList.contains(""+device.getAddress())){
-                            macList.add(""+device.getAddress());
+//                            macList.add(""+device.getAddress());
 //                          title.setText(isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + k);
                         }
 
@@ -3156,28 +3303,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             }
         };
 
-        manager = new BeaconManager(this);
-        manager.setEddyStoneListener(new BeaconManager.EddyStoneListener() {
 
-            @Override
-            public void onEddyStoneDiscovered(EddyStone eddyStone) {
-                refreshList(eddyStone);
-            }
 
-            private void refreshList(EddyStone eddyStone) {
 
-                k++;
-
-                Log.e("EddyStoneListener===", k+"==="+eddyStone.getName()+"==="+eddyStone.getMacAddress()+"==="+eddyStone.getMajor()+"==="+eddyStone.getMinor()+"==="+eddyStone.getUuid()+"==="+eddyStone.getUrl()+"==="+eddyStone.getModel());
-
-                if (eddyStone.getName()!=null && eddyStone.getName().contains("abeacon") && !macList.contains(eddyStone.getMacAddress())) {
-                    macList.add(eddyStone.getMacAddress());
-                }
-
-                scan = true;
-
-            }
-        });
 
 
     }
@@ -3644,13 +3772,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             params.put("xinbiao_name", "");
             params.put("xinbiao_mac", macList.size() > 0?macList.get(0):"");
 
+
             if(major!=0){
                 Log.e("submit===221", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
                 params.put("back_type", "iBeacon_Lo");
+            }else if(isGPS_Lo){
+                params.put("back_type", "GPS_Lo");
             }else if(macList.size() > 0){
                 Log.e("submit===222", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
                 params.put("back_type", "iBeacon_Pho");
-            }else if(isContainsList.contains(true)){
+            }else{
+//            }else if(isContainsList.contains(true)){
                 params.put("back_type", "GPS");
             }
 
@@ -3711,9 +3843,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                     SharedPreferencesUrls.getInstance().putString("biking_latitude","");
                                     SharedPreferencesUrls.getInstance().putString("biking_longitude","");
 
-//                        if (myLocation != null){
-//                            addMaplocation(myLocation.latitude,myLocation.longitude);
-//                        }
+//                                  if (myLocation != null){
+//                                      addMaplocation(myLocation.latitude,myLocation.longitude);
+//                                  }
 
                                     if (loadingDialog != null && loadingDialog.isShowing()){
                                         loadingDialog.dismiss();
@@ -3727,7 +3859,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                         }else {
                                             BikeFragment.tz = 2;
                                             Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
-                                            intent.putExtra("oid",oid);
+                                            intent.putExtra("oid", oid);
                                             startActivity(intent);
                                         }
 
@@ -3764,7 +3896,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 //                                  finish();
 
-
                                 }else {
                                     ToastUtil.showMessageApp(context, result.getMsg());
                                 }
@@ -3791,11 +3922,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             });
         }
 
-
-
-
-
-
     }
 
 
@@ -3816,11 +3942,13 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         if(open) {
                             ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
-                            if (lockLoading != null && lockLoading.isShowing()){
-                                lockLoading.dismiss();
-                            }
+
                         }else {
                             submit(uid, access_token);
+                        }
+
+                        if (lockLoading != null && lockLoading.isShowing()){
+                            lockLoading.dismiss();
                         }
                     }
                 });
@@ -3836,7 +3964,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 m_myHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showMessageApp(context,Code.toString(code));
+//                        ToastUtil.showMessageApp(context,Code.toString(code));
 
                         if (lockLoading != null && lockLoading.isShowing()){
                             lockLoading.dismiss();
@@ -4433,7 +4561,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
         }else {
-            Log.e("biking===endBtn7",macList.size()+"==="+type+"==="+deviceuuid);
+            Log.e("biking===endBtn7",macList.size()+"==="+type+"==="+deviceuuid+"==="+isConnect);
 
             rl_msg.setVisibility(View.GONE);
             if (polyline != null) {
@@ -4446,6 +4574,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 if(isConnect){
                     closeEbike_XA();
                 }else{
+                    if (lockLoading != null && !lockLoading.isShowing()){
+                        lockLoading.setTitle("正在连接");
+                        lockLoading.show();
+                    }
+
                     xa_state = 1;
 
                     XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
@@ -4453,9 +4586,28 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     builder.setScanResultCallback(CurRoadBikingActivity.this);
                     apiClient = builder.build();
 
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (lockLoading != null && lockLoading.isShowing()){
+                                lockLoading.dismiss();
+
+                                if(!isConnect){
+                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                    customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+                                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                    customBuilder.create().show();
+                                }
+                            }
+                        }
+                    }, 10 * 1000);
+
                     CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
                 }
-
 
                 return;
             }
@@ -4465,12 +4617,37 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 if(isConnect){
                     closeEbike_XA();
                 }else{
+                    if (lockLoading != null && !lockLoading.isShowing()){
+                        lockLoading.setTitle("正在连接");
+                        lockLoading.show();
+                    }
+
                     xa_state = 1;
 
                     XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
                     builder.setBleStateChangeListener(CurRoadBikingActivity.this);
                     builder.setScanResultCallback(CurRoadBikingActivity.this);
                     apiClient = builder.build();
+
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (lockLoading != null && lockLoading.isShowing()){
+                                lockLoading.dismiss();
+
+                                if(!isConnect){
+                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                    customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+                                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                    customBuilder.create().show();
+                                }
+                            }
+                        }
+                    }, 10 * 1000);
 
                     CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
                 }
@@ -4490,65 +4667,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     }
 
 
-    public LatLng getCenterPoint(List<LatLng> list) {
-        double x = 0.0;
-        double y = 0.0;
-        for (int i = 0; i < list.size(); i++) {
-            x = x + list.get(i).longitude;
-            y = y + list.get(i).latitude;
-        }
-        x = x / list.size();
-        y = y / list.size();
 
-        centerList.add(new LatLng(y, x));
-
-    //        Log.e("getCenterPoint===2", x+"==="+y);
-
-        return new LatLng(y, x);
-    }
-
-    public LatLng minPolygon() {
-        double s=0;
-        double s1=0;
-
-        double x = 0;
-        double y = 0;
-
-        for (int i = 0; i < centerList.size(); i++) {
-
-            Log.e("minPolygon===", centerList.get(i).latitude+"==="+referLatitude+">>>"+centerList.get(i).longitude+"==="+referLongitude);
-
-            s1 = (centerList.get(i).latitude-referLatitude)*(centerList.get(i).latitude-referLatitude) + (centerList.get(i).longitude-referLongitude)*(centerList.get(i).longitude-referLongitude);
-
-            if(i==0 || s1<s){
-                s = s1;
-
-                x = centerList.get(i).longitude;
-                y = centerList.get(i).latitude;
-            }else{
-                continue;
-            }
-        }
-
-        PolylineOptions pOption = new PolylineOptions();
-
-        pOption.setDottedLine(true);
-        pOption.setDottedLineType(1);
-        pOption.width(20);
-        pOption.color(Color.argb(255, 0, 0, 255));
-        pOption.useGradient(true);
-        pOption.add(new LatLng(referLatitude, referLongitude));
-        pOption.add(new LatLng(y, x));
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18f);// 设置缩放监听
-        aMap.moveCamera(cameraUpdate);
-
-        polyline = aMap.addPolyline(pOption);
-
-        Log.e("minPolygon===2", "==="+s);
-
-        return null;
-    }
 
     public void clickCountDeal(){
         if(isClickCount && clickCount>=3){
@@ -4580,21 +4699,26 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 macList.clear();
             }
 
+            scanManager.startScan();
+            manager.startEddyStoneScan();
+
             Log.e("biking===startXB",mBluetoothAdapter+"==="+mLeScanCallback);
             UUID[] uuids = {Config.xinbiaoUUID};
             mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
 
-            manager.startEddyStoneScan();
         }
     }
 
     private void stopXB() {
         if (!"1".equals(type)) {
+            scanManager.stopScan();
+            manager.stopEddyStoneScan();
+
             if (mLeScanCallback != null && mBluetoothAdapter != null) {
                 mBluetoothAdapter.stopLeScan(mLeScanCallback);
             }
 
-            manager.stopEddyStoneScan();
+
         }
     }
 
@@ -4604,33 +4728,36 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     public void onLocationChanged(final AMapLocation amapLocation) {
 //        super.onLocationChanged(amapLocation);
 
-        this.amapLocation = amapLocation;
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+//                this.amapLocation = amapLocation;
 
 //        title.setText(isContainsList.contains(true)+"》》"+k+"=="+macList.size()+"=="+xb);
 
 //        if(1==1) return;
 
-        if (mListener != null && amapLocation != null && xb==0) {
+                if (mListener != null && amapLocation != null && xb==0) {
 
-            if((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
+                    if((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
 //
 //            hintText.setText(isContainsList.contains(true)+"》》》"+near+"==="+macList.size()+"==="+amapLocation.getLatitude());
 
-            Log.e("biking===Changed", isContainsList.contains(true) + "》》》" + near + "===" + macList.size()+"==="+amapLocation.getLatitude());
+                    Log.e("biking===Changed", isContainsList.contains(true) + "》》》" + near + "===" + macList.size()+"==="+amapLocation.getLatitude());
 
 //            title.setText(isContainsList.contains(true)+"》》"+near+"=="+macList.size()+"=="+k);
 
-            if (amapLocation != null && amapLocation.getErrorCode() == 0) {
-                if (0.0 != amapLocation.getLatitude() && 0.0 != amapLocation.getLongitude()){
-                    String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude","0.0");
-                    String longitude = SharedPreferencesUrls.getInstance().getString("biking_longitude","0.0");
+                    if (amapLocation != null && amapLocation.getErrorCode() == 0) {
+                        if (0.0 != amapLocation.getLatitude() && 0.0 != amapLocation.getLongitude()){
+                            String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude","0.0");
+                            String longitude = SharedPreferencesUrls.getInstance().getString("biking_longitude","0.0");
 
-                    if (mListener != null) {
-                        mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-                    }
-                    referLatitude = amapLocation.getLatitude();
-                    referLongitude = amapLocation.getLongitude();
-                    myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
+                            if (mListener != null) {
+                                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+                            }
+                            referLatitude = amapLocation.getLatitude();
+                            referLongitude = amapLocation.getLongitude();
+                            myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
 
 //                    Log.e("biking===Changed2", latitude+"==="+amapLocation.getLatitude());
 
@@ -4641,14 +4768,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                    }
 
 
-                    if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)){
+                            if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)){
 
-                        if (AMapUtils.calculateLineDistance(new LatLng(
-                                Double.parseDouble(latitude),Double.parseDouble(longitude)
-                        ), new LatLng(amapLocation.getLatitude(),amapLocation.getLongitude())) > 10){
+                                if (AMapUtils.calculateLineDistance(new LatLng(
+                                        Double.parseDouble(latitude),Double.parseDouble(longitude)
+                                ), new LatLng(amapLocation.getLatitude(),amapLocation.getLongitude())) > 10){
 
-                            SharedPreferencesUrls.getInstance().putString("biking_latitude",""+amapLocation.getLatitude());
-                            SharedPreferencesUrls.getInstance().putString("biking_longitude",""+amapLocation.getLongitude());
+                                    SharedPreferencesUrls.getInstance().putString("biking_latitude",""+amapLocation.getLatitude());
+                                    SharedPreferencesUrls.getInstance().putString("biking_longitude",""+amapLocation.getLongitude());
 //                            addMaplocation(amapLocation.getLatitude(),amapLocation.getLongitude());
 
 //                            mPolyoptions.add(myLocation);
@@ -4657,27 +4784,29 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                                aMap.addPolyline(mPolyoptions);
 //                            }
 
-                        }
-                    }
+                                }
+                            }
 
-                    if (mFirstFix) {
-                        mFirstFix = false;
-                        schoolRange();
-                        aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18f));
-                    } else {
-                        centerMarker.remove();
-                        mCircle.remove();
-                        centerMarker=null;
+                            if (mFirstFix) {
+                                mFirstFix = false;
+                                schoolRange();
+                                aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18f));
+                            } else {
+                                centerMarker.remove();
+                                mCircle.remove();
+                                centerMarker=null;
 
-                        if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
-                            isContainsList.clear();
-                        }
-                        for ( int i = 0; i < pOptions.size(); i++){
-                            isContainsList.add(pOptions.get(i).contains(myLocation));
-                        }
-                    }
-                    addChooseMarker();
-                    addCircle(myLocation, amapLocation.getAccuracy());//添加定位精度圆
+                                if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                                    isContainsList.clear();
+                                }
+                                for ( int i = 0; i < pOptions.size(); i++){
+                                    isContainsList.add(pOptions.get(i).contains(myLocation));
+                                }
+
+
+                            }
+                            addChooseMarker();
+                            addCircle(myLocation, amapLocation.getAccuracy());//添加定位精度圆
 
 //                    //补正自动还车
 //                    if(!SharedPreferencesUrls.getInstance().getBoolean("switcher",false)){
@@ -4719,30 +4848,35 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                        near = 1;
 //                    }
 
-                    Log.e("biking===Changed4", isContainsList.contains(true) + "》》》" + near + "===" + macList.size()+"==="+macList2.size());
+                            Log.e("biking===Changed4", isContainsList.contains(true) + "》》》" + near + "===" + macList.size()+"==="+macList2.size());
 
-                }else {
-                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        }else {
+                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                            scrollToFinishActivity();
+                                        }
+                                    }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
-                                    scrollToFinishActivity();
+                                    CurRoadBikingActivity.this.requestPermissions(
+                                            new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                                            REQUEST_CODE_ASK_PERMISSIONS);
                                 }
-                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            CurRoadBikingActivity.this.requestPermissions(
-                                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                                    REQUEST_CODE_ASK_PERMISSIONS);
+                            });
+                            customBuilder.create().show();
                         }
-                    });
-                    customBuilder.create().show();
+                    }
+
+
                 }
             }
+        });
 
 
-        }
+
 
     }
 
@@ -4792,8 +4926,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     polyline.remove();
                 }
 
+
+
                 if(macList.size()>0 || isContainsList.contains(true)){
-//                if(!isContainsList.contains(true)){
 
                     if("4".equals(type)){
                         endBtn4();
@@ -4805,10 +4940,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                         endBtn5();
                     }else if("7".equals(type)){
-                        if (lockLoading != null && !lockLoading.isShowing()){
-                            lockLoading.setTitle("正在连接");
-                            lockLoading.show();
-                        }
+//                        if (lockLoading != null && !lockLoading.isShowing()){
+//                            lockLoading.setTitle("正在连接");
+//                            lockLoading.show();
+//                        }
 
                         endBtn7();
                     }else{
@@ -4957,12 +5092,20 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 Log.e("biking===", "closeEbike===="+result.getData());
 
                                 if ("0".equals(result.getData())){
+                                    if (loadingDialog != null && loadingDialog.isShowing()){
+                                        loadingDialog.dismiss();
+                                    }
+
                                     ToastUtil.showMessageApp(context,"关锁成功");
 
 //                                    m_myHandler.sendEmptyMessage(6);
                                     submit(uid, access_token);
+
+
                                 } else {
                                     ToastUtil.showMessageApp(context,"关锁失败");
+
+//                                    m_nowMac = "01:02:03:04:16:4A";
 
                                     bleService.connect(m_nowMac);
                                     cn = 0;
@@ -4971,12 +5114,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 }
                             } else {
                                 ToastUtil.showMessageApp(context,result.getMsg());
+
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
                             }
                         } catch (Exception e) {
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
                         }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
+
                     }
                 });
 
@@ -4988,7 +5136,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         m_myHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Log.e("closeLock3===", "===");
+                Log.e("closeLock3===", m_nowMac+"==="+bleid+"==="+bleService.connect);
 
                 if(!bleService.connect){
                     cn++;
@@ -4996,6 +5144,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     if(cn<5){
                         closeLock3();
                     }else{
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+
                         customDialog4.show();
                         return;
                     }
@@ -5386,32 +5538,40 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         params.put("type", ("4".equals(type)||"7".equals(type))?2:1);
 
         HttpHelper.get(context, Urls.schoolRange, params, new TextHttpResponseHandler() {
+//            @Override
+//            public void onStart() {
+//                onStartCommon("正在加载");
+//            }
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                onFailureCommon(throwable.toString());
+//            }
+
             @Override
             public void onStart() {
                 m_myHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("正在加载");
-                            loadingDialog.show();
+                        if (loadingDialog2 != null && !loadingDialog2.isShowing()) {
+                            loadingDialog2.setTitle("正在加载");
+                            loadingDialog2.show();
                         }
                     }
                 });
-
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
                 m_myHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
+                        if (loadingDialog2 != null && loadingDialog2.isShowing()){
+                            loadingDialog2.dismiss();
                         }
                         UIHelper.ToastError(context, throwable.toString());
                     }
                 });
-
             }
+
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, final String responseString) {
@@ -5420,11 +5580,33 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     @Override
                     public void run() {
                         try {
-//                          Log.e("biking===schoolRange1", "==="+type);
+                            Log.e("biking===schoolRange1", "==="+responseString);
 
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//                                    String ss ="{\"flag\":\"Success\",\"errcode\":\"0\",\"msg\":\"\\u5b66\\u6821\\u6805\\u680f\",\"data\":[[{\"longitude\":\"118.28775\",\"latitude\":\"35.11533\",\"is_yhq\":0},{\"longitude\":\"118.28773\",\"latitude\":\"35.11581\",\"is_yhq\":0},{\"longitude\":\"118.28872\",\"latitude\":\"35.11580\",\"is_yhq\":0},{\"longitude\":\"118.28871\",\"latitude\":\"35.11534\",\"is_yhq\":0}],[{\"longitude\":\"118.29537\",\"latitude\":\"35.11433\",\"is_yhq\":0},{\"longitude\":\"118.29410\",\"latitude\":\"35.11433\",\"is_yhq\":0},{\"longitude\":\"118.29413\",\"latitude\":\"35.11339\",\"is_yhq\":0},{\"longitude\":\"118.29538\",\"latitude\":\"35.11338\",\"is_yhq\":0}]]}";
+
+//                                    String ss ="{\"flag\":\"Success\",\"errcode\":\"0\",\"msg\":\"\\u5b66\\u6821\\u6805\\u680f\",\"data\":\"1\",\"status\":\"2\"}";
+//                                    com.jsoniter.spi.JsonException: readInt: expect 0~9, head: 29, peek: errcode":", buf: {"flag":"Success"
+
+//                                    ResultConsel2 result = JsonIterator.deserialize(responseString, ResultConsel2.class);
+//                                    JsonIterator.deserialize(responseString, ResultConsel.class);
+
+//                                    JsonIterator iter = JsonIterator.parse(responseString.replace('\'', '"'));
+                            JsonIterator iter = JsonIterator.parse(responseString);
+                            ResultConsel2 result = iter.read(ResultConsel2.class);
+
+//                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            Log.e("biking===schoolRange2", "==="+result.getData().getClass());
                             if (result.getFlag().equals("Success")) {
-                                JSONArray jsonArray = new JSONArray(result.getData());
+
+//                              IterImplArray.
+
+//                                JSONArray jsonArray = new JSONArray(JSON.toJSONString(result.getData()));
+                                JSONArray jsonArray = new JSONArray(result.getData().toString());
+//                                JSONArray.parseArray(JSON.toJSONString(studentList));
+//                                com.alibaba.fastjson.JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(result.getData()));
+
+//                                        iter.readArray()
+                                Log.e("biking===schoolRange3", "==="+jsonArray);
                                 if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
                                     isContainsList.clear();
                                 }
@@ -5439,69 +5621,64 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                     List<LatLng> list = new ArrayList<>();
                                     List<LatLng> list2 = new ArrayList<>();
                                     int flag=0;
-                                    if (polyline2 != null) {
-                                        polyline2.remove();
-                                    }
-                                    mPolyoptions2 = new PolylineOptions();
-                                    mPolyoptions2.width(10f);
-                                    mPolyoptions2.setCustomTexture(BitmapDescriptorFactory.fromResource(R.drawable.grasp_trace_line));
+//                                    if (polyline2 != null) {
+//                                        polyline2.remove();
+//                                    }
+//                                    mPolyoptions2 = new PolylineOptions();
+//                                    mPolyoptions2.width(10f);
+//                                    mPolyoptions2.setCustomTexture(BitmapDescriptorFactory.fromResource(R.drawable.grasp_trace_line));
 
-//                            Log.e("main===schoolRange1", i+"==="+jsonArray.length()+"==="+jsonArray.getJSONArray(i).length());
+//                                  Log.e("main===schoolRange1", i+"==="+jsonArray.length()+"==="+jsonArray.getJSONArray(i).length());
 
+                                    Polyline polyline2 = null;
                                     for (int j = 0; j < jsonArray.getJSONArray(i).length(); j ++){
-                                        try {
-//                                    Log.e("main===schoolRange1", "222==="+jsonObject.getInt("is_yhq"));
-                                        }catch (Exception e){
-//                                    Log.e("main===schoolRange1", "eee==="+e.toString());
-                                        }
-
 
                                         JSONObject jsonObject = jsonArray.getJSONArray(i).getJSONObject(j);
+//                                        com.alibaba.fastjson.JSONObject jsonObject = jsonArray.getJSONArray(i).getJSONObject(j);
 
-//                                Log.e("main===schoolRange1", "221==="+jsonObject.getInt("is_yhq"));
+//                                      Log.e("main===schoolRange1", "221==="+jsonObject.getInt("is_yhq"));
 
                                         LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
-
-
-//                                Log.e("main===schoolRange1", "222==="+Integer.parseInt(jsonObject.getString("is_yhq")));
 
                                         if(jsonObject.getInt("is_yhq")==0){
                                             flag=0;
                                             list.add(latLng);
 
-//                                    Log.e("main===schoolRange1", "222==="+jsonObject.getInt("is_yhq"));
                                         }else{
                                             flag=1;
                                             list2.add(latLng);
 
-//                                    Log.e("main===schoolRange1", "223==="+jsonObject.getInt("is_yhq"));
                                         }
 
-                                        mPolyoptions2.add(latLng);
+                                        listPoint.add(latLng);
 
-//                                        List<GeoPoint> points = new ArrayList<GeoPoint>();
-//                                        points.add(new GeoPoint(39907794,116356694));
-
-                                        if (mPolyoptions2.getPoints().size() > 1 && j==jsonArray.getJSONArray(i).length()-1) {
-                                            polyline2 = aMap.addPolyline(mPolyoptions2);
-//                                            polyline2 = new Polyline(mPolyoptions2);
-                                        }
+//                                        mPolyoptions2.add(latLng);
+//
+////                                        List<GeoPoint> points = new ArrayList<GeoPoint>();
+////                                        points.add(new GeoPoint(39907794,116356694));
+//
+//                                        if (mPolyoptions2.getPoints().size() > 1 && j==jsonArray.getJSONArray(i).length()-1 ) {
+//
+//                                            Log.e("biking===schoolRange", "==="+mPolyoptions2);
+////                                            pOptions.add(polygon);
+////                                            mPolyoptions2.addAll()
+////                                            polyline2 = aMap.addPolyline(mPolyoptions2);
+////                                            polyline2 = new Polyline(mPolyoptions2);
+//                                        }
                                     }
 
-                                    Log.e("biking===schoolRange", myLocation+"===");
-                                    Log.e("biking===schoolRange2", i+"==="+jsonArray.getJSONArray(i).length()+"==="+myLocation+">>>"+polyline2.getNearestLatLng(myLocation));
+//                                    Log.e("biking===schoolRange2", i+"==="+jsonArray.getJSONArray(i).length()+"==="+myLocation+">>>");
 
-//                                    minPolylineToPolygon();
 
-                                    LatLng nearestLatLng = polyline2.getNearestLatLng(myLocation);
-                                    s1 = AMapUtils.calculateLineDistance(nearestLatLng, new LatLng(myLocation.latitude, myLocation.longitude));
-
-                                    if(i==0 || s1<s){
-                                        s = s1;
-
-                                        x = nearestLatLng.longitude;
-                                        y = nearestLatLng.latitude;
-                                    }
+//                                    LatLng nearestLatLng = polyline2.getNearestLatLng(myLocation);
+//                                    s1 = AMapUtils.calculateLineDistance(nearestLatLng, new LatLng(myLocation.latitude, myLocation.longitude));
+//
+//                                    if(i==0 || s1<s){
+//                                        s = s1;
+//
+//                                        x = nearestLatLng.longitude;
+//                                        y = nearestLatLng.latitude;
+//                                    }
 
 //                                    Log.e("main===schoolRange1", "333==="+list2+"==="+flag);
 
@@ -5514,6 +5691,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                                     .strokeColor(Color.argb(255, 48, 191, 186))
                                                     .fillColor(Color.argb(75, 18, 237, 226)));
                                         }else{
+//                                            Log.e("biking===schoolRange3", "==="+mPolyoptions2);
+
                                             polygon = aMap.addPolygon(pOption.strokeWidth(2)
                                                     .strokeColor(Color.argb(255, 228, 59, 74))
                                                     .fillColor(Color.argb(75, 230, 0, 18)));
@@ -5535,27 +5714,40 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                 }
 
-                                Log.e("y===x", myLocation.latitude+","+myLocation.longitude+"==="+y+","+x);
+                                Log.e("y===x", listPoint.size()+"==="+myLocation.latitude+","+myLocation.longitude+"==="+y+","+x);
+
+//                                minPoint();
 
 //                                MarkerOptions centerMarkerOption = new MarkerOptions().position(polyline2.getNearestLatLng(myLocation)).icon(freeDescripter);
-                                MarkerOptions centerMarkerOption = new MarkerOptions().position(new LatLng(y, x)).icon(freeDescripter);
-                                aMap.addMarker(centerMarkerOption);
-
-                                if (polyline2 != null) {
-                                    polyline2.remove();
-                                }
-
+//                                MarkerOptions centerMarkerOption = new MarkerOptions().position(new LatLng(y, x)).icon(freeDescripter);
+//                                aMap.addMarker(centerMarkerOption);
+//
+//                                if (polyline2 != null) {
+//                                    polyline2.remove();
+//                                }
 
                             }else {
                                 ToastUtil.showMessageApp(context,result.getMsg());
                             }
                         }catch (Exception e){
+                            e.printStackTrace();
+                            Log.e("biking===schoolRange_e", "==="+e);
                         }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
+                        if (loadingDialog2 != null && loadingDialog2.isShowing()){
+                            loadingDialog2.dismiss();
                         }
                     }
                 });
+
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                    }
+//                }).start();
+
+
+
 
             }
         });
@@ -5571,6 +5763,115 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 
         if (AMapUtils.calculateLineDistance(polyline2.getNearestLatLng(myLocation), new LatLng(myLocation.latitude, myLocation.longitude)) > 10)
+
+        for (int i = 0; i < centerList.size(); i++) {
+
+            Log.e("minPolygon===", centerList.get(i).latitude+"==="+referLatitude+">>>"+centerList.get(i).longitude+"==="+referLongitude);
+
+            s1 = (centerList.get(i).latitude-referLatitude)*(centerList.get(i).latitude-referLatitude) + (centerList.get(i).longitude-referLongitude)*(centerList.get(i).longitude-referLongitude);
+
+            if(i==0 || s1<s){
+                s = s1;
+
+                x = centerList.get(i).longitude;
+                y = centerList.get(i).latitude;
+            }else{
+                continue;
+            }
+        }
+
+        PolylineOptions pOption = new PolylineOptions();
+
+        pOption.setDottedLine(true);
+        pOption.setDottedLineType(1);
+        pOption.width(20);
+        pOption.color(Color.argb(255, 0, 0, 255));
+        pOption.useGradient(true);
+        pOption.add(new LatLng(referLatitude, referLongitude));
+        pOption.add(new LatLng(y, x));
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18f);// 设置缩放监听
+        aMap.moveCamera(cameraUpdate);
+
+        polyline = aMap.addPolyline(pOption);
+
+        Log.e("minPolygon===2", "==="+s);
+
+        return null;
+    }
+
+    public LatLng getCenterPoint(List<LatLng> list) {
+        double x = 0.0;
+        double y = 0.0;
+        for (int i = 0; i < list.size(); i++) {
+            x = x + list.get(i).longitude;
+            y = y + list.get(i).latitude;
+        }
+        x = x / list.size();
+        y = y / list.size();
+
+        centerList.add(new LatLng(y, x));
+
+        //        Log.e("getCenterPoint===2", x+"==="+y);
+
+        return new LatLng(y, x);
+    }
+
+    public LatLng minPoint() {
+        double s=0;
+        double s1=0;
+
+        double x = 0;
+        double y = 0;
+
+        for (int i = 0; i < listPoint.size(); i++) {
+
+//            Log.e("minPoint===", listPoint.get(i).latitude+"==="+referLatitude+">>>"+listPoint.get(i).longitude+"==="+referLongitude);
+
+            s1 = (listPoint.get(i).latitude-referLatitude)*(listPoint.get(i).latitude-referLatitude) + (listPoint.get(i).longitude-referLongitude)*(listPoint.get(i).longitude-referLongitude);
+
+            if(i==0 || s1<s){
+                s = s1;
+
+                x = listPoint.get(i).longitude;
+                y = listPoint.get(i).latitude;
+            }else{
+                continue;
+            }
+        }
+
+//        PolylineOptions pOption = new PolylineOptions();
+//
+//        pOption.setDottedLine(true);
+//        pOption.setDottedLineType(1);
+//        pOption.width(20);
+//        pOption.color(Color.argb(255, 0, 0, 255));
+//        pOption.useGradient(true);
+//        pOption.add(new LatLng(referLatitude, referLongitude));
+//        pOption.add(new LatLng(y, x));
+//
+//        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18f);// 设置缩放监听
+//        aMap.moveCamera(cameraUpdate);
+//
+//        polyline = aMap.addPolyline(pOption);
+
+        float dis = AMapUtils.calculateLineDistance(new LatLng(referLatitude, referLongitude), new LatLng(y, x));
+
+        Log.e("minPoint===2", s+"==="+dis);
+
+        if(!isContainsList.contains(true) && dis < 30){
+            isContainsList.add(true);
+        }
+
+        return null;
+    }
+
+    public LatLng minPolygon() {
+        double s=0;
+        double s1=0;
+
+        double x = 0;
+        double y = 0;
 
         for (int i = 0; i < centerList.size(); i++) {
 
@@ -5925,6 +6226,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         @Override
                         public void run() {
                             if("4".equals(type)) {
+                                BLEService.bluetoothAdapter = mBluetoothAdapter;
+
+                                bleService.view = context;
+                                bleService.showValue = true;
                             }else if("5".equals(type) || "6".equals(type)){
 
                                 connectDeviceLP();
@@ -6049,7 +6354,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                         }
 
                                         Log.e("getStatus===", Code.toString(code));
-                                        ToastUtil.showMessageApp(context, Code.toString(code));
+//                                        ToastUtil.showMessageApp(context, Code.toString(code));
                                     }
                                 });
                             }
@@ -6184,29 +6489,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         HttpHelper.get(context, Urls.stopSite, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("正在加载");
-                            loadingDialog.show();
-                        }
-                    }
-                });
-
+                onStartCommon("正在加载");
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        UIHelper.ToastError(context, throwable.toString());
-                    }
-                });
-
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
             }
             @Override
             public void onSuccess(int statusCode, Header[] headers, final String responseString) {

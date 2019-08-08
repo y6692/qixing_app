@@ -132,7 +132,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
             getCurrentorder(uid,access_token);
         }
 
-        Log.e("history===","biked===onResume");
+        Log.e("biked===onResume","===");
     }
 
     @Override
@@ -208,6 +208,8 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                                 endTime.setText(bean.getEd_time());
                                 timeText.setText(bean.getTotal_mintues());
 
+                                Log.e("biked==getCurrentorder0",prices+"==="+user_money);
+
                                 if(bean.getIs_super_member()==1){
                                     rl_time.setVisibility(View.VISIBLE);
                                     payOtherLayout.setVisibility(View.VISIBLE);
@@ -218,6 +220,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                                     payOtherLayout.setVisibility(View.GONE);
                                 }
 
+                                Log.e("biked==getCurrentorder1",prices+"==="+user_money);
 
                                 if (bean.getPrices() != null && !"".equals(bean.getPrices())){
                                     prices = bean.getPrices();
@@ -225,6 +228,9 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                                     prices = "0.00";
                                 }
                                 moneyText.setText(prices);
+
+                                Log.e("biked==getCurrentorder2",prices+"==="+user_money);
+
                                 if (bean.getUser_money() != null && !"".equals(bean.getUser_money())){
                                     user_money = bean.getUser_money();
                                 }else {
@@ -235,9 +241,12 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                                 osn = bean.getOsn();
 //                        if (Double.parseDouble(prices) <= Double.parseDouble(user_money)
 //                                && Double.parseDouble(prices) <= 5){
+
+                                Log.e("biked==getCurrentorder3",prices+"==="+user_money);
+
                                 if (Double.parseDouble(prices) <= Double.parseDouble(user_money)){
                                     m_myHandler.sendEmptyMessage(0);
-//                            paySubmit();
+//                                  paySubmit();
                                 }
                             } else {
                                 Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
@@ -584,10 +593,13 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                         public void run() {
                             try {
                                 ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                                Log.e("biked==paySubmit","==="+responseString);
+
                                 if (result.getFlag().equals("Success")) {
                                     Toast.makeText(context,"恭喜您,支付成功!",Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(context,HistoryRoadDetailActivity.class);
-                                    intent.putExtra("oid",oid);
+                                    intent.putExtra("oid", oid);
                                     startActivity(intent);
                                     scrollToFinishActivity();
                                 } else {

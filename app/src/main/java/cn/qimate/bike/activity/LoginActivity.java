@@ -48,6 +48,7 @@ import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.ToastUtil;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -76,6 +77,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
     private boolean isHidepsd = true;
 
     private TelephonyManager tm;
+    public static boolean isForeground = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,18 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
         setContentView(R.layout.ui_login);
         context = this;
         initView();
+    }
+
+    @Override
+    public void onResume() {
+        isForeground = true;
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        isForeground = false;
+        super.onPause();
     }
 
     private void initView() {

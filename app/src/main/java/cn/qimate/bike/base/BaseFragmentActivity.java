@@ -185,7 +185,10 @@ public class BaseFragmentActivity extends AppCompatActivity
 	@Override
 	protected void onResume() {
 		super.onResume();
-		RefreshLogin();
+		if(!LoginActivity.isForeground){
+			RefreshLogin();
+		}
+
 
 	}
 
@@ -237,6 +240,8 @@ public class BaseFragmentActivity extends AppCompatActivity
 		String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
 		if (access_token == null || "".equals(access_token) || uid == null || "".equals(uid)) {
 			setAlias("");
+			ToastUtil.showMessageApp(context, "请先登录账号");
+			UIHelper.goToAct(context, LoginActivity.class);
 		} else {
 			RequestParams params = new RequestParams();
 			params.add("uid", uid);

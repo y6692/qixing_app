@@ -22,6 +22,7 @@ public class CurRoadBikingBean {
     private String macinfo;
     private String tokencode;
     private int is_super_member;
+    private String deviceuuid;
 
     public String getOrderid() {
         return orderid;
@@ -149,5 +150,13 @@ public class CurRoadBikingBean {
 
     public void setTokencode(String tokencode) {
         this.tokencode = tokencode;
+    }
+
+    public String getDeviceuuid() {
+        return deviceuuid;
+    }
+
+    public void setDeviceuuid(String deviceuuid) {
+        this.deviceuuid = deviceuuid;
     }
 }

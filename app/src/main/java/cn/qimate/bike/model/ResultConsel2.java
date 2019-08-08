@@ -1,11 +1,14 @@
 package cn.qimate.bike.model;
 
-public class ResultConsel {
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+public class ResultConsel2 {
 	
 	public String flag;
-	public int errcode;
+	public String errcode;
 	public String msg;
-	public String data;
+	public ArrayList data;
 	public String status;
 	
 	public String getFlag() {
@@ -15,11 +18,11 @@ public class ResultConsel {
 		this.flag = flag;
 	}
 
-	public int getErrcode() {
+	public String getErrcode() {
 		return errcode;
 	}
 
-	public void setErrcode(int errcode) {
+	public void setErrcode(String errcode) {
 		this.errcode = errcode;
 	}
 
@@ -30,18 +33,11 @@ public class ResultConsel {
 		this.msg = msg;
 	}
 
-//	public Object getData() {
-//		return data;
-//	}
-//
-//	public void setData(Object data) {
-//		this.data = data;
-//	}
-
-	public String getData() {
+	public ArrayList getData() {
 		return data;
 	}
-	public void setData(String data) {
+
+	public void setData(ArrayList data) {
 		this.data = data;
 	}
 

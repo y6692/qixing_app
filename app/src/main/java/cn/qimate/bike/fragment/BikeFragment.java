@@ -1398,6 +1398,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                             SharedPreferencesUrls.getInstance().putString("oid", oid);
                                             SharedPreferencesUrls.getInstance().putString("osn", osn);
                                             SharedPreferencesUrls.getInstance().putString("type", type);
+                                            SharedPreferencesUrls.getInstance().putString("deviceuuid", bean.getDeviceuuid());
 
                                         }
 

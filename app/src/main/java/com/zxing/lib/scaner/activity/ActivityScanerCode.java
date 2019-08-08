@@ -758,24 +758,25 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private void useBike(final String result) {
         Log.e("scan===useBike", result.indexOf('&') + "<===>" + result);
 
-        int code = 0;
-        if (result.split("&").length == 1) {
-            if (result.split("\\?")[1].split("&")[0].split("=")[1].matches(".*[a-zA-z].*")) {
-                useCar(result);
-                return;
-            } else {
-                code = Integer.parseInt(result.split("\\?")[1].split("&")[0].split("=")[1]);
-            }
-        } else {
-            code = Integer.parseInt(result.split("\\?")[1].split("&")[0].split("=")[1]);
-        }
+//        int code = 0;
+//        if (result.split("&").length == 1) {
+//            if (result.split("\\?")[1].split("&")[0].split("=")[1].matches(".*[a-zA-z].*")) {
+//                useCar(result);
+//                return;
+//            } else {
+//                code = Integer.parseInt(result.split("\\?")[1].split("&")[0].split("=")[1]);
+//            }
+//        } else {
+//            code = Integer.parseInt(result.split("\\?")[1].split("&")[0].split("=")[1]);
+//        }
+//
+//        if (result.indexOf('&') != -1 || (code >= 80001651 && code <= 80002050)) {  //电单车
+//            ebikeInfo(result);
+//        } else {
+//            useCar(result);
+//        }
 
-        if (result.indexOf('&') != -1 || (code >= 80001651 && code <= 80002000)) {  //电单车
-            ebikeInfo(result);
-        } else {
-            useCar(result);
-        }
-
+        ebikeInfo(result);
     }
 
     private void ebikeInfo(final String tokencode) {
@@ -824,6 +825,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                         scrollToFinishActivity();
                                     } else {
+
                                         CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
                                         customBuilder.setMessage("电单车必须在校内停车线还车");
 
@@ -841,6 +843,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                         }).setHint(false);
                                         customBuilder.create().show();
                                     }
+
+
                                 }
                             } else {
                                 ToastUtil.showMessageApp(context, result.getMsg());
@@ -871,7 +875,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         } else {
             Log.e("scan===useCar1", "===" + result);
 
-            result = "11223344";
+//            result = "11223344";
 
             RequestParams params = new RequestParams();
             params.put("uid", uid);
@@ -909,8 +913,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     Log.e("scan===", jsonObject.getString("bleid") + "statusCode===" + result.getFlag()  + "===" + jsonObject.getString("type"));
 
                                     bleid = jsonObject.getString("bleid");
-                                    deviceuuid = jsonObject.getString("deviceuuid");
                                     type = jsonObject.getString("type");
+                                    if("7".equals(type)){
+                                        deviceuuid = jsonObject.getString("deviceuuid");
+                                    }
                                     codenum = jsonObject.getString("codenum");
                                     m_nowMac = jsonObject.getString("macinfo");
 
@@ -992,7 +998,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                             ToastUtil.showMessageApp(context, "恭喜您,开锁成功!");
 
-                                            tzEnd();
+                                            if(!isFinishing()){
+                                                tzEnd();
+                                            }
 
                                         } else {
                                             if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -1072,14 +1080,18 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                             if (!TextUtils.isEmpty(m_nowMac)) {
 
-                                                SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
-                                                        .searchBluetoothLeDevice(0)
-                                                        .build();
+//                                                SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+//                                                        .searchBluetoothLeDevice(0)
+//                                                        .build();
+//
+//                                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                                                    return;
+//                                                }
+//                                                ClientManager.getClient().search(request, mSearchResponse);
 
-                                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                                    return;
-                                                }
-                                                ClientManager.getClient().search(request, mSearchResponse);
+                                                connectDeviceLP();
+
+                                                ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
 
                                             }
                                         }
@@ -1090,7 +1102,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                             ToastUtil.showMessageApp(context, "恭喜您,开锁成功!");
 
-                                            tzEnd();
+                                            if(!isFinishing()){
+                                                tzEnd();
+                                            }
 
                                         } else {
                                             if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -1187,7 +1201,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             Log.e("scan===onDeviceFounded",device.device.getName() + "===" + device.device.getAddress());
 
 //            bike:GpDTxe8DGN412
-//
 //            bike:LUPFKsrUyR405
 //            bike:LUPFKsrUyK405
 //            bike:L6OsRAiviK289===E8:EB:11:02:2B:E2
@@ -1204,10 +1217,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     }
                 }
             });
-
-
-
-
 
 //            if (!mDevices.contains(device)) {
 //                mDevices.add(device);
@@ -1243,7 +1252,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         public void onConnectStatusChanged(String mac, int status) {
 //            BluetoothLog.v(String.format(Locale.getDefault(), "DeviceDetailActivity onConnectStatusChanged %d in %s", status, Thread.currentThread().getName()));
 
-            Log.e("ConnectStatus===", "===="+(status == STATUS_CONNECTED));
+            Log.e("ConnectStatus===", mac+"===="+(status == STATUS_CONNECTED));
 
             ClientManager.getClient().getStatus(mac, new IGetStatusResponse() {
                 @Override
@@ -1294,14 +1303,13 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                     Log.e("scan===", "scan====1");
 
+//                                    getBleRecord();
                                     rent();
 
                                     if (loadingDialog != null && !loadingDialog.isShowing()) {
                                         loadingDialog.setTitle("开锁中");
                                         loadingDialog.show();
                                     }
-
-
 
                                     Log.e("scan===", "scan===="+loadingDialog);
 
@@ -1322,7 +1330,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         @Override
                         public void run() {
                             Log.e("getStatus===", Code.toString(code));
-                            ToastUtil.showMessageApp(context, Code.toString(code));
+//                            ToastUtil.showMessageApp(context, Code.toString(code));
                         }
                     });
 
@@ -1416,6 +1424,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 serverTime = bean.getServerTime();
 
                                 Log.e("rent===", m_nowMac+"==="+encryptionKey+"==="+keys);
+
+//                                getBleRecord();
+//                                openBleLock(null);
 
                                 getCurrentorder2(uid, access_token);
 
@@ -1518,14 +1529,23 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //        ClientManager.getClient().openLock(m_nowMac,"000000000000", 1560316059, "EFD72E14D4F1CAA9F919B6FE0066579F", 179, new IEmptyResponse(){
 //        ClientManager.getClient().openLock(m_nowMac,"000000000000", resultBean.getServerTime(), resultBean.getKeys(), resultBean.getEncryptionKey(), new IEmptyResponse(){
                     @Override
-                    public void onResponseFail(int code) {
-                        Log.e("openLock===Fail", Code.toString(code));
-//                        UIHelper.dismiss();
-//                        UIHelper.showToast(DeviceDetailActivity.this, Code.toString(code));
+                    public void onResponseFail(final int code) {
+                        m_myHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.e("openLock===Fail", m_nowMac+"==="+Code.toString(code));
+//                              UIHelper.dismiss();
+//                              UIHelper.showToast(DeviceDetailActivity.this, Code.toString(code));
 
-                        getBleRecord();
+                                getBleRecord();
+//                                deleteBleRecord(null);
 
-                        ToastUtil.showMessageApp(context, Code.toString(code));
+                                submit(uid, access_token);
+
+//                                ToastUtil.showMessageApp(context, Code.toString(code));
+                            }
+                        });
+
 
 
 //                        submit(uid, access_token);
@@ -1534,9 +1554,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     @Override
                     public void onResponseSuccess() {
 //                        UIHelper.dismiss();
-                        getBleRecord();
 
                         Log.e("openLock===Success", "===");
+
+                        getBleRecord();
 
 //                        ClientManager.getClient().stopSearch();
 //                        ClientManager.getClient().disconnect(m_nowMac);
@@ -1565,18 +1586,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
     //与设备，获取记录
     private void getBleRecord() {
+
+        Log.e("getBleRecord===", "###==="+m_nowMac);
+
         ClientManager.getClient().getRecord(m_nowMac, new IGetRecordResponse() {
-//            @Override
-//            public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp,
-//                                          String transType, String mackey, String index, String cap, String vol) {
-//                Log.e("getBleRecord===", "Success===");
-//
-//                deleteBleRecord(bikeTradeNo);
-//            }
 
             @Override
             public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp, String transType, String mackey, String index, int Major, int Minor, String vol) {
-                Log.e("getBleRecord===", transType + "==Major:"+ Major +"---Minor:"+Minor);
+                Log.e("getBleRecord===0", transType + "==Major:"+ Major +"---Minor:"+Minor+"==="+bikeTradeNo);
                 deleteBleRecord(bikeTradeNo);
 
 //                if (loadingDialog != null && loadingDialog.isShowing()){
@@ -1599,13 +1616,13 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             @Override
             public void onResponseSuccessEmpty() {
 //                ToastUtil.showMessageApp(context, "record empty");
-                Log.e("getBleRecord===", "Success===Empty");
+                Log.e("getBleRecord===1", "Success===Empty");
             }
 
             @Override
             public void onResponseFail(int code) {
-                Log.e("getBleRecord===", Code.toString(code));
-                ToastUtil.showMessageApp(context, Code.toString(code));
+                Log.e("getBleRecord===2", Code.toString(code));
+//                ToastUtil.showMessageApp(context, Code.toString(code));
             }
         });
     }
@@ -1631,19 +1648,29 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //                UIHelper.dismiss();
                 Log.e("scan===deleteBleRecord", "Success===Empty");
 
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
 
-                ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
+                        isFinish = true;
 
-                tzEnd();
+                        ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
+
+                        if(!isFinishing()){
+                            tzEnd();
+                        }
+                    }
+                });
+
             }
 
             @Override
             public void onResponseFail(int code) {
                 Log.e("scan===deleteBleRecord", Code.toString(code));
-                ToastUtil.showMessageApp(context, Code.toString(code));
+//                ToastUtil.showMessageApp(context, Code.toString(code));
             }
         });
     }
@@ -1664,18 +1691,18 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             @Override
             public void onResponseFail(int code) {
                 Log.e("connectDevice===", Code.toString(code));
-                ToastUtil.showMessageApp(context, Code.toString(code));
+//                ToastUtil.showMessageApp(context, Code.toString(code));
             }
 
             @Override
             public void onResponseSuccess(BleGattProfile profile) {
-                BluetoothLog.v(String.format("profile:\n%s", profile));
+//                BluetoothLog.v(String.format("profile:\n%s", profile));
                 refreshData(true);
 
-                if (Globals.bType == 1) {
-                    ToastUtil.showMessageApp(context, "正在关锁中");
-//                    getBleRecord();
-                }
+//                if (Globals.bType == 1) {
+//                    ToastUtil.showMessageApp(context, "正在关锁中");
+////                    getBleRecord();
+//                }
             }
         });
     }
@@ -1995,10 +2022,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             @Override
             public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
 
-//                Log.e("connect===", m_nowMac+"==="+device.getName()+"==="+device.getAddress());
+                Log.e("connect===", m_nowMac+"==="+device.getName()+"==="+device.getAddress());
 
                 if (device==null||TextUtils.isEmpty(device.getAddress()))return;
                 if (m_nowMac.equalsIgnoreCase(device.getAddress())){
+                    Log.e("connect===2", m_nowMac+"==="+device.getName()+"==="+device.getAddress());
+
                     m_myHandler.removeMessages(0x99);
                     BaseApplication.getInstance().getIBLE().stopScan();
                     BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
@@ -2112,7 +2141,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                             if (TextUtils.isEmpty(data)) {
                                 ToastUtil.showMessageApp(context,"开锁失败,请重试");
-                                scrollToFinishActivity();
+
+                                submit(uid, access_token);
+
+//                                scrollToFinishActivity();
                             } else {
                                 isOpen = true;
 
@@ -2120,7 +2152,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 Log.e("scan===", "OPEN_ACTION===="+isOpen);
 
                                 isFinish = true;
-                                tzEnd();
+
+                                if(!isFinishing()){
+                                    tzEnd();
+                                }
+//                                else{
+//                                    addOrderbluelock2();
+//                                }
+
                             }
                             break;
                         case Config.CLOSE_ACTION:
@@ -2214,8 +2253,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
 
     private void addOrderbluelock(){
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
             ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
@@ -2281,7 +2320,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                                             ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
                                                             Log.e("scan===", "OPEN_ACTION===="+isOpen);
 
-                                                            tzEnd();
+                                                            if(!isFinishing()){
+                                                                tzEnd();
+                                                            }
                                                         }else{
                                                             closeEbike();
                                                         }
@@ -2295,48 +2336,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                     }else if("5".equals(type) || "6".equals(type)){
 
+//                                        getBleRecord();
+
                                         openBleLock(null);
-
-                                        m_myHandler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-
-                                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                                    loadingDialog.dismiss();
-                                                }
-
-                                                String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-                                                String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-
-                                                Log.e("scan===21", isFinish+"===="+isOpen+"===="+oid+"===="+referLatitude);
-
-                                                if(!isFinishing() && !isFinish){
-                                                    submit(uid, access_token);
-                                                }
-                                            }
-                                        }, 10 * 1000);
-
-                                    }else if("7".equals(type)){
-
-                                        apiClient.setDefend(false, new BleCallback() {
-                                            @Override
-                                            public void onResponse(final Response response) {
-                                                m_myHandler.post(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        Log.e("defend===", response.toString());
-                                                        if (loadingDialog != null && loadingDialog.isShowing()){
-                                                            loadingDialog.dismiss();
-                                                        }
-
-                                                        ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
-
-                                                        tzEnd();
-                                                    }
-                                                });
-
-                                            }
-                                        });
 
 //                                        m_myHandler.postDelayed(new Runnable() {
 //                                            @Override
@@ -2357,30 +2359,83 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //                                            }
 //                                        }, 10 * 1000);
 
+                                    }else if("7".equals(type)){
+
+                                        apiClient.setDefend(false, new BleCallback() {
+                                            @Override
+                                            public void onResponse(final Response response) {
+                                                m_myHandler.post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        Log.e("defend===", response.toString());
+
+                                                        if(response.code==0){
+                                                            isFinish = true;
+
+                                                            ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
+
+                                                            if(!isFinishing()){
+                                                                tzEnd();
+                                                            }
+                                                        }else{
+                                                            ToastUtil.showMessageApp(context,"开锁失败");
+
+//                                                            submit(uid, access_token);
+                                                            closeEbike();
+                                                        }
+
+                                                        if (loadingDialog != null && loadingDialog.isShowing()){
+                                                            loadingDialog.dismiss();
+                                                        }
+                                                    }
+                                                });
+
+                                            }
+                                        });
+
+//                                        m_myHandler.postDelayed(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//
+//                                                if (loadingDialog != null && loadingDialog.isShowing()){
+//                                                    loadingDialog.dismiss();
+//                                                }
+//
+//                                                String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+//                                                String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+//
+//                                                Log.e("scan===7", isFinish+"===="+isOpen+"===="+oid+"===="+referLatitude);
+//
+//                                                if(!isFinishing() && !isFinish){
+//                                                    submit(uid, access_token);
+//                                                }
+//                                            }
+//                                        }, 10 * 1000);
+
                                     }else{
                                         Log.e("scan===lock1", "===");
 
                                         BaseApplication.getInstance().getIBLE().openLock();
 
-                                        m_myHandler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-
-                                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                                    loadingDialog.dismiss();
-                                                }
-
-                                                String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-                                                String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-
-                                                Log.e("scan===22", isFinish+"===="+isOpen+"===="+oid+"===="+referLatitude);
-
-                                                if(!isFinishing() && !isFinish){
-                                                    submit(uid, access_token);
-                                                }
-
-                                            }
-                                        }, 10 * 1000);
+//                                        m_myHandler.postDelayed(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//
+//                                                if (loadingDialog != null && loadingDialog.isShowing()){
+//                                                    loadingDialog.dismiss();
+//                                                }
+//
+//                                                String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+//                                                String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+//
+//                                                Log.e("scan===22", isFinish+"===="+isOpen+"===="+oid+"===="+referLatitude);
+//
+//                                                if(!isFinishing() && !isFinish){
+//                                                    submit(uid, access_token);
+//                                                }
+//
+//                                            }
+//                                        }, 1 * 1000);
 
                                         Log.e("scan===lock2", "===");
                                     }
@@ -2396,6 +2451,70 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 if (loadingDialog != null && loadingDialog.isShowing()){
                                     loadingDialog.dismiss();
                                 }
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    private void addOrderbluelock2(){
+        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+            ToastUtil.showMessageApp(context,"请先登录账号");
+            UIHelper.goToAct(context, LoginActivity.class);
+        }else {
+            RequestParams params = new RequestParams();
+            params.put("uid",uid);
+            params.put("access_token",access_token);
+            params.put("codenum", codenum);
+
+            Log.e("addOrderbluelock==", "==="+quantity);
+
+            if (quantity != null && !"".equals(quantity)){
+                params.put("quantity",quantity);
+            }
+
+            HttpHelper.post(context, Urls.addOrderbluelock, params, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    onStartCommon("正在加载");
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    onFailureCommon(throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                if (result.getFlag().equals("Success")) {
+                                    CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
+                                    oid = bean.getOrderid();
+
+                                    Log.e("scan==addOrderbluelock2", oid + "===" + type);
+
+                                    ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
+
+//                                    tzEnd();
+
+                                } else {
+                                    ToastUtil.showMessageApp(context, result.getMsg());
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+
+                            }
+
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
                             }
                         }
                     });
@@ -2481,21 +2600,26 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     @Override
                     public void run() {
                         try {
-                            Log.e("scan===submit","结束用车:"+type+"==="+responseString);
+                            Log.e("scan===submit","结束用车:"+type+"==="+isFinish+"==="+responseString);
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
                             if (result.getFlag().equals("Success")) {
-                                SharedPreferencesUrls.getInstance().putString("m_nowMac","");
-                                SharedPreferencesUrls.getInstance().putString("oid","");
-                                SharedPreferencesUrls.getInstance().putString("osn","");
-                                SharedPreferencesUrls.getInstance().putString("type",type);
-                                SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
-                                SharedPreferencesUrls.getInstance().putString("biking_latitude","");
-                                SharedPreferencesUrls.getInstance().putString("biking_longitude","");
+                                if(isFinish){
+                                    addOrderbluelock2();
+                                }else{
+                                    SharedPreferencesUrls.getInstance().putString("m_nowMac","");
+                                    SharedPreferencesUrls.getInstance().putString("oid","");
+                                    SharedPreferencesUrls.getInstance().putString("osn","");
+                                    SharedPreferencesUrls.getInstance().putString("type",type);
+                                    SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
+                                    SharedPreferencesUrls.getInstance().putString("biking_latitude","");
+                                    SharedPreferencesUrls.getInstance().putString("biking_longitude","");
 
-                                ToastUtil.showMessageApp(context, "开锁失败，请重试");
+                                    ToastUtil.showMessageApp(context, "开锁失败，请重试");
 
-                                scrollToFinishActivity();
+                                    scrollToFinishActivity();
+                                }
+
                             }else {
                                 ToastUtil.showMessageApp(context, result.getMsg());
                             }

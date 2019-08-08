@@ -719,7 +719,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
 
     public void onCameraChange(CameraPosition cameraPosition) {
-        Log.e("onCameraChange===", "==="+centerMarker);
+//        Log.e("onCameraChange===", "==="+centerMarker);
 
         if (centerMarker != null) {
             setMovingMarker();
@@ -1393,7 +1393,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                             SharedPreferencesUrls.getInstance().putString("oid", oid);
                                             SharedPreferencesUrls.getInstance().putString("osn", osn);
                                             SharedPreferencesUrls.getInstance().putString("type", type);
-
+                                            SharedPreferencesUrls.getInstance().putString("deviceuuid", bean.getDeviceuuid());
                                         }
 
                                         Log.e("main===ebike", "getStatus====" + bean.getStatus());

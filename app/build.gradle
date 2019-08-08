@@ -145,11 +145,11 @@ dependencies {
     implementation files('libs/AMap_Location_V4.6.0_20190423.jar')
     implementation files('libs/Android_Map3D_SDK_V6.9.0_20190530.jar')
     implementation(name: 'XiaoanBleSdk_V1.0.3', ext: 'aar')
-
-    implementation ("com.github.hotchemi:permissionsdispatcher:3.3.1")
-            {
+    implementation('com.github.hotchemi:permissionsdispatcher:3.3.1') {
         exclude group: 'com.android.support'
     }
+    implementation files('libs/jsoniter-0.9.23.jar')
+    implementation files('libs/aprilscansdk.jar')
 }
 
 afterEvaluate {

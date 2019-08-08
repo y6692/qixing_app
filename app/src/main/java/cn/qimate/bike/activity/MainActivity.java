@@ -288,8 +288,13 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
      * 获取广告
      * */
     private void initHttp(){
+
+
         RequestParams params = new RequestParams();
         params.put("adsid","11");
+
+        Log.e("initHttp===main", SharedPreferencesUrls.getInstance().getString("uid","")+"==="+SharedPreferencesUrls.getInstance().getString("access_token",""));
+
         if (SharedPreferencesUrls.getInstance().getString("uid","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("uid",""))){
             params.put("uid",SharedPreferencesUrls.getInstance().getString("uid",""));
         }
