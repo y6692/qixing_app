@@ -200,13 +200,16 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                     public void run() {
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("biked==getCurrentorder@","==="+responseString);
+
                             if (result.getFlag().equals("Success")) {
                                 CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
-                                bikeCode.setText("行程编号:"+bean.getOsn());
-                                bikeNum.setText(bean.getCodenum());
-                                startTime.setText(bean.getSt_time());
-                                endTime.setText(bean.getEd_time());
-                                timeText.setText(bean.getTotal_mintues());
+//                                bikeCode.setText("行程编号:"+bean.getOsn());
+                                bikeNum.setText(""+bean.getCodenum());
+                                startTime.setText(""+bean.getSt_time());
+                                endTime.setText(""+bean.getEd_time());
+                                timeText.setText(""+bean.getTotal_mintues());
 
                                 Log.e("biked==getCurrentorder0",prices+"==="+user_money);
 

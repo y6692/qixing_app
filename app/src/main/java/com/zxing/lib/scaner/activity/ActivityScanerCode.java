@@ -1268,54 +1268,51 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         @Override
                         public void run() {
 
-                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
-                            if (0 == Tag){
-                                customBuilder.setMessage("扫码成功,是否开锁?");
-                            }else {
-                                customBuilder.setMessage("输号成功,是否开锁?");
-                            }
-                            customBuilder.setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-
-                                    if("5".equals(type)  || "6".equals(type)){
-                                        ClientManager.getClient().stopSearch();
-                                        ClientManager.getClient().disconnect(m_nowMac);
-                                        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
-
-                                    }else{
-                                        BaseApplication.getInstance().getIBLE().refreshCache();
-                                        BaseApplication.getInstance().getIBLE().close();
-                                        BaseApplication.getInstance().getIBLE().disconnect();
-                                    }
-
-//                                    BaseApplication.getInstance().getIBLE().refreshCache();
-//                                    BaseApplication.getInstance().getIBLE().close();
-//                                    BaseApplication.getInstance().getIBLE().disconnect();
-//                                  BaseApplication.getInstance().getIBLE().disableBluetooth();
-
-                                    scrollToFinishActivity();
-
-                                }
-                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-
-                                    Log.e("scan===", "scan====1");
+                            Log.e("scan===", "scan====1");
 
 //                                    getBleRecord();
-                                    rent();
+                            rent();
 
-                                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                                        loadingDialog.setTitle("开锁中");
-                                        loadingDialog.show();
-                                    }
+                            if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                loadingDialog.setTitle("开锁中");
+                                loadingDialog.show();
+                            }
 
-                                    Log.e("scan===", "scan===="+loadingDialog);
+                            Log.e("scan===", "scan===="+loadingDialog);
 
-                                }
-                            }).setHint(false);
-                            customBuilder.create().show();
+//                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
+//                            if (0 == Tag){
+//                                customBuilder.setMessage("扫码成功,是否开锁?");
+//                            }else {
+//                                customBuilder.setMessage("输号成功,是否开锁?");
+//                            }
+//                            customBuilder.setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.cancel();
+//
+//                                    if("5".equals(type)  || "6".equals(type)){
+//                                        ClientManager.getClient().stopSearch();
+//                                        ClientManager.getClient().disconnect(m_nowMac);
+//                                        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+//
+//                                    }else{
+//                                        BaseApplication.getInstance().getIBLE().refreshCache();
+//                                        BaseApplication.getInstance().getIBLE().close();
+//                                        BaseApplication.getInstance().getIBLE().disconnect();
+//                                    }
+//
+//                                    scrollToFinishActivity();
+//
+//                                }
+//                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.cancel();
+//
+//
+//
+//                                }
+//                            }).setHint(false);
+//                            customBuilder.create().show();
 
                         }
                     });
@@ -2016,24 +2013,26 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
      * 3. 搜索不到就执行直接连接设备
      */
     protected void connect() {
-        BaseApplication.getInstance().getIBLE().stopScan();
-        m_myHandler.sendEmptyMessage(0x99);
-        BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
-            @Override
-            public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
+        BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
 
-                Log.e("connect===", m_nowMac+"==="+device.getName()+"==="+device.getAddress());
-
-                if (device==null||TextUtils.isEmpty(device.getAddress()))return;
-                if (m_nowMac.equalsIgnoreCase(device.getAddress())){
-                    Log.e("connect===2", m_nowMac+"==="+device.getName()+"==="+device.getAddress());
-
-                    m_myHandler.removeMessages(0x99);
-                    BaseApplication.getInstance().getIBLE().stopScan();
-                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
-                }
-            }
-        });
+//        BaseApplication.getInstance().getIBLE().stopScan();
+//        m_myHandler.sendEmptyMessage(0x99);
+//        BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
+//            @Override
+//            public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
+//
+//                Log.e("connect===", m_nowMac+"==="+device.getName()+"==="+device.getAddress());
+//
+//                if (device==null||TextUtils.isEmpty(device.getAddress()))return;
+//                if (m_nowMac.equalsIgnoreCase(device.getAddress())){
+//                    Log.e("connect===2", m_nowMac+"==="+device.getName()+"==="+device.getAddress());
+//
+//                    m_myHandler.removeMessages(0x99);
+//                    BaseApplication.getInstance().getIBLE().stopScan();
+//                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
+//                }
+//            }
+//        });
     }
     @Override
     public void onTimeOut() {
@@ -2092,39 +2091,42 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 }
                             }, 1000);
 
-                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
-                            if (0 == Tag){
-                                customBuilder.setMessage("扫码成功,是否开锁?");
-                            }else {
-                                customBuilder.setMessage("输号成功,是否开锁?");
+
+                            Log.e("scan===", "scan====1");
+
+                            getCurrentorder2(uid, access_token);
+
+                            if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                loadingDialog.setTitle("开锁中");
+                                loadingDialog.show();
                             }
-                            customBuilder.setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
 
-                                    m_myHandler.sendEmptyMessage(1);
+//                          BaseApplication.getInstance().getIBLE().getLockStatus();
 
-                                }
-                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
+                            Log.e("scan===", "scan===="+loadingDialog);
 
-                                    Log.e("scan===", "scan====1");
-
-                                    getCurrentorder2(uid, access_token);
-
-                                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                                        loadingDialog.setTitle("开锁中");
-                                        loadingDialog.show();
-                                    }
-
-//                                  BaseApplication.getInstance().getIBLE().getLockStatus();
-
-                                    Log.e("scan===", "scan===="+loadingDialog);
-
-                                }
-                            }).setHint(false);
-                            customBuilder.create().show();
+//                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
+//                            if (0 == Tag){
+//                                customBuilder.setMessage("扫码成功,是否开锁?");
+//                            }else {
+//                                customBuilder.setMessage("输号成功,是否开锁?");
+//                            }
+//                            customBuilder.setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.cancel();
+//
+//                                    m_myHandler.sendEmptyMessage(1);
+//
+//                                }
+//                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.cancel();
+//
+//
+//
+//                                }
+//                            }).setHint(false);
+//                            customBuilder.create().show();
 
                             break;
                         case Config.BATTERY_ACTION:
@@ -2701,41 +2703,43 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             @Override
             public void run() {
 
-                CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
-                if (0 == Tag){
-                    customBuilder.setMessage("扫码成功,是否开锁?");
-                }else {
-                    customBuilder.setMessage("输号成功,是否开锁?");
+                Log.e("scan===", "scan====1");
+
+                getCurrentorder2(uid, access_token);
+
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("开锁中");
+                    loadingDialog.show();
                 }
-                customBuilder.setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
 
-                        if (apiClient != null) {
-                            apiClient.onDestroy();
-                        }
+                Log.e("scan===", "scan===="+loadingDialog);
 
-                        scrollToFinishActivity();
-
-                    }
-                }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-
-                        Log.e("scan===", "scan====1");
-
-                        getCurrentorder2(uid, access_token);
-
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("开锁中");
-                            loadingDialog.show();
-                        }
-
-                        Log.e("scan===", "scan===="+loadingDialog);
-
-                    }
-                }).setHint(false);
-                customBuilder.create().show();
+//                CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
+//                if (0 == Tag){
+//                    customBuilder.setMessage("扫码成功,是否开锁?");
+//                }else {
+//                    customBuilder.setMessage("输号成功,是否开锁?");
+//                }
+//                customBuilder.setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//
+//                        if (apiClient != null) {
+//                            apiClient.onDestroy();
+//                        }
+//
+//                        scrollToFinishActivity();
+//
+//                    }
+//                }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//
+//
+//
+//                    }
+//                }).setHint(false);
+//                customBuilder.create().show();
 
             }
         }, 1 * 1000);

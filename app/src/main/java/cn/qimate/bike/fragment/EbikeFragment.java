@@ -700,7 +700,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             public void onAnimationEnd(Animator animation) {
                 Log.e("onAnimationEnd===", centerMarker+"==="+isMovingMarker);
 
-                centerMarker.setIcon(successDescripter);
+                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
             }
         });
         animator.start();
@@ -714,7 +714,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         isMovingMarker = true;
         centerMarker.setPositionByPixels(mapView.getWidth() / 2, mapView.getHeight() / 2);
-        centerMarker.setIcon(successDescripter);
+        centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
     }
 
 
@@ -2897,7 +2897,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         if(centerMarker == null){
             // 加入自定义标签
-            MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation).icon(successDescripter);
+            MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
             centerMarker = aMap.addMarker(centerMarkerOption);
 
             handler.postDelayed(new Runnable() {

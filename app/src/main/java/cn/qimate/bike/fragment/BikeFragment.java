@@ -650,7 +650,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                centerMarker.setIcon(successDescripter);
+//                centerMarker.setIcon(successDescripter);
+                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
             }
         });
         animator.start();
@@ -662,7 +663,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         isMovingMarker = true;
         centerMarker.setPositionByPixels(mapView.getWidth() / 2, mapView.getHeight() / 2);
-        centerMarker.setIcon(successDescripter);
+//        centerMarker.setIcon(successDescripter);
+        centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
     }
 
 
@@ -2912,7 +2914,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         // 加入自定义标签
 
         if(centerMarker == null){
-            MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation).icon(successDescripter);
+            MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation)
+//                    .icon(successDescripter);
+            .icon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
+
             centerMarker = aMap.addMarker(centerMarkerOption);
             handler.postDelayed(new Runnable() {
                 @Override
@@ -2935,6 +2940,17 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             }, 1000);
         }
 
+    }
+
+    public View getInfoWindow() {
+        View view = View.inflate(context, R.layout.marker_info_layout, null);
+//        TextView tvCity = (TextView) view.findViewById(R.id.tv_city);
+//        TextView tvTemp = (TextView) view.findViewById(R.id.tv_temp);
+//        ImageView ivIcon = (ImageView) view.findViewById(R.id.iv_icon);
+//        tvCity.setText(city);
+//        tvTemp.setText(temp);
+//        ivIcon.setImageResource(icon);
+        return view;
     }
 
 
