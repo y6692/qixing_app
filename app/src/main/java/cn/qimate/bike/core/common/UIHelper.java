@@ -6,6 +6,7 @@ import cn.qimate.bike.R;
 import cn.qimate.bike.activity.InsureanceActivity;
 import cn.qimate.bike.activity.InviteCodeActivity;
 import cn.qimate.bike.activity.MainActivity;
+import cn.qimate.bike.activity.MapTaceActivity;
 import cn.qimate.bike.activity.MonthlyCardActivity;
 import cn.qimate.bike.activity.WebviewActivity;
 import cn.qimate.bike.base.BaseActivity;
@@ -361,6 +362,11 @@ public class UIHelper {
 			Intent intent = new Intent(context, InviteCodeActivity.class);
 			intent.putExtra("isBack",false);
 			context.startActivity(intent);
+
+//			Intent intent = new Intent(context, MapTaceActivity.class);
+////			intent.putExtra("oid",oid);
+//			context.startActivity(intent);
+
 			break;
 		case 3:
 			Intent intent1 = new Intent(context, InsureanceActivity.class);

@@ -139,6 +139,7 @@ import cn.qimate.bike.model.CardinfoBean;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.NearbyBean;
 import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
@@ -724,8 +725,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 //                                Log.e("initNearby===Bike", bean.getLatitude()+"==="+bean.getLongitude());
 
-                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(
-                                        Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
+                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
                                 Marker bikeMarker = aMap.addMarker(bikeMarkerOption);
                                 bikeMarkerList.add(bikeMarker);
                             }
@@ -885,7 +885,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         isForeground = true;
         super.onResume();
 
-        Log.e("main===bike", "main====onResume==="+type);
+        Log.e("main===bike", "main====onResume==="+type+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
 
         if("4".equals(type) || "7".equals(type)){
             ((MainActivity)getActivity()).changeTab(1);
@@ -927,7 +927,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         osn = SharedPreferencesUrls.getInstance().getString("osn", "");
         type = SharedPreferencesUrls.getInstance().getString("type", "");
 
-        ToastUtil.showMessage(context, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + ">>>" + m_nowMac);
+        ToastUtil.showMessage(context, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getString("iscert", "") + ">>>" + m_nowMac);
 
 
         closeBroadcast();
@@ -1029,7 +1029,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     case 4:
                         authBtn.setEnabled(false);
                         authBtn.setVisibility(View.VISIBLE);
-                        authBtn.setText("认证审核中");
+                        authBtn.setText("认证审核中，请点击刷新");
                         break;
                 }
             } else {
@@ -1849,28 +1849,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         switch (view.getId()){
-            case R.id.mainUI_leftBtn:
-//				title.setText(macList.size()+"###"+isContainsList.contains(true)+"###"+type);
-
-//                startXB();
-
-//                carClose();
-
-                UIHelper.goToAct(context, ActionCenterActivity.class);
-
-//                UIHelper.goToAct(context,RealNameAuthActivity.class);
-
-
-                break;
-            case R.id.mainUI_rightBtn:
-                if (SharedPreferencesUrls.getInstance().getString("uid","") == null || "".equals(
-                        SharedPreferencesUrls.getInstance().getString("access_token",""))){
-                    UIHelper.goToAct(context, LoginActivity.class);
-                    ToastUtil.showMessageApp(context,"请先登录你的账号");
-                    return;
-                }
-                UIHelper.goToAct(context, PersonAlterActivity.class);
-                break;
             case R.id.mainUI_marqueeLayout:
 
                 break;
@@ -1888,6 +1866,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                 break;
             case R.id.mainUI_scanCode_lock:
+
+                Log.e("scanCode_lock===1", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
                 if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
                     ToastUtil.showMessageApp(context,"请先登录账号");
@@ -1908,11 +1888,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                             UIHelper.goToAct(context,RealNameAuthActivity.class);
                             break;
                         case 4:
-                            ToastUtil.showMessageApp(context,"认证审核中");
+                            ToastUtil.showMessageApp(context,"认证审核中，请点击刷新");
                             break;
                     }
                 }else {
-                    ToastUtil.showMessage(context,"您还未认证,请先认证");
+                    ToastUtil.showMessageApp(context,"您还未认证,请先认证");
                 }
                 break;
             case R.id.mainUI_linkServiceLayout:
@@ -1946,83 +1926,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 UIHelper.goToAct(context, MyPurseActivity.class);
                 break;
             case R.id.mainUI_refreshLayout:
+                Log.e("refreshLayout===", "==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
+
                 RefreshLogin();
-                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-                    UIHelper.goToAct(context,LoginActivity.class);
-                }else {
-                    new MyAsyncTask().execute();
-                    if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
-                        authBtn.setVisibility(View.VISIBLE);
-                        authBtn.setText("您还未登录，点我快速登录");
-                        authBtn.setEnabled(true);
-                    } else {
-                        if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                            switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                                case 1:
-                                    authBtn.setEnabled(true);
-                                    authBtn.setVisibility(View.VISIBLE);
-                                    authBtn.setText("您还未认证，点我快速认证");
-                                    break;
-                                case 2:
 
-//                                    startXB();
-//
-//                                    if (lockLoading != null && !lockLoading.isShowing()){
-//                                        lockLoading.setTitle("还车点确认中");
-//                                        lockLoading.show();
-//                                    }
-//
-//                                    new Thread(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            try {
-//                                                int n=0;
-//                                                while(macList.size() == 0){
-//
-//                                                    Thread.sleep(1000);
-//                                                    n++;
-//
-//                                                    Log.e("main===", "n====" + n);
-//
-//                                                    if(n>=6) break;
-//
-//                                                }
-//                                            } catch (InterruptedException e) {
-//                                                e.printStackTrace();
-//                                            }
-//
-//                                            m_myHandler.sendEmptyMessage(3);
-//
-//                                        }
-//                                    }).start();
-
-
-                                    getCurrentorder1(uid, access_token);
-                                    break;
-                                case 3:
-                                    authBtn.setEnabled(true);
-                                    authBtn.setVisibility(View.VISIBLE);
-                                    authBtn.setText("认证被驳回，请重新认证");
-                                    break;
-                                case 4:
-                                    authBtn.setEnabled(false);
-                                    authBtn.setVisibility(View.VISIBLE);
-                                    authBtn.setText("认证审核中");
-                                    break;
-                            }
-                        } else {
-                            authBtn.setVisibility(View.GONE);
-                        }
-                    }
-                    if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))||
-                            "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) ||
-                            SharedPreferencesUrls.getInstance().getString("money", "") == null ||
-                            "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))){
-                        rechargeBtn.setVisibility(View.VISIBLE);
-                    }else {
-                        rechargeBtn.setVisibility(View.GONE);
-                    }
-                }
                 break;
 
 
@@ -2037,6 +1944,227 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 break;
             default:
                 break;
+        }
+    }
+
+    public void RefreshLogin() {
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+        String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
+
+        Log.e("BF===RefreshLogin", uid+"==="+access_token);
+
+        if (access_token == null || "".equals(access_token) || uid == null || "".equals(uid)) {
+            ToastUtil.showMessageApp(context, "请先登录账号");
+            UIHelper.goToAct(context, LoginActivity.class);
+        } else {
+            RequestParams params = new RequestParams();
+            params.add("uid", uid);
+            params.add("access_token", access_token);
+
+            HttpHelper.post(AppManager.getAppManager().currentActivity(), Urls.accesslogin, params, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    onStartCommon("正在刷新");
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    onFailureCommon(throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                if (result.getFlag().equals("Success")) {
+                                    UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+                                    // 极光标记别名
+
+                                    Log.e("RefreshLogin===", bean.getSpecialdays()+"==="+bean.getEbike_specialdays());
+
+                                    String uid = bean.getUid();
+                                    String access_token = bean.getAccess_token();
+
+                                    SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
+                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
+                                    SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
+                                    SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
+                                    SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
+                                    SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
+                                    SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
+                                    SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
+                                    SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
+                                    SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
+                                    SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
+                                    SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+
+                                    new MyAsyncTask().execute();
+                                    if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+                                        authBtn.setVisibility(View.VISIBLE);
+                                        authBtn.setText("您还未登录，点我快速登录");
+                                        authBtn.setEnabled(true);
+                                    } else {
+                                        if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+                                            switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+                                                case 1:
+                                                    authBtn.setEnabled(true);
+                                                    authBtn.setVisibility(View.VISIBLE);
+                                                    authBtn.setText("您还未认证，点我快速认证");
+                                                    break;
+                                                case 2:
+                                                    getCurrentorder1(uid, access_token);
+                                                    break;
+                                                case 3:
+                                                    authBtn.setEnabled(true);
+                                                    authBtn.setVisibility(View.VISIBLE);
+                                                    authBtn.setText("认证被驳回，请重新认证");
+                                                    break;
+                                                case 4:
+                                                    authBtn.setEnabled(false);
+                                                    authBtn.setVisibility(View.VISIBLE);
+                                                    authBtn.setText("认证审核中，请点击刷新");
+                                                    break;
+                                            }
+                                        } else {
+                                            authBtn.setVisibility(View.GONE);
+                                        }
+                                    }
+                                    if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))||
+                                            "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) ||
+                                            SharedPreferencesUrls.getInstance().getString("money", "") == null ||
+                                            "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))){
+                                        rechargeBtn.setVisibility(View.VISIBLE);
+                                    }else {
+                                        rechargeBtn.setVisibility(View.GONE);
+                                    }
+
+
+//                                    if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+//                                        UIHelper.goToAct(context,LoginActivity.class);
+//                                    }else {
+//
+//                                    }
+
+                                } else {
+                                    if (BaseApplication.getInstance().getIBLE() != null){
+                                        if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                                            BaseApplication.getInstance().getIBLE().refreshCache();
+                                            BaseApplication.getInstance().getIBLE().close();
+                                            BaseApplication.getInstance().getIBLE().stopScan();
+                                        }
+                                    }
+                                    SharedPreferencesUrls.getInstance().putString("uid", "");
+                                    SharedPreferencesUrls.getInstance().putString("access_token","");
+                                }
+                            } catch (Exception e) {
+                            }
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+                        }
+                    });
+
+                }
+            });
+
+//            HttpHelper.post(AppManager.getAppManager().currentActivity(), Urls.accesslogin, params,
+//                    new TextHttpResponseHandler() {
+//                        @Override
+//                        public void onSuccess(int statusCode, Header[] headers, String responseString) {
+//                            try {
+//                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//                                if (result.getFlag().equals("Success")) {
+//                                    UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+//                                    // 极光标记别名
+//
+//                                    Log.e("RefreshLogin===", bean.getSpecialdays()+"==="+bean.getEbike_specialdays());
+//
+//                                    String uid = bean.getUid();
+//                                    String access_token = bean.getAccess_token();
+//
+//                                    SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
+//                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
+//                                    SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
+//                                    SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
+//                                    SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
+//                                    SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
+//                                    SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
+//                                    SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
+//                                    SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
+//                                    SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
+//                                    SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
+//                                    SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+//
+//                                    new MyAsyncTask().execute();
+//                                    if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+//                                        authBtn.setVisibility(View.VISIBLE);
+//                                        authBtn.setText("您还未登录，点我快速登录");
+//                                        authBtn.setEnabled(true);
+//                                    } else {
+//                                        if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+//                                            switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+//                                                case 1:
+//                                                    authBtn.setEnabled(true);
+//                                                    authBtn.setVisibility(View.VISIBLE);
+//                                                    authBtn.setText("您还未认证，点我快速认证");
+//                                                    break;
+//                                                case 2:
+//                                                    getCurrentorder1(uid, access_token);
+//                                                    break;
+//                                                case 3:
+//                                                    authBtn.setEnabled(true);
+//                                                    authBtn.setVisibility(View.VISIBLE);
+//                                                    authBtn.setText("认证被驳回，请重新认证");
+//                                                    break;
+//                                                case 4:
+//                                                    authBtn.setEnabled(false);
+//                                                    authBtn.setVisibility(View.VISIBLE);
+//                                                    authBtn.setText("认证审核中");
+//                                                    break;
+//                                            }
+//                                        } else {
+//                                            authBtn.setVisibility(View.GONE);
+//                                        }
+//                                    }
+//                                    if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))||
+//                                            "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) ||
+//                                            SharedPreferencesUrls.getInstance().getString("money", "") == null ||
+//                                            "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))){
+//                                        rechargeBtn.setVisibility(View.VISIBLE);
+//                                    }else {
+//                                        rechargeBtn.setVisibility(View.GONE);
+//                                    }
+//
+//
+////                                    if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+////                                        UIHelper.goToAct(context,LoginActivity.class);
+////                                    }else {
+////
+////                                    }
+//
+//                                } else {
+//                                    if (BaseApplication.getInstance().getIBLE() != null){
+//                                        if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+//                                            BaseApplication.getInstance().getIBLE().refreshCache();
+//                                            BaseApplication.getInstance().getIBLE().close();
+//                                            BaseApplication.getInstance().getIBLE().stopScan();
+//                                        }
+//                                    }
+//                                    SharedPreferencesUrls.getInstance().putString("uid", "");
+//                                    SharedPreferencesUrls.getInstance().putString("access_token","");
+//                                }
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(int statusCode, Header[] headers, String responseString,
+//                                              Throwable throwable) {
+//                        }
+//                    });
         }
     }
 
@@ -3173,7 +3301,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                     }
                                 }
                             } else {
-                                ToastUtil.showMessage(context,result.getMsg());
+                                ToastUtil.showMessageApp(context,result.getMsg());
                             }
                         } catch (Exception e) {
                         }

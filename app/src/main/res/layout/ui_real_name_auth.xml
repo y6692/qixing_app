@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/ui_main"
+    android:background="#F5F5F5"
     android:fitsSystemWindows="true"
     android:clipToPadding="true">
     <LinearLayout
@@ -12,376 +12,344 @@
         <include
             layout="@layout/ui_main_title"/>
 
-        <cn.qimate.bike.core.widget.MyScrollView
+        <!--<cn.qimate.bike.core.widget.MyScrollView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent">-->
+        <!--</cn.qimate.bike.core.widget.MyScrollView>-->
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_alignParentTop="true"
-                android:background="@color/ui_backgroud">
-                <cn.qimate.bike.core.widget.MyScrollView
+                android:layout_height="wrap_content"
+                android:paddingTop="13dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/ui_realNameAuth_schoolLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="55dp"
+                    android:paddingLeft="@dimen/dp20"
+                    android:paddingRight="19dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="学校"
+                        android:textColor="@color/tx_black"
+                        android:textSize="@dimen/sp18" />
+
                     <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/ui_realNameAuth_schoolText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="选择学校"
+                            android:textColor="@color/tx_black"
+                            android:textColorHint="#A0A0A0"
+                            android:textSize="@dimen/sp15" />
+
+                        <!--<ImageView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="@dimen/dp10"-->
+                        <!--android:scaleType="centerInside"-->
+                        <!--android:src="@drawable/right_arrows" />-->
+                    </LinearLayout>
+                </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line_height"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="13dp"
+                    android:background="#DDDDDD" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:paddingLeft="@dimen/dp20"
+                    android:paddingRight="19dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="姓名"
+                        android:textColor="@color/tx_black"
+                        android:textSize="@dimen/sp18" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:orientation="horizontal">
+
+                        <cn.qimate.bike.core.widget.ClearEditText
+                            android:id="@+id/ui_realNameAuth_realName"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@null"
+                            android:drawableRight="@drawable/delete_selector"
+                            android:gravity="center_vertical|right"
+                            android:hint="填写真实姓名"
+                            android:textColor="@color/tx_black"
+                            android:textColorHint="#A0A0A0"
+                            android:textSize="@dimen/sp15" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line_height"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="13dp"
+                    android:background="#DDDDDD" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:paddingLeft="@dimen/dp20"
+                    android:paddingRight="19dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="学号"
+                        android:textColor="@color/tx_black"
+                        android:textSize="@dimen/sp18" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:orientation="horizontal">
+
+                        <cn.qimate.bike.core.widget.ClearEditText
+                            android:id="@+id/ui_realNameAuth_stuNum"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@null"
+                            android:drawableRight="@drawable/delete_selector"
+                            android:gravity="center_vertical|right"
+                            android:hint="填写学号"
+                            android:textColor="@color/tx_black"
+                            android:textColorHint="#A0A0A0"
+                            android:textSize="@dimen/sp15" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line_height"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="13dp"
+                    android:background="#DDDDDD" />
+
+                <RelativeLayout
+                    android:id="@+id/ui_realNameAuth_sexLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="51dp"
+                    android:paddingLeft="@dimen/dp20"
+                    android:paddingRight="@dimen/dp20">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="注：仅限7MA出行已进驻高校师生使用"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp14" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_1"
+                android:layout_width="match_parent"
+                android:layout_height="244dp"
+                android:layout_marginTop="19dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp18"
+                        android:textColor="#333333"
+                        android:text="上传证件"/>
+
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="40dp"
-                        android:orientation="vertical">
+                        android:gravity="center_vertical|right"
+                        android:textSize="@dimen/sp15"
+                        android:textColor="#7D7D7D"
+                        android:text="学生证、校园卡、录取通知书均可"/>
+                </LinearLayout>
 
-                        <LinearLayout
-                            android:id="@+id/ui_realNameAuth_headLayout"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="115dp"
+                    android:layout_marginTop="17dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="115dp"
+                        android:layout_weight="1"
+                        android:layout_marginRight="12dp"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/ui_realNameAuth_uploadImage"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#f6f6f6"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:layout_height="match_parent"
+                            android:src="@drawable/identity_card_pic1"/>
 
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/real_name_auth" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingLeft="@dimen/dp15"
-                            android:paddingTop="@dimen/dp15">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="学生/教职工认证"
-                                android:textColor="@color/tx_black"
-                                android:textSize="@dimen/sp14" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/dp5"
-                                android:text="为了您的用车安全，请进行实名认证"
-                                android:textColor="#cdcdcd"
-                                android:textSize="@dimen/dp10" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <RelativeLayout
-                                android:id="@+id/ui_realNameAuth_schoolLayout"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/dp40"
-                                android:paddingLeft="@dimen/dp15"
-                                android:paddingRight="@dimen/dp15">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:text="院校"
-                                    android:textColor="@color/tx_black"
-                                    android:textSize="@dimen/sp12" />
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:id="@+id/ui_realNameAuth_schoolText"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:hint="请选择院校"
-                                        android:textColor="@color/tx_black"
-                                        android:textColorHint="#cdcdcd"
-                                        android:textSize="@dimen/sp12" />
-
-                                    <ImageView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="@dimen/dp10"
-                                        android:scaleType="centerInside"
-                                        android:src="@drawable/right_arrows" />
-                                </LinearLayout>
-                            </RelativeLayout>
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/line_height"
-                                android:layout_marginLeft="@dimen/dp5"
-                                android:layout_marginRight="@dimen/dp5"
-                                android:background="#dedede" />
-                            <RelativeLayout
-                                android:id="@+id/ui_realNameAuth_classLayout"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/dp45"
-                                android:paddingLeft="@dimen/dp15"
-                                android:paddingRight="@dimen/dp15">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/tx_black"
-                                    android:textSize="@dimen/sp12"
-                                    android:text="入学时间"
-                                    android:layout_centerVertical="true"
-                                    android:layout_alignParentLeft="true"/>
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:orientation="horizontal"
-                                    android:layout_centerVertical="true"
-                                    android:layout_alignParentRight="true"
-                                    android:gravity="center_vertical">
-
-                                    <TextView
-                                        android:id="@+id/ui_realNameAuth_class"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
-                                        android:textSize="@dimen/sp12"
-                                        android:textColor="@color/tx_black"
-                                        android:hint="请选择您的入学时间"
-                                        android:textColorHint="#cdcdcd"
-                                        android:gravity="center_vertical|right"
-                                        android:background="@null"/>
-
-                                    <ImageView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:background="@null"
-                                        android:src="@drawable/arrows_right"
-                                        android:layout_marginLeft="@dimen/dp10"
-                                        android:scaleType="centerInside"/>
-                                </LinearLayout>
-                            </RelativeLayout>
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/line_height"
-                                android:layout_marginLeft="@dimen/dp5"
-                                android:layout_marginRight="@dimen/dp5"
-                                android:background="#dedede" />
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/dp40"
-                                android:paddingLeft="@dimen/dp15"
-                                android:paddingRight="@dimen/dp15">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:text="姓名"
-                                    android:textColor="@color/tx_black"
-                                    android:textSize="@dimen/sp12" />
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:orientation="horizontal">
-
-                                    <cn.qimate.bike.core.widget.ClearEditText
-                                        android:id="@+id/ui_realNameAuth_realName"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:background="@null"
-                                        android:drawableRight="@drawable/delete_selector"
-                                        android:gravity="center_vertical|right"
-                                        android:hint="请输入您的真实姓名"
-                                        android:textColor="@color/tx_black"
-                                        android:textColorHint="#cdcdcd"
-                                        android:textSize="@dimen/sp12" />
-                                </LinearLayout>
-                            </RelativeLayout>
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/line_height"
-                                android:layout_marginLeft="@dimen/dp5"
-                                android:layout_marginRight="@dimen/dp5"
-                                android:background="#dedede" />
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/dp40"
-                                android:paddingLeft="@dimen/dp15"
-                                android:paddingRight="@dimen/dp15">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:text="学号/工号"
-                                    android:textColor="@color/tx_black"
-                                    android:textSize="@dimen/sp12" />
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:orientation="horizontal">
-
-                                    <cn.qimate.bike.core.widget.ClearEditText
-                                        android:id="@+id/ui_realNameAuth_stuNum"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:background="@null"
-                                        android:drawableRight="@drawable/delete_selector"
-                                        android:gravity="center_vertical|right"
-                                        android:hint="请输入学号/工号"
-                                        android:textColor="@color/tx_black"
-                                        android:textColorHint="#cdcdcd"
-                                        android:textSize="@dimen/sp12" />
-                                </LinearLayout>
-                            </RelativeLayout>
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/line_height"
-                                android:layout_marginLeft="@dimen/dp5"
-                                android:layout_marginRight="@dimen/dp5"
-                                android:background="#dedede" />
-
-                            <RelativeLayout
-                                android:id="@+id/ui_realNameAuth_sexLayout"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/dp40"
-                                android:paddingLeft="@dimen/dp15"
-                                android:paddingRight="@dimen/dp15">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:text="性别"
-                                    android:textColor="@color/tx_black"
-                                    android:textSize="@dimen/sp12" />
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:id="@+id/ui_realNameAuth_sexText"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:gravity="right"
-                                        android:hint="请选择性别"
-                                        android:textColor="@color/tx_black"
-                                        android:textColorHint="#cdcdcd"
-                                        android:textSize="@dimen/sp12" />
-
-                                    <ImageView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="@dimen/dp10"
-                                        android:scaleType="centerInside"
-                                        android:src="@drawable/right_arrows" />
-                                </LinearLayout>
-                            </RelativeLayout>
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/line_height"
-                                android:layout_marginLeft="@dimen/dp5"
-                                android:layout_marginRight="@dimen/dp5"
-                                android:background="#dedede" />
-                        </LinearLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/ui_realNameAuth_uploadImageLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="120dp"
-                            android:orientation="horizontal"
-                            android:paddingLeft="@dimen/dp5"
-                            android:paddingRight="@dimen/dp5"
-                            android:background="@color/white"
-                            android:layout_marginTop="@dimen/dp5">
-
-                            <ImageView
-                                android:id="@+id/ui_realNameAuth_uploadImage"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginTop="@dimen/dp10"
-                                android:background="@null"
-                                android:scaleType="centerCrop"
-                                android:src="@drawable/shape_feedback" />
-
-                            <RelativeLayout
-                                android:id="@+id/ui_realNameAuth_addImageLayout"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
-                                android:layout_marginTop="@dimen/dp15">
-
-                                <ImageView
-                                    android:id="@+id/ui_realNameAuth_addImage"
-                                    android:layout_width="@dimen/dp45"
-                                    android:layout_height="@dimen/dp45"
-                                    android:layout_centerHorizontal="true"
-                                    android:scaleType="centerInside"
-                                    android:src="@drawable/add_icon" />
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    android:layout_below="@id/ui_realNameAuth_addImage">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerHorizontal="true"
-                                        android:layout_marginTop="@dimen/dp15"
-                                        android:text="请拍摄校园卡/学生证/教工证上传"
-                                        android:textColor="#cdcdcd"
-                                        android:textSize="@dimen/sp12"/>
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="新生可上传录取通知书"
-                                        android:layout_marginTop="@dimen/dp5"
-                                        android:textColor="#cdcdcd"
-                                        android:textSize="@dimen/sp12"/>
-                                </LinearLayout>
-                            </RelativeLayout>
-                        </RelativeLayout>
-
-                        <Button
-                            android:id="@+id/ui_realNameAuth_submitBtn"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/dp45"
-                            android:layout_marginLeft="@dimen/dp15"
-                            android:layout_marginRight="@dimen/dp15"
-                            android:layout_marginTop="@dimen/dp25"
-                            android:background="@drawable/btn_bcg"
-                            android:gravity="center"
-                            android:maxHeight="0dp"
-                            android:text="提交"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/sp16"
-                            android:layout_marginBottom="@dimen/dp100"/>
                     </LinearLayout>
-                </cn.qimate.bike.core.widget.MyScrollView>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="115dp"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="12dp"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/ui_realNameAuth_uploadImage2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/identity_card_pic2"/>
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginRight="12dp"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/sp15"
+                            android:textColor="#333333"
+                            android:text="证件照片"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:textSize="@dimen/sp13"
+                            android:textColor="#7D7D7D"
+                            android:text="证件头像、学号清晰"/>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="12dp"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/sp15"
+                            android:textColor="#333333"
+                            android:text="手持证件照片"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:textSize="@dimen/sp13"
+                            android:textColor="#7D7D7D"
+                            android:text="证件头像、学号清晰"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
             </LinearLayout>
-        </cn.qimate.bike.core.widget.MyScrollView>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:layout_marginBottom="22dp"
+            >
+            <Button
+                android:id="@+id/ui_realNameAuth_submitBtn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp40"
+                android:layout_marginLeft="@dimen/dp40"
+                android:layout_marginRight="@dimen/dp40"
+                android:layout_marginTop="@dimen/dp25"
+                android:background="@drawable/btn_bcg"
+                android:gravity="center"
+                android:maxHeight="0dp"
+                android:text="提交"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp18"
+
+                />
+
+        </RelativeLayout>
+
+
     </LinearLayout>
     <include
         layout="@layout/ui_main_task"/>

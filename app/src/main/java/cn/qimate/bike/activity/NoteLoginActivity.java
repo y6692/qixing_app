@@ -113,6 +113,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         findPsd.setOnClickListener(this);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onClick(View v) {
         String telphone = userNameEdit.getText().toString();
@@ -306,7 +307,8 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         });
     }
 
-    private void loginHttp(String telphone,String telcode) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void loginHttp(String telphone, String telcode) {
 
         RequestParams params = new RequestParams();
         params.put("telphone", telphone);

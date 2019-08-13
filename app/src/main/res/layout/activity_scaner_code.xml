@@ -15,7 +15,7 @@
     <RelativeLayout
         android:id="@+id/rl_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp90"
+        android:layout_height="@dimen/dp40"
         android:layout_alignParentTop="true"
         android:background="@drawable/scan_mask"
         android:paddingTop="@dimen/dp15">
@@ -85,6 +85,7 @@
             android:contentDescription="@string/app_name"/>
     </RelativeLayout>
     <ImageView
+
         android:id="@+id/top_mask_bcg"
         android:layout_width="220dp"
         android:layout_height="match_parent"
@@ -93,6 +94,40 @@
         android:src="@null"
         android:background="@drawable/scan_mask"
         android:layout_centerHorizontal="true"/>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/ll_help"
+        android:layout_width="220dp"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_title"
+        android:layout_above="@id/capture_crop_layout"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_help"
+            android:layout_width="149dp"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:src="@drawable/help"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="按下左侧按钮，加快开锁速度 "
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/sp14"/>
+
+    </LinearLayout>
+
+
+
     <ImageView
         android:id="@+id/bottom_mask"
         android:layout_width="match_parent"

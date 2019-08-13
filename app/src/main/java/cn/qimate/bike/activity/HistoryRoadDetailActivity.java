@@ -333,6 +333,9 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
 
                 @Override
                 public void onItemClick(int curIndex) {
+
+                    Log.e("initBanner===", datas.get(curIndex).getApp_type()+"==="+datas.get(curIndex).getApp_id()+"==="+datas.get(curIndex).getAd_link());
+
                     UIHelper.bannerGoAct(context, datas.get(curIndex).getApp_type(), datas.get(curIndex).getApp_id(),
                             datas.get(curIndex).getAd_link());
                 }

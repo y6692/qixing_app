@@ -980,7 +980,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         isForeground = true;
         super.onResume();
 
-        Log.e("main===ebike", "main====onResume==="+type);
+        Log.e("main===ebike", "main====onResume==="+type+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
 
         if(!"4".equals(type) && !"7".equals(type)){
             ((MainActivity)getActivity()).changeTab(0);
@@ -999,12 +999,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //        }
 
         context = getContext();
-
-
-//        if (1 == 1) {
-//            return;
-//        }
-
 
         if (flag == 1) {
             flag = 0;
@@ -1121,7 +1115,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                     case 4:
                         authBtn.setEnabled(false);
                         authBtn.setVisibility(View.VISIBLE);
-                        authBtn.setText("认证审核中");
+                        authBtn.setText("认证审核中，请点击刷新");
                         break;
                 }
             } else {
@@ -1842,28 +1836,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         switch (view.getId()){
-            case R.id.mainUI_leftBtn:
-//				title.setText(macList.size()+"###"+isContainsList.contains(true)+"###"+type);
-
-//                startXB();
-
-//                carClose();
-
-                UIHelper.goToAct(context, ActionCenterActivity.class);
-
-//                UIHelper.goToAct(context,RealNameAuthActivity.class);
-
-
-                break;
-            case R.id.mainUI_rightBtn:
-                if (SharedPreferencesUrls.getInstance().getString("uid","") == null || "".equals(
-                        SharedPreferencesUrls.getInstance().getString("access_token",""))){
-                    UIHelper.goToAct(context, LoginActivity.class);
-                    ToastUtil.showMessageApp(context,"请先登录你的账号");
-                    return;
-                }
-                UIHelper.goToAct(context, PersonAlterActivity.class);
-                break;
             case R.id.mainUI_marqueeLayout2:
 
                 break;
@@ -1881,6 +1853,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 }
                 break;
             case R.id.mainUI_scanCode_lock2:
+                Log.e("scanCode_lock===2", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
                 if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
                     ToastUtil.showMessageApp(context,"请先登录账号");
@@ -1901,11 +1874,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                             UIHelper.goToAct(context,RealNameAuthActivity.class);
                             break;
                         case 4:
-                            ToastUtil.showMessageApp(context,"认证审核中");
+                            ToastUtil.showMessageApp(context,"认证审核中，请点击刷新");
                             break;
                     }
                 }else {
-                    ToastUtil.showMessage(context,"您还未认证,请先认证");
+                    ToastUtil.showMessageApp(context,"您还未认证,请先认证");
                 }
                 break;
             case R.id.mainUI_linkServiceLayout2:
@@ -2000,7 +1973,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                 case 4:
                                     authBtn.setEnabled(false);
                                     authBtn.setVisibility(View.VISIBLE);
-                                    authBtn.setText("认证审核中");
+                                    authBtn.setText("认证审核中，请点击刷新");
                                     break;
                             }
                         } else {
@@ -3111,6 +3084,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                     public void run() {
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("getCurrentorder2===","==="+responseString);
+
                             if (result.getFlag().equals("Success")) {
                                 if ("[]".equals(result.getData()) || 0 == result.getData().length()){
                                     SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
@@ -3139,7 +3115,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                     }
                                 }
                             } else {
-                                ToastUtil.showMessage(context,result.getMsg());
+                                ToastUtil.showMessageApp(context,result.getMsg());
                             }
                         } catch (Exception e) {
                         }

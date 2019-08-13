@@ -8,6 +8,7 @@ public class SchoolListBean {
 
     private String id;
     private String school;
+    private String cert_method;
 
     public String getId() {
         return id;
@@ -23,5 +24,13 @@ public class SchoolListBean {
 
     public void setSchool(String school) {
         this.school = school;
+    }
+
+    public String getCert_method() {
+        return cert_method;
+    }
+
+    public void setCert_method(String cert_method) {
+        this.cert_method = cert_method;
     }
 }

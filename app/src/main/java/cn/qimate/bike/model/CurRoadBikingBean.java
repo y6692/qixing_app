@@ -23,6 +23,7 @@ public class CurRoadBikingBean {
     private String tokencode;
     private int is_super_member;
     private String deviceuuid;
+    private int force_backcar;
 
     public String getOrderid() {
         return orderid;
@@ -158,5 +159,13 @@ public class CurRoadBikingBean {
 
     public void setDeviceuuid(String deviceuuid) {
         this.deviceuuid = deviceuuid;
+    }
+
+    public int getForce_backcar() {
+        return force_backcar;
+    }
+
+    public void setForce_backcar(int force_backcar) {
+        this.force_backcar = force_backcar;
     }
 }

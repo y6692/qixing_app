@@ -72,7 +72,7 @@ public class MapTaceActivity extends SwipeBackActivity implements View.OnClickLi
 
     private MapView mMapView;
     private AMap mAMap;
-    private String oid;
+    private String oid = "";
     private List<MapTraceBean>data;
     private List<LatLng>latLngs;
     private BitmapDescriptor originDescripter;
@@ -100,7 +100,7 @@ public class MapTaceActivity extends SwipeBackActivity implements View.OnClickLi
         loadingDialog = new LoadingDialog(context);
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
-        oid = getIntent().getExtras().getString("oid");
+//        oid = getIntent().getExtras().getString("oid");
 
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);

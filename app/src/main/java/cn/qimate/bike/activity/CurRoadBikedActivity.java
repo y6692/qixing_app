@@ -103,12 +103,27 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
         IntentFilter filter = new IntentFilter("data.broadcast.rechargeAction");
         registerReceiver(broadcastReceiver, filter);
 
+        filter = new IntentFilter("data.broadcast.action");
+        registerReceiver(broadcastReceiver1, filter);
+
         initView();
     }
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            intent = new Intent(context, HistoryRoadDetailActivity.class);
+            intent.putExtra("oid", oid);
+            startActivity(intent);
+            scrollToFinishActivity();
+        }
+    };
+
+    BroadcastReceiver broadcastReceiver1 = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e("biked===Receiver1", "==="+m_nowMac);
+
             intent = new Intent(context, HistoryRoadDetailActivity.class);
             intent.putExtra("oid", oid);
             startActivity(intent);
@@ -143,6 +158,11 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
         if (broadcastReceiver != null) {
             unregisterReceiver(broadcastReceiver);
             broadcastReceiver = null;
+        }
+
+        if (broadcastReceiver1 != null) {
+            unregisterReceiver(broadcastReceiver1);
+            broadcastReceiver1 = null;
         }
     }
 
@@ -347,7 +367,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                 break;
 
             case R.id.ll_pop_payLayout:
-                Toast.makeText(context,"当前余额不足,请先充值!",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context,"当前余额不足,请先充值!",Toast.LENGTH_SHORT).show();
 
                 if ("1".equals(paytype)){
                     alipayBikeAction(osn, uid, access_token);

@@ -4,22 +4,22 @@ package cn.qimate.bike.model;
  * Created by Administrator1 on 2017/2/21.
  */
 
-public class AuthStateBean {
+public class AuthStateBean2 {
 
-    private String school;
     private String realname;
+    private String sex;
+    private String school;
+    private String grade;
     private String stunum;
     private String stunumfile;
-    private String stunumfile2;
     private String iscert;
-    private String cert_method;
 
-    public String getSchool() {
-        return school;
+    public String getGrade() {
+        return grade;
     }
 
-    public void setSchool(String school) {
-        this.school = school;
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 
     public String getRealname() {
@@ -28,6 +28,22 @@ public class AuthStateBean {
 
     public void setRealname(String realname) {
         this.realname = realname;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
     }
 
     public String getStunum() {
@@ -46,27 +62,11 @@ public class AuthStateBean {
         this.stunumfile = stunumfile;
     }
 
-    public String getStunumfile2() {
-        return stunumfile2;
-    }
-
-    public void setStunumfile2(String stunumfile2) {
-        this.stunumfile2 = stunumfile2;
-    }
-
     public String getIscert() {
         return iscert;
     }
 
     public void setIscert(String iscert) {
         this.iscert = iscert;
-    }
-
-    public String getCert_method() {
-        return cert_method;
-    }
-
-    public void setCert_method(String cert_method) {
-        this.cert_method = cert_method;
     }
 }

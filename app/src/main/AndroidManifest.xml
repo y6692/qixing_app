@@ -107,7 +107,7 @@
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
 
         <activity
-            android:name=".full.SplashActivity2"
+            android:name=".full.SplashActivity"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -115,6 +115,8 @@
             </intent-filter>
 
         </activity>
+
+        <activity android:name=".full.SplashActivity2" />
 
         <activity
             android:name=".activity.MainActivity"
@@ -210,7 +212,7 @@
         <activity android:name=".activity.BannerActivity" />
         <activity android:name=".activity.InterstitialActivity" />
 
-        <activity android:name=".full.SplashActivity" />
+
 
         <activity android:name=".activity.Main2Activity" />
         <activity android:name=".activity.Main3Activity" />

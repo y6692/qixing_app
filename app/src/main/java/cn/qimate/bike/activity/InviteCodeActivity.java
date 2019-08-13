@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +22,7 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.shareboard.ShareBoard;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.Log;
 import com.umeng.socialize.utils.ShareBoardlistener;
@@ -131,9 +135,18 @@ public class InviteCodeActivity extends SwipeBackActivity implements View.OnClic
                  * shareboard need the platform all you want and
                  * callbacklistener,then open it
                  **/
-                new ShareAction(this).setDisplayList(SHARE_MEDIA.WEIXIN,
-                        SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.QQ,SHARE_MEDIA.QZONE).setShareboardclickCallback(shareBoardlistener)
-                        .open();
+
+                ShareAction shareAction = new ShareAction(this);
+                shareAction.setDisplayList(SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE).setShareboardclickCallback(shareBoardlistener).open();
+
+//                ShareBoard mShareBoard = new ShareBoard(this, shareAction.);
+//
+//                mSharePopupWindowView = new SharePopupWindowView(mActivity, MyApplication.mScreenWidth, WindowManager.LayoutParams.WRAP_CONTENT, mShareMessageData.link);
+//
+//
+//                final PopupWindow popupwindow = new PopupWindow(customView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
+//                popupWindow.showAtLocation(linearLayout, Gravity.BOTTOM, 0, -getNavigationBarHeight());
+
                 break;
             default:
                 break;
@@ -219,6 +232,7 @@ public class InviteCodeActivity extends SwipeBackActivity implements View.OnClic
 
         @Override
         public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
+//            snsPlatform.
             new ShareAction(InviteCodeActivity.this).setPlatform(share_media).setCallback(umShareListener)
                     .withTitle(shareTitle).withText(shareDesc).withTargetUrl(share_url).withMedia(image).share();
         }

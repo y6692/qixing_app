@@ -85,18 +85,34 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
         setContentView(R.layout.ui_login);
         context = this;
         initView();
+
+        isForeground = true;
+        isRefresh = true;
+        Log.e("LA===onCreate", "==="+isRefresh);
     }
 
     @Override
     public void onResume() {
         isForeground = true;
+//        isRefresh = true;
+        Log.e("LA===onResume", "==="+isRefresh);
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        isForeground = false;
+//        isForeground = false;
+        Log.e("LA===onPause", "==="+isRefresh);
         super.onPause();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+//        isForeground = false;
+
+        Log.e("LA===onDestroy", "==="+isRefresh);
+        super.onDestroy();
     }
 
     private void initView() {
@@ -158,6 +174,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
+        isForeground = true;
         switch (v.getId()) {
             case R.id.mainUI_title_backBtn:
                 scrollToFinishActivity();
@@ -167,6 +184,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                 scrollToFinishActivity();
                 break;
             case R.id.loginUI_btn:
+
                 String telphone = userNameEdit.getText().toString();
                 String password = passwordEdit.getText().toString();
                 if (telphone == null || "".equals(telphone)) {
@@ -186,6 +204,8 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
             case R.id.loginUI_noteLogin:
                 UIHelper.goToAct(context, NoteLoginActivity.class);
                 scrollToFinishActivity();
+
+                Log.e("LA===onClick", "==="+isForeground);
                 break;
             case R.id.loginUI_findPsd:
                 UIHelper.goToAct(context, FindPsdActivity.class);
@@ -276,6 +296,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                                 SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
                                 SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
                                 Toast.makeText(context, "恭喜您,登录成功", Toast.LENGTH_SHORT).show();
+                                isRefresh = false;
                                 scrollToFinishActivity();
                             } else {
                                 Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();

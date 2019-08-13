@@ -154,6 +154,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private Activity mActivity = this;
     private Context context = this;
     private ImageView top_mask_bcg;
+    private LinearLayout iv_help;
     /**
      * 扫描结果监听
      */
@@ -586,6 +587,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         top_mask_bcg = (ImageView) findViewById(R.id.top_mask_bcg);
         mCropLayout = (RelativeLayout) findViewById(R.id.capture_crop_layout);
         mLlScanHelp = (LinearLayout) findViewById(R.id.ll_scan_help);
+
+        iv_help = (LinearLayout) findViewById(R.id.ll_help);
 
         dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.pop_circles_menu, null);
@@ -1078,6 +1081,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                                 loadingDialog.show();
                                             }
 
+                                            iv_help.setVisibility(View.VISIBLE);
+
                                             if (!TextUtils.isEmpty(m_nowMac)) {
 
 //                                                SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
@@ -1254,6 +1259,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
             Log.e("ConnectStatus===", mac+"===="+(status == STATUS_CONNECTED));
 
+
+
+            if(status != STATUS_CONNECTED){
+                return;
+            }
+
             ClientManager.getClient().getStatus(mac, new IGetStatusResponse() {
                 @Override
                 public void onResponseSuccess(String version, String keySerial, String macKey, String vol) {
@@ -1272,6 +1283,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
 //                                    getBleRecord();
                             rent();
+
+
 
                             if (loadingDialog != null && !loadingDialog.isShowing()) {
                                 loadingDialog.setTitle("开锁中");
@@ -1436,6 +1449,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         if (loadingDialog != null && loadingDialog.isShowing()){
                             loadingDialog.dismiss();
                         }
+
                     }
                 });
 
@@ -1537,7 +1551,22 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 getBleRecord();
 //                                deleteBleRecord(null);
 
-                                submit(uid, access_token);
+                                if("锁已开".equals(Code.toString(code))){
+                                    if (loadingDialog != null && loadingDialog.isShowing()){
+                                        loadingDialog.dismiss();
+                                    }
+
+                                    isFinish = true;
+
+                                    ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
+
+                                    if(!isFinishing()){
+                                        tzEnd();
+                                    }
+                                }else{
+                                    submit(uid, access_token);
+                                }
+
 
 //                                ToastUtil.showMessageApp(context, Code.toString(code));
                             }
@@ -2340,6 +2369,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
 //                                        getBleRecord();
 
+                                        iv_help.setVisibility(View.GONE);
                                         openBleLock(null);
 
 //                                        m_myHandler.postDelayed(new Runnable() {

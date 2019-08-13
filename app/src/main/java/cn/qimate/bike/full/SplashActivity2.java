@@ -200,6 +200,8 @@ public class SplashActivity2 extends BaseActivity implements View.OnClickListene
         splashAd = new SplashAd(this, adsParent, listener, splashAdUnitId);
         splashAd.setCloseButtonPadding(10, 20, 10, 10);
 
+//        jumpWhenCanClick();
+
     }
 
     @Override

@@ -279,6 +279,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private CustomDialog customDialog6;
     private CustomDialog customDialog7;
     private CustomDialog customDialog8;
+    private CustomDialog customDialog9;
 
     int near = 1;
     protected InternalReceiver internalReceiver = null;
@@ -351,6 +352,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
     List<LatLng> listPoint = new ArrayList<>();
     private boolean  isLookPsdBtn = false;
+
+    private int force_backcar = 0;
+    private boolean isTwo = false;
 
     @Override
     @TargetApi(23)
@@ -457,6 +461,15 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     }
                 });
         customDialog8 = customBuilder.create();
+
+        customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setTitle("温馨提示").setMessage("请确认锁已关闭")
+                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        customDialog9 = customBuilder.create();
 
 
 //        customBuilder = new CustomDialog.Builder(context);
@@ -1344,7 +1357,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             //锁已开启
                             ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
-                            clickCountDeal();
+//                            clickCountDeal();
                         }
                         break;
                     case Config.LOCK_RESULT:
@@ -1464,6 +1477,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                     password = bean.getPassword();
                                     type = bean.getType();
                                     m_nowMac = bean.getMacinfo();
+                                    force_backcar = bean.getForce_backcar();
+
+//                                    force_backcar = 1;
 
                                     if(BaseApplication.getInstance().isTest()){
                                         type = "5";
@@ -1710,6 +1726,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }
         if (customDialog8 != null){
             customDialog8.dismiss();
+        }
+        if (customDialog9 != null){
+            customDialog9.dismiss();
         }
 
         if(testDialog != null){
@@ -2886,7 +2905,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         lockLoading.show();
                     }
 
-                    minPoint();
+                    if(!isContainsList.contains(true)){
+                        minPoint(referLatitude, referLongitude);
+                    }
 
                     new Thread(new Runnable() {
                         @Override
@@ -3182,14 +3203,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                     isContainsList.add(pOptions.get(i).contains(new LatLng(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()))));
                                 }
 
-                                minPoint();
+                                if(!isContainsList.contains(true)){
+                                    minPoint(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()));
+                                }
 
                                 Log.e("biking===location", bean.getLatitude()+"===="+bean.getLongitude()+"===="+isContainsList.contains(true));
 
                                 if(isContainsList.contains(true)){
                                     isGPS_Lo = true;
 
-                                    submit(uid, access_token);
+                                    closeEbike_XA();
+//                                    submit(uid, access_token);
                                 }else{
                                     isGPS_Lo = false;
 
@@ -4016,6 +4040,21 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     }
 
     public void endBtn(){
+
+        Log.e("biking===endBtn0", force_backcar+"==="+isTwo+"==="+isEndBtn+"==="+macList.size()+"==="+isContainsList.contains(true));
+
+
+        if(force_backcar==1 && isTwo){
+            ToastUtil.showMessageApp(context,"锁已关闭");
+            Log.e("biking===", "endBtn===锁已关闭==="+first3);
+
+            if(!isEndBtn) return;
+
+            m_myHandler.sendEmptyMessage(6);
+
+            return;
+        }
+
         final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
@@ -4023,7 +4062,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             UIHelper.goToAct(context,LoginActivity.class);
         }else {
 //            ToastUtil.showMessage(context,macList.size()+"==="+isContainsList.contains(true));
-            Log.e("biking===endBtn",macList.size()+"==="+isContainsList.contains(true)+"==="+type);
+            Log.e("biking===endBtn",macList.size()+"==="+isContainsList.contains(true)+"==="+type+"==="+isContainsList.contains(true));
 
             rl_msg.setVisibility(View.GONE);
             if (polyline != null) {
@@ -4032,6 +4071,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
             if (macList.size() > 0 && !"1".equals(type)){
                 //蓝牙锁
+
                 flag = 2;
                 if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                     ToastUtil.showMessageApp(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0");
@@ -4059,16 +4099,18 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             }
 
                             if(!isStop){
-                                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
-                                        .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.cancel();
-                                            }
-                                        });
-                                customBuilder.create().show();
-
-                                clickCountDeal();
+                                if(force_backcar==0){
+                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                    customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+                                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                    customBuilder.create().show();
+                                }else{
+                                    clickCountDeal();
+                                }
                             }
                         }
                     }, 10 * 1000);
@@ -4076,6 +4118,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     macList2 = new ArrayList<> (macList);
                     BaseApplication.getInstance().getIBLE().getLockStatus();
                 } else {
+                    Log.e("biking===endBtn_3",macList.size()+"===");
+
                     if (lockLoading != null && !lockLoading.isShowing()){
                         lockLoading.setTitle("正在连接");
                         lockLoading.show();
@@ -4097,16 +4141,18 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 BaseApplication.getInstance().getIBLE().disconnect();
 
                                 if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
-                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                    customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
-                                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-                                    customBuilder.create().show();
-
-                                    clickCountDeal();
+                                    if(force_backcar==0){
+                                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                        customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+                                                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                        customBuilder.create().show();
+                                    }else{
+                                        clickCountDeal();
+                                    }
                                 }
                             }
                         }
@@ -4147,6 +4193,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         return;
                     }
                     if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                        Log.e("biking===endBtn_4",macList.size()+"===");
+
                         if (loadingDialog != null && !loadingDialog.isShowing()){
                             loadingDialog.setTitle("请稍等");
                             loadingDialog.show();
@@ -4162,16 +4210,18 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 }
 
                                 if(!isStop){
-                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                    customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
-                                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-                                    customBuilder.create().show();
-
-                                    clickCountDeal();
+                                    if(force_backcar==0){
+                                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                        customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+                                                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                        customBuilder.create().show();
+                                    }else{
+                                        clickCountDeal();
+                                    }
                                 }
                             }
                         }, 10 * 1000);
@@ -4179,6 +4229,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         macList2 = new ArrayList<> (macList);
                         BaseApplication.getInstance().getIBLE().getLockStatus();
                     }else {
+                        Log.e("biking===endBtn_5",macList.size()+"===");
+
                         if (lockLoading != null && !lockLoading.isShowing()){
                             lockLoading.setTitle("正在连接");
                             lockLoading.show();
@@ -4200,16 +4252,18 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                     BaseApplication.getInstance().getIBLE().disconnect();
 
                                     if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
-                                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                        customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
-                                                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
-                                        customBuilder.create().show();
-
-                                        clickCountDeal();
+                                        if(force_backcar==0){
+                                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+                                                    .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.cancel();
+                                                        }
+                                                    });
+                                            customBuilder.create().show();
+                                        }else{
+                                            clickCountDeal();
+                                        }
                                     }
                                 }
                             }
@@ -4226,7 +4280,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                 minPolygon();
 
-                clickCountDeal();
+//                clickCountDeal();
             }
 
 //            if(BikeFragment.screen){
@@ -4709,12 +4763,21 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 
     public void clickCountDeal(){
-        if(isClickCount && clickCount>=3){
-            Intent intent = new Intent(context,ClientServiceActivity.class);
-            intent.putExtra("bikeCode", bikeCode);
-            startActivity(intent);
-            scrollToFinishActivity();
+        if("2".equals(type)){
+            if(force_backcar==1){
+                isTwo = true;
+                customDialog9.show();
+            }
         }
+
+
+//        if(isClickCount && clickCount>=3){
+//            Intent intent = new Intent(context,ClientServiceActivity.class);
+//            intent.putExtra("bikeCode", bikeCode);
+//            startActivity(intent);
+//            scrollToFinishActivity();
+//
+//        }
     }
 
 
@@ -5001,7 +5064,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                     minPolygon();
 
-                    clickCountDeal();
+//                    clickCountDeal();
                 }
 
 
@@ -5856,7 +5919,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         return new LatLng(y, x);
     }
 
-    public LatLng minPoint() {
+    public LatLng minPoint(double lat, double lon) {
         double s=0;
         double s1=0;
 
@@ -5867,7 +5930,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 //            Log.e("minPoint===", listPoint.get(i).latitude+"==="+referLatitude+">>>"+listPoint.get(i).longitude+"==="+referLongitude);
 
-            s1 = (listPoint.get(i).latitude-referLatitude)*(listPoint.get(i).latitude-referLatitude) + (listPoint.get(i).longitude-referLongitude)*(listPoint.get(i).longitude-referLongitude);
+            s1 = (listPoint.get(i).latitude-lat)*(listPoint.get(i).latitude-lat) + (listPoint.get(i).longitude-lon)*(listPoint.get(i).longitude-lon);
 
             if(i==0 || s1<s){
                 s = s1;

@@ -44,6 +44,8 @@ public class Urls {
 	public static String autoauthentication = "http://jsut.qian-xue.com/student/checkxhxma";
 	/**手动认证*/
 	public static String authentication = host + "/index.php?g=App&m=User&a=authentication";
+	/**认证接口*/
+	public static String certification = host + "?g=App&m=User&a=certification";
 	/**学校列表*/
 	public static String schoolList = host + "/index.php?g=App&m=Index&a=schoolList";
 	/**上传图片*/
@@ -74,6 +76,8 @@ public class Urls {
 	public static String rechargeLog = host + "/index.php?g=App&m=User&a=rechargeLog";
 	/**获取认证信息状态*/
 	public static String getAuthentication = host + "/index.php?g=App&m=User&a=getAuthentication";
+	/**获取认证信息状态*/
+	public static String getCertification = host + "?g=App&m=User&a=getCertification";
 	/**用户充值,提交充值订单*/
 	public static String userRecharge = host + "/index.php?g=App&m=User&a=userRecharge";
 	/**支付宝付款*/

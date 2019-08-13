@@ -191,7 +191,8 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/dp20"
                 android:paddingRight="@dimen/dp20"
-                android:paddingTop="@dimen/dp15">
+                android:paddingTop="@dimen/dp15"
+                android:visibility="gone">
 
                 <Button
                     android:id="@+id/mainUI_authBtn2"

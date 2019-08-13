@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.TextureMapView;
@@ -14,12 +16,23 @@ import com.amap.api.maps.model.BitmapDescriptor;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
 import com.zxing.lib.scaner.activity.ActivityScanerCode;
 
+import org.apache.http.Header;
+
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.loopj.android.http.RequestParams;
+import cn.loopj.android.http.TextHttpResponseHandler;
+import cn.qimate.bike.activity.LoginActivity;
+import cn.qimate.bike.core.common.AppManager;
+import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
+import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.model.UserMsgBean;
+import cn.qimate.bike.util.ToastUtil;
 
 public class BaseFragment extends Fragment implements OnConnectionListener {
 
@@ -160,58 +173,74 @@ public class BaseFragment extends Fragment implements OnConnectionListener {
 	});
 	
 	//用户已经登录过没有退出刷新登录
-	public void RefreshLogin(){
-//		if(access_token == null || "".equals(access_token)){
-//			userlogin = false;
-//		}else{
-//			RequestParams params = new RequestParams();
-//			params.add("uid", uid);
-//			params.add("access_token", access_token);
-//			HttpHelper.post(AppManager.getAppManager().currentActivity(), Urls.userFastLogin, params, new TextHttpResponseHandler() {				
-//				@Override
-//				public void onSuccess(int statusCode, Header[] headers, String responseString) {					
-//					ResultConsel result = new ResultConsel();
-//					try {
-//						result = JSON.parseObject(responseString, ResultConsel.class);  
-//						if(result.getFlag().equals("Success")){
-//							LoginBean bean = JSON.parseObject(result.getData(), LoginBean.class);
-//							// 极光标记别名
-//							SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
-//							SharedPreferencesUrls.getInstance().putString("access_token",
-//									bean.getAccess_token());
-//							SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
-//							SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
-//							SharedPreferencesUrls.getInstance().putString("user_type", bean.getUser_type());
-//							SharedPreferencesUrls.getInstance().putString("merchant_name",
-//									bean.getMerchant_name());
-//							SharedPreferencesUrls.getInstance().putString("headimgurl", bean.getHeadimgurl());
-//							SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
-//							SharedPreferencesUrls.getInstance().putString("sign_days", bean.getSign_days());
-//							SharedPreferencesUrls.getInstance().putString("today_pass", bean.getToday_pass());
-//							
-//							SharedPreferencesUrls.getInstance().putString("surplus_day", bean.getSurplus_day());
-//							SharedPreferencesUrls.getInstance().putString("activation_status", bean.getActivation_status());
-//							SharedPreferencesUrls.getInstance().putString("mname", bean.getMname());
-//							
-//							userlogin = true;
-//						}else{
-//							UIHelper.showToastMsg(AppManager.getAppManager().currentActivity(), result.getMsg(),R.drawable.ic_error);
-//							//清空数据
-//							SharedPreferencesUrls.getInstance().putString("uid", "");
-//							SharedPreferencesUrls.getInstance().putString("access_token", "");
-//							userlogin = false;
-//						}
-//						//Log.e("Login", result.getMsg());
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}	
-//				}			
-//				@Override
-//				public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//					UIHelper.ToastError(AppManager.getAppManager().currentActivity(), throwable.toString());
-//				}
-//			});
-//			
-//		}		
+	public void RefreshLogin() {
+		String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+		String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
+
+		Log.e("BFA===RefreshLogin", uid+"==="+access_token);
+
+		if (access_token == null || "".equals(access_token) || uid == null || "".equals(uid)) {
+			setAlias("");
+			ToastUtil.showMessageApp(context, "请先登录账号");
+			UIHelper.goToAct(context, LoginActivity.class);
+		} else {
+			RequestParams params = new RequestParams();
+			params.add("uid", uid);
+			params.add("access_token", access_token);
+			HttpHelper.post(AppManager.getAppManager().currentActivity(), Urls.accesslogin, params,
+					new TextHttpResponseHandler() {
+						@Override
+						public void onSuccess(int statusCode, Header[] headers, String responseString) {
+							try {
+								ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+								if (result.getFlag().equals("Success")) {
+									UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+									// 极光标记别名
+
+									Log.e("RefreshLogin===", bean.getSpecialdays()+"==="+bean.getEbike_specialdays());
+
+									setAlias(bean.getUid());
+									SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
+									SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
+									SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
+									SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
+									SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
+									SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
+									SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
+									SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
+									SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
+									SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
+									SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
+									SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+								} else {
+									setAlias("");
+									if (BaseApplication.getInstance().getIBLE() != null){
+										if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+											BaseApplication.getInstance().getIBLE().refreshCache();
+											BaseApplication.getInstance().getIBLE().close();
+											BaseApplication.getInstance().getIBLE().stopScan();
+										}
+									}
+									SharedPreferencesUrls.getInstance().putString("uid", "");
+									SharedPreferencesUrls.getInstance().putString("access_token","");
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+
+						@Override
+						public void onFailure(int statusCode, Header[] headers, String responseString,
+											  Throwable throwable) {
+						}
+					});
+		}
 	}
+
+	// 极光推送===================================================================
+	private void setAlias(String uid) {
+		// 调用JPush API设置Alias
+		mHandler.sendMessage(mHandler.obtainMessage(MSG_SET_ALIAS, uid));
+	}
+
 }

@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:background="@drawable/invate_code_bcg"
     android:fitsSystemWindows="true"
     android:clipToPadding="true">
 
-    <!--android:background="@drawable/invate_code_bcg"-->
+
 
     <ImageView
         android:id="@+id/ui_inviteCode_backImage"

@@ -574,6 +574,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             case R.id.mainUI_leftBtn:
                 UIHelper.goToAct(context, ActionCenterActivity.class);
 
+//                UIHelper.goToAct(context, RealNameAuthActivity.class);
+
                 break;
             case R.id.mainUI_rightBtn:
                 if (SharedPreferencesUrls.getInstance().getString("uid","") == null || "".equals(

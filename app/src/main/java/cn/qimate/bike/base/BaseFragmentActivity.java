@@ -125,6 +125,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 
 	protected Handler m_myHandler = new MainHandler(this);
 
+	protected boolean isRefresh;
 
 //	public static LoadingDialog loadingDialog;
 //	public static LoadingDialog lockLoading;
@@ -139,7 +140,6 @@ public class BaseFragmentActivity extends AppCompatActivity
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		context = this;
-
 
 //		registerReceiver(Config.initFilter());
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
@@ -179,17 +179,21 @@ public class BaseFragmentActivity extends AppCompatActivity
 ////			}
 //		}
 
-
+//		isRefresh = false;
+		Log.e("BFA===onCreate", "==="+LoginActivity.isForeground);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+
+		Log.e("BFA===onResume", "==="+LoginActivity.isForeground);
+
 		if(!LoginActivity.isForeground){
 			RefreshLogin();
 		}
 
-
+//		RefreshLogin();
 	}
 
 	@Override
@@ -197,8 +201,6 @@ public class BaseFragmentActivity extends AppCompatActivity
 		super.onDestroy();
 
 //		ToastUtil.showMessage(context, "base===onDestroy==="+type);
-
-
 
 //		try {
 //			if (internalReceiver!= null) {
@@ -212,13 +214,6 @@ public class BaseFragmentActivity extends AppCompatActivity
 	}
 
 
-
-
-
-
-
-
-
 	private String parseAdvData(int rssi, byte[] scanRecord) {
 		byte[] bytes = ParseLeAdvData.adv_report_parse(ParseLeAdvData.BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA, scanRecord);
 		if (bytes[0] == 0x01 && bytes[1] == 0x02) {
@@ -226,9 +221,6 @@ public class BaseFragmentActivity extends AppCompatActivity
 		}
 		return "";
 	}
-
-	
-
 
 	public void finishMine() {
 		AppManager.getAppManager().finishActivity(this);
@@ -238,6 +230,9 @@ public class BaseFragmentActivity extends AppCompatActivity
 	public void RefreshLogin() {
 		String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 		String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
+
+		Log.e("BFA===RefreshLogin", uid+"==="+access_token);
+
 		if (access_token == null || "".equals(access_token) || uid == null || "".equals(uid)) {
 			setAlias("");
 			ToastUtil.showMessageApp(context, "请先登录账号");
@@ -388,7 +383,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 
 //	public static Handler m_myHandler = new Handler(new Handler.Callback() {
 //	public static
-class MainHandler extends Handler {
+	class MainHandler extends Handler {
 		WeakReference<BaseFragmentActivity> softReference;
 
 		public MainHandler(BaseFragmentActivity activity) {
