@@ -297,6 +297,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                                 SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
                                 Toast.makeText(context, "恭喜您,登录成功", Toast.LENGTH_SHORT).show();
                                 isRefresh = false;
+                                isForeground = false;
                                 scrollToFinishActivity();
                             } else {
                                 Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();

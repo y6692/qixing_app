@@ -53,9 +53,7 @@ import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
-import cn.qimate.bike.activity.BannerActivity;
 import cn.qimate.bike.activity.CrashHandler;
-import cn.qimate.bike.activity.InterstitialActivity;
 import cn.qimate.bike.activity.Main2Activity;
 import cn.qimate.bike.activity.Main3Activity;
 import cn.qimate.bike.activity.Main4Activity;
@@ -108,11 +106,14 @@ public class SplashActivity extends BaseActivity {
 
 	private Handler handler = new MainHandler(this);
 
+
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.main_enter);
 		context = this;
+
+		isForeground = true;
 
 //		android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND);
 
@@ -144,8 +145,6 @@ public class SplashActivity extends BaseActivity {
 
 		Log.e("splash===onResume", "===");
 
-
-
 //		m_myHandler = new Handler();
 //		myhandler = new Myhandler();
 
@@ -155,7 +154,6 @@ public class SplashActivity extends BaseActivity {
 
 			handler.sendEmptyMessageDelayed(0, 900);
 		}
-
 
 //		m_myHandler.sendEmptyMessage(0);
 //		m_myHandler.sendEmptyMessageDelayed(0, 900);
@@ -327,7 +325,7 @@ public class SplashActivity extends BaseActivity {
 
 	@Override
 	protected void onDestroy() {
-
+		isForeground = false;
 		super.onDestroy();
 
 //		handler.removeCallbacksAndMessages(null);

@@ -30,6 +30,7 @@ import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.full.SplashActivity;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.util.ToastUtil;
@@ -76,8 +77,22 @@ public class BaseFragment extends Fragment implements OnConnectionListener {
 
 		context = getActivity();
 
-		RefreshLogin();
+//		RefreshLogin();
 	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		Log.e("BF===onResume", "==="+LoginActivity.isForeground);
+
+		if(!LoginActivity.isForeground && !SplashActivity.isForeground){
+			RefreshLogin();
+		}
+
+//		RefreshLogin();
+	}
+
 	private void init() {
 		baseApplication = (BaseApplication) getActivity().getApplication();
 	}

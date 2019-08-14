@@ -1098,6 +1098,24 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                                 ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
 
+                                                m_myHandler.postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        if (!isStop){
+                                                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                                                loadingDialog.dismiss();
+                                                            }
+                                                            Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
+
+                                                            ClientManager.getClient().stopSearch();
+                                                            ClientManager.getClient().disconnect(m_nowMac);
+                                                            ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+                                                            scrollToFinishActivity();
+                                                        }
+                                                    }
+                                                }, 10 * 1000);
+
                                             }
                                         }
                                     }else if ("7".equals(type)) {
@@ -1258,7 +1276,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //            BluetoothLog.v(String.format(Locale.getDefault(), "DeviceDetailActivity onConnectStatusChanged %d in %s", status, Thread.currentThread().getName()));
 
             Log.e("ConnectStatus===", mac+"===="+(status == STATUS_CONNECTED));
-
 
 
             if(status != STATUS_CONNECTED){
@@ -1716,14 +1733,20 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         ClientManager.getClient().connect(m_nowMac, options, new IConnectResponse() {
             @Override
             public void onResponseFail(int code) {
-                Log.e("connectDevice===", Code.toString(code));
+                isStop = false;
+
+                Log.e("connectDevice===", "Fail==="+Code.toString(code));
 //                ToastUtil.showMessageApp(context, Code.toString(code));
             }
 
             @Override
             public void onResponseSuccess(BleGattProfile profile) {
 //                BluetoothLog.v(String.format("profile:\n%s", profile));
-                refreshData(true);
+//                refreshData(true);
+
+                isStop = true;
+
+                Log.e("connectDevice===", "Success==="+profile);
 
 //                if (Globals.bType == 1) {
 //                    ToastUtil.showMessageApp(context, "正在关锁中");
@@ -1760,7 +1783,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     if(cn<15){
                         checkConnect();
                     }else{
-                        Toast.makeText(context,"扫码唤醒失败，换辆车试试吧！",Toast.LENGTH_LONG).show();
+                        Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
                         scrollToFinishActivity();
                     }
 
@@ -1971,12 +1994,16 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         loadingDialog.show();
                     }
 
+
+
                     if (!TextUtils.isEmpty(m_nowMac)) {
                         if("4".equals(type)){
                             bleService.connect(m_nowMac);
                             checkConnect();
 
                         }else if("5".equals(type) || "6".equals(type)){
+                            iv_help.setVisibility(View.VISIBLE);
+
                             SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
                                     .searchBluetoothLeDevice(0)
                                     .build();
@@ -2069,10 +2096,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     }
     @Override
     public void onDisconnect(int state) {
+        Log.e("onDisconnect===", "==="+state);
+
         m_myHandler.sendEmptyMessageDelayed(0, 1000);
     }
     @Override
     public void onServicesDiscovered(String name, String address) {
+        Log.e("onServicesDiscovered===", name+"==="+address);
+
         isStop = true;
         getToken();
     }
@@ -2701,7 +2732,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     loadingDialog.dismiss();
                                 }
 //                                Toast.makeText(context,"请重启软件，开启定位服务,输编号用车",5 * 1000).show();
-                                Toast.makeText(context,"扫码唤醒失败，换辆车试试吧！",Toast.LENGTH_LONG).show();
+                                Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
                                 BaseApplication.getInstance().getIBLE().refreshCache();
                                 BaseApplication.getInstance().getIBLE().close();
                                 BaseApplication.getInstance().getIBLE().disconnect();

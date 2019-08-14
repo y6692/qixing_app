@@ -77,6 +77,7 @@ import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.full.SplashActivity;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
@@ -187,9 +188,9 @@ public class BaseFragmentActivity extends AppCompatActivity
 	protected void onResume() {
 		super.onResume();
 
-		Log.e("BFA===onResume", "==="+LoginActivity.isForeground);
+		Log.e("BFA===onResume", SplashActivity.isForeground+"==="+LoginActivity.isForeground);
 
-		if(!LoginActivity.isForeground){
+		if(!LoginActivity.isForeground && !SplashActivity.isForeground){
 			RefreshLogin();
 		}
 

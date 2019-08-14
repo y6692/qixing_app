@@ -134,6 +134,7 @@ import cn.qimate.bike.model.CardinfoBean;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.NearbyBean;
 import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
@@ -418,6 +419,74 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 addChooseMarker();
                 addCircle(myLocation, accuracy);
             }
+
+
+
+
+            String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
+            String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+//        String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
+            String ebike_specialdays = SharedPreferencesUrls.getInstance().getString("ebike_specialdays", "");
+            if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+                authBtn.setVisibility(View.VISIBLE);
+                authBtn.setText("您还未登录，点我快速登录");
+                authBtn.setEnabled(true);
+                cartBtn.setVisibility(View.GONE);
+                refreshLayout.setVisibility(View.GONE);
+                rechargeBtn.setVisibility(View.GONE);
+            } else {
+                refreshLayout.setVisibility(View.VISIBLE);
+                if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+
+                    Log.e("authBtn===2", "==="+Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", "")));
+
+                    switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+                        case 1:
+                            authBtn.setEnabled(true);
+                            authBtn.setVisibility(View.VISIBLE);
+                            authBtn.setText("您还未认证，点我快速认证");
+                            break;
+                        case 2:
+
+                            getCurrentorder1(uid, access_token);
+                            break;
+                        case 3:
+                            authBtn.setEnabled(true);
+                            authBtn.setVisibility(View.VISIBLE);
+                            authBtn.setText("认证被驳回，请重新认证");
+                            break;
+                        case 4:
+
+
+                            authBtn.setEnabled(false);
+                            authBtn.setVisibility(View.VISIBLE);
+                            authBtn.setText("认证审核中，请点击刷新");
+                            break;
+                    }
+                } else {
+                    authBtn.setVisibility(View.GONE);
+                }
+                if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))
+                        || "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) || SharedPreferencesUrls.getInstance().getString("money", "") == null ||
+                        "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))) {
+                    rechargeBtn.setVisibility(View.VISIBLE);
+                } else {
+                    rechargeBtn.setVisibility(View.GONE);
+                }
+
+                Log.e("type===2", type+"==="+ebike_specialdays);
+
+
+                if (("0".equals(ebike_specialdays) || ebike_specialdays == null || "".equals(ebike_specialdays))
+                        && ("0".equals(ebike_specialdays) || ebike_specialdays == null || "".equals(ebike_specialdays))) {
+                    cartBtn.setVisibility(View.GONE);
+                } else {
+                    cartBtn.setVisibility(View.VISIBLE);
+                    cartBtn.setText("免费" + ebike_specialdays + "天,每次前一个小时免费,点击续费");
+                }
+
+            }
+
 
 //            mapView.onResume();
 
@@ -982,6 +1051,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         Log.e("main===ebike", "main====onResume==="+type+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
 
+
+
+
         if(!"4".equals(type) && !"7".equals(type)){
             ((MainActivity)getActivity()).changeTab(0);
 //            return;
@@ -1028,119 +1100,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             getFeedbackStatus();
         }
 
-        String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-//        String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
-        String ebike_specialdays = SharedPreferencesUrls.getInstance().getString("ebike_specialdays", "");
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
-            authBtn.setVisibility(View.VISIBLE);
-            authBtn.setText("您还未登录，点我快速登录");
-            authBtn.setEnabled(true);
-            cartBtn.setVisibility(View.GONE);
-            refreshLayout.setVisibility(View.GONE);
-            rechargeBtn.setVisibility(View.GONE);
-        } else {
-            refreshLayout.setVisibility(View.VISIBLE);
-            if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                    case 1:
-                        authBtn.setEnabled(true);
-                        authBtn.setVisibility(View.VISIBLE);
-                        authBtn.setText("您还未认证，点我快速认证");
-                        break;
-                    case 2:
-//                        if (!"".equals(m_nowMac) && !SharedPreferencesUrls.getInstance().getBoolean("switcher",false)) {
-//                        if (!"".equals(m_nowMac)) {
-//                            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-//                                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-//                                finish();
-//                            }
-//                            //蓝牙锁
-//                            if (mBluetoothAdapter == null) {
-//                                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-//                                mBluetoothAdapter = bluetoothManager.getAdapter();
-//                            }
-//
-//                            if (mBluetoothAdapter == null) {
-//                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
-//                                finish();
-//                                return;
-//                            }
-//
-//                            if (!mBluetoothAdapter.isEnabled()) {
-//                                flag = 1;
-//                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                                startActivityForResult(enableBtIntent, 188);
-//                            } else {
-////                                mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-////                                    @Override
-////                                    public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-////                                        k++;
-////                                        Log.e("main===LeScan", device + "====" + rssi + "====" + k);
-////
-////                                        if (!macList.contains(""+device)){
-////                                            macList.add(""+device);
-////                                            m_myHandler.sendEmptyMessage(3);
-////                                        }
-////
-////                                    }
-////                                };
-////
-////                                startXB();
-////
-////                                if (lockLoading != null && !lockLoading.isShowing()){
-////                                    lockLoading.setTitle("还车点确认中");
-////                                    lockLoading.show();
-////                                }
-////
-////                                m_myHandler.postDelayed(new Runnable() {
-////                                    @Override
-////                                    public void run() {
-////                                        if(macList.size() == 0) {
-////                                            m_myHandler.sendEmptyMessage(3);
-////                                        }
-////                                    }
-////                                }, 6 * 1000);
-//
-//                            }
-//                        }
 
-                        getCurrentorder1(uid, access_token);
-                        break;
-                    case 3:
-                        authBtn.setEnabled(true);
-                        authBtn.setVisibility(View.VISIBLE);
-                        authBtn.setText("认证被驳回，请重新认证");
-                        break;
-                    case 4:
-                        authBtn.setEnabled(false);
-                        authBtn.setVisibility(View.VISIBLE);
-                        authBtn.setText("认证审核中，请点击刷新");
-                        break;
-                }
-            } else {
-                authBtn.setVisibility(View.GONE);
-            }
-            if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))
-                    || "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) || SharedPreferencesUrls.getInstance().getString("money", "") == null ||
-                    "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))) {
-                rechargeBtn.setVisibility(View.VISIBLE);
-            } else {
-                rechargeBtn.setVisibility(View.GONE);
-            }
-
-            Log.e("type===", type+"==="+ebike_specialdays);
-
-
-            if (("0".equals(ebike_specialdays) || ebike_specialdays == null || "".equals(ebike_specialdays))
-                    && ("0".equals(ebike_specialdays) || ebike_specialdays == null || "".equals(ebike_specialdays))) {
-                cartBtn.setVisibility(View.GONE);
-            } else {
-                cartBtn.setVisibility(View.VISIBLE);
-                cartBtn.setText("免费" + ebike_specialdays + "天,每次前一个小时免费,点击续费");
-            }
-
-        }
     }
 
     protected Handler m_myHandler = new Handler(new Handler.Callback() {
@@ -1912,83 +1872,53 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 UIHelper.goToAct(context, MyPurseActivity.class);
                 break;
             case R.id.mainUI_refreshLayout2:
+                Log.e("refreshLayout===2", "==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
+
                 RefreshLogin();
-                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-                    UIHelper.goToAct(context,LoginActivity.class);
-                }else {
-                    new MyAsyncTask().execute();
-                    if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
-                        authBtn.setVisibility(View.VISIBLE);
-                        authBtn.setText("您还未登录，点我快速登录");
-                        authBtn.setEnabled(true);
-                    } else {
-                        if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                            switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                                case 1:
-                                    authBtn.setEnabled(true);
-                                    authBtn.setVisibility(View.VISIBLE);
-                                    authBtn.setText("您还未认证，点我快速认证");
-                                    break;
-                                case 2:
 
-//                                    startXB();
-//
-//                                    if (lockLoading != null && !lockLoading.isShowing()){
-//                                        lockLoading.setTitle("还车点确认中");
-//                                        lockLoading.show();
-//                                    }
-//
-//                                    new Thread(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            try {
-//                                                int n=0;
-//                                                while(macList.size() == 0){
-//
-//                                                    Thread.sleep(1000);
-//                                                    n++;
-//
-//                                                    Log.e("main===", "n====" + n);
-//
-//                                                    if(n>=6) break;
-//
-//                                                }
-//                                            } catch (InterruptedException e) {
-//                                                e.printStackTrace();
-//                                            }
-//
-//                                            m_myHandler.sendEmptyMessage(3);
-//
-//                                        }
-//                                    }).start();
-
-
-                                    getCurrentorder1(uid, access_token);
-                                    break;
-                                case 3:
-                                    authBtn.setEnabled(true);
-                                    authBtn.setVisibility(View.VISIBLE);
-                                    authBtn.setText("认证被驳回，请重新认证");
-                                    break;
-                                case 4:
-                                    authBtn.setEnabled(false);
-                                    authBtn.setVisibility(View.VISIBLE);
-                                    authBtn.setText("认证审核中，请点击刷新");
-                                    break;
-                            }
-                        } else {
-                            authBtn.setVisibility(View.GONE);
-                        }
-                    }
-                    if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))||
-                            "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) ||
-                            SharedPreferencesUrls.getInstance().getString("money", "") == null ||
-                            "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))){
-                        rechargeBtn.setVisibility(View.VISIBLE);
-                    }else {
-                        rechargeBtn.setVisibility(View.GONE);
-                    }
-                }
+//                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+//                    UIHelper.goToAct(context,LoginActivity.class);
+//                }else {
+//                    new MyAsyncTask().execute();
+//                    if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+//                        authBtn.setVisibility(View.VISIBLE);
+//                        authBtn.setText("您还未登录，点我快速登录");
+//                        authBtn.setEnabled(true);
+//                    } else {
+//                        if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+//                            switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+//                                case 1:
+//                                    authBtn.setEnabled(true);
+//                                    authBtn.setVisibility(View.VISIBLE);
+//                                    authBtn.setText("您还未认证，点我快速认证");
+//                                    break;
+//                                case 2:
+//                                    getCurrentorder1(uid, access_token);
+//                                    break;
+//                                case 3:
+//                                    authBtn.setEnabled(true);
+//                                    authBtn.setVisibility(View.VISIBLE);
+//                                    authBtn.setText("认证被驳回，请重新认证");
+//                                    break;
+//                                case 4:
+//                                    authBtn.setEnabled(false);
+//                                    authBtn.setVisibility(View.VISIBLE);
+//                                    authBtn.setText("认证审核中，请点击刷新");
+//                                    break;
+//                            }
+//                        } else {
+//                            authBtn.setVisibility(View.GONE);
+//                        }
+//                    }
+//                    if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))||
+//                            "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) ||
+//                            SharedPreferencesUrls.getInstance().getString("money", "") == null ||
+//                            "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))){
+//                        rechargeBtn.setVisibility(View.VISIBLE);
+//                    }else {
+//                        rechargeBtn.setVisibility(View.GONE);
+//                    }
+//                }
                 break;
             case R.id.ui_adv_image:
 
@@ -2011,6 +1941,123 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 break;
             default:
                 break;
+        }
+    }
+
+    public void RefreshLogin() {
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+        String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
+
+        Log.e("EBF===RefreshLogin", uid+"==="+access_token);
+
+        if (access_token == null || "".equals(access_token) || uid == null || "".equals(uid)) {
+            ToastUtil.showMessageApp(context, "请先登录账号");
+            UIHelper.goToAct(context, LoginActivity.class);
+        } else {
+            RequestParams params = new RequestParams();
+            params.add("uid", uid);
+            params.add("access_token", access_token);
+
+            HttpHelper.post(AppManager.getAppManager().currentActivity(), Urls.accesslogin, params, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    onStartCommon("正在刷新");
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    onFailureCommon(throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                if (result.getFlag().equals("Success")) {
+                                    UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+                                    // 极光标记别名
+
+                                    Log.e("RefreshLogin===", bean.getSpecialdays()+"==="+bean.getEbike_specialdays());
+
+                                    String uid = bean.getUid();
+                                    String access_token = bean.getAccess_token();
+
+                                    SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
+                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
+                                    SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
+                                    SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
+                                    SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
+                                    SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
+                                    SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
+                                    SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
+                                    SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
+                                    SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
+                                    SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
+                                    SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+
+                                    new MyAsyncTask().execute();
+                                    if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+                                        authBtn.setVisibility(View.VISIBLE);
+                                        authBtn.setText("您还未登录，点我快速登录");
+                                        authBtn.setEnabled(true);
+                                    } else {
+                                        if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+                                            switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+                                                case 1:
+                                                    authBtn.setEnabled(true);
+                                                    authBtn.setVisibility(View.VISIBLE);
+                                                    authBtn.setText("您还未认证，点我快速认证");
+                                                    break;
+                                                case 2:
+                                                    getCurrentorder1(uid, access_token);
+                                                    break;
+                                                case 3:
+                                                    authBtn.setEnabled(true);
+                                                    authBtn.setVisibility(View.VISIBLE);
+                                                    authBtn.setText("认证被驳回，请重新认证");
+                                                    break;
+                                                case 4:
+                                                    authBtn.setEnabled(false);
+                                                    authBtn.setVisibility(View.VISIBLE);
+                                                    authBtn.setText("认证审核中，请点击刷新");
+                                                    break;
+                                            }
+                                        } else {
+                                            authBtn.setVisibility(View.GONE);
+                                        }
+                                    }
+                                    if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))||
+                                            "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) ||
+                                            SharedPreferencesUrls.getInstance().getString("money", "") == null ||
+                                            "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))){
+                                        rechargeBtn.setVisibility(View.VISIBLE);
+                                    }else {
+                                        rechargeBtn.setVisibility(View.GONE);
+                                    }
+
+                                } else {
+                                    if (BaseApplication.getInstance().getIBLE() != null){
+                                        if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                                            BaseApplication.getInstance().getIBLE().refreshCache();
+                                            BaseApplication.getInstance().getIBLE().close();
+                                            BaseApplication.getInstance().getIBLE().stopScan();
+                                        }
+                                    }
+                                    SharedPreferencesUrls.getInstance().putString("uid", "");
+                                    SharedPreferencesUrls.getInstance().putString("access_token","");
+                                }
+                            } catch (Exception e) {
+                            }
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+                        }
+                    });
+
+                }
+            });
         }
     }
 

@@ -753,8 +753,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                 for (int i = 0; i < JSONArray.length();i++){
                                     SchoolListBean bean = JSON.parseObject(JSONArray.getJSONObject(i).toString(),SchoolListBean.class);
                                     schoolList.add(bean);
-                                    item.add(bean.getSchool()+"_"+bean.getCert_method());
-//                                    item.add(bean.getSchool());
+//                                    item.add(bean.getSchool()+"_"+bean.getCert_method());
+                                    item.add(bean.getSchool());
                                     item1.add(new String[]{bean.getSchool(), bean.getCert_method()});
 
                                 }

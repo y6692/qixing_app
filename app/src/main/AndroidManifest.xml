@@ -116,7 +116,6 @@
 
         </activity>
 
-        <activity android:name=".full.SplashActivity2" />
 
         <activity
             android:name=".activity.MainActivity"
@@ -126,6 +125,23 @@
 
         </activity>
 
+        <activity
+            android:name=".activity.LoginActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+        <activity
+            android:name=".activity.NoteLoginActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+        <activity
+            android:name=".activity.FindPsdActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.Login2Activity"
             android:screenOrientation="portrait"
@@ -155,14 +171,13 @@
              <!--</intent-filter>-->
          <!--</activity>-->
 
-        <activity
-            android:name="com.hubcloud.adhubsdk.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:theme="@style/AdhubDialogStyle" />
-        <service
-            android:name="com.hubcloud.adhubsdk.DownloadService"
-            android:exported="false" />
-        <!-- 声明SDK所需要的组件 -->
+        <!--<activity-->
+            <!--android:name="com.hubcloud.adhubsdk.AdActivity"-->
+            <!--android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"-->
+            <!--android:theme="@style/AdhubDialogStyle" />-->
+        <!--<service-->
+            <!--android:name="com.hubcloud.adhubsdk.DownloadService"-->
+            <!--android:exported="false" />-->
 
         <!--lance start-->
         <!--声明SDK所需要的组件-->
@@ -207,12 +222,6 @@
                 android:resource="@xml/tt_file_path" />
         </provider>
         <!--lance end-->
-
-
-        <activity android:name=".activity.BannerActivity" />
-        <activity android:name=".activity.InterstitialActivity" />
-
-
 
         <activity android:name=".activity.Main2Activity" />
         <activity android:name=".activity.Main3Activity" />
@@ -299,22 +308,7 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
-            android:name=".activity.LoginActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
-            android:name=".activity.RegisterActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
-            android:name=".activity.NoteLoginActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
-            android:name=".activity.FindPsdActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
         <activity
             android:name=".activity.HistoryRoadDetailActivity"
             android:screenOrientation="portrait"
