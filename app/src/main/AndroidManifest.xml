@@ -171,6 +171,7 @@
              <!--</intent-filter>-->
          <!--</activity>-->
 
+        <!-- ad 广告 -->
         <!--<activity-->
             <!--android:name="com.hubcloud.adhubsdk.AdActivity"-->
             <!--android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"-->
@@ -178,20 +179,29 @@
         <!--<service-->
             <!--android:name="com.hubcloud.adhubsdk.DownloadService"-->
             <!--android:exported="false" />-->
+        <!--<service-->
+            <!--android:name="com.qq.e.comm.DownloadService"-->
+            <!--android:exported="false" />-->
+        <!--&lt;!&ndash;请开发者注意字母的大小写，ADActivity，而不是AdActivity&ndash;&gt;-->
+        <!--<activity-->
+            <!--android:name="com.qq.e.ads.ADActivity"-->
+            <!--android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />-->
+        <!--<activity-->
+            <!--android:name="com.baidu.mobads.AppActivity"-->
+            <!--android:configChanges="screenSize|keyboard|keyboardHidden|orientation"-->
+            <!--android:theme="@android:style/Theme.Translucent.NoTitleBar" />-->
+        <!--<provider-->
+            <!--android:name="com.bytedance.sdk.openadsdk.TTFileProvider"-->
+            <!--android:authorities="cn.qimate.bike.TTFileProvider"-->
+            <!--android:exported="false"-->
+            <!--android:grantUriPermissions="true">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
+                <!--android:resource="@xml/tt_file_path" />-->
+        <!--</provider>-->
 
-        <!--lance start-->
-        <!--声明SDK所需要的组件-->
-        <service
-            android:name="com.qq.e.comm.DownloadService"
-            android:exported="false" />
-        <!--请开发者注意字母的大小写，ADActivity，而不是AdActivity-->
-        <activity
-            android:name="com.qq.e.ads.ADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
-        <activity
-            android:name="com.baidu.mobads.AppActivity"
-            android:configChanges="screenSize|keyboard|keyboardHidden|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+
         <!--&lt;!&ndash;targetSDKVersion >= 24时才需要添加这个provider。请开发者根据自己的包名来替换${applicationId}这个值&ndash;&gt;-->
         <!--<provider-->
             <!--android:name="android.support.v4.content.FileProvider"-->
@@ -212,15 +222,7 @@
                 <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
                 <!--android:resource="@xml/bd_file_paths" />-->
         <!--</provider>-->
-        <provider
-            android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
-            android:authorities="cn.qimate.bike.TTFileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/tt_file_path" />
-        </provider>
+
         <!--lance end-->
 
         <activity android:name=".activity.Main2Activity" />

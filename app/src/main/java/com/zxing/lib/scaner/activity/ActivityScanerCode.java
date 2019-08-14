@@ -2069,10 +2069,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
      * 3. 搜索不到就执行直接连接设备
      */
     protected void connect() {
-        BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
+//        BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
 
 //        BaseApplication.getInstance().getIBLE().stopScan();
-//        m_myHandler.sendEmptyMessage(0x99);
+        m_myHandler.sendEmptyMessage(0x99);
 //        BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
 //            @Override
 //            public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
@@ -2723,23 +2723,33 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 case 9:
                     break;
                 case 0x99://搜索超时
+//                    BaseApplication.getInstance().getIBLE().resetLock();
+//                    BaseApplication.getInstance().getIBLE().resetBluetoothAdapter();
+
+//                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+
+//                    mBluetoothAdapter..disable();
+
+
                     BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!isStop){
-                                if (loadingDialog != null && loadingDialog.isShowing()) {
-                                    loadingDialog.dismiss();
-                                }
-//                                Toast.makeText(context,"请重启软件，开启定位服务,输编号用车",5 * 1000).show();
-                                Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
-                                BaseApplication.getInstance().getIBLE().refreshCache();
-                                BaseApplication.getInstance().getIBLE().close();
-                                BaseApplication.getInstance().getIBLE().disconnect();
-                                scrollToFinishActivity();
-                            }
-                        }
-                    }, 15 * 1000);
+                    resetLock();
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (!isStop){
+//                                if (loadingDialog != null && loadingDialog.isShowing()) {
+//                                    loadingDialog.dismiss();
+//                                }
+////                                Toast.makeText(context,"请重启软件，开启定位服务,输编号用车",5 * 1000).show();
+//                                Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
+//                                BaseApplication.getInstance().getIBLE().refreshCache();
+//                                BaseApplication.getInstance().getIBLE().close();
+//                                BaseApplication.getInstance().getIBLE().disconnect();
+//                                scrollToFinishActivity();
+//                            }
+//                        }
+//                    }, 15 * 1000);
                     break;
                 default:
                     break;
@@ -2747,6 +2757,47 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             return false;
         }
     });
+
+    public void resetLock(){
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isStop){
+
+                    BaseApplication.getInstance().getIBLE().resetLock();
+
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!isStop){
+
+                                BaseApplication.getInstance().getIBLE().resetLock();
+
+                                m_myHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (!isStop){
+                                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                                loadingDialog.dismiss();
+                                            }
+
+                                            Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
+                                            BaseApplication.getInstance().getIBLE().refreshCache();
+                                            BaseApplication.getInstance().getIBLE().close();
+                                            BaseApplication.getInstance().getIBLE().disconnect();
+                                            scrollToFinishActivity();
+                                        }
+                                    }
+                                }, 5 * 1000);
+
+                            }
+                        }
+                    }, 5 * 1000);
+
+                }
+            }
+        }, 5 * 1000);
+    }
 
     @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.BLUETOOTH})
     public void connectDevice(String imei) {

@@ -817,8 +817,10 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                 UIHelper.goToAct(context,SuperVipActivity.class);
                 break;
             case R.id.personUI_bottom_billing_questionLayout:
-                UIHelper.goWebViewAct(context,"常见问题",
-                        "http://www.7mate.cn/App/Helper/index.html");
+//                UIHelper.goWebViewAct(context,"常见问题", "http://www.7mate.cn/App/Helper/index.html");
+
+                UIHelper.goToAct(context, ServiceCenter0Activity.class);
+
                 break;
             case R.id.personUI_bottom_billing_insuranceLayout:
                 Intent intent1 = new Intent(context,InsureanceActivity.class);

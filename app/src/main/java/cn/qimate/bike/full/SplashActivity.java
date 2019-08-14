@@ -37,7 +37,6 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.bumptech.glide.Glide;
-import com.ly.adpoymer.model.ServerParam;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.utils.GlobalParameterUtils;

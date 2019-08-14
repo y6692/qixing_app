@@ -24,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.androidquery.util.Common;
 
 import org.apache.http.Header;
 import org.json.JSONArray;

@@ -128,9 +128,9 @@ dependencies {
     implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
     implementation 'com.google.zxing:core:3.3.0'
 //    implementation(name: 'adhub_sdk_3.0.1', ext: 'aar')
-    implementation(name: 'open_ad_sdk1.9.72', ext: 'aar')
-    implementation(name: 'adpoymer-3.5.10', ext: 'aar')
-    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
+//    implementation(name: 'open_ad_sdk1.9.72', ext: 'aar')
+//    implementation(name: 'adpoymer-3.5.10', ext: 'aar')
+//    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
     implementation 'com.android.support:support-v4:26.1.0'
     implementation files('libs/ab-sdk-beta1.7.3.jar')
     implementation 'com.squareup.okhttp3:okhttp:3.4.1'

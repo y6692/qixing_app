@@ -1696,6 +1696,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             BaseApplication.getInstance().getIBLE().refreshCache();
             BaseApplication.getInstance().getIBLE().close();
             BaseApplication.getInstance().getIBLE().disconnect();
+
+
+
         }
 
 
@@ -5111,6 +5114,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 break;
             case 0x99://搜索超时
                 BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
+                resetLock();
                 break;
             default:
                 break;
@@ -5118,6 +5122,47 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         return false;
         }
     });
+
+    public void resetLock(){
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isStop){
+
+                    BaseApplication.getInstance().getIBLE().resetLock();
+
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!isStop){
+
+                                BaseApplication.getInstance().getIBLE().resetLock();
+
+                                m_myHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (!isStop){
+                                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                                loadingDialog.dismiss();
+                                            }
+
+                                            Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
+                                            BaseApplication.getInstance().getIBLE().refreshCache();
+                                            BaseApplication.getInstance().getIBLE().close();
+                                            BaseApplication.getInstance().getIBLE().disconnect();
+                                            scrollToFinishActivity();
+                                        }
+                                    }
+                                }, 5 * 1000);
+
+                            }
+                        }
+                    }, 5 * 1000);
+
+                }
+            }
+        }, 5 * 1000);
+    }
 
     void checkConnect(){
         m_myHandler.postDelayed(new Runnable() {
@@ -6744,10 +6789,15 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     }
     @Override
     public void onDisconnect(int state) {
+        Log.e("biking===onDisconnect", "==="+state);
+
         m_myHandler.sendEmptyMessageDelayed(0, 1000);
     }
     @Override
     public void onServicesDiscovered(String name, String address) {
+        Log.e("biking===onServicesDis", name+"==="+address);
+
+        isStop = true;
         getToken();
     }
     /**
