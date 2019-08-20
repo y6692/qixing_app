@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.alibaba.fastjson.JSON;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
 
 import java.util.Set;
 
@@ -44,6 +45,9 @@ public class SwipeBackActivity extends BaseFragmentActivity implements SwipeBack
 	public BLEService bleService = new BLEService();
 
 	protected LoadingDialog loadingDialog;
+
+	protected static JSONArray jsonArray;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

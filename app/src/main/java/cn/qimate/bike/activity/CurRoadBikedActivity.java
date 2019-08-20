@@ -76,7 +76,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     private TextView balanceText;
     private LinearLayout payBalanceLayout;
     private LinearLayout payOtherLayout;
-    private String oid = "";
+    private String oid = "1";
     private String osn = "";
     private String user_money = "";
     private String prices = "";
@@ -224,53 +224,64 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
                             Log.e("biked==getCurrentorder@","==="+responseString);
 
                             if (result.getFlag().equals("Success")) {
-                                CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
-//                                bikeCode.setText("行程编号:"+bean.getOsn());
-                                bikeNum.setText(""+bean.getCodenum());
-                                startTime.setText(""+bean.getSt_time());
-                                endTime.setText(""+bean.getEd_time());
-                                timeText.setText(""+bean.getTotal_mintues());
 
-                                Log.e("biked==getCurrentorder0",prices+"==="+user_money);
-
-                                if(bean.getIs_super_member()==1){
-                                    rl_time.setVisibility(View.VISIBLE);
-                                    payOtherLayout.setVisibility(View.VISIBLE);
-
-                                    tv_time.setText(""+(Integer.parseInt(bean.getTotal_mintues())-60));
+                                if ("[]".equals(result.getData()) || 0 == result.getData().length()){
+                                    Toast.makeText(context,"恭喜您,支付成功!",Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(context,HistoryRoadDetailActivity.class);
+                                    intent.putExtra("oid", oid);
+                                    startActivity(intent);
+                                    scrollToFinishActivity();
                                 }else{
-                                    rl_time.setVisibility(View.GONE);
-                                    payOtherLayout.setVisibility(View.GONE);
-                                }
+                                    CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
+//                                bikeCode.setText("行程编号:"+bean.getOsn());
+                                    bikeNum.setText(""+bean.getCodenum());
+                                    startTime.setText(""+bean.getSt_time());
+                                    endTime.setText(""+bean.getEd_time());
+                                    timeText.setText(""+bean.getTotal_mintues());
 
-                                Log.e("biked==getCurrentorder1",prices+"==="+user_money);
+                                    Log.e("biked==getCurrentorder0",prices+"==="+user_money);
 
-                                if (bean.getPrices() != null && !"".equals(bean.getPrices())){
-                                    prices = bean.getPrices();
-                                }else {
-                                    prices = "0.00";
-                                }
-                                moneyText.setText(prices);
+                                    if(bean.getIs_super_member()==1){
+                                        rl_time.setVisibility(View.VISIBLE);
+                                        payOtherLayout.setVisibility(View.VISIBLE);
 
-                                Log.e("biked==getCurrentorder2",prices+"==="+user_money);
+                                        tv_time.setText(""+(Integer.parseInt(bean.getTotal_mintues())-60));
+                                    }else{
+                                        rl_time.setVisibility(View.GONE);
+                                        payOtherLayout.setVisibility(View.GONE);
+                                    }
 
-                                if (bean.getUser_money() != null && !"".equals(bean.getUser_money())){
-                                    user_money = bean.getUser_money();
-                                }else {
-                                    user_money = "0.00";
-                                }
-                                balanceText.setText(user_money);
-                                oid = bean.getOid();
-                                osn = bean.getOsn();
+                                    Log.e("biked==getCurrentorder1",prices+"==="+user_money);
+
+                                    if (bean.getPrices() != null && !"".equals(bean.getPrices())){
+                                        prices = bean.getPrices();
+                                    }else {
+                                        prices = "0.00";
+                                    }
+                                    moneyText.setText(prices);
+
+                                    Log.e("biked==getCurrentorder2",prices+"==="+user_money);
+
+                                    if (bean.getUser_money() != null && !"".equals(bean.getUser_money())){
+                                        user_money = bean.getUser_money();
+                                    }else {
+                                        user_money = "0.00";
+                                    }
+                                    balanceText.setText(user_money);
+                                    oid = bean.getOid();
+                                    osn = bean.getOsn();
 //                        if (Double.parseDouble(prices) <= Double.parseDouble(user_money)
 //                                && Double.parseDouble(prices) <= 5){
 
-                                Log.e("biked==getCurrentorder3",prices+"==="+user_money);
+                                    Log.e("biked==getCurrentorder3",prices+"==="+user_money);
 
-                                if (Double.parseDouble(prices) <= Double.parseDouble(user_money)){
-                                    m_myHandler.sendEmptyMessage(0);
+                                    if (Double.parseDouble(prices) <= Double.parseDouble(user_money)){
+                                        m_myHandler.sendEmptyMessage(0);
 //                                  paySubmit();
+                                    }
                                 }
+
+
                             } else {
                                 Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
                             }

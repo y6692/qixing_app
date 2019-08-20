@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import cn.qimate.bike.R;
 
@@ -75,7 +76,11 @@ public class LoadingDialog extends Dialog {
 	@Override
 	public void show() {// 在要用到的地方调用这个方法
 //		iv_route.startAnimation(mAnim);
-		Glide.with(context).load(R.drawable.loading_large).crossFade().into(iv_route);
+		Glide.with(context).load(R.drawable.loading_large)
+//						.dontAnimate()
+//						.skipMemoryCache(true)
+//						.diskCacheStrategy(DiskCacheStrategy.NONE)
+				.crossFade().into(iv_route);
 		handler.sendEmptyMessage(CHANGE_TITLE_WHAT);
 		super.show();
 	}

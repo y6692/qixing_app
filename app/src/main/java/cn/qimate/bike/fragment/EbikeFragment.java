@@ -353,6 +353,10 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         isHidden = hidden;
 
+        if (loadingDialog != null && loadingDialog.isShowing()){
+            loadingDialog.dismiss();
+        }
+
         if(hidden){
             //pause
 //            aMap.clear();
@@ -363,10 +367,13 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
 //            aMap.clear();
 
+            schoolRange();
         }else{
             //resume
 
 //            mapView.onResume();
+
+
 
             pOptions.clear();
             isContainsList.clear();
@@ -501,9 +508,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
-    private void schoolRange(){
-        Log.e("main===schoolRange2", "===");
-
+    private void schoolRange0(){
         RequestParams params = new RequestParams();
         params.put("type", 2);
 
@@ -527,14 +532,14 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                             if (result.getFlag().equals("Success")) {
-                                arraySchoolRange = new JSONArray(result.getData());
+                                jsonArray2 = new JSONArray(result.getData());
                                 if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
                                     isContainsList.clear();
                                 }
-                                for (int i = 0; i < arraySchoolRange.length(); i++) {
+                                for (int i = 0; i < jsonArray2.length(); i++) {
                                     List<LatLng> list = new ArrayList<>();
-                                    for (int j = 0; j < arraySchoolRange.getJSONArray(i).length(); j ++){
-                                        JSONObject jsonObject = arraySchoolRange.getJSONArray(i).getJSONObject(j);
+                                    for (int j = 0; j < jsonArray2.getJSONArray(i).length(); j ++){
+                                        JSONObject jsonObject = jsonArray2.getJSONArray(i).getJSONObject(j);
                                         LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")),
                                                 Double.parseDouble(jsonObject.getString("longitude")));
                                         list.add(latLng);
@@ -568,6 +573,130 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
             }
         });
+    }
+
+    private void schoolRange(){
+        Log.e("main===schoolRange2", isHidden+"==="+jsonArray2);
+
+        if(isHidden) return;
+
+        if(jsonArray2 != null){
+
+            onStartCommon("正在加载");
+
+            m_myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if(isHidden) return;
+
+                    try{
+                        pOptions.clear();
+                        if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                            isContainsList.clear();
+                        }
+                        for (int i = 0; i < jsonArray2.length(); i++) {
+                            List<LatLng> list = new ArrayList<>();
+                            for (int j = 0; j < jsonArray2.getJSONArray(i).length(); j ++){
+                                JSONObject jsonObject = jsonArray2.getJSONArray(i).getJSONObject(j);
+                                LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")),
+                                        Double.parseDouble(jsonObject.getString("longitude")));
+                                list.add(latLng);
+                            }
+                            Polygon polygon = null;
+                            PolygonOptions pOption = new PolygonOptions();
+                            pOption.addAll(list);
+
+                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
+                                    .strokeColor(Color.argb(255, 48, 191, 186))
+                                    .fillColor(Color.argb(75, 18, 237, 226)));
+
+                            if(!isHidden){
+                                pOptions.add(polygon);
+                                isContainsList.add(polygon.contains(myLocation));
+                            }
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Log.e("biking===schoolRange_e", "==="+e);
+                    }
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                }
+            });
+
+        }else{
+            RequestParams params = new RequestParams();
+            params.put("type", 2);
+
+            HttpHelper.get(context, Urls.schoolRange, params, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    onStartCommon("正在加载");
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    onFailureCommon(throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                if (result.getFlag().equals("Success")) {
+                                    jsonArray2 = new JSONArray(result.getData());
+
+                                    if(isHidden) return;
+
+                                    if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                                        isContainsList.clear();
+                                    }
+                                    for (int i = 0; i < jsonArray2.length(); i++) {
+                                        List<LatLng> list = new ArrayList<>();
+                                        for (int j = 0; j < jsonArray2.getJSONArray(i).length(); j ++){
+                                            JSONObject jsonObject = jsonArray2.getJSONArray(i).getJSONObject(j);
+                                            LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")),
+                                                    Double.parseDouble(jsonObject.getString("longitude")));
+                                            list.add(latLng);
+                                        }
+                                        Polygon polygon = null;
+                                        PolygonOptions pOption = new PolygonOptions();
+                                        pOption.addAll(list);
+
+                                        polygon = aMap.addPolygon(pOption.strokeWidth(2)
+                                                .strokeColor(Color.argb(255, 48, 191, 186))
+                                                .fillColor(Color.argb(75, 18, 237, 226)));
+
+                                        if(!isHidden){
+                                            pOptions.add(polygon);
+                                            isContainsList.add(polygon.contains(myLocation));
+                                        }
+                                    }
+
+//                              minPolygon();
+
+                                }else {
+                                    ToastUtil.showMessageApp(context,result.getMsg());
+                                }
+                            }catch (Exception e){
+                            }
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+                        }
+                    });
+
+                }
+            });
+        }
+
+
     }
 
 

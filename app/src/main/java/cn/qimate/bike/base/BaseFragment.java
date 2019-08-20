@@ -17,6 +17,7 @@ import com.sunshine.blelibrary.inter.OnConnectionListener;
 import com.zxing.lib.scaner.activity.ActivityScanerCode;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
 
 import java.util.Set;
 
@@ -62,6 +63,9 @@ public class BaseFragment extends Fragment implements OnConnectionListener {
 
 	public static double referLatitude = 0.0;
 	public static double referLongitude = 0.0;
+
+	public static JSONArray jsonArray;
+	public static JSONArray jsonArray2;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
