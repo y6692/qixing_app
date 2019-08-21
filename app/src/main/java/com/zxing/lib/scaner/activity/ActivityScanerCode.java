@@ -2100,6 +2100,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             }
         });
 
+
     }
     @Override
     public void onTimeOut() {
