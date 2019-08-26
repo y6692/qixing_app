@@ -319,39 +319,39 @@ public class BaseFragmentActivity extends AppCompatActivity
 
 
 
-	protected   void connect() {
-//		BaseApplication.getInstance().getIBLE().resetBluetoothAdapter();
-
-		BaseApplication.getInstance().getIBLE().stopScan();
-
-		Log.e("base===","connect1===");
-
-		m_myHandler.sendEmptyMessage(0x99);
-
-		Log.e("base===","connect2===");
-
-		BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
-			@Override
-			public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
-				if (device==null||TextUtils.isEmpty(device.getAddress()))return;
-
-				Log.e("base===","connect3===");
-
-				if (m_nowMac.equalsIgnoreCase(device.getAddress())){
-					Log.e("base===","connect4===");
-					m_myHandler.removeMessages(0x99);
-
-					Log.e("base===","connect5===");
-					BaseApplication.getInstance().getIBLE().stopScan();
-
-					Log.e("base===","connect6===");
-					BaseApplication.getInstance().getIBLE().connect(m_nowMac, BaseFragmentActivity.this);
-
-					Log.e("base===","connect7===");
-				}
-			}
-		});
-	}
+//	protected   void connect() throws Exception {
+////		BaseApplication.getInstance().getIBLE().resetBluetoothAdapter();
+//
+//		BaseApplication.getInstance().getIBLE().stopScan();
+//
+//		Log.e("base===","connect1===");
+//
+//		m_myHandler.sendEmptyMessage(0x99);
+//
+//		Log.e("base===","connect2===");
+//
+//		BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
+//			@Override
+//			public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
+//				if (device==null||TextUtils.isEmpty(device.getAddress()))return;
+//
+//				Log.e("base===","connect3===");
+//
+//				if (m_nowMac.equalsIgnoreCase(device.getAddress())){
+//					Log.e("base===","connect4===");
+//					m_myHandler.removeMessages(0x99);
+//
+//					Log.e("base===","connect5===");
+//					BaseApplication.getInstance().getIBLE().stopScan();
+//
+//					Log.e("base===","connect6===");
+//					BaseApplication.getInstance().getIBLE().connect(m_nowMac, BaseFragmentActivity.this);
+//
+//					Log.e("base===","connect7===");
+//				}
+//			}
+//		});
+//	}
 
 
 

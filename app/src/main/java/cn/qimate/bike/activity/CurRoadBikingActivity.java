@@ -196,7 +196,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private  LoadingDialog loadingDialog2;
     private  LoadingDialog lockLoading;
     private LinearLayout mainLayout;
-    private ImageView backImg;
+    private LinearLayout backImg;
     private TextView title;
     private TextView rightBtn;
 
@@ -571,7 +571,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
         mainLayout = (LinearLayout)findViewById(R.id.mainUI_title_mainLayout);
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        backImg = (LinearLayout) findViewById(R.id.ll_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("骑行中");
         rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
@@ -756,9 +756,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                     CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
                 }else{
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("正在唤醒车锁");
-                        loadingDialog.show();
+
+                    if (lockLoading != null && !lockLoading.isShowing()){
+                        lockLoading.setTitle("正在唤醒车锁");
+                        lockLoading.show();
                     }
 
 
@@ -769,7 +770,22 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                            connect();
 
                             BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
-                            resetLock();
+//                            resetLock();
+                            m_myHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (!isStop){
+                                        if (lockLoading != null && lockLoading.isShowing()) {
+                                            lockLoading.dismiss();
+                                        }
+                                        Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
+                                        BaseApplication.getInstance().getIBLE().refreshCache();
+                                        BaseApplication.getInstance().getIBLE().close();
+                                        BaseApplication.getInstance().getIBLE().disconnect();
+                                        scrollToFinishActivity();
+                                    }
+                                }
+                            }, 15 * 1000);
                         }
                     }, 2 * 1000);
 
@@ -824,7 +840,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
      * 2. 搜索到就链接设备，取消倒计时；
      * 3. 搜索不到就执行直接连接设备
      */
-    @Override
     protected void connect() {
 
         Log.e("biking====", "connect===="+m_nowMac+"==="+type);
@@ -833,11 +848,12 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 //        m_myHandler.sendEmptyMessage(0x99);
 
-        BaseApplication.getInstance().getIBLE().stopScan();
-        m_myHandler.sendEmptyMessage(0x99);
-        BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
-            @Override
-            public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
+        try{
+            BaseApplication.getInstance().getIBLE().stopScan();
+            m_myHandler.sendEmptyMessage(0x99);
+            BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
+                @Override
+                public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
 
 //                Log.e("biking===connect", device.getAddress()+"==="+m_nowMac);
 
@@ -848,17 +864,21 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //
 //                    return;
 //                }
-                if (device==null||TextUtils.isEmpty(device.getAddress()))return;
-                if (m_nowMac.equalsIgnoreCase(device.getAddress())){
+                    if (device==null||TextUtils.isEmpty(device.getAddress()))return;
+                    if (m_nowMac.equalsIgnoreCase(device.getAddress())){
 
-                    Log.e("biking====", "connect===3==="+stopScan);
+                        Log.e("biking====", "connect===3==="+stopScan);
 
-                    m_myHandler.removeMessages(0x99);
-                    BaseApplication.getInstance().getIBLE().stopScan();
-                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
+                        m_myHandler.removeMessages(0x99);
+                        BaseApplication.getInstance().getIBLE().stopScan();
+                        BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
+                    }
                 }
-            }
-        });
+            });
+        }catch (Exception e){
+
+        }
+
     }
 
 
@@ -1429,29 +1449,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         HttpHelper.post(this, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("正在加载");
-                            loadingDialog.show();
-                        }
-                    }
-                });
-
+                onStartCommon("正在加载");
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        UIHelper.ToastError(context, throwable.toString());
-                    }
-                });
-
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -1590,29 +1592,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         HttpHelper.get(this, Urls.ebikeInfo, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("正在加载");
-                            loadingDialog.show();
-                        }
-                    }
-                });
-
+                onStartCommon("正在加载");
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        UIHelper.ToastError(context, throwable.toString());
-                    }
-                });
-
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -1802,32 +1786,13 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         RequestParams params = new RequestParams();
         params.put("telphone",SharedPreferencesUrls.getInstance().getString("userName",""));
         HttpHelper.get(context, Urls.getFeedbackStatus, params, new TextHttpResponseHandler() {
-
             @Override
             public void onStart() {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("正在加载");
-                            loadingDialog.show();
-                        }
-                    }
-                });
-
+                onStartCommon("正在加载");
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        UIHelper.ToastError(context, throwable.toString());
-                    }
-                });
-
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -1838,7 +1803,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                             if (result.getFlag().equals("Success")) {
-//						ToastUtil.showMessageApp(context,"数据更新成功==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
+//						        ToastUtil.showMessageApp(context,"数据更新成功==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
 
                                 Log.e("biking=", "getFeedbackStatus==="+result.data+"==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
 
@@ -2072,8 +2037,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         }else{
                             ToastUtil.showMessageApp(context,"开锁失败");
                         }
-
-
 
                         if (loadingDialog != null && loadingDialog.isShowing()) {
                             loadingDialog.dismiss();
@@ -2430,29 +2393,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         HttpHelper.post(this, Urls.openEbike, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("正在加载");
-                            loadingDialog.show();
-                        }
-                    }
-                });
-
+                onStartCommon("正在加载");
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        UIHelper.ToastError(context, throwable.toString());
-                    }
-                });
-
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -2657,7 +2602,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_backBtn:
                 scrollToFinishActivity();
                 break;
             case R.id.mainUI_title_rightBtn:
@@ -2806,82 +2751,89 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             }
                         }
                     }else{
-                        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                            ToastUtil.showMessageApp(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0");
-                            scrollToFinishActivity();
-                        }
-                        //蓝牙锁
-                        if (!BaseApplication.getInstance().getIBLE().isEnable()){
-                            BaseApplication.getInstance().getIBLE().enableBluetooth();
-                            return;
-                        }
-                        if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
-                            if (loadingDialog != null && !loadingDialog.isShowing()){
-                                loadingDialog.setTitle("正在开锁");
-                                loadingDialog.show();
+
+                        try{
+                            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                                ToastUtil.showMessageApp(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0");
+                                scrollToFinishActivity();
                             }
-
-                            BaseApplication.getInstance().getIBLE().openLock();
-
-                            isStop = false;
-                            m_myHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (loadingDialog != null && loadingDialog.isShowing()){
-                                        loadingDialog.dismiss();
-                                    }
-
-                                    if (!isStop){
-                                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                        customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
-                                                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
-                                        customBuilder.create().show();
-                                    }
-
-                                }
-                            }, 10 * 1000);
-
-                        }else {
-                            if (lockLoading != null && !lockLoading.isShowing()){
-                                lockLoading.setTitle("正在连接");
-                                lockLoading.show();
+                            //蓝牙锁
+                            if (!BaseApplication.getInstance().getIBLE().isEnable()){
+                                BaseApplication.getInstance().getIBLE().enableBluetooth();
+                                return;
                             }
-
-                            isStop = false;
-                            m_myHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    if (lockLoading != null && lockLoading.isShowing()){
-                                        lockLoading.dismiss();
-                                    }
-
-                                    if (!isStop){
-                                        stopScan = true;
-//                                      BaseApplication.getInstance().getIBLE().stopScan();
-                                        BaseApplication.getInstance().getIBLE().refreshCache();
-                                        BaseApplication.getInstance().getIBLE().close();
-                                        BaseApplication.getInstance().getIBLE().disconnect();
-
-                                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                        customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
-                                                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
-                                        customBuilder.create().show();
-                                    }
-
+                            if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                                if (loadingDialog != null && !loadingDialog.isShowing()){
+                                    loadingDialog.setTitle("正在开锁");
+                                    loadingDialog.show();
                                 }
-                            }, 10 * 1000);
 
-                            connect();
+                                BaseApplication.getInstance().getIBLE().openLock();
+
+                                isStop = false;
+                                m_myHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (loadingDialog != null && loadingDialog.isShowing()){
+                                            loadingDialog.dismiss();
+                                        }
+
+                                        if (!isStop){
+                                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+                                                    .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.cancel();
+                                                        }
+                                                    });
+                                            customBuilder.create().show();
+                                        }
+
+                                    }
+                                }, 10 * 1000);
+
+                            }else {
+                                if (lockLoading != null && !lockLoading.isShowing()){
+                                    lockLoading.setTitle("正在连接");
+                                    lockLoading.show();
+                                }
+
+                                isStop = false;
+                                m_myHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        if (lockLoading != null && lockLoading.isShowing()){
+                                            lockLoading.dismiss();
+                                        }
+
+                                        if (!isStop){
+                                            stopScan = true;
+//                                          BaseApplication.getInstance().getIBLE().stopScan();
+                                            BaseApplication.getInstance().getIBLE().refreshCache();
+                                            BaseApplication.getInstance().getIBLE().close();
+                                            BaseApplication.getInstance().getIBLE().disconnect();
+
+                                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+                                                    .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.cancel();
+                                                        }
+                                                    });
+                                            customBuilder.create().show();
+                                        }
+
+                                    }
+                                }, 10 * 1000);
+
+                                connect();
+                            }
+                        }catch (Exception e){
+                            ToastUtil.showMessageApp(context, "请重试");
                         }
+
+
                     }
                 }
                 break;
@@ -3175,29 +3127,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         HttpHelper.get(this, Urls.location, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("正在加载");
-                            loadingDialog.show();
-                        }
-                    }
-                });
-
+                onStartCommon("正在加载");
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        UIHelper.ToastError(context, throwable.toString());
-                    }
-                });
-
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -3583,7 +3517,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                     if (!isStop){
                                         stopScan = true;
-//                              BaseApplication.getInstance().getIBLE().stopScan();
+//                                      BaseApplication.getInstance().getIBLE().stopScan();
                                         BaseApplication.getInstance().getIBLE().refreshCache();
                                         BaseApplication.getInstance().getIBLE().close();
                                         BaseApplication.getInstance().getIBLE().disconnect();
@@ -3636,29 +3570,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         HttpHelper.post(this, Urls.carClose, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("正在加载");
-                            loadingDialog.show();
-                        }
-                    }
-                });
-
+                onStartCommon("正在加载");
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        UIHelper.ToastError(context, throwable.toString());
-                    }
-                });
-
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -3782,29 +3698,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         HttpHelper.post(this, Urls.carClose, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("正在加载");
-                            loadingDialog.show();
-                        }
-                    }
-                });
-
+                onStartCommon("正在加载");
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        UIHelper.ToastError(context, throwable.toString());
-                    }
-                });
-
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -3885,8 +3783,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
             params.put("xinbiao_name", "");
             params.put("xinbiao_mac", macList.size() > 0?macList.get(0):"");
-
-
 
             if(major!=0){
                 Log.e("submit===221", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
@@ -5003,6 +4899,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                     break;
                 }
+                BaseApplication.getInstance().getIBLE().resetLock();
+                BaseApplication.getInstance().getIBLE().resetBluetoothAdapter();
                 BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
                 break;
             case 1:
@@ -5228,29 +5126,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         HttpHelper.post(this, Urls.closeEbike, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("正在加载");
-                            loadingDialog.show();
-                        }
-                    }
-                });
-
+                onStartCommon("正在加载");
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        UIHelper.ToastError(context, throwable.toString());
-                    }
-                });
-
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -5388,29 +5268,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         HttpHelper.post(this, Urls.closeEbike, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("正在加载");
-                            loadingDialog.show();
-                        }
-                    }
-                });
-
+                onStartCommon("正在加载");
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        UIHelper.ToastError(context, throwable.toString());
-                    }
-                });
-
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
             }
 
             @Override
@@ -5782,39 +5644,39 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             params.put("type", ("4".equals(type)||"7".equals(type))?2:1);
 
             HttpHelper.get(context, Urls.schoolRange, params, new TextHttpResponseHandler() {
-//            @Override
-//            public void onStart() {
-//                onStartCommon("正在加载");
-//            }
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                onFailureCommon(throwable.toString());
-//            }
-
                 @Override
                 public void onStart() {
-                    m_myHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (loadingDialog2 != null && !loadingDialog2.isShowing()) {
-                                loadingDialog2.setTitle("正在加载");
-                                loadingDialog2.show();
-                            }
-                        }
-                    });
+                    onStartCommon("正在加载");
                 }
                 @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                    m_myHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (loadingDialog2 != null && loadingDialog2.isShowing()){
-                                loadingDialog2.dismiss();
-                            }
-                            UIHelper.ToastError(context, throwable.toString());
-                        }
-                    });
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    onFailureCommon(throwable.toString());
                 }
+
+//                @Override
+//                public void onStart() {
+//                    m_myHandler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (loadingDialog2 != null && !loadingDialog2.isShowing()) {
+//                                loadingDialog2.setTitle("正在加载");
+//                                loadingDialog2.show();
+//                            }
+//                        }
+//                    });
+//                }
+//                @Override
+//                public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
+//                    m_myHandler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (loadingDialog2 != null && loadingDialog2.isShowing()){
+//                                loadingDialog2.dismiss();
+//                            }
+//                            UIHelper.ToastError(context, throwable.toString());
+//                        }
+//                    });
+//                }
 
 
                 @Override
@@ -5981,8 +5843,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 e.printStackTrace();
                                 Log.e("biking===schoolRange_e", "==="+e);
                             }
-                            if (loadingDialog2 != null && loadingDialog2.isShowing()){
-                                loadingDialog2.dismiss();
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
                             }
                         }
                     });
@@ -5993,10 +5855,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //
 //                    }
 //                }).start();
-
-
-
-
                 }
             });
         }
@@ -6650,29 +6508,13 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         HttpHelper.get(this, Urls.rent, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("正在提交");
-                            loadingDialog.show();
-                        }
-                    }
-                });
+                onStartCommon("正在提交");
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        UIHelper.ToastError(context, throwable.toString());
-                    }
-                });
-
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
             }
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, final String responseString) {
 

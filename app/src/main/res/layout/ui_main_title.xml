@@ -11,6 +11,7 @@
         android:layout_height="@dimen/dp40">
 
         <LinearLayout
+            android:id="@+id/ll_backBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:clickable="true"
