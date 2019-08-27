@@ -187,4 +187,7 @@ public class Urls {
 	public static String question = host + "?g=App&m=Question&a=index";
 	/**电单车位置信息接口*/
 	public static String location = host + "?g=App&m=Ebike&a=location";
+
+	/**扫码用车不下单*/
+	public static String useCarDdy = host + "/index.php?g=App&m=User&a=useCarDdy";
 }
