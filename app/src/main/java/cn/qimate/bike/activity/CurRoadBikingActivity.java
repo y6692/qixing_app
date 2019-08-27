@@ -1123,7 +1123,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 m_myHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("getBleRecord===", transType+"==Major:"+ Major +"---Minor:"+Minor+"---mackey:"+mackey);
+                        Log.e("getBleRecord===###", transType+"==Major:"+ Major +"---Minor:"+Minor+"---mackey:"+mackey);
 
 //                      ToastUtil.showMessageApp(context, "Major:"+ Major +"---Minor:"+Minor);
 
@@ -1157,7 +1157,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                        ToastUtil.showMessageApp(context, Code.toString(code));
                     }
                 });
-
             }
         });
     }
@@ -2932,7 +2931,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     mlocationClient.startLocation();
                 }
 
-                schoolRange();
+//                schoolRange();
 
                 break;
             case R.id.curRoadUI_biking_slideLayout:
@@ -3244,9 +3243,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                 for (Beacon beacon : beacons) {
 
-                    Log.e("biking===scanM", beacon.getRssi()+"=====" + beacon.getMacAddress());
+                    Log.e("biking===scanM", beacon.getName()+"=====" +beacon.getRssi()+"=====" + beacon.getMacAddress());
 
-                    macList.add(""+beacon.getMacAddress());
+//                    macList.add(""+beacon.getMacAddress());
+                    macList.add(""+beacon.getName());
 
                     scan = true;
                 }
@@ -3300,7 +3300,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         tv_test_xinbiao.setText(test_xinbiao);
 
                         if ("BC01".equals(device.getName()) && !macList.contains(""+device.getAddress())){
-                            macList.add(""+device.getAddress());
+                            macList.add(""+device.getName());
+//                            macList.add(""+device.getAddress());
 //                          title.setText(isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + k);
                         }
 
