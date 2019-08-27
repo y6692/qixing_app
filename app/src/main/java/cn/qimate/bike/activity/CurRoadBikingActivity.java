@@ -767,9 +767,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     m_myHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-//                            connect();
+                            connect();
 
-                            BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
+//                            BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
 //                            resetLock();
                             m_myHandler.postDelayed(new Runnable() {
                                 @Override
