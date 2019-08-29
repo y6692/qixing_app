@@ -1125,6 +1125,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     public void run() {
                         Log.e("getBleRecord===###", transType+"==Major:"+ Major +"---Minor:"+Minor+"---mackey:"+mackey);
 
+                        if(BaseApplication.getInstance().isTestLog()){
+                            macText.setText(Major+"==="+Minor+"==="+macList);
+                        }
+
 //                      ToastUtil.showMessageApp(context, "Major:"+ Major +"---Minor:"+Minor);
 
                         transtype = transType;

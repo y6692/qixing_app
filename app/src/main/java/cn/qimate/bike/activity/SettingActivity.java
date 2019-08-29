@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Selection;
 import android.text.Spannable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -45,7 +46,7 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 public class SettingActivity extends SwipeBackActivity implements View.OnClickListener {
 
     private Context context;
-    private LoadingDialog loadingDialog;
+//    private LoadingDialog loadingDialog;
     private ImageView backImg;
     private TextView title;
 //    private TextView rightBtn;
@@ -247,6 +248,8 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
             classLayout.setEnabled(true);
             stuNumEdit.setEnabled(true);
         }
+
+        Log.e("initView===", "===");
     }
 
     @Override
@@ -259,6 +262,8 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
                 break;
 
             case R.id.settingUI_sexLayout:
+                Log.e("onClick===", "==="+pvOptions1);
+
                 pvOptions1.show();
                 break;
             case R.id.settingUI_schoolLayout:
@@ -307,8 +312,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
         }
     }
 
-    private void submit(String uid,String access_token,String realname,String nickname,
-                        String sex,String school,String grade,String stunum){
+    private void submit(String uid,String access_token,String realname,String nickname,String sex,String school,String grade,String stunum){
 
         RequestParams params = new RequestParams();
         params.put("uid",uid);
@@ -322,35 +326,36 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
         HttpHelper.post(context, Urls.editUserinfo, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在提交");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在提交");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
+
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        Toast.makeText(context,"恭喜您,信息修改成功",Toast.LENGTH_SHORT).show();
-                        scrollToFinishActivity();
-                    } else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                Toast.makeText(context,"恭喜您,信息修改成功",Toast.LENGTH_SHORT).show();
+                                scrollToFinishActivity();
+                            } else {
+                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
+                });
+
             }
         });
     }
@@ -367,44 +372,47 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
             HttpHelper.get(context, Urls.userIndex, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("正在加载");
-                        loadingDialog.show();
-                    }
+                    onStartCommon("正在加载");
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
+                    onFailureCommon(throwable.toString());
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                        if (result.getFlag().equals("Success")) {
-                            UserIndexBean bean = JSON.parseObject(result.getData(), UserIndexBean.class);
-                            nameEdit.setText(bean.getRealname());
-                            phoneNum.setText(bean.getTelphone());
-                            nickNameEdit.setText(bean.getNickname());
-                            sexText.setText(bean.getSex());
-                            schoolText.setText(bean.getSchool());
-                            classEdit.setText(bean.getGrade());
-                            stuNumEdit.setText(bean.getStunum());
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            sex = bean.getSex();
-                            school = bean.getSchool();
-                        } else {
-                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                                Log.e("initHttp===", "==="+responseString);
+
+                                if (result.getFlag().equals("Success")) {
+                                    UserIndexBean bean = JSON.parseObject(result.getData(), UserIndexBean.class);
+                                    nameEdit.setText(bean.getRealname());
+                                    phoneNum.setText(bean.getTelphone());
+                                    nickNameEdit.setText(bean.getNickname());
+                                    sexText.setText(bean.getSex());
+                                    schoolText.setText(bean.getSchool());
+                                    classEdit.setText(bean.getGrade());
+                                    stuNumEdit.setText(bean.getStunum());
+
+                                    sex = bean.getSex();
+                                    school = bean.getSchool();
+                                } else {
+                                    Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
+                    });
+
                 }
             });
         }else {
@@ -423,47 +431,47 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
 
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon(throwable.toString());
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        JSONArray JSONArray = new JSONArray(result.getData());
-                        if (schoolList.size() != 0 || !schoolList.isEmpty()){
-                            schoolList.clear();
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                JSONArray JSONArray = new JSONArray(result.getData());
+                                if (schoolList.size() != 0 || !schoolList.isEmpty()){
+                                    schoolList.clear();
+                                }
+                                if (item1.size() != 0 || !item1.isEmpty()){
+                                    item1.clear();
+                                }
+                                for (int i = 0; i < JSONArray.length();i++){
+                                    SchoolListBean bean = JSON.parseObject(JSONArray.getJSONObject(i).toString(),SchoolListBean.class);
+                                    schoolList.add(bean);
+                                    item1.add(bean.getSchool());
+                                }
+                                handler.sendEmptyMessage(0x123);
+                            }else {
+                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                            }
+                        }catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        if (item1.size() != 0 || !item1.isEmpty()){
-                            item1.clear();
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
                         }
-                        for (int i = 0; i < JSONArray.length();i++){
-                            SchoolListBean bean = JSON.parseObject(JSONArray.getJSONObject(i).toString(),SchoolListBean.class);
-                            schoolList.add(bean);
-                            item1.add(bean.getSchool());
-                        }
-                        handler.sendEmptyMessage(0x123);
-                    }else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
                     }
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
+                });
+
+
             }
         });
     }

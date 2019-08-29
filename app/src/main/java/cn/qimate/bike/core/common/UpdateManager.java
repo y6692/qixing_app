@@ -450,7 +450,7 @@ public class UpdateManager {
 		Intent i = new Intent(Intent.ACTION_VIEW);
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
 			i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-			Uri contentUri = FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID + ".provider", apkfile);
+			Uri contentUri = FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID + ".fileprovider", apkfile);
 			i.setDataAndType(contentUri, "application/vnd.android.package-archive");
 		}else {
 			i.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android.package-archive");

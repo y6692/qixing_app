@@ -1,11 +1,31 @@
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- 这个下载路径也不可以修改，必须为GDTDOWNLOAD -->
-    <external-path
-        name="external"
-        path="Adhub" />
+    <!--<external-path-->
+        <!--name="external"-->
+        <!--path="Adhub" />-->
+
+    <!--<external-path-->
+        <!--name="gdt_sdk_download_path"-->
+        <!--path="GDTDOWNLOAD" />-->
+
+    <files-path
+        name="my_images"
+        path="images" />
+
+    <cache-path
+        name="cache"
+        path="/"/>
 
     <external-path
-        name="gdt_sdk_download_path"
-        path="GDTDOWNLOAD" />
+        name="external"
+        path="/"/>
+
+    <external-files-path
+        name="external_file_path"
+        path="/"/>
+
+    <external-cache-path
+        name="external_cache_path"
+        path="/"/>
 
 </paths>

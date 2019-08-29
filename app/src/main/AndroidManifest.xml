@@ -206,16 +206,16 @@
 
 
 
-        <!--&lt;!&ndash;targetSDKVersion >= 24时才需要添加这个provider。请开发者根据自己的包名来替换${applicationId}这个值&ndash;&gt;-->
-        <!--<provider-->
-            <!--android:name="android.support.v4.content.FileProvider"-->
-            <!--android:authorities="cn.qimate.bike.fileprovider"-->
-            <!--android:exported="false"-->
-            <!--android:grantUriPermissions="true">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
-                <!--android:resource="@xml/gdt_file_path" />-->
-        <!--</provider>-->
+        <!--targetSDKVersion >= 24时才需要添加这个provider。请开发者根据自己的包名来替换${applicationId}这个值-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="cn.qimate.bike.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/gdt_file_path" />
+        </provider>
         <!--&lt;!&ndash;如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现效率&ndash;&gt;-->
         <!--<provider-->
             <!--android:name="com.baidu.mobads.openad.FileProvider"-->

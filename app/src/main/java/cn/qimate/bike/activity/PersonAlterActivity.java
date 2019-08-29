@@ -22,6 +22,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -329,7 +330,10 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                                 if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                         File imgUri = new File(GetImagePath.getPath(context, data.getData()));
-                                        Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", imgUri);
+                                        Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", imgUri);
+
+//                                        Uri contentUri = FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID + ".provider", apkfile);
+
                                         startPhotoZoom(dataUri);
                                     } else {
                                         startPhotoZoom(data.getData());
@@ -339,6 +343,8 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                                 }
                             } catch (NullPointerException e) {
                                 e.printStackTrace();// 用户点击取消操作
+
+                                Log.e("REQUESTCODE_PICK===e", "==="+e);
                             }
                         }
                         break;
@@ -349,7 +355,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 //通过FileProvider创建一个content类型的Uri
                                 Uri inputUri = FileProvider.getUriForFile(context,
-                                        BuildConfig.APPLICATION_ID + ".provider",
+                                        BuildConfig.APPLICATION_ID + ".fileprovider",
                                         new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME));
                                 startPhotoZoom(inputUri);//设置输入类型
                             } else {
@@ -653,7 +659,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                                     Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                         takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(PersonAlterActivity.this,
-                                                BuildConfig.APPLICATION_ID + ".provider",
+                                                BuildConfig.APPLICATION_ID + ".fileprovider",
                                                 new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
                                         takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                         takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);

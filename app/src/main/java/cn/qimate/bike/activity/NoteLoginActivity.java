@@ -122,14 +122,14 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                 scrollToFinishActivity();
                 break;
             case R.id.noteLoginUI_noteCode:
-                if (telphone == null || "".equals(telphone)) {
-                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (!StringUtil.isPhoner(telphone)) {
-                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                if (telphone == null || "".equals(telphone)) {
+//                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                if (!StringUtil.isPhoner(telphone)) {
+//                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 sendCode(telphone);
                 break;
             case R.id.noteLoginUI_btn:
@@ -183,30 +183,37 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
      * 发送验证码
      *
      * */
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    //@RequiresApi(api = Build.VERSION_CODES.O)
     private void sendCode(String telphone) {
 
-        RequestParams params = new RequestParams();
-        params.add("telphone", telphone);
+        try{
+            RequestParams params = new RequestParams();
+            params.add("telphone", telphone);
 
 //        params.put("UUID", getMyUUID());
 //        params.put("UUID", getDeviceId());
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
 
-        String UUID = tm.getDeviceId();
+            String UUID = "";
 
-        if("".equals(UUID)){
-            UUID = tm.getImei();
-        }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                UUID = tm.getImei();
+            } else {
+                UUID = tm.getDeviceId();
+            }
 
-        if("".equals(UUID)){
-            UUID = tm.getMeid();
-        }
+//        if("".equals(UUID)){
+//            UUID = tm.getImei();
+//        }
+//
+//        if("".equals(UUID)){
+//            UUID = tm.getMeid();
+//        }
 
-        params.add("UUID", UUID);
+            params.add("UUID", UUID);
 
 //        if (tm.getDeviceId() != null) {
 //            params.add("UUID", tm.getDeviceId());
@@ -266,45 +273,49 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
 //
 //        Log.e("UUID", tm.getDeviceId() + "====" + m_szDevIDShort + "====" + UUID.randomUUID().toString());
 
-        params.add("type", "2");
-        HttpHelper.post(context, Urls.sendcode, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("请稍等");
-                    loadingDialog.show();
-                }
-            }
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-
-                        handler.sendEmptyMessage(2);
-
-                        // 开始60秒倒计时
-                        handler.sendEmptyMessageDelayed(1, 1000);
-                    } else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+            params.add("type", "2");
+            HttpHelper.post(context, Urls.sendcode, params, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                }
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                        if (result.getFlag().equals("Success")) {
+
+                            handler.sendEmptyMessage(2);
+
+                            // 开始60秒倒计时
+                            handler.sendEmptyMessageDelayed(1, 1000);
+                        } else {
+                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    if (loadingDialog != null && loadingDialog.isShowing()){
                         loadingDialog.dismiss();
                     }
+                    UIHelper.ToastError(context, throwable.toString());
                 }
-            }
+            });
+        }catch (Exception e){
+            Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+        }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
-            }
-        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
