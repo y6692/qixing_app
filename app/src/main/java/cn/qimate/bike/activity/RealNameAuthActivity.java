@@ -436,8 +436,6 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //                    AutoSubmitBtn(uid, access_token, realname, stunum);
 
                     SubmitBtn(uid, access_token, realname, stunum);
-
-
                 }
                 break;
         }

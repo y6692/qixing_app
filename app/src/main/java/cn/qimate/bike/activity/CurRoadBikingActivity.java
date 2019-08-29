@@ -939,9 +939,19 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 public void run() {
                     Log.e("ConnectStatus===biking", mac+"==="+(status == STATUS_CONNECTED)+"==="+m_nowMac);
 //                    lookPsdBtn.setEnabled(true);
-                    isLookPsdBtn = true;
 
-                    ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备连接成功");
+                    if(status == STATUS_CONNECTED){
+                        isLookPsdBtn = true;
+
+                        ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备连接成功");
+                    }else{
+                        isLookPsdBtn = false;
+
+                        ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备断开连接");
+                    }
+
+                    connectDeviceIfNeeded();
+
                 }
             });
 
@@ -951,6 +961,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //            connectDeviceIfNeeded();
         }
     };
+
+    private void connectDeviceIfNeeded() {
+        if (!isLookPsdBtn) {
+            connectDeviceLP();
+        } else {
+            ClientManager.getClient().stopSearch();
+        }
+    }
 
     //监听当前连接状态
     private final BleConnectStatusListener mConnectStatusListener2 = new BleConnectStatusListener() {
@@ -1265,7 +1283,42 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }
     };
 
+    @Override
+    public void onTimeOut() {
 
+    }
+    @Override
+    public void onDisconnect(int state) {
+        Log.e("biking===onDisconnect", "==="+state);
+
+        isLookPsdBtn = false;
+
+        ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备断开连接");
+
+        m_myHandler.sendEmptyMessageDelayed(0, 1000);
+    }
+    @Override
+    public void onServicesDiscovered(String name, String address) {
+        Log.e("biking===onServicesDis", name+"==="+address);
+
+        isLookPsdBtn = true;
+
+        ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备连接成功");
+
+        isStop = true;
+        getToken();
+    }
+    /**
+     * 获取token
+     */
+    private void getToken() {
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                BaseApplication.getInstance().getIBLE().getToken();
+            }
+        }, 500);
+    }
 
 
     protected void handleReceiver(final Context context, final Intent intent) {
@@ -1280,7 +1333,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     case Config.TOKEN_ACTION:
                         Log.e("biking===TOKEN_ACTION", isEndBtn+"==="+stopScan);
 //                        lookPsdBtn.setEnabled(true);
-                        isLookPsdBtn = true;
+
 
                         isEndBtn = false;
                         isStop = true;
@@ -1308,7 +1361,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                    lockLoading = null;
                         }
 
-                        ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备连接成功");
+
 //                        switch (flag){
 //                            case 0:
 //                                break;
@@ -2104,6 +2157,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     @Override
     public void onDisConnect(BluetoothDevice bluetoothDevice) {
         isConnect = false;
+
+        isLookPsdBtn = false;
+        ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备断开连接");
         Log.e("biking===Xiaoan", "===DisConnect");
 
     }
@@ -2858,6 +2914,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                 Log.e("biking_endBtn===", "==="+major);
 
+//                major = 1;
 
                 if(major !=0){
 //                    m_myHandler.sendEmptyMessage(3);
@@ -3976,7 +4033,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
             @Override
             public void onResponseFail(final int code) {
-//                Log.e(TAG, Code.toString(code));
+                Log.e("queryOpenState===f",  Code.toString(code));
 //                UIHelper.dismiss();
 
                 m_myHandler.post(new Runnable() {
@@ -4901,12 +4958,13 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         switch (mes.what) {
             case 0:
                 if (!BaseApplication.getInstance().getIBLE().isEnable()){
-
                     break;
                 }
-                BaseApplication.getInstance().getIBLE().resetLock();
-                BaseApplication.getInstance().getIBLE().resetBluetoothAdapter();
+//                BaseApplication.getInstance().getIBLE().resetLock();
+//                BaseApplication.getInstance().getIBLE().resetBluetoothAdapter();
                 BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
+
+
                 break;
             case 1:
                 break;
@@ -6729,34 +6787,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 
 
-    @Override
-    public void onTimeOut() {
 
-    }
-    @Override
-    public void onDisconnect(int state) {
-        Log.e("biking===onDisconnect", "==="+state);
-
-        m_myHandler.sendEmptyMessageDelayed(0, 1000);
-    }
-    @Override
-    public void onServicesDiscovered(String name, String address) {
-        Log.e("biking===onServicesDis", name+"==="+address);
-
-        isStop = true;
-        getToken();
-    }
-    /**
-     * 获取token
-     */
-    private void getToken() {
-        m_myHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                BaseApplication.getInstance().getIBLE().getToken();
-            }
-        }, 500);
-    }
 
 //    @Override
 //    public void onReceive(Context context, Intent intent) {}
