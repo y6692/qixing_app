@@ -727,10 +727,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
 
 
-    //--------------------------------------打开本地图片识别二维码 start---------------------------------
-    private void initDialogResult(Result result) {
-        useBike(result.toString());
-    }
+
 
     public void handleDecode(Result result) {
         if(!previewing) return;
@@ -752,6 +749,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         } else {
             mScanerListener.onSuccess("From to Camera", result);
         }
+    }
+
+    //--------------------------------------打开本地图片识别二维码 start---------------------------------
+    private void initDialogResult(Result result) {
+        useBike(result.toString());
     }
 
     public Handler getHandler() {

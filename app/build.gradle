@@ -6,7 +6,7 @@ def static releaseTime() {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 27
     buildToolsVersion '27.0.3'
     lintOptions {
         checkReleaseBuilds false
@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId "cn.qimate.bike"
         minSdkVersion 18
-        targetSdkVersion 29
+        targetSdkVersion 27
         versionCode 39
         versionName "1.7.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

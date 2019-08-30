@@ -712,10 +712,41 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, 188);
             } else {
+                if ("2".equals(type) || "3".equals(type)){
+                    if (lockLoading != null && !lockLoading.isShowing()){
+                        lockLoading.setTitle("正在唤醒车锁");
+                        lockLoading.show();
+                    }
 
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            connect();
 
+//                            BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
+//                            resetLock();
+                            m_myHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (!isStop){
+                                        if (lockLoading != null && lockLoading.isShowing()) {
+                                            lockLoading.dismiss();
+                                        }
+                                        Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
+                                        BaseApplication.getInstance().getIBLE().refreshCache();
+                                        BaseApplication.getInstance().getIBLE().close();
+                                        BaseApplication.getInstance().getIBLE().disconnect();
+                                        scrollToFinishActivity();
+                                    }
+                                }
+                            }, 15 * 1000);
+                        }
+                    }, 2 * 1000);
 
-                if("4".equals(type)){
+                    closeBroadcast();
+                    registerReceiver(Config.initFilter());
+                    GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+                }else if("4".equals(type)){
                     isLookPsdBtn = true;
 
                     BLEService.bluetoothAdapter = mBluetoothAdapter;
@@ -755,43 +786,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     Log.e("initView===", "==="+deviceuuid);
 
                     CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
-                }else{
-
-                    if (lockLoading != null && !lockLoading.isShowing()){
-                        lockLoading.setTitle("正在唤醒车锁");
-                        lockLoading.show();
-                    }
-
-
-
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            connect();
-
-//                            BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
-//                            resetLock();
-                            m_myHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (!isStop){
-                                        if (lockLoading != null && lockLoading.isShowing()) {
-                                            lockLoading.dismiss();
-                                        }
-                                        Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
-                                        BaseApplication.getInstance().getIBLE().refreshCache();
-                                        BaseApplication.getInstance().getIBLE().close();
-                                        BaseApplication.getInstance().getIBLE().disconnect();
-                                        scrollToFinishActivity();
-                                    }
-                                }
-                            }, 15 * 1000);
-                        }
-                    }, 2 * 1000);
-
-                    closeBroadcast();
-                    registerReceiver(Config.initFilter());
-                    GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
                 }
 
             }
@@ -870,7 +864,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         Log.e("biking====", "connect===3==="+stopScan);
 
                         m_myHandler.removeMessages(0x99);
-                        BaseApplication.getInstance().getIBLE().stopScan();
+
                         BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
                     }
                 }
@@ -1295,7 +1289,13 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备断开连接");
 
-        m_myHandler.sendEmptyMessageDelayed(0, 1000);
+//        m_myHandler.sendEmptyMessageDelayed(0, 1000);
+        if (!BaseApplication.getInstance().getIBLE().isEnable()){
+           return;
+        }
+//                BaseApplication.getInstance().getIBLE().resetLock();
+//                BaseApplication.getInstance().getIBLE().resetBluetoothAdapter();
+        BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
     }
     @Override
     public void onServicesDiscovered(String name, String address) {
@@ -1304,6 +1304,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         isLookPsdBtn = true;
 
         ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备连接成功");
+
+        BaseApplication.getInstance().getIBLE().stopScan();
 
         isStop = true;
         getToken();
