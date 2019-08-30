@@ -99,7 +99,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 
 
 
-	private TelephonyManager tm;
+//	private TelephonyManager tm;
 	protected Context context;
 	protected LoadingDialog loadingDialog;
 
@@ -145,7 +145,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 //		registerReceiver(Config.initFilter());
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
 
-		tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+//		tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
 		// 添加Activity到堆栈
 		AppManager.getAppManager().addActivity(this);
 		// 修改状态栏颜色，4.4+生效

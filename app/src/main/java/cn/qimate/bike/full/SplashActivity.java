@@ -261,18 +261,28 @@ public class SplashActivity extends BaseActivity {
 			isStop = true;
 			isEnd = true;
 
+			Log.e("splash===init", getVersion()+"==="+SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)+"==="+SharedPreferencesUrls.getInstance().getInt("version", 0));
+
 			synchronized(ss){
 				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
 					UIHelper.goToAct(context, MainActivity.class);
+
+					ToastUtil.showMessage(this,  "===111" );
+
 				} else {
 					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
 					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
 					UIHelper.goToAct(context, EnterActivity.class);
+
+					ToastUtil.showMessage(this,  "===222" );
 				}
+			}
+
 
 //				UIHelper.goToAct(context, InterstitialActivity.class);
-				finishMine();
-			}
+			finishMine();
+
+
 
 		}
 
@@ -371,6 +381,20 @@ public class SplashActivity extends BaseActivity {
 		}
 	}
 
+//	protected Handler handler = new Handler(new Handler.Callback() {
+//		@Override
+//		public boolean handleMessage(Message mes) {
+//			switch (mes.what) {
+//				case 0:
+//					time();
+//					break;
+//
+//				default:
+//					break;
+//			}
+//			return false;
+//		}
+//	});
 
 	private void time(){
 
@@ -696,6 +720,9 @@ public class SplashActivity extends BaseActivity {
 			PackageManager manager = this.getPackageManager();
 			PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
 			int version = info.versionCode;
+
+			Log.e("getVersion===", "==="+version);
+
 			return version;
 		} catch (Exception e) {
 			e.printStackTrace();

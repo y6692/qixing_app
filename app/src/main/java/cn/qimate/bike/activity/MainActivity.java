@@ -139,7 +139,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ui_main);
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this);
 
 //        IntentFilter filter = new IntentFilter("data.broadcast.action");
 //        registerReceiver(mReceiver, filter);
@@ -147,12 +147,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         mapView = (MapView) findViewById(R.id.mainUI_map);
         mapView.onCreate(savedInstanceState);
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//            }
-//        }).start();
 
         m_myHandler.sendEmptyMessage(1);
 
@@ -160,7 +154,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         initData();
         initView();
-        initListener();
+//        initListener();
 //        initLocation();
 //        AppApplication.getApp().scan();
 
@@ -460,7 +454,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
 
 
-        ClientManager.getClient().registerBluetoothStateListener(mBluetoothStateListener);
+//        ClientManager.getClient().registerBluetoothStateListener(mBluetoothStateListener);
 
 
 //        aMap = mapView.getMap();
@@ -561,8 +555,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     }
 
-    private void initListener() {
-    }
 
 
 

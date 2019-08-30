@@ -10,8 +10,7 @@
     <!-- targetSdkVersion >= 26 时需要配置此权限，否则无法进行安装app的动作 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
-    <uses-sdk
-        tools:overrideLibrary="com.hubcloud.adhubsdk,com.ly.adpoymer" />
+    <!--<uses-sdk tools:overrideLibrary="com.hubcloud.adhubsdk,com.ly.adpoymer" />-->
 
 
     <!-- Required 自定义用来收发消息的相关权限 -->
@@ -121,11 +120,12 @@
 
         </activity>
 
+        <!--android:screenOrientation="portrait"-->
 
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
+
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
         </activity>
@@ -133,7 +133,7 @@
         <activity
             android:name=".activity.LoginActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
+
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.RegisterActivity"
