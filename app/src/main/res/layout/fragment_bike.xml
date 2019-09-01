@@ -43,13 +43,13 @@
             android:layout_height="match_parent"
             android:layout_below="@id/mainUI_titleLayout">
 
-            <!--<com.amap.api.maps.TextureMapView-->
-                <!--android:id="@+id/mainUI_map"-->
+            <!--<com.amap.api.maps.MapView-->
+                <!--android:id="@+id/mainUI_map2"-->
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="match_parent"-->
                 <!--android:layout_alignParentTop="true"-->
                 <!--android:layout_alignParentStart="true">-->
-            <!--</com.amap.api.maps.TextureMapView>-->
+            <!--</com.amap.api.maps.MapView>-->
 
             <LinearLayout
                 android:visibility="gone"

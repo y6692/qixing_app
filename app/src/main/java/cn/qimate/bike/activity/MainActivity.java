@@ -160,7 +160,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         initData();
         initView();
-        initListener();
 //        initLocation();
 //        AppApplication.getApp().scan();
 
@@ -454,7 +453,10 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         super.onResume();
 
-        mapView.onResume();
+        if(mapView!=null){
+            mapView.onResume();
+        }
+
 
         Log.e("main===onResume", "==="+type);
 
@@ -462,10 +464,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         ClientManager.getClient().registerBluetoothStateListener(mBluetoothStateListener);
 
-
-//        aMap = mapView.getMap();
-//
-//        aMap.clear();
 
         Log.e("main===onResume2", "===");
 
@@ -561,8 +559,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     }
 
-    private void initListener() {
-    }
 
 
 

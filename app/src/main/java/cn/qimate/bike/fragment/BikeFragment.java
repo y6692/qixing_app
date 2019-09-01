@@ -269,6 +269,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //        mapView = ((MainActivity)activity).mapView;
 
         mapView = activity.findViewById(R.id.mainUI_map);
+//        mapView.onCreate(savedInstanceState);
 
         WindowManager.LayoutParams winParams = activity.getWindow().getAttributes();
         winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
@@ -325,6 +326,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         Log.e("main===bike", "m_nowMac====" + m_nowMac);
     }
 
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -358,32 +360,17 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 //            mapView.onResume();
 
-
-
             pOptions.clear();
             isContainsList.clear();
             aMap.clear();
             aMap.reloadMap();
 
-//
-//            aMap = mapView.getMap();
             setUpMap();
 
-//            m_myHandler.sendEmptyMessage(4);
 
             aMap.setOnMapTouchListener(this);
             aMap.setOnCameraChangeListener(this);
-//            setUpLocationStyle();
 
-//            if (mlocationClient != null) {
-//                mlocationClient.setLocationListener(this);
-//                mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-//                mLocationOption.setInterval(2 * 1000);
-//                mLocationOption.setLocationCacheEnable(false);
-////              mLocationOption.setOnceLocationLatest(true);
-//                mlocationClient.setLocationOption(mLocationOption);
-//                mlocationClient.startLocation();
-//            }
 
             if(centerMarker!=null){
                 centerMarker.remove();
@@ -764,8 +751,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 }
             });
         }
-
-
     }
 
     public LatLng getCenterPoint(List<LatLng> list) {
@@ -1350,6 +1335,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     public void onLocationChanged(AMapLocation amapLocation) {
         change = true;
 
+
+        Log.e("onLocationChanged=0", mListener+"==="+amapLocation);
+
+
         if(isHidden) return;
 
         if (mListener != null && amapLocation != null) {
@@ -1372,6 +1361,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //                            addMaplocation(amapLocation.getLatitude(), amapLocation.getLongitude());
 //                        }
 //                    }
+
                     if (mListener != null) {
                         mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
                     }
@@ -1471,8 +1461,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 SharedPreferencesUrls.getInstance().putString("longitude", "" + amapLocation.getLongitude());
             }
 
-
         }
+
     }
 
 
@@ -1936,8 +1926,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     private void openGPSSettings() {
 
-
-
         if (checkGPSIsOpen()) {
         } else {
 
@@ -1960,9 +1948,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         }
     }
-
-
-
 
 
     @Override
@@ -3151,15 +3136,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         });
 
     }
-
-
-
-
-
-
-
-
-
 
     private void addChooseMarker() {
         // 加入自定义标签
