@@ -977,7 +977,15 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //                                    } else
                                     if ("3".equals(type)) {    //单车3合1锁
 
-                                        ToastUtil.showMessageApp(context, "开锁成功");
+                                        if ("200".equals(jsonObject.getString("code"))) {
+
+                                            ToastUtil.showMessageApp(context, "开锁成功");
+                                        } else if ("404".equals(jsonObject.getString("code"))) {
+
+                                            ToastUtil.showMessageApp(context, "开锁失败");
+                                        }
+
+
 
                                         scrollToFinishActivity();
 
