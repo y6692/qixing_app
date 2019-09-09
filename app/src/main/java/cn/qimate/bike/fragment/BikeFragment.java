@@ -2321,6 +2321,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         @Override
         public void onReceive(Context context, final Intent intent) {
+            Log.e("broadcastReceiver===0", "==="+intent);
+
             m_myHandler.post(new Runnable() {
                 @Override
                 public void run() {

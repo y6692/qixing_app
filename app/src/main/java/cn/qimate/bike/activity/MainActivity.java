@@ -255,6 +255,20 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     }
 
+    private void initData() {
+        mContext = this;
+        bikeFragment = new BikeFragment();
+        ebikeFragment = new EbikeFragment();
+        mFragments.add(bikeFragment);
+        mFragments.add(ebikeFragment);
+
+        Log.e("main===initData", "===");
+
+        for (int i = 0; i < mTitles.length; i++) {
+            mTabEntities.add(new TabTopEntity(mTitles[i]));
+        }
+    }
+
     protected Handler m_myHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message mes) {
@@ -282,8 +296,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
      * 获取广告
      * */
     private void initHttp(){
-
-
         RequestParams params = new RequestParams();
         params.put("adsid","11");
 
@@ -521,19 +533,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         }
     };
 
-    private void initData() {
-        mContext = this;
-        bikeFragment = new BikeFragment();
-        ebikeFragment = new EbikeFragment();
-        mFragments.add(bikeFragment);
-        mFragments.add(ebikeFragment);
 
-        Log.e("main===initData", "===");
-
-        for (int i = 0; i < mTitles.length; i++) {
-            mTabEntities.add(new TabTopEntity(mTitles[i]));
-        }
-    }
 
 
 

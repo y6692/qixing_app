@@ -122,14 +122,14 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                 scrollToFinishActivity();
                 break;
             case R.id.noteLoginUI_noteCode:
-//                if (telphone == null || "".equals(telphone)) {
-//                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                if (!StringUtil.isPhoner(telphone)) {
-//                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
+                if (telphone == null || "".equals(telphone)) {
+                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!StringUtil.isPhoner(telphone)) {
+                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 sendCode(telphone);
                 break;
             case R.id.noteLoginUI_btn:
@@ -197,13 +197,17 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                 return;
             }
 
-            String UUID = "";
+            String uuid = UUID.randomUUID().toString();
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                UUID = tm.getImei();
-            } else {
-                UUID = tm.getDeviceId();
-            }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            UUID = tm.getImei();
+//        } else {
+//            UUID = tm.getDeviceId();
+//        }
+
+            params.add("UUID", uuid);
+
+//            Toast.makeText(context, "UUID=="+uuid, Toast.LENGTH_LONG).show();
 
 //        if("".equals(UUID)){
 //            UUID = tm.getImei();
@@ -213,7 +217,6 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
 //            UUID = tm.getMeid();
 //        }
 
-            params.add("UUID", UUID);
 
 //        if (tm.getDeviceId() != null) {
 //            params.add("UUID", tm.getDeviceId());
@@ -285,7 +288,11 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
                     try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
                         if (result.getFlag().equals("Success")) {
 
                             handler.sendEmptyMessage(2);
@@ -306,6 +313,8 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
                     if (loadingDialog != null && loadingDialog.isShowing()){
                         loadingDialog.dismiss();
                     }
@@ -318,7 +327,6 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void loginHttp(String telphone, String telcode) {
 
         RequestParams params = new RequestParams();
@@ -343,17 +351,25 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        String UUID = tm.getDeviceId();
+//        String UUID = tm.getDeviceId();
+//
+//        if("".equals(UUID)){
+//            UUID = tm.getImei();
+//        }
+//
+//        if("".equals(UUID)){
+//            UUID = tm.getMeid();
+//        }
 
-        if("".equals(UUID)){
-            UUID = tm.getImei();
-        }
+        String uuid = UUID.randomUUID().toString();
 
-        if("".equals(UUID)){
-            UUID = tm.getMeid();
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            UUID = tm.getImei();
+//        } else {
+//            UUID = tm.getDeviceId();
+//        }
 
-        params.add("UUID", UUID);
+        params.add("UUID", uuid);
 
         HttpHelper.post(context, Urls.loginCode, params, new TextHttpResponseHandler() {
             @Override

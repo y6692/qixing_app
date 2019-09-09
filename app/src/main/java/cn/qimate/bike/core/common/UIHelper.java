@@ -13,6 +13,7 @@ import cn.qimate.bike.base.BaseActivity;
 import cn.qimate.bike.core.widget.ConfirmDialog;
 import cn.qimate.bike.fragment.BikeFragment;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.ToastUtil;
 
 public class UIHelper {
 
@@ -84,12 +85,15 @@ public class UIHelper {
 		if (context == null || msg == null || "".equals(msg))
 			return;
 		if (!NetworkUtils.isNetWorkAvalible(context)) {
-			openDialogOneMsg(context, R.drawable.ic_error, "无网络连接，请先打开网络连接");
+//			openDialogOneMsg(context, R.drawable.ic_error, "无网络连接，请先打开网络连接");
+			ToastUtil.showMessageApp(context, "无网络连接，请先打开网络连接");
 		} else if (msg.contains("SocketTimeoutException") || msg.contains("ConnectTimeoutException")) {
 //			openDialogOneMsg(context, R.drawable.ic_error, "网速不给力哦！");
-			openDialogOneMsg(context, R.drawable.ic_error, "请求超时，请稍后再试");
+//			openDialogOneMsg(context, R.drawable.ic_error, "请求超时，请稍后再试");
+			ToastUtil.showMessageApp(context, "请求超时，请稍后再试");
 		} else {
-			openDialogOneMsg(context, R.drawable.ic_error, "请求失败");
+//			openDialogOneMsg(context, R.drawable.ic_error, "请求失败");
+			ToastUtil.showMessageApp(context, "请求失败");
 		}
 	}
 

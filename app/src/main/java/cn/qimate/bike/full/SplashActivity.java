@@ -43,6 +43,7 @@ import com.sunshine.blelibrary.utils.GlobalParameterUtils;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.Timer;
@@ -71,6 +72,7 @@ import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.util.ToastUtil;
+import okhttp3.Response;
 
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 
@@ -105,6 +107,7 @@ public class SplashActivity extends BaseActivity {
 
 	private Handler handler = new MainHandler(this);
 
+	private boolean flag = true;
 
 	@Override
 	protected void onCreate(Bundle bundle) {
@@ -134,6 +137,34 @@ public class SplashActivity extends BaseActivity {
 		initHttp();
 
 		init();
+
+
+//		Log.e("tz===000", "===");
+//
+//		RequestParams params = new RequestParams();
+//		params.put("id", "1");
+//		HttpHelper.post(context, "http://192.168.1.108/web2/test.php?g=App", params, new TextHttpResponseHandler() {
+//			@Override
+//			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//				Log.e("tz===Fail", "==="+responseString);
+//			}
+//
+//
+//			@Override
+//			public void onSuccess(int statusCode, Header[] headers, String responseString) {
+//				try {
+//
+//
+//					ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//
+//					JSONObject jsonObject = new JSONObject(result.getData());
+//
+//					Log.e("tz===Succ", responseString+"==="+jsonObject.getString("name"));
+//				} catch (Exception e) {
+//
+//				}
+//			}
+//		});
 	}
 
 	@Override
@@ -256,6 +287,7 @@ public class SplashActivity extends BaseActivity {
 
 	private void tz(){
 
+
 		if(!isStop && !isEnd){
 
 			isStop = true;
@@ -281,9 +313,6 @@ public class SplashActivity extends BaseActivity {
 
 //				UIHelper.goToAct(context, InterstitialActivity.class);
 			finishMine();
-
-
-
 		}
 
 
@@ -342,6 +371,8 @@ public class SplashActivity extends BaseActivity {
 		unregisterReceiver(mMessageReceiver);
 
 //		destroyLocation();
+		stopLocation();
+//		deactivate();
 
 		isStop = true;
 		isEnd = true;
@@ -356,6 +387,16 @@ public class SplashActivity extends BaseActivity {
 //		m_myHandler.removeCallbacks(myhandler);
 
 	}
+
+//	@Override
+//	public void deactivate() {
+//		mListener = null;
+//		if (mlocationClient != null) {
+//			mlocationClient.stopLocation();
+//			mlocationClient.onDestroy();
+//		}
+//		mlocationClient = null;
+//	}
 
 
 	private static class MainHandler extends Handler {
@@ -584,8 +625,15 @@ public class SplashActivity extends BaseActivity {
 			if (null != loc) {
 //				Toast.makeText(context,"===="+loc.getLongitude(),Toast.LENGTH_SHORT).show();
 
-				if (0.0 != loc.getLongitude() && 0.0 != loc.getLongitude()) {
-					PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
+				Log.e("onLocationChanged===", loc.getLongitude()+"==="+loc.getLongitude());
+
+				if (0.0 != loc.getLongitude() && 0.0 != loc.getLongitude() ) {
+
+					if(flag){
+						flag = false;
+						PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
+					}
+
 				} else {
 					CustomDialog.Builder customBuilder = new CustomDialog.Builder(SplashActivity.this);
 					customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
@@ -639,13 +687,13 @@ public class SplashActivity extends BaseActivity {
 	 * @author hongming.wang
 	 *
 	 */
-//	private void stopLocation() {
-//		// 停止定位
-//		if (null != locationClient) {
-//			locationClient.stopLocation();
-//		}
-//
-//	}
+	private void stopLocation() {
+		// 停止定位
+		if (null != locationClient) {
+			locationClient.stopLocation();
+		}
+
+	}
 
 	/**
 	 * 销毁定位
@@ -732,6 +780,9 @@ public class SplashActivity extends BaseActivity {
 
 	// 提交设备信息到appinfo
 	private void PostDeviceInfo(double latitude, double longitude) {
+
+		Log.e("PostDeviceInfo===", "===");
+
 		if (NetworkUtils.getNetWorkType(context) != NetworkUtils.NONETWORK) {
 			try {
 				TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);

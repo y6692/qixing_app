@@ -25,6 +25,7 @@ import com.alibaba.fastjson.JSON;
 import org.apache.http.Header;
 
 import java.util.Set;
+import java.util.UUID;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
@@ -197,7 +198,6 @@ public class RegisterActivity extends SwipeBackActivity implements View.OnClickL
      * 发送验证码
      *
      * */
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendCode(String telphone) {
 
         RequestParams params = new RequestParams();
@@ -206,17 +206,17 @@ public class RegisterActivity extends SwipeBackActivity implements View.OnClickL
             return;
         }
 
-        String UUID = tm.getDeviceId();
+        String uuid = UUID.randomUUID().toString();
 
-        if("".equals(UUID)){
-            UUID = tm.getImei();
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            UUID = tm.getImei();
+//        } else {
+//            UUID = tm.getDeviceId();
+//        }
 
-        if("".equals(UUID)){
-            UUID = tm.getMeid();
-        }
+//        Toast.makeText(context, "UUID=="+uuid, Toast.LENGTH_LONG).show();
 
-        params.add("UUID", UUID);
+        params.add("UUID", uuid);
         params.add("type", "1");
         HttpHelper.post(context, Urls.sendcode, params, new TextHttpResponseHandler() {
             @Override
@@ -258,7 +258,6 @@ public class RegisterActivity extends SwipeBackActivity implements View.OnClickL
     }
 
     // 注册处理
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void RegisterHttp(String telphone, String telcode, String password) {
 
         Md5Helper Md5Helper = new Md5Helper();
@@ -270,17 +269,16 @@ public class RegisterActivity extends SwipeBackActivity implements View.OnClickL
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        String UUID = tm.getDeviceId();
 
-        if("".equals(UUID)){
-            UUID = tm.getImei();
-        }
+        String uuid = UUID.randomUUID().toString();
 
-        if("".equals(UUID)){
-            UUID = tm.getMeid();
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            UUID = tm.getImei();
+//        } else {
+//            UUID = tm.getDeviceId();
+//        }
 
-        params.add("UUID", UUID);
+        params.add("UUID", uuid);
 
         HttpHelper.post(context, Urls.register, params, new TextHttpResponseHandler() {
             @Override

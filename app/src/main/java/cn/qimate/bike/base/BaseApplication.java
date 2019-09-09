@@ -98,8 +98,8 @@ public class BaseApplication extends Application {
 		BluetoothContext.set(this);
 
 		setDebug(false);
-		setTestLog(true);
-//		setTestLog(false);
+//		setTestLog(true);
+		setTestLog(false);
 //		setTest(true);
 		setTest(false);
 

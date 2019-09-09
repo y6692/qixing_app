@@ -11,6 +11,7 @@ public class Urls {
 
 	public static String HTTP = "http://";
 	public static String host = HTTP + "app.7mate.cn";
+//	public static String host = HTTP + "web1.7mate.cn";
 //	public static String host = HTTP + "test.7mate.cn";
 //	public static String host = HTTP + "uat.7mate.cn";
 //  public static String host = HTTP + "192.168.206.10:8345";
@@ -45,7 +46,7 @@ public class Urls {
 	/**手动认证*/
 	public static String authentication = host + "/index.php?g=App&m=User&a=authentication";
 	/**认证接口*/
-	public static String certification = host + "?g=App&m=User&a=certification";
+	public static String certification = host + "/index.php?g=App&m=User&a=certification";
 	/**学校列表*/
 	public static String schoolList = host + "/index.php?g=App&m=Index&a=schoolList";
 	/**上传图片*/
@@ -77,7 +78,7 @@ public class Urls {
 	/**获取认证信息状态*/
 	public static String getAuthentication = host + "/index.php?g=App&m=User&a=getAuthentication";
 	/**获取认证信息状态*/
-	public static String getCertification = host + "?g=App&m=User&a=getCertification";
+	public static String getCertification = host + "/index.php?g=App&m=User&a=getCertification";
 	/**用户充值,提交充值订单*/
 	public static String userRecharge = host + "/index.php?g=App&m=User&a=userRecharge";
 	/**支付宝付款*/
@@ -105,7 +106,7 @@ public class Urls {
 	/**学校范围电子栅栏*/
 	public static String schoolrangeList = host + "/index.php?g=App&m=Index&a=schoolrangeList";
 	/**学校范围电子栅栏*/
-	public static String schoolRange = host + "?g=App&m=SchoolRange&a=index";
+	public static String schoolRange = host + "/index.php?g=App&m=SchoolRange&a=index";
 	/** 版本检测更新 */
 	public static String updateApp = host + "/index.php?g=App&m=Index&a=android";
 	/**获取启动页图广告*/
@@ -155,7 +156,7 @@ public class Urls {
 	/**获取月卡配置接口*/
 	public static String userMonth = host + "/index.php?a=month_card_set&m=UserMonth&g=App";
 	/**月卡首页接口*/
-	public static String userMonthIndex = host + "?g=App&m=userMonth&a=index";
+	public static String userMonthIndex = host + "/index.php?g=App&m=userMonth&a=index";
 
 	/**3合1锁再次开锁*/
 	public static String openAgain = host + "/index.php?g=App&m=User&a=open_again";
@@ -164,7 +165,7 @@ public class Urls {
 	/**电单车关锁*/
 	public static String closeEbike = host + "/index.php?g=App&m=User&a=closeEbike";
 	/**电单车开锁*/
-	public static String openEbike = host + "?g=App&m=User&a=openEbike";
+	public static String openEbike = host + "/index.php?g=App&m=User&a=openEbike";
 
 	/**坏车列表*/
 	public static String badcarList = host + "/index.php?g=App&m=UserManage&a=badcar_list";
@@ -172,19 +173,22 @@ public class Urls {
 	public static String badcarShow = host + "/index.php?g=App&m=UserManage&a=badcar_show";
 
     /**电单车信息*/
-	public static String ebikeInfo = host + "?g=App&m=Ebike&a=info";
+	public static String ebikeInfo = host + "/index.php?g=App&m=Ebike&a=info";
 //    public static String ebikeInfo = host + "/index.php?g=App&m=Ebike&a=info";
 
 
 	/**支付宝支付单车费用接口*/
-	public static String alipayBike = host + "?g=App&m=AlipayBike&a=alipay";
+	public static String alipayBike = host + "/index.php?g=App&m=AlipayBike&a=alipay";
 	/**微信支付单车费用接口*/
-	public static String wxpayBike = host + "?g=App&m=WxpayBike&a=wxpay";
+	public static String wxpayBike = host + "/index.php?g=App&m=WxpayBike&a=wxpay";
 	/**泺平锁加密接口*/
-	public static String rent = host + "?g=App&m=Index&a=rent";
+	public static String rent = host + "/index.php?g=App&m=Index&a=rent";
 
 	/**常见热门问题接口*/
-	public static String question = host + "?g=App&m=Question&a=index";
+	public static String question = host + "/index.php?g=App&m=Question&a=index";
 	/**电单车位置信息接口*/
-	public static String location = host + "?g=App&m=Ebike&a=location";
+	public static String location = host + "/index.php?g=App&m=Ebike&a=location";
+
+    /**电单车位置信息接口*/
+//    http://app.7mate.cn/index.php?g=App&m=Login&a=verifyDevice_info&act=1&platform=Android&version=1.7.7
 }

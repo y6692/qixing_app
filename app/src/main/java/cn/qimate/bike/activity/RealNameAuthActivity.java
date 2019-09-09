@@ -500,6 +500,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
 //                                getSchoolList();
 
+                                Log.e("getCertification===1", "==="+Urls.host+imageurl);
+
                                 if (bean.getStunumfile() == null || "".equals(bean.getStunumfile()) || "/Public/stunumfile.png".equals(bean.getStunumfile())){
 //                                    addImageLayout.setVisibility(View.VISIBLE);
 //                                    uploadImage.setVisibility(View.GONE);
@@ -1022,6 +1024,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             BitmapFactory.Options option = new BitmapFactory.Options();
                             // 压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图，3为三分之一
                             option.inSampleSize = 1;
+
+                            Log.e("mHandler===", "==="+Urls.host + imageurl);
 
 //                            addImageLayout.setVisibility(View.GONE);
 //                            uploadImage.setVisibility(View.VISIBLE);

@@ -1236,7 +1236,10 @@ public class FeedbackActivity
 
             if(!((MyGridView) parent).isOnMeasure()) return convertView;
 
-            Log.e("ImageLoader===3", position+"==="+imageUrlList.size()+"==="+isComplete+"==="+convertView+"==="+((MyGridView) parent).isOnMeasure());
+            if(imageUrlList.size()>0){
+                Log.e("ImageLoader===3", "==="+position+"==="+imageUrlList.size()+"==="+isComplete+"==="+convertView+"===");
+
+            }
 
             ImageView imageView = BaseViewHolder.get(convertView, R.id.item_photo_gridView_image);
             if (position == imageUrlList.size()) {

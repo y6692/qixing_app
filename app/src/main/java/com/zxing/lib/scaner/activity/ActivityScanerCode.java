@@ -1172,7 +1172,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                 } else {
 
-                                    Toast.makeText(context,result.getMsg(),10 * 1000).show();
+                                    Toast.makeText(context,result.getMsg(),Toast.LENGTH_LONG).show();
                                     if (loadingDialog != null && loadingDialog.isShowing()){
                                         loadingDialog.dismiss();
                                     }

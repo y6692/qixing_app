@@ -21,6 +21,8 @@ import com.alibaba.fastjson.JSON;
 
 import org.apache.http.Header;
 
+import java.util.UUID;
+
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
@@ -137,7 +139,6 @@ public class ChangePhoneNumActivity extends SwipeBackActivity implements View.On
      * 发送验证码
      *
      * */
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendCode(String telphone) {
 
         RequestParams params = new RequestParams();
@@ -145,17 +146,16 @@ public class ChangePhoneNumActivity extends SwipeBackActivity implements View.On
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        String UUID = tm.getDeviceId();
 
-        if("".equals(UUID)){
-            UUID = tm.getImei();
-        }
+        String uuid = UUID.randomUUID().toString();
 
-        if("".equals(UUID)){
-            UUID = tm.getMeid();
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            UUID = tm.getImei();
+//        } else {
+//            UUID = tm.getDeviceId();
+//        }
 
-        params.add("UUID", UUID);
+        params.add("UUID", uuid);
         params.add("type", "2");
         HttpHelper.post(context, Urls.sendcode, params, new TextHttpResponseHandler() {
             @Override

@@ -248,6 +248,7 @@ public class UpdateManager {
 		version.setText("V"+mUpdate.getAppVersion());
 		text.setText(mUpdate.getUpdateDesc());
 
+		Log.e("showNoticeDialog===", mUpdate.getLink()+"==="+mUpdate.getUpdateDesc());
 
 		if ("2".equals(mUpdate.isForce())) {
 			showDownloadDialog();
@@ -277,7 +278,7 @@ public class UpdateManager {
 		noticeDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
 		noticeDialog.show();
 
-		Log.e("showNoticeDialog===", "===");
+		Log.e("showNoticeDialog===2", "===");
 	}
 
 	private void showDialog() {
