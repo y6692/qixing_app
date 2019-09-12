@@ -304,55 +304,61 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
                 break;
             case R.id.myPurseUI_monthCard_bike:
 
-                if("1".equals(bike_open_state)){
-                    Intent intent = new Intent(context, PayMontCartActivity.class);
-                    intent.putExtra("carType",1);
-                    context.startActivity(intent);
-                }else{
-                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-                    customBuilder.setMessage(bike_desc);
+                Intent intent = new Intent(context, PayMontCartActivity.class);
+                intent.putExtra("carType",1);
+                context.startActivity(intent);
 
-                    customBuilder.setType(5).setImg_url(bike_img_url).setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-
-                            Intent intent = new Intent(context, PayMontCartActivity.class);
-                            intent.putExtra("carType",1);
-                            context.startActivity(intent);
-                        }
-                    }).setHint(false);
-                    customBuilder.create().show();
-                }
+//                if("1".equals(bike_open_state)){
+//                    Intent intent = new Intent(context, PayMontCartActivity.class);
+//                    intent.putExtra("carType",1);
+//                    context.startActivity(intent);
+//                }else{
+//                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+//                    customBuilder.setMessage(bike_desc);
+//
+//                    customBuilder.setType(5).setImg_url(bike_img_url).setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.cancel();
+//                        }
+//                    }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.cancel();
+//
+//                            Intent intent = new Intent(context, PayMontCartActivity.class);
+//                            intent.putExtra("carType",1);
+//                            context.startActivity(intent);
+//                        }
+//                    }).setHint(false);
+//                    customBuilder.create().show();
+//                }
 
 
 
 
                 break;
             case R.id.myPurseUI_monthCard_ebike:
-                CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-                customBuilder.setMessage(ebike_desc);
+                intent = new Intent(context, PayMontCartActivity.class);
+                intent.putExtra("carType",2);
+                context.startActivity(intent);
 
-                customBuilder.setType(5).setImg_url(ebike_img_url).setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-
-                        Intent intent = new Intent(context, PayMontCartActivity.class);
-                        intent.putExtra("carType",2);
-                        context.startActivity(intent);
-
-//                        UIHelper.goToAct(context,PayMontCartActivity.class);
-//                        scrollToFinishActivity();
-                    }
-                }).setHint(false);
-                customBuilder.create().show();
+//                CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+//                customBuilder.setMessage(ebike_desc);
+//
+//                customBuilder.setType(5).setImg_url(ebike_img_url).setTitle("温馨提示").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//
+//                        Intent intent = new Intent(context, PayMontCartActivity.class);
+//                        intent.putExtra("carType",2);
+//                        context.startActivity(intent);
+//
+//                    }
+//                }).setHint(false);
+//                customBuilder.create().show();
                 break;
             default:
                 break;

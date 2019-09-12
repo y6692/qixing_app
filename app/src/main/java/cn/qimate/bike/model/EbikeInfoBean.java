@@ -9,6 +9,7 @@ public class EbikeInfoBean {
     private String electricity;
     private String mileage;
     private String fee;
+    private String  is_locked;
 
     public String getElectricity() {
         return electricity;
@@ -32,5 +33,13 @@ public class EbikeInfoBean {
 
     public void setFee(String fee) {
         this.fee = fee;
+    }
+
+    public String getIs_locked() {
+        return is_locked;
+    }
+
+    public void setIs_locked(String is_locked) {
+        this.is_locked = is_locked;
     }
 }

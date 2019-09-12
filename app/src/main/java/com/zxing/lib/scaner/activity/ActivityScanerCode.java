@@ -891,7 +891,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             params.put("latitude", SharedPreferencesUrls.getInstance().getString("latitude", ""));
             params.put("longitude", SharedPreferencesUrls.getInstance().getString("longitude", ""));
             params.put("telprama", "手机型号：" + SystemUtil.getSystemModel() + ", Android系统版本号：" + SystemUtil.getSystemVersion());
-            params.put("can_use_ebike", 1);
+            params.put("can_use_ebike", 2);
             HttpHelper.post(context, Urls.useCar, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {

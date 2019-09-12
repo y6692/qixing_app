@@ -358,7 +358,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private int force_backcar = 0;
     private boolean isTwo = false;
 
-
+    int tn=0;
 
     @Override
     @TargetApi(23)
@@ -778,14 +778,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }else if ("7".equals(type)) {
                     isLookPsdBtn = true;
 
-                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
-                    builder.setBleStateChangeListener(this);
-                    builder.setScanResultCallback(this);
-                    apiClient = builder.build();
-
-                    Log.e("initView===", "==="+deviceuuid);
-
-                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+//                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+//                    builder.setBleStateChangeListener(this);
+//                    builder.setScanResultCallback(this);
+//                    apiClient = builder.build();
+//
+//                    Log.e("initView===", "==="+deviceuuid);
+//
+//                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
                 }
 
             }
@@ -1281,6 +1281,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     public void onTimeOut() {
 
     }
+
+    //type2
     @Override
     public void onDisconnect(int state) {
         Log.e("biking===onDisconnect", "==="+state);
@@ -1297,6 +1299,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                BaseApplication.getInstance().getIBLE().resetBluetoothAdapter();
         BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
     }
+
+    //type2
     @Override
     public void onServicesDiscovered(String name, String address) {
         Log.e("biking===onServicesDis", name+"==="+address);
@@ -1552,7 +1556,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                     if(BaseApplication.getInstance().isTest()){
                                         type = "5";
                                         if("40001101".equals(bikeCode)){
-//                                  m_nowMac = "3C:A3:08:AE:BE:24"; //"3C:A3:08:AE:BE:24";
+//                                          m_nowMac = "3C:A3:08:AE:BE:24"; //"3C:A3:08:AE:BE:24";
                                             m_nowMac = "3C:A3:08:CD:9F:47";
                                         }else{
                                             type = "6";
@@ -1575,6 +1579,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                             ebikeInfoLayout.setVisibility(View.VISIBLE);
 
+                                            tn=0;
                                             if (ebikeInfoThread == null) {
                                                 Runnable ebikeInfoRunnable = new Runnable() {
                                                     @Override
@@ -1583,11 +1588,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                                             m_myHandler.sendEmptyMessage(4);
 
+//                                                            if(tn%10==0){
+//                                                                m_myHandler.sendEmptyMessage(4);
+//                                                            }
+
                                                             try {
-                                                                Thread.sleep(5 * 60 * 1000);
+                                                                Thread.sleep(30 * 1000);
                                                             } catch (InterruptedException e) {
                                                                 e.printStackTrace();
                                                             }
+
+//                                                            tn++;
 
                                                         }
                                                     }
@@ -1650,7 +1661,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         HttpHelper.get(this, Urls.ebikeInfo, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                onStartCommon("正在加载");
+
+//                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -1665,21 +1677,33 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                             if (result.getFlag().equals("Success")) {
-                                ToastUtil.showMessageApp(context,"电量更新成功");
+//                                ToastUtil.showMessageApp(context,"电量更新成功");
                                 Log.e("biking===", "ebikeInfo===="+result.getData());
 
                                 EbikeInfoBean bean = JSON.parseObject(result.getData(), EbikeInfoBean.class);
                                 electricity.setText(bean.getElectricity());
                                 mileage.setText(bean.getMileage());
 
+                                if("1".equals(bean.getIs_locked())){
+                                    lookPsdBtn.setText("再次开锁");
+//                                    ToastUtil.showMessageApp(context,"关锁成功");
+
+                                    SharedPreferencesUrls.getInstance().putString("tempStat","1");
+                                }else{
+                                    lookPsdBtn.setText("临时上锁");
+//                                    ToastUtil.showMessageApp(context,"关锁成功");
+
+                                    SharedPreferencesUrls.getInstance().putString("tempStat","0");
+                                }
+
                             } else {
                                 ToastUtil.showMessageApp(context, result.getMsg());
                             }
                         } catch (Exception e) {
                         }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
+//                        if (loadingDialog != null && loadingDialog.isShowing()){
+//                            loadingDialog.dismiss();
+//                        }
                     }
                 });
 
@@ -1958,6 +1982,13 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 } else {
                                     ToastUtil.showMessageApp(context,"关锁失败");
 
+                                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                                    builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+                                    builder.setScanResultCallback(CurRoadBikingActivity.this);
+                                    apiClient = builder.build();
+
+                                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+
                                     closeLock_XA();
                                 }
                             } else {
@@ -2112,6 +2143,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }
     }
 
+    //type7
     @Override
     public void onConnect(BluetoothDevice bluetoothDevice) {
         isConnect = true;
@@ -2156,6 +2188,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
     }
 
+    //type7
     @Override
     public void onDisConnect(BluetoothDevice bluetoothDevice) {
         isConnect = false;
@@ -2163,6 +2196,16 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         isLookPsdBtn = false;
         ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备断开连接");
         Log.e("biking===Xiaoan", "===DisConnect");
+
+//        apiClient.disConnect();
+
+
+//        m_myHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+//            }
+//        }, 1000);
 
     }
 
@@ -2696,9 +2739,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                 Log.e("biking===lookPsdBtn", tvAgain+"==="+m_nowMac);
 
-                if(!isLookPsdBtn){
-                    ToastUtil.showMessageApp(context, "蓝牙未连接，请重试");
-                    break;
+                if("7".equals(type)){
+                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                    builder.setBleStateChangeListener(this);
+                    builder.setScanResultCallback(this);
+                    apiClient = builder.build();
+                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+                }else{
+                    if(!isLookPsdBtn){
+                        ToastUtil.showMessageApp(context, "蓝牙未连接，请重试");
+                        break;
+                    }
                 }
 
                 if ("查看密码".equals(tvAgain)){
@@ -2900,10 +2951,19 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 break;
             case R.id.curRoadUI_biking_endBtn:
 
-                if(!isLookPsdBtn){
-                    ToastUtil.showMessageApp(context, "蓝牙未连接，请重试");
-                    break;
+                if("7".equals(type)){
+                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                    builder.setBleStateChangeListener(this);
+                    builder.setScanResultCallback(this);
+                    apiClient = builder.build();
+                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+                }else{
+                    if(!isLookPsdBtn){
+                        ToastUtil.showMessageApp(context, "蓝牙未连接，请重试");
+                        break;
+                    }
                 }
+
 
                 isEndBtn = true;
 
@@ -4692,86 +4752,90 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             if (macList.size() > 0){
 //                flag = 2;
 
-                if(isConnect){
-                    closeEbike_XA();
-                }else{
-                    if (lockLoading != null && !lockLoading.isShowing()){
-                        lockLoading.setTitle("正在连接");
-                        lockLoading.show();
-                    }
+                closeEbike_XA();
 
-                    xa_state = 1;
-
-                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
-                    builder.setBleStateChangeListener(CurRoadBikingActivity.this);
-                    builder.setScanResultCallback(CurRoadBikingActivity.this);
-                    apiClient = builder.build();
-
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (lockLoading != null && lockLoading.isShowing()){
-                                lockLoading.dismiss();
-
-                                if(!isConnect){
-                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                    customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
-                                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-                                    customBuilder.create().show();
-                                }
-                            }
-                        }
-                    }, 10 * 1000);
-
-                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
-                }
+//                if(isConnect){
+//                    closeEbike_XA();
+//                }else{
+//                    if (lockLoading != null && !lockLoading.isShowing()){
+//                        lockLoading.setTitle("正在连接");
+//                        lockLoading.show();
+//                    }
+//
+//                    xa_state = 1;
+//
+//                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+//                    builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+//                    builder.setScanResultCallback(CurRoadBikingActivity.this);
+//                    apiClient = builder.build();
+//
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (lockLoading != null && lockLoading.isShowing()){
+//                                lockLoading.dismiss();
+//
+//                                if(!isConnect){
+//                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+//                                    customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+//                                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                                                public void onClick(DialogInterface dialog, int which) {
+//                                                    dialog.cancel();
+//                                                }
+//                                            });
+//                                    customBuilder.create().show();
+//                                }
+//                            }
+//                        }
+//                    }, 10 * 1000);
+//
+//                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+//                }
 
                 return;
             }
 
             if (isContainsList.contains(true)){
 
-                if(isConnect){
-                    closeEbike_XA();
-                }else{
-                    if (lockLoading != null && !lockLoading.isShowing()){
-                        lockLoading.setTitle("正在连接");
-                        lockLoading.show();
-                    }
+                closeEbike_XA();
 
-                    xa_state = 1;
-
-                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
-                    builder.setBleStateChangeListener(CurRoadBikingActivity.this);
-                    builder.setScanResultCallback(CurRoadBikingActivity.this);
-                    apiClient = builder.build();
-
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (lockLoading != null && lockLoading.isShowing()){
-                                lockLoading.dismiss();
-
-                                if(!isConnect){
-                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                    customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
-                                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-                                    customBuilder.create().show();
-                                }
-                            }
-                        }
-                    }, 10 * 1000);
-
-                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
-                }
+//                if(isConnect){
+//                    closeEbike_XA();
+//                }else{
+//                    if (lockLoading != null && !lockLoading.isShowing()){
+//                        lockLoading.setTitle("正在连接");
+//                        lockLoading.show();
+//                    }
+//
+//                    xa_state = 1;
+//
+//                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+//                    builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+//                    builder.setScanResultCallback(CurRoadBikingActivity.this);
+//                    apiClient = builder.build();
+//
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (lockLoading != null && lockLoading.isShowing()){
+//                                lockLoading.dismiss();
+//
+//                                if(!isConnect){
+//                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+//                                    customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+//                                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                                                public void onClick(DialogInterface dialog, int which) {
+//                                                    dialog.cancel();
+//                                                }
+//                                            });
+//                                    customBuilder.create().show();
+//                                }
+//                            }
+//                        }
+//                    }, 10 * 1000);
+//
+//                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+//                }
 
             }else {
 //                customDialog4.show();
@@ -5095,6 +5159,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             case 9:
                 time.setText(transtype+">>1="+ major +">>2="+minor);
                 break;
+
+//            case 10:
+//                ebikeInfo(uid, access_token);
+//                break;
+
             case 0x99://搜索超时
                 BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
 //                resetLock();
@@ -6429,12 +6498,12 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             }else if("7".equals(type)) {
                                 isLookPsdBtn = true;
 
-                                XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
-                                builder.setBleStateChangeListener(CurRoadBikingActivity.this);
-                                builder.setScanResultCallback(CurRoadBikingActivity.this);
-                                apiClient = builder.build();
-
-                                CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+//                                XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+//                                builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+//                                builder.setScanResultCallback(CurRoadBikingActivity.this);
+//                                apiClient = builder.build();
+//
+//                                CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
                             }else{
                                 if (loadingDialog != null && !loadingDialog.isShowing()) {
                                     loadingDialog.setTitle("正在唤醒车锁");

@@ -191,4 +191,6 @@ public class Urls {
 
     /**电单车位置信息接口*/
 //    http://app.7mate.cn/index.php?g=App&m=Login&a=verifyDevice_info&act=1&platform=Android&version=1.7.7
+
+
 }
