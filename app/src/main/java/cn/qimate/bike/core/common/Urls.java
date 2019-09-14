@@ -108,7 +108,7 @@ public class Urls {
 	/**学校范围电子栅栏*/
 	public static String schoolRange = host + "/index.php?g=App&m=SchoolRange&a=index";
 	/** 版本检测更新 */
-	public static String updateApp = host + "/index.php?g=App&m=Index&a=android";
+	public static String updateApp = "http://web1.7mate.cn/index.php?g=App&m=Index&a=android";
 	/**获取启动页图广告*/
 	public static String getIndexAd = host + "/index.php?g=App&m=Index&a=getIndexAd";
 	/**

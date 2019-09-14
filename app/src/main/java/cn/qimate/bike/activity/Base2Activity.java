@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
-
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.qimate.bike.R;
@@ -16,7 +15,6 @@ import cn.qimate.bike.R;
 /**
  * Created by heyong on 2017/5/23.
  */
-
 public abstract class Base2Activity extends AppCompatActivity {
     private Unbinder mUnBinder;
     private Toolbar mToolbar;

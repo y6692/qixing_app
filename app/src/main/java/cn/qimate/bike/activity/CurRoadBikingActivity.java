@@ -360,6 +360,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
     int tn=0;
 
+    private boolean isTemp = false;
+
     @Override
     @TargetApi(23)
     protected void onCreate(Bundle savedInstanceState) {
@@ -843,7 +845,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //        m_myHandler.sendEmptyMessage(0x99);
 
         try{
-            BaseApplication.getInstance().getIBLE().stopScan();
+//            BaseApplication.getInstance().getIBLE().stopScan();
             m_myHandler.sendEmptyMessage(0x99);
             BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
                 @Override
@@ -870,7 +872,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }
             });
         }catch (Exception e){
-
+            ToastUtil.showMessageApp(context,"连接异常==="+e);
         }
 
     }
@@ -1392,7 +1394,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         Log.e("biking===", "BATTERY_ACTION==="+stopScan);
 
                         macList2 = new ArrayList<> (macList);
-                        BaseApplication.getInstance().getIBLE().getLockStatus();
+
+                        if(isTemp){
+                            isTemp = false;
+                            BaseApplication.getInstance().getIBLE().openLock();
+                        }else{
+                            BaseApplication.getInstance().getIBLE().getLockStatus();
+                        }
+
                         break;
                     case Config.OPEN_ACTION:
                         isStop = true;
@@ -2865,85 +2874,130 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     }else{
 
                         try{
+//                            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//                                ToastUtil.showMessageApp(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0");
+//                                scrollToFinishActivity();
+//                            }
+//                            //蓝牙锁
+//                            if (!BaseApplication.getInstance().getIBLE().isEnable()){
+//                                BaseApplication.getInstance().getIBLE().enableBluetooth();
+//                                return;
+//                            }
+//                            if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+//                                if (loadingDialog != null && !loadingDialog.isShowing()){
+//                                    loadingDialog.setTitle("正在开锁");
+//                                    loadingDialog.show();
+//                                }
+//
+//                                BaseApplication.getInstance().getIBLE().openLock();
+//
+//                                isStop = false;
+//                                m_myHandler.postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        if (loadingDialog != null && loadingDialog.isShowing()){
+//                                            loadingDialog.dismiss();
+//                                        }
+//
+//                                        if (!isStop){
+//                                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+//                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+//                                                    .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                                                        public void onClick(DialogInterface dialog, int which) {
+//                                                            dialog.cancel();
+//                                                        }
+//                                                    });
+//                                            customBuilder.create().show();
+//                                        }
+//
+//                                    }
+//                                }, 10 * 1000);
+//
+//                            }else {
+//                                if (lockLoading != null && !lockLoading.isShowing()){
+//                                    lockLoading.setTitle("正在连接");
+//                                    lockLoading.show();
+//                                }
+//
+//                                isStop = false;
+//                                m_myHandler.postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//
+//                                        if (lockLoading != null && lockLoading.isShowing()){
+//                                            lockLoading.dismiss();
+//                                        }
+//
+//                                        if (!isStop){
+//                                            stopScan = true;
+////                                          BaseApplication.getInstance().getIBLE().stopScan();
+//                                            BaseApplication.getInstance().getIBLE().refreshCache();
+//                                            BaseApplication.getInstance().getIBLE().close();
+//                                            BaseApplication.getInstance().getIBLE().disconnect();
+//
+//                                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+//                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+//                                                    .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                                                        public void onClick(DialogInterface dialog, int which) {
+//                                                            dialog.cancel();
+//                                                        }
+//                                                    });
+//                                            customBuilder.create().show();
+//                                        }
+//
+//                                    }
+//                                }, 10 * 1000);
+//
+//                                connect();
+//                            }
+
+                            Log.e("again===", "===");
+
                             if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                                ToastUtil.showMessageApp(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0");
+                                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                                 scrollToFinishActivity();
                             }
                             //蓝牙锁
-                            if (!BaseApplication.getInstance().getIBLE().isEnable()){
-                                BaseApplication.getInstance().getIBLE().enableBluetooth();
+                            BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+
+                            mBluetoothAdapter = bluetoothManager.getAdapter();
+
+                            if (mBluetoothAdapter == null) {
+                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                                scrollToFinishActivity();
                                 return;
                             }
-                            if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
-                                if (loadingDialog != null && !loadingDialog.isShowing()){
-                                    loadingDialog.setTitle("正在开锁");
+                            if (!mBluetoothAdapter.isEnabled()) {
+                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                                startActivityForResult(enableBtIntent, 188);
+                            } else {
+                                if (loadingDialog != null && loadingDialog.isShowing()) {
+                                    loadingDialog.dismiss();
+                                }
+
+                                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                    loadingDialog.setTitle("正在唤醒车锁");
                                     loadingDialog.show();
                                 }
 
-                                BaseApplication.getInstance().getIBLE().openLock();
+                                isTemp = true;
 
-                                isStop = false;
-                                m_myHandler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (loadingDialog != null && loadingDialog.isShowing()){
-                                            loadingDialog.dismiss();
-                                        }
 
-                                        if (!isStop){
-                                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
-                                                    .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                            dialog.cancel();
-                                                        }
-                                                    });
-                                            customBuilder.create().show();
-                                        }
-
-                                    }
-                                }, 10 * 1000);
-
-                            }else {
-                                if (lockLoading != null && !lockLoading.isShowing()){
-                                    lockLoading.setTitle("正在连接");
-                                    lockLoading.show();
-                                }
-
-                                isStop = false;
-                                m_myHandler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                        if (lockLoading != null && lockLoading.isShowing()){
-                                            lockLoading.dismiss();
-                                        }
-
-                                        if (!isStop){
-                                            stopScan = true;
-//                                          BaseApplication.getInstance().getIBLE().stopScan();
-                                            BaseApplication.getInstance().getIBLE().refreshCache();
-                                            BaseApplication.getInstance().getIBLE().close();
-                                            BaseApplication.getInstance().getIBLE().disconnect();
-
-                                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
-                                                    .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                            dialog.cancel();
-                                                        }
-                                                    });
-                                            customBuilder.create().show();
-                                        }
-
-                                    }
-                                }, 10 * 1000);
+                                BaseApplication.getInstance().getIBLE().stopScan();
+                                BaseApplication.getInstance().getIBLE().refreshCache();
+                                BaseApplication.getInstance().getIBLE().close();
+                                BaseApplication.getInstance().getIBLE().disconnect();
 
                                 connect();
+
+//                                    BaseApplication.getInstance().getIBLE().openLock();
+
                             }
+
                         }catch (Exception e){
                             ToastUtil.showMessageApp(context, "请重试");
                         }
+
 
 
                     }
@@ -5085,6 +5139,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 
                 if(macList.size()>0 || isContainsList.contains(true)){
+                    isTemp = false;
 
                     if("4".equals(type)){
                         endBtn4();
@@ -5165,7 +5220,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                break;
 
             case 0x99://搜索超时
-                BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
+//                BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
 //                resetLock();
                 m_myHandler.postDelayed(new Runnable() {
                     @Override
@@ -5175,6 +5230,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 loadingDialog.dismiss();
                             }
                             Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
+                            BaseApplication.getInstance().getIBLE().stopScan();
                             BaseApplication.getInstance().getIBLE().refreshCache();
                             BaseApplication.getInstance().getIBLE().close();
                             BaseApplication.getInstance().getIBLE().disconnect();

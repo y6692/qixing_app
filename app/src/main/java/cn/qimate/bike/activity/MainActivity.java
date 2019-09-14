@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.amap.api.maps.AMap;
@@ -67,6 +68,7 @@ import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
+import cn.qimate.bike.core.common.Update;
 import cn.qimate.bike.core.common.UpdateManager;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
@@ -172,6 +174,51 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //                else {
 //                    Globals.USERNAME = "99920170623";
 //                    Log.e("UserLogin===", "====success");
+//                }
+//            }
+//        });
+
+
+//        HttpHelper.get(context, Urls.updateApp, new TextHttpResponseHandler() {
+//
+//            @Override
+//            public void onStart() {
+//                if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                    loadingDialog.setTitle("正在获取最新版本信息...");
+//                    loadingDialog.show();
+//                }
+//            }
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+//                Update mUpdate = new Update();
+//                try {
+//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//                    if (0 == result.getErrcode()) {
+//                        mUpdate = JSON.parseObject(result.getData(), Update.class);
+//                        if (mUpdate != null) {
+//
+//                            ToastUtil.showMessage(context, "==="+mUpdate.getAppVersion());
+//
+//                            Log.e("checkAppUpdate==000", "==="+mUpdate.getAppVersion());
+//
+//                        } else {
+//                            UIHelper.ToastError(context, result.getMsg());
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                if (loadingDialog != null && loadingDialog.isShowing()) {
+//                    loadingDialog.dismiss();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                UIHelper.ToastError(mContext, throwable.toString());
+//                if (loadingDialog != null && loadingDialog.isShowing()) {
+//                    loadingDialog.dismiss();
 //                }
 //            }
 //        });
