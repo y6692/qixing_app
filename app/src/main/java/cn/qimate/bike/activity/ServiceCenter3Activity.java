@@ -406,7 +406,7 @@ public class ServiceCenter3Activity extends SwipeBackActivity implements View.On
                 break;
 
             case R.id.mainUI_title_rightBtn:
-                SharedPreferencesUrls.getInstance().putString("type", "1");
+//                SharedPreferencesUrls.getInstance().putString("type", "1");
                 UIHelper.goToAct(context,FeedbackActivity.class);
                 break;
 

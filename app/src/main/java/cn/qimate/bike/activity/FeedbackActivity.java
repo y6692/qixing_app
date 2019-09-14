@@ -105,7 +105,7 @@ public class FeedbackActivity
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
     private EditText bikeCodeEdit;
-    private TextView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6,Tag7,Tag8,Tag9,Tag10,Tag11,Tag12,Tag13,Tag14;
+    private TextView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6,Tag7,Tag8,Tag9,Tag10,Tag11,Tag12,Tag13,Tag14,Tag15;
     private LinearLayout ll_2,ll_3,ll_4,ll_5;
     private EditText restCauseEdit;
     private EditText addressEdit;
@@ -127,6 +127,7 @@ public class FeedbackActivity
     private boolean isSelected12 = false;
     private boolean isSelected13 = false;
     private boolean isSelected14 = false;
+    private boolean isSelected15 = false;
 
 
 
@@ -211,7 +212,7 @@ public class FeedbackActivity
 
 //        ClientManager.getClient().disconnect("A4:34:F1:7B:BF:9A");
 
-        Log.e("feedback===","feedback===onResume");
+        Log.e("feedback===","feedback===onResume==="+type);
     }
 
     @Override
@@ -266,6 +267,7 @@ public class FeedbackActivity
         Tag12 = (TextView)findViewById(R.id.feedbackUI_type_Tag12);
         Tag13 = (TextView)findViewById(R.id.feedbackUI_type_Tag13);
         Tag14 = (TextView)findViewById(R.id.feedbackUI_type_Tag14);
+        Tag15 = (TextView)findViewById(R.id.feedbackUI_type_Tag15);
 
         ll_2 = (LinearLayout)findViewById(R.id.ll_2);
         ll_3 = (LinearLayout)findViewById(R.id.ll_3);
@@ -314,6 +316,7 @@ public class FeedbackActivity
         Tag12.setOnClickListener(this);
         Tag13.setOnClickListener(this);
         Tag14.setOnClickListener(this);
+        Tag15.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
         bikeCodeEdit.addTextChangedListener(new TextWatcher() {
@@ -703,6 +706,24 @@ public class FeedbackActivity
                     }
                     Tag14.setTextColor(Color.parseColor("#f57752"));
                     Tag14.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
+            case R.id.feedbackUI_type_Tag15:
+                if (isSelected15){
+                    isSelected15 = false;
+                    if (TagsList.contains(Tag15.getText().toString())){
+                        TagsList.remove(Tag15.getText().toString());
+                    }
+                    Tag15.setTextColor(Color.parseColor("#666666"));
+                    Tag15.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected15 = true;
+                    if (!TagsList.contains(Tag15.getText().toString())){
+                        TagsList.add(Tag15.getText().toString());
+                    }
+                    Tag15.setTextColor(Color.parseColor("#f57752"));
+                    Tag15.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
                 pd();
                 break;

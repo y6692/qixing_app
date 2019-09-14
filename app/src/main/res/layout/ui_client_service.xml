@@ -164,7 +164,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
-                            android:text="脚踏损坏"
+                            android:text="没有助力"
                             android:padding="@dimen/dp10"
                             android:textColor="@color/tx_black_light"
                             android:textSize="@dimen/sp12"
@@ -172,6 +172,17 @@
 
                         <TextView
                             android:id="@+id/feedbackUI_type_Tag6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_feedback"
+                            android:text="脚踏损坏"
+                            android:padding="@dimen/dp10"
+                            android:textColor="@color/tx_black_light"
+                            android:textSize="@dimen/sp12"
+                            android:layout_marginLeft="@dimen/dp10"/>
+
+                        <TextView
+                            android:id="@+id/feedbackUI_type_Tag7"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
@@ -193,7 +204,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/feedbackUI_type_Tag7"
+                            android:id="@+id/feedbackUI_type_Tag8"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
@@ -204,7 +215,7 @@
                             />
 
                         <TextView
-                            android:id="@+id/feedbackUI_type_Tag8"
+                            android:id="@+id/feedbackUI_type_Tag9"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
@@ -216,7 +227,7 @@
                             />
 
                         <TextView
-                            android:id="@+id/feedbackUI_type_Tag9"
+                            android:id="@+id/feedbackUI_type_Tag10"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
@@ -236,7 +247,7 @@
                         android:layout_marginTop="@dimen/dp10">
 
                         <TextView
-                            android:id="@+id/feedbackUI_type_Tag10"
+                            android:id="@+id/feedbackUI_type_Tag11"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
@@ -245,7 +256,7 @@
                             android:textColor="@color/tx_black_light"
                             android:textSize="@dimen/sp12"/>
                         <TextView
-                            android:id="@+id/feedbackUI_type_Tag11"
+                            android:id="@+id/feedbackUI_type_Tag12"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"
@@ -256,7 +267,7 @@
                             android:layout_marginLeft="@dimen/dp10"/>
 
                         <TextView
-                            android:id="@+id/feedbackUI_type_Tag12"
+                            android:id="@+id/feedbackUI_type_Tag13"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_feedback"

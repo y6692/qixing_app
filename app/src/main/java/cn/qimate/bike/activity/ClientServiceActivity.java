@@ -94,7 +94,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = new AMapLocationClientOption();
 
-    private TextView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6,Tag7,Tag8,Tag9,Tag10,Tag11,Tag12;
+    private TextView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6,Tag7,Tag8,Tag9,Tag10,Tag11,Tag12,Tag13;
     private LinearLayout ll_2,ll_3,ll_4;
     private EditText restCauseEdit;
 
@@ -110,6 +110,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     private boolean isSelected10 = false;
     private boolean isSelected11 = false;
     private boolean isSelected12 = false;
+    private boolean isSelected13 = false;
 
     private Context context;
     private LoadingDialog loadingDialog;
@@ -209,6 +210,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         Tag10 = (TextView)findViewById(R.id.feedbackUI_type_Tag10);
         Tag11 = (TextView)findViewById(R.id.feedbackUI_type_Tag11);
         Tag12 = (TextView)findViewById(R.id.feedbackUI_type_Tag12);
+        Tag13 = (TextView)findViewById(R.id.feedbackUI_type_Tag13);
 
         ll_2 = (LinearLayout)findViewById(R.id.ll_2);
         ll_3 = (LinearLayout)findViewById(R.id.ll_3);
@@ -279,6 +281,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         Tag10.setOnClickListener(this);
         Tag11.setOnClickListener(this);
         Tag12.setOnClickListener(this);
+        Tag13.setOnClickListener(this);
 
         restCauseEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -579,6 +582,24 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                     }
                     Tag12.setTextColor(Color.parseColor("#f57752"));
                     Tag12.setBackgroundResource(R.drawable.shape_feedback_selectd);
+                }
+                pd();
+                break;
+            case R.id.feedbackUI_type_Tag13:
+                if (isSelected13){
+                    isSelected13 = false;
+                    if (TagsList.contains(Tag13.getText().toString())){
+                        TagsList.remove(Tag13.getText().toString());
+                    }
+                    Tag13.setTextColor(Color.parseColor("#666666"));
+                    Tag13.setBackgroundResource(R.drawable.shape_feedback);
+                }else {
+                    isSelected13 = true;
+                    if (!TagsList.contains(Tag13.getText().toString())){
+                        TagsList.add(Tag13.getText().toString());
+                    }
+                    Tag13.setTextColor(Color.parseColor("#f57752"));
+                    Tag13.setBackgroundResource(R.drawable.shape_feedback_selectd);
                 }
                 pd();
                 break;
