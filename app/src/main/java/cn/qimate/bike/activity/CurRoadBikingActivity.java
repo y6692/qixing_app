@@ -938,6 +938,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                         getBleRecord();
 
+                        if (lockLoading != null && lockLoading.isShowing()) {
+                            lockLoading.dismiss();
+                        }
+
 //                        if (Globals.bType == 1) {
 //                            ToastUtil.showMessageApp(context, "正在关锁中");
 //                            getBleRecord();
@@ -1260,6 +1264,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             @Override
             public void onResponseSuccessEmpty() {
                 Log.e("biking=deleteBleRecord", "Success===Empty");
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+//                        ToastUtil.showMessageApp(context, Code.toString(code));
+
+                        if (lockLoading != null && lockLoading.isShowing()) {
+                            lockLoading.dismiss();
+                        }
+                    }
+                });
             }
 
             @Override
@@ -1269,6 +1284,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     public void run() {
                         Log.e("biking=deleteBleRecord", Code.toString(code));
 //                        ToastUtil.showMessageApp(context, Code.toString(code));
+
+                        if (lockLoading != null && lockLoading.isShowing()) {
+                            lockLoading.dismiss();
+                        }
                     }
                 });
 
