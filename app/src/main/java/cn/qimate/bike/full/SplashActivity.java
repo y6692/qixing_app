@@ -79,7 +79,6 @@ import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 @SuppressLint("NewApi")
 public class SplashActivity extends BaseActivity {
 
-	//	private Context context = this;
 	public static boolean isForeground = false;
 
 	private AMapLocationClient locationClient = null;
@@ -221,14 +220,28 @@ public class SplashActivity extends BaseActivity {
 				return;
 			}
 		}
+
+		// <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			int checkPermission = this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+			if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+				if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+					requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+				} else {
+					requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+				}
+				return;
+			}
+		}
+
 		// <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			int checkPermission = this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
 			if (checkPermission != PackageManager.PERMISSION_GRANTED) {
 				if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-					requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+					requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 				} else {
-					requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+					requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 				}
 				return;
 			}
@@ -849,6 +862,31 @@ public class SplashActivity extends BaseActivity {
 //							}
 //						}
 //					}
+					init();
+				} else {
+					CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+					customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开存储空间权限！")
+							.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									dialog.cancel();
+									finishMine();
+								}
+							}).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+							Intent localIntent = new Intent();
+							localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+							localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+							startActivity(localIntent);
+							finishMine();
+						}
+					});
+					customBuilder.create().show();
+				}
+				return;
+			case 1:
+				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					init();
 				} else {
 					CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);

@@ -2010,6 +2010,18 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     public void closeEbike_XA(){
 //        closeLock_XA();
 
+//        xa_state=4;
+//
+//        XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+//        builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+//        builder.setScanResultCallback(CurRoadBikingActivity.this);
+//        apiClient = builder.build();
+//
+//
+//        CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+
+
+
         RequestParams params = new RequestParams();
         params.put("uid",uid);
         params.put("access_token",access_token);
@@ -2037,9 +2049,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             if (result.getFlag().equals("Success")) {
 //                              ToastUtil.showMessage(context,"数据更新成功");
 
-                                Log.e("biking===", "closeEbike_XA1===="+result.getData());
+                                Log.e("biking===", "closeEbike_XA1===="+deviceuuid+"==="+result.getData());
 
-                                if ("0".equals(result.getData())){
+                                if ("0".equals(result.getData()) || "108".equals(result.getInfo())){
                                     if (loadingDialog != null && loadingDialog.isShowing()){
                                         loadingDialog.dismiss();
                                     }
@@ -2049,16 +2061,22 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                                    m_myHandler.sendEmptyMessage(6);
                                     submit(uid, access_token);
                                 } else {
-                                    ToastUtil.showMessageApp(context,"关锁失败");
+//                                    ToastUtil.showMessageApp(context,"关锁失败");
+
+                                    Log.e("biking===2", "closeEbike_XA1===="+deviceuuid+"==="+result.getData());
+
+                                    xa_state=4;
 
                                     XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
                                     builder.setBleStateChangeListener(CurRoadBikingActivity.this);
                                     builder.setScanResultCallback(CurRoadBikingActivity.this);
                                     apiClient = builder.build();
 
+
                                     CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
 
-                                    closeLock_XA();
+
+
                                 }
                             } else {
                                 if (loadingDialog != null && loadingDialog.isShowing()){
@@ -2090,7 +2108,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 m_myHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("biking_defend==="+type, response.toString());
+                        Log.e("biking_defend===", type+"==="+deviceuuid+"==="+response.toString());
 
                         if(response.code==0){
 
@@ -2216,7 +2234,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     @Override
     public void onConnect(BluetoothDevice bluetoothDevice) {
         isConnect = true;
-        Log.e("biking===Xiaoan", "===Connect");
+        Log.e("biking===Xiaoan", "===Connect==="+xa_state);
 
         m_myHandler.post(new Runnable() {
             @Override
@@ -2249,6 +2267,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         closeLock_XA_temp();
                     }else if(xa_state==3){
                         openLock_XA_temp();
+                    }else if(xa_state==4){
+                        closeLock_XA();
                     }
 
                 }
@@ -2263,8 +2283,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         isConnect = false;
 
         isLookPsdBtn = false;
-        ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备断开连接");
-        Log.e("biking===Xiaoan", "===DisConnect");
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备断开连接");
+                Log.e("biking===Xiaoan", "===DisConnect");
+            }
+        });
+
 
 //        apiClient.disConnect();
 
@@ -2360,7 +2386,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                             if (result.getFlag().equals("Success")) {
 
-                                Log.e("biking===", "closeEbike===="+result.getData());
+                                Log.e("biking===", "closeEbike===="+responseString);
 
                                 if ("0".equals(result.getData())){
                                     lookPsdBtn.setText("再次开锁");
@@ -2809,6 +2835,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 Log.e("biking===lookPsdBtn", tvAgain+"==="+m_nowMac);
 
                 if("7".equals(type)){
+                    xa_state = 0;
                     XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
                     builder.setBleStateChangeListener(this);
                     builder.setScanResultCallback(this);
@@ -2873,6 +2900,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 loadingDialog.show();
                             }
 
+                            Log.e("lookPsdBtn===", "==="+isLookPsdBtn);
+
                             if(!isLookPsdBtn){   //没连上
                                 ClientManager.getClient().stopSearch();
                                 ClientManager.getClient().disconnect(m_nowMac);
@@ -2932,8 +2961,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                     }
                                 });
                             }
-
-
 
                         }
                     }else{
@@ -3081,14 +3108,13 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             ToastUtil.showMessageApp(context, "请重试");
                         }
 
-
-
                     }
                 }
                 break;
             case R.id.curRoadUI_biking_endBtn:
 
                 if("7".equals(type)){
+                    xa_state = 0;
                     XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
                     builder.setBleStateChangeListener(this);
                     builder.setScanResultCallback(this);
@@ -3111,7 +3137,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 //                getBleRecord();
 
-                Log.e("biking_endBtn===", "==="+major);
+                Log.e("biking_endBtn===", type+"==="+major);
 
 //                major = 1;
 
@@ -5434,7 +5460,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                 Log.e("biking===", "closeEbike===="+result.getData());
 
-                                if ("0".equals(result.getData())){
+                                if ("0".equals(result.getData()) || "108".equals(result.getInfo())){
                                     if (loadingDialog != null && loadingDialog.isShowing()){
                                         loadingDialog.dismiss();
                                     }
@@ -5572,13 +5598,13 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                             if (result.getFlag().equals("Success")) {
-//                        ToastUtil.showMessage(context,"数据更新成功");
+//                              ToastUtil.showMessage(context,"数据更新成功");
 
-                                Log.e("biking===", "closeEbike===="+result.getData());
+                                Log.e("biking===", "closeEbike===="+result.getData()+"==="+result.getInfo());
 
                                 if ("0".equals(result.getData())){
                                     m_myHandler.sendEmptyMessage(6);
-//                            submit(uid, access_token);
+//                                  submit(uid, access_token);
                                 } else {
                                     ToastUtil.showMessageApp(context,"关锁失败");
 
@@ -6750,13 +6776,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 openBleLock(null);
                             }else {
                                 ToastUtil.showMessageApp(context, result.getMsg());
+
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
                             }
                         }catch (Exception e){
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+                        }
 
-                        }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
                     }
                 });
             }
@@ -6935,18 +6965,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }
     }
 
-
-
-
-
-
 //    @Override
 //    public void onReceive(Context context, Intent intent) {}
-
-
-
-
-
 
     protected void registerReceiver(IntentFilter intentfilter) {
         if (internalReceiver == null) {

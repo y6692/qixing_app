@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Looper;
 import android.util.Log;
 
 
@@ -23,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import cn.qimate.bike.util.ToastUtil;
 
 /**
  * UncaughtException处理类,当程序发生Uncaught异常的时候,由该类来接管程序,并记录发送错误报告.
@@ -55,6 +58,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
      * @param context
      */
     public void init(Context context) {
+//        mContext = context;
         mContext = context.getApplicationContext();
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();// 获取系统默认的UncaughtException处理器
         Thread.setDefaultUncaughtExceptionHandler(this);// 设置该CrashHandler为程序的默认处理器
@@ -81,11 +85,27 @@ public class CrashHandler implements UncaughtExceptionHandler {
      */
     public boolean handleException(final Throwable ex) {
         if (ex == null) return false;
-        Log.e("crash===", " uncaught exception !");
+
+        new Thread() {
+            @Override
+            public void run() {
+                Looper.prepare();
+
+                ToastUtil.showMessageApp(mContext, ">>>"+ex.getMessage());
+
+                Looper.loop();
+            }
+        }.start();
+
+
+
         // 收集设备参数信息
         collectDeviceInfo(mContext);
         // 保存日志文件
         final String exString = getCrashInfoString(ex);
+
+        Log.e("crash===", exString+"==="+ex);
+
         saveCrashInfo2File(exString, mContext);
         return true;
     }
