@@ -557,6 +557,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         if("5".equals(type)  || "6".equals(type)){
             ClientManager.getClient().stopSearch();
             ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
             ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
         }else if("7".equals(type)){
             if (apiClient != null) {
@@ -568,6 +573,15 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             BaseApplication.getInstance().getIBLE().close();
             BaseApplication.getInstance().getIBLE().disconnect();
         }
+
+//        m_myHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        });
+
+
 
         super.onDestroy();
 
@@ -1072,8 +1086,15 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                                                         .build();
 
                                                                 if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                                                    Log.e("usecar===1", "===");
+
                                                                     return;
                                                                 }
+
+                                                                Log.e("usecar===2", "===");
+
+//                                                                ClientManager.getClient().stopSearch();
+                                                                m_myHandler.sendEmptyMessage(0x98);
                                                                 ClientManager.getClient().search(request, mSearchResponse);
                                                             }
                                                         });
@@ -1096,6 +1117,15 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                             }
 
                                         } else {
+
+//                                            XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+//                                            builder.setBleStateChangeListener(ActivityScanerCode.this);
+//                                            builder.setScanResultCallback(ActivityScanerCode.this);
+//                                            apiClient = builder.build();
+//
+////                                                String imei = "866039040791940";
+//                                            MainActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(ActivityScanerCode.this, deviceuuid);
+
 
                                             getCurrentorder2(uid, access_token);
 
@@ -1989,25 +2019,90 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         checkConnect();
 
                     }else if("5".equals(type) || "6".equals(type)){
+//                        iv_help.setVisibility(View.VISIBLE);
+//
+//                        SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+//                                .searchBluetoothLeDevice(0)
+//                                .build();
+//
+//                        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                            return;
+//                        }
+//                        ClientManager.getClient().search(request, mSearchResponse);
+
+
                         iv_help.setVisibility(View.VISIBLE);
 
-                        SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
-                                .searchBluetoothLeDevice(0)
-                                .build();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+                                                    .searchBluetoothLeDevice(0)
+                                                    .build();
 
-                        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            return;
-                        }
-                        ClientManager.getClient().search(request, mSearchResponse);
+                                            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                                Log.e("usecar===1", "===");
+
+                                                return;
+                                            }
+
+                                            Log.e("usecar===2", "===");
+
+//                                                                ClientManager.getClient().stopSearch();
+                                            m_myHandler.sendEmptyMessage(0x98);
+                                            ClientManager.getClient().search(request, mSearchResponse);
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
 
                     }else if("7".equals(type)){
-                        XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
-                        builder.setBleStateChangeListener(ActivityScanerCode.this);
-                        builder.setScanResultCallback(ActivityScanerCode.this);
-                        apiClient = builder.build();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                                            builder.setBleStateChangeListener(ActivityScanerCode.this);
+                                            builder.setScanResultCallback(ActivityScanerCode.this);
+                                            apiClient = builder.build();
 
-//                                                String imei = "866039040791940";
-                        MainActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(ActivityScanerCode.this, deviceuuid);
+                                            MainActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(ActivityScanerCode.this, deviceuuid);
+
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+
+                        m_myHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!isConnect){
+                                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                                        loadingDialog.dismiss();
+                                    }
+//                                                        Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
+//                                                        BaseApplication.getInstance().getIBLE().refreshCache();
+//                                                        BaseApplication.getInstance().getIBLE().close();
+//                                                        BaseApplication.getInstance().getIBLE().disconnect();
+//                                                        scrollToFinishActivity();
+
+                                    closeEbike();
+                                }
+                            }
+                        }, 15 * 1000);
 
                     }else{
                         connect();
@@ -2434,15 +2529,29 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                             startActivityForResult(enableBtIntent, 188);
                                         } else {
 
-                                            Log.e("scan===7_1", "===");
+                                            Log.e("scan===7_1", "==="+deviceuuid);
 
-                                            XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
-                                            builder.setBleStateChangeListener(ActivityScanerCode.this);
-                                            builder.setScanResultCallback(ActivityScanerCode.this);
-                                            apiClient = builder.build();
+                                            new Thread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    try {
+                                                        runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                                                                builder.setBleStateChangeListener(ActivityScanerCode.this);
+                                                                builder.setScanResultCallback(ActivityScanerCode.this);
+                                                                apiClient = builder.build();
 
-//                                                String imei = "866039040791940";
-                                            MainActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(ActivityScanerCode.this, deviceuuid);
+                                                                MainActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(ActivityScanerCode.this, deviceuuid);
+
+                                                            }
+                                                        });
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            }).start();
 
                                             m_myHandler.postDelayed(new Runnable() {
                                                 @Override
@@ -2717,6 +2826,33 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     break;
                 case 9:
                     break;
+
+                case 0x98://搜索超时
+//                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
+
+                    connectDeviceLP();
+                    ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!isStop){
+                                if (loadingDialog != null && loadingDialog.isShowing()) {
+                                    loadingDialog.dismiss();
+                                }
+//                                Toast.makeText(context,"请重启软件，开启定位服务,输编号用车",5 * 1000).show();
+                                Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
+
+                                ClientManager.getClient().stopSearch();
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+                                scrollToFinishActivity();
+                            }
+                        }
+                    }, 15 * 1000);
+                    break;
+
                 case 0x99://搜索超时
 //                    BaseApplication.getInstance().getIBLE().resetLock();
 //                    BaseApplication.getInstance().getIBLE().resetBluetoothAdapter();

@@ -107,6 +107,8 @@ import com.xiaoantech.sdk.ble.scanner.ScanResult;
 import com.xiaoantech.sdk.listeners.BleCallback;
 import com.xiaoantech.sdk.listeners.BleStateChangeListener;
 import com.xiaoantech.sdk.listeners.ScanResultCallback;
+import com.zxing.lib.scaner.activity.ActivityScanerCode;
+import com.zxing.lib.scaner.activity.MainActivityPermissionsDispatcher;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -773,6 +775,25 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             connectDeviceLP();
                             ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
                             ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+
+                            m_myHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (!isLookPsdBtn){
+                                        if (lockLoading != null && lockLoading.isShowing()) {
+                                            lockLoading.dismiss();
+                                        }
+                                        Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
+
+                                        ClientManager.getClient().stopSearch();
+                                        ClientManager.getClient().disconnect(m_nowMac);
+                                        ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+                                        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+                                        scrollToFinishActivity();
+                                    }
+                                }
+                            }, 15 * 1000);
 
                         }
                     }, 2 * 1000);
@@ -2010,15 +2031,24 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     public void closeEbike_XA(){
 //        closeLock_XA();
 
-//        xa_state=4;
+//        m_myHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                xa_state=4;
 //
-//        XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
-//        builder.setBleStateChangeListener(CurRoadBikingActivity.this);
-//        builder.setScanResultCallback(CurRoadBikingActivity.this);
-//        apiClient = builder.build();
+//                XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+//                builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+//                builder.setScanResultCallback(CurRoadBikingActivity.this);
+//                apiClient = builder.build();
 //
 //
-//        CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+//                CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+//
+//            }
+//        });
+
+        Log.e("closeEbike_X===", "==="+deviceuuid);
+
 
 
 
@@ -2065,16 +2095,30 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                     Log.e("biking===2", "closeEbike_XA1===="+deviceuuid+"==="+result.getData());
 
-                                    xa_state=4;
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        xa_state=4;
 
-                                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
-                                    builder.setBleStateChangeListener(CurRoadBikingActivity.this);
-                                    builder.setScanResultCallback(CurRoadBikingActivity.this);
-                                    apiClient = builder.build();
+                                                        XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                                                        builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+                                                        builder.setScanResultCallback(CurRoadBikingActivity.this);
+                                                        apiClient = builder.build();
 
 
-                                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+                                                        CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
 
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }).start();
 
 
                                 }
@@ -2272,7 +2316,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     }
 
                 }
-            }, 1 * 1000);
+            }, 2 * 1000);
         }
 
     }
@@ -2806,9 +2850,21 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 break;
             case R.id.mainUI_title_rightBtn:
                 Intent intent = new Intent(context,ClientServiceActivity.class);
-                intent.putExtra("bikeCode",bikeCode);
-                startActivity(intent);
-                scrollToFinishActivity();
+//                intent.putExtra("bikeCode",bikeCode);
+//                startActivity(intent);
+//                scrollToFinishActivity();
+
+                xa_state=4;
+
+                XiaoanBleApiClient.Builder xbuilder = new XiaoanBleApiClient.Builder(context);
+                xbuilder.setBleStateChangeListener(CurRoadBikingActivity.this);
+                xbuilder.setScanResultCallback(CurRoadBikingActivity.this);
+                apiClient = xbuilder.build();
+
+
+                CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+
+
                 break;
             case R.id.switcher:
                 SharedPreferencesUrls.getInstance().putBoolean("switcher", switcher.isChecked());
@@ -3114,12 +3170,12 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             case R.id.curRoadUI_biking_endBtn:
 
                 if("7".equals(type)){
-                    xa_state = 0;
-                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
-                    builder.setBleStateChangeListener(this);
-                    builder.setScanResultCallback(this);
-                    apiClient = builder.build();
-                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+//                    xa_state = 0;
+//                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+//                    builder.setBleStateChangeListener(this);
+//                    builder.setScanResultCallback(this);
+//                    apiClient = builder.build();
+//                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
                 }else{
                     if(!isLookPsdBtn){
                         ToastUtil.showMessageApp(context, "蓝牙未连接，请重试");

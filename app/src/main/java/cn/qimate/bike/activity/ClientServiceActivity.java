@@ -113,7 +113,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     private boolean isSelected13 = false;
 
     private Context context;
-    private LoadingDialog loadingDialog;
+//    private LoadingDialog loadingDialog;
     private ImageView backImg;
     private TextView title;
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
@@ -153,6 +153,8 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     private String type = "";
 
     private boolean isComplete = false;
+
+    private boolean isSubmit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -642,6 +644,10 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     }
 
     private void submit(){
+        if(isSubmit) return;
+
+        isSubmit = true;
+
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         String other = restCauseEdit.getText().toString().trim();
@@ -716,6 +722,8 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
                 m_myHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        isSubmit = false;
+
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                             if (result.getFlag().equals("Success")) {

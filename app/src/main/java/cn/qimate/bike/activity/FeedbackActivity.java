@@ -99,7 +99,7 @@ public class FeedbackActivity
     private AMapLocationClientOption locationOption = new AMapLocationClientOption();
 
     private Context context;
-    private LoadingDialog loadingDialog;
+//    private LoadingDialog loadingDialog;
     private ImageView backImg;
     private TextView title;
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
@@ -163,6 +163,7 @@ public class FeedbackActivity
 
     private ImageView imageView;
     private int pos;
+    private boolean isSubmit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -777,6 +778,9 @@ public class FeedbackActivity
     });
 
     private void submit(){
+        if(isSubmit) return;
+
+        isSubmit = true;
 
         String address = addressEdit.getText().toString().trim();
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
@@ -856,8 +860,13 @@ public class FeedbackActivity
                 m_myHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        isSubmit = false;
+
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("feedback===", "==="+responseString);
+
                             if (result.getFlag().equals("Success")) {
                                 ToastUtil.showMessageApp(context,"谢谢您的反馈,工作人员将很快处理");
 //                              closeBle();

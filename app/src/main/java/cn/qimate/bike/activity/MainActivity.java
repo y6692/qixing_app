@@ -137,6 +137,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     private ImageView advImageView;
     private ImageView advCloseBtn;
 
+    private String type = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
