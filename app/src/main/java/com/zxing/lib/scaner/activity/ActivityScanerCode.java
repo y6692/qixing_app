@@ -1769,8 +1769,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //                        Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
 //                        scrollToFinishActivity();
 
-                        closeEbike();
+//                        closeEbike();
 //                        submit(uid, access_token);
+                        if(!isFinishing()){
+                            tzEnd();
+                        }
                     }
 
                 }else{
@@ -1805,7 +1808,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                             tzEnd();
                                         }
                                     }else{
-                                        closeEbike();
+//                                        closeEbike();
+                                        if(!isFinishing()){
+                                            tzEnd();
+                                        }
                                     }
 
                                     Log.e("checkConnect===6", "==="+bleService.cc);
@@ -2105,13 +2111,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     if (loadingDialog != null && loadingDialog.isShowing()) {
                                         loadingDialog.dismiss();
                                     }
-//                                                        Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
-//                                                        BaseApplication.getInstance().getIBLE().refreshCache();
-//                                                        BaseApplication.getInstance().getIBLE().close();
-//                                                        BaseApplication.getInstance().getIBLE().disconnect();
-//                                                        scrollToFinishActivity();
 
-                                    closeEbike();
+//                                    closeEbike();
+
+                                    if(!isFinishing()){
+                                        tzEnd();
+                                    }
                                 }
                             }
                         }, 15 * 1000);
@@ -2128,7 +2133,16 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             }
         }else if( requestCode == 188){
             ToastUtil.showMessageApp(this, "需要打开蓝牙");
-            scrollToFinishActivity();
+
+            if("".equals(oid)){
+                scrollToFinishActivity();
+            }else{
+                if(!isFinishing()){
+                    tzEnd();
+                }
+            }
+
+
         }
     }
     @Override
@@ -2578,7 +2592,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //                                                        BaseApplication.getInstance().getIBLE().disconnect();
 //                                                        scrollToFinishActivity();
 
-                                                        closeEbike();
+//                                                        closeEbike();
+
+                                                        if(!isFinishing()){
+                                                            tzEnd();
+                                                        }
                                                     }
                                                 }
                                             }, 15 * 1000);
@@ -2988,10 +3006,13 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                         tzEnd();
                                     }
                                 }else{
-                                    ToastUtil.showMessageApp(context,"开锁失败");
+//                                    ToastUtil.showMessageApp(context,"开锁失败");
 
 //                                                            submit(uid, access_token);
-                                    closeEbike();
+//                                    closeEbike();
+                                    if(!isFinishing()){
+                                        tzEnd();
+                                    }
                                 }
 
                                 if (loadingDialog != null && loadingDialog.isShowing()){
@@ -3032,7 +3053,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //                customBuilder.create().show();
 
             }
-        }, 1 * 1000);
+        }, 2 * 1000);
 
     }
 
@@ -3048,7 +3069,15 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //                Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
 //                scrollToFinishActivity();
 
-                closeEbike();
+                if("".equals(oid)){
+                    scrollToFinishActivity();
+                }else{
+                    if(!isFinishing()){
+                        tzEnd();
+                    }
+                }
+
+//                closeEbike();
 //                submit(uid, access_token);
             }
         });
