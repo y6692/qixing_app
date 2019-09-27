@@ -363,6 +363,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     int tn=0;
 
     private boolean isTemp = false;
+    private String info = "";
 
     @Override
     @TargetApi(23)
@@ -2049,9 +2050,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         Log.e("closeEbike_X===", "==="+deviceuuid);
 
-
-
-
         RequestParams params = new RequestParams();
         params.put("uid",uid);
         params.put("access_token",access_token);
@@ -2079,21 +2077,22 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             if (result.getFlag().equals("Success")) {
 //                              ToastUtil.showMessage(context,"数据更新成功");
 
-                                Log.e("biking===", "closeEbike_XA1===="+deviceuuid+"==="+result.getData());
+                                info = result.getInfo();
 
-                                if ("0".equals(result.getData()) || "108".equals(result.getInfo())){
+                                if ("0".equals(result.getData())){
                                     if (loadingDialog != null && loadingDialog.isShowing()){
                                         loadingDialog.dismiss();
                                     }
 
+                                    Log.e("biking===", "closeEbike_XA1===="+deviceuuid+"==="+result.getData());
+
                                     ToastUtil.showMessageApp(context,"关锁成功");
 
-//                                    m_myHandler.sendEmptyMessage(6);
                                     submit(uid, access_token);
-                                } else {
+                                }else{
 //                                    ToastUtil.showMessageApp(context,"关锁失败");
 
-                                    Log.e("biking===2", "closeEbike_XA1===="+deviceuuid+"==="+result.getData());
+                                    Log.e("biking===2", "closeEbike_XA2===="+deviceuuid+"==="+result.getData());
 
                                     new Thread(new Runnable() {
                                         @Override
@@ -2162,7 +2161,19 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         }else if(response.code==6){
                             ToastUtil.showMessageApp(context,"车辆未停止，请停止后再试");
                         }else{
-                            ToastUtil.showMessageApp(context,"关锁失败");
+//                            ToastUtil.showMessageApp(context,"关锁失败");
+
+                            if("108".equals(info)){
+                                Log.e("biking_defend===1", "====");
+
+//                                ToastUtil.showMessageApp(context,"关锁成功");
+
+                                submit(uid, access_token);
+                            }else{
+                                Log.e("biking_defend===2", "====");
+
+                                ToastUtil.showMessageApp(context,"关锁失败，请重试");
+                            }
                         }
 
                         if (loadingDialog != null && loadingDialog.isShowing()){
@@ -2332,6 +2343,22 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             public void run() {
                 ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备断开连接");
                 Log.e("biking===Xiaoan", "===DisConnect");
+
+                if(xa_state==4){
+                    if("108".equals(info)){
+                        Log.e("biking===Xiaoan1", "====");
+
+                        ToastUtil.showMessageApp(context,"关锁成功");
+
+                        submit(uid, access_token);
+                    }else{
+                        Log.e("biking===Xiaoan2", "====");
+
+                        ToastUtil.showMessageApp(context,"蓝牙连接失败，请重试");
+                    }
+                }
+
+
             }
         });
 
@@ -5456,38 +5483,38 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }, 5 * 1000);
     }
 
-    void checkConnect(){
-        m_myHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Log.e("checkConnect===", "===");
-
-                if(!bleService.connect){
-                    cn++;
-
-                    if(cn<5){
-                        checkConnect();
-                    }else{
-                        if (lockLoading != null && lockLoading.isShowing()){
-                            lockLoading.dismiss();
-                        }
-
-                        customDialog4.show();
-
-                        ccn++;
-
-                        return;
-                    }
-                }else{
-                    if (lockLoading != null && lockLoading.isShowing()){
-                        lockLoading.dismiss();
-                    }
-
-                    closeEbike();
-                }
-            }
-        }, 2 * 1000);
-    }
+//    void checkConnect(){
+//        m_myHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.e("checkConnect===", "===");
+//
+//                if(!bleService.connect){
+//                    cn++;
+//
+//                    if(cn<5){
+//                        checkConnect();
+//                    }else{
+//                        if (lockLoading != null && lockLoading.isShowing()){
+//                            lockLoading.dismiss();
+//                        }
+//
+//                        customDialog4.show();
+//
+//                        ccn++;
+//
+//                        return;
+//                    }
+//                }else{
+//                    if (lockLoading != null && lockLoading.isShowing()){
+//                        lockLoading.dismiss();
+//                    }
+//
+//                    closeEbike();
+//                }
+//            }
+//        }, 2 * 1000);
+//    }
 
     public void closeEbike2(){
         RequestParams params = new RequestParams();
@@ -5516,7 +5543,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                 Log.e("biking===", "closeEbike===="+result.getData());
 
-                                if ("0".equals(result.getData()) || "108".equals(result.getInfo())){
+                                info = result.getInfo();
+
+                                if ("0".equals(result.getData())){
                                     if (loadingDialog != null && loadingDialog.isShowing()){
                                         loadingDialog.dismiss();
                                     }
@@ -5524,13 +5553,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                     submit(uid, access_token);
 
                                     ToastUtil.showMessageApp(context,"关锁成功");
-
-//                                    m_myHandler.sendEmptyMessage(6);
-
-                                } else {
-                                    ToastUtil.showMessageApp(context,"关锁失败");
-
-//                                    m_nowMac = "01:02:03:04:16:4A";
+                                }else{
+//                                    ToastUtil.showMessageApp(context,"关锁失败");
 
                                     bleService.connect(m_nowMac);
                                     cn = 0;
@@ -5573,7 +5597,20 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             loadingDialog.dismiss();
                         }
 
-                        customDialog4.show();
+                        if("108".equals(info)){
+                            Log.e("biking===closeLock3_1", "====");
+
+                            ToastUtil.showMessageApp(context,"关锁成功");
+
+                            submit(uid, access_token);
+                        }else{
+                            Log.e("biking===closeLock3_2", "====");
+
+//                            ToastUtil.showMessageApp(context,"蓝牙连接失败，请重试");
+                            customDialog4.show();
+                        }
+
+
                         return;
                     }
 
@@ -5631,71 +5668,71 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //    }
 
 
-    public void closeEbike(){
-        RequestParams params = new RequestParams();
-        params.put("uid",uid);
-        params.put("access_token",access_token);
-        params.put("oid",oid);
-        HttpHelper.post(this, Urls.closeEbike, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                onStartCommon("正在加载");
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                            if (result.getFlag().equals("Success")) {
-//                              ToastUtil.showMessage(context,"数据更新成功");
-
-                                Log.e("biking===", "closeEbike===="+result.getData()+"==="+result.getInfo());
-
-                                if ("0".equals(result.getData())){
-                                    m_myHandler.sendEmptyMessage(6);
-//                                  submit(uid, access_token);
-                                } else {
-                                    ToastUtil.showMessageApp(context,"关锁失败");
-
-                                    bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
-
-                                    m_myHandler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Log.e("endBtn4===4_3", "==="+m_nowMac);
-
-                                            button8();
-                                            button9();
-                                            button2();
-
-                                            cn=0;
-                                            closeLock2();
-                                        }
-                                    }, 500);
-
-                                }
-                            } else {
-                                ToastUtil.showMessageApp(context,result.getMsg());
-
-                            }
-                        } catch (Exception e) {
-                        }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                    }
-                });
-
-            }
-        });
-    }
+//    public void closeEbike(){
+//        RequestParams params = new RequestParams();
+//        params.put("uid",uid);
+//        params.put("access_token",access_token);
+//        params.put("oid",oid);
+//        HttpHelper.post(this, Urls.closeEbike, params, new TextHttpResponseHandler() {
+//            @Override
+//            public void onStart() {
+//                onStartCommon("正在加载");
+//            }
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                onFailureCommon(throwable.toString());
+//            }
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+//                m_myHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//                            if (result.getFlag().equals("Success")) {
+////                              ToastUtil.showMessage(context,"数据更新成功");
+//
+//                                Log.e("biking===", "closeEbike===="+result.getData()+"==="+result.getInfo());
+//
+//                                if ("0".equals(result.getData())){
+//                                    m_myHandler.sendEmptyMessage(6);
+////                                  submit(uid, access_token);
+//                                } else {
+//                                    ToastUtil.showMessageApp(context,"关锁失败");
+//
+//                                    bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
+//
+//                                    m_myHandler.postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            Log.e("endBtn4===4_3", "==="+m_nowMac);
+//
+//                                            button8();
+//                                            button9();
+//                                            button2();
+//
+//                                            cn=0;
+//                                            closeLock2();
+//                                        }
+//                                    }, 500);
+//
+//                                }
+//                            } else {
+//                                ToastUtil.showMessageApp(context,result.getMsg());
+//
+//                            }
+//                        } catch (Exception e) {
+//                        }
+//                        if (loadingDialog != null && loadingDialog.isShowing()){
+//                            loadingDialog.dismiss();
+//                        }
+//                    }
+//                });
+//
+//            }
+//        });
+//    }
 
     void closeLock2(){
 
@@ -5722,7 +5759,19 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                         closeLock2();
                     }else{
-                        customDialog5.show();
+
+                        if("108".equals(info)){
+                            Log.e("biking===closeLock2_1", "====");
+
+                            ToastUtil.showMessageApp(context,"关锁成功");
+
+                            submit(uid, access_token);
+                        }else{
+                            Log.e("biking===closeLock2_2", "====");
+
+//                            ToastUtil.showMessageApp(context,"蓝牙连接失败，请重试");
+                            customDialog5.show();
+                        }
 
                         if (loadingDialog != null && loadingDialog.isShowing()){
                             loadingDialog.dismiss();

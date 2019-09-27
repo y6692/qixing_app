@@ -476,6 +476,13 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //            Log.e("light===4_3", "===");
 //            button3();
 
+//            XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+//            builder.setBleStateChangeListener(ActivityScanerCode.this);
+//            builder.setScanResultCallback(ActivityScanerCode.this);
+//            apiClient = builder.build();
+//
+//            MainActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(ActivityScanerCode.this, deviceuuid);
+
         } else if (viewId == R.id.top_back) {
             scrollToFinishActivity();
         } else if (viewId == R.id.top_openpicture) {
@@ -1118,12 +1125,15 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                         } else {
 
+//                                            if (loadingDialog != null && loadingDialog.isShowing()){
+//                                                loadingDialog.dismiss();
+//                                            }
+
 //                                            XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
 //                                            builder.setBleStateChangeListener(ActivityScanerCode.this);
 //                                            builder.setScanResultCallback(ActivityScanerCode.this);
 //                                            apiClient = builder.build();
 //
-////                                                String imei = "866039040791940";
 //                                            MainActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(ActivityScanerCode.this, deviceuuid);
 
 
@@ -2064,27 +2074,29 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         }).start();
 
                     }else if("7".equals(type)){
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
-                                            builder.setBleStateChangeListener(ActivityScanerCode.this);
-                                            builder.setScanResultCallback(ActivityScanerCode.this);
-                                            apiClient = builder.build();
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                try {
+//                                    runOnUiThread(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//
+//
+//                                        }
+//                                    });
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        }).start();
 
-                                            MainActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(ActivityScanerCode.this, deviceuuid);
+                        XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                        builder.setBleStateChangeListener(ActivityScanerCode.this);
+                        builder.setScanResultCallback(ActivityScanerCode.this);
+                        apiClient = builder.build();
 
-                                        }
-                                    });
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }).start();
+                        MainActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(ActivityScanerCode.this, deviceuuid);
 
                         m_myHandler.postDelayed(new Runnable() {
                             @Override
