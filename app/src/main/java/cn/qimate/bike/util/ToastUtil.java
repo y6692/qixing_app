@@ -83,7 +83,7 @@ public class ToastUtil {
 
                     if (toast != null) {
 
-                        Log.e("toast===1", "==="+context);
+//                        Log.e("toast===1", "==="+context);
 
                         toast.cancel();
                         toast = null;

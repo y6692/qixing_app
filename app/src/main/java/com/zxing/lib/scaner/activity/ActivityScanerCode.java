@@ -95,6 +95,7 @@ import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.ClientManager;
+import cn.qimate.bike.activity.CouponActivity;
 import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadBikingActivity;
 import cn.qimate.bike.activity.CurRoadStartActivity;
@@ -268,6 +269,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private XiaoanBleApiClient apiClient;
 
     private boolean isConnect = false;
+    private boolean isTz = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -561,34 +563,30 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         Log.e("scan===onDestroy", m_nowMac+"==="+type);
 
-        if("5".equals(type)  || "6".equals(type)){
-            ClientManager.getClient().stopSearch();
-            ClientManager.getClient().disconnect(m_nowMac);
-            ClientManager.getClient().disconnect(m_nowMac);
-            ClientManager.getClient().disconnect(m_nowMac);
-            ClientManager.getClient().disconnect(m_nowMac);
-            ClientManager.getClient().disconnect(m_nowMac);
-            ClientManager.getClient().disconnect(m_nowMac);
-            ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
-        }else if("7".equals(type)){
-            if (apiClient != null) {
-                apiClient.onDestroy();
+        if(!isTz){
+            if("5".equals(type)  || "6".equals(type)){
+                ClientManager.getClient().stopSearch();
+
+                ClientManager.getClient().disconnect(m_nowMac);
+                ClientManager.getClient().disconnect(m_nowMac);
+                ClientManager.getClient().disconnect(m_nowMac);
+                ClientManager.getClient().disconnect(m_nowMac);
+                ClientManager.getClient().disconnect(m_nowMac);
+                ClientManager.getClient().disconnect(m_nowMac);
+
+                ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+            }else if("7".equals(type)){
+                if (apiClient != null) {
+                    apiClient.onDestroy();
+                }
+            }else{
+                BaseApplication.getInstance().getIBLE().stopScan();
+                BaseApplication.getInstance().getIBLE().refreshCache();
+                BaseApplication.getInstance().getIBLE().close();
+                BaseApplication.getInstance().getIBLE().disconnect();
             }
-        }else{
-            BaseApplication.getInstance().getIBLE().stopScan();
-            BaseApplication.getInstance().getIBLE().refreshCache();
-            BaseApplication.getInstance().getIBLE().close();
-            BaseApplication.getInstance().getIBLE().disconnect();
         }
-
-//        m_myHandler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//            }
-//        });
-
-
 
         super.onDestroy();
 
@@ -598,6 +596,31 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             broadcastReceiver = null;
         }
         m_myHandler.removeCallbacksAndMessages(null);
+    }
+
+    void tzEnd(){
+
+        isTz = true;
+
+        Log.e("tzEnd===", oid+"==="+type);
+
+        SharedPreferencesUrls.getInstance().putBoolean("isStop", false);
+        SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
+        SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
+        SharedPreferencesUrls.getInstance().putString("type", type);
+        SharedPreferencesUrls.getInstance().putString("tempStat", "0");
+        SharedPreferencesUrls.getInstance().putString("bleid", bleid);
+        SharedPreferencesUrls.getInstance().putString("deviceuuid", deviceuuid);
+        SharedPreferencesUrls.getInstance().putInt("major", 0);
+
+//        SharedPreferencesUrls.getInstance().putBoolean("isTz", true);
+//        UIHelper.goToAct(context, CurRoadBikingActivity.class);
+
+        Intent intent = new Intent(context, CurRoadBikingActivity.class);
+        intent.putExtra("isTz",true);
+        startActivity(intent);
+
+        scrollToFinishActivity();
     }
 
     private void initView() {
@@ -1173,22 +1196,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         }
     }
 
-    void tzEnd(){
 
-        Log.e("tzEnd===", oid+"==="+type);
-
-        SharedPreferencesUrls.getInstance().putBoolean("isStop", false);
-        SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
-        SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
-        SharedPreferencesUrls.getInstance().putString("type", type);
-        SharedPreferencesUrls.getInstance().putString("tempStat", "0");
-        SharedPreferencesUrls.getInstance().putString("bleid", bleid);
-        SharedPreferencesUrls.getInstance().putString("deviceuuid", deviceuuid);
-        SharedPreferencesUrls.getInstance().putInt("major", 0);
-
-        UIHelper.goToAct(context, CurRoadBikingActivity.class);
-        scrollToFinishActivity();
-    }
 
     private final SearchResponse mSearchResponse = new SearchResponse() {
         @Override

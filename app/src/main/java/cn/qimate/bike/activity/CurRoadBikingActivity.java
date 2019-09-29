@@ -364,6 +364,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
     private boolean isTemp = false;
     private String info = "";
+    private boolean isTz = false;
 
     @Override
     @TargetApi(23)
@@ -379,6 +380,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         bleid = SharedPreferencesUrls.getInstance().getString("bleid", "");
         deviceuuid = SharedPreferencesUrls.getInstance().getString("deviceuuid", "");
         major = SharedPreferencesUrls.getInstance().getInt("major", 0);
+
+        isTz = getIntent().getBooleanExtra("isTz", false);
 
         if("4".equals(type) || "7".equals(type)){
             jsonArray = BaseFragment.jsonArray2;
@@ -718,39 +721,46 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 startActivityForResult(enableBtIntent, 188);
             } else {
                 if ("2".equals(type) || "3".equals(type)){
-                    if (lockLoading != null && !lockLoading.isShowing()){
-                        lockLoading.setTitle("正在唤醒车锁");
-                        lockLoading.show();
-                    }
 
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
+                    if(isTz){
+                        isLookPsdBtn = true;
 
-                            connect();
+                    }else{
+                        if (lockLoading != null && !lockLoading.isShowing()){
+                            lockLoading.setTitle("正在唤醒车锁");
+                            lockLoading.show();
+                        }
+
+                        m_myHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                connect();
 
 //                            BaseApplication.getInstance().getIBLE().disconnect();
 
 //                            BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
 //                            resetLock();
-                            m_myHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (!isStop){
-                                        if (lockLoading != null && lockLoading.isShowing()) {
-                                            lockLoading.dismiss();
-                                        }
-                                        Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
-                                        BaseApplication.getInstance().getIBLE().refreshCache();
-                                        BaseApplication.getInstance().getIBLE().disconnect();
-                                        BaseApplication.getInstance().getIBLE().close();
+                                m_myHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (!isStop){
+                                            if (lockLoading != null && lockLoading.isShowing()) {
+                                                lockLoading.dismiss();
+                                            }
+                                            Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
+                                            BaseApplication.getInstance().getIBLE().refreshCache();
+                                            BaseApplication.getInstance().getIBLE().disconnect();
+                                            BaseApplication.getInstance().getIBLE().close();
 
-                                        scrollToFinishActivity();
+                                            scrollToFinishActivity();
+                                        }
                                     }
-                                }
-                            }, 15 * 1000);
-                        }
-                    }, 2 * 1000);
+                                }, 15 * 1000);
+                            }
+                        }, 2 * 1000);
+                    }
+
 
                     closeBroadcast();
                     registerReceiver(Config.initFilter());
@@ -765,48 +775,61 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }else if ("5".equals(type)  || "6".equals(type)) {
 //                    ClientManager.getClient().disconnect(m_nowMac);
 
-                    if (lockLoading != null && !lockLoading.isShowing()){
-                        lockLoading.setTitle("正在唤醒车锁");
-                        lockLoading.show();
+                    Log.e("initView===5", isTz+"==="+isLookPsdBtn);
+
+                    if(isTz){
+                        isLookPsdBtn = true;
+                        ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+                        ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+                    }else{
+                        if (lockLoading != null && !lockLoading.isShowing()){
+                            lockLoading.setTitle("正在唤醒车锁");
+                            lockLoading.show();
+                        }
+
+                        m_myHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+//                                SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+//                                        .searchBluetoothLeDevice(0)
+//                                        .build();
+//
+//                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                                    return;
+//                                }
+//                                ClientManager.getClient().search(request, mSearchResponse);
+
+
+                                connectDeviceLP();
+                                ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+                                ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+//
+                                m_myHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (!isLookPsdBtn){
+                                            if (lockLoading != null && lockLoading.isShowing()) {
+                                                lockLoading.dismiss();
+                                            }
+                                            Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
+
+                                            ClientManager.getClient().stopSearch();
+                                            ClientManager.getClient().disconnect(m_nowMac);
+                                            ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+                                            ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+                                            scrollToFinishActivity();
+                                        }
+                                    }
+                                }, 15 * 1000);
+
+                            }
+                        }, 2 * 1000);
                     }
 
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            connectDeviceLP();
-                            ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
-                            ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
 
-                            m_myHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (!isLookPsdBtn){
-                                        if (lockLoading != null && lockLoading.isShowing()) {
-                                            lockLoading.dismiss();
-                                        }
-                                        Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
 
-                                        ClientManager.getClient().stopSearch();
-                                        ClientManager.getClient().disconnect(m_nowMac);
-                                        ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
-                                        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
 
-                                        scrollToFinishActivity();
-                                    }
-                                }
-                            }, 15 * 1000);
-
-                        }
-                    }, 2 * 1000);
-
-//                    SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
-//                            .searchBluetoothLeDevice(0)
-//                            .build();
-//
-//                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                        return;
-//                    }
-//                    ClientManager.getClient().search(request, mSearchResponse);
 
                 }else if ("7".equals(type)) {
                     isLookPsdBtn = true;
@@ -945,6 +968,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     public void run() {
                         Log.e("connectDevice===", Code.toString(code));
 //                        ToastUtil.showMessageApp(context, Code.toString(code));
+
+                        if (lockLoading != null && lockLoading.isShowing()) {
+                            lockLoading.dismiss();
+                        }
                     }
                 });
             }
@@ -996,6 +1023,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                         ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备断开连接");
                     }
+
+
 
                     connectDeviceIfNeeded();
 
@@ -1848,6 +1877,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 
             ClientManager.getClient().stopSearch();
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
             ClientManager.getClient().disconnect(m_nowMac);
             ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
             ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
@@ -6664,9 +6698,50 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 bleService.showValue = true;
                             }else if("5".equals(type) || "6".equals(type)){
 
-                                connectDeviceLP();
-                                ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
-                                ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+                                if (lockLoading != null && !lockLoading.isShowing()){
+                                    lockLoading.setTitle("正在唤醒车锁");
+                                    lockLoading.show();
+                                }
+
+                                m_myHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+//                                SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+//                                        .searchBluetoothLeDevice(0)
+//                                        .build();
+//
+//                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                                    return;
+//                                }
+//                                ClientManager.getClient().search(request, mSearchResponse);
+
+
+                                        connectDeviceLP();
+                                        ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+                                        ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+//
+                                        m_myHandler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (!isLookPsdBtn){
+                                                    if (lockLoading != null && lockLoading.isShowing()) {
+                                                        lockLoading.dismiss();
+                                                    }
+                                                    Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
+
+                                                    ClientManager.getClient().stopSearch();
+                                                    ClientManager.getClient().disconnect(m_nowMac);
+                                                    ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+                                                    ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+                                                    scrollToFinishActivity();
+                                                }
+                                            }
+                                        }, 15 * 1000);
+
+                                    }
+                                }, 2 * 1000);
+
 
                             }else if("7".equals(type)) {
                                 isLookPsdBtn = true;
@@ -6678,9 +6753,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //
 //                                CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
                             }else{
-                                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                                    loadingDialog.setTitle("正在唤醒车锁");
-                                    loadingDialog.show();
+
+                                if (lockLoading != null && !lockLoading.isShowing()){
+                                    lockLoading.setTitle("正在唤醒车锁");
+                                    lockLoading.show();
                                 }
 
                                 m_myHandler.postDelayed(new Runnable() {
