@@ -92,7 +92,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
     private TextView title, rightBtn;
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
-    private LinearLayout ll_1;
+    private LinearLayout ll_1, ll_2, ll_3;
     private RelativeLayout schoolLayout;
     private TextView schoolText;
     private EditText realNameEdit, stuNumEdit;
@@ -228,6 +228,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         submitBtn = (Button) findViewById(R.id.ui_realNameAuth_submitBtn);
 
         ll_1 = (LinearLayout)findViewById(R.id.ll_1);
+        ll_2 = (LinearLayout)findViewById(R.id.ll_2);
+        ll_3 = (LinearLayout)findViewById(R.id.ll_3);
 //        uploadImageLayout = (RelativeLayout)findViewById(R.id.ui_realNameAuth_uploadImageLayout);
         uploadImage = (ImageView)findViewById(R.id.ui_realNameAuth_uploadImage);
         uploadImage2 = (ImageView)findViewById(R.id.ui_realNameAuth_uploadImage2);
@@ -277,12 +279,22 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                 schoolText.setText(school);
 
                 cert_method = item1.get(options1)[1];
-                if("1".equals(cert_method) || "2".equals(cert_method)){
+
+                Log.e("pvOptions===", "==="+cert_method);
+
+                if("0".equals(cert_method)){
+                    isVisible = true;
+                    ll_1.setVisibility(View.VISIBLE);
+                    ll_2.setVisibility(View.GONE);
+                    ll_3.setVisibility(View.GONE);
+                }else if("1".equals(cert_method) || "2".equals(cert_method)){
                     isVisible = false;
                     ll_1.setVisibility(View.GONE);
                 }else{
                     isVisible = true;
                     ll_1.setVisibility(View.VISIBLE);
+                    ll_2.setVisibility(View.VISIBLE);
+                    ll_3.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -422,10 +434,14 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             Toast.makeText(context,"请上传您的证件照片",Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        if (imageurl2 == null || "".equals(imageurl2)){
-                            Toast.makeText(context,"请上传您的手持证件照片",Toast.LENGTH_SHORT).show();
-                            return;
+
+                        if(!"0".equals(cert_method)){
+                            if (imageurl2 == null || "".equals(imageurl2)){
+                                Toast.makeText(context,"请上传您的手持证件照片",Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                         }
+
                     }
 
 
@@ -435,7 +451,12 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
 //                    AutoSubmitBtn(uid, access_token, realname, stunum);
 
-                    SubmitBtn(uid, access_token, realname, stunum);
+                    if("0".equals(cert_method)){
+                        SubmitBtn2(uid, access_token, realname, stunum);
+                    }else{
+                        SubmitBtn(uid, access_token, realname, stunum);
+                    }
+
                 }
                 break;
         }
@@ -489,13 +510,19 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                     ll_1.setVisibility(View.VISIBLE);
                                 }
 
-
-                                if("1".equals(cert_method) || "2".equals(cert_method)){
+                                if("0".equals(cert_method)){
+                                    isVisible = true;
+                                    ll_1.setVisibility(View.VISIBLE);
+                                    ll_2.setVisibility(View.GONE);
+                                    ll_3.setVisibility(View.GONE);
+                                }else if("1".equals(cert_method) || "2".equals(cert_method)){
                                     isVisible = false;
                                     ll_1.setVisibility(View.GONE);
                                 }else{
                                     isVisible = true;
                                     ll_1.setVisibility(View.VISIBLE);
+                                    ll_2.setVisibility(View.VISIBLE);
+                                    ll_3.setVisibility(View.VISIBLE);
                                 }
 
 //                                getSchoolList();
@@ -650,7 +677,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
      * */
     private void SubmitBtn(String uid, String access_token, String realname, String stunum){
 
-        Log.e("SubmitBtn===0", uid+"==="+access_token+"==="+stunum+"==="+realname+"==="+school+"==="+cert_method);
+        Log.e("SubmitBtn===0", flag+"==="+uid+"==="+access_token+"==="+stunum+"==="+realname+"==="+school+"==="+cert_method);
 
         RequestParams params = new RequestParams();
         params.put("uid",uid);
@@ -658,6 +685,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         params.put("realname",realname);
         params.put("school",school);
         params.put("stunum",stunum);
+
         if("3".equals(cert_method) || "4".equals(cert_method) || flag){
             params.put("stunumfile", imageurl);
             params.put("stunumfile2", imageurl2);

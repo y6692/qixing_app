@@ -247,6 +247,7 @@
 
 
                         <LinearLayout
+                            android:id="@+id/ll_2"
                             android:layout_width="0dp"
                             android:layout_height="115dp"
                             android:layout_weight="1"
@@ -301,6 +302,7 @@
 
 
                         <LinearLayout
+                            android:id="@+id/ll_3"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

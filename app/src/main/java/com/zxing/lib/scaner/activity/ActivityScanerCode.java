@@ -39,6 +39,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.zxing.Result;
 import com.sofi.blelocker.library.Code;
 import com.sofi.blelocker.library.connect.listener.BleConnectStatusListener;
@@ -116,6 +118,7 @@ import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.EbikeInfoBean;
 import cn.qimate.bike.model.KeyBean;
 import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.model.UserIndexBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.AESUtil;
 import cn.qimate.bike.util.ByteUtil;
@@ -271,6 +274,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private boolean isConnect = false;
     private boolean isTz = false;
 
+    private Dialog advDialog;
+    private ImageView advCloseBtn;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -304,6 +310,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         mCameraManager = CameraManager.get();
 
         surfaceView = (SurfaceView) findViewById(R.id.capture_preview);
+
+        initHttp();
 
     }
 
@@ -586,6 +594,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 BaseApplication.getInstance().getIBLE().close();
                 BaseApplication.getInstance().getIBLE().disconnect();
             }
+
+
         }
 
         super.onDestroy();
@@ -641,17 +651,101 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         dialog.setContentView(dialogView);
         dialog.setCanceledOnTouchOutside(false);
 
+        advDialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+        View advDialogView = LayoutInflater.from(context).inflate(R.layout.ui_adv_view2, null);
+        advDialog.setContentView(advDialogView);
+        advDialog.setCanceledOnTouchOutside(false);
+
+        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+        advCloseBtn.setOnClickListener(this);
+
         bikeNumEdit = (EditText) dialogView.findViewById(R.id.pop_circlesMenu_bikeNumEdit);
         positiveButton = (Button) dialogView.findViewById(R.id.pop_circlesMenu_positiveButton);
         negativeButton = (Button) dialogView.findViewById(R.id.pop_circlesMenu_negativeButton);
         positiveButton.setOnClickListener(this);
         negativeButton.setOnClickListener(this);
 
+
+    }
+
+    private void initHttp(){
+
+        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid != null && !"".equals(uid) && access_token != null && !"".equals(access_token)){
+            RequestParams params = new RequestParams();
+            params.put("uid",uid);
+            params.put("access_token",access_token);
+            HttpHelper.get(context, Urls.userIndex, params, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    onStartCommon("正在加载");
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    onFailureCommon(throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                if (result.getFlag().equals("Success")) {
+
+
+                                    UserIndexBean bean = JSON.parseObject(result.getData(), UserIndexBean.class);
+                                    String school = bean.getSchool();
+
+                                    Log.e("initHttp===", "==="+school);
+
+                                    if("河北工程大学".equals(school) || "西安交通大学（创新港）".equals(school) || "南京信息工程大学".equals(school)){
+                                        WindowManager windowManager = getWindowManager();
+                                        Display display = windowManager.getDefaultDisplay();
+
+                                        Log.e("display===", "==="+display.getWidth());
+
+                                        WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
+                                        lp.width = (int) (display.getWidth() * 1);
+                                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                                        advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+                                        advDialog.getWindow().setAttributes(lp);
+                                        advDialog.show();
+                                    }
+
+
+                                } else {
+                                    Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+                        }
+                    });
+
+                }
+            });
+        }else {
+            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context,LoginActivity.class);
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.ui_adv_closeBtn:
+                Log.e("onClick===", advDialog+"==="+advDialog.isShowing());
+
+                if (advDialog != null && advDialog.isShowing()) {
+                    advDialog.dismiss();
+                }
+                break;
             case R.id.pop_circlesMenu_positiveButton:
 //                try {
                     String bikeNum = bikeNumEdit.getText().toString().trim();
@@ -766,14 +860,18 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
 
 
-    public void handleDecode(Result result) {
-        if(!previewing) return;
+    public void handleDecode(final Result result) {
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    if(!previewing) return;
 
-        Log.e("handleDecode===", "===");
+                    Log.e("handleDecode===", "===");
 
-        inactivityTimer.onActivity();
-        //扫描成功之后的振动与声音提示
-        RxBeepTool.playBeep(mActivity, vibrate);
+                    inactivityTimer.onActivity();
+                    //扫描成功之后的振动与声音提示
+                    RxBeepTool.playBeep(mActivity, vibrate);
 
 
 //        mCamera.setPreviewCallback(null);
@@ -782,17 +880,31 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //        releaseCamera();
 
 
-        String result1 = result.getText();
-        if (mScanerListener == null) {
-            initDialogResult(result);
-        } else {
-            mScanerListener.onSuccess("From to Camera", result);
-        }
+                    String result1 = result.getText();
+                    if (mScanerListener == null) {
+                        initDialogResult(result);
+                    } else {
+                        mScanerListener.onSuccess("From to Camera", result);
+                    }
+                } catch (Exception e) {
+                    ToastUtil.showMessageApp(context, "扫码异常，请重试");
+                    scrollToFinishActivity();
+                }
+
+            }
+        });
+
     }
 
     //--------------------------------------打开本地图片识别二维码 start---------------------------------
-    private void initDialogResult(Result result) {
-        useBike(result.toString());
+    private void initDialogResult(final Result result) {
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                useBike(result.toString());
+            }
+        });
+
     }
 
     public Handler getHandler() {

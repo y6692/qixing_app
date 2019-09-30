@@ -252,7 +252,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 									UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
 									// 极光标记别名
 
-									Log.e("RefreshLogin===", bean.getSpecialdays()+"==="+bean.getEbike_specialdays());
+									Log.e("RefreshLogin===", "==="+responseString);
 
 									setAlias(bean.getUid());
 									SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());

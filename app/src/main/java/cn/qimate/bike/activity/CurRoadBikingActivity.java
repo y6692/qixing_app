@@ -366,6 +366,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private String info = "";
     private boolean isTz = false;
 
+    private LinearLayout ll_1;
+
     @Override
     @TargetApi(23)
     protected void onCreate(Bundle savedInstanceState) {
@@ -560,6 +562,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         tv_test = (TextView)testDialogView.findViewById(R.id.ui_test_text);
         testLayout = (LinearLayout)testDialogView.findViewById(R.id.ui_test_confirm);
+
+        ll_1 = (LinearLayout)findViewById(R.id.ll_1);
 
         view_test = (MyScrollView)findViewById(R.id.view_test);
         tv_test_xinbiao = (TextView)findViewById(R.id.tv_test_xinbiao);
@@ -782,6 +786,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
                         ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
                     }else{
+                        ll_1.setVisibility(View.VISIBLE);
+
                         if (lockLoading != null && !lockLoading.isShowing()){
                             lockLoading.setTitle("正在唤醒车锁");
                             lockLoading.show();
@@ -972,6 +978,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         if (lockLoading != null && lockLoading.isShowing()) {
                             lockLoading.dismiss();
                         }
+                        ll_1.setVisibility(View.GONE);
                     }
                 });
             }
@@ -990,6 +997,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         if (lockLoading != null && lockLoading.isShowing()) {
                             lockLoading.dismiss();
                         }
+                        ll_1.setVisibility(View.GONE);
 
 //                        if (Globals.bType == 1) {
 //                            ToastUtil.showMessageApp(context, "正在关锁中");
@@ -1886,6 +1894,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
             ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
 
+        }else if("4".equals(type)){
+            if (bleService != null) {
+                bleService.artifClose();
+            }
         }else if("7".equals(type)){
             if (apiClient != null) {
                 apiClient.onDestroy();
@@ -2952,17 +2964,18 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 Log.e("biking===lookPsdBtn", tvAgain+"==="+m_nowMac);
 
                 if("7".equals(type)){
-                    xa_state = 0;
-                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
-                    builder.setBleStateChangeListener(this);
-                    builder.setScanResultCallback(this);
-                    apiClient = builder.build();
-                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+//                    xa_state = 0;
+//                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+//                    builder.setBleStateChangeListener(this);
+//                    builder.setScanResultCallback(this);
+//                    apiClient = builder.build();
+//                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
                 }else{
-//                    if(!isLookPsdBtn){
-//                        ToastUtil.showMessageApp(context, "蓝牙未连接，请重试");
-//                        break;
-//                    }
+                    if(!isLookPsdBtn){
+                        ToastUtil.showMessageApp(context, "蓝牙未连接，请重试");
+                        scrollToFinishActivity();
+                        break;
+                    }
                 }
 
                 if ("查看密码".equals(tvAgain)){
@@ -3240,6 +3253,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }else{
                     if(!isLookPsdBtn){
                         ToastUtil.showMessageApp(context, "蓝牙未连接，请重试");
+                        scrollToFinishActivity();
                         break;
                     }
                 }
