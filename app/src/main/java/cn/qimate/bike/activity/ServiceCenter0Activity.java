@@ -112,7 +112,7 @@ public class ServiceCenter0Activity extends SwipeBackActivity implements View.On
     private String starttime = "";
     private String endtime = "";
 
-    private String data = "";
+    private String bikeCode = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +123,7 @@ public class ServiceCenter0Activity extends SwipeBackActivity implements View.On
         hotData = new ArrayList<>();
         commonData = new ArrayList<>();
 
-//        data = getIntent().getStringExtra("data");
+        bikeCode = getIntent().getStringExtra("bikeCode");
 
         initView();
     }
@@ -579,7 +579,12 @@ public class ServiceCenter0Activity extends SwipeBackActivity implements View.On
 
             case R.id.mainUI_title_rightBtn:
 //                SharedPreferencesUrls.getInstance().putString("type", "1");
-                UIHelper.goToAct(context,FeedbackActivity.class);
+//                UIHelper.goToAct(context,FeedbackActivity.class);
+
+                Intent intent = new Intent(context, FeedbackActivity.class);
+                intent.putExtra("bikeCode",bikeCode);
+                startActivity(intent);
+
                 break;
 
 

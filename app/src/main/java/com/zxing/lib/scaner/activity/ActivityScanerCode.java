@@ -569,7 +569,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             loadingDialog.dismiss();
         }
 
-        Log.e("scan===onDestroy", m_nowMac+"==="+type);
+        Log.e("scan===onDestroy", m_nowMac+"==="+type+"==="+isTz);
 
         if(!isTz){
             if("5".equals(type)  || "6".equals(type)){
@@ -1223,6 +1223,16 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                                         runOnUiThread(new Runnable() {
                                                             @Override
                                                             public void run() {
+
+                                                                ClientManager.getClient().stopSearch();
+                                                                ClientManager.getClient().disconnect(m_nowMac);
+                                                                ClientManager.getClient().disconnect(m_nowMac);
+                                                                ClientManager.getClient().disconnect(m_nowMac);
+                                                                ClientManager.getClient().disconnect(m_nowMac);
+                                                                ClientManager.getClient().disconnect(m_nowMac);
+                                                                ClientManager.getClient().disconnect(m_nowMac);
+                                                                ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
                                                                 SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
                                                                         .searchBluetoothLeDevice(0)
                                                                         .build();
@@ -1332,6 +1342,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 @Override
                 public void run() {
                     if(m_nowMac.equals(device.device.getAddress())){
+
+                        Log.e("scan===stop",device.device.getName() + "===" + device.device.getAddress());
+
                         ClientManager.getClient().stopSearch();
 
                         connectDeviceLP();
@@ -1375,12 +1388,24 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         public void onConnectStatusChanged(String mac, int status) {
 //            BluetoothLog.v(String.format(Locale.getDefault(), "DeviceDetailActivity onConnectStatusChanged %d in %s", status, Thread.currentThread().getName()));
 
+
+//            ClientManager.getClient().disconnect(m_nowMac);
+//            ClientManager.getClient().disconnect(m_nowMac);
+//            ClientManager.getClient().disconnect(m_nowMac);
+//            ClientManager.getClient().disconnect(m_nowMac);
+//            ClientManager.getClient().disconnect(m_nowMac);
+//            ClientManager.getClient().disconnect(m_nowMac);
+//            ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+//            ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
             Log.e("ConnectStatus===", mac+"===="+(status == STATUS_CONNECTED));
 
 
             if(status != STATUS_CONNECTED){
                 return;
             }
+
+            ClientManager.getClient().stopSearch();
 
             ClientManager.getClient().getStatus(mac, new IGetStatusResponse() {
                 @Override
@@ -1396,6 +1421,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         @Override
                         public void run() {
                             Log.e("scan===", "scan====1");
+
+
 
 //                                    getBleRecord();
                             rent();
@@ -2176,6 +2203,15 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
+                                            ClientManager.getClient().stopSearch();
+                                            ClientManager.getClient().disconnect(m_nowMac);
+                                            ClientManager.getClient().disconnect(m_nowMac);
+                                            ClientManager.getClient().disconnect(m_nowMac);
+                                            ClientManager.getClient().disconnect(m_nowMac);
+                                            ClientManager.getClient().disconnect(m_nowMac);
+                                            ClientManager.getClient().disconnect(m_nowMac);
+                                            ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
                                             SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
                                                     .searchBluetoothLeDevice(0)
                                                     .build();
@@ -2983,6 +3019,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     connectDeviceLP();
                     ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
 
+
+                    Log.e("0x98===", "==="+isStop);
+
                     m_myHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -2994,6 +3033,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
 
                                 ClientManager.getClient().stopSearch();
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().disconnect(m_nowMac);
                                 ClientManager.getClient().disconnect(m_nowMac);
                                 ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
 

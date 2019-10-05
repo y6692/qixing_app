@@ -165,6 +165,8 @@ public class FeedbackActivity
     private int pos;
     private boolean isSubmit = false;
 
+    private String bikeCode = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,6 +177,7 @@ public class FeedbackActivity
 
         type = SharedPreferencesUrls.getInstance().getString("type", "");
         m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+        bikeCode = getIntent().getStringExtra("bikeCode");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
@@ -254,6 +257,8 @@ public class FeedbackActivity
         cancelBtn.setOnClickListener(itemsOnClick);
 
         bikeCodeEdit = (EditText)findViewById(R.id.feedbackUI_bikeCode);
+        bikeCodeEdit.setText(bikeCode);
+
         Tag1 = (TextView)findViewById(R.id.feedbackUI_type_Tag1);
         Tag2 = (TextView)findViewById(R.id.feedbackUI_type_Tag2);
         Tag3 = (TextView)findViewById(R.id.feedbackUI_type_Tag3);
