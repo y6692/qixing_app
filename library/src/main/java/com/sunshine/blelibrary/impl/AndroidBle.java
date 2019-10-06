@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.dispose.impl.Battery;
@@ -41,6 +42,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.sunshine.blelibrary.mode.Order.formatByte2HexStr;
 import static com.sunshine.blelibrary.utils.EncryptUtils.Encrypt;
 
 /**
@@ -264,6 +266,14 @@ public class AndroidBle implements IBLE {
             return false;
         }
         byte[] miwen = Encrypt(ConvertUtils.hexString2Bytes(txOrder.generateString()), Config.key);
+
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < miwen.length; i++) {
+            byte value = miwen[i];//获取数据
+            builder.append(formatByte2HexStr(value));//拼凑数据
+        }
+        Log.e("miwen===", miwen.length+"==="+builder);
+
         if (miwen != null) {
             write_characteristic.setValue(miwen);
             mHandler.removeMessages(0);

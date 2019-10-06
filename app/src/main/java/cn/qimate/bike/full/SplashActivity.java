@@ -48,6 +48,7 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
@@ -601,6 +602,8 @@ public class SplashActivity extends BaseActivity {
 			// 设置定位监听
 			locationClient.setLocationListener(locationListener);
 			startLocation();
+
+//			PostDeviceInfo(0, 0);
 		} else {
 			Toast.makeText(context, "暂无网络连接，请连接网络", Toast.LENGTH_SHORT).show();
 			return;
@@ -794,7 +797,7 @@ public class SplashActivity extends BaseActivity {
 	// 提交设备信息到appinfo
 	private void PostDeviceInfo(double latitude, double longitude) {
 
-		Log.e("PostDeviceInfo===", "===");
+
 
 		if (NetworkUtils.getNetWorkType(context) != NetworkUtils.NONETWORK) {
 			try {
@@ -803,11 +806,16 @@ public class SplashActivity extends BaseActivity {
 					return;
 				}
 				String UUID = tm.getDeviceId();
+//				String UUID = java.util.UUID.randomUUID().toString();
+
 				String system_version = Build.VERSION.RELEASE;
 				String device_model = new Build().MODEL;
 				RequestParams params = new RequestParams();
 				Md5Helper Md5Helper = new Md5Helper();
 				String verify = Md5Helper.encode("7mateapp" + UUID);
+
+				Log.e("PostDeviceInfo===0", latitude+"==="+longitude+"==="+system_version+"==="+device_model+"==="+new Build().MANUFACTURER+"==="+UUID);
+
 				params.put("verify", verify);
 				params.put("system_name", "Android");
 				params.put("system_version", system_version);
@@ -820,6 +828,8 @@ public class SplashActivity extends BaseActivity {
 					@Override
 					public void onSuccess(int statusCode, Header[] headers, String responseString) {
 						try {
+							Log.e("PostDeviceInfo===", "==="+responseString);
+
 							ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 							if (result.getFlag().toString().equals("Success")) {
 

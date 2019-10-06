@@ -2377,6 +2377,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     public void onServicesDiscovered(String name, String address) {
         Log.e("onServicesDiscovered===", name+"==="+address);
 
+        BaseApplication.getInstance().getIBLE().stopScan();
+
         isStop = true;
         getToken();
     }
