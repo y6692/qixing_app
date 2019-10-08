@@ -173,9 +173,11 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.ui_real_name_auth);
         context = this;
+
+        CrashHandler.getInstance().setmContext(this);
+
         schoolList = new ArrayList<>();
         initView();
     }

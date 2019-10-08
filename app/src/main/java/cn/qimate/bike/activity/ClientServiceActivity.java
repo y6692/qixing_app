@@ -155,12 +155,15 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     private boolean isComplete = false;
 
     private boolean isSubmit = false;
+    private String fid = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ui_client_service);
         context = this;
+
+        CrashHandler.getInstance().setmContext(this);
 
         type = SharedPreferencesUrls.getInstance().getString("type", "");
 
@@ -643,6 +646,47 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         }
     }
 
+    void memberEvent() {
+        RequestParams params = new RequestParams();
+        try {
+            Log.e("ClientS===memberEvent0", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+Build.VERSION.RELEASE+"==="+getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+
+            params.put("uid", uid);
+            params.put("access_token", access_token);
+            params.put("phone_brand", new Build().MANUFACTURER.toUpperCase());
+            params.put("phone_model", new Build().MODEL);
+            params.put("phone_system", "Android");
+            params.put("phone_system_version", Build.VERSION.RELEASE);     //手机系统版本 必传 如：13.1.2
+            params.put("app_version", getPackageManager().getPackageInfo(getPackageName(), 0).versionName);      //应用版本 必传 如：1.8.2
+            params.put("event", "4");
+            params.put("event_id", fid);
+            params.put("event_content", "submit_feedback");
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+
+        HttpHelper.post(context, Urls.memberEvent, params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    Log.e("ClientS===memberEvent1", "==="+responseString);
+
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().toString().equals("Success")) {
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+            }
+        });
+    }
+
     private void submit(){
         if(isSubmit) return;
 
@@ -726,6 +770,12 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
 
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("ClientService===", result.getData()+"==="+responseString);
+
+                            fid = result.getData();
+                            memberEvent();
+
                             if (result.getFlag().equals("Success")) {
                                 Toast.makeText(context,"提交成功，工作人员将很快处理。",Toast.LENGTH_SHORT).show();
                                 scrollToFinishActivity();

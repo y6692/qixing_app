@@ -11,6 +11,10 @@ import android.os.Looper;
 import android.util.Log;
 
 
+import com.alibaba.fastjson.JSON;
+
+import org.apache.http.Header;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -25,6 +29,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.loopj.android.http.RequestParams;
+import cn.loopj.android.http.TextHttpResponseHandler;
+import cn.qimate.bike.core.common.HttpHelper;
+import cn.qimate.bike.core.common.SharedPreferencesUrls;
+import cn.qimate.bike.core.common.Urls;
+import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.util.ToastUtil;
 
 /**
@@ -52,14 +62,22 @@ public class CrashHandler implements UncaughtExceptionHandler {
         return INSTANCE;
     }
 
+    public Context getmContext() {
+        return mContext;
+    }
+
+    public void setmContext(Context mContext) {
+        this.mContext = mContext;
+    }
+
     /**
      * 初始化
      *
      * @param context
      */
     public void init(Context context) {
-//        mContext = context;
-        mContext = context.getApplicationContext();
+        mContext = context;
+//        mContext = context.getApplicationContext();
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();// 获取系统默认的UncaughtException处理器
         Thread.setDefaultUncaughtExceptionHandler(this);// 设置该CrashHandler为程序的默认处理器
     }
@@ -73,6 +91,9 @@ public class CrashHandler implements UncaughtExceptionHandler {
             handleException(ex);// 如果自定义的没有处理则让系统默认的异常处理器来处理
             mDefaultHandler.uncaughtException(thread, ex);// 退出程序
             android.os.Process.killProcess(android.os.Process.myPid());
+
+//            StackTraceElement[] stackTrace = ex.getStackTrace();
+//            stackTrace[1].getLineNumber();
         }
     }
 
@@ -93,6 +114,8 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
                 ToastUtil.showMessageApp(mContext, ">>>"+ex.getMessage());
 
+                memberEvent(mContext.getClass().getName()+"_"+ex.getStackTrace()[0].getLineNumber()+"_"+ex.getMessage());
+
                 Looper.loop();
             }
         }.start();
@@ -108,6 +131,49 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
         saveCrashInfo2File(exString, mContext);
         return true;
+    }
+
+    void memberEvent(String ex) {
+        RequestParams params = new RequestParams();
+        try {
+            Log.e("CrashH===memberEvent0", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+Build.VERSION.RELEASE+"==="+mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
+
+            String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
+            String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+
+            params.put("uid", uid);
+            params.put("access_token", access_token);
+            params.put("phone_brand", new Build().MANUFACTURER.toUpperCase());
+            params.put("phone_model", new Build().MODEL);
+            params.put("phone_system", "Android");
+            params.put("phone_system_version", Build.VERSION.RELEASE);     //手机系统版本 必传 如：13.1.2
+            params.put("app_version", mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);      //应用版本 必传 如：1.8.2
+            params.put("event", "1");
+            params.put("event_content", ex);
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+
+        HttpHelper.post(mContext, Urls.memberEvent, params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    Log.e("CrashH===memberEvent1", "==="+responseString);
+
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().toString().equals("Success")) {
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+            }
+        });
     }
 
     /**

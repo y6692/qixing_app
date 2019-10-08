@@ -145,6 +145,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         setContentView(R.layout.ui_main);
 //        ButterKnife.bind(this);
 
+        CrashHandler.getInstance().setmContext(this);
+
 //        IntentFilter filter = new IntentFilter("data.broadcast.action");
 //        registerReceiver(mReceiver, filter);
 

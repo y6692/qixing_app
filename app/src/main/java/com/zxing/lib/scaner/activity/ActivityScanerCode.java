@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -98,6 +99,7 @@ import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.ClientManager;
 import cn.qimate.bike.activity.CouponActivity;
+import cn.qimate.bike.activity.CrashHandler;
 import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadBikingActivity;
 import cn.qimate.bike.activity.CurRoadStartActivity;
@@ -108,6 +110,7 @@ import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.ble.BLEService;
 import cn.qimate.bike.core.common.HttpHelper;
+import cn.qimate.bike.core.common.Md5Helper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
@@ -290,6 +293,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //
 //        bleService.view = this;
 //        bleService.showValue = true;
+
+        CrashHandler.getInstance().setmContext(this);
 
         registerReceiver(broadcastReceiver, Config.initFilter());
         GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
@@ -940,6 +945,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private void ebikeInfo(final String tokencode) {
         Log.e("scan===000", "ebikeInfo====" + tokencode);
 
+//        int t = 1/0;
+
         final String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 
@@ -978,30 +985,31 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                     Log.e("scan===ebikeInfo2", bean.getElectricity().substring(0, bean.getElectricity().length() - 1) + "====");
 
-                                    if (Integer.parseInt(bean.getElectricity().substring(0, bean.getElectricity().length() - 1)) <= 10) {
-                                        ToastUtil.showMessageApp(context, "电量低，请换辆车");
+//                                    if (Integer.parseInt(bean.getElectricity().substring(0, bean.getElectricity().length() - 1)) <= 10) {
+//                                        ToastUtil.showMessageApp(context, "电量低，请换辆车");
+//
+//                                        scrollToFinishActivity();
+//                                    } else {
+//
+//
+//                                    }
 
-                                        scrollToFinishActivity();
-                                    } else {
+                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
+                                    customBuilder.setMessage("电单车必须在校内停车线还车");
 
-                                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
-                                        customBuilder.setMessage("电单车必须在校内停车线还车");
+                                    customBuilder.setType(4).setElectricity(bean.getElectricity()).setMileage(bean.getMileage()).setFee(bean.getFee()).setTitle("这是一辆电单车").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                            scrollToFinishActivity();
+                                        }
+                                    }).setPositiveButton("开锁", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
 
-                                        customBuilder.setType(4).setElectricity(bean.getElectricity()).setMileage(bean.getMileage()).setFee(bean.getFee()).setTitle("这是一辆电单车").setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.cancel();
-                                                scrollToFinishActivity();
-                                            }
-                                        }).setPositiveButton("开锁", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.cancel();
-
-                                                useCar(tokencode);
-                                            }
-                                        }).setHint(false);
-                                        customBuilder.create().show();
-                                    }
-
+                                            useCar(tokencode);
+                                        }
+                                    }).setHint(false);
+                                    customBuilder.create().show();
 
                                 }
                             } else {
@@ -1021,6 +1029,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         });
     }
 
+
+
     void useCar(String result) {
 
         Log.e("scan===useCar0", "===" + result);
@@ -1034,6 +1044,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             Log.e("scan===useCar1", "===" + result);
 
 //            result = "11223344";
+
+//            memberEvent();
 
             RequestParams params = new RequestParams();
             params.put("uid", uid);
@@ -1156,6 +1168,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                             ToastUtil.showMessageApp(context, "恭喜您,开锁成功!");
 
+                                            oid = jsonObject.getString("orderid");
+                                            memberEvent();
+
                                             if(!isFinishing()){
                                                 tzEnd();
                                             }
@@ -1263,6 +1278,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                             Log.e("useBike===4", "====" + jsonObject);
 
                                             ToastUtil.showMessageApp(context, "恭喜您,开锁成功!");
+
+                                            oid = jsonObject.getString("orderid");
+                                            memberEvent();
 
                                             if(!isFinishing()){
                                                 tzEnd();
@@ -1918,8 +1936,19 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
 //                        closeEbike();
 //                        submit(uid, access_token);
-                        if(!isFinishing()){
-                            tzEnd();
+//                        if(!isFinishing()){
+//                            tzEnd();
+//                        }
+
+                        if("".equals(oid)){
+                            memberEvent2();
+
+                            Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
+                            scrollToFinishActivity();
+                        }else{
+                            if(!isFinishing()){
+                                tzEnd();
+                            }
                         }
                     }
 
@@ -2379,7 +2408,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         BaseApplication.getInstance().getIBLE().stopScan();
 
-        isStop = true;
+//        if (m_nowMac.equalsIgnoreCase(address)){
+//            Log.e("onServicesDiscovered==2", m_nowMac+"==="+address);
+//
+//            m_myHandler.removeMessages(0x99);
+//            BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
+//        }
+
+
         getToken();
     }
     /**
@@ -2408,6 +2444,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     String data = intent.getStringExtra("data");
                     switch (action) {
                         case Config.TOKEN_ACTION:
+                            isStop = true;
 
                             if (null != loadingDialog && loadingDialog.isShowing()) {
                                 loadingDialog.dismiss();
@@ -2588,6 +2625,87 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         });
     }
 
+    void memberEvent() {
+        RequestParams params = new RequestParams();
+        try {
+            Log.e("scan===memberEvent0", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+Build.VERSION.RELEASE+"==="+getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+
+            params.put("uid", uid);
+            params.put("access_token", access_token);
+            params.put("phone_brand", new Build().MANUFACTURER.toUpperCase());
+            params.put("phone_model", new Build().MODEL);
+            params.put("phone_system", "Android");
+            params.put("phone_system_version", Build.VERSION.RELEASE);     //手机系统版本 必传 如：13.1.2
+            params.put("app_version", getPackageManager().getPackageInfo(getPackageName(), 0).versionName);      //应用版本 必传 如：1.8.2
+            params.put("event", "2");
+            params.put("event_id", oid);
+            params.put("event_content", "open_lock");
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+
+        HttpHelper.post(context, Urls.memberEvent, params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    Log.e("scan===memberEvent1", "==="+responseString);
+
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().toString().equals("Success")) {
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+            }
+        });
+    }
+
+    void memberEvent2() {
+        RequestParams params = new RequestParams();
+        try {
+            Log.e("scan===memberEvent0", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+Build.VERSION.RELEASE+"==="+getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+
+            params.put("uid", uid);
+            params.put("access_token", access_token);
+            params.put("phone_brand", new Build().MANUFACTURER.toUpperCase());
+            params.put("phone_model", new Build().MODEL);
+            params.put("phone_system", "Android");
+            params.put("phone_system_version", Build.VERSION.RELEASE);     //手机系统版本 必传 如：13.1.2
+            params.put("app_version", getPackageManager().getPackageInfo(getPackageName(), 0).versionName);      //应用版本 必传 如：1.8.2
+            params.put("event", "2");
+//            params.put("event_id", type);
+            params.put("event_content", "type"+type+"唤醒失败");
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+
+        HttpHelper.post(context, Urls.memberEvent, params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    Log.e("scan===memberEvent1", "==="+responseString);
+
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().toString().equals("Success")) {
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+            }
+        });
+    }
 
     private void addOrderbluelock(){
         final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
@@ -2628,6 +2746,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 if (result.getFlag().equals("Success")) {
                                     CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
                                     oid = bean.getOrderid();
+
+                                    memberEvent();
 
                                     Log.e("scan===addOrderbluelock", oid + "===" + type);
 
@@ -3031,6 +3151,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 if (loadingDialog != null && loadingDialog.isShowing()) {
                                     loadingDialog.dismiss();
                                 }
+
+                                memberEvent2();
+
 //                                Toast.makeText(context,"请重启软件，开启定位服务,输编号用车",5 * 1000).show();
                                 Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
 
@@ -3068,6 +3191,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 if (loadingDialog != null && loadingDialog.isShowing()) {
                                     loadingDialog.dismiss();
                                 }
+
+                                memberEvent2();
+
 //                                Toast.makeText(context,"请重启软件，开启定位服务,输编号用车",5 * 1000).show();
                                 Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
                                 BaseApplication.getInstance().getIBLE().refreshCache();
@@ -3126,6 +3252,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         }, 5 * 1000);
     }
 
+    //小安
     @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.BLUETOOTH})
     public void connectDevice(String imei) {
         if (apiClient != null) {
@@ -3136,6 +3263,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
     }
 
+    //小安
     @Override
     public void onConnect(BluetoothDevice bluetoothDevice) {
         isConnect = true;
@@ -3223,6 +3351,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
     }
 
+    //小安
     @Override
     public void onDisConnect(BluetoothDevice bluetoothDevice) {
         isConnect = false;
@@ -3236,6 +3365,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //                scrollToFinishActivity();
 
                 if("".equals(oid)){
+                    memberEvent2();
+
+                    Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
                     scrollToFinishActivity();
                 }else{
                     if(!isFinishing()){

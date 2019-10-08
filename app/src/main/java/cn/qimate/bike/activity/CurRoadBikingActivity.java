@@ -379,6 +379,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //        instance = this;
         BikeFragment.tz = 0;
 
+        CrashHandler.getInstance().setmContext(this);
+
         m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
         type = SharedPreferencesUrls.getInstance().getString("type", "");
         bleid = SharedPreferencesUrls.getInstance().getString("bleid", "");
@@ -4265,6 +4267,47 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         });
     }
 
+    void memberEvent() {
+        RequestParams params = new RequestParams();
+        try {
+            Log.e("biking===memberEvent0", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+Build.VERSION.RELEASE+"==="+getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+
+            params.put("uid", uid);
+            params.put("access_token", access_token);
+            params.put("phone_brand", new Build().MANUFACTURER.toUpperCase());
+            params.put("phone_model", new Build().MODEL);
+            params.put("phone_system", "Android");
+            params.put("phone_system_version", Build.VERSION.RELEASE);     //手机系统版本 必传 如：13.1.2
+            params.put("app_version", getPackageManager().getPackageInfo(getPackageName(), 0).versionName);      //应用版本 必传 如：1.8.2
+            params.put("event", "3");
+            params.put("event_id", oid);
+            params.put("event_content", "close_lock");
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+
+        HttpHelper.post(context, Urls.memberEvent, params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    Log.e("biking===memberEvent1", "==="+responseString);
+
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().toString().equals("Success")) {
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+            }
+        });
+    }
+
     protected void submit(String uid,String access_token){
         Log.e("submit===", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
 
@@ -4383,6 +4426,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                                  if (myLocation != null){
 //                                      addMaplocation(myLocation.latitude,myLocation.longitude);
 //                                  }
+
+                                    memberEvent();
 
                                     if (loadingDialog != null && loadingDialog.isShowing()){
                                         loadingDialog.dismiss();

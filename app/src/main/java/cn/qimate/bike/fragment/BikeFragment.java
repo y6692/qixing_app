@@ -109,6 +109,7 @@ import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.ActionCenterActivity;
 import cn.qimate.bike.activity.CouponActivity;
+import cn.qimate.bike.activity.CrashHandler;
 import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadBikingActivity;
 import cn.qimate.bike.activity.FeedbackActivity;
@@ -263,6 +264,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         super.onActivityCreated(savedInstanceState);
         context = getActivity();
         activity = getActivity();
+
+        CrashHandler.getInstance().setmContext(context);
 
 //        aMap = ((MainActivity)activity).aMap;
 //        successDescripter = ((MainActivity)activity).successDescripter;

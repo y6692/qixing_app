@@ -267,12 +267,12 @@ public class AndroidBle implements IBLE {
         }
         byte[] miwen = Encrypt(ConvertUtils.hexString2Bytes(txOrder.generateString()), Config.key);
 
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < miwen.length; i++) {
-            byte value = miwen[i];//获取数据
-            builder.append(formatByte2HexStr(value));//拼凑数据
-        }
-        Log.e("miwen===", miwen.length+"==="+builder);
+//        StringBuilder builder = new StringBuilder();
+//        for (int i = 0; i < miwen.length; i++) {
+//            byte value = miwen[i];//获取数据
+//            builder.append(formatByte2HexStr(value));//拼凑数据
+//        }
+//        Log.e("miwen===", miwen.length+"==="+builder);
 
         if (miwen != null) {
             write_characteristic.setValue(miwen);
