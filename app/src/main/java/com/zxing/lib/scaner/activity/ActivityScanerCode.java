@@ -1041,7 +1041,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             ToastUtil.showMessageApp(context, "请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
         } else {
-            Log.e("scan===useCar1", "===" + result);
+
 
 //            result = "11223344";
 
@@ -1055,13 +1055,20 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             params.put("longitude", SharedPreferencesUrls.getInstance().getString("longitude", ""));
             params.put("telprama", "手机型号：" + SystemUtil.getSystemModel() + ", Android系统版本号：" + SystemUtil.getSystemVersion());
             params.put("can_use_ebike", 3);
+
+
+            Log.e("scan===useCar1", uid + "===" + access_token + "===" + SystemUtil.getSystemModel() + "==="+SystemUtil.getSystemVersion() + "===" + result);
+
             HttpHelper.post(context, Urls.useCar, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
+                    Log.e("scan===useCar2", "===");
                     onStartCommon("正在连接");
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.e("scan===useCar3", "===");
+
                     onFailureCommon(throwable.toString());
                 }
 

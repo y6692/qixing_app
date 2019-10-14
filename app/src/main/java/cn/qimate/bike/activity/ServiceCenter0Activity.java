@@ -40,6 +40,7 @@ import cn.qimate.bike.adapter.HotQuestionAdapter;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
+import cn.qimate.bike.core.common.UpdateManager;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
@@ -581,9 +582,11 @@ public class ServiceCenter0Activity extends SwipeBackActivity implements View.On
 //                SharedPreferencesUrls.getInstance().putString("type", "1");
 //                UIHelper.goToAct(context,FeedbackActivity.class);
 
-                Intent intent = new Intent(context, FeedbackActivity.class);
-                intent.putExtra("bikeCode",bikeCode);
-                startActivity(intent);
+                UpdateManager.getUpdateManager().setType(2).setBikeCode(bikeCode).checkAppUpdate(ServiceCenter0Activity.this, context, true);
+
+//                Intent intent = new Intent(context, FeedbackActivity.class);
+//                intent.putExtra("bikeCode",bikeCode);
+//                startActivity(intent);
 
                 break;
 

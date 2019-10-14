@@ -9,6 +9,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -835,7 +836,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                 break;
             case R.id.personUI_bottom_checkUpdataLayout:
                 // 版本更新
-                UpdateManager.getUpdateManager().checkAppUpdate(this, context, true);
+                UpdateManager.getUpdateManager().setType(0).checkAppUpdate(this, context, true);
                 break;
             default:
                 break;
@@ -1025,6 +1026,18 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
         scrollView.setHeaderView(headView);
         scrollView.setZoomView(zoomView);
         scrollView.setScrollContentView(contentView);
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+
+            TextView version = contentView.findViewById(R.id.version);
+            version.setText("检查更新 V"+info.versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace(System.err);
+        }
+
+
+
     }
     private void billRule(){
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");

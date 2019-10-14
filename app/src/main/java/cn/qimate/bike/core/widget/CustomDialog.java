@@ -238,6 +238,8 @@ public class CustomDialog extends Dialog {
 					layout = inflater.inflate(R.layout.alertdialog4, null);
 				}else if(type==5){
 					layout = inflater.inflate(R.layout.alertdialog5, null);
+				}else if(type==6){
+					layout = inflater.inflate(R.layout.alertdialog6, null);
 				}else{
 					layout = inflater.inflate(R.layout.alertdialog, null);
 				}
@@ -293,11 +295,14 @@ public class CustomDialog extends Dialog {
 
 			}else{
 				TextView hintText = ((TextView) layout.findViewById(R.id.hintText));
-				if (isHint){
-					hintText.setVisibility(View.GONE);
-				}else {
-					hintText.setVisibility(View.VISIBLE);
+				if (hintText != null) {
+					if (isHint){
+						hintText.setVisibility(View.GONE);
+					}else {
+						hintText.setVisibility(View.VISIBLE);
+					}
 				}
+
 			}
 
 

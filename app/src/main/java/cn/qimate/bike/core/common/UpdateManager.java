@@ -48,6 +48,8 @@ import android.widget.Toast;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.ClientServiceActivity;
+import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.ResultConsel;
@@ -110,6 +112,27 @@ public class UpdateManager {
 
 	private RelativeLayout confirmLayout;
 	private RelativeLayout closeLayout;
+
+	private int type = 0;
+	private  String bikeCode = "";
+
+	public int getType() {
+		return type;
+	}
+
+	public UpdateManager setType(int type) {
+		this.type = type;
+		return updateManager;
+	}
+
+	public String getBikeCode() {
+		return bikeCode;
+	}
+
+	public UpdateManager setBikeCode(String bikeCode) {
+		this.bikeCode = bikeCode;
+		return updateManager;
+	}
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -189,7 +212,22 @@ public class UpdateManager {
 									showNoticeDialog();
 								}
 							} else {
-								Toast.makeText(context,"当前已是最新版本",Toast.LENGTH_SHORT).show();
+								if(type==0){
+									Toast.makeText(context,"当前已是最新版本",Toast.LENGTH_SHORT).show();
+								}else if(type==1){
+									Intent intent = new Intent(context, ClientServiceActivity.class);
+									intent.putExtra("bikeCode", bikeCode);
+									context.startActivity(intent);
+								}else if(type==2){
+									Intent intent = new Intent(context, FeedbackActivity.class);
+									intent.putExtra("bikeCode",bikeCode);
+									context.startActivity(intent);
+								}else if(type==3){
+									UIHelper.goToAct(context, FeedbackActivity.class);
+								}
+
+
+
 							}
 						} else {
 							UIHelper.ToastError(context, result.getMsg());
@@ -243,10 +281,19 @@ public class UpdateManager {
 		confirmLayout = (RelativeLayout)noticeDialogView.findViewById(R.id.ui_update_confirmLayout);
 		closeLayout = (RelativeLayout)noticeDialogView.findViewById(R.id.ui_update_closeLayout);
 
+		TextView title = (TextView)noticeDialogView.findViewById(R.id.ui_title);
 		TextView version = (TextView)noticeDialogView.findViewById(R.id.ui_update_version);
 		TextView text = (TextView)noticeDialogView.findViewById(R.id.ui_update_text);
-		version.setText("V"+mUpdate.getAppVersion());
-		text.setText(mUpdate.getUpdateDesc());
+
+		if(type==0){
+			version.setText("V"+mUpdate.getAppVersion());
+			text.setText(mUpdate.getUpdateDesc());
+		}else{
+			title.setText("温馨提示");
+			version.setText("");
+			text.setText("您当前软件非最新版本，会影响功能体验，请您更新软件后再试");
+		}
+
 
 		Log.e("showNoticeDialog===", mUpdate.getLink()+"==="+mUpdate.getUpdateDesc());
 

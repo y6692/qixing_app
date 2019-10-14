@@ -20,6 +20,7 @@
             android:src="@drawable/update_view" />
 
         <TextView
+            android:id="@+id/ui_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
@@ -34,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="90dp"
-            android:text="V1.3.2"
+            android:text=""
             android:textColor="#4D0D07"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"

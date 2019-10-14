@@ -136,6 +136,7 @@ import cn.qimate.bike.core.common.DisplayUtil;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
+import cn.qimate.bike.core.common.UpdateManager;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
@@ -286,6 +287,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private CustomDialog customDialog7;
     private CustomDialog customDialog8;
     private CustomDialog customDialog9;
+    private CustomDialog customDialog10;
+    private CustomDialog customDialog11;
 
     int near = 1;
     protected InternalReceiver internalReceiver = null;
@@ -493,6 +496,24 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     }
                 });
         customDialog9 = customBuilder.create();
+
+        customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setTitle("温馨提示").setType(6).setMessage("如已关锁仍提示未关，请拨动锁扣直至听到嘀的一声后再试")
+                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        customDialog10 = customBuilder.create();
+
+        customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setTitle("温馨提示").setType(6).setMessage("如锁未弹开，请拨动锁扣直至听到嘀的一声后再试")
+                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        customDialog11 = customBuilder.create();
 
 
 //        customBuilder = new CustomDialog.Builder(context);
@@ -1209,6 +1230,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                 ToastUtil.showMessageApp(context, "开锁成功");
 
+                                customDialog11.show();
+
 //                                if("6".equals(type)){
 //                                    lookPsdBtn.setText("临时上锁");
 //                                    SharedPreferencesUrls.getInstance().putString("tempStat","0");
@@ -1584,6 +1607,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             ToastUtil.showMessageApp(context,"开锁失败,请重试");
                         } else {
                             ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
+
+                            customDialog11.show();
                         }
                         break;
                     case Config.CLOSE_ACTION:
@@ -1624,6 +1649,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             //锁已开启
                             ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
+                            customDialog10.show();
 //                            clickCountDeal();
                         }
                         break;
@@ -1992,6 +2018,12 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }
         if (customDialog9 != null){
             customDialog9.dismiss();
+        }
+        if (customDialog10 != null){
+            customDialog10.dismiss();
+        }
+        if (customDialog11 != null){
+            customDialog11.dismiss();
         }
 
         if(testDialog != null){
@@ -2971,10 +3003,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 scrollToFinishActivity();
                 break;
             case R.id.mainUI_title_rightBtn:
+
+                UpdateManager.getUpdateManager().setType(1).setBikeCode(bikeCode).checkAppUpdate(CurRoadBikingActivity.this, context, true);
+
                 Intent intent = new Intent(context,ClientServiceActivity.class);
-                intent.putExtra("bikeCode",bikeCode);
-                startActivity(intent);
+//                intent.putExtra("bikeCode",bikeCode);
+//                startActivity(intent);
 //                scrollToFinishActivity();
+
+
+
+
 
 //                xa_state=4;
 //
@@ -4243,10 +4282,12 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 Log.e("biking===", "carClose===="+result.getData());
 
                                 if ("0".equals(result.getData())){
-                                    m_myHandler.sendEmptyMessage(6);
-//                                  submit(uid, access_token);
+//                                    m_myHandler.sendEmptyMessage(6);
+                                    submit(uid, access_token);
                                 } else {
                                     ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+
+                                    customDialog10.show();
 
                                     clickCountDeal();
                                 }
@@ -4531,6 +4572,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                         if(open) {
                             ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+
+                            customDialog10.show();
                         }else {
                             submit(uid, access_token);
                         }
@@ -5216,14 +5259,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     public void onResponseFail(final int code) {
                         Log.e("getStatus===Fail", "===");
 
-
-
                         m_myHandler.post(new Runnable() {
                             @Override
                             public void run() {
 
 //                              ToastUtil.showMessageApp(context, Code.toString(code));
                                 ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+
+                                customDialog10.show();
 
                                 if (lockLoading != null && lockLoading.isShowing()) {
                                     lockLoading.dismiss();

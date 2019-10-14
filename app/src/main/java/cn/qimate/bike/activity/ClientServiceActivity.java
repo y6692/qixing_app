@@ -157,6 +157,8 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
     private boolean isSubmit = false;
     private String fid = "";
 
+    private String bikeCode = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -262,8 +264,10 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
 //        pickPhotoBtn.setOnClickListener(itemsOnClick);
         cancelBtn.setOnClickListener(itemsOnClick);
 
+        bikeCode = getIntent().getExtras().getString("bikeCode", "");
+
         codeNum = (TextView)findViewById(R.id.ui_client_service_codeNum);
-        codeNum.setText("车辆编号："+getIntent().getExtras().getString("bikeCode"));
+        codeNum.setText("车辆编号："+bikeCode);
 
         photoMyGridview = (MyGridView)findViewById(R.id.ui_client_service_photoGridView);
         submitBtn = (Button)findViewById(R.id.ui_client_service_submitBtn);
@@ -746,7 +750,11 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
         }
 
         params.put("content", content);
-        params.put("bike_code",getIntent().getExtras().getString("bikeCode"));
+
+        if (bikeCode != null && !"".equals(bikeCode)){
+            params.put("bike_code",bikeCode);
+        }
+//        params.put("bike_code",getIntent().getExtras().getString("bikeCode"));
         params.put("desc_img",imageUrlList);
         params.put("latitude", latitude);
         params.put("longitude",longitude);
