@@ -179,6 +179,9 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         params.put("access_token",access_token);
         params.put("rid",rid);
         params.put("paytype",paytype);
+
+        Log.e("userRecharge===", rid+"==="+paytype);
+
         HttpHelper.post(context, Urls.userRecharge, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {

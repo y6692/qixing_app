@@ -432,20 +432,23 @@ public class ServiceCenter2Activity extends SwipeBackActivity implements View.On
                     }
                 }
                 CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                customBuilder.setTitle("温馨提示").setMessage("确认拨打" + "0519-86999222" + "吗?")
+//                customBuilder.setTitle("温馨提示").setMessage("确认拨打" + "0519-86999222" + "吗?")
+                customBuilder.setTitle("点击号码一键拨打").setType(7)
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
                             }
-                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        Intent intent=new Intent();
-                        intent.setAction(Intent.ACTION_CALL);
-                        intent.setData(Uri.parse("tel:" + "0519-86999222"));
-                        startActivity(intent);
-                    }
-                });
+                        })
+//                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                        Intent intent=new Intent();
+//                        intent.setAction(Intent.ACTION_CALL);
+//                        intent.setData(Uri.parse("tel:" + "0519-86999222"));
+//                        startActivity(intent);
+//                    }
+//                })
+                ;
                 customBuilder.create().show();
                 break;
 

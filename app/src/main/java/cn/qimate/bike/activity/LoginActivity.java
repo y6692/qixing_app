@@ -243,7 +243,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 //            return;
 //        }
 //
-//        Log.e("LoginHttp===", tm.getDeviceId() + "===" + tm.getSubscriberId());
+        Log.e("LoginHttp===", telphone + "===" + passwordmd5);
 //
 //        String id;
 //        if (tm.getDeviceId() != null && !"".equals(tm.getDeviceId())) {

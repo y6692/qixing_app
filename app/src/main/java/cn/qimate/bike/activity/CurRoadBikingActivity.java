@@ -287,8 +287,12 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private CustomDialog customDialog7;
     private CustomDialog customDialog8;
     private CustomDialog customDialog9;
-    private CustomDialog customDialog10;
-    private CustomDialog customDialog11;
+//    private CustomDialog customDialog10;
+//    private CustomDialog customDialog11;
+//    private CustomDialog customDialog12;
+
+    private Dialog advDialog;
+
 
     int near = 1;
     protected InternalReceiver internalReceiver = null;
@@ -340,6 +344,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private MyScrollView view_test;
     private TextView tv_test_xinbiao;
 
+    private ImageView advCloseBtn;
+
     int tz = 0;
     String transtype = "";
     int major = 0;
@@ -372,6 +378,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private boolean isTz = false;
 
     private LinearLayout ll_1;
+    private boolean isFristAdv = true;
 
     @Override
     @TargetApi(23)
@@ -429,6 +436,74 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         macList = new ArrayList<>();
         macList2 = new ArrayList<>();
         initView();
+
+
+
+
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("不在还车点，请至校内地图红色区域停车")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog4 = customBuilder.create();
+    }
+
+    private void initView(){
+        if (Build.VERSION.SDK_INT >= 23) {
+            int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                            REQUEST_CODE_ASK_PERMISSIONS);
+                } else {
+                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    scrollToFinishActivity();
+                                }
+                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            CurRoadBikingActivity.this.requestPermissions(
+                                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                                    REQUEST_CODE_ASK_PERMISSIONS);
+                        }
+                    });
+                    customBuilder.create().show();
+                }
+                return;
+            }
+        }
+        loadingDialog = new LoadingDialog(this);
+        loadingDialog.setCancelable(false);
+        loadingDialog.setCanceledOnTouchOutside(false);
+
+        loadingDialog2 = new LoadingDialog(this);
+        loadingDialog2.setCancelable(false);
+        loadingDialog2.setCanceledOnTouchOutside(false);
+
+        loadingDialogWithHelp = new LoadingDialogWithHelp(this);
+        loadingDialogWithHelp.setCancelable(false);
+        loadingDialogWithHelp.setCanceledOnTouchOutside(false);
+
+        lockLoading = new LoadingDialog(this);
+        lockLoading.setCancelable(false);
+        lockLoading.setCanceledOnTouchOutside(false);
+
+        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
+        dialog.setContentView(dialogView);
+        dialog.setCanceledOnTouchOutside(false);
+
+        discountDialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+        View discountDialogView = LayoutInflater.from(context).inflate(R.layout.ui_discount_view, null);
+        discountDialog.setContentView(discountDialogView);
+        discountDialog.setCanceledOnTouchOutside(false);
+        discountDialog.setCancelable(false);
 
         CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
         customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
@@ -497,89 +572,41 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 });
         customDialog9 = customBuilder.create();
 
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setType(6).setMessage("如已关锁仍提示未关，请拨动锁扣直至听到嘀的一声后再试")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog10 = customBuilder.create();
-
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setType(6).setMessage("如锁未弹开，请拨动锁扣直至听到嘀的一声后再试")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog11 = customBuilder.create();
-
-
 //        customBuilder = new CustomDialog.Builder(context);
-//        customBuilder.setTitle("温馨提示").setMessage("不在还车点，请至校内地图红色区域停车")
+//        customBuilder.setTitle("温馨提示").setType(6).setMessage("如已关锁仍提示未关，请拨动锁扣直至听到嘀的一声后再试")
 //                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
 //                    public void onClick(DialogInterface dialog, int which) {
 //                        dialog.cancel();
 //                    }
 //                });
-//        customDialog4 = customBuilder.create();
-    }
+//        customDialog10 = customBuilder.create();
+//
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setType(6).setMessage("如锁未弹开，请拨动锁扣直至听到嘀的一声后再试")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog11 = customBuilder.create();
+//
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setType(6).setMessage("如锁未弹开，请拨动锁扣直至听到嘀的一声后再试")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog12 = customBuilder.create();
 
-    private void initView(){
-        if (Build.VERSION.SDK_INT >= 23) {
-            int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                            REQUEST_CODE_ASK_PERMISSIONS);
-                } else {
-                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                    scrollToFinishActivity();
-                                }
-                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            CurRoadBikingActivity.this.requestPermissions(
-                                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                                    REQUEST_CODE_ASK_PERMISSIONS);
-                        }
-                    });
-                    customBuilder.create().show();
-                }
-                return;
-            }
-        }
-        loadingDialog = new LoadingDialog(this);
-        loadingDialog.setCancelable(false);
-        loadingDialog.setCanceledOnTouchOutside(false);
+//        customDialog10.show();
 
-        loadingDialog2 = new LoadingDialog(this);
-        loadingDialog2.setCancelable(false);
-        loadingDialog2.setCanceledOnTouchOutside(false);
+        advDialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+        View advDialogView = LayoutInflater.from(context).inflate(R.layout.ui_adv_view3, null);
+        advDialog.setContentView(advDialogView);
+        advDialog.setCanceledOnTouchOutside(false);
 
-        loadingDialogWithHelp = new LoadingDialogWithHelp(this);
-        loadingDialogWithHelp.setCancelable(false);
-        loadingDialogWithHelp.setCanceledOnTouchOutside(false);
-
-        lockLoading = new LoadingDialog(this);
-        lockLoading.setCancelable(false);
-        lockLoading.setCanceledOnTouchOutside(false);
-
-        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
-        dialog.setContentView(dialogView);
-        dialog.setCanceledOnTouchOutside(false);
-
-        discountDialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
-        View discountDialogView = LayoutInflater.from(context).inflate(R.layout.ui_discount_view, null);
-        discountDialog.setContentView(discountDialogView);
-        discountDialog.setCanceledOnTouchOutside(false);
-        discountDialog.setCancelable(false);
+        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
 
         tv_discount = (TextView)discountDialogView.findViewById(R.id.ui_discount_text);
         confirmLayout = (LinearLayout)discountDialogView.findViewById(R.id.ui_discount_confirm);
@@ -700,6 +727,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         slideLayout.setOnClickListener(this);
         confirmLayout.setOnClickListener(this);
         testLayout.setOnClickListener(this);
+        advCloseBtn.setOnClickListener(this);
 
 //        lookPsdBtn.setEnabled(false);  //
 
@@ -810,7 +838,18 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                     Log.e("initView===5", isTz+"==="+isLookPsdBtn);
 
+
                     if(isTz){
+                        WindowManager windowManager = getWindowManager();
+                        Display display = windowManager.getDefaultDisplay();
+                        WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
+                        lp.width = (int) (display.getWidth() * 1);
+                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                        advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+                        advDialog.getWindow().setAttributes(lp);
+                        advDialog.show();
+
+
                         isLookPsdBtn = true;
                         ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
                         ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
@@ -1049,6 +1088,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         if (loadingDialogWithHelp != null && loadingDialogWithHelp.isShowing()){
                             loadingDialogWithHelp.dismiss();
                         }
+
+
+
+
+
 //                        ll_1.setVisibility(View.GONE);
 
 //                        if (Globals.bType == 1) {
@@ -1084,10 +1128,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备断开连接");
                     }
 
-
-
                     connectDeviceIfNeeded();
-
                 }
             });
 
@@ -1230,7 +1271,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                 ToastUtil.showMessageApp(context, "开锁成功");
 
-                                customDialog11.show();
+//                                customDialog11.show();
 
 //                                if("6".equals(type)){
 //                                    lookPsdBtn.setText("临时上锁");
@@ -1608,7 +1649,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         } else {
                             ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
 
-                            customDialog11.show();
+//                            customDialog11.show();
                         }
                         break;
                     case Config.CLOSE_ACTION:
@@ -1649,7 +1690,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             //锁已开启
                             ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
-                            customDialog10.show();
+//                            customDialog10.show();
 //                            clickCountDeal();
                         }
                         break;
@@ -2019,11 +2060,15 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         if (customDialog9 != null){
             customDialog9.dismiss();
         }
-        if (customDialog10 != null){
-            customDialog10.dismiss();
-        }
-        if (customDialog11 != null){
-            customDialog11.dismiss();
+//        if (customDialog10 != null){
+//            customDialog10.dismiss();
+//        }
+//        if (customDialog11 != null){
+//            customDialog11.dismiss();
+//        }
+
+        if (advDialog != null){
+            advDialog.dismiss();
         }
 
         if(testDialog != null){
@@ -3027,6 +3072,13 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 
                 break;
+
+            case R.id.ui_adv_closeBtn:
+                if (advDialog != null && advDialog.isShowing()) {
+                    advDialog.dismiss();
+                }
+                break;
+
             case R.id.switcher:
                 SharedPreferencesUrls.getInstance().putBoolean("switcher", switcher.isChecked());
 
@@ -4287,7 +4339,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 } else {
                                     ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
-                                    customDialog10.show();
+//                                    customDialog10.show();
 
                                     clickCountDeal();
                                 }
@@ -4573,7 +4625,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         if(open) {
                             ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
-                            customDialog10.show();
+//                            customDialog10.show();
                         }else {
                             submit(uid, access_token);
                         }
@@ -5266,7 +5318,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                              ToastUtil.showMessageApp(context, Code.toString(code));
                                 ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
-                                customDialog10.show();
+//                                customDialog10.show();
 
                                 if (lockLoading != null && lockLoading.isShowing()) {
                                     lockLoading.dismiss();

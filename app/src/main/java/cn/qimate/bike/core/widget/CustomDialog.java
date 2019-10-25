@@ -3,6 +3,8 @@ package cn.qimate.bike.core.widget;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -240,6 +242,10 @@ public class CustomDialog extends Dialog {
 					layout = inflater.inflate(R.layout.alertdialog5, null);
 				}else if(type==6){
 					layout = inflater.inflate(R.layout.alertdialog6, null);
+				}else if(type==7){	//客服电话
+					layout = inflater.inflate(R.layout.alertdialog7, null);
+				}else if(type==8){	//客服电话
+					layout = inflater.inflate(R.layout.alertdialog8, null);
 				}else{
 					layout = inflater.inflate(R.layout.alertdialog, null);
 				}
@@ -293,6 +299,30 @@ public class CustomDialog extends Dialog {
 
 				ImageLoader.getInstance().displayImage(img_url, iv_img_url, options);
 
+			}else if(type==7){
+				TextView tel1 = ((TextView) layout.findViewById(R.id.tel1));
+				TextView tel2 = ((TextView) layout.findViewById(R.id.tel2));
+
+				tel1.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent=new Intent();
+						intent.setAction(Intent.ACTION_CALL);
+						intent.setData(Uri.parse("tel:" + "0519-86999222"));
+						context.startActivity(intent);
+					}
+				});
+
+				tel2.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent=new Intent();
+						intent.setAction(Intent.ACTION_CALL);
+						intent.setData(Uri.parse("tel:" + "13275248446"));
+						context.startActivity(intent);
+					}
+				});
+
 			}else{
 				TextView hintText = ((TextView) layout.findViewById(R.id.hintText));
 				if (hintText != null) {
@@ -302,7 +332,6 @@ public class CustomDialog extends Dialog {
 						hintText.setVisibility(View.VISIBLE);
 					}
 				}
-
 			}
 
 

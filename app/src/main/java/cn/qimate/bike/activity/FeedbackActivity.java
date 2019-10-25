@@ -849,6 +849,9 @@ public class FeedbackActivity
 
             return;
         }
+
+        Log.e("feedback===", "==="+imageUrlList.get(0));
+
         params.put("desc_img",imageUrlList);
         params.put("latitude", latitude);
         params.put("longitude",longitude);
@@ -1145,6 +1148,8 @@ public class FeedbackActivity
                     // 得到网络返回的输入流
                     InputStream is = conn.getInputStream();
                     resultStr = NetUtil.readString(is);
+
+                    Log.e("upload===", imgUrl+"==="+urlpath+"==="+resultStr);
                 } else {
                     ToastUtil.showMessageApp(context, "请求URL失败！");
                 }

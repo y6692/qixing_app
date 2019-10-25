@@ -51,9 +51,28 @@
             android:id="@+id/img_url"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/help_lock"/>
+            android:src="@drawable/help2"/>
 
 
+        <TextView
+            style="@style/DialogText"
+            android:id="@+id/message2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dp15"
+            android:paddingTop="@dimen/dp15"
+            android:gravity="left"
+            android:lineSpacingExtra="5dp"
+            android:paddingLeft="@dimen/dp5"
+            android:paddingRight="@dimen/dp5"
+            android:singleLine="false"
+            />
+
+        <ImageView
+            android:id="@+id/img_url2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/help2"/>
 
     </LinearLayout>
 

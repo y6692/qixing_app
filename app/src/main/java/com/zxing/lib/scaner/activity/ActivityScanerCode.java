@@ -442,7 +442,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             int cropHeight = mCropLayout.getHeight() * height.get() / mContainer.getHeight();
             setCropWidth(cropWidth);
             setCropHeight(cropHeight);
-        } catch (IOException | RuntimeException ioe) {
+        } catch (Exception e) {
+            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
             return;
         }
 
@@ -475,8 +476,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //            }
 
             handler = new CaptureActivityHandler(ActivityScanerCode.this);
-        } catch (IOException | RuntimeException ioe) {
-            Log.e("initCamera===ASC_e", "===="+ioe);
+        } catch (Exception e) {
+            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+            Log.e("initCamera===ASC_e", "===="+e);
 //            return;
         }
 
@@ -568,49 +570,54 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
     @Override
     protected void onDestroy() {
-        inactivityTimer.shutdown();
-        mScanerListener = null;
-        if (loadingDialog != null && loadingDialog.isShowing()) {
-            loadingDialog.dismiss();
-        }
-
-        Log.e("scan===onDestroy", m_nowMac+"==="+type+"==="+isTz);
-
-        if(!isTz){
-            if("5".equals(type)  || "6".equals(type)){
-                ClientManager.getClient().stopSearch();
-
-                ClientManager.getClient().disconnect(m_nowMac);
-                ClientManager.getClient().disconnect(m_nowMac);
-                ClientManager.getClient().disconnect(m_nowMac);
-                ClientManager.getClient().disconnect(m_nowMac);
-                ClientManager.getClient().disconnect(m_nowMac);
-                ClientManager.getClient().disconnect(m_nowMac);
-
-                ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
-
-            }else if("7".equals(type)){
-                if (apiClient != null) {
-                    apiClient.onDestroy();
-                }
-            }else{
-                BaseApplication.getInstance().getIBLE().stopScan();
-                BaseApplication.getInstance().getIBLE().refreshCache();
-                BaseApplication.getInstance().getIBLE().close();
-                BaseApplication.getInstance().getIBLE().disconnect();
+        try{
+            inactivityTimer.shutdown();
+            mScanerListener = null;
+            if (loadingDialog != null && loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
             }
 
+            Log.e("scan===onDestroy", m_nowMac+"==="+type+"==="+isTz);
 
+            if(!isTz){
+                if("5".equals(type)  || "6".equals(type)){
+                    ClientManager.getClient().stopSearch();
+
+                    ClientManager.getClient().disconnect(m_nowMac);
+                    ClientManager.getClient().disconnect(m_nowMac);
+                    ClientManager.getClient().disconnect(m_nowMac);
+                    ClientManager.getClient().disconnect(m_nowMac);
+                    ClientManager.getClient().disconnect(m_nowMac);
+                    ClientManager.getClient().disconnect(m_nowMac);
+
+                    ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+                }else if("7".equals(type)){
+                    if (apiClient != null) {
+                        apiClient.onDestroy();
+                    }
+                }else{
+                    BaseApplication.getInstance().getIBLE().stopScan();
+                    BaseApplication.getInstance().getIBLE().refreshCache();
+                    BaseApplication.getInstance().getIBLE().close();
+                    BaseApplication.getInstance().getIBLE().disconnect();
+                }
+            }
+
+            super.onDestroy();
+
+
+            if (broadcastReceiver != null) {
+                unregisterReceiver(broadcastReceiver);
+                broadcastReceiver = null;
+            }
+            m_myHandler.removeCallbacksAndMessages(null);
+        }catch (Exception e){
+            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
         }
 
-        super.onDestroy();
 
 
-        if (broadcastReceiver != null) {
-            unregisterReceiver(broadcastReceiver);
-            broadcastReceiver = null;
-        }
-        m_myHandler.removeCallbacksAndMessages(null);
     }
 
     void tzEnd(){
@@ -725,6 +732,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
                                 }
                             } catch (Exception e) {
+                                memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
                                 e.printStackTrace();
                             }
                             if (loadingDialog != null && loadingDialog.isShowing()){
@@ -907,6 +915,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             @Override
             public void run() {
                 useBike(result.toString());
+
+
             }
         });
 
@@ -946,6 +956,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         Log.e("scan===000", "ebikeInfo====" + tokencode);
 
 //        int t = 1/0;
+
+//        useCar(tokencode);
+
 
         final String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
@@ -1017,6 +1030,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             }
 
                         } catch (Exception e) {
+                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
                         }
                         if (loadingDialog != null && loadingDialog.isShowing()) {
                             loadingDialog.dismiss();
@@ -1027,6 +1041,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
             }
         });
+
     }
 
 
@@ -1057,7 +1072,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             params.put("can_use_ebike", 3);
 
 
-            Log.e("scan===useCar1", uid + "===" + access_token + "===" + SystemUtil.getSystemModel() + "==="+SystemUtil.getSystemVersion() + "===" + result);
+            Log.e("scan===useCar1", uid + "===" + access_token + "===" + SystemUtil.getSystemModel() + "==="+SystemUtil.getSystemVersion() + "===" +SharedPreferencesUrls.getInstance().getString("latitude", "") + "===" +SharedPreferencesUrls.getInstance().getString("longitude", "")+ "===" +result);
 
             HttpHelper.post(context, Urls.useCar, params, new TextHttpResponseHandler() {
                 @Override
@@ -1327,6 +1342,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 }
 
                             } catch (Exception e) {
+                                memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
                                 e.printStackTrace();
 
                                 if (loadingDialog != null && loadingDialog.isShowing()){
@@ -2685,7 +2701,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             params.put("phone_system", "Android");
             params.put("phone_system_version", Build.VERSION.RELEASE);     //手机系统版本 必传 如：13.1.2
             params.put("app_version", getPackageManager().getPackageInfo(getPackageName(), 0).versionName);      //应用版本 必传 如：1.8.2
-            params.put("event", "2");
+            params.put("event", "4");
 //            params.put("event_id", type);
             params.put("event_content", "type"+type+"唤醒失败");
         } catch (Exception e) {
@@ -2697,6 +2713,49 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 try {
                     Log.e("scan===memberEvent1", "==="+responseString);
+
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().toString().equals("Success")) {
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+            }
+        });
+    }
+
+    void memberEvent(String ex) {
+        RequestParams params = new RequestParams();
+        try {
+            Log.e("CrashH===memberEvent0", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+Build.VERSION.RELEASE+"==="+context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
+
+            String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
+            String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+
+            params.put("uid", uid);
+            params.put("access_token", access_token);
+            params.put("phone_brand", new Build().MANUFACTURER.toUpperCase());
+            params.put("phone_model", new Build().MODEL);
+            params.put("phone_system", "Android");
+            params.put("phone_system_version", Build.VERSION.RELEASE);     //手机系统版本 必传 如：13.1.2
+            params.put("app_version", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);      //应用版本 必传 如：1.8.2
+            params.put("event", "1");
+            params.put("event_content", ex);
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+
+        HttpHelper.post(context, Urls.memberEvent, params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    Log.e("CrashH===memberEvent1", "==="+responseString);
 
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().toString().equals("Success")) {
