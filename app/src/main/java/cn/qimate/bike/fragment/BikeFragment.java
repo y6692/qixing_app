@@ -417,6 +417,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             }
 
 
+
             String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
             String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
             String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
