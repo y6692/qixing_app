@@ -29,7 +29,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
 //    design包
-    implementation 'com.android.support:design:26.0.0-alpha1'
+    implementation 'com.android.support:design:26.1.0'
     //压缩与加密
     implementation files('libs/zip4j_1.3.2.jar')
     //Zxing核心包

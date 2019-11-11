@@ -113,12 +113,15 @@ public class MLImageView extends ImageView {
         //Paint 的 Xfermode，PorterDuff.Mode.SRC_IN 取两层图像的交集部门, 只显示上层图像。
         PorterDuffXfermode xfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
         // 标志
-        int saveFlags = Canvas.MATRIX_SAVE_FLAG
-                | Canvas.CLIP_SAVE_FLAG
-                | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG
-                | Canvas.FULL_COLOR_LAYER_SAVE_FLAG
-                | Canvas.CLIP_TO_LAYER_SAVE_FLAG;
-        canvas.saveLayer(0, 0, mWidth, mHeight, null, saveFlags);
+//        int saveFlags = Canvas.MATRIX_SAVE_FLAG
+//                | Canvas.CLIP_SAVE_FLAG
+//                | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG
+//                | Canvas.FULL_COLOR_LAYER_SAVE_FLAG
+//                | Canvas.CLIP_TO_LAYER_SAVE_FLAG;
+//        canvas.saveLayer(0, 0, mWidth, mHeight, null, saveFlags);
+
+        int LAYER_FLAGS = Canvas.ALL_SAVE_FLAG;
+        canvas.saveLayerAlpha(0, 0, mWidth, mHeight, 0xff, LAYER_FLAGS);
 
         if (mShapeType == 0) {
             // 画遮罩，画出来就是一个和空间大小相匹配的圆

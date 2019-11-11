@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="cn.qimate.bike">
+    package="cn.qimate.bike"
+    android:versionCode="48"
+    android:versionName="1.8.4"
+    android:installLocation="auto">
+
+    <uses-sdk
+        android:minSdkVersion="18"
+        android:targetSdkVersion="28"
+        tools:overrideLibrary="com.hubcloud.adhubsdk,com.ly.adpoymer"
+        />
 
     <!--lance-->
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -10,8 +19,8 @@
     <!-- targetSdkVersion >= 26 时需要配置此权限，否则无法进行安装app的动作 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
-    <uses-sdk
-        tools:overrideLibrary="com.hubcloud.adhubsdk,com.ly.adpoymer" />
+    <!--<uses-sdk-->
+        <!-- />-->
 
 
     <!-- Required 自定义用来收发消息的相关权限 -->
@@ -81,15 +90,23 @@
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:supportsRtl="false"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@drawable/round_app_icon"
         android:theme="@style/AppTheme">
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+
+
         <activity
-            android:name=".full.SplashActivity2"
-            android:label="@string/app_name">
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
          <!--<activity-->
@@ -100,70 +117,68 @@
              <!--</intent-filter>-->
          <!--</activity>-->
 
-        <activity
-            android:name="com.hubcloud.adhubsdk.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:theme="@style/AdhubDialogStyle" />
-        <service
-            android:name="com.hubcloud.adhubsdk.DownloadService"
-            android:exported="false" />
-        <!-- 声明SDK所需要的组件 -->
+        <!--<activity-->
+            <!--android:name="com.hubcloud.adhubsdk.AdActivity"-->
+            <!--android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"-->
+            <!--android:theme="@style/AdhubDialogStyle" />-->
+        <!--<service-->
+            <!--android:name="com.hubcloud.adhubsdk.DownloadService"-->
+            <!--android:exported="false" />-->
+        <!--&lt;!&ndash; 声明SDK所需要的组件 &ndash;&gt;-->
 
-        <!--lance start-->
-        <!--声明SDK所需要的组件-->
-        <service
-            android:name="com.qq.e.comm.DownloadService"
-            android:exported="false" />
-        <!--请开发者注意字母的大小写，ADActivity，而不是AdActivity-->
-        <activity
-            android:name="com.qq.e.ads.ADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
-        <activity
-            android:name="com.baidu.mobads.AppActivity"
-            android:configChanges="screenSize|keyboard|keyboardHidden|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <!--&lt;!&ndash;targetSDKVersion >= 24时才需要添加这个provider。请开发者根据自己的包名来替换${applicationId}这个值&ndash;&gt;-->
+        <!--&lt;!&ndash;lance start&ndash;&gt;-->
+        <!--&lt;!&ndash;声明SDK所需要的组件&ndash;&gt;-->
+        <!--<service-->
+            <!--android:name="com.qq.e.comm.DownloadService"-->
+            <!--android:exported="false" />-->
+        <!--&lt;!&ndash;请开发者注意字母的大小写，ADActivity，而不是AdActivity&ndash;&gt;-->
+        <!--<activity-->
+            <!--android:name="com.qq.e.ads.ADActivity"-->
+            <!--android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />-->
+        <!--<activity-->
+            <!--android:name="com.baidu.mobads.AppActivity"-->
+            <!--android:configChanges="screenSize|keyboard|keyboardHidden|orientation"-->
+            <!--android:theme="@android:style/Theme.Translucent.NoTitleBar" />-->
+        <!--&lt;!&ndash;&lt;!&ndash;targetSDKVersion >= 24时才需要添加这个provider。请开发者根据自己的包名来替换${applicationId}这个值&ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;<provider&ndash;&gt;-->
+            <!--&lt;!&ndash;android:name="android.support.v4.content.FileProvider"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:authorities="cn.qimate.bike.fileprovider"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:exported="false"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:grantUriPermissions="true">&ndash;&gt;-->
+            <!--&lt;!&ndash;<meta-data&ndash;&gt;-->
+                <!--&lt;!&ndash;android:name="android.support.FILE_PROVIDER_PATHS"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:resource="@xml/gdt_file_path" />&ndash;&gt;-->
+        <!--&lt;!&ndash;</provider>&ndash;&gt;-->
+        <!--&lt;!&ndash;&lt;!&ndash;如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现效率&ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;<provider&ndash;&gt;-->
+            <!--&lt;!&ndash;android:name="com.baidu.mobads.openad.FileProvider"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:authorities="cn.qimate.bike.bd.provider"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:exported="false"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:grantUriPermissions="true">&ndash;&gt;-->
+            <!--&lt;!&ndash;<meta-data&ndash;&gt;-->
+                <!--&lt;!&ndash;android:name="android.support.FILE_PROVIDER_PATHS"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:resource="@xml/bd_file_paths" />&ndash;&gt;-->
+        <!--&lt;!&ndash;</provider>&ndash;&gt;-->
         <!--<provider-->
-            <!--android:name="android.support.v4.content.FileProvider"-->
-            <!--android:authorities="cn.qimate.bike.fileprovider"-->
+            <!--android:name="com.bytedance.sdk.openadsdk.TTFileProvider"-->
+            <!--android:authorities="cn.qimate.bike.TTFileProvider"-->
             <!--android:exported="false"-->
             <!--android:grantUriPermissions="true">-->
             <!--<meta-data-->
                 <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
-                <!--android:resource="@xml/gdt_file_path" />-->
+                <!--android:resource="@xml/tt_file_path" />-->
         <!--</provider>-->
-        <!--&lt;!&ndash;如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现效率&ndash;&gt;-->
-        <!--<provider-->
-            <!--android:name="com.baidu.mobads.openad.FileProvider"-->
-            <!--android:authorities="cn.qimate.bike.bd.provider"-->
-            <!--android:exported="false"-->
-            <!--android:grantUriPermissions="true">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
-                <!--android:resource="@xml/bd_file_paths" />-->
-        <!--</provider>-->
-        <provider
-            android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
-            android:authorities="cn.qimate.bike.TTFileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/tt_file_path" />
-        </provider>
-        <!--lance end-->
+        <!--&lt;!&ndash;lance end&ndash;&gt;-->
 
 
-        <activity android:name=".activity.BannerActivity" />
-        <activity android:name=".activity.InterstitialActivity" />
+        <!--<activity android:name=".activity.BannerActivity" />-->
+        <!--<activity android:name=".activity.InterstitialActivity" />-->
 
         <activity android:name=".full.SplashActivity" />
 
         <activity android:name=".activity.Main2Activity" />
         <activity android:name=".activity.Main3Activity" />
-        <activity
-            android:name=".activity.MainActivity"
-            android:launchMode="singleTask"/>
+
         <activity
             android:name=".activity.InstructionsActivity"
             android:screenOrientation="portrait"
