@@ -34,9 +34,11 @@ import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.full.SplashActivity;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
+import cn.qimate.bike.swipebacklayout.SwipeBackLayout;
+import cn.qimate.bike.swipebacklayout.app.SwipeBackActivityBase;
 import cn.qimate.bike.util.ToastUtil;
 
-public class BaseFragment extends Fragment implements OnConnectionListener {
+public class BaseFragment extends Fragment implements OnConnectionListener, SwipeBackActivityBase {
 
 	private static final int MSG_SET_ALIAS = 1001;
 	private static final int MSG_SET_TAGS = 1002;
@@ -190,6 +192,25 @@ public class BaseFragment extends Fragment implements OnConnectionListener {
 			return false;
 		}
 	});
+
+	@Override
+	public SwipeBackLayout getSwipeBackLayout() {
+		return null;
+	}
+
+	@Override
+	public void setSwipeBackEnable(boolean enable) {
+
+	}
+
+	@Override
+	public void scrollToFinishActivity() {
+		finishMine();
+	}
+
+	public void finishMine() {
+		AppManager.getAppManager().finishActivity(getActivity());
+	}
 	
 	//用户已经登录过没有退出刷新登录
 	public void RefreshLogin() {

@@ -42,6 +42,11 @@ import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.sofi.blelocker.library.connect.listener.BluetoothStateListener;
 import com.sofi.blelocker.library.search.SearchRequest;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.Transformer;
+import com.youth.banner.listener.OnBannerListener;
+import com.youth.banner.loader.ImageLoader;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -75,7 +80,11 @@ import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.fragment.BikeFragment;
 import cn.qimate.bike.fragment.EbikeFragment;
+import cn.qimate.bike.fragment.MainFragment;
+import cn.qimate.bike.fragment.MineFragment;
+import cn.qimate.bike.fragment.PurseFragment;
 import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.model.TabEntity;
 import cn.qimate.bike.model.TabTopEntity;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.Globals;
@@ -85,7 +94,7 @@ import okhttp3.Request;
 import static com.sofi.blelocker.library.Constants.STATUS_CONNECTED;
 
 @SuppressLint("NewApi")
-public class MainActivity extends BaseFragmentActivity implements View.OnClickListener{
+public class MainActivity extends BaseFragmentActivity implements View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -100,22 +109,23 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //    @BindView(R.id.ll_tab) LinearLayout llTab;
 
     private Context mContext;
-    private ImageView leftBtn, rightBtn;
+
     private ArrayList<Fragment> mFragments = new ArrayList<>();
     private ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
-    private String[] mTitles = { "单车", "电单车"};
-//    private int[] mIconUnselectIds = {
-//            R.drawable.bike, R.drawable.near, R.drawable.purse, R.drawable.mine
-//    };
-//    private int[] mIconSelectIds = {
-//            R.drawable.bike2, R.drawable.near2, R.drawable.purse2, R.drawable.mine2
-//    };
-    private BikeFragment bikeFragment;
-    private EbikeFragment ebikeFragment;
+    private String[] mTitles = { "首页", "钱包", "会员中心" };
+    private int[] mIconUnselectIds = {
+            R.drawable.bike, R.drawable.purse, R.drawable.mine
+    };
+    private int[] mIconSelectIds = {
+            R.drawable.bike2, R.drawable.purse2, R.drawable.mine2
+    };
+    private MainFragment mainFragment;
+    private PurseFragment purseFragment;
+    private MineFragment mineFragment;
 
-    public AMap aMap;
-    public BitmapDescriptor successDescripter;
-    public MapView mapView;
+//    public AMap aMap;
+//    public BitmapDescriptor successDescripter;
+//    public MapView mapView;
 
 
     private Dialog dialog;
@@ -139,6 +149,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     private String type = "";
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -150,8 +162,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //        IntentFilter filter = new IntentFilter("data.broadcast.action");
 //        registerReceiver(mReceiver, filter);
 
-        mapView = (MapView) findViewById(R.id.mainUI_map);
-        mapView.onCreate(savedInstanceState);
 
 
         m_myHandler.sendEmptyMessage(1);
@@ -164,68 +174,26 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //        initLocation();
 //        AppApplication.getApp().scan();
 
-//        OkHttpClientManager.getInstance().UserLogin("99920170623", "123456", new ResultCallback<RUserLogin>() {
-//            @Override
-//            public void onError(Request request, Exception e) {
-//                Log.e("UserLogin===", "====Error");
-//            }
-//
-//            @Override
-//            public void onResponse(RUserLogin rUserLogin) {
-//                if (rUserLogin.getResult() < 0) {
-//                    Log.e("UserLogin===", "====fail");
-//                }
-//                else {
-//                    Globals.USERNAME = "99920170623";
-//                    Log.e("UserLogin===", "====success");
-//                }
-//            }
-//        });
+    }
+
+    private void initData() {
+        mContext = this;
+
+        mainFragment = new MainFragment();
+        purseFragment = new PurseFragment();
+        mineFragment = new MineFragment();
+        mFragments.add(mainFragment);
+        mFragments.add(purseFragment);
+        mFragments.add(mineFragment);
 
 
-//        HttpHelper.get(context, Urls.updateApp, new TextHttpResponseHandler() {
-//
-//            @Override
-//            public void onStart() {
-//                if (loadingDialog != null && !loadingDialog.isShowing()) {
-//                    loadingDialog.setTitle("正在获取最新版本信息...");
-//                    loadingDialog.show();
-//                }
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                Update mUpdate = new Update();
-//                try {
-//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-//                    if (0 == result.getErrcode()) {
-//                        mUpdate = JSON.parseObject(result.getData(), Update.class);
-//                        if (mUpdate != null) {
-//
-//                            ToastUtil.showMessage(context, "==="+mUpdate.getAppVersion());
-//
-//                            Log.e("checkAppUpdate==000", "==="+mUpdate.getAppVersion());
-//
-//                        } else {
-//                            UIHelper.ToastError(context, result.getMsg());
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                if (loadingDialog != null && loadingDialog.isShowing()) {
-//                    loadingDialog.dismiss();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                UIHelper.ToastError(mContext, throwable.toString());
-//                if (loadingDialog != null && loadingDialog.isShowing()) {
-//                    loadingDialog.dismiss();
-//                }
-//            }
-//        });
+        Log.e("main===initData", "===");
+
+        for (int i = 0; i < mTitles.length; i++) {
+//            mTabEntities.add(new TabTopEntity(mTitles[i]));
+            mTabEntities.add(new TabEntity(mTitles[i], mIconSelectIds[i], mIconUnselectIds[i]));
+        }
+
 
     }
 
@@ -237,8 +205,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         tab.setCurrentTab(0);
 
 
-        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
-        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
+
 
         loadingDialog = new LoadingDialog(context);
         loadingDialog.setCancelable(false);
@@ -264,6 +231,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
         advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+
+
 
 //        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
 //        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
@@ -297,8 +266,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //        exImage_1.setOnClickListener(myOnClickLister);
 //        exImage_2.setOnClickListener(myOnClickLister);
 
-        leftBtn.setOnClickListener(this);
-        rightBtn.setOnClickListener(this);
+
 
         advImageView.setOnClickListener(this);
         advCloseBtn.setOnClickListener(this);
@@ -306,19 +274,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     }
 
-    private void initData() {
-        mContext = this;
-        bikeFragment = new BikeFragment();
-        ebikeFragment = new EbikeFragment();
-        mFragments.add(bikeFragment);
-        mFragments.add(ebikeFragment);
 
-        Log.e("main===initData", "===");
-
-        for (int i = 0; i < mTitles.length; i++) {
-            mTabEntities.add(new TabTopEntity(mTitles[i]));
-        }
-    }
 
     protected Handler m_myHandler = new Handler(new Handler.Callback() {
         @Override
@@ -435,9 +391,9 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         Log.e("main===", "===onDestroy");
 
-        if (mapView != null) {
-            mapView.onDestroy();
-        }
+//        if (mapView != null) {
+//            mapView.onDestroy();
+//        }
     }
 
 
@@ -511,7 +467,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         super.onResume();
 
-        mapView.onResume();
+//        mapView.onResume();
 
         Log.e("main===onResume", "==="+type);
 
@@ -558,7 +514,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
+//        mapView.onSaveInstanceState(outState);
 
         Log.e("main===onSIS", "==="+type);
     }
@@ -614,21 +570,21 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         switch (view.getId()){
-            case R.id.mainUI_leftBtn:
-                UIHelper.goToAct(context, ActionCenterActivity.class);
-
-//                UIHelper.goToAct(context, RealNameAuthActivity.class);
-
-                break;
-            case R.id.mainUI_rightBtn:
-                if (SharedPreferencesUrls.getInstance().getString("uid","") == null || "".equals(
-                        SharedPreferencesUrls.getInstance().getString("access_token",""))){
-                    UIHelper.goToAct(context, LoginActivity.class);
-                    ToastUtil.showMessageApp(context,"请先登录你的账号");
-                    return;
-                }
-                UIHelper.goToAct(context, PersonAlterActivity.class);
-                break;
+//            case R.id.mainUI_leftBtn:
+//                UIHelper.goToAct(context, ActionCenterActivity.class);
+//
+////                UIHelper.goToAct(context, RealNameAuthActivity.class);
+//
+//                break;
+//            case R.id.mainUI_rightBtn:
+//                if (SharedPreferencesUrls.getInstance().getString("uid","") == null || "".equals(
+//                        SharedPreferencesUrls.getInstance().getString("access_token",""))){
+//                    UIHelper.goToAct(context, LoginActivity.class);
+//                    ToastUtil.showMessageApp(context,"请先登录你的账号");
+//                    return;
+//                }
+//                UIHelper.goToAct(context, PersonAlterActivity.class);
+//                break;
             case R.id.ui_adv_closeBtn:
                 if (advDialog != null && advDialog.isShowing()) {
                     advDialog.dismiss();
@@ -697,5 +653,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         }
         return super.onKeyDown(keyCode, event);
     }
+
 
 }

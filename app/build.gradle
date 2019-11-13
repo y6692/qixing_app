@@ -11,7 +11,8 @@ android {
 
     buildToolsVersion '28.0.0'
 
-    useLibrary 'org.apache.http.legacy'
+
+
 
     lintOptions {
         checkReleaseBuilds false
@@ -159,6 +160,15 @@ dependencies {
     }
     implementation files('libs/jsoniter-0.9.23.jar')
     implementation files('libs/aprilscansdk.jar')
+
+    implementation 'com.youth.banner:banner:1.4.10'
+//    implementation "com.github.bumptech.glide:glide:4.6.1"
+
+//    implementation 'com.github.ymwm-lxl:VerificationCodeEditText:1.0'
+//    implementation 'com.github.bumptech.glide:glide:4.8.0'
+//    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+
+    implementation project(':verification-view')
 }
 
 afterEvaluate {

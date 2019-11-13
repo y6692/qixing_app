@@ -183,6 +183,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
      * 扫描框根布局
      */
     private RelativeLayout mCropLayout = null;
+    private RelativeLayout mCropLayout2 = null;
+
+    private LinearLayout ll_input;
 
     /**
      * 扫描边界的宽度
@@ -212,7 +215,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     /**
      * 生成二维码 & 条形码 布局
      */
-    private LinearLayout mLlScanHelp;
+//    private LinearLayout mLlScanHelp;
 
     /**
      * 闪光灯 按钮
@@ -279,6 +282,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
     private Dialog advDialog;
     private ImageView advCloseBtn;
+
+    private boolean isHide = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -518,23 +523,40 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //            releaseCamera();
 //            mCameraManager.closeDriver();
 
+            isHide = true;
+
+            mCropLayout2.setVisibility(View.GONE);
+            ll_input.setVisibility(View.VISIBLE);
+
             bikeNumEdit.setText("");
 
-            WindowManager windowManager = getWindowManager();
-            Display display = windowManager.getDefaultDisplay();
-            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-            lp.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setAttributes(lp);
-            dialog.getWindow().setWindowAnimations(R.style.dialogWindowAnim);
-            dialog.show();
+//            WindowManager windowManager = getWindowManager();
+//            Display display = windowManager.getDefaultDisplay();
+//            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+//            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+//            lp.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+//            dialog.getWindow().setAttributes(lp);
+//            dialog.getWindow().setWindowAnimations(R.style.dialogWindowAnim);
+//            dialog.show();
             InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             manager.showSoftInput(view, InputMethodManager.RESULT_SHOWN);
             manager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+
+//            InputMethodHolder.registerListener(onInputMethodListener);
         }
     }
 
-
+//    onInputMethodListener = new OnInputMethodListener() {
+//        @Override
+//        public void onShow(boolean result) {
+//            Toast.makeText(context, "Show input method! " + result, Toast.LENGTH_SHORT).show();
+//        }
+//        @Override
+//        public void onHide(boolean result) {
+//            Toast.makeText(context, "Hide input method! " + result, Toast.LENGTH_SHORT).show();
+//        }
+//    };
 
     @Override
     public void oncall() {
@@ -654,7 +676,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         mContainer = (RelativeLayout) findViewById(R.id.capture_containter);
         top_mask_bcg = (ImageView) findViewById(R.id.top_mask_bcg);
         mCropLayout = (RelativeLayout) findViewById(R.id.capture_crop_layout);
-        mLlScanHelp = (LinearLayout) findViewById(R.id.ll_scan_help);
+        mCropLayout2 = (RelativeLayout) findViewById(R.id.capture_crop_layout2);
+        ll_input = (LinearLayout) findViewById(R.id.ll_input);
+//        mLlScanHelp = (LinearLayout) findViewById(R.id.ll_scan_help);
 
         iv_help = (LinearLayout) findViewById(R.id.ll_help);
 
@@ -773,6 +797,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                         return;
                     }
+
+                    mCropLayout.setVisibility(View.VISIBLE);
+                    ll_input.setVisibility(View.GONE);
+
                     InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                     manager.hideSoftInputFromWindow(v.getWindowToken(), 0); // 隐藏
                     if (dialog!=null && dialog.isShowing()) {
@@ -794,6 +822,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             case R.id.pop_circlesMenu_negativeButton:
 
                 Log.e("bikeNum===2", "==="+type);
+
+                mCropLayout.setVisibility(View.VISIBLE);
+                ll_input.setVisibility(View.GONE);
 
                 InputMethodManager manager1 = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 manager1.hideSoftInputFromWindow(v.getWindowToken(), 0); // 隐藏
@@ -822,6 +853,18 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 break;
         }
     }
+
+//    @Override
+//    public void onWindowHidden() {
+//        super.onWindowHidden();
+//        print("on window hidden");
+//    }
+//
+//    @Override
+//    public void onFinishInput() {
+//        super.onFinishInput();
+//        print("on finishinput");
+//    }
 
     private void initPermission() {
         //请求Camera权限 与 文件读写 权限
@@ -2356,8 +2399,19 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
+        Log.e("onKeyDown===", "==="+keyCode);
+
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finishMine();
+
+            if(isHide){
+                isHide = false;
+
+                mCropLayout2.setVisibility(View.VISIBLE);
+                ll_input.setVisibility(View.GONE);
+            }else{
+                finishMine();
+            }
+
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -2590,8 +2644,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         RequestParams params = new RequestParams();
         params.put("uid",uid);
         params.put("access_token",access_token);
-
-
 
         HttpHelper.post(this, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
             @Override

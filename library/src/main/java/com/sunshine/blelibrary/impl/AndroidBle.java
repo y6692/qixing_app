@@ -139,19 +139,25 @@ public class AndroidBle implements IBLE {
 
     @Override
     public boolean connect(String address, OnConnectionListener onConnectionListener) {
-        if (TextUtils.isEmpty(address) || mBluetoothAdapter == null || null == onConnectionListener)
-            return false;
-        this.mOnConnectionListener = onConnectionListener;
-        BluetoothDevice bluetoothDevice = mBluetoothAdapter.getRemoteDevice(address);
-        if (null == bluetoothDevice) {
+        try{
+            if (TextUtils.isEmpty(address) || mBluetoothAdapter == null || null == onConnectionListener)
+                return false;
+            this.mOnConnectionListener = onConnectionListener;
+            BluetoothDevice bluetoothDevice = mBluetoothAdapter.getRemoteDevice(address);
+            if (null == bluetoothDevice) {
+                return false;
+            }
+            if (mBluetoothGatt != null) {
+                mBluetoothGatt.close();
+                mBluetoothGatt = null;
+            }
+            mBluetoothGatt = bluetoothDevice.connectGatt(context, false, mBluetoothGattCallback);
+            return mBluetoothGatt.connect();
+        }catch (Exception e){
+            Log.e("AndroidBle===e", "==="+e);
             return false;
         }
-        if (mBluetoothGatt != null) {
-            mBluetoothGatt.close();
-            mBluetoothGatt = null;
-        }
-        mBluetoothGatt = bluetoothDevice.connectGatt(context, false, mBluetoothGattCallback);
-        return mBluetoothGatt.connect();
+
     }
 
     @Override

@@ -191,7 +191,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private Handler handler = new Handler();
     private Marker centerMarker;
     private boolean isMovingMarker = false;
-    private Button authBtn;
+    private RelativeLayout rl_authBtn;
+    private TextView tv_authBtn;
+//    private Button authBtn;
     private Button rechargeBtn;
     private int Tag = 0;
 
@@ -422,9 +424,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
             String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
             if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
-                authBtn.setVisibility(View.VISIBLE);
-                authBtn.setText("您还未登录，点我快速登录");
-                authBtn.setEnabled(true);
+                rl_authBtn.setVisibility(View.VISIBLE);
+                tv_authBtn.setText("您还未登录，点我快速登录");
+                rl_authBtn.setEnabled(true);
                 cartBtn.setVisibility(View.GONE);
                 refreshLayout.setVisibility(View.GONE);
                 rechargeBtn.setVisibility(View.GONE);
@@ -433,9 +435,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
                     switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
                         case 1:
-                            authBtn.setEnabled(true);
-                            authBtn.setVisibility(View.VISIBLE);
-                            authBtn.setText("您还未认证，点我快速认证");
+                            rl_authBtn.setEnabled(true);
+                            rl_authBtn.setVisibility(View.VISIBLE);
+                            tv_authBtn.setText("您还未认证，点我快速认证");
                             break;
                         case 2:
 //                        if (!"".equals(m_nowMac) && !SharedPreferencesUrls.getInstance().getBoolean("switcher",false)) {
@@ -497,18 +499,18 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                             getCurrentorder1(uid, access_token);
                             break;
                         case 3:
-                            authBtn.setEnabled(true);
-                            authBtn.setVisibility(View.VISIBLE);
-                            authBtn.setText("认证被驳回，请重新认证");
+                            rl_authBtn.setEnabled(true);
+                            rl_authBtn.setVisibility(View.VISIBLE);
+                            tv_authBtn.setText("认证被驳回，请重新认证");
                             break;
                         case 4:
-                            authBtn.setEnabled(false);
-                            authBtn.setVisibility(View.VISIBLE);
-                            authBtn.setText("认证审核中，请点击刷新");
+                            rl_authBtn.setEnabled(false);
+                            rl_authBtn.setVisibility(View.VISIBLE);
+                            tv_authBtn.setText("认证审核中");
                             break;
                     }
                 } else {
-                    authBtn.setVisibility(View.GONE);
+                    rl_authBtn.setVisibility(View.GONE);
                 }
                 if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))
                         || "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) || SharedPreferencesUrls.getInstance().getString("money", "") == null ||
@@ -1017,7 +1019,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         linkLayout = (LinearLayout) activity.findViewById(R.id.mainUI_linkServiceLayout);
         scanLock = (LinearLayout) activity.findViewById(R.id.mainUI_scanCode_lock);
         linkBtn = (ImageView) activity.findViewById(R.id.mainUI_linkService_btn);
-        authBtn = (Button)activity.findViewById(R.id.mainUI_authBtn);
+        rl_authBtn = activity.findViewById(R.id.rl_authBtn);
+        tv_authBtn = activity.findViewById(R.id.tv_authBtn);
         cartBtn = (Button)activity.findViewById(R.id.mainUI_cartBtn);
         rechargeBtn = (Button)activity.findViewById(R.id.mainUI_rechargeBtn);
         refreshLayout = (LinearLayout) activity.findViewById(R.id.mainUI_refreshLayout);
@@ -1060,7 +1063,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         linkLayout.setOnClickListener(this);
         scanLock.setOnClickListener(this);
         linkBtn.setOnClickListener(this);
-        authBtn.setOnClickListener(this);
+        rl_authBtn.setOnClickListener(this);
         rechargeBtn.setOnClickListener(this);
         refreshLayout.setOnClickListener(this);
         marqueeLayout.setOnClickListener(this);
@@ -1504,8 +1507,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                             if (result.getFlag().equals("Success")) {
                                 if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
                                     if ("[]".equals(result.getData()) || 0 == result.getData().length()) {
-                                        authBtn.setEnabled(false);
-                                        authBtn.setVisibility(View.GONE);
+                                        rl_authBtn.setEnabled(false);
+                                        rl_authBtn.setVisibility(View.GONE);
 
                                         SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
                                         SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
@@ -1534,17 +1537,17 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                         if ("1".equals(bean.getStatus())) {
                                             SharedPreferencesUrls.getInstance().putBoolean("isStop", false);
 
-                                            authBtn.setText("您有一条进行中的行程，点我查看");
+                                            tv_authBtn.setText("您有一条进行中的行程，点我查看");
                                             Tag = 0;
                                         } else {
                                             SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
                                             SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
 
-                                            authBtn.setText("您有一条未支付的行程，点我查看");
+                                            tv_authBtn.setText("您有一条未支付的行程，点我查看");
                                             Tag = 1;
                                         }
-                                        authBtn.setVisibility(View.VISIBLE);
-                                        authBtn.setEnabled(true);
+                                        rl_authBtn.setVisibility(View.VISIBLE);
+                                        rl_authBtn.setEnabled(true);
                                     }
                                 }
                             } else {
@@ -2024,7 +2027,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             case R.id.mainUI_linkService_btn:
                 initmPopupWindowView();
                 break;
-            case R.id.mainUI_authBtn:
+            case R.id.rl_authBtn:
                 if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
                     UIHelper.goToAct(context,LoginActivity.class);
                 }else {
@@ -2129,33 +2132,33 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                     new MyAsyncTask().execute();
                                     if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
-                                        authBtn.setVisibility(View.VISIBLE);
-                                        authBtn.setText("您还未登录，点我快速登录");
-                                        authBtn.setEnabled(true);
+                                        rl_authBtn.setVisibility(View.VISIBLE);
+                                        tv_authBtn.setText("您还未登录，点我快速登录");
+                                        rl_authBtn.setEnabled(true);
                                     } else {
                                         if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
                                             switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
                                                 case 1:
-                                                    authBtn.setEnabled(true);
-                                                    authBtn.setVisibility(View.VISIBLE);
-                                                    authBtn.setText("您还未认证，点我快速认证");
+                                                    rl_authBtn.setEnabled(true);
+                                                    rl_authBtn.setVisibility(View.VISIBLE);
+                                                    tv_authBtn.setText("您还未认证，点我快速认证");
                                                     break;
                                                 case 2:
                                                     getCurrentorder1(uid, access_token);
                                                     break;
                                                 case 3:
-                                                    authBtn.setEnabled(true);
-                                                    authBtn.setVisibility(View.VISIBLE);
-                                                    authBtn.setText("认证被驳回，请重新认证");
+                                                    rl_authBtn.setEnabled(true);
+                                                    rl_authBtn.setVisibility(View.VISIBLE);
+                                                    tv_authBtn.setText("认证被驳回，请重新认证");
                                                     break;
                                                 case 4:
-                                                    authBtn.setEnabled(false);
-                                                    authBtn.setVisibility(View.VISIBLE);
-                                                    authBtn.setText("认证审核中，请点击刷新");
+                                                    rl_authBtn.setEnabled(false);
+                                                    rl_authBtn.setVisibility(View.VISIBLE);
+                                                    tv_authBtn.setText("认证审核中");
                                                     break;
                                             }
                                         } else {
-                                            authBtn.setVisibility(View.GONE);
+                                            rl_authBtn.setVisibility(View.GONE);
                                         }
                                     }
                                     if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))||

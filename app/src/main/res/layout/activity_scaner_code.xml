@@ -3,7 +3,10 @@
                 android:id="@+id/capture_containter"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#88000000">
+                android:background="#88000000"
+                android:fitsSystemWindows="true"
+                >
+
 
     <SurfaceView
         android:id="@+id/capture_preview"
@@ -17,8 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp40"
         android:layout_alignParentTop="true"
-        android:background="@drawable/scan_mask"
-        android:paddingTop="@dimen/dp15">
+        android:background="@drawable/scan_mask">
 
         <ImageView
             android:layout_width="40dp"
@@ -44,13 +46,12 @@
 
         <ImageView
             android:id="@+id/top_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="23dp"
+            android:layout_height="17dp"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/dp10"
-            android:alpha="0.5"
+            android:layout_marginLeft="@dimen/dp30"
             android:onClick="btn"
-            android:src="@drawable/s_left_jiantou"
+            android:src="@drawable/s_left"
             android:layout_centerVertical="true"/>
 
         <TextView
@@ -67,27 +68,17 @@
             android:onClick="btn"
             android:visibility="gone"/>
     </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/capture_crop_layout"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
-        android:layout_centerInParent="true"
-        android:background="@drawable/capture"
-        android:contentDescription="@string/app_name">
 
-        <ImageView
-            android:id="@+id/capture_scan_line"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/kakalib_scan_ray"
-            android:contentDescription="@string/app_name"/>
-    </RelativeLayout>
+    <!--android:layout_centerInParent="true"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_above="@+id/tv_tip"-->
+
+
+
     <ImageView
 
         android:id="@+id/top_mask_bcg"
-        android:layout_width="220dp"
+        android:layout_width="206dp"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_title"
         android:layout_above="@id/capture_crop_layout"
@@ -126,8 +117,6 @@
 
     </LinearLayout>
 
-
-
     <ImageView
         android:id="@+id/bottom_mask"
         android:layout_width="match_parent"
@@ -157,91 +146,187 @@
         android:background="@drawable/scan_mask"
         android:contentDescription="@string/app_name"/>
 
-    <TextView
-        android:layout_marginTop="@dimen/dp25"
-        android:layout_width="wrap_content"
+    <!--android:layout_below="@+id/capture_crop_layout"-->
+
+    <RelativeLayout
+        android:id="@+id/capture_crop_layout"
+        android:layout_width="206dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:background="@drawable/scan_mask"
+        >
+
+        <RelativeLayout
+            android:id="@+id/capture_crop_layout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            >
+            <RelativeLayout
+                android:id="@+id/rl_crop"
+                android:layout_width="206dp"
+                android:layout_height="206dp"
+                android:background="@drawable/capture"
+                android:contentDescription="@string/app_name">
+
+                <ImageView
+                    android:id="@+id/capture_scan_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/kakalib_scan_ray"
+                    android:contentDescription="@string/app_name"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="220dp"
+                android:layout_height="53dp"
+                android:layout_below="@+id/rl_crop"
+                android:contentDescription="@string/app_name">
+
+                <TextView
+                    android:id="@+id/tv_tip"
+                    android:layout_marginBottom="0dp"
+                    android:layout_width="200dp"
+                    android:layout_height="29dp"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/block_scan_bcg"
+                    android:text="对准车上的二维码"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sp14"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+
+
+    <!--<ImageView-->
+        <!--android:layout_width="220dp"-->
+        <!--android:layout_height="53dp"-->
+        <!--android:layout_below="@id/rl_crop"-->
+        <!--android:src="@null"-->
+        <!--android:background="@drawable/scan_mask"-->
+        <!--android:layout_centerHorizontal="true"/>-->
+
+    <!--android:layout_below="@id/capture_crop_layout"-->
+
+
+
+    <LinearLayout
+        android:id="@+id/ll_input2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/ll_scan_help"
-        android:layout_centerHorizontal="true"
-        android:text="将二维码图片对准扫描框即可自动扫描"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/sp16"/>
+        android:orientation="vertical"
+        >
 
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/capture_crop_layout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
-        android:onClick="btn"
-        android:weightSum="2">
-        <TextView
-            android:id="@+id/loca_show_btnBikeNum"
+        <LinearLayout
+            android:id="@+id/ll_bottom"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/top_hand"
-            android:gravity="center"
-            android:src="@drawable/code_icon"
-            android:text="手动输车号"
-            android:textColor="#DBD5D5"
+            android:layout_height="78dp"
+            android:layout_marginBottom="83dp"
+            android:layout_above="@+id/ll_input"
             android:onClick="btn"
-            />
+            android:weightSum="2">
+            <TextView
+                android:id="@+id/loca_show_btnBikeNum"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="30dp"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/top_hand"
+                android:gravity="center"
+                android:src="@drawable/code_icon"
+                android:text="手动输车号"
+                android:textColor="#DBD5D5"
+                android:onClick="btn"
+                />
 
-        <TextView
-            android:id="@+id/top_mask"
+            <TextView
+                android:id="@+id/top_mask"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/top_light"
+                android:gravity="center"
+                android:src="@drawable/linecode_icon"
+                android:text="手电筒"
+                android:textColor="#DBD5D5"
+                android:onClick="btn"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_input"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/top_light"
-            android:gravity="center"
-            android:src="@drawable/linecode_icon"
-            android:text="手电筒"
-            android:textColor="#DBD5D5"
-            android:onClick="btn"
-            />
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/block_bcg"
+            android:visibility="gone"
+            >
+
+            <cn.qimate.bike.core.widget.ClearEditText
+                android:id="@+id/loginUI_userName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:drawableRight="@drawable/delete_selector"
+                android:hint="请输入您的手机号码"
+                android:inputType="numberDecimal"
+                android:maxLength="11"
+                android:paddingBottom="0dp"
+                android:paddingLeft="@dimen/dp20"
+                android:paddingRight="0dp"
+                android:textColorHint="#ceced4"
+                android:textSize="@dimen/sp12" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/ll_scan_help"
+
+    <RelativeLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/capture_crop_layout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:onClick="btn"
-        android:weightSum="2"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/code_icon"
-            android:gravity="center"
-            android:padding="10dp"
-            android:src="@drawable/code_icon"
-            android:text="二维码"
-            android:textColor="#DBD5D5"/>
+        android:layout_height="105dp"
+        android:layout_marginTop="@dimen/dp5"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        >
 
         <TextView
+            android:id="@+id/loginUI_noteLogin"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/linecode_icon"
-            android:gravity="center"
-            android:src="@drawable/linecode_icon"
-            android:text="条形码"
-            android:textColor="#DBD5D5"/>
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/dp25"
+            android:paddingRight="@dimen/dp20"
+            android:text="短信验证码登录"
+            android:textColor="@color/tx_black_light"
+            android:textSize="@dimen/sp14" />
+
+        <TextView
+            android:id="@+id/loginUI_findPsd"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/dp20"
+            android:paddingRight="@dimen/dp25"
+            android:text="忘记密码?"
+            android:textColor="@color/tx_black_light"
+            android:textSize="@dimen/sp14" />
+    </RelativeLayout>
+
 </RelativeLayout>

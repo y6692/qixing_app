@@ -224,50 +224,8 @@
                 <!--android:layout_alignParentBottom="true"-->
                 <!--/>-->
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/dp20"
-                android:paddingRight="@dimen/dp20"
-                android:paddingTop="@dimen/dp15">
 
-                <Button
-                    android:id="@+id/mainUI_authBtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp40"
-                    android:background="@drawable/btn_bcg"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="@color/white"
-                    android:text="您还未认证，点我快速认证"
-                    android:gravity="center"
-                    android:visibility="gone"
-                    android:layout_marginBottom="@dimen/dp15"/>
 
-                <Button
-                    android:id="@+id/mainUI_rechargeBtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp40"
-                    android:background="@drawable/btn_bcg"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="@color/white"
-                    android:text="您的余额不足，点我快速充值"
-                    android:gravity="center"
-                    android:visibility="gone"
-                    android:layout_below="@id/mainUI_authBtn"/>
-
-                <Button
-                    android:id="@+id/mainUI_cartBtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp40"
-                    android:background="@drawable/btn_bcg"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="@color/white"
-                    android:text="还剩XX天免费，每次前一个小时免费"
-                    android:gravity="center"
-                    android:visibility="gone"
-                    android:layout_below="@id/mainUI_rechargeBtn"
-                    android:layout_marginTop="@dimen/dp15"/>
-            </RelativeLayout>
             <LinearLayout
                 android:id="@+id/mainUI_refreshLayout"
                 android:layout_width="wrap_content"

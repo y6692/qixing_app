@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.tuo.customview.VerificationCodeView;
 
 import org.apache.http.Header;
 
@@ -70,6 +71,9 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
     private int num;
     private TelephonyManager tm;
 
+    private LinearLayout content;
+    private VerificationCodeView icv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +115,46 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         codeBtn.setOnClickListener(this);
         loginBtn.setOnClickListener(this);
         findPsd.setOnClickListener(this);
+
+
+
+        content = (LinearLayout) findViewById(R.id.note_content);
+        icv = (VerificationCodeView) findViewById(R.id.icv);
+
+//        final VerificationCodeView codeView = new VerificationCodeView(this);
+//
+//        content.addView(codeView);
+
+        icv.setInputCompleteListener(new VerificationCodeView.InputCompleteListener() {
+            @Override
+            public void inputComplete() {
+                Log.e("icv_input", icv.getInputContent());
+            }
+
+            @Override
+            public void deleteContent() {
+                Log.e("icv_delete", icv.getInputContent());
+            }
+        });
+
+//        codeView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                codeView.setEtNumber(5);
+//            }
+//        }, 5000);
+//
+//        codeView.setInputCompleteListener(new VerificationCodeView.InputCompleteListener() {
+//            @Override
+//            public void inputComplete() {
+//                Log.e("codeView_input", codeView.getInputContent());
+//            }
+//
+//            @Override
+//            public void deleteContent() {
+//                Log.e("codeView_delete", codeView.getInputContent());
+//            }
+//        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
