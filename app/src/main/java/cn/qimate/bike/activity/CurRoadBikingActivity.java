@@ -108,7 +108,6 @@ import com.xiaoantech.sdk.listeners.BleCallback;
 import com.xiaoantech.sdk.listeners.BleStateChangeListener;
 import com.xiaoantech.sdk.listeners.ScanResultCallback;
 import com.zxing.lib.scaner.activity.ActivityScanerCode;
-import com.zxing.lib.scaner.activity.MainActivityPermissionsDispatcher;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
