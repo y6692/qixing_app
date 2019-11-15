@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--android:gravity="center_vertical"-->
+
     <LinearLayout
         android:id="@+id/container_et"
         android:layout_width="wrap_content"
@@ -12,13 +14,21 @@
         android:orientation="horizontal"
         android:showDividers="middle">
 
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="456"-->
+            <!--/>-->
+
     </LinearLayout>
 
     <com.tuo.customview.PwdEditText
         android:id="@+id/et"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"
-        android:inputType="number" />
+        android:inputType="number"
+        />
 
 </RelativeLayout>

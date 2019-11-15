@@ -18,7 +18,7 @@
     <color name="red">#ff0000</color>
     <color name="black">#000</color>
     <color name="line_color">#F0EFED</color>
-    <color name="ui_main">#ff0000</color>
+    <color name="ui_main">#ffffff</color>
 
     <color name="personitem_normal">#ffffff</color>
     <color name="personitem_pressed">#e3e3e3</color>

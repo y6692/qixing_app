@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ui_main"
+
+    android:background="#ffffff"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical" >
@@ -13,19 +14,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/ui_backgroud">
+        android:orientation="vertical">
 
         <cn.qimate.bike.core.widget.MyScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/ui_backgroud">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:background="#f7f7f7">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/noteLoginUI_headLayout"
@@ -33,7 +31,7 @@
                     android:layout_height="@dimen/dp160"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:background="#f7f7f7">
+                    >
 
                     <ImageView
                         android:layout_width="@dimen/dp80"
@@ -75,6 +73,7 @@
                         android:textColorHint="#ceced4"
                         android:textSize="@dimen/sp12" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp45"
@@ -137,6 +136,12 @@
                     <!--app:codeCursorHeight="50dp">-->
                 <!--</com.xuanluo.verificationcodeedit.VerificationCodeEditText>-->
 
+                <!--app:icv_et_bg_focus="@drawable/shape_icv_et_bg_focus"-->
+                <!--app:icv_et_pwd="true"-->
+                <!--app:icv_et_pwd_radius="10dp"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--app:icv_et_divider_drawable="@drawable/shape_divider_identifying"-->
+
                 <LinearLayout
                     android:id="@+id/note_content"
                     android:layout_width="match_parent"
@@ -147,18 +152,17 @@
                         android:id="@+id/icv"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
+                        android:gravity="center"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
                         android:layout_marginTop="26dp"
-                        app:icv_et_bg_focus="@drawable/shape_icv_et_bg_focus"
+                        app:icv_et_bg_focus="@drawable/shape_icv_et_bg_normal"
                         app:icv_et_bg_normal="@drawable/shape_icv_et_bg_normal"
-                        app:icv_et_divider_drawable="@drawable/shape_divider_identifying"
                         app:icv_et_number="6"
-                        app:icv_et_pwd="true"
-                        app:icv_et_pwd_radius="10dp"
+                        app:icv_et_text_size="@dimen/sp18"
                         app:icv_et_text_color="#000000"
-                        app:icv_et_width="50dp" />
+                        app:icv_et_width="40dp" />
 
                 </LinearLayout>
 
@@ -168,7 +172,7 @@
                     android:id="@+id/noteLoginUI_btn"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp45"
-                    android:layout_marginLeft="@dimen/dp15"
+                    android:layout_marginLeft="@dimen/dp30"
                     android:layout_marginRight="@dimen/dp15"
                     android:layout_marginTop="@dimen/dp25"
                     android:background="@drawable/btn_bcg"

@@ -13,7 +13,9 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.IBinder;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.sofi.blelocker.library.BluetoothContext;
 import com.sunshine.blelibrary.config.Config;
@@ -55,6 +57,9 @@ public class BaseApplication extends Application {
 	private boolean debug = false;
 	private boolean test = false;
 	private boolean testLog = false;
+	public static int width;
+	public static int height;
+	public static float density;
 
 	public static  BaseApplication getInstance() {
 		return app;
@@ -94,6 +99,15 @@ public class BaseApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		app = this;
+
+		DisplayMetrics metrics = new DisplayMetrics();
+		WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+		wm.getDefaultDisplay().getMetrics(metrics);
+		density = metrics.density;
+		width = metrics.widthPixels;
+		height = metrics.heightPixels;
+
+		Log.e("BaseApplication===", density+"==="+width+"==="+height);
 
 		BluetoothContext.set(this);
 

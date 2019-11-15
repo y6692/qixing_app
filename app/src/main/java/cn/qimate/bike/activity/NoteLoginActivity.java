@@ -8,11 +8,12 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -23,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.tuo.customview.VerificationCodeView;
 
 import org.apache.http.Header;
 
@@ -43,6 +43,7 @@ import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import com.tuo.customview.VerificationCodeView;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -74,12 +75,23 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
     private LinearLayout content;
     private VerificationCodeView icv;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ui_note_login);
         context = this;
         initView();
+
+
+//        DisplayMetrics metrics = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//        width = metrics.widthPixels;
+//        height = metrics.heightPixels;
+//
+//        Log.e("NoteLogin===", metrics.density+"==="+width+"==="+height);
+
     }
 
     private void initView() {

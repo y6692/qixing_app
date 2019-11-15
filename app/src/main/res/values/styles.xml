@@ -1,6 +1,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme2" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
 
         <!--<item name="colorPrimary">@color/colorPrimary</item>-->
@@ -10,7 +10,7 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme2" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <!--<item name="windowActionBar">false</item>-->
         <!--<item name="android:windowNoTitle">true</item>-->
@@ -19,13 +19,35 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="Theme.AppCompat.Light.NoActionBar" parent="android:Theme.Light">
+    <style name="AppTheme1" parent="android:Theme">
+        <!--action bar-->
+        <item name="android:windowActionBar">false</item>
+        <!-- title -->
+        <item name="android:windowNoTitle">false</item>
+        <!-- 窗口背景-->
+        <item name="android:windowBackground">@color/colorPrimary</item>
+        <!-- true 全屏显示-->
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <!--<style name="Theme.AppCompat.Light.NoActionBar" parent="android:Theme">-->
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
+        <!--<item name="android:windowTitleSize">45dp</item>-->
+    <!--</style>-->
+
+    <!--<style name="Theme.AppCompat.Light.NoActionBar" parent="android:Theme.Light">-->
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
+        <!--<item name="android:windowTitleSize">45dp</item>-->
+    <!--</style>-->
+
+    <style name="Theme.AppCompat.Light.NoActionBar" >
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowTitleSize">45dp</item>
+        <item name="android:statusBarColor">@color/black</item>
     </style>
-
-
 
 
     <!--<style name="AppTheme" parent="Theme.AppCompat.Light">-->

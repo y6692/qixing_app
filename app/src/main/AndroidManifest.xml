@@ -110,12 +110,19 @@
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
         </activity>
 
         <activity
             android:name="com.zxing.lib.scaner.activity.ActivityScanerCode"
             android:windowSoftInputMode="adjustResize"
             >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <!--android:windowSoftInputMode="stateVisible|adjustResize"-->
         <!--android:windowSoftInputMode="adjustUnspecified|stateHidden"-->
@@ -125,16 +132,14 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
+
         </activity>
 
         <activity
             android:name=".activity.NoteLoginActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <activity

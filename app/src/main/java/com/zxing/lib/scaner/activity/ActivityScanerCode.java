@@ -507,6 +507,30 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         } else if (viewId == R.id.top_back) {
             scrollToFinishActivity();
+        } else if (viewId == R.id.et_confirm) {
+            String bikeNum = bikeNumEdit.getText().toString().trim();
+
+            Log.e("bikeNum===", "==="+bikeNum);
+
+
+
+            if (bikeNum == null || "".equals(bikeNum)) {
+
+                ToastUtil.showMessageApp(context, "请输入单车编号");
+
+                return;
+            }
+
+            mCropLayout.setVisibility(View.VISIBLE);
+            ll_input.setVisibility(View.GONE);
+
+            InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            manager.hideSoftInputFromWindow(view.getWindowToken(), 0); // 隐藏
+            if (dialog!=null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            Tag = 1;
+            ebikeInfo(bikeNum);
         } else if (viewId == R.id.top_openpicture) {
             RxPhotoTool.openLocalImage(mActivity);
         } else if (viewId == R.id.loca_show_btnBikeNum) {
@@ -695,7 +719,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
         advCloseBtn.setOnClickListener(this);
 
-        bikeNumEdit = (EditText) dialogView.findViewById(R.id.pop_circlesMenu_bikeNumEdit);
+        bikeNumEdit = (EditText) findViewById(R.id.pop_circlesMenu_bikeNumEdit);
         positiveButton = (Button) dialogView.findViewById(R.id.pop_circlesMenu_positiveButton);
         negativeButton = (Button) dialogView.findViewById(R.id.pop_circlesMenu_negativeButton);
         positiveButton.setOnClickListener(this);

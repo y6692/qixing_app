@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -61,6 +62,7 @@ import java.util.UUID;
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
+import cn.qimate.bike.R;
 import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadBikingActivity;
 import cn.qimate.bike.activity.CurRoadStartActivity;
@@ -155,6 +157,16 @@ public class BaseFragmentActivity extends AppCompatActivity
 //			// 透明导航栏
 ////			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 //		}
+
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//			Window window = getWindow();
+//			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//			window.setStatusBarColor(getResources().getColor(R.color.black));
+//
+//			//底部导航栏
+//			//window.setNavigationBarColor(activity.getResources().getColor(colorResId));
+//		}
+
 
 //		ToastUtil.showMessage(this, "===="+m_nowMac);
 

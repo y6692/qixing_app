@@ -6,9 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.tuo.customview.VerificationCodeView;
 
 import cn.qimate.bike.R;
+import com.tuo.customview.VerificationCodeView;
 
 
 public class NoteTestActivity extends AppCompatActivity {

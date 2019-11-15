@@ -14,7 +14,6 @@
             <option value="$PROJECT_DIR$/library" />
             <option value="$PROJECT_DIR$/pullzoomview" />
             <option value="$PROJECT_DIR$/sunshinelibrary" />
-            <option value="$PROJECT_DIR$/verification-view" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

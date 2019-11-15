@@ -2,7 +2,12 @@ package com.tuo.customview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -19,6 +24,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import cn.qimate.bike.R;
+import cn.qimate.bike.activity.NoteLoginActivity;
+import cn.qimate.bike.base.BaseApplication;
 
 
 /**
@@ -38,6 +47,7 @@ public class VerificationCodeView extends RelativeLayout {
     private int mEtWidth;
     //输入框分割线
     private Drawable mEtDividerDrawable;
+    private Drawable mEtDividerDrawable2;
     //输入框文字颜色
     private int mEtTextColor;
     //输入框文字大小
@@ -93,7 +103,14 @@ public class VerificationCodeView extends RelativeLayout {
         // 当xml中未配置时 这里进行初始配置默认图片
         if (mEtDividerDrawable == null) {
             mEtDividerDrawable = context.getResources().getDrawable(R.drawable.shape_divider_identifying);
+//            mEtDividerDrawable.setW
+
+            int w = (int)(BaseApplication.width-2*30*BaseApplication.density-6*40*BaseApplication.density)/5;
+
+            mEtDividerDrawable2 =zoomDrawable(mEtDividerDrawable, (int)(w*BaseApplication.density), mEtDividerDrawable.getMinimumHeight());
         }
+
+
 
         if (mEtBackgroundDrawableFocus == null) {
             mEtBackgroundDrawableFocus = context.getResources().getDrawable(R.drawable.shape_icv_et_bg_focus);
@@ -108,9 +125,32 @@ public class VerificationCodeView extends RelativeLayout {
 
     }
 
+    private Drawable zoomDrawable(Drawable drawable, int w, int h) {
+        int width = drawable.getIntrinsicWidth();
+        int height = drawable.getIntrinsicHeight();
+        Bitmap oldbmp = drawableToBitmap(drawable);
+        Matrix matrix = new Matrix();
+        float scaleWidth = ((float) w / width);
+        float scaleHeight = ((float) h / height);
+        matrix.postScale(scaleWidth, scaleHeight);
+        Bitmap newbmp = Bitmap.createBitmap(oldbmp, 0, 0, width, height, matrix, true);
+        return new BitmapDrawable(null, newbmp);
+    }
+
+    private Bitmap drawableToBitmap(Drawable drawable) {
+        int width = drawable.getIntrinsicWidth();
+        int height = drawable.getIntrinsicHeight();
+        Bitmap.Config config = drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565;
+        Bitmap bitmap = Bitmap.createBitmap(width, height, config);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, width, height);
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
     // 初始UI
     private void initUI() {
-        initTextViews(getContext(), mEtNumber, mEtWidth, mEtDividerDrawable, mEtTextSize, mEtTextColor);
+        initTextViews(getContext(), mEtNumber, mEtWidth, mEtDividerDrawable2, mEtTextSize, mEtTextColor);
         initEtContainer(mPwdTextViews);
         setListener();
     }
@@ -127,6 +167,11 @@ public class VerificationCodeView extends RelativeLayout {
         }
 
         super.onMeasure(widthMeasureSpec, mHeightMeasureSpec);
+
+        int measureWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int measureHeigt = MeasureSpec.getSize(heightMeasureSpec);
+
+        Log.e("onMeasure===", measureWidth+"==="+measureHeigt);
     }
 
 
@@ -136,8 +181,21 @@ public class VerificationCodeView extends RelativeLayout {
         et.setCursorVisible(false);//将光标隐藏
         et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(etNumber)}); //最大输入长度
         // 设置分割线的宽度
+
+//        Display display = context.getWindowManager().getDefaultDisplay();
+//        int width = display.getWidth();
+//        int height = display.getHeight();
+
+        int w = etDividerDrawable.getMinimumWidth();
+//        int w = 40;
+//        int w = (int)(BaseApplication.width-2*30*BaseApplication.density-6*40*BaseApplication.density)/5;
+
+        Log.e("initTextViews===", etNumber+"==="+etWidth+"==="+w+"==="+BaseApplication.width+"==="+BaseApplication.height+"==="+etDividerDrawable.getMinimumWidth());
+
+
+
         if (etDividerDrawable != null) {
-            etDividerDrawable.setBounds(0, 0, etDividerDrawable.getMinimumWidth(), etDividerDrawable.getMinimumHeight());
+            etDividerDrawable.setBounds(0, 0, w, etDividerDrawable.getMinimumHeight());
             containerEt.setDividerDrawable(etDividerDrawable);
         }
         mPwdTextViews = new PwdTextView[etNumber];

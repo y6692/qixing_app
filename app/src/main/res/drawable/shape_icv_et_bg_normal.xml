@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<shape xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:shape="rectangle">-->
+    <!--<solid android:color="#F2F2F2" />-->
+    <!--&lt;!&ndash; 大小 &ndash;&gt;-->
+    <!--<size-->
+        <!--android:width="25dp"-->
+        <!--android:height="25dp" />&lt;!&ndash; 宽度和高度 &ndash;&gt;-->
+    <!--<corners android:radius="2dp" />-->
+
+    <!--<stroke-->
+        <!--android:width="1dp"-->
+        <!--android:color="#C7C7CD" />-->
+<!--</shape>-->
+
+<!--<shape xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:shape="line">-->
+    <!--&lt;!&ndash;<solid android:color="#F2F2F2" />&ndash;&gt;-->
+    <!--&lt;!&ndash; 大小 &ndash;&gt;-->
+    <!--&lt;!&ndash;<size&ndash;&gt;-->
+        <!--&lt;!&ndash;android:width="40dp"/>&lt;!&ndash; 宽度和高度 &ndash;&gt;&ndash;&gt;-->
+
+    <!--&lt;!&ndash;<corners android:radius="2dp" />&ndash;&gt;-->
+
+    <!--<stroke-->
+        <!--android:width="1dp"-->
+        <!--android:color="#979797" />-->
+
+<!--</shape>-->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!-- This is the line -->
+    <item android:left="0dp" android:right="0dp">
+        <shape>
+            <solid android:color="#979797" />
+        </shape>
+    </item>
+
+    <item android:bottom="1dp">
+        <shape>
+            <solid
+
+                android:color="#ffffff" />
+        </shape>
+    </item>
+</layer-list>
