@@ -246,6 +246,8 @@ public class CustomDialog extends Dialog {
 					layout = inflater.inflate(R.layout.alertdialog7, null);
 				}else if(type==8){	//客服电话
 					layout = inflater.inflate(R.layout.alertdialog8, null);
+				}else if(type==9){	//客服电话
+					layout = inflater.inflate(R.layout.alertdialog9, null);
 				}else{
 					layout = inflater.inflate(R.layout.alertdialog, null);
 				}
@@ -294,10 +296,10 @@ public class CustomDialog extends Dialog {
 				tv_mileage.setText(mileage);
 				tv_fee.setText(fee);
 
-			}else if(type==5){
-				ImageView iv_img_url = ((ImageView) layout.findViewById(R.id.img_url));
-
-				ImageLoader.getInstance().displayImage(img_url, iv_img_url, options);
+			}else if(type==5 || type==9){
+//				ImageView iv_img_url = ((ImageView) layout.findViewById(R.id.img_url));
+//
+//				ImageLoader.getInstance().displayImage(img_url, iv_img_url, options);
 
 			}else if(type==7){
 				TextView tel1 = ((TextView) layout.findViewById(R.id.tel1));

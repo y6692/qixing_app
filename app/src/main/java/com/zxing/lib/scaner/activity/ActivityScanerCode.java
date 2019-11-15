@@ -282,8 +282,16 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
     private Dialog advDialog;
     private ImageView advCloseBtn;
+    private ImageView cancelBtn;
+    private LinearLayout ll_positiveButton;
+    private ImageView cancelBtn2;
+    private LinearLayout ll_positiveButton2;
 
     private boolean isHide = false;
+
+    private CustomDialog customDialog;
+    private CustomDialog customDialog2;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -716,6 +724,28 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         advDialog.setContentView(advDialogView);
         advDialog.setCanceledOnTouchOutside(false);
 
+        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setType(5).setTitle("温馨提示").setMessage("该车已被占用…");
+        customDialog = customBuilder.create();
+        customDialog.show();
+
+        cancelBtn = (ImageView)customDialog.findViewById(R.id.cancelBtn);
+        ll_positiveButton = (LinearLayout)customDialog.findViewById(R.id.ll_positiveButton);
+        cancelBtn.setOnClickListener(this);
+        ll_positiveButton.setOnClickListener(this);
+
+
+        customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setType(9).setTitle("温馨提示").setMessage("该车正在维修中…");
+        customDialog2 = customBuilder.create();
+        customDialog2.show();
+
+        cancelBtn2 = (ImageView)customDialog2.findViewById(R.id.cancelBtn2);
+        ll_positiveButton2 = (LinearLayout)customDialog2.findViewById(R.id.ll_positiveButton2);
+        cancelBtn2.setOnClickListener(this);
+        ll_positiveButton2.setOnClickListener(this);
+
+
         advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
         advCloseBtn.setOnClickListener(this);
 
@@ -805,6 +835,35 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                 if (advDialog != null && advDialog.isShowing()) {
                     advDialog.dismiss();
+                }
+
+                break;
+            case R.id.cancelBtn:
+                Log.e("onClick===customDialog", customDialog+"==="+customDialog.isShowing());
+
+                if (customDialog != null && customDialog.isShowing()) {
+                    customDialog.dismiss();
+                }
+                break;
+            case R.id.ll_positiveButton:
+                Log.e("onClick=ll_positiveB", customDialog+"==="+customDialog.isShowing());
+
+                if (customDialog != null && customDialog.isShowing()) {
+                    customDialog.dismiss();
+                }
+                break;
+            case R.id.cancelBtn2:
+                Log.e("onClick===customDialog", customDialog+"==="+customDialog.isShowing());
+
+                if (customDialog2 != null && customDialog2.isShowing()) {
+                    customDialog2.dismiss();
+                }
+                break;
+            case R.id.ll_positiveButton2:
+                Log.e("onClick=ll_positiveB", customDialog+"==="+customDialog.isShowing());
+
+                if (customDialog2 != null && customDialog2.isShowing()) {
+                    customDialog2.dismiss();
                 }
                 break;
             case R.id.pop_circlesMenu_positiveButton:

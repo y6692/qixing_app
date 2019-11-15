@@ -293,7 +293,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="@drawable/block_input_bcg0"
+                        android:background="@drawable/block_input_bcg1"
                         >
 
                     </LinearLayout>
@@ -314,8 +314,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/block_input_bcg"
                 android:orientation="horizontal"
+                android:background="@drawable/block_input_bcg"
                 >
 
                 <cn.qimate.bike.core.widget.ClearEditText
