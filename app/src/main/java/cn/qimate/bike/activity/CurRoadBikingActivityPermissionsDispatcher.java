@@ -21,7 +21,7 @@ public final class CurRoadBikingActivityPermissionsDispatcher {
 
   static void connectDeviceWithPermissionCheck(CurRoadBikingActivity target, String imei) {
     if (PermissionUtils.hasSelfPermissions(target, PERMISSION_CONNECTDEVICE)) {
-//      target.connectDevice(imei);
+      target.connectDevice(imei);
     } else {
       PENDING_CONNECTDEVICE = new MainActivityConnectDevicePermissionRequest(target, imei);
       ActivityCompat.requestPermissions(target, PERMISSION_CONNECTDEVICE, REQUEST_CONNECTDEVICE);
@@ -68,7 +68,7 @@ public final class CurRoadBikingActivityPermissionsDispatcher {
     public void grant() {
       CurRoadBikingActivity target = weakTarget.get();
       if (target == null) return;
-//      target.connectDevice(imei);
+      target.connectDevice(imei);
     }
   }
 }

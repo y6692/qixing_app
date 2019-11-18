@@ -175,7 +175,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         LocationSource,AMapLocationListener
         , AMap.OnCameraChangeListener
         , AMap.OnMapTouchListener
-        , OnConnectionListener
+        ,OnConnectionListener
+        , BleStateChangeListener
         , ScanResultCallback
     {
     private final static String TAG = "BLEService";
@@ -824,6 +825,107 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     closeBroadcast();
                     registerReceiver(Config.initFilter());
                     GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+                }else if("4".equals(type)){
+                    isLookPsdBtn = true;
+
+                    BLEService.bluetoothAdapter = mBluetoothAdapter;
+
+                    bleService.view = context;
+                    bleService.showValue = true;
+                }else if ("5".equals(type)  || "6".equals(type)) {
+//                    ClientManager.getClient().disconnect(m_nowMac);
+
+                    Log.e("initView===5", isTz+"==="+isLookPsdBtn);
+
+
+                    if(isTz){
+                        WindowManager windowManager = getWindowManager();
+                        Display display = windowManager.getDefaultDisplay();
+                        WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
+                        lp.width = (int) (display.getWidth() * 1);
+                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                        advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+                        advDialog.getWindow().setAttributes(lp);
+                        advDialog.show();
+
+
+                        isLookPsdBtn = true;
+                        ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+                        ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+                    }else{
+//                        ll_1.setVisibility(View.VISIBLE);
+
+                        if (loadingDialogWithHelp != null && !loadingDialogWithHelp.isShowing()){
+                            loadingDialogWithHelp.setTitle("正在唤醒车锁");
+                            loadingDialogWithHelp.show();
+                        }
+
+                        ClientManager.getClient().stopSearch();
+                        ClientManager.getClient().disconnect(m_nowMac);
+                        ClientManager.getClient().disconnect(m_nowMac);
+                        ClientManager.getClient().disconnect(m_nowMac);
+                        ClientManager.getClient().disconnect(m_nowMac);
+                        ClientManager.getClient().disconnect(m_nowMac);
+                        ClientManager.getClient().disconnect(m_nowMac);
+                        ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+                        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+                        m_myHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+//                                SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+//                                        .searchBluetoothLeDevice(0)
+//                                        .build();
+//
+//                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                                    return;
+//                                }
+//                                ClientManager.getClient().search(request, mSearchResponse);
+
+
+                                connectDeviceLP();
+                                ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+                                ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+//
+                                m_myHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (!isLookPsdBtn){
+                                            if (lockLoading != null && lockLoading.isShowing()) {
+                                                lockLoading.dismiss();
+                                            }
+                                            Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
+
+                                            ClientManager.getClient().stopSearch();
+                                            ClientManager.getClient().disconnect(m_nowMac);
+                                            ClientManager.getClient().disconnect(m_nowMac);
+                                            ClientManager.getClient().disconnect(m_nowMac);
+                                            ClientManager.getClient().disconnect(m_nowMac);
+                                            ClientManager.getClient().disconnect(m_nowMac);
+                                            ClientManager.getClient().disconnect(m_nowMac);
+                                            ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+                                            ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+                                            scrollToFinishActivity();
+                                        }
+                                    }
+                                }, 15 * 1000);
+
+                            }
+                        }, 2 * 1000);
+                    }
+
+                }else if ("7".equals(type)) {
+                    isLookPsdBtn = true;
+
+//                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+//                    builder.setBleStateChangeListener(this);
+//                    builder.setScanResultCallback(this);
+//                    apiClient = builder.build();
+//
+//                    Log.e("initView===", "==="+deviceuuid);
+//
+//                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
                 }
 
             }
@@ -929,6 +1031,484 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
     }
 
+
+    //连接泺平锁
+    private void connectDeviceLP() {
+        BleConnectOptions options = new BleConnectOptions.Builder()
+                .setConnectRetry(3)
+                .setConnectTimeout(20000)
+                .setServiceDiscoverRetry(1)
+                .setServiceDiscoverTimeout(10000)
+                .setEnableNotifyRetry(1)
+                .setEnableNotifyTimeout(10000)
+                .build();
+
+        ClientManager.getClient().connect(m_nowMac, options, new IConnectResponse() {
+            @Override
+            public void onResponseFail(final int code) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("connectDevice===", Code.toString(code));
+//                        ToastUtil.showMessageApp(context, Code.toString(code));
+
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                        if (loadingDialogWithHelp != null && loadingDialogWithHelp.isShowing()){
+                            loadingDialogWithHelp.dismiss();
+                        }
+                        if (lockLoading != null && lockLoading.isShowing()) {
+                            lockLoading.dismiss();
+                        }
+//                        ll_1.setVisibility(View.GONE);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponseSuccess(BleGattProfile profile) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("connectDevice===", "Success==="+Globals.bType);
+//                      refreshData(true);
+
+                        getBleRecord();
+
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                        if (lockLoading != null && lockLoading.isShowing()) {
+                            lockLoading.dismiss();
+                        }
+                        if (loadingDialogWithHelp != null && loadingDialogWithHelp.isShowing()){
+                            loadingDialogWithHelp.dismiss();
+                        }
+
+
+
+
+
+//                        ll_1.setVisibility(View.GONE);
+
+//                        if (Globals.bType == 1) {
+//                            ToastUtil.showMessageApp(context, "正在关锁中");
+//                            getBleRecord();
+//                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    //监听当前连接状态
+    private final BleConnectStatusListener mConnectStatusListener = new BleConnectStatusListener() {
+        @Override
+        public void onConnectStatusChanged(final String mac, final int status) {
+//            BluetoothLog.v(String.format(Locale.getDefault(), "DeviceDetailActivity onConnectStatusChanged %d in %s", status, Thread.currentThread().getName()));
+
+            m_myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Log.e("ConnectStatus===biking", mac+"==="+(status == STATUS_CONNECTED)+"==="+m_nowMac);
+//                    lookPsdBtn.setEnabled(true);
+
+                    if(status == STATUS_CONNECTED){
+                        isLookPsdBtn = true;
+
+                        ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备连接成功");
+                    }else{
+                        isLookPsdBtn = false;
+
+                        ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备断开连接");
+                    }
+
+                    connectDeviceIfNeeded();
+                }
+            });
+
+
+//            Globals.isBleConnected = mConnected = (status == STATUS_CONNECTED);
+//            refreshData(mConnected);
+//            connectDeviceIfNeeded();
+        }
+    };
+
+    private void connectDeviceIfNeeded() {
+        if (!isLookPsdBtn) {
+            connectDeviceLP();
+        } else {
+            ClientManager.getClient().stopSearch();
+        }
+    }
+
+    //监听当前连接状态
+    private final BleConnectStatusListener mConnectStatusListener2 = new BleConnectStatusListener() {
+        @Override
+        public void onConnectStatusChanged(String mac, int status) {
+//            BluetoothLog.v(String.format(Locale.getDefault(), "DeviceDetailActivity onConnectStatusChanged %d in %s", status, Thread.currentThread().getName()));
+
+            Log.e("ConnectStatus2===biking", mac+"==="+(status == STATUS_CONNECTED)+"===="+m_nowMac);
+
+            ClientManager.getClient().getStatus(mac, new IGetStatusResponse() {
+                @Override
+                public void onResponseSuccess(String version, String keySerial, String macKey, String vol) {
+//                    cn.qimate.bike.util.UIHelper.dismiss();
+                    queryStatusServer(version, keySerial, macKey, vol);
+                }
+
+                @Override
+                public void onResponseFail(int code) {
+                    Log.e("getStatus===", Code.toString(code));
+//                    cn.qimate.bike.util.UIHelper.dismiss();
+//                    ToastUtil.showMessageApp(context, Code.toString(code));
+                }
+
+            });
+
+        }
+    };
+
+    //获取服务器的加密信息
+    private void queryStatusServer(String version, String keySerial, String macKey, String vol) {
+        Log.e("queryStatusServer===", "version:" + version + " keySerial:" + keySerial + " macKey:" + macKey + " vol:" + vol);
+//        this.version = version;
+        int timestamp = (int) StringUtils.getCurrentTimestamp();
+
+//        UIHelper.showProgress(this, "get_bike_server");
+        OkHttpClientManager.getInstance().Rent(macKey, keySerial, timestamp, new ResultCallback<RRent>() {
+
+            @Override
+            public void onResponse(final RRent rRent) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (rRent.getResult() >= 0) {
+                            RRent.ResultBean resultBean = rRent.getInfo();
+                            openBleLock(resultBean);
+                        }
+                        else {
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+                            ToastUtil.showMessageApp(context, ""+rRent.getResult());
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(Request request, final Exception e) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+
+                        ToastUtil.showMessageApp(context, e.getMessage());
+                    }
+                });
+
+            }
+
+        });
+    }
+
+    //与设备，开锁
+    private void openBleLock(RRent.ResultBean resultBean) {
+//        UIHelper.showProgress(this, "open_bike_status");
+//        ClientManager.getClient().openLock(mac, "18112348925", resultBean.getServerTime(),
+
+//        Log.e("openBleLock===", resultBean.getServerTime()+"==="+resultBean.getKeys()+"==="+resultBean.getEncryptionKey());
+
+        Log.e("biking===openBleLock", serverTime+"==="+keys+"==="+encryptionKey);
+
+        ClientManager.getClient().openLock(m_nowMac,"000000000000", (int) serverTime, keys, encryptionKey, new IEmptyResponse(){
+//      ClientManager.getClient().openLock(m_nowMac,"000000000000", resultBean.getServerTime(), resultBean.getKeys(), resultBean.getEncryptionKey(), new IEmptyResponse(){
+                    @Override
+                    public void onResponseFail(final int code) {
+                        m_myHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
+                                if (lockLoading != null && lockLoading.isShowing()) {
+                                    lockLoading.dismiss();
+                                }
+
+//                                Log.e("openLock===Fail", Code.toString(code));
+                                ToastUtil.showMessageApp(context, Code.toString(code));
+                            }
+                        });
+
+
+                    }
+
+                    @Override
+                    public void onResponseSuccess() {
+                        m_myHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
+                                if (lockLoading != null && lockLoading.isShowing()) {
+                                    lockLoading.dismiss();
+                                }
+
+                                getBleRecord();
+
+                                Log.e("openLock===Success", "===");
+
+
+                                ToastUtil.showMessageApp(context, "开锁成功");
+
+//                                customDialog11.show();
+
+//                                if("6".equals(type)){
+//                                    lookPsdBtn.setText("临时上锁");
+//                                    SharedPreferencesUrls.getInstance().putString("tempStat","0");
+//                                }
+                            }
+                        });
+
+
+//                        ClientManager.getClient().stopSearch();
+//                        ClientManager.getClient().disconnect(m_nowMac);
+//                      ClientManager.getClient().unnotifyClose(mac, mCloseListener);
+//                        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener2);
+
+                    }
+                });
+    }
+
+//    //与设备，获取记录
+//    private void getBleRecord() {
+//        ClientManager.getClient().getRecord(m_nowMac, new IGetRecordResponse() {
+//            @Override
+//            public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp,
+//                                          String transType, String mackey, String index, String cap, String vol) {
+//                Log.e("biking===getBleRecord", "Success===");
+//
+//                deleteBleRecord(bikeTradeNo);
+//            }
+//
+//            @Override
+//            public void onResponseSuccessEmpty() {
+////                ToastUtil.showMessageApp(context, "record empty");
+//                Log.e("biking===getBleRecord", "Success===Empty");
+//            }
+//
+//            @Override
+//            public void onResponseFail(int code) {
+//                Log.e("biking===getBleRecord", Code.toString(code));
+//                ToastUtil.showMessageApp(context, Code.toString(code));
+//            }
+//        });
+//    }
+
+    //与设备，获取记录
+    private void getBleRecord() {
+//        UIHelper.showProgress(this, R.string.get_bike_record);
+        ClientManager.getClient().getRecord(m_nowMac, new IGetRecordResponse() {
+
+            @Override
+            public void onResponseSuccess(String phone, final String bikeTradeNo, String timestamp, final String transType, final String mackey, String index, final int Major, final int Minor, String vol) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("getBleRecord===###", transType+"==Major:"+ Major +"---Minor:"+Minor+"---mackey:"+mackey);
+
+                        if(BaseApplication.getInstance().isTestLog()){
+                            macText.setText(Major+"==="+Minor+"==="+macList);
+                        }
+
+//                      ToastUtil.showMessageApp(context, "Major:"+ Major +"---Minor:"+Minor);
+
+                        transtype = transType;
+                        major = Major;
+                        minor = Minor;
+
+                        SharedPreferencesUrls.getInstance().putInt("major", major);
+
+//                      m_myHandler.sendEmptyMessage(9);
+
+                        deleteBleRecord(bikeTradeNo);
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onResponseSuccessEmpty() {
+//                ToastUtil.showMessageApp(context, "record empty");
+                Log.e("getBleRecord===", "Success===Empty");
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+//                        ToastUtil.showMessageApp(context, Code.toString(code));
+
+//                        if (lockLoading != null && lockLoading.isShowing()){
+//                            lockLoading.dismiss();
+//                        }
+//                        if (loadingDialog != null && loadingDialog.isShowing()){
+//                            loadingDialog.dismiss();
+//                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void onResponseFail(final int code) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("getBleRecord===fail", Code.toString(code));
+//                        ToastUtil.showMessageApp(context, Code.toString(code));
+
+//                        if (lockLoading != null && lockLoading.isShowing()){
+//                            lockLoading.dismiss();
+//                        }
+//                        if (loadingDialog != null && loadingDialog.isShowing()){
+//                            loadingDialog.dismiss();
+//                        }
+                    }
+                });
+            }
+        });
+    }
+
+
+    //与设备，删除记录
+    private void deleteBleRecord(String tradeNo) {
+        ClientManager.getClient().deleteRecord(m_nowMac, tradeNo, new IGetRecordResponse() {
+//            @Override
+//            public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp, String transType, String mackey, String index, String cap, String vol) {
+//
+//                Log.e("biking=deleteBleRecord", "Success===");
+//
+//                deleteBleRecord(bikeTradeNo);
+//            }
+
+            @Override
+            public void onResponseSuccess(String phone, final String bikeTradeNo, String timestamp, final String transType, String mackey, String index, final int Major, final int Minor, String vol) {
+
+//                m_myHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                        deleteBleRecord(bikeTradeNo);
+//                    }
+//                });
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("deleteBleRecord===", transType+"==Major:"+ Major +"---Minor:"+Minor);
+
+                        transtype = transType;
+                        major = Major;
+                        minor = Minor;
+
+                        deleteBleRecord(bikeTradeNo);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponseSuccessEmpty() {
+                Log.e("biking=deleteBleRecord", "Success===Empty");
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+//                        ToastUtil.showMessageApp(context, Code.toString(code));
+
+//                        if (lockLoading != null && lockLoading.isShowing()){
+//                            lockLoading.dismiss();
+//                        }
+//                        if (loadingDialog != null && loadingDialog.isShowing()){
+//                            loadingDialog.dismiss();
+//                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onResponseFail(final int code) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("biking=deleteBleRecord", Code.toString(code));
+//                        ToastUtil.showMessageApp(context, Code.toString(code));
+
+//                        if (lockLoading != null && lockLoading.isShowing()){
+//                            lockLoading.dismiss();
+//                        }
+//                        if (loadingDialog != null && loadingDialog.isShowing()){
+//                            loadingDialog.dismiss();
+//                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    //监听锁关闭事件
+    private final ICloseListener mCloseListener = new ICloseListener() {
+        @Override
+        public void onNotifyClose() {
+
+            m_myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Log.e("onNotifyClose===", "====");
+
+                    ToastUtil.showMessageApp(context,"锁已关闭");
+
+//                    if("6".equals(type)){
+//                        lookPsdBtn.setText("再次开锁");
+//                        SharedPreferencesUrls.getInstance().putString("tempStat","1");
+//                    }
+
+                    getBleRecord();
+
+//                    ClientManager.getClient().disconnect(m_nowMac);
+//                    ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+//                    ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+                }
+            });
+
+//            m_myHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Log.e("onNotifyClose===", "====");
+//
+//                    ToastUtil.showMessageApp(context,"锁已关闭");
+//
+//                    if("6".equals(type)){
+//                        lookPsdBtn.setText("再次开锁");
+//                        SharedPreferencesUrls.getInstance().putString("tempStat","1");
+//                    }
+//
+//                    getBleRecord();
+//                }
+//            }, 2*1000);
+
+        }
+    };
 
     @Override
     public void onTimeOut() {
@@ -1418,6 +1998,25 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         if("5".equals(type)  || "6".equals(type)){
 
+
+            ClientManager.getClient().stopSearch();
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+            ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+        }else if("4".equals(type)){
+            if (bleService != null) {
+                bleService.artifClose();
+            }
+        }else if("7".equals(type)){
+            if (apiClient != null) {
+                apiClient.onDestroy();
+            }
         }else{
             BaseApplication.getInstance().getIBLE().stopScan();
             BaseApplication.getInstance().getIBLE().refreshCache();
@@ -1601,11 +2200,844 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }
     };
 
+    public void closeEbike_XA(){
+//        closeLock_XA();
 
+//        m_myHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                xa_state=4;
+//
+//                XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+//                builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+//                builder.setScanResultCallback(CurRoadBikingActivity.this);
+//                apiClient = builder.build();
+//
+//
+//                CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+//
+//            }
+//        });
+
+        Log.e("closeEbike_X===", "==="+deviceuuid);
+
+        RequestParams params = new RequestParams();
+        params.put("uid",uid);
+        params.put("access_token",access_token);
+        params.put("oid",oid);
+        HttpHelper.post(this, Urls.closeEbike, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("biking===", "closeEbike_XA0===="+responseString);
+
+                            if (result.getFlag().equals("Success")) {
+//                              ToastUtil.showMessage(context,"数据更新成功");
+
+                                info = result.getInfo();
+
+                                if ("0".equals(result.getData())){
+                                    if (loadingDialog != null && loadingDialog.isShowing()){
+                                        loadingDialog.dismiss();
+                                    }
+
+                                    Log.e("biking===", "closeEbike_XA1===="+deviceuuid+"==="+result.getData());
+
+                                    ToastUtil.showMessageApp(context,"关锁成功");
+
+                                    submit(uid, access_token);
+                                }else{
+//                                    ToastUtil.showMessageApp(context,"关锁失败");
+
+                                    Log.e("biking===2", "closeEbike_XA2===="+deviceuuid+"==="+result.getData());
+
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        xa_state=4;
+
+                                                        XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                                                        builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+                                                        builder.setScanResultCallback(CurRoadBikingActivity.this);
+                                                        apiClient = builder.build();
+
+
+                                                        CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }).start();
+
+
+                                }
+                            } else {
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
+
+                                Log.e("biking===", "closeEbike_XA2===="+result.getData());
+
+                                ToastUtil.showMessageApp(context,result.getMsg());
+                            }
+                        } catch (Exception e) {
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+                        }
+
+                    }
+                });
+
+            }
+        });
+    }
+
+    void closeLock_XA(){
+
+        apiClient.setDefend(true, new BleCallback() {
+            @Override
+            public void onResponse(final Response response) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("biking_defend===", type+"==="+deviceuuid+"==="+response.toString());
+
+                        if(response.code==0){
+
+                            macList2 = new ArrayList<> (macList);
+                            submit(uid, access_token);
+
+                        }else if(response.code==6){
+                            ToastUtil.showMessageApp(context,"车辆未停止，请停止后再试");
+                        }else{
+//                            ToastUtil.showMessageApp(context,"关锁失败");
+
+                            if("108".equals(info)){
+                                Log.e("biking_defend===1", "====");
+
+//                                ToastUtil.showMessageApp(context,"关锁成功");
+
+                                submit(uid, access_token);
+                            }else{
+                                Log.e("biking_defend===2", "====");
+
+                                ToastUtil.showMessageApp(context,"关锁失败，请重试");
+                            }
+                        }
+
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+
+//        m_myHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.e("closeLock3===", "===");
+//
+//                if(!bleService.connect){
+//                    cn++;
+//
+//                    if(cn<5){
+//                        closeLock3();
+//                    }else{
+//                        customDialog4.show();
+//                        return;
+//                    }
+//
+//                }else{
+//                    bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
+//
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Log.e("closeLock3===4_3", "==="+m_nowMac);
+//
+//                            button8();
+//                            button9();
+//                            button2();    //设防
+//
+//                            closeLock2();
+//                        }
+//                    }, 500);
+//
+//                }
+//
+//            }
+//        }, 2 * 1000);
+    }
+
+    void closeLock_XA_temp() {
+
+        apiClient.setDefend(true, new BleCallback() {
+            @Override
+            public void onResponse(final Response response) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("biking_defend===ct" + type, response.toString());
+
+                        if(response.code==0){
+                            lookPsdBtn.setText("再次开锁");
+                            ToastUtil.showMessageApp(context,"关锁成功");
+
+                            SharedPreferencesUrls.getInstance().putString("tempStat","1");
+                        }else{
+                            ToastUtil.showMessageApp(context,"关锁失败");
+                        }
+
+
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    void openLock_XA_temp() {
+
+        apiClient.setDefend(false, new BleCallback() {
+            @Override
+            public void onResponse(final Response response) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("biking_defend===ot" + type, response.toString());
+
+                        if(response.code==0){
+                            lookPsdBtn.setText("临时上锁");
+                            ToastUtil.showMessageApp(context,"开锁成功");
+
+                            SharedPreferencesUrls.getInstance().putString("tempStat","0");
+                        }else{
+                            ToastUtil.showMessageApp(context,"开锁失败");
+                        }
+
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.BLUETOOTH})
+    public void connectDevice(String imei) {
+        if (apiClient != null) {
+            apiClient.connectToIMEI(imei);
+        }
+    }
+
+    //type7
+    @Override
+    public void onConnect(BluetoothDevice bluetoothDevice) {
+        isConnect = true;
+        Log.e("biking===Xiaoan", "===Connect==="+xa_state);
+
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                isLookPsdBtn = true;
+                ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备连接成功");
+            }
+        });
+
+
+        if(xa_state>0){
+            m_myHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+//                apiClient.setAcc(false, new BleCallback() {
+//                    @Override
+//                    public void onResponse(final Response response) {
+//                        Log.e("acc===", response.toString());
+//                    }
+//                });
+//                getCurrentorder2(uid, access_token);
+
+                    if (lockLoading != null && lockLoading.isShowing()){
+                        lockLoading.dismiss();
+                    }
+
+                    if(xa_state==1){
+                        closeEbike_XA();
+                    }else if(xa_state==2){
+                        closeLock_XA_temp();
+                    }else if(xa_state==3){
+                        openLock_XA_temp();
+                    }else if(xa_state==4){
+                        closeLock_XA();
+                    }
+
+                }
+            }, 2 * 1000);
+        }
+
+    }
+
+    //type7
+    @Override
+    public void onDisConnect(BluetoothDevice bluetoothDevice) {
+        isConnect = false;
+
+        isLookPsdBtn = false;
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备断开连接");
+                Log.e("biking===Xiaoan", "===DisConnect");
+
+                if(xa_state==4){
+                    if("108".equals(info)){
+                        Log.e("biking===Xiaoan1", "====");
+
+                        ToastUtil.showMessageApp(context,"关锁成功");
+
+                        submit(uid, access_token);
+                    }else{
+                        Log.e("biking===Xiaoan2", "====");
+
+                        ToastUtil.showMessageApp(context,"蓝牙连接失败，请重试");
+                    }
+                }
+
+
+            }
+        });
+
+
+//        apiClient.disConnect();
+
+
+//        m_myHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+//            }
+//        }, 1000);
+
+    }
+
+    @Override
+    public void onDeviceReady(BluetoothDevice bluetoothDevice) {
+
+    }
+
+    @Override
+    public void onReadRemoteRssi(int i) {
+
+    }
+
+    @Override
+    public void onError(BluetoothDevice bluetoothDevice, String s, int i) {
+
+    }
+
+    @Override
+    public void onBleAdapterStateChanged(int i) {
+
+    }
 
     @Override
     public void onResult(ScanResult scanResult) {
 
+    }
+
+    void checkConnectCloseTemp(){
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("checkConnect===", "===");
+
+                if(!bleService.connect){
+                    cn++;
+
+                    if(cn<5){
+                        checkConnectCloseTemp();
+                    }else{
+                        if (lockLoading != null && lockLoading.isShowing()){
+                            lockLoading.dismiss();
+                        }
+
+                        customDialog6.show();
+                        return;
+                    }
+
+                }else{
+                    if (lockLoading != null && lockLoading.isShowing()){
+                        lockLoading.dismiss();
+                    }
+
+                    closeEbikeTemp();
+                }
+
+            }
+        }, 2 * 1000);
+    }
+
+    public void closeEbikeTemp(){
+
+        RequestParams params = new RequestParams();
+        params.put("uid",uid);
+        params.put("access_token",access_token);
+        params.put("oid",oid);
+        HttpHelper.post(this, Urls.closeEbike, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+
+                                Log.e("biking===", "closeEbike===="+responseString);
+
+                                if ("0".equals(result.getData())){
+                                    lookPsdBtn.setText("再次开锁");
+                                    ToastUtil.showMessageApp(context,"关锁成功");
+
+                                    SharedPreferencesUrls.getInstance().putString("tempStat","1");
+                                } else {
+                                    ToastUtil.showMessageApp(context,"关锁失败");
+
+                                    if("4".equals(type)){
+                                        bleService.connect(m_nowMac);
+                                        cn = 0;
+
+                                        temporaryLock();
+                                    }else{
+
+                                        if(isConnect){
+                                            closeLock_XA_temp();
+                                        }else{
+                                            xa_state = 2;
+
+                                            XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                                            builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+                                            builder.setScanResultCallback(CurRoadBikingActivity.this);
+                                            apiClient = builder.build();
+
+                                            m_myHandler.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (lockLoading != null && lockLoading.isShowing()){
+                                                        lockLoading.dismiss();
+
+                                                        if(!isConnect){
+                                                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+                                                                    .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int which) {
+                                                                            dialog.cancel();
+                                                                        }
+                                                                    });
+                                                            customBuilder.create().show();
+                                                        }
+                                                    }
+                                                }
+                                            }, 10 * 1000);
+
+                                            CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+                                        }
+                                    }
+
+                                }
+                            } else {
+                                ToastUtil.showMessageApp(context,result.getMsg());
+                            }
+                        } catch (Exception e) {
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    void temporaryLock(){
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("temporaryLock===", "===");
+
+                if(!bleService.connect){
+                    cn++;
+
+                    if(cn<5){
+                        temporaryLock();
+                    }else{
+                        customDialog6.show();
+                        return;
+                    }
+
+                }else{
+
+                    bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
+
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("temporaryLock===4_3", "==="+m_nowMac);
+
+                            button8();
+                            button9();
+                            button2();    //设防
+
+                            closeLock();
+                        }
+                    }, 500);
+
+//                    bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
+//
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Log.e("temporaryLock===4_3", "==="+m_nowMac);
+//
+//                            button8();
+//                            button9();
+//                            button2();
+//
+//                            closeLock();
+//                        }
+//                    }, 500);
+                }
+
+            }
+        }, 2 * 1000);
+    }
+
+    void closeLock(){
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("temporaryLock===4_4", bleService.cc+"==="+"B1 2A 80 00 00 5B ".equals(bleService.cc));
+
+                if("B1 2A 80 00 00 5B ".equals(bleService.cc)){
+                    Log.e("temporaryLock===4_5", oid+"==="+bleService.cc);
+
+                    lookPsdBtn.setText("再次开锁");
+                    ToastUtil.showMessageApp(context,"关锁成功");
+
+                    SharedPreferencesUrls.getInstance().putString("tempStat","1");
+
+
+
+                }else{
+//                    button9();
+//                    button2();
+//
+//                    closeLock();
+//
+//                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                        loadingDialog.setTitle("正在加载");
+//                        loadingDialog.show();
+//                    }
+
+
+//                    bleService.connect(m_nowMac);
+//
+//                    cn = 0;
+//                    temporaryLock();
+
+//                    ToastUtil.showMessageApp(context,"关锁失败，请重试");
+                      customDialog7.show();
+                }
+
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+
+
+                Log.e("temporaryLock===4_6", "==="+bleService.cc);
+
+            }
+        }, 500);
+    }
+
+    void checkConnectOpenTemp(){
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("checkConnect===", "===");
+
+                if(!bleService.connect){
+                    cn++;
+
+                    if(cn<5){
+                        checkConnectOpenTemp();
+                    }else{
+                        if (lockLoading != null && lockLoading.isShowing()){
+                            lockLoading.dismiss();
+                        }
+
+                        customDialog6.show();
+                        return;
+                    }
+
+                }else{
+                    if (lockLoading != null && lockLoading.isShowing()){
+                        lockLoading.dismiss();
+                    }
+
+//                  openEbike();
+                }
+
+            }
+        }, 2 * 1000);
+    }
+
+    public void openEbike(){
+        RequestParams params = new RequestParams();
+        params.put("uid",uid);
+        params.put("access_token",access_token);
+        HttpHelper.post(this, Urls.openEbike, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+//                        ToastUtil.showMessage(context,"数据更新成功");
+
+                                Log.e("biking===", "openEbike===="+result.getData());
+
+                                lookPsdBtn.setText("临时上锁");
+                                ToastUtil.showMessageApp(context,"开锁成功");
+
+                                SharedPreferencesUrls.getInstance().putString("tempStat","0");
+                            } else {
+                                ToastUtil.showMessageApp(context,"开锁失败");
+
+                                if ("4".equals(type)) {
+                                    bleService.connect(m_nowMac);
+
+                                    cn=0;
+
+                                    openLock();
+                                }else{
+                                    if(isConnect){
+                                        openLock_XA_temp();
+                                    }else{
+                                        xa_state = 3;
+
+                                        XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                                        builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+                                        builder.setScanResultCallback(CurRoadBikingActivity.this);
+                                        apiClient = builder.build();
+
+                                        CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+                                    }
+                                }
+
+                                ToastUtil.showMessageApp(context,result.getMsg());
+                            }
+                        } catch (Exception e) {
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    void openLock(){
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("checkConnect===", "===");
+
+                if(!bleService.connect){
+                    cn++;
+
+                    if(cn<5){
+                        openLock();
+                    }else{
+                        customDialog6.show();
+                        return;
+                    }
+
+                }else{
+                    bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
+
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("openLock===4_3", "==="+m_nowMac);
+
+                            button8();
+                            button9();
+                            button3();  //启动
+
+                            openLock2();
+                        }
+                    }, 500);
+                }
+
+            }
+        }, 2 * 1000);
+    }
+
+    void openLock2() {
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("openLock2===4_4", bleService.cc+"==="+"B1 25 80 00 00 56 ".equals(bleService.cc));
+
+                if("B1 25 80 00 00 56 ".equals(bleService.cc)){
+                    Log.e("openLock2===4_5", oid+"==="+bleService.cc);
+                    lookPsdBtn.setText("临时上锁");
+                    ToastUtil.showMessageApp(context,"开锁成功");
+
+                    SharedPreferencesUrls.getInstance().putString("tempStat","0");
+                }else{
+//                  openLock2();
+
+                    customDialog8.show();
+
+//                  ToastUtil.showMessageApp(context,"开锁失败，请重试");
+                }
+
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+
+                Log.e("openLock2===4_6", "==="+bleService.cc);
+
+            }
+        }, 500);
+    }
+
+    //注册
+    void button8() {
+        IoBuffer ioBuffer = IoBuffer.allocate(20);
+        ioBuffer.writeByte((byte) 0x82);
+        ByteUtil.log("tel-->" + tel);
+        String str = tel;
+
+        byte[] bb = new byte[11];
+        for (int i = 0; i < str.length(); i++) {
+            char a = str.charAt(i);
+            bb[i] = (byte) a;
+        }
+        ioBuffer.writeBytes(bb);
+
+        int crc = (int) ByteUtil.crc32(getfdqId(bleid));
+        byte cc[] = ByteUtil.intToByteArray(crc);
+        ioBuffer.writeByte(cc[0] ^ cc[3]);
+        ioBuffer.writeByte(cc[1] ^ cc[2]);
+        ioBuffer.writeInt(0);
+        bleService.write(toBody(ioBuffer.readableBytes()));
+    }
+
+    //启动
+    void button3() {
+        IoBuffer ioBuffer = IoBuffer.allocate(20);
+        byte[] cmd = sendCmd("00000101", "00000000");
+        ioBuffer.writeBytes(cmd);
+        bleService.write(toBody(ioBuffer.readableBytes()));
+    }
+
+    //泺平锁临时上锁
+    private void temporaryAction() {
+//        UIHelper.showProgress(this, R.string.temporaryAction);
+
+
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
+            }
+        });
+
+        ClientManager.getClient().temporaryAction(m_nowMac, "000000000000", new ITemporaryActionResponse() {
+            @Override
+            public void onResponseSuccess() {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+
+                        ToastUtil.showMessageApp(context,"请手动关锁");
+//                        m_myHandler.sendEmptyMessage(7);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponseFail(final int code) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+//                        UIHelper.ToastError(context, Code.toString(code));
+                    }
+                });
+
+            }
+        });
     }
 
     @Override
@@ -1702,16 +3134,123 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     }
 
                     if("4".equals(type) || "7".equals(type)){
+                        closeEbikeTemp();
                     }else{
+                        temporaryAction();
                     }
 
                 }else if ("再次开锁".equals(tvAgain)){
                     flag = 1;
 
                     if("3".equals(type)){
+                        openAgain();
                     }else if("4".equals(type) || "7".equals(type)){
+                        openEbike();
                     }else if("5".equals(type) || "6".equals(type)){
+                        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                            ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+                            scrollToFinishActivity();
+                        }
+                        //蓝牙锁
+                        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+                        mBluetoothAdapter = bluetoothManager.getAdapter();
 
+                        if (mBluetoothAdapter == null) {
+                            ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                            scrollToFinishActivity();
+                            return;
+                        }
+                        if (!mBluetoothAdapter.isEnabled()) {
+                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            startActivityForResult(enableBtIntent, 188);
+                        } else {
+
+
+                            Log.e("lookPsdBtn===", "==="+isLookPsdBtn);
+
+                            if(!isLookPsdBtn){   //没连上
+                                if (loadingDialogWithHelp != null && !loadingDialogWithHelp.isShowing()) {
+                                    loadingDialogWithHelp.setTitle("正在唤醒车锁");
+                                    loadingDialogWithHelp.show();
+                                }
+
+                                ClientManager.getClient().stopSearch();
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+                                ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+                                SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+                                        .searchBluetoothLeDevice(0)
+                                        .build();
+
+                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                    return;
+                                }
+                                ClientManager.getClient().search(request, mSearchResponse2);
+                            }else{
+                                if (lockLoading != null && !lockLoading.isShowing()){
+                                    lockLoading.setTitle("正在连接");
+                                    lockLoading.show();
+                                }
+
+                                ClientManager.getClient().getStatus(m_nowMac, new IGetStatusResponse() {
+                                    @Override
+                                    public void onResponseSuccess(String version, String keySerial, String macKey, String vol) {
+                                        Log.e("getStatus===Success", "===");
+
+                                        keySource = keySerial;
+                                        m_myHandler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                rent();
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onResponseFail(final int code) {
+                                        Log.e("getStatus===Fail", "===");
+
+                                        m_myHandler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                ToastUtil.showMessageApp(context, Code.toString(code));
+
+                                                if (lockLoading != null && lockLoading.isShowing()) {
+                                                    lockLoading.dismiss();
+                                                }
+
+//                                                ClientManager.getClient().disconnect(m_nowMac);
+//                                                ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+//                                                ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+//
+//                                                m_myHandler.postDelayed(new Runnable() {
+//                                                    @Override
+//                                                    public void run() {
+//                                                        if (loadingDialog != null && loadingDialog.isShowing()){
+//                                                            loadingDialog.dismiss();
+//                                                        }
+//
+//                                                        connectDeviceLP();
+//                                                        ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+//                                                        ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+//
+//                                                    }
+//                                                }, 2 * 1000);
+
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+
+                        }
                     }else{
 
                         try{
@@ -1917,9 +3456,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                    m_myHandler.sendEmptyMessage(3);
 //                    endBtn5();
 
+                    queryState();
 
                 }
                 else if("7".equals(type)){
+                    location();
                 }
                 else{
                     startXB();
@@ -2186,6 +3727,103 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             default:
                 break;
         }
+    }
+
+    private void location(){
+        Log.e("biking===location0", "===="+bikeCode);
+
+        RequestParams params = new RequestParams();
+        params.put("uid", uid);
+        params.put("access_token",access_token);
+        params.put("tokencode", bikeCode);
+//        params.put("version", "");
+        HttpHelper.get(this, Urls.location, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                ToastUtil.showMessageApp(context,"电量更新成功");
+
+                                LocationBean bean = JSON.parseObject(result.getData(), LocationBean.class);
+
+                                if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                                    isContainsList.clear();
+                                }
+                                for ( int i = 0; i < pOptions.size(); i++){
+                                    isContainsList.add(pOptions.get(i).contains(new LatLng(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()))));
+                                }
+
+                                if(!isContainsList.contains(true)){
+                                    minPoint(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()));
+                                }
+
+                                Log.e("biking===location", bean.getLatitude()+"===="+bean.getLongitude()+"===="+isContainsList.contains(true));
+
+                                if(isContainsList.contains(true)){
+                                    isGPS_Lo = true;
+
+                                    closeEbike_XA();
+//                                    submit(uid, access_token);
+                                }else{
+                                    isGPS_Lo = false;
+
+                                    startXB();
+
+                                    if (lockLoading != null && !lockLoading.isShowing()){
+                                        lockLoading.setTitle("还车点确认中");
+                                        lockLoading.show();
+                                    }
+
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                int n=0;
+                                                while(macList.size() == 0){
+
+                                                    Thread.sleep(100);
+                                                    n++;
+
+                                                    Log.e("biking===","biking=n=="+n);
+
+                                                    if(n>=101) break;
+
+                                                }
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            m_myHandler.sendEmptyMessage(3);
+                                        }
+                                    }).start();
+                                }
+
+                            } else {
+                                ToastUtil.showMessageApp(context, result.getMsg());
+                            }
+                        } catch (Exception e) {
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+
+            }
+        });
     }
 
     protected void onStart() {
@@ -3269,184 +4907,46 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }
     }
 
-        public void endBtn3(){
-            final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-            final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-            if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-                ToastUtil.showMessageApp(context,"请先登录账号");
-                UIHelper.goToAct(context, LoginActivity.class);
-            }else {
-                Log.e("biking===endBtn3",macList.size()+"==="+type+"==="+first3);
+    public void endBtn3(){
+        final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+            ToastUtil.showMessageApp(context,"请先登录账号");
+            UIHelper.goToAct(context, LoginActivity.class);
+        }else {
+            Log.e("biking===endBtn3",macList.size()+"==="+type+"==="+first3);
 
-                rl_msg.setVisibility(View.GONE);
-                if (polyline != null) {
-                    polyline.remove();
+            rl_msg.setVisibility(View.GONE);
+            if (polyline != null) {
+                polyline.remove();
+            }
+
+            if (macList.size() > 0){
+                flag = 2;
+                if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                    ToastUtil.showMessageApp(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0");
+                    scrollToFinishActivity();
                 }
-
-                if (macList.size() > 0){
-                    flag = 2;
-                    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                        ToastUtil.showMessageApp(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0");
-                        scrollToFinishActivity();
-                    }
-                    if (!BaseApplication.getInstance().getIBLE().isEnable()){
-                        BaseApplication.getInstance().getIBLE().enableBluetooth();
-                        return;
-                    }
-                    if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
-                        if (loadingDialog != null && !loadingDialog.isShowing()){
-                            loadingDialog.setTitle("请稍等");
-                            loadingDialog.show();
-                        }
-
-                        isStop = false;
-                        m_myHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                    loadingDialog.dismiss();
-
-                                    if(!isStop){
-                                        if(first3){
-                                            first3 = false;
-                                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
-                                                    .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                            dialog.cancel();
-                                                        }
-                                                    });
-                                            customBuilder.create().show();
-
-                                            clickCountDeal();
-                                        }else{
-                                            carClose();
-                                        }
-                                    }
-                                }
-                            }
-                        }, 10 * 1000);
-
-                        macList2 = new ArrayList<> (macList);
-                        BaseApplication.getInstance().getIBLE().getLockStatus();
-                    } else {
-                        if (lockLoading != null && !lockLoading.isShowing()){
-                            lockLoading.setTitle("正在连接");
-                            lockLoading.show();
-                        }
-
-                        isStop = false;
-                        m_myHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (lockLoading != null && lockLoading.isShowing()){
-                                    lockLoading.dismiss();
-                                }
-
-                                if(!isStop){
-                                    stopScan = true;
-                                    BaseApplication.getInstance().getIBLE().refreshCache();
-                                    BaseApplication.getInstance().getIBLE().close();
-                                    BaseApplication.getInstance().getIBLE().disconnect();
-
-                                    if(first3){
-                                        first3 = false;
-                                        customDialog3.show();
-
-                                        clickCountDeal();
-                                    }else{
-                                        carClose();
-                                    }
-                                }
-                            }
-                        }, 10 * 1000);
-
-                        connect();
-                    }
-
-//                if("3".equals(type)){
-//                    carClose();
-//                }else{
-//                    submit(uid, access_token);
-//                }
-
+                if (!BaseApplication.getInstance().getIBLE().isEnable()){
+                    BaseApplication.getInstance().getIBLE().enableBluetooth();
                     return;
                 }
-
-                if (isContainsList.contains(true)){
-
-                    flag = 2;
-                    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                        ToastUtil.showMessageApp(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0");
-                        scrollToFinishActivity();
+                if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                    if (loadingDialog != null && !loadingDialog.isShowing()){
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
                     }
-                    //蓝牙锁
-                    if (!BaseApplication.getInstance().getIBLE().isEnable()){
-                        BaseApplication.getInstance().getIBLE().enableBluetooth();
-                        return;
-                    }
-                    if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
-                        if (loadingDialog != null && !loadingDialog.isShowing()){
-                            loadingDialog.setTitle("请稍等");
-                            loadingDialog.show();
-                        }
 
-                        isStop = false;
-                        m_myHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                    loadingDialog.dismiss();
-
-                                    if(!isStop){
-                                        if(first3){
-                                            first3 = false;
-                                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
-                                                    .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                            dialog.cancel();
-                                                        }
-                                                    });
-                                            customBuilder.create().show();
-
-                                            clickCountDeal();
-                                        }else{
-                                            carClose();
-                                        }
-                                    }
-
-                                }
-                            }
-                        }, 10 * 1000);
-
-                        macList2 = new ArrayList<> (macList);
-                        BaseApplication.getInstance().getIBLE().getLockStatus();
-                    }else {
-                        if (lockLoading != null && !lockLoading.isShowing()){
-                            lockLoading.setTitle("正在连接");
-                            lockLoading.show();
-                        }
-
-                        isStop = false;
-                        m_myHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (lockLoading != null && lockLoading.isShowing()){
-                                    lockLoading.dismiss();
-                                }
+                    isStop = false;
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
 
                                 if(!isStop){
-                                    stopScan = true;
-//                                  BaseApplication.getInstance().getIBLE().stopScan();
-                                    BaseApplication.getInstance().getIBLE().refreshCache();
-                                    BaseApplication.getInstance().getIBLE().close();
-                                    BaseApplication.getInstance().getIBLE().disconnect();
-
                                     if(first3){
                                         first3 = false;
-//                                    customDialog3.show();
-
                                         CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
                                         customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
                                                 .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
@@ -3462,27 +4962,512 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                     }
                                 }
                             }
-                        }, 10 * 1000);
+                        }
+                    }, 10 * 1000);
 
-                        connect();
-
+                    macList2 = new ArrayList<> (macList);
+                    BaseApplication.getInstance().getIBLE().getLockStatus();
+                } else {
+                    if (lockLoading != null && !lockLoading.isShowing()){
+                        lockLoading.setTitle("正在连接");
+                        lockLoading.show();
                     }
 
+                    isStop = false;
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (lockLoading != null && lockLoading.isShowing()){
+                                lockLoading.dismiss();
+                            }
+
+                            if(!isStop){
+                                stopScan = true;
+                                BaseApplication.getInstance().getIBLE().refreshCache();
+                                BaseApplication.getInstance().getIBLE().close();
+                                BaseApplication.getInstance().getIBLE().disconnect();
+
+                                if(first3){
+                                    first3 = false;
+                                    customDialog3.show();
+
+                                    clickCountDeal();
+                                }else{
+                                    carClose();
+                                }
+                            }
+                        }
+                    }, 10 * 1000);
+
+                    connect();
+                }
+
+//                if("3".equals(type)){
+//                    carClose();
+//                }else{
+//                    submit(uid, access_token);
+//                }
+
+                return;
+            }
+
+            if (isContainsList.contains(true)){
+
+                flag = 2;
+                if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                    ToastUtil.showMessageApp(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0");
+                    scrollToFinishActivity();
+                }
+                //蓝牙锁
+                if (!BaseApplication.getInstance().getIBLE().isEnable()){
+                    BaseApplication.getInstance().getIBLE().enableBluetooth();
+                    return;
+                }
+                if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                    if (loadingDialog != null && !loadingDialog.isShowing()){
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+
+                    isStop = false;
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+
+                                if(!isStop){
+                                    if(first3){
+                                        first3 = false;
+                                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                        customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+                                                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                        customBuilder.create().show();
+
+                                        clickCountDeal();
+                                    }else{
+                                        carClose();
+                                    }
+                                }
+
+                            }
+                        }
+                    }, 10 * 1000);
+
+                    macList2 = new ArrayList<> (macList);
+                    BaseApplication.getInstance().getIBLE().getLockStatus();
                 }else {
+                    if (lockLoading != null && !lockLoading.isShowing()){
+                        lockLoading.setTitle("正在连接");
+                        lockLoading.show();
+                    }
+
+                    isStop = false;
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (lockLoading != null && lockLoading.isShowing()){
+                                lockLoading.dismiss();
+                            }
+
+                            if(!isStop){
+                                stopScan = true;
+//                                  BaseApplication.getInstance().getIBLE().stopScan();
+                                BaseApplication.getInstance().getIBLE().refreshCache();
+                                BaseApplication.getInstance().getIBLE().close();
+                                BaseApplication.getInstance().getIBLE().disconnect();
+
+                                if(first3){
+                                    first3 = false;
+//                                    customDialog3.show();
+
+                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                    customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+                                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                    customBuilder.create().show();
+
+                                    clickCountDeal();
+                                }else{
+                                    carClose();
+                                }
+                            }
+                        }
+                    }, 10 * 1000);
+
+                    connect();
+
+                }
+
+            }else {
 //                customDialog3.show();
 
-                    rl_msg.setVisibility(View.GONE);
+                rl_msg.setVisibility(View.GONE);
 
-                    minPolygon();
+                minPolygon();
 
-                    clickCountDeal();
-                }
+                clickCountDeal();
+            }
 
 //            if(BikeFragment.screen){
 //            }
 
-            }
         }
+    }
+
+    public void endBtn4(){
+        final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+            ToastUtil.showMessageApp(context,"请先登录账号");
+            UIHelper.goToAct(context, LoginActivity.class);
+        }else {
+            Log.e("biking===endBtn4",macList.size()+"==="+type+"==="+first3);
+
+            rl_msg.setVisibility(View.GONE);
+            if (polyline != null) {
+                polyline.remove();
+            }
+
+            if (macList.size() > 0){
+//                flag = 2;
+
+                closeEbike2();
+
+//                bleService.connect(m_nowMac);
+//                cn = 0;
+//
+//                closeLock3();
+
+                return;
+            }
+
+            if (isContainsList.contains(true)){
+
+                closeEbike2();
+
+            }else {
+//                customDialog4.show();
+
+                rl_msg.setVisibility(View.GONE);
+
+                minPolygon();
+            }
+
+//            if(BikeFragment.screen){
+//            }
+
+        }
+    }
+
+    public void endBtn5(){
+        final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+            ToastUtil.showMessageApp(context,"请先登录账号");
+            UIHelper.goToAct(context,LoginActivity.class);
+        }else {
+//            ToastUtil.showMessage(context,macList.size()+"==="+isContainsList.contains(true));
+            Log.e("biking===endBtn5",macList.size()+"==="+isContainsList.contains(true)+"==="+type+"==="+BikeFragment.screen);
+
+            rl_msg.setVisibility(View.GONE);
+            if (polyline != null) {
+                polyline.remove();
+            }
+
+
+            if (macList.size() > 0){
+                //泺平锁
+                flag = 2;
+                queryState();
+
+                return;
+            }
+
+            if (isContainsList.contains(true)){
+                flag = 2;
+                queryState();
+
+
+            }else {
+//                customDialog3.show();
+
+                rl_msg.setVisibility(View.GONE);
+
+                minPolygon();
+
+                clickCountDeal();
+            }
+
+//            if(BikeFragment.screen){
+//            }
+
+        }
+    }
+
+    public void queryState(){
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+            scrollToFinishActivity();
+        }
+        //蓝牙锁
+        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+
+        if (mBluetoothAdapter == null) {
+            ToastUtil.showMessageApp(context, "获取蓝牙失败");
+            scrollToFinishActivity();
+            return;
+        }
+        if (!mBluetoothAdapter.isEnabled()) {
+            Log.e("queryState===1", "===");
+
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 188);
+        } else {
+            Log.e("queryState===2", "==="+isLookPsdBtn);
+
+            if(!isLookPsdBtn){   //没连上
+
+                if (loadingDialogWithHelp != null && !loadingDialogWithHelp.isShowing()) {
+                    loadingDialogWithHelp.setTitle("正在唤醒车锁");
+                    loadingDialogWithHelp.show();
+                }
+
+//                ll_1.setVisibility(View.VISIBLE);
+
+                ClientManager.getClient().stopSearch();
+                ClientManager.getClient().disconnect(m_nowMac);
+                ClientManager.getClient().disconnect(m_nowMac);
+                ClientManager.getClient().disconnect(m_nowMac);
+                ClientManager.getClient().disconnect(m_nowMac);
+                ClientManager.getClient().disconnect(m_nowMac);
+                ClientManager.getClient().disconnect(m_nowMac);
+                ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+                ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+                SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+                        .searchBluetoothLeDevice(0)
+                        .build();
+
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                ClientManager.getClient().search(request, mSearchResponse3);
+
+                m_myHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isLookPsdBtn){
+                            if (lockLoading != null && lockLoading.isShowing()) {
+                                lockLoading.dismiss();
+                            }
+                            Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
+
+                            ClientManager.getClient().stopSearch();
+                            ClientManager.getClient().disconnect(m_nowMac);
+                            ClientManager.getClient().disconnect(m_nowMac);
+                            ClientManager.getClient().disconnect(m_nowMac);
+                            ClientManager.getClient().disconnect(m_nowMac);
+                            ClientManager.getClient().disconnect(m_nowMac);
+                            ClientManager.getClient().disconnect(m_nowMac);
+                            ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+                            ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+                            scrollToFinishActivity();
+                        }
+                    }
+                }, 15 * 1000);
+            }else{
+                if (lockLoading != null && !lockLoading.isShowing()){
+                    lockLoading.setTitle("正在连接");
+                    lockLoading.show();
+                }
+
+                ClientManager.getClient().getStatus(m_nowMac, new IGetStatusResponse() {
+                    @Override
+                    public void onResponseSuccess(String version, String keySerial, String macKey, String vol) {
+
+                        Log.e("getStatus===Success", "===");
+
+                        keySource = keySerial;
+                        m_myHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                queryOpenState();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onResponseFail(final int code) {
+                        Log.e("getStatus===Fail", "===");
+
+                        m_myHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+
+//                              ToastUtil.showMessageApp(context, Code.toString(code));
+                                ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+
+//                                customDialog10.show();
+
+                                if (lockLoading != null && lockLoading.isShowing()) {
+                                    lockLoading.dismiss();
+                                }
+
+//                                ClientManager.getClient().disconnect(m_nowMac);
+//                                ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+//                                ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+//
+//                                m_myHandler.postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        if (loadingDialog != null && loadingDialog.isShowing()){
+//                                            loadingDialog.dismiss();
+//                                        }
+//
+//                                        connectDeviceLP();
+//                                        ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+//                                        ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+//
+//                                    }
+//                                }, 2 * 1000);
+
+
+                            }
+                        });
+                    }
+                });
+            }
+
+        }
+    }
+
+    public void endBtn7(){
+        final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+            ToastUtil.showMessageApp(context,"请先登录账号");
+            UIHelper.goToAct(context, LoginActivity.class);
+        }else {
+            Log.e("biking===endBtn7",macList.size()+"==="+type+"==="+deviceuuid+"==="+isConnect);
+
+            rl_msg.setVisibility(View.GONE);
+            if (polyline != null) {
+                polyline.remove();
+            }
+
+            if (macList.size() > 0){
+//                flag = 2;
+
+                closeEbike_XA();
+
+//                if(isConnect){
+//                    closeEbike_XA();
+//                }else{
+//                    if (lockLoading != null && !lockLoading.isShowing()){
+//                        lockLoading.setTitle("正在连接");
+//                        lockLoading.show();
+//                    }
+//
+//                    xa_state = 1;
+//
+//                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+//                    builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+//                    builder.setScanResultCallback(CurRoadBikingActivity.this);
+//                    apiClient = builder.build();
+//
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (lockLoading != null && lockLoading.isShowing()){
+//                                lockLoading.dismiss();
+//
+//                                if(!isConnect){
+//                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+//                                    customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+//                                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                                                public void onClick(DialogInterface dialog, int which) {
+//                                                    dialog.cancel();
+//                                                }
+//                                            });
+//                                    customBuilder.create().show();
+//                                }
+//                            }
+//                        }
+//                    }, 10 * 1000);
+//
+//                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+//                }
+
+                return;
+            }
+
+            if (isContainsList.contains(true)){
+
+                closeEbike_XA();
+
+//                if(isConnect){
+//                    closeEbike_XA();
+//                }else{
+//                    if (lockLoading != null && !lockLoading.isShowing()){
+//                        lockLoading.setTitle("正在连接");
+//                        lockLoading.show();
+//                    }
+//
+//                    xa_state = 1;
+//
+//                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+//                    builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+//                    builder.setScanResultCallback(CurRoadBikingActivity.this);
+//                    apiClient = builder.build();
+//
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (lockLoading != null && lockLoading.isShowing()){
+//                                lockLoading.dismiss();
+//
+//                                if(!isConnect){
+//                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+//                                    customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+//                                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                                                public void onClick(DialogInterface dialog, int which) {
+//                                                    dialog.cancel();
+//                                                }
+//                                            });
+//                                    customBuilder.create().show();
+//                                }
+//                            }
+//                        }
+//                    }, 10 * 1000);
+//
+//                    CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
+//                }
+
+            }else {
+//                customDialog4.show();
+
+                rl_msg.setVisibility(View.GONE);
+
+                minPolygon();
+            }
+
+//            if(BikeFragment.screen){
+//            }
+
+        }
+    }
+
+
 
 
     public void clickCountDeal(){
@@ -3719,17 +5704,22 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     isTemp = false;
 
                     if("4".equals(type)){
+                        endBtn4();
                     }else if("5".equals(type) || "6".equals(type)){
 
+
+                        endBtn5();
                     }else if("7".equals(type)){
 //                        if (lockLoading != null && !lockLoading.isShowing()){
 //                            lockLoading.setTitle("正在连接");
 //                            lockLoading.show();
 //                        }
 
+                        endBtn7();
                     }else{
 
                         if("3".equals(type)){
+                            endBtn3();
                         }else{
                             endBtn();
                         }
@@ -3815,6 +5805,417 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }
     });
 
+    public void resetLock(){
+        Log.e("resetLock===", "===0");
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isStop){
+
+                    Log.e("resetLock===", "===1");
+
+                    BaseApplication.getInstance().getIBLE().resetLock();
+
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!isStop){
+                                Log.e("resetLock===", "===2");
+
+                                BaseApplication.getInstance().getIBLE().resetBluetoothAdapter();
+
+                                m_myHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (!isStop){
+                                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                                loadingDialog.dismiss();
+                                            }
+
+                                            Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
+                                            BaseApplication.getInstance().getIBLE().refreshCache();
+                                            BaseApplication.getInstance().getIBLE().close();
+                                            BaseApplication.getInstance().getIBLE().disconnect();
+                                            scrollToFinishActivity();
+                                        }
+                                    }
+                                }, 5 * 1000);
+
+                            }
+                        }
+                    }, 5 * 1000);
+
+                }
+            }
+        }, 5 * 1000);
+    }
+
+//    void checkConnect(){
+//        m_myHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.e("checkConnect===", "===");
+//
+//                if(!bleService.connect){
+//                    cn++;
+//
+//                    if(cn<5){
+//                        checkConnect();
+//                    }else{
+//                        if (lockLoading != null && lockLoading.isShowing()){
+//                            lockLoading.dismiss();
+//                        }
+//
+//                        customDialog4.show();
+//
+//                        ccn++;
+//
+//                        return;
+//                    }
+//                }else{
+//                    if (lockLoading != null && lockLoading.isShowing()){
+//                        lockLoading.dismiss();
+//                    }
+//
+//                    closeEbike();
+//                }
+//            }
+//        }, 2 * 1000);
+//    }
+
+    public void closeEbike2(){
+        RequestParams params = new RequestParams();
+        params.put("uid",uid);
+        params.put("access_token",access_token);
+        params.put("oid",oid);
+        HttpHelper.post(this, Urls.closeEbike, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+//                              ToastUtil.showMessage(context,"数据更新成功");
+
+                                Log.e("biking===", "closeEbike===="+result.getData());
+
+                                info = result.getInfo();
+
+                                if ("0".equals(result.getData())){
+                                    if (loadingDialog != null && loadingDialog.isShowing()){
+                                        loadingDialog.dismiss();
+                                    }
+
+                                    submit(uid, access_token);
+
+                                    ToastUtil.showMessageApp(context,"关锁成功");
+                                }else{
+//                                    ToastUtil.showMessageApp(context,"关锁失败");
+
+                                    bleService.connect(m_nowMac);
+                                    cn = 0;
+
+                                    closeLock3();
+                                }
+                            } else {
+                                ToastUtil.showMessageApp(context,result.getMsg());
+
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
+                            }
+                        } catch (Exception e) {
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+                        }
+
+                    }
+                });
+
+            }
+        });
+    }
+
+    void closeLock3(){
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("closeLock3===", m_nowMac+"==="+bleid+"==="+bleService.connect);
+
+                if(!bleService.connect){
+                    cn++;
+
+                    if(cn<5){
+                        closeLock3();
+                    }else{
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+
+                        if("108".equals(info)){
+                            Log.e("biking===closeLock3_1", "====");
+
+                            ToastUtil.showMessageApp(context,"关锁成功");
+
+                            submit(uid, access_token);
+                        }else{
+                            Log.e("biking===closeLock3_2", "====");
+
+//                            ToastUtil.showMessageApp(context,"蓝牙连接失败，请重试");
+                            customDialog4.show();
+                        }
+
+
+                        return;
+                    }
+
+                }else{
+                    bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
+
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("closeLock3===4_3", "==="+m_nowMac);
+
+                            button8();
+                            button9();
+                            button2();    //设防
+
+                            closeLock2();
+                        }
+                    }, 500);
+
+                }
+
+            }
+        }, 2 * 1000);
+    }
+
+//    void closeLock(){
+//        m_myHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.e("temporaryLock===4_4", bleService.cc+"==="+"B1 2A 80 00 00 5B ".equals(bleService.cc));
+//
+//                if("B1 2A 80 00 00 5B ".equals(bleService.cc)){
+//                    Log.e("temporaryLock===4_5", oid+"==="+bleService.cc);
+//
+//                    lookPsdBtn.setText("开锁用车");
+//                    ToastUtil.showMessageApp(context,"关锁成功");
+//
+//                    SharedPreferencesUrls.getInstance().putString("tempStat","1");
+//
+//
+//
+//                }else{
+//                    customDialog7.show();
+//                }
+//
+//                if (loadingDialog != null && loadingDialog.isShowing()){
+//                    loadingDialog.dismiss();
+//                }
+//
+//
+//                Log.e("temporaryLock===4_6", "==="+bleService.cc);
+//
+//            }
+//        }, 500);
+//    }
+
+
+//    public void closeEbike(){
+//        RequestParams params = new RequestParams();
+//        params.put("uid",uid);
+//        params.put("access_token",access_token);
+//        params.put("oid",oid);
+//        HttpHelper.post(this, Urls.closeEbike, params, new TextHttpResponseHandler() {
+//            @Override
+//            public void onStart() {
+//                onStartCommon("正在加载");
+//            }
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                onFailureCommon(throwable.toString());
+//            }
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+//                m_myHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//                            if (result.getFlag().equals("Success")) {
+////                              ToastUtil.showMessage(context,"数据更新成功");
+//
+//                                Log.e("biking===", "closeEbike===="+result.getData()+"==="+result.getInfo());
+//
+//                                if ("0".equals(result.getData())){
+//                                    m_myHandler.sendEmptyMessage(6);
+////                                  submit(uid, access_token);
+//                                } else {
+//                                    ToastUtil.showMessageApp(context,"关锁失败");
+//
+//                                    bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
+//
+//                                    m_myHandler.postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            Log.e("endBtn4===4_3", "==="+m_nowMac);
+//
+//                                            button8();
+//                                            button9();
+//                                            button2();
+//
+//                                            cn=0;
+//                                            closeLock2();
+//                                        }
+//                                    }, 500);
+//
+//                                }
+//                            } else {
+//                                ToastUtil.showMessageApp(context,result.getMsg());
+//
+//                            }
+//                        } catch (Exception e) {
+//                        }
+//                        if (loadingDialog != null && loadingDialog.isShowing()){
+//                            loadingDialog.dismiss();
+//                        }
+//                    }
+//                });
+//
+//            }
+//        });
+//    }
+
+    void closeLock2(){
+
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("closeLock2===4_4", bleService.cc+"==="+"B1 2A 80 00 00 5B ".equals(bleService.cc));
+
+                if("B1 2A 80 00 00 5B ".equals(bleService.cc)){
+                    Log.e("closeLock2===4_5", oid+"==="+bleService.cc);
+                    macList2 = new ArrayList<> (macList);
+                    submit(uid, access_token);
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+
+                }else{
+                    cn++;
+
+                    if(cn<=10){
+                        button9();
+                        button2();
+
+                        closeLock2();
+                    }else{
+
+                        if("108".equals(info)){
+                            Log.e("biking===closeLock2_1", "====");
+
+                            ToastUtil.showMessageApp(context,"关锁成功");
+
+                            submit(uid, access_token);
+                        }else{
+                            Log.e("biking===closeLock2_2", "====");
+
+//                            ToastUtil.showMessageApp(context,"蓝牙连接失败，请重试");
+                            customDialog5.show();
+                        }
+
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                }
+
+                Log.e("closeLock2===4_6", "==="+bleService.cc);
+
+            }
+        }, 500);
+    }
+
+
+
+
+    //认证
+    void button9() {
+        IoBuffer ioBuffer = IoBuffer.allocate(20);
+        ioBuffer.writeByte((byte) 0x83);
+        ioBuffer.writeBytes(getfdqId(tel));
+//        ioBuffer.writeBytes(getfdqId(tel.trim().toUpperCase()));
+        bleService.write(toBody(ioBuffer.readableBytes()));
+//        SharePreUtil.getPreferences("FDQID").putString("ID", tel);
+//        SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
+    }
+
+    byte[] getfdqId(String str) {
+
+        IoBuffer ioBuffer = IoBuffer.allocate(17);
+        for (int i = 0; i < str.length(); i++) {
+            char a = str.charAt(i);
+            ioBuffer.writeByte((byte) a);
+        }
+        return ioBuffer.array();
+    }
+
+    //设防
+    void button2() {
+        IoBuffer ioBuffer = IoBuffer.allocate(20);
+        byte[] cmd = sendCmd("00001000", "00000000");
+        ioBuffer.writeBytes(cmd);
+        bleService.write(toBody(ioBuffer.readableBytes()));
+    }
+
+    //关闭
+    void button4() {
+        IoBuffer ioBuffer = IoBuffer.allocate(20);
+        byte[] cmd = sendCmd("00000010", "00000000");
+        ioBuffer.writeBytes(cmd);
+        bleService.write(toBody(ioBuffer.readableBytes()));
+    }
+
+    public byte[] sendCmd(String s1, String s2) {
+        IoBuffer ioBuffer = IoBuffer.allocate(5);
+        ioBuffer.writeByte(0XA1);
+        ioBuffer.writeByte(ByteUtil.BitToByte(s1));
+        ioBuffer.writeByte(ByteUtil.BitToByte(s2));
+
+        ioBuffer.writeByte(0);
+        ioBuffer.writeByte(0);
+
+        return ioBuffer.array();
+    }
+
+    IoBuffer toBody(byte[] bb) {
+        IoBuffer buffer = IoBuffer.allocate(20);
+        buffer.writeByte(bb.length + 1);
+        buffer.writeBytes(bb);
+        buffer.writeByte((int) ByteUtil.SumCheck(bb));
+
+
+        return buffer.flip();
+    }
+
+
+
     public void initmPopupWindowView() {
 
         // 获取自定义布局文件的视图
@@ -3891,6 +6292,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         popupwindow.showAtLocation(customView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
+
+
+
+
 
     private void addChooseMarker() {
         // 加入自定义标签
@@ -4424,6 +6829,62 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         return new LatLng(y, x);
     }
 
+//    private void schoolrangeList(){
+//        RequestParams params = new RequestParams();
+//        HttpHelper.get(context, schoolrangeList, params, new TextHttpResponseHandler() {
+//            @Override
+//            public void onStart() {
+//                if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                    loadingDialog.setTitle("正在加载");
+//                    loadingDialog.show();
+//                }
+//            }
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                if (loadingDialog != null && loadingDialog.isShowing()){
+//                    loadingDialog.dismiss();
+//                }
+//                UIHelper.ToastError(context, throwable.toString());
+//            }
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+//                try {
+//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//                    if (result.getFlag().equals("Success")) {
+//                        JSONArray jsonArray = new JSONArray(result.getData());
+//                        if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+//                            isContainsList.clear();
+//                        }
+//                        for (int i = 0; i < jsonArray.length(); i++) {
+//                            List<LatLng> list = new ArrayList<>();
+//                            for (int j = 0; j < jsonArray.getJSONArray(i).length(); j ++){
+//                                JSONObject jsonObject = jsonArray.getJSONArray(i).getJSONObject(j);
+//                                LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")),
+//                                        Double.parseDouble(jsonObject.getString("longitude")));
+//                                list.add(latLng);
+//                            }
+//                            Polygon polygon = null;
+//                            PolygonOptions pOption = new PolygonOptions();
+//                            pOption.addAll(list);
+//                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                    .strokeColor(Color.argb(160, 255, 0, 0))
+//                                    .fillColor(Color.argb(160, 255, 0, 0)));
+//                            pOptions.add(polygon);
+//                            isContainsList.add(polygon.contains(myLocation));
+//                        }
+//                    }else {
+//                        ToastUtil.showMessageApp(context, result.getMsg());
+//                    }
+//                }catch (Exception e){
+//                }
+//                if (loadingDialog != null && loadingDialog.isShowing()){
+//                    loadingDialog.dismiss();
+//                }
+//            }
+//        });
+//    }
+
     /**
      * 上传骑行坐标
      **/
@@ -4574,7 +7035,88 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         @Override
                         public void run() {
                             if("4".equals(type)) {
+                                isLookPsdBtn = true;
 
+                                BLEService.bluetoothAdapter = mBluetoothAdapter;
+
+                                bleService.view = context;
+                                bleService.showValue = true;
+                            }else if("5".equals(type) || "6".equals(type)){
+
+//                                if (lockLoading != null && !lockLoading.isShowing()){
+//                                    lockLoading.setTitle("正在唤醒车锁");
+//                                    lockLoading.show();
+//                                }
+
+                                if (loadingDialogWithHelp != null && !loadingDialogWithHelp.isShowing()){
+                                    loadingDialogWithHelp.setTitle("正在唤醒车锁");
+                                    loadingDialogWithHelp.show();
+                                }
+
+                                ClientManager.getClient().stopSearch();
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().disconnect(m_nowMac);
+                                ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+                                ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+                                m_myHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+//                                SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+//                                        .searchBluetoothLeDevice(0)
+//                                        .build();
+//
+//                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                                    return;
+//                                }
+//                                ClientManager.getClient().search(request, mSearchResponse);
+
+
+                                        connectDeviceLP();
+                                        ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+                                        ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+//
+                                        m_myHandler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (!isLookPsdBtn){
+                                                    if (lockLoading != null && lockLoading.isShowing()) {
+                                                        lockLoading.dismiss();
+                                                    }
+                                                    Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
+
+                                                    ClientManager.getClient().stopSearch();
+                                                    ClientManager.getClient().disconnect(m_nowMac);
+                                                    ClientManager.getClient().disconnect(m_nowMac);
+                                                    ClientManager.getClient().disconnect(m_nowMac);
+                                                    ClientManager.getClient().disconnect(m_nowMac);
+                                                    ClientManager.getClient().disconnect(m_nowMac);
+                                                    ClientManager.getClient().disconnect(m_nowMac);
+                                                    ClientManager.getClient().unnotifyClose(m_nowMac, mCloseListener);
+                                                    ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+
+                                                    scrollToFinishActivity();
+                                                }
+                                            }
+                                        }, 15 * 1000);
+
+                                    }
+                                }, 2 * 1000);
+
+
+                            }else if("7".equals(type)) {
+                                isLookPsdBtn = true;
+
+//                                XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+//                                builder.setBleStateChangeListener(CurRoadBikingActivity.this);
+//                                builder.setScanResultCallback(CurRoadBikingActivity.this);
+//                                apiClient = builder.build();
+//
+//                                CurRoadBikingActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(CurRoadBikingActivity.this, deviceuuid);
                             }else{
 
                                 if (lockLoading != null && !lockLoading.isShowing()){
@@ -4625,6 +7167,285 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //            scrollToFinishActivity();
             AppManager.getAppManager().AppExit(context);
         }
+    }
+
+    private final SearchResponse mSearchResponse = new SearchResponse() {
+        @Override
+        public void onSearchStarted() {
+            Log.e("biking===","DeviceListActivity.onSearchStarted");
+        }
+
+        @Override
+        public void onDeviceFounded(final SearchResult device) {
+            m_myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Log.e("biking=onDeviceFounded",device.device.getName() + "===" + device.device.getAddress()+"==="+m_nowMac);
+
+                    if(m_nowMac.equals(device.device.getAddress())){
+                        ClientManager.getClient().stopSearch();
+
+                        connectDeviceLP();
+
+                        ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+                        ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onSearchStopped() {
+            Log.e("biking===","DeviceListActivity.onSearchStopped");
+
+        }
+
+        @Override
+        public void onSearchCanceled() {
+            Log.e("biking===","DeviceListActivity.onSearchCanceled");
+
+        }
+    };
+
+    private final SearchResponse mSearchResponse2 = new SearchResponse() {
+        @Override
+        public void onSearchStarted() {
+            Log.e("biking===","DeviceListActivity.onSearchStarted");
+        }
+
+        @Override
+        public void onDeviceFounded(final SearchResult device) {
+
+            m_myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Log.e("biking===","DeviceListActivity.onDeviceFounded2 " + device.device.getAddress()+"==="+m_nowMac);
+
+                    if(m_nowMac.equals(device.device.getAddress())){
+                        ClientManager.getClient().stopSearch();
+
+                        connectDeviceLP();
+//                        ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+//                        ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+
+
+                        ClientManager.getClient().getStatus(m_nowMac, new IGetStatusResponse() {
+                            @Override
+                            public void onResponseSuccess(String version, String keySerial, String macKey, String vol) {
+                                keySource = keySerial;
+                                m_myHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        rent();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onResponseFail(final int code) {
+                                m_myHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (loadingDialog != null && loadingDialog.isShowing()){
+                                            loadingDialog.dismiss();
+                                        }
+
+                                        Log.e("getStatus===", Code.toString(code));
+//                                        ToastUtil.showMessageApp(context, Code.toString(code));
+                                    }
+                                });
+                            }
+                        });
+
+//                        m_myHandler.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//
+//                            }
+//                        }, 2000);
+
+
+                        Log.e("biking===","DeviceListActivity.onDeviceFounded2_2 " + device.device.getAddress()+"==="+m_nowMac);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onSearchStopped() {
+            Log.e("biking===","DeviceListActivity.onSearchStopped");
+
+        }
+
+        @Override
+        public void onSearchCanceled() {
+            Log.e("biking===","DeviceListActivity.onSearchCanceled");
+
+        }
+    };
+
+    private final SearchResponse mSearchResponse3 = new SearchResponse() {
+        @Override
+        public void onSearchStarted() {
+            Log.e("biking===","DeviceListActivity.onSearchStarted");
+        }
+
+        @Override
+        public void onDeviceFounded(final SearchResult device) {
+
+            m_myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Log.e("biking===","DeviceListActivity.onDeviceFounded2 " + device.device.getAddress()+"==="+m_nowMac);
+
+                    if(m_nowMac.equals(device.device.getAddress())){
+                        ClientManager.getClient().stopSearch();
+
+                        connectDeviceLP();
+//                        ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+//                        ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
+
+
+                        ClientManager.getClient().getStatus(m_nowMac, new IGetStatusResponse() {
+                            @Override
+                            public void onResponseSuccess(String version, String keySerial, String macKey, String vol) {
+                                keySource = keySerial;
+                                m_myHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        queryOpenState();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onResponseFail(final int code) {
+                                m_myHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (loadingDialog != null && loadingDialog.isShowing()){
+                                            loadingDialog.dismiss();
+                                        }
+                                        if (lockLoading != null && lockLoading.isShowing()) {
+                                            lockLoading.dismiss();
+                                        }
+
+                                        Log.e("getStatus===", Code.toString(code));
+//                                        ToastUtil.showMessageApp(context, Code.toString(code));
+                                    }
+                                });
+                            }
+                        });
+
+                        Log.e("biking===","DeviceListActivity.onDeviceFounded2_2 " + device.device.getAddress()+"==="+m_nowMac);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onSearchStopped() {
+            Log.e("biking===","DeviceListActivity.onSearchStopped");
+        }
+
+        @Override
+        public void onSearchCanceled() {
+            Log.e("biking===","DeviceListActivity.onSearchCanceled");
+
+        }
+    };
+
+
+
+    protected void rent(){
+
+        Log.e("rent===000",m_nowMac+"==="+keySource);
+
+        RequestParams params = new RequestParams();
+        params.put("macinfo", m_nowMac);
+        params.put("keySource",keySource);
+        HttpHelper.get(this, Urls.rent, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在开锁");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("rent===","==="+responseString);
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            if (result.getFlag().equals("Success")) {
+                                KeyBean bean = JSON.parseObject(result.getData(), KeyBean.class);
+
+                                encryptionKey = bean.getEncryptionKey();
+                                keys = bean.getKeys();
+                                serverTime = bean.getServerTime();
+
+                                Log.e("rent===", m_nowMac+"==="+encryptionKey+"==="+keys);
+
+                                openBleLock(null);
+                            }else {
+                                ToastUtil.showMessageApp(context, result.getMsg());
+
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
+                                if (lockLoading != null && lockLoading.isShowing()) {
+                                    lockLoading.dismiss();
+                                }
+                            }
+                        }catch (Exception e){
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+                            if (lockLoading != null && lockLoading.isShowing()) {
+                                lockLoading.dismiss();
+                            }
+                        }
+
+                    }
+                });
+            }
+        });
+    }
+
+    private void rent2(){
+        String secretKey = "";
+
+        secretKey = Constants.keyMap.get(m_nowMac);
+
+        //AES加解密密钥
+        String pwd = null;
+
+        Random random = new Random();
+        //随机数取80位密钥中，前64位的某一位
+        encryptionKey = random.nextInt(secretKey.length()-16);
+        //从随机数位数开始截取16位字符作为AES加解密密钥
+        pwd = secretKey.substring(encryptionKey, encryptionKey+16);
+        encryptionKey = encryptionKey + 128;
+
+        //补8个0，AES加密需要16位数据
+        keySource = keySource.toUpperCase()+"00000000";
+        //加密
+        byte[] encryptResultStr = AESUtil.encrypt(keySource.getBytes(), pwd);
+        //转成hexString
+        keys = AESUtil.bytesToHexString(encryptResultStr).toUpperCase();
+        //服务器时间戳，精确到秒，用于锁同步时间
+        serverTime = Calendar.getInstance().getTimeInMillis()/1000;
+
+        Log.e("rent===", encryptionKey+"==="+keys+"==="+pwd);
+
+        openBleLock(null);
+
     }
 
     private void initSite(){
