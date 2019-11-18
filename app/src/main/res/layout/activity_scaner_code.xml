@@ -221,7 +221,6 @@
 
 
     <LinearLayout
-        android:id="@+id/ll_input2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -271,12 +270,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:orientation="vertical"
+            android:visibility="gone"
             >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/ll_input"
+                android:layout_above="@+id/ll_input2"
                 android:weightSum="2">
 
 
@@ -311,6 +311,7 @@
 
 
             <LinearLayout
+                android:id="@+id/ll_input2"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_alignParentBottom="true"
@@ -346,8 +347,6 @@
                     android:layout_marginLeft="-49dp"
                     android:onClick="btn"
                     android:src="@drawable/arrows_right2"/>
-
-
 
             </LinearLayout>
 

@@ -116,6 +116,7 @@ import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.core.widget.LoadingDialog2;
 import cn.qimate.bike.fragment.BikeFragment;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.EbikeInfoBean;
@@ -729,8 +730,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         customDialog = customBuilder.create();
         customDialog.show();
 
-        cancelBtn = (ImageView)customDialog.findViewById(R.id.cancelBtn);
-        ll_positiveButton = (LinearLayout)customDialog.findViewById(R.id.ll_positiveButton);
+        cancelBtn = (ImageView)customDialog.findViewById(R.id.scan_cancelBtn);
+        ll_positiveButton = (LinearLayout)customDialog.findViewById(R.id.ll_scan_positiveButton);
         cancelBtn.setOnClickListener(this);
         ll_positiveButton.setOnClickListener(this);
 
@@ -738,10 +739,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         customBuilder = new CustomDialog.Builder(context);
         customBuilder.setType(9).setTitle("温馨提示").setMessage("该车正在维修中…");
         customDialog2 = customBuilder.create();
-        customDialog2.show();
+//        customDialog2.show();
 
-        cancelBtn2 = (ImageView)customDialog2.findViewById(R.id.cancelBtn2);
-        ll_positiveButton2 = (LinearLayout)customDialog2.findViewById(R.id.ll_positiveButton2);
+        cancelBtn2 = (ImageView)customDialog2.findViewById(R.id.scan_cancelBtn2);
+        ll_positiveButton2 = (LinearLayout)customDialog2.findViewById(R.id.ll_scan_positiveButton2);
         cancelBtn2.setOnClickListener(this);
         ll_positiveButton2.setOnClickListener(this);
 
@@ -756,6 +757,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         negativeButton.setOnClickListener(this);
 
 
+//        LoadingDialog2 lockLoading = new LoadingDialog2(this);
+//        lockLoading.setCancelable(false);
+//        lockLoading.setCanceledOnTouchOutside(false);
+//
+//        lockLoading.setTitle("正在连接");
+//        lockLoading.show();
     }
 
     private void initHttp(){
@@ -838,28 +845,28 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 }
 
                 break;
-            case R.id.cancelBtn:
+            case R.id.scan_cancelBtn:
                 Log.e("onClick===customDialog", customDialog+"==="+customDialog.isShowing());
 
                 if (customDialog != null && customDialog.isShowing()) {
                     customDialog.dismiss();
                 }
                 break;
-            case R.id.ll_positiveButton:
+            case R.id.ll_scan_positiveButton:
                 Log.e("onClick=ll_positiveB", customDialog+"==="+customDialog.isShowing());
 
                 if (customDialog != null && customDialog.isShowing()) {
                     customDialog.dismiss();
                 }
                 break;
-            case R.id.cancelBtn2:
+            case R.id.scan_cancelBtn2:
                 Log.e("onClick===customDialog", customDialog+"==="+customDialog.isShowing());
 
                 if (customDialog2 != null && customDialog2.isShowing()) {
                     customDialog2.dismiss();
                 }
                 break;
-            case R.id.ll_positiveButton2:
+            case R.id.ll_scan_positiveButton2:
                 Log.e("onClick=ll_positiveB", customDialog+"==="+customDialog.isShowing());
 
                 if (customDialog2 != null && customDialog2.isShowing()) {

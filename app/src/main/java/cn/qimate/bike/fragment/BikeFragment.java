@@ -79,6 +79,25 @@ import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polygon;
 import com.amap.api.maps.model.PolygonOptions;
 import com.amap.api.maps.model.PolylineOptions;
+import com.amap.api.navi.AMapNavi;
+import com.amap.api.navi.AMapNaviListener;
+import com.amap.api.navi.model.AMapCalcRouteResult;
+import com.amap.api.navi.model.AMapLaneInfo;
+import com.amap.api.navi.model.AMapModelCross;
+import com.amap.api.navi.model.AMapNaviCameraInfo;
+import com.amap.api.navi.model.AMapNaviCross;
+import com.amap.api.navi.model.AMapNaviInfo;
+import com.amap.api.navi.model.AMapNaviLocation;
+import com.amap.api.navi.model.AMapNaviPath;
+import com.amap.api.navi.model.AMapNaviRouteNotifyData;
+import com.amap.api.navi.model.AMapNaviTrafficFacilityInfo;
+import com.amap.api.navi.model.AMapServiceAreaInfo;
+import com.amap.api.navi.model.AimLessModeCongestionInfo;
+import com.amap.api.navi.model.AimLessModeStat;
+import com.amap.api.navi.model.NaviInfo;
+import com.amap.api.navi.model.NaviLatLng;
+import com.amap.api.navi.view.RouteOverLay;
+import com.autonavi.tbt.TrafficFacilityInfo;
 import com.bumptech.glide.Glide;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
@@ -153,7 +172,7 @@ import static cn.qimate.bike.activity.CurRoadBikingActivity.bytes2hex03;
 
 @SuppressLint("NewApi")
 public class BikeFragment extends BaseFragment implements View.OnClickListener, LocationSource,
-        AMapLocationListener, AMap.OnCameraChangeListener, AMap.OnMapTouchListener, OnConnectionListener {
+        AMapLocationListener, AMap.OnCameraChangeListener, AMap.OnMapTouchListener, OnConnectionListener, AMapNaviListener {
 
     Unbinder unbinder;
 
@@ -255,6 +274,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private int carType = 1;
 
     private Bundle savedIS;
+    private AMapNavi mAMapNavi;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_bike, null);
@@ -375,6 +395,32 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             setUpMap();
 
 //            m_myHandler.sendEmptyMessage(4);
+
+            mAMapNavi = AMapNavi.getInstance(context);
+            mAMapNavi.addAMapNaviListener(this);
+
+            aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+
+//                    curMarker = marker;
+//
+//                    marker.setTitle(marker.getTitle());
+
+
+//                    Log.e("onMarkerClick===", marker.getTitle()+"==="+marker.getTitle().split("-")[0]);
+                    Log.e("onMarkerClick===", referLatitude+"==="+referLongitude+"==="+marker.getPosition().latitude+"==="+marker.getPosition().longitude);
+
+//                    31.764391===119.920551===31.765937===119.921452
+                    mAMapNavi.calculateRideRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
+
+//                    codenum = marker.getTitle().split("-")[0];
+//                    quantity = marker.getTitle().split("-")[1];
+//
+//                    initmPopupWindowView();
+                    return true;
+                }
+            });
 
             aMap.setOnMapTouchListener(this);
             aMap.setOnCameraChangeListener(this);
@@ -3280,6 +3326,216 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 }
             }
         });
+    }
+
+    @Override
+    public void onInitNaviFailure() {
+
+    }
+
+    @Override
+    public void onInitNaviSuccess() {
+//        mAMapNavi.calculateRideRoute(new NaviLatLng(39.92, 116.43), new NaviLatLng(39.92, 116.53), 0);
+        Log.e("onInitNaviSuccess===", "===");
+
+        //                    31.764391===119.920551===31.765937===119.921452
+//        mAMapNavi.calculateRideRoute(new NaviLatLng(31.764391, 119.920551), new NaviLatLng(31.765937, 119.921452));
+
+        Log.e("onInitNaviSuccess===2", "===");
+    }
+
+    @Override
+    public void onCalculateRouteSuccess(int[] ints) {
+        Log.e("onCalculateRouteSuc=", "===");
+
+        AMapNaviPath path = mAMapNavi.getNaviPath();
+        /**
+         * 单路径不需要进行路径选择，直接传入－1即可
+         */
+        drawRoutes(-1, path);
+//        showMarkInfo(path);
+    }
+
+    private void drawRoutes(int routeId, AMapNaviPath path) {
+//        calculateSuccess = true;
+        aMap.moveCamera(CameraUpdateFactory.changeTilt(0));
+        //路径绘制图层
+        RouteOverLay routeOverLay = new RouteOverLay(aMap, path, context);
+        routeOverLay.setTrafficLine(false);
+        routeOverLay.addToMap();
+//        routeOverlays.put(routeId, routeOverLay);
+    }
+
+    @Override
+    public void onStartNavi(int i) {
+
+    }
+
+    @Override
+    public void onTrafficStatusUpdate() {
+
+    }
+
+    @Override
+    public void onLocationChange(AMapNaviLocation aMapNaviLocation) {
+
+    }
+
+    @Override
+    public void onGetNavigationText(int i, String s) {
+
+    }
+
+    @Override
+    public void onGetNavigationText(String s) {
+
+    }
+
+    @Override
+    public void onEndEmulatorNavi() {
+
+    }
+
+    @Override
+    public void onArriveDestination() {
+
+    }
+
+    @Override
+    public void onCalculateRouteFailure(int i) {
+
+    }
+
+    @Override
+    public void onReCalculateRouteForYaw() {
+
+    }
+
+    @Override
+    public void onReCalculateRouteForTrafficJam() {
+
+    }
+
+    @Override
+    public void onArrivedWayPoint(int i) {
+
+    }
+
+    @Override
+    public void onGpsOpenStatus(boolean b) {
+
+    }
+
+    @Override
+    public void onNaviInfoUpdate(NaviInfo naviInfo) {
+
+    }
+
+    @Override
+    public void onNaviInfoUpdated(AMapNaviInfo aMapNaviInfo) {
+
+    }
+
+    @Override
+    public void updateCameraInfo(AMapNaviCameraInfo[] aMapNaviCameraInfos) {
+
+    }
+
+    @Override
+    public void updateIntervalCameraInfo(AMapNaviCameraInfo aMapNaviCameraInfo, AMapNaviCameraInfo aMapNaviCameraInfo1, int i) {
+
+    }
+
+    @Override
+    public void onServiceAreaUpdate(AMapServiceAreaInfo[] aMapServiceAreaInfos) {
+
+    }
+
+    @Override
+    public void showCross(AMapNaviCross aMapNaviCross) {
+
+    }
+
+    @Override
+    public void hideCross() {
+
+    }
+
+    @Override
+    public void showModeCross(AMapModelCross aMapModelCross) {
+
+    }
+
+    @Override
+    public void hideModeCross() {
+
+    }
+
+    @Override
+    public void showLaneInfo(AMapLaneInfo[] aMapLaneInfos, byte[] bytes, byte[] bytes1) {
+
+    }
+
+    @Override
+    public void showLaneInfo(AMapLaneInfo aMapLaneInfo) {
+
+    }
+
+    @Override
+    public void hideLaneInfo() {
+
+    }
+
+
+
+    @Override
+    public void notifyParallelRoad(int i) {
+
+    }
+
+    @Override
+    public void OnUpdateTrafficFacility(AMapNaviTrafficFacilityInfo[] aMapNaviTrafficFacilityInfos) {
+
+    }
+
+    @Override
+    public void OnUpdateTrafficFacility(AMapNaviTrafficFacilityInfo aMapNaviTrafficFacilityInfo) {
+
+    }
+
+    @Override
+    public void OnUpdateTrafficFacility(TrafficFacilityInfo trafficFacilityInfo) {
+
+    }
+
+    @Override
+    public void updateAimlessModeStatistics(AimLessModeStat aimLessModeStat) {
+
+    }
+
+    @Override
+    public void updateAimlessModeCongestionInfo(AimLessModeCongestionInfo aimLessModeCongestionInfo) {
+
+    }
+
+    @Override
+    public void onPlayRing(int i) {
+
+    }
+
+    @Override
+    public void onCalculateRouteSuccess(AMapCalcRouteResult aMapCalcRouteResult) {
+
+    }
+
+    @Override
+    public void onCalculateRouteFailure(AMapCalcRouteResult aMapCalcRouteResult) {
+
+    }
+
+    @Override
+    public void onNaviRouteNotify(AMapNaviRouteNotifyData aMapNaviRouteNotifyData) {
+
     }
 
     private class MyAsyncTask extends AsyncTask<Void, Void, Void> {

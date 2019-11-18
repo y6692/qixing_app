@@ -283,7 +283,8 @@ public class CustomDialog extends Dialog {
                 }
 			}
 
-			dialog.addContentView(layout, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+//			dialog.addContentView(layout, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+			dialog.addContentView(layout, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			// set the dialog title
 			((TextView) layout.findViewById(R.id.title)).setText(title);
 
@@ -344,10 +345,12 @@ public class CustomDialog extends Dialog {
 				// if no message set
 				// add the contentView to the dialog body
 				((LinearLayout) layout.findViewById(R.id.content)).removeAllViews();
-				((LinearLayout) layout.findViewById(R.id.content)).addView(contentView,
-						new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+				((LinearLayout) layout.findViewById(R.id.content)).addView(contentView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			}
 			dialog.setContentView(layout);
+
+			dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+
 			return dialog;
 		}
 

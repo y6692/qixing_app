@@ -31,7 +31,6 @@ allprojects {
             links "http://docs.oracle.com/javase/7/docs/api"
             addStringOption('Xdoclint:none', '-quiet')
             addStringOption('encoding', 'UTF-8')
-
         }
     }
 }

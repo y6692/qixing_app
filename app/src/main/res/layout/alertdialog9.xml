@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
     android:layout_width="220dp"
     android:minWidth="220dip"
     android:layout_height="wrap_content"
+    android:layout_gravity="center"
     android:background="@drawable/block_dialog_bcg"
     android:orientation="vertical"
     >
@@ -16,7 +16,6 @@
         <TextView
             android:visibility="gone"
             android:id="@+id/title"
-            style="@style/DialogText.Title"
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:gravity="center"
@@ -25,7 +24,7 @@
             />
 
         <ImageView
-            android:id="@+id/cancelBtn2"
+            android:id="@+id/scan_cancelBtn2"
             android:layout_width="12dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -106,7 +105,7 @@
 
 
     <LinearLayout
-        android:id="@+id/ll_positiveButton2"
+        android:id="@+id/ll_scan_positiveButton2"
         android:layout_width="106dp"
         android:layout_height="32dp"
         android:layout_marginBottom="13dp"

@@ -2,11 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:id="@+id/pop_win_bg">
+    android:id="@+id/pop_rent_bg">
 
     <!-- 弹窗背景 -->
     <ImageView
-        android:id="@+id/popupWindow_back"
+        android:id="@+id/popupWindow_rent_back"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="#FFF5F7FA"
@@ -16,10 +16,26 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="351dp"
         android:orientation="vertical"
-        android:background="@color/white"
+        android:background="@drawable/pop_rent_bcg"
         android:layout_alignParentBottom="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="66dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_centerInParent="true"
+                android:textSize="@dimen/sp20"
+                android:textColor="@color/tx_black"
+                android:textStyle="bold"
+                android:text="确认租车"/>
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"

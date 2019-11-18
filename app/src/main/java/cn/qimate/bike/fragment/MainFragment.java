@@ -188,6 +188,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private ArrayList<Integer> imagePath;
     private ArrayList<String> imageTitle;
 
+    private LinearLayout rl_ad;
+
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_main, null);
         unbinder = ButterKnife.bind(this, v);
@@ -253,7 +255,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         imageTitle.add("我是海鸟三号");
 
         mMyImageLoader = new MyImageLoader();
-        mBanner = getActivity().findViewById(R.id.banner);
+        mBanner = activity.findViewById(R.id.banner);
         //设置样式，里面有很多种样式可以自己都看看效果
         mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE);
         //设置图片加载器
@@ -275,8 +277,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 //开始调用的方法，启动轮播图。
                 .start();
 
+        rl_ad = activity.findViewById(R.id.rl_ad);
+
         leftBtn.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
+        rl_ad.setOnClickListener(this);
 
 //        tab = (TabLayout) getActivity().findViewById(R.id.tab);
 //        vp = (ViewPager)getActivity().findViewById(R.id.vp);
@@ -303,6 +308,41 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //
 //            }
 //        });
+
+
+    }
+
+    public void initmPopupWindowView(){
+
+        // 获取自定义布局文件的视图
+        View customView = getLayoutInflater().inflate(R.layout.pop_rent_bike, null, false);
+        // 创建PopupWindow宽度和高度
+        RelativeLayout pop_win_bg = (RelativeLayout) customView.findViewById(R.id.pop_rent_bg);
+        ImageView iv_popup_window_back = (ImageView) customView.findViewById(R.id.popupWindow_rent_back);
+        // 获取截图的Bitmap
+        Bitmap bitmap = UtilScreenCapture.getDrawing(getActivity());
+        if (bitmap != null) {
+            // 将截屏Bitma放入ImageView
+            iv_popup_window_back.setImageBitmap(bitmap);
+            // 将ImageView进行高斯模糊【25是最高模糊等级】【0x77000000是蒙上一层颜色，此参数可不填】
+            UtilBitmap.blurImageView(context, iv_popup_window_back, 10,0xAA000000);
+        } else {
+            // 获取的Bitmap为null时，用半透明代替
+            iv_popup_window_back.setBackgroundColor(0x77000000);
+        }
+        // 打开弹窗
+        UtilAnim.showToUp(pop_win_bg, iv_popup_window_back);
+        // 创建PopupWindow宽度和高度
+        final PopupWindow popupwindow = new PopupWindow(customView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
+        /**
+         * 设置动画效果 ,从上到下加载方式等，不设置自动的下拉，最好 [动画效果不好，不加实现下拉效果，不错]
+         */
+        popupwindow.setAnimationStyle(R.style.PopupAnimation);
+        popupwindow.setOutsideTouchable(false);
+
+        popupwindow.showAtLocation(customView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+
+        Log.e("initmPopup===", "===");
     }
 
     @Override
@@ -310,6 +350,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         switch (view.getId()){
+            case R.id.rl_ad:
+                initmPopupWindowView();
+
+                break;
+
             case R.id.mainUI_leftBtn:
                 UIHelper.goToAct(context, ActionCenterActivity.class);
 
@@ -408,6 +453,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void OnBannerClick(int position) {
         Toast.makeText(context, "你点了第" + (position + 1) + "张轮播图", Toast.LENGTH_SHORT).show();
+
+        initmPopupWindowView();
     }
 
 

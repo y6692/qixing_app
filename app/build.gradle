@@ -12,7 +12,13 @@ android {
     buildToolsVersion '28.0.0'
 
 
-
+//    packagingOptions {
+//        exclude 'assets/ap1.data'
+//        exclude 'assets/marker_gps_no_sharing.png'
+//        exclude 'assets/map_assets/roadarrow.data'
+//        exclude 'assets/location_pressed.png'
+//        exclude 'assets/amap_sdk_shaders/point.glsl'
+//    }
 
     lintOptions {
         checkReleaseBuilds false
@@ -36,6 +42,10 @@ android {
         ndk {
             abiFilters 'armeabi-v7a'
         }
+
+//        ndk {
+//            abiFilters 'armeabi'
+//        }
     }
 
     signingConfigs {
@@ -109,6 +119,8 @@ repositories {
     }
 }
 
+
+
 dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -137,10 +149,10 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.2'
     implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
     implementation 'com.google.zxing:core:3.3.0'
-//    implementation(name: 'adhub_sdk_3.0.1', ext: 'aar')
-//    implementation(name: 'open_ad_sdk1.9.72', ext: 'aar')
-//    implementation(name: 'adpoymer-3.5.10', ext: 'aar')
-//    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
+    //    implementation(name: 'adhub_sdk_3.0.1', ext: 'aar')
+    //    implementation(name: 'open_ad_sdk1.9.72', ext: 'aar')
+    //    implementation(name: 'adpoymer-3.5.10', ext: 'aar')
+    //    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
     implementation 'com.android.support:support-v4:28.0.0'
     implementation files('libs/ab-sdk-beta1.7.3.jar')
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
@@ -153,22 +165,20 @@ dependencies {
     //    implementation files('libs/ma.sdk-1.2.0.jar')
     //    implementation files('libs/alisdk-ut-4.jar')
     implementation files('libs/AMap_Location_V4.6.0_20190423.jar')
-    implementation files('libs/Android_Map3D_SDK_V6.9.0_20190530.jar')
+//    implementation files('libs/Android_Map3D_SDK_V6.9.0_20190530.jar')
     implementation(name: 'XiaoanBleSdk_V1.0.3', ext: 'aar')
     implementation('com.github.hotchemi:permissionsdispatcher:3.3.1') {
         exclude group: 'com.android.support'
     }
     implementation files('libs/jsoniter-0.9.23.jar')
     implementation files('libs/aprilscansdk.jar')
-
     implementation 'com.youth.banner:banner:1.4.10'
-//    implementation "com.github.bumptech.glide:glide:4.6.1"
-
-//    implementation 'com.github.ymwm-lxl:VerificationCodeEditText:1.0'
-//    implementation 'com.github.bumptech.glide:glide:4.8.0'
-//    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
-
-//    implementation project(':verification-view')
+    //    implementation "com.github.bumptech.glide:glide:4.6.1"
+    //    implementation 'com.github.ymwm-lxl:VerificationCodeEditText:1.0'
+    //    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    //    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+    //    implementation project(':verification-view')
+//    implementation files('libs/AMap3DMap_7.1.0_AMapNavi_7.1.0_20191030.jar')
 }
 
 afterEvaluate {
