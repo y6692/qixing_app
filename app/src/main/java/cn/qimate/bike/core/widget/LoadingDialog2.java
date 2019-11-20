@@ -95,7 +95,7 @@ public class LoadingDialog2 extends Dialog {
 //			animDrawable2 .start();
 //		}
 
-		handler.sendEmptyMessage(CHANGE_TITLE_WHAT);
+//		handler.sendEmptyMessage(CHANGE_TITLE_WHAT);
 		super.show();
 	}
 

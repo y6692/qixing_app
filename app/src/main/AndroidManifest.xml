@@ -118,6 +118,14 @@
         </activity>
 
         <activity
+            android:name=".activity.SchoolSelectActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
+
+        <activity
             android:name="com.zxing.lib.scaner.activity.ActivityScanerCode"
             android:windowSoftInputMode="adjustResize"
             >

@@ -80,94 +80,90 @@
         </com.amap.api.maps.MapView>
 
         <LinearLayout
-            android:id="@+id/rl_ad"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/block_bcg"
-
+            android:id="@+id/ll_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
 
             >
 
+            <LinearLayout
+                android:id="@+id/rl_ad"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/block_bcg"
+                >
 
-            <!--<ImageView-->
+
+                <!--<ImageView-->
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="match_parent"-->
                 <!--android:padding="3dp"-->
                 <!--android:src="@drawable/ad"/>-->
 
-            <com.youth.banner.Banner
-                android:id="@+id/banner"
+                <com.youth.banner.Banner
+                    android:id="@+id/banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_authBtn"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                android:layout_height="32dp"
+                android:layout_below="@+id/rl_ad"
+                android:background="@drawable/block_bcg"
+                android:layout_marginTop="7dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp">
 
-
-        </LinearLayout>
-
-        <!--<com.youth.banner.Banner-->
-            <!--android:id="@+id/banner"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="80dp"-->
-            <!--android:layout_marginTop="12dp"-->
-            <!--android:layout_marginLeft="18dp"-->
-            <!--android:layout_marginRight="18dp"-->
-            <!--app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--app:layout_constraintTop_toTopOf="parent"/>-->
-
-        <RelativeLayout
-            android:id="@+id/rl_authBtn"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:layout_below="@+id/rl_ad"
-            android:background="@drawable/block_bcg"
-            android:layout_marginTop="7dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:layout_marginLeft="13dp"
-                android:orientation="horizontal"
-                android:layout_alignParentLeft="true">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/horn"/>
-
-                <TextView
-                    android:id="@+id/tv_authBtn"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="消息"
-                    android:textColor="#EC3F4C"
-                    android:textSize="@dimen/sp12"
-                    android:layout_marginLeft="7dp"/>
-            </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="13dp"
+                    android:orientation="horizontal"
+                    android:layout_alignParentLeft="true">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/horn"/>
+
+                    <TextView
+                        android:id="@+id/tv_authBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="消息"
+                        android:textColor="#EC3F4C"
+                        android:textSize="@dimen/sp12"
+                        android:layout_marginLeft="7dp"/>
+                </LinearLayout>
 
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:layout_marginRight="2dp"
-                android:orientation="horizontal"
-                android:layout_alignParentRight="true">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="2dp"
+                    android:orientation="horizontal"
+                    android:layout_alignParentRight="true">
 
-                <ImageView
-                    android:layout_width="7dp"
-                    android:layout_height="12dp"
-                    android:src="@drawable/yjt"/>
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="7dp"
+                        android:layout_height="12dp"
+                        android:src="@drawable/yjt"/>
+                </LinearLayout>
 
-            <!--<Button-->
+                <!--<Button-->
                 <!--android:id="@+id/mainUI_authBtn"-->
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="32dp"-->
@@ -178,29 +174,83 @@
                 <!--android:gravity="center"-->
                 <!--android:layout_marginBottom="@dimen/dp15"/>-->
 
-            <Button
-                android:id="@+id/mainUI_rechargeBtn"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp40"
-                android:background="@drawable/btn_bcg"
-                android:textSize="@dimen/sp14"
-                android:textColor="@color/white"
-                android:text="您的余额不足，点我快速充值"
-                android:gravity="center"
-                android:visibility="gone"/>
+                <Button
+                    android:id="@+id/mainUI_rechargeBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp40"
+                    android:background="@drawable/btn_bcg"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="@color/white"
+                    android:text="您的余额不足，点我快速充值"
+                    android:gravity="center"
+                    android:visibility="gone"/>
 
-            <Button
-                android:id="@+id/mainUI_cartBtn"
+                <Button
+                    android:id="@+id/mainUI_cartBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp40"
+                    android:background="@drawable/btn_bcg"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="@color/white"
+                    android:text="还剩XX天免费，每次前一个小时免费"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/dp15"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_top_navi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
+
+
+            <RelativeLayout
+                android:id="@+id/rl_navi"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp40"
-                android:background="@drawable/btn_bcg"
-                android:textSize="@dimen/sp14"
-                android:textColor="@color/white"
-                android:text="还剩XX天免费，每次前一个小时免费"
-                android:gravity="center"
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/dp15"/>
-        </RelativeLayout>
+                android:layout_height="60dp"
+                android:layout_below="@+id/rl_ad"
+                android:background="@drawable/block_bcg"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="13dp"
+                    android:orientation="horizontal"
+                    android:layout_alignParentLeft="true">
+
+                    <TextView
+                        android:id="@+id/tv_navi_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="大学"
+                        android:textColor="#EC3F4C"
+                        android:textSize="@dimen/sp12"
+                        android:layout_marginLeft="7dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_navi_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10米"
+                        android:textColor="#EC3F4C"
+                        android:textSize="@dimen/sp12"
+                        android:layout_marginLeft="7dp"/>
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
 
         <FrameLayout
             android:id="@+id/fl_change2"

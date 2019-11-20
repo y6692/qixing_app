@@ -10,9 +10,51 @@
         android:src="@drawable/marker"
         />
 
-    <ImageView
+
+
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/icon_usecarnow_position_succeed"
-        />
+        >
+
+        <ImageView
+            android:layout_width="27dp"
+            android:layout_height="54dp"
+            android:src="@drawable/compass0"
+            />
+
+
+        <TextView
+            android:layout_width="27dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="7dp"
+            android:text="9辆"
+            android:textColor="#EC3F4C"
+            android:textSize="10sp"
+            />
+
+    </FrameLayout>
+
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_marker"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@drawable/compass0"-->
+        <!--&gt;-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_navi_distance"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="10米"-->
+            <!--android:textColor="#EC3F4C"-->
+            <!--android:textSize="@dimen/sp12"/>-->
+
+    <!--</ImageView>-->
+
+    <!--android:src="@drawable/end_biking_animation"-->
+    <!--android:src="@drawable/icon_usecarnow_position_succeed"-->
+
 </LinearLayout>

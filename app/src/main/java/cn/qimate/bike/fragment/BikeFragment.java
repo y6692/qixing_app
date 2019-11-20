@@ -20,6 +20,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -81,6 +82,7 @@ import com.amap.api.maps.model.PolygonOptions;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.navi.AMapNavi;
 import com.amap.api.navi.AMapNaviListener;
+import com.amap.api.navi.enums.NaviType;
 import com.amap.api.navi.model.AMapCalcRouteResult;
 import com.amap.api.navi.model.AMapLaneInfo;
 import com.amap.api.navi.model.AMapModelCross;
@@ -154,6 +156,7 @@ import cn.qimate.bike.core.common.UpdateManager;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.core.widget.LoadingDialog2;
 import cn.qimate.bike.lock.utils.ToastUtils;
 import cn.qimate.bike.model.CardinfoBean;
 import cn.qimate.bike.model.CurRoadBikingBean;
@@ -172,7 +175,7 @@ import static cn.qimate.bike.activity.CurRoadBikingActivity.bytes2hex03;
 
 @SuppressLint("NewApi")
 public class BikeFragment extends BaseFragment implements View.OnClickListener, LocationSource,
-        AMapLocationListener, AMap.OnCameraChangeListener, AMap.OnMapTouchListener, OnConnectionListener, AMapNaviListener {
+        AMapLocationListener, AMap.OnCameraChangeListener, AMap.OnMapTouchListener, OnConnectionListener, AMap.OnMapClickListener, AMapNaviListener {
 
     Unbinder unbinder;
 
@@ -182,7 +185,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     static private final int REQUEST_CODE_ASK_PERMISSIONS = 101;
     private final static int SCANNIN_GREQUEST_CODE = 1;
-    private LoadingDialog lockLoading;
+    private LoadingDialog2 lockLoading;
     private LoadingDialog loadingDialog1;
     private LoadingDialog loadingDialog2;
     public static boolean isForeground = false;
@@ -191,6 +194,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private ImageView myLocationBtn, linkBtn;
     private LinearLayout scanLock, myCommissionLayout, myLocationLayout, linkLayout;
     private ImageView closeBtn;
+
+    private LinearLayout ll_top;
+    private LinearLayout ll_top_navi;
+    private TextView tv_navi_distance;
 
     protected AMap aMap;
     protected BitmapDescriptor successDescripter;
@@ -224,6 +231,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private LinearLayout marqueeLayout;
     private int imageWith = 0;
     private ValueAnimator animator = null;
+
+
 
     private static final int BAIDU_READ_PHONE_STATE = 100;//定位权限请求
     private static final int PRIVATE_CODE = 1315;//开启GPS权限
@@ -275,6 +284,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     private Bundle savedIS;
     private AMapNavi mAMapNavi;
+    private RouteOverLay routeOverLay;
+    private MarkerOptions centerMarkerOptionLoading;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_bike, null);
@@ -377,13 +388,19 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 //            aMap.clear();
 
-            schoolRange();
+//            if(mAMapNavi != null){
+//                mAMapNavi.stopNavi();
+//                mAMapNavi.destroy();
+//            }
+
+            ll_top.setVisibility(View.VISIBLE);
+            ll_top_navi.setVisibility(View.GONE);
+
+//            schoolRange();
         }else{
             //resume
 
 //            mapView.onResume();
-
-
 
             pOptions.clear();
             isContainsList.clear();
@@ -399,6 +416,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             mAMapNavi = AMapNavi.getInstance(context);
             mAMapNavi.addAMapNaviListener(this);
 
+
             aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
@@ -407,12 +425,16 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //
 //                    marker.setTitle(marker.getTitle());
 
+                    ll_top.setVisibility(View.GONE);
+                    ll_top_navi.setVisibility(View.VISIBLE);
+
 
 //                    Log.e("onMarkerClick===", marker.getTitle()+"==="+marker.getTitle().split("-")[0]);
-                    Log.e("onMarkerClick===", referLatitude+"==="+referLongitude+"==="+marker.getPosition().latitude+"==="+marker.getPosition().longitude);
+                    Log.e("onMarkerClick===", mAMapNavi+"==="+referLatitude+"==="+referLongitude+"==="+marker.getPosition().latitude+"==="+marker.getPosition().longitude);
 
 //                    31.764391===119.920551===31.765937===119.921452
                     mAMapNavi.calculateRideRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
+
 
 //                    codenum = marker.getTitle().split("-")[0];
 //                    quantity = marker.getTitle().split("-")[1];
@@ -423,6 +445,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             });
 
             aMap.setOnMapTouchListener(this);
+            aMap.setOnMapClickListener(this);
             aMap.setOnCameraChangeListener(this);
 //            setUpLocationStyle();
 
@@ -486,61 +509,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                             tv_authBtn.setText("您还未认证，点我快速认证");
                             break;
                         case 2:
-//                        if (!"".equals(m_nowMac) && !SharedPreferencesUrls.getInstance().getBoolean("switcher",false)) {
-//                        if (!"".equals(m_nowMac)) {
-//                            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-//                                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-//                                finish();
-//                            }
-//                            //蓝牙锁
-//                            if (mBluetoothAdapter == null) {
-//                                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-//                                mBluetoothAdapter = bluetoothManager.getAdapter();
-//                            }
-//
-//                            if (mBluetoothAdapter == null) {
-//                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
-//                                finish();
-//                                return;
-//                            }
-//
-//                            if (!mBluetoothAdapter.isEnabled()) {
-//                                flag = 1;
-//                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                                startActivityForResult(enableBtIntent, 188);
-//                            } else {
-////                                mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-////                                    @Override
-////                                    public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-////                                        k++;
-////                                        Log.e("main===LeScan", device + "====" + rssi + "====" + k);
-////
-////                                        if (!macList.contains(""+device)){
-////                                            macList.add(""+device);
-////                                            m_myHandler.sendEmptyMessage(3);
-////                                        }
-////
-////                                    }
-////                                };
-////
-////                                startXB();
-////
-////                                if (lockLoading != null && !lockLoading.isShowing()){
-////                                    lockLoading.setTitle("还车点确认中");
-////                                    lockLoading.show();
-////                                }
-////
-////                                m_myHandler.postDelayed(new Runnable() {
-////                                    @Override
-////                                    public void run() {
-////                                        if(macList.size() == 0) {
-////                                            m_myHandler.sendEmptyMessage(3);
-////                                        }
-////                                    }
-////                                }, 6 * 1000);
-//
-//                            }
-//                        }
 
                             getCurrentorder1(uid, access_token);
                             break;
@@ -575,6 +543,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 }
 
             }
+
+            ll_top.setVisibility(View.VISIBLE);
+            ll_top_navi.setVisibility(View.GONE);
 
 //            mapView.onResume();
 
@@ -929,6 +900,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             public void onAnimationEnd(Animator animation) {
 //                centerMarker.setIcon(successDescripter);
                 centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
+
+//                View view = View.inflate(context, R.layout.marker_info_layout, null);
+//                MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromView(view));
             }
         });
         animator.start();
@@ -942,6 +916,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         centerMarker.setPositionByPixels(mapView.getWidth() / 2, mapView.getHeight() / 2);
 //        centerMarker.setIcon(successDescripter);
         centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
+
+//        View view = View.inflate(context, R.layout.marker_info_layout, null);
+//        MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation) .icon(BitmapDescriptorFactory.fromView(view));
     }
 
 
@@ -965,7 +942,22 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         HttpHelper.get(context, Urls.nearby, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                onStartCommon("正在加载");
+//                onStartCommon("正在加载");
+
+
+//                ArrayList<BitmapDescriptor> iconList = new ArrayList<>();
+//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout1, null)));
+//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout2, null)));
+//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout3, null)));
+//
+//                MarkerOptions centerMarkerOption = new MarkerOptions();
+//                centerMarkerOption.position(myLocation).icons(iconList).period(2);
+
+
+                centerMarker.setMarkerOptions(centerMarkerOptionLoading);
+//                centerMarker.setIcon(iconList);
+//                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
+
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -1039,9 +1031,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        lockLoading = new LoadingDialog(context);
+        lockLoading = new LoadingDialog2(context);
         lockLoading.setCancelable(false);
         lockLoading.setCanceledOnTouchOutside(false);
+
+//        lockLoading.show();
 
         loadingDialog1 = new LoadingDialog(context);
         loadingDialog1.setCancelable(false);
@@ -1074,6 +1068,34 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         marqueeLayout = (LinearLayout)activity.findViewById(R.id.mainUI_marqueeLayout);
         closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
+//        ImageView iv_myLocation =  activity.findViewById(R.id.mainUI_myLocation7);
+//        Glide.with(context).load(R.drawable.loading_large).crossFade().into(iv_myLocation);
+
+        ArrayList<BitmapDescriptor> iconList = new ArrayList<>();
+        iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout1, null)));
+        iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout2, null)));
+        iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout3, null)));
+//                iconList.add(BitmapDescriptorFactory.fromResource(R.drawable.compass1));
+//                iconList.add(BitmapDescriptorFactory.fromResource(R.drawable.compass2));
+//                iconList.add(BitmapDescriptorFactory.fromResource(R.drawable.compass3));
+//                iconList.add(successDescripter);
+
+        //title一定要设，不然可能出现marker不显示
+        centerMarkerOptionLoading = new MarkerOptions();
+        centerMarkerOptionLoading.icons(iconList).period(2);
+//        centerMarkerOption.position(myLocation).icons(iconList).period(2);
+
+
+//        lockLoading = new LoadingDialog2(context);
+//        lockLoading.setCancelable(false);
+//        lockLoading.setCanceledOnTouchOutside(false);
+
+
+        ll_top = activity.findViewById(R.id.ll_top);
+        ll_top_navi = activity.findViewById(R.id.ll_top_navi);
+        tv_navi_distance = activity.findViewById(R.id.tv_navi_distance);
+
+
         if(aMap==null){
             aMap = mapView.getMap();
             setUpMap();
@@ -1094,11 +1116,13 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18f);// 设置缩放监听
         aMap.moveCamera(cameraUpdate);
+//        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
         successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
         freeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.free_icon);
         bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
 
         aMap.setOnMapTouchListener(this);
+        aMap.setOnMapClickListener(this);
         setUpLocationStyle();
 
 //        leftBtn.setOnClickListener(this);
@@ -1235,6 +1259,18 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         @Override
         public boolean handleMessage(Message mes) {
             switch (mes.what) {
+
+
+                case 33:
+                    ImageView iv_myLocation =  activity.findViewById(R.id.mainUI_myLocation7);
+                    AnimationDrawable animDrawable = (AnimationDrawable) iv_myLocation.getBackground();
+                    iv_myLocation.setBackground(animDrawable);
+
+                    if (animDrawable != null && !animDrawable.isRunning()) {
+                        animDrawable.start();
+                    }
+                    break;
+
                 case 0:
                     if (!BaseApplication.getInstance().getIBLE().isEnable()){
 
@@ -2038,6 +2074,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     aMap.animateCamera(update);
                 }
 
+                m_myHandler.sendEmptyMessage(33);
+
+
+
                 break;
             case R.id.mainUI_scanCode_lock:
 
@@ -2119,6 +2159,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                 break;
             default:
+
+
+
+
+
                 break;
         }
     }
@@ -3220,9 +3265,26 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         // 加入自定义标签
 
         if(centerMarker == null){
+
+            View view = View.inflate(context, R.layout.marker_info_layout, null);
+//            ImageView iv_marker = view.findViewById(R.id.iv_marker);
+//            Glide.with(context).load(R.drawable.loading_large).crossFade().into(iv_marker);
             MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation)
 //                    .icon(successDescripter);
-            .icon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
+            .icon(BitmapDescriptorFactory.fromView(view));
+
+//            ImageView iv_myLocation =  activity.findViewById(R.id.mainUI_myLocation7);
+//            Glide.with(context).load(R.drawable.loading_large).crossFade().into(iv_myLocation);
+
+//            ArrayList<BitmapDescriptor> iconList = new ArrayList<>();
+//            iconList.add(BitmapDescriptorFactory.fromResource(R.drawable.compass1));
+//            iconList.add(BitmapDescriptorFactory.fromResource(R.drawable.compass2));
+//            iconList.add(BitmapDescriptorFactory.fromResource(R.drawable.compass3));
+//
+//            //title一定要设，不然可能出现marker不显示
+//            MarkerOptions centerMarkerOption = new MarkerOptions();
+//            centerMarkerOption.position(myLocation).icons(iconList).period(2);
+
 
             centerMarker = aMap.addMarker(centerMarkerOption);
             handler.postDelayed(new Runnable() {
@@ -3277,21 +3339,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    public void onTouch(MotionEvent motionEvent) {
-        Log.e("main===onTouch", "===" + motionEvent.getAction());
-
-
-        if (motionEvent.getAction() == MotionEvent.ACTION_UP ||
-                motionEvent.getAction() == MotionEvent.ACTION_CANCEL || motionEvent.getAction() == MotionEvent.ACTION_OUTSIDE
-                || motionEvent.getActionMasked() == MotionEvent.ACTION_POINTER_UP){
-            isUp = true;
-        }else {
-            isUp = false;
-        }
-    }
-
-
-
     protected   void connect() {
 //		BaseApplication.getInstance().getIBLE().resetBluetoothAdapter();
 
@@ -3329,30 +3376,61 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     @Override
+    public void onMapClick(LatLng point) {
+        Log.e("onMapClick===", ll_top.isShown()+"===" + routeOverLay+"===" + ll_top_navi);
+
+        if(!ll_top.isShown()){
+            routeOverLay.removeFromMap();
+
+            ll_top.setVisibility(View.VISIBLE);
+            ll_top_navi.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onTouch(MotionEvent motionEvent) {
+        Log.e("main===onTouch", ll_top.isShown()+"===" + routeOverLay+"===" + ll_top_navi);
+
+        if (motionEvent.getAction() == MotionEvent.ACTION_UP ||
+                motionEvent.getAction() == MotionEvent.ACTION_CANCEL || motionEvent.getAction() == MotionEvent.ACTION_OUTSIDE
+                || motionEvent.getActionMasked() == MotionEvent.ACTION_POINTER_UP){
+            isUp = true;
+        }else {
+            isUp = false;
+        }
+    }
+
+
+    @Override
     public void onInitNaviFailure() {
 
     }
 
     @Override
     public void onInitNaviSuccess() {
-//        mAMapNavi.calculateRideRoute(new NaviLatLng(39.92, 116.43), new NaviLatLng(39.92, 116.53), 0);
         Log.e("onInitNaviSuccess===", "===");
 
-        //                    31.764391===119.920551===31.765937===119.921452
-//        mAMapNavi.calculateRideRoute(new NaviLatLng(31.764391, 119.920551), new NaviLatLng(31.765937, 119.921452));
 
-        Log.e("onInitNaviSuccess===2", "===");
     }
 
     @Override
     public void onCalculateRouteSuccess(int[] ints) {
-        Log.e("onCalculateRouteSuc=", "===");
+        if(isHidden) return;
+
+        Log.e("onCalculateRouteSuc=", "==="+routeOverLay);
+
+//        routeOverlays.clear();
+//        ways.clear();
+
+        if(routeOverLay != null){
+            routeOverLay.removeFromMap();
+        }
+
+//        mAMapNavi.startNavi(NaviType.EMULATOR);
 
         AMapNaviPath path = mAMapNavi.getNaviPath();
-        /**
-         * 单路径不需要进行路径选择，直接传入－1即可
-         */
-        drawRoutes(-1, path);
+
+        drawRoutes(-1, path);   // 单路径不需要进行路径选择，直接传入－1即可
 //        showMarkInfo(path);
     }
 
@@ -3360,9 +3438,17 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //        calculateSuccess = true;
         aMap.moveCamera(CameraUpdateFactory.changeTilt(0));
         //路径绘制图层
-        RouteOverLay routeOverLay = new RouteOverLay(aMap, path, context);
+        routeOverLay = new RouteOverLay(aMap, path, context);
         routeOverLay.setTrafficLine(false);
+        routeOverLay.setStartPointBitmap(null);
+        routeOverLay.setEndPointBitmap(null);
         routeOverLay.addToMap();
+
+
+        Log.e("drawRoutes===", "==="+path.getAllLength());
+
+        tv_navi_distance.setText(path.getAllLength()+"米");
+
 //        routeOverlays.put(routeId, routeOverLay);
     }
 
