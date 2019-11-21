@@ -246,61 +246,63 @@ public class BaseFragmentActivity extends AppCompatActivity
 
 		Log.e("BFA===RefreshLogin", uid+"==="+access_token);
 
-		if (access_token == null || "".equals(access_token) || uid == null || "".equals(uid)) {
+		if (access_token == null || "".equals(access_token)) {
 			setAlias("");
 			ToastUtil.showMessageApp(context, "请先登录账号");
 			UIHelper.goToAct(context, LoginActivity.class);
 		} else {
-			RequestParams params = new RequestParams();
-			params.add("uid", uid);
-			params.add("access_token", access_token);
-			HttpHelper.post(AppManager.getAppManager().currentActivity(), Urls.accesslogin, params,
-					new TextHttpResponseHandler() {
-						@Override
-						public void onSuccess(int statusCode, Header[] headers, String responseString) {
-							try {
-								ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-								if (result.getFlag().equals("Success")) {
-									UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
-									// 极光标记别名
-
-									Log.e("RefreshLogin===", "==="+responseString);
-
-									setAlias(bean.getUid());
-									SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
-									SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
-									SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
-									SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
-									SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
-									SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
-									SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
-									SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
-									SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
-									SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
-									SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
-									SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
-								} else {
-									setAlias("");
-									if (BaseApplication.getInstance().getIBLE() != null){
-										if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
-											BaseApplication.getInstance().getIBLE().refreshCache();
-											BaseApplication.getInstance().getIBLE().close();
-											BaseApplication.getInstance().getIBLE().stopScan();
-										}
-									}
-									SharedPreferencesUrls.getInstance().putString("uid", "");
-									SharedPreferencesUrls.getInstance().putString("access_token","");
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-
-						@Override
-						public void onFailure(int statusCode, Header[] headers, String responseString,
-											  Throwable throwable) {
-						}
-					});
+//			RequestParams params = new RequestParams();
+//			params.add("uid", uid);
+//			params.add("access_token", access_token);
+//			HttpHelper.post(AppManager.getAppManager().currentActivity(), Urls.accesslogin, params,
+//					new TextHttpResponseHandler() {
+//						@Override
+//						public void onSuccess(int statusCode, Header[] headers, String responseString) {
+//							try {
+//								ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//								if (result.getFlag().equals("Success")) {
+//									UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+//									// 极光标记别名
+//
+//									Log.e("RefreshLogin===BFA", "==="+responseString);
+//
+////									setAlias(bean.getUid());
+////									SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
+////									SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
+////									SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
+////									SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
+////									SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
+////									SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
+////									SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
+////									SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
+////									SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
+////									SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
+////									SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
+////									SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+//
+//									SharedPreferencesUrls.getInstance().putString("access_token", bean.getToken());
+//								} else {
+//									setAlias("");
+//									if (BaseApplication.getInstance().getIBLE() != null){
+//										if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+//											BaseApplication.getInstance().getIBLE().refreshCache();
+//											BaseApplication.getInstance().getIBLE().close();
+//											BaseApplication.getInstance().getIBLE().stopScan();
+//										}
+//									}
+//									SharedPreferencesUrls.getInstance().putString("uid", "");
+//									SharedPreferencesUrls.getInstance().putString("access_token","");
+//								}
+//							} catch (Exception e) {
+//								e.printStackTrace();
+//							}
+//						}
+//
+//						@Override
+//						public void onFailure(int statusCode, Header[] headers, String responseString,
+//											  Throwable throwable) {
+//						}
+//					});
 		}
 	}
 

@@ -2,12 +2,14 @@ package cn.qimate.bike.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +20,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,6 +37,12 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.UpCancellationSignal;
+import com.qiniu.android.storage.UpCompletionHandler;
+import com.qiniu.android.storage.UpProgressHandler;
+import com.qiniu.android.storage.UploadOptions;
 import com.vondear.rxtools.RxFileTool;
 
 import org.apache.http.Header;
@@ -41,12 +50,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -72,7 +84,10 @@ import cn.qimate.bike.model.AuthStateBean;
 import cn.qimate.bike.model.GradeListBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.SchoolListBean;
+import cn.qimate.bike.model.UpTokenBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.FileUtil;
+import cn.qimate.bike.util.QiNiuInitialize;
 import cn.qimate.bike.util.SHA1;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
@@ -106,6 +121,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //    private LinearLayout headLayout;
 
     private String imgUrl = Urls.uploadsImg;
+
     private String imageurl = "";
     private String imageurl2 = "";
     private Uri imageUri;
@@ -142,6 +158,11 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
     private  boolean flag = false;
     private  boolean isVisible = false;
 
+    private String upToken = "";
+
+    private Bitmap upBitmap;
+
+
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             // 三级联动效果
@@ -152,24 +173,6 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         };
     };
 
-//    private Handler handler1 = new Handler() {
-//        public void handleMessage(Message msg) {
-//            // 三级联动效果
-//            pvOptions1.setPicker(item2);
-//            pvOptions1.setCyclic(false, false, false);
-//            pvOptions1.setSelectOptions(0, 0, 0);
-//            schoolLayout.setClickable(true);
-//        };
-//    };
-//    private Handler handler2 = new Handler() {
-//        public void handleMessage(Message msg) {
-//            // 三级联动效果
-//            pvOptions2.setPicker(item3);
-//            pvOptions2.setCyclic(false, false, false);
-//            pvOptions2.setSelectOptions(0, 0, 0);
-//            classLayout.setClickable(true);
-//        };
-//    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -180,6 +183,10 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
         schoolList = new ArrayList<>();
         initView();
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
     }
 
     private void initView(){
@@ -301,27 +308,12 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
             }
         });
 
-//        pvOptions1.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
-//
-//            @Override
-//            public void onOptionsSelect(int options1, int option2, int options3) {
-//                sex = item2.get(options1);
-//                sexText.setText(item2.get(options1));
-//            }
-//        });
-//        pvOptions2.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
-//
-//            @Override
-//            public void onOptionsSelect(int options1, int option2, int options3) {
-//                classText.setText(item3.get(options1));
-//            }
-//        });
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+//        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
         Log.e("RNA===initView", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+        if (access_token == null || "".equals(access_token)){
             Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
             UIHelper.goToAct(context,LoginActivity.class);
         }else {
@@ -331,9 +323,13 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //                initHttp(uid,access_token);
 //            }
 
-            initHttp(uid, access_token);
+//            initHttp(uid, access_token);
+
+            getUpToken();
         }
 //        getGradeList();
+
+
     }
 
     @Override
@@ -410,7 +406,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                 String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
                 String realname = realNameEdit.getText().toString();
                 String stunum = stuNumEdit.getText().toString();
-                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+                if (access_token == null || "".equals(access_token)){
                     Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
                 }else {
                     if (school == null || "".equals(school)){
@@ -467,7 +463,154 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         }
     }
 
-    private void initHttp(String uid,String access_token){
+    public void getUpToken() {
+        RequestParams params = new RequestParams();
+//        params.put("uid",uid);
+//        params.put("access_token",access_token);
+        HttpHelper.get(context, Urls.uploadtoken, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Log.e("uploadtoken===", "==="+responseString);
+
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+//                            Log.e("uploadtoken===1", result.getData()+"==="+result.getStatus_code());
+
+                            UpTokenBean bean = JSON.parseObject(result.getData(), UpTokenBean.class);
+
+                            Log.e("uploadtoken===2", bean+"==="+bean.getToken());
+
+                            if (null != bean.getToken()) {
+
+                                upToken = bean.getToken();
+
+//                                SharedPreferencesUrls.getInstance().putString("access_token", "Bearer "+bean.getToken());
+                                Toast.makeText(context,"恭喜您,获取成功",Toast.LENGTH_SHORT).show();
+//                                scrollToFinishActivity();
+
+//                                uploadImage();
+                            }else{
+                                Toast.makeText(context, result.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+
+            }
+        });
+
+    }
+
+    public void uploadImage() {
+        //定义数据上传结束后的处理动作
+        final UpCompletionHandler upCompletionHandler = new UpCompletionHandler() {
+            @Override
+            public void complete(String key, ResponseInfo info, JSONObject response) {
+
+//                JSONObject jsonObject = new JSONObject(info.timeStamp);
+
+                try {
+                    JSONObject jsonObject = new JSONObject(response.getString("image"));
+
+                    if(photo == 1){
+                        imageurl = jsonObject.getString("key");
+                    }else{
+                        imageurl2 = jsonObject.getString("key");
+                    }
+
+                    Log.e("UpCompletion===", jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+
+
+
+//                {ver:7.3.3,ResponseInfo:1574237736489492,status:200, reqId:HpgAAAAlr6vh0NgV, xlog:X-Log, xvia:, host:upload.qiniu.com, path:/, ip:/180.101.136.11:80, port:80, duration:183.000000 s, time:1574237736, sent:25256,error:null}==={"image":null,"ret":"success"}
+
+//                http://q0xo2if8t.bkt.clouddn.com/y2.png?e=1574241198&token=FXDJS_lmH1Gfs-Ni9I9kpPf6MZFTGz5U5BP1CgNu:q2uGajiCFq6t7E-9CxrYXWF0bIQ=&attname=
+
+//                Glide.with(context)
+//                        .load("http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken)
+//                        .crossFade()
+//                        .into(uploadImage);
+
+//                Glide.with(context)
+//                        .load("/storage/emulated/0/com.gamefox.samecity.fish/activity/bill1.png")
+//                        .crossFade()
+//                        .into(uploadImage);
+
+//                ImageLoader.getInstance().displayImage("/storage/emulated/0/com.gamefox.samecity.fish/activity/bill1.png", uploadImage);
+
+//                Glide.with(context)
+//                        .load("http://q0xo2if8t.bkt.clouddn.com/y3.png?e=1574242008&token=FXDJS_lmH1Gfs-Ni9I9kpPf6MZFTGz5U5BP1CgNu:cbzS4BHzqrRF8-iENlvHv7v8i94=&attname=")
+////                        .fitCenter()
+////                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                        .crossFade()
+//                        .into(uploadImage);
+
+//                Glide.with(context).load(Urls.host+"/Public/uploads/201911/201911201609453660.jpg").crossFade().into(uploadImage);
+            }
+        };
+        final UploadOptions uploadOptions = new UploadOptions(null, null, false, new UpProgressHandler() {
+            @Override
+            public void progress(String key, final double percent) {
+                //百分数格式化
+                NumberFormat fmt = NumberFormat.getPercentInstance();
+                fmt.setMaximumFractionDigits(2);//最多两位百分小数，如25.23%
+
+                Log.e("progress===", "==="+fmt.format(percent));
+
+//                tv.setText("图片已经上传:" + fmt.format(percent));
+            }
+        }, new UpCancellationSignal() {
+            @Override
+            public boolean isCancelled() {
+                return false;
+            }
+        });
+        try {
+            //上传图片jjj
+            Log.e("uploadImage===", "==="+upToken);
+
+            QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //获取资源文件中的图片
+    public byte[] getByte() {
+//        Resources res = getResources();
+//        Bitmap bm = BitmapFactory.decodeResource(res, R.drawable.bike3);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bm.compress(Bitmap.CompressFormat.PNG, 80, baos);
+        upBitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
+        return baos.toByteArray();
+    }
+
+    private void initHttp(String uid, String access_token){
         RequestParams params = new RequestParams();
         params.put("uid",uid);
         params.put("access_token",access_token);
@@ -680,7 +823,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
     /**
      * 认证
      * */
-    private void SubmitBtn(String uid, String access_token, String realname, String stunum){
+    private void SubmitBtn3(String uid, String access_token, String realname, String stunum){
 
         Log.e("SubmitBtn===0", flag+"==="+uid+"==="+access_token+"==="+stunum+"==="+realname+"==="+school+"==="+cert_method);
 
@@ -731,6 +874,68 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
                                 Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    private void SubmitBtn(String uid, String access_token, String realname, String stunum){
+
+        Log.e("SubmitBtn===0", flag+"==="+uid+"==="+access_token+"==="+stunum+"==="+realname+"==="+school+"==="+cert_method);
+
+        RequestParams params = new RequestParams();
+        params.put("name", "yy");
+        params.put("student_id", "t1");
+        params.put("school_id", "s1");
+        params.put("admission_time", "1982");
+
+        if("3".equals(cert_method) || "4".equals(cert_method) || flag){
+            params.put("cert_photo", imageurl);
+            params.put("holding_cert_photo", imageurl2);
+        }
+
+        HttpHelper.post(context, Urls.cert, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在提交");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("SubmitBtn===", "==="+responseString);
+
+//                            if (result.getFlag().equals("Success")) {
+//                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+//                                SharedPreferencesUrls.getInstance().putString("iscert","4");
+//                                scrollToFinishActivity();
+//                            } else {
+//
+//                                if (result.getErrcode()==401) {
+//                                    flag = true;
+//                                    isVisible = true;
+//                                    ll_1.setVisibility(View.VISIBLE);
+//                                }
+//
+//                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+//                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -863,12 +1068,93 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             try {
                                 if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
                                     if (imageUri != null) {
-                                        urlpath = getRealFilePath(context, data.getData());
-                                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                                            loadingDialog.setTitle("请稍等");
-                                            loadingDialog.show();
+//                                        urlpath = getRealFilePath(context, data.getData());
+                                        urlpath  = FileUtil.getFilePathByUri(context, data.getData());
+//                                        if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                                            loadingDialog.setTitle("请稍等");
+//                                            loadingDialog.show();
+//                                        }
+
+//                                        RequestOptions requestOptions1 = new RequestOptions().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE);
+
+                                        Log.e("REQUESTCODE_PICK===", data.getData()+"==="+urlpath);
+
+//                                        Glide.with(context)
+//                                        .load(urlpath)
+//                                                .skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                        .crossFade()
+//                                        .into(uploadImage);
+
+//                                        Bitmap bitmap = BitmapFactory.decodeFile(urlpath);
+//
+
+//                                        File picture = new File(Environment.getExternalStorageDirectory(), "com.gamefox.samecity.fish/activity/bill1.png");
+                                        File picture = new File(urlpath);
+//                                        Uri filepath;
+                                        Uri filepath = Uri.fromFile(picture);
+//                                        Bitmap bitmap = BitmapFactory.decodeFile(filepath.getPath());
+                                        upBitmap = BitmapFactory.decodeFile(urlpath);
+
+                                        if(photo == 1){
+                                            uploadImage.setImageBitmap(upBitmap);
+                                        }else{
+                                            uploadImage2.setImageBitmap(upBitmap);
                                         }
-                                        new Thread(uploadImageRunnable).start();
+
+
+                                        Log.e("REQUESTCODE_PICK===3", data.getData()+"==="+filepath.getPath());
+
+                                        uploadImage();
+
+
+
+//                                        Bitmap bitmap= null;
+//                                        try {
+//                                            bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(filepath));
+//                                        } catch (FileNotFoundException e) {
+//                                            e.printStackTrace();
+//                                        }
+
+//                                        if (Build.VERSION.SDK_INT < 24) {
+//                                            filepath = Uri.fromFile(picture);
+//                                        } else {
+//                                            Log.e("REQUESTCODE_PICK===2", "===");
+//
+//                                            filepath = FileProvider.getUriForFile(context, "com.example.cameraalbumtest.fileprovider", picture);
+//
+//
+//
+//                                        }
+//
+//                                        Bitmap bitmap = BitmapFactory.decodeFile(filepath.getPath());
+
+
+
+//                                        Bundle bundle = data.getExtras();
+//
+//                                        Log.e("REQUESTCODE_PICK===", data+"==="+bundle);
+//
+//                                        if (bundle != null) {
+//                                            Bitmap bitmap = bundle.getParcelable("dat");
+//
+//                                            Log.e("REQUESTCODE_PICK===2", "==="+bitmap);
+//
+//                                            uploadImage.setImageBitmap(bitmap);
+//                                            // 把裁剪后的图片保存至本地 返回路径
+////                                            String urlpath = FileUtilcll.saveFile(this, "crop.jpg", bitmap);
+////                                            L.e("裁剪图片地址->" + urlpath);
+//                                        }
+
+//                                        Uri uri = data.getData();
+//                                        String filePath = FileUtil.getFilePathByUri(this, uri);
+//
+//                                        if (!TextUtils.isEmpty(filePath)) {
+//                                            RequestOptions requestOptions1 = new RequestOptions().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE);
+//                                            //将照片显示在 ivImage上
+//                                            Glide.with(this).load(filePath).apply(requestOptions1).into(ivImage);
+//                                        }
+
+//                                        new Thread(uploadImageRunnable).start();
                                     }
                                 }else {
                                     Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
@@ -978,6 +1264,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
     }
 
+
+
     /**
      * 使用HttpUrlConnection模拟post表单进行文件 上传平时很少使用，比较麻烦 原理是：
      * 分析文件上传的数据格式，然后根据格式构造相应的发送给服务器的字符串。
@@ -998,6 +1286,9 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                 textParams = new HashMap<>();
                 fileparams = new HashMap<>();
                 // 要上传的图片文件
+
+                Log.e("urlpath===", "==="+urlpath);
+
                 File file = new File(urlpath);
                 if (file.length() >= 2097152 / 2) {
                     file = new File(BitmapUtils1.compressImageUpload(urlpath,480f,800f));
@@ -1058,7 +1349,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             // 压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图，3为三分之一
                             option.inSampleSize = 1;
 
-                            Log.e("mHandler===", "==="+Urls.host + imageurl);
+                            Log.e("mHandler===", urlpath+"==="+Urls.host + imageurl);
 
 //                            addImageLayout.setVisibility(View.GONE);
 //                            uploadImage.setVisibility(View.VISIBLE);
@@ -1071,7 +1362,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                 ImageLoader.getInstance().displayImage(Urls.host + imageurl2, uploadImage2);
                             }
 
-                            Log.e("mHandler===", imageurl+"==="+imageurl2);
+                            Log.e("mHandler===2", imageurl+"==="+imageurl2);
 
                             Toast.makeText(context, "照片上传成功", Toast.LENGTH_SHORT).show();
                         } else {

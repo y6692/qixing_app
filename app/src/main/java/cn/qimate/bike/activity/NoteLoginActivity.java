@@ -235,12 +235,158 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
 
     }
 
+    private void sendCode(String telphone) {
+
+//        "Accept": "application/vnd.ws.v1+json",
+//        "Phone_Brand": "IPHONE",
+//        "Phone_Model": "iPhone X",
+//        "Phone_System": "iOS",
+//        "Phone_System_Version": "13.1.2",
+//        "App_Version": "1.0.0",
+//        "Device_UUID": "B45A95F3-E1DB-44CA-989D-971618140D5E"
+
+        Log.e("verificationcode===0", "==="+telphone);
+
+        try{
+            RequestParams params = new RequestParams();
+            params.add("phone", telphone);
+//            params.add("phone", "18151207269");
+            params.add("scene", "1");
+
+            HttpHelper.post(context, Urls.verificationcode, params, new TextHttpResponseHandler() {
+//            HttpHelper.post(context, Urls.verificationcode, params, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+                }
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+                        Log.e("verificationcode===", "==="+responseString);
+
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        if (result.getFlag().equals("Success")) {
+
+                            handler.sendEmptyMessage(2);
+
+                            // 开始60秒倒计时
+                            handler.sendEmptyMessageDelayed(1, 1000);
+                        } else {
+                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
+            });
+        }catch (Exception e){
+            Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void loginHttp(String telphone, String telcode) {
+
+        RequestParams params = new RequestParams();
+        params.put("phone", telphone);
+        params.put("verification_code", telcode);
+//        params.put("verification_code", "a");
+
+        HttpHelper.post(context, Urls.authorizations, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在登录");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    Log.e("authorizations===", "==="+responseString);
+
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                    Log.e("authorizations===1", result.getData()+"==="+result.getStatus_code());
+
+                    UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+
+                    Log.e("authorizations===2", bean+"==="+bean.getToken());
+
+                    if (null != bean.getToken()) {
+//                        UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+//                        // 极光标记别名
+//                        setAlias(bean.getUid());
+//                        SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
+//                        SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
+//                        SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
+//                        SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
+//                        SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
+//                        SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
+//                        SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
+//                        SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
+//                        SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
+//                        SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+
+                        SharedPreferencesUrls.getInstance().putString("access_token", "Bearer "+bean.getToken());
+                        Toast.makeText(context,"恭喜您,登录成功",Toast.LENGTH_SHORT).show();
+                        scrollToFinishActivity();
+
+                    }else{
+                        Toast.makeText(context, result.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+//                    if (result.getFlag().equals("Success")) {
+
+//                    } else {
+//                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+//                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                }
+            }
+        });
+    }
+
     /**
      * 发送验证码
      *
      * */
     //@RequiresApi(api = Build.VERSION_CODES.O)
-    private void sendCode(String telphone) {
+    private void sendCode2(String telphone) {
 
         try{
             RequestParams params = new RequestParams();
@@ -347,6 +493,8 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
 
 //                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
 
+                        Log.e("verificationcode===", "==="+responseString);
+
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
                         if (result.getFlag().equals("Success")) {
@@ -383,7 +531,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
 
     }
 
-    private void loginHttp(String telphone, String telcode) {
+    private void loginHttp2(String telphone, String telcode) {
 
         RequestParams params = new RequestParams();
         params.put("telphone", telphone);

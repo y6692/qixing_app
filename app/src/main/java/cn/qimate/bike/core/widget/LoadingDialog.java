@@ -13,6 +13,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import cn.qimate.bike.R;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 public class LoadingDialog extends Dialog {
 
@@ -26,6 +28,8 @@ public class LoadingDialog extends Dialog {
 	private TextView tv_point;
 //	private RotateAnimation mAnim;
 	private Context context;
+
+	GifDrawable gifDrawable;
 
 	private Handler handler = new Handler() {
 		private int num = 0;
@@ -58,7 +62,11 @@ public class LoadingDialog extends Dialog {
 
 	private void init() {
 		setContentView(R.layout.common_dialog_loading_layout);
-		iv_route = (ImageView) findViewById(R.id.iv_route);
+		iv_route = (GifImageView) findViewById(R.id.iv_route);
+
+
+		gifDrawable = (GifDrawable) iv_route.getDrawable();
+
 		detail_tv = (TextView) findViewById(R.id.detail_tv);
 		tv_point = (TextView) findViewById(R.id.tv_point);
 //		initAnim();
@@ -76,11 +84,14 @@ public class LoadingDialog extends Dialog {
 	@Override
 	public void show() {// 在要用到的地方调用这个方法
 //		iv_route.startAnimation(mAnim);
-		Glide.with(context).load(R.drawable.loading_large)
+//		Glide.with(context).load(R.drawable.loading_large)
 //						.dontAnimate()
 //						.skipMemoryCache(true)
 //						.diskCacheStrategy(DiskCacheStrategy.NONE)
-				.crossFade().into(iv_route);
+//				.crossFade().into(iv_route);
+
+		gifDrawable.start();
+
 		handler.sendEmptyMessage(CHANGE_TITLE_WHAT);
 		super.show();
 	}

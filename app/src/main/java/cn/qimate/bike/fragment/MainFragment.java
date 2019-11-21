@@ -363,8 +363,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                 break;
             case R.id.mainUI_rightBtn:
-                if (SharedPreferencesUrls.getInstance().getString("uid","") == null || "".equals(
-                        SharedPreferencesUrls.getInstance().getString("access_token",""))){
+                if ("".equals(SharedPreferencesUrls.getInstance().getString("access_token",""))){
                     UIHelper.goToAct(context, LoginActivity.class);
                     ToastUtil.showMessageApp(context,"请先登录你的账号");
                     return;

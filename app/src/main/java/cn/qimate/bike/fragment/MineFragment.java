@@ -321,7 +321,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //        exImage_1.setOnClickListener(myOnClickLister);
 //        exImage_2.setOnClickListener(myOnClickLister);
         closeBtn.setOnClickListener(myOnClickLister);
-        billRule();
+//        billRule();
     }
 
 
@@ -359,13 +359,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
         String bikenum = SharedPreferencesUrls.getInstance().getString("bikenum","");
         String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays","");
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+        if (access_token == null || "".equals(access_token)) {
 //            settingImage.setVisibility(View.GONE);
             superVip.setVisibility(View.GONE);
 //            billing_ruleLayout.setVisibility(View.GONE);
         } else {
 //            settingImage.setVisibility(View.VISIBLE);
-            initHttp();
+//            initHttp();
             if (("0".equals(bikenum) || bikenum == null || "".equals(bikenum))
                     && ("0".equals(specialdays) || specialdays == null || "".equals(specialdays))){
                 superVip.setVisibility(View.GONE);
@@ -784,7 +784,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
         final String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+        if (access_token == null || "".equals(access_token)) {
             Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -1051,7 +1051,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
         String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-        if (uid != null && !"".equals(uid) && access_token != null && !"".equals(access_token)) {
+        if (access_token != null && !"".equals(access_token)) {
             RequestParams params = new RequestParams();
             params.put("uid", uid);
             params.put("access_token", access_token);
@@ -1117,7 +1117,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private void billRule(){
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+        if (access_token == null || "".equals(access_token)){
             Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
             UIHelper.goToAct(context, LoginActivity.class);
         }else {

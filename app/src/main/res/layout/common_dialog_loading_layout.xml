@@ -17,14 +17,24 @@
         <!--android:scaleType="centerInside"/>-->
 
 
-    <ImageView
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_route"-->
+        <!--android:layout_width="@dimen/dp25"-->
+        <!--android:layout_height="@dimen/dp25"-->
+        <!--android:layout_marginTop="@dimen/dp15"-->
+        <!--android:background="@null"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:scaleType="centerInside"/>-->
+
+    <pl.droidsonroids.gif.GifImageView
         android:id="@+id/iv_route"
         android:layout_width="@dimen/dp25"
         android:layout_height="@dimen/dp25"
         android:layout_marginTop="@dimen/dp15"
         android:background="@null"
         android:layout_centerHorizontal="true"
-        android:scaleType="centerInside"/>
+        android:src="@drawable/loading_large"
+        />
 
     <RelativeLayout
         android:layout_below="@id/iv_route"

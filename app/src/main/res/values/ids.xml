@@ -10,4 +10,8 @@
     <item name="quit" type="id"/>
     <item name="restart_preview" type="id"/>
 
+    <item
+        type="id"
+        name="scrapped_view" />
+
 </resources>

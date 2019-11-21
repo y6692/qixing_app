@@ -11,10 +11,28 @@ public class Urls {
 
 	public static String HTTP = "http://";
 	public static String host = HTTP + "app.7mate.cn";
+	public static String host2 = HTTP + "testnewmapi.7mate.cn/api";
 //	public static String host = HTTP + "web1.7mate.cn";
 //	public static String host = HTTP + "test.7mate.cn";
 //	public static String host = HTTP + "uat.7mate.cn";
 //  public static String host = HTTP + "192.168.206.10:8345";
+
+	public static String authorizations = host2 + "/authorizations";
+	public static String verificationcode = host2 + "/verificationcode";
+	public static String uploadtoken = host2 + "/qiniu/uploadtoken";
+	public static String cert = host2 + "/cert";
+
+	//运营区域接口
+	public static String operating_areas = host2 + "/operating_areas";
+	//充值价格列表
+	public static String recharge_prices = host2 + "/recharge_prices";
+
+//	http://testnewmapi.7mate.cn/api/recharge_prices
+//	http://testnewmapi.7mate.cn/api/operating_areas
+//	http://testnewmapi.7mate.cn/api/cert
+//	http://testnewmapi.7mate.cn/api/qiniu/uploadtoken
+//	http://testnewmapi.7mate.cn/api/authorizations
+
 	/***上传坐标*/
 	public static String locationHost = HTTP + "106.14.188.246";
 	/**存入设备信息*/

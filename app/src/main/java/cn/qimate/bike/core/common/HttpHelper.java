@@ -4,6 +4,7 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.util.Log;
 
 import java.util.Date;
 
@@ -28,6 +29,8 @@ public class HttpHelper {
 		client.setTimeout(15000); // 设置链接超时，如果不设置，默认为10s
 		client.setUserAgent("Mozilla/5.0 (Linux; U; Android " + android.os.Build.VERSION.RELEASE + "; zh-cn; "
 				+ android.os.Build.MODEL + ") AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30");
+
+
 	}
 
 	/**
@@ -51,16 +54,21 @@ public class HttpHelper {
 	 * 
 	 * @param context
 	 * @param url
-	 * @param params
 	 * @param responseHandler
 	 */
 	public static void get(Context context, String url, AsyncHttpResponseHandler responseHandler) {
+
+		Log.e("header===0", "===");
+
 		try {
 			url = url + "&act=1&platform=Android&version="
 					+ context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
+
+
+
 		client.get(context, url, responseHandler);
 	}
 
@@ -72,14 +80,21 @@ public class HttpHelper {
 	 * @param params
 	 * @param responseHandler
 	 */
-	public static void get(Context context, String url, RequestParams params,
-			AsyncHttpResponseHandler responseHandler) {
-		try {
-			url = url + "&act=1&platform=Android&version="
-					+ context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
+	public static void get(Context context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+//		try {
+//			url = url + "&act=1&platform=Android&version="
+//					+ context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+//		} catch (NameNotFoundException e) {
+//			e.printStackTrace();
+//		}
+
+
+		String token = SharedPreferencesUrls.getInstance().getString("access_token","");
+
+		Log.e("header===", "==="+token);
+
+		client.addHeader("Authorization", token);
+		client.addHeader("Accept", "application/vnd.ws.v1+json");
 		client.get(context, url, params, responseHandler);
 	}
 
@@ -91,14 +106,17 @@ public class HttpHelper {
 	 * @param params
 	 * @param responseHandler
 	 */
-	public static void post(Context context, String url, RequestParams params,
-			AsyncHttpResponseHandler responseHandler) {
-		try {
-			url = url + "&act=1&platform=Android&version="
-					+ context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
+	public static void post(Context context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+//		try {
+//
+//
+//			url = url + "&act=1&platform=Android&version=" + context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+//		} catch (NameNotFoundException e) {
+//			e.printStackTrace();
+//		}
+
+		client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
+		client.addHeader("Accept", "application/vnd.ws.v1+json");
 		client.post(context, url, params, responseHandler);
 	}
 
@@ -110,8 +128,7 @@ public class HttpHelper {
 	 * @param params
 	 * @param responseHandler
 	 */
-	public static void postWithHead(Context context, String url, RequestParams params,
-							AsyncHttpResponseHandler responseHandler) {
+	public static void postWithHead(Context context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
 //		try {
 //			url = url + "&act=1&platform=Android&version="
 //					+ context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
@@ -122,10 +139,11 @@ public class HttpHelper {
 		String time = ""+Math.round(new Date().getTime()/1000);
 		String sign = SHA1.encode(time+"ga4H9dwf"+"StfmzsxJ6NBQGRFd2lI5gWhZnPVboLjU4eCcwauHYrqKOE0739AM18iDyTkXvp");
 
-		client.addHeader("A-APPKEY", "ga4H9dwf");
-		client.addHeader("A-TIMESTAMP", time);
-		client.addHeader("A-SIGN", sign);
+//		client.addHeader("A-APPKEY", "ga4H9dwf");
+//		client.addHeader("A-TIMESTAMP", time);
+//		client.addHeader("A-SIGN", sign);
 
+		client.addHeader("Accept", "application/vnd.ws.v1+json");
 
 		client.post(context, url, params, responseHandler);
 	}

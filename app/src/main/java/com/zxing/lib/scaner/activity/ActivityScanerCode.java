@@ -300,6 +300,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         setContentView(R.layout.activity_scaner_code);
         context = this;
 
+//        SharedPreferencesUrls.getInstance().putString("uid", "251540");
+
 //        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 //        mBluetoothAdapter = bluetoothManager.getAdapter();
 //
@@ -769,7 +771,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (uid != null && !"".equals(uid) && access_token != null && !"".equals(access_token)){
+        if (access_token != null && !"".equals(access_token)){
             RequestParams params = new RequestParams();
             params.put("uid",uid);
             params.put("access_token",access_token);
@@ -1185,7 +1187,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         final String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+        if (access_token == null || "".equals(access_token)) {
             ToastUtil.showMessageApp(context, "请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
         } else {
@@ -2918,7 +2920,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private void addOrderbluelock(){
         final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+        if (access_token == null || "".equals(access_token)){
             ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
         }else {
@@ -3139,7 +3141,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private void addOrderbluelock2(){
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+        if (access_token == null || "".equals(access_token)){
             ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
         }else {

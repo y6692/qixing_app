@@ -19,6 +19,8 @@ public class UserMsgBean {
     private String specialdays;
     private String ebike_specialdays;
 
+    private String token;
+
     public String getEbike_specialdays() {
         return ebike_specialdays;
     }
@@ -113,5 +115,13 @@ public class UserMsgBean {
 
     public void setIscert(String iscert) {
         this.iscert = iscert;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alipay.sdk.app.PayTask;
+import com.huewu.pla.lib.MultiColumnListView;
+import com.huewu.pla.lib.internal.PLA_AdapterView;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -55,7 +57,7 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 /**
  * Created by Administrator1 on 2017/2/15.
  */
-public class RechargeActivity extends SwipeBackActivity implements View.OnClickListener,AdapterView.OnItemClickListener{
+public class RechargeActivity extends SwipeBackActivity implements View.OnClickListener, PLA_AdapterView.OnItemClickListener{
 
     private static final int SDK_PAY_FLAG = 1;
     private IWXAPI api;
@@ -66,10 +68,10 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
     private TextView title;
     private TextView rightBtn;
 
-    private MyListView moneyListView;
+    private MultiColumnListView moneyListView;
     private RelativeLayout alipayTypeLayout,WeChatTypeLayout;
     private ImageView alipayTypeImage,WeChatTypeImage;
-    private Button submitBtn;
+    private LinearLayout submitBtn;
 
     private List<RechargeBean> datas;
     private MyAdapter myAdapter;
@@ -83,7 +85,7 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_recharge);
+        setContentView(R.layout.activity_recharge);
         context = this;
         datas = new ArrayList<>();
         IntentFilter filter = new IntentFilter("data.broadcast.rechargeAction");
@@ -108,13 +110,13 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
         rightBtn.setText("充值记录");
 
-        moneyListView = (MyListView)findViewById(R.id.rechargeUI_moneyList);
-        alipayTypeLayout = (RelativeLayout)findViewById(R.id.rechargeUI_alipayTypeLayout);
-        WeChatTypeLayout = (RelativeLayout)findViewById(R.id.rechargeUI_WeChatTypeLayout);
-        alipayTypeImage = (ImageView)findViewById(R.id.rechargeUI_alipayTypeImage);
-        WeChatTypeImage = (ImageView)findViewById(R.id.rechargeUI_WeChatTypeImage);
-        submitBtn = (Button)findViewById(R.id.rechargeUI_submitBtn);
-        dealLayout = (LinearLayout)findViewById(R.id.rechargeUI_dealLayout);
+        moneyListView = (MultiColumnListView)findViewById(R.id.rechargeUI_moneyList);
+//        alipayTypeLayout = (RelativeLayout)findViewById(R.id.rechargeUI_alipayTypeLayout);
+//        WeChatTypeLayout = (RelativeLayout)findViewById(R.id.rechargeUI_WeChatTypeLayout);
+//        alipayTypeImage = (ImageView)findViewById(R.id.rechargeUI_alipayTypeImage);
+//        WeChatTypeImage = (ImageView)findViewById(R.id.rechargeUI_WeChatTypeImage);
+        submitBtn = (LinearLayout)findViewById(R.id.rechargeUI_submitBtn);
+//        dealLayout = (LinearLayout)findViewById(R.id.rechargeUI_dealLayout);
 
         if (datas.isEmpty() || 0 == datas.size()){
             initHttp();
@@ -123,13 +125,13 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         moneyListView.setAdapter(myAdapter);
 
         moneyListView.setOnItemClickListener(this);
-
-        backImg.setOnClickListener(this);
-        rightBtn.setOnClickListener(this);
-        alipayTypeLayout.setOnClickListener(this);
-        WeChatTypeLayout.setOnClickListener(this);
+//
+//        backImg.setOnClickListener(this);
+//        rightBtn.setOnClickListener(this);
+//        alipayTypeLayout.setOnClickListener(this);
+//        WeChatTypeLayout.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
-        dealLayout.setOnClickListener(this);
+//        dealLayout.setOnClickListener(this);
     }
 
     @Override
@@ -141,35 +143,38 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
                 scrollToFinishActivity();
                 break;
             case R.id.mainUI_title_rightBtn:
-                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+                if (access_token == null || "".equals(access_token)){
                     Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 UIHelper.goToAct(context,RechargeRecordActivity.class);
                 break;
-            case R.id.rechargeUI_alipayTypeLayout:
-                alipayTypeImage.setImageResource(R.drawable.pay_type_selected);
-                WeChatTypeImage.setImageResource(R.drawable.pay_type_normal);
-                paytype = "1";
-                break;
-            case R.id.rechargeUI_WeChatTypeLayout:
-                alipayTypeImage.setImageResource(R.drawable.pay_type_normal);
-                WeChatTypeImage.setImageResource(R.drawable.pay_type_selected);
-                paytype = "2";
-                break;
+//            case R.id.rechargeUI_alipayTypeLayout:
+//                alipayTypeImage.setImageResource(R.drawable.pay_type_selected);
+//                WeChatTypeImage.setImageResource(R.drawable.pay_type_normal);
+//                paytype = "1";
+//                break;
+//            case R.id.rechargeUI_WeChatTypeLayout:
+//                alipayTypeImage.setImageResource(R.drawable.pay_type_normal);
+//                WeChatTypeImage.setImageResource(R.drawable.pay_type_selected);
+//                paytype = "2";
+//                break;
             case R.id.rechargeUI_submitBtn:
-                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+                if (access_token == null || "".equals(access_token)){
                     Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                userRecharge(uid,access_token);
+
+                Log.e("rid===", "==="+rid);
+
+//                userRecharge(uid, access_token);
                 break;
-            case R.id.rechargeUI_dealLayout:
-                Intent intent = new Intent(context,WebviewActivity.class);
-                intent.putExtra("title","充值协议");
-                intent.putExtra("link",Urls.rechargeDeal);
-                startActivity(intent);
-                break;
+//            case R.id.rechargeUI_dealLayout:
+//                Intent intent = new Intent(context,WebviewActivity.class);
+//                intent.putExtra("title","充值协议");
+//                intent.putExtra("link",Urls.rechargeDeal);
+//                startActivity(intent);
+//                break;
         }
     }
 
@@ -351,9 +356,13 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         };
     };
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//    @Override
+//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//     }
 
+    @Override
+    public void onItemClick(PLA_AdapterView<?> parent, View view, int position, long id) {
         rid = myAdapter.getDatas().get(position).getId();
         if (position != selectPosition){
             myAdapter.getDatas().get(position).setSelected(true);
@@ -361,7 +370,12 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
             selectPosition = position;
         }
         myAdapter.notifyDataSetChanged();
-     }
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
 
     private class MyAdapter extends BaseViewAdapter<RechargeBean>{
 
@@ -381,17 +395,100 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
             TextView moneyText = BaseViewHolder.get(convertView,R.id.item_recharge_money);
 
             RechargeBean bean = getDatas().get(position);
+
+            Log.e("MyAdapter===", bean.getPrice_s()+"==="+bean.isSelected());
+
+//            layout.setSelected(true);
             layout.setSelected(bean.isSelected());
             moneyText.setSelected(bean.isSelected());
-            moneyText.setText(bean.getTitle());
+            moneyText.setText(bean.getPrice_s());
+
             return convertView;
         }
     }
 
+
+
     private void initHttp(){
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (uid == null ||"".equals(uid) || access_token == null || "".equals(access_token)){
+        if (access_token == null || "".equals(access_token)){
+            Toast.makeText(context,"请先登录您的账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context,LoginActivity.class);
+            return;
+        }
+
+        Log.e("recharge_prices===","==="+access_token);
+
+        RequestParams params = new RequestParams();
+        params.put("tab", 1);
+        HttpHelper.get(context, Urls.recharge_prices, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+
+                Log.e("recharge_prices===Fail","==="+responseString);
+
+                UIHelper.ToastError(context, throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+
+                    Log.e("recharge_prices===1","==="+responseString);
+
+
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                    Log.e("recharge_prices===","==="+result.getData());
+//                    UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+
+                    JSONArray array = new JSONArray(result.getData());
+                    if (datas.size() != 0 || !datas.isEmpty()){
+                        datas.clear();
+                    }
+                    for (int i = 0; i < array.length(); i++){
+                        RechargeBean bean = JSON.parseObject(array.getJSONObject(i).toString(), RechargeBean.class);
+                        datas.add(bean);
+                        if ( 0 == i){
+                            rid = bean.getId();
+                            bean.setSelected(true);
+                        }else {
+                            bean.setSelected(false);
+                        }
+                    }
+                    myAdapter.setDatas(datas);
+                    myAdapter.notifyDataSetChanged();
+
+//                    if (result.getFlag().equals("Success")) {
+//
+//                    } else {
+//                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+//                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
+
+    private void initHttp2(){
+        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (access_token == null || "".equals(access_token)){
             Toast.makeText(context,"请先登录您的账号",Toast.LENGTH_SHORT).show();
             UIHelper.goToAct(context,LoginActivity.class);
             return;

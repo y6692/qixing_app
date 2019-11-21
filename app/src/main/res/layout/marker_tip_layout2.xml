@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    >
+
+
+
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="32dp"
+        android:layout_height="18dp"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/tip"
+            />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="还车点"
+            android:textColor="#333333"
+            android:textSize="8sp"
+            />
+
+    </FrameLayout>
+
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_marker"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@drawable/compass0"-->
+        <!--&gt;-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_navi_distance"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="10米"-->
+            <!--android:textColor="#EC3F4C"-->
+            <!--android:textSize="@dimen/sp12"/>-->
+
+    <!--</ImageView>-->
+
+    <!--android:src="@drawable/end_biking_animation"-->
+    <!--android:src="@drawable/icon_usecarnow_position_succeed"-->
+
+</LinearLayout>

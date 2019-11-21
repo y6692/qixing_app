@@ -8,8 +8,8 @@ public class RechargeBean {
 
     private String id;
     private String title;
-    private String realmoney;
-    private String paymoney;
+    private String price;
+    private String price_s;
     private boolean isSelected;
 
     public String getId() {
@@ -28,20 +28,20 @@ public class RechargeBean {
         this.title = title;
     }
 
-    public String getRealmoney() {
-        return realmoney;
+    public String getPrice() {
+        return price;
     }
 
-    public void setRealmoney(String realmoney) {
-        this.realmoney = realmoney;
+    public void setPrice(String price) {
+        this.price = price;
     }
 
-    public String getPaymoney() {
-        return paymoney;
+    public String getPrice_s() {
+        return price_s;
     }
 
-    public void setPaymoney(String paymoney) {
-        this.paymoney = paymoney;
+    public void setPrice_s(String price_s) {
+        this.price_s = price_s;
     }
 
     public boolean isSelected() {

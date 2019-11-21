@@ -111,6 +111,20 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
+
+        </activity>
+
+        <activity
+            android:name=".activity.NoteLoginActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
+
+        <activity
+            android:name=".activity.RechargeActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -124,6 +138,10 @@
 
 
         </activity>
+
+        <!--android:exported="false"-->
+
+
 
         <activity
             android:name="com.zxing.lib.scaner.activity.ActivityScanerCode"
@@ -143,8 +161,10 @@
 
         </activity>
 
+
+
         <activity
-            android:name=".activity.NoteLoginActivity"
+            android:name=".activity.RealNameAuthActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -163,6 +183,7 @@
         <activity
             android:name=".activity.FindPsdActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
         <activity
             android:name=".activity.Login2Activity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
@@ -180,6 +201,8 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
         </activity>
+
+
 
          <!--<activity-->
              <!--android:name=".activity.EddyStoneScanActivity" >-->
@@ -301,13 +324,8 @@
         <activity
             android:name=".activity.ChangePasswordActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
-            android:name=".activity.RealNameAuthActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
-            android:name=".activity.RechargeActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
+
 
         <activity
             android:name=".activity.HistoryRoadDetailActivity"

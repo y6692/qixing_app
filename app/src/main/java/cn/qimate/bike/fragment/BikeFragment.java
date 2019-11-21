@@ -287,6 +287,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private RouteOverLay routeOverLay;
     private MarkerOptions centerMarkerOptionLoading;
 
+    private MarkerOptions marker_tip_Option;
+    private MarkerOptions marker_tip_Option2;
+
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_bike, null);
         unbinder = ButterKnife.bind(this, v);
@@ -393,8 +396,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //                mAMapNavi.destroy();
 //            }
 
-            ll_top.setVisibility(View.VISIBLE);
-            ll_top_navi.setVisibility(View.GONE);
+            if(ll_top!=null){
+                ll_top.setVisibility(View.VISIBLE);
+                ll_top_navi.setVisibility(View.GONE);
+            }
+
 
 //            schoolRange();
         }else{
@@ -468,7 +474,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 mCircle = null;
             }
 
-
             if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
                 isContainsList.clear();
             }
@@ -477,6 +482,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             }
 
             schoolRange();
+            operating_areas();
 
             if(referLatitude!=0 && referLongitude!=0){
                 myLocation = new LatLng(referLatitude, referLongitude);
@@ -487,12 +493,13 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 addCircle(myLocation, accuracy);
             }
 
-
-
             String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
             String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
             String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
-            if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+
+            Log.e("onHiddenChanged===bike2", "==="+access_token);
+
+            if (access_token == null || "".equals(access_token)) {
                 rl_authBtn.setVisibility(View.VISIBLE);
                 tv_authBtn.setText("您还未登录，点我快速登录");
                 rl_authBtn.setEnabled(true);
@@ -547,26 +554,137 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             ll_top.setVisibility(View.VISIBLE);
             ll_top_navi.setVisibility(View.GONE);
 
-//            mapView.onResume();
-
-
-//            if (mlocationClient != null) {
-//                mlocationClient.setLocationListener(this);
-//                mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-//                mLocationOption.setInterval(2 * 1000);
-//                mlocationClient.setLocationOption(mLocationOption);
-//                mlocationClient.startLocation();
-//            }
-
-//            setUpMap();
-//            mapView.setVisibility(View.VISIBLE);
-//
-
-//
-//            if (aMap != null) {
-//                setUpMap();
-//            }
         }
+    }
+
+    private void operating_areas(){
+        if(isHidden) return;
+
+        Log.e("main===operating_areas", isHidden+"===");
+
+        RequestParams params = new RequestParams();
+
+        HttpHelper.get(context, Urls.operating_areas, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+                Log.e("main===operating_areas1", "==="+responseString);
+
+                responseString = "{\"data\":[[{\"longitude\":\"119.920544\",\"latitude\":\"31.764389\"},{\"longitude\":\"119.921544\",\"latitude\":\"31.765389\"},{\"longitude\":\"119.922544\",\"latitude\":\"31.764389\"}]]}";
+
+                final ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+
+
+                            if (1==1 || result.getFlag().equals("Success")) {
+                                jsonArray = new JSONArray(result.getData());
+
+                                Log.e("main===operating_areas1", "==="+jsonArray);
+
+                                if(isHidden) return;
+
+                                if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                                    isContainsList.clear();
+                                }
+
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    List<LatLng> list = new ArrayList<>();
+                                    List<LatLng> list2 = new ArrayList<>();
+                                    int flag=0;
+
+                                    for (int j = 0; j < jsonArray.getJSONArray(i).length(); j ++){
+
+                                        JSONObject jsonObject = jsonArray.getJSONArray(i).getJSONObject(j);
+
+                                        LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
+
+                                        Log.e("main===operating_areas2", "==="+latLng);
+
+                                        flag=0;
+                                        list.add(latLng);
+
+
+//                                        if(jsonObject.getInt("is_yhq")==0){
+//                                            flag=0;
+//                                            list.add(latLng);
+//
+//                                        }else{
+//                                            flag=1;
+//                                            list2.add(latLng);
+//
+////                                    MarkerOptions centerMarkerOption = new MarkerOptions().position(latLng).icon(freeDescripter);
+////                                    aMap.addMarker(centerMarkerOption);
+//
+//                                        }
+                                    }
+
+                                    Log.e("main===operating_areas3", "==="+list.size());
+
+                                    Polygon polygon = null;
+                                    PolygonOptions pOption = new PolygonOptions();
+
+                                    pOption.addAll(list);
+                                    polygon = aMap.addPolygon(pOption.strokeWidth(2)
+                                            .strokeColor(Color.argb(255, 0, 135, 255))
+                                            .fillColor(Color.argb(76, 0, 173, 255)));
+//#0087FF
+//                                    #00ADFF
+
+                                    Log.e("main===operating_areas4", "==="+polygon);
+
+                                    getMaxPoint(list);
+
+//                                    if(flag==0){
+//                                        pOption.addAll(list);
+//                                        polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                                .strokeColor(Color.argb(255, 228, 59, 74))
+//                                                .fillColor(Color.argb(75, 230, 0, 18)));
+//                                    }else{
+//                                        pOption.addAll(list2);
+//                                        polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                                .strokeColor(Color.argb(255, 255, 80, 23))
+//                                                .fillColor(Color.argb(75, 255, 80, 23)));
+//
+//                                        getCenterPoint(list2);
+//                                    }
+
+
+
+                                    if(!isHidden){
+                                        pOptions.add(polygon);
+
+                                        isContainsList.add(polygon.contains(myLocation));
+                                    }else{
+                                    }
+
+                                }
+                            }else {
+                                ToastUtil.showMessageApp(context,result.getMsg());
+                            }
+                        }catch (Exception e){
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+
+            }
+        });
     }
 
     private void schoolRange(){
@@ -791,6 +909,39 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
+    public LatLng getMaxPoint(List<LatLng> list) {
+        double x = 0.0;
+        double y = 0.0;
+
+        double m = 0.0;
+        double m1 = 0.0;
+
+        for (int i = 0; i < list.size(); i++) {
+//            x = x + list.get(i).longitude;
+//            y = y + list.get(i).latitude;
+
+            m1 = list.get(i).latitude;
+
+            if(i == 0 || m1 > m){
+                m = m1;
+
+                x = list.get(i).longitude;
+                y = list.get(i).latitude;
+            }else{
+                continue;
+            }
+        }
+
+//        MarkerOptions centerMarkerOption = new MarkerOptions().position(new LatLng(y, x)).icon(freeDescripter);
+        marker_tip_Option.position(new LatLng(y, x));
+        aMap.addMarker(marker_tip_Option);
+
+//        centerList.add(new LatLng(y, x));
+//        Log.e("getCenterPoint===2", x+"==="+y);
+
+        return new LatLng(y, x);
+    }
+
     public LatLng getCenterPoint(List<LatLng> list) {
         double x = 0.0;
         double y = 0.0;
@@ -805,7 +956,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         aMap.addMarker(centerMarkerOption);
 
 //        centerList.add(new LatLng(y, x));
-
 //        Log.e("getCenterPoint===2", x+"==="+y);
 
         return new LatLng(y, x);
@@ -936,14 +1086,13 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         Log.e("main===initNearby0", latitude+"==="+longitude);
 
         RequestParams params = new RequestParams();
-        params.put("latitude",latitude);
-        params.put("longitude",longitude);
+        params.put("latitude", latitude);
+        params.put("longitude", longitude);
         params.put("type", 1);
         HttpHelper.get(context, Urls.nearby, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
 //                onStartCommon("正在加载");
-
 
 //                ArrayList<BitmapDescriptor> iconList = new ArrayList<>();
 //                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout1, null)));
@@ -952,7 +1101,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //
 //                MarkerOptions centerMarkerOption = new MarkerOptions();
 //                centerMarkerOption.position(myLocation).icons(iconList).period(2);
-
 
                 centerMarker.setMarkerOptions(centerMarkerOptionLoading);
 //                centerMarker.setIcon(iconList);
@@ -1031,11 +1179,13 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
+
+
         lockLoading = new LoadingDialog2(context);
         lockLoading.setCancelable(false);
         lockLoading.setCanceledOnTouchOutside(false);
 
-//        lockLoading.show();
+
 
         loadingDialog1 = new LoadingDialog(context);
         loadingDialog1.setCancelable(false);
@@ -1075,10 +1225,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout1, null)));
         iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout2, null)));
         iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout3, null)));
-//                iconList.add(BitmapDescriptorFactory.fromResource(R.drawable.compass1));
-//                iconList.add(BitmapDescriptorFactory.fromResource(R.drawable.compass2));
-//                iconList.add(BitmapDescriptorFactory.fromResource(R.drawable.compass3));
-//                iconList.add(successDescripter);
 
         //title一定要设，不然可能出现marker不显示
         centerMarkerOptionLoading = new MarkerOptions();
@@ -1095,6 +1241,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         ll_top_navi = activity.findViewById(R.id.ll_top_navi);
         tv_navi_distance = activity.findViewById(R.id.tv_navi_distance);
 
+        Log.e("BF===initView", "==="+aMap);
 
         if(aMap==null){
             aMap = mapView.getMap();
@@ -1120,6 +1267,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
         freeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.free_icon);
         bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
+
+        marker_tip_Option = new MarkerOptions().icon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_tip_layout, null)));
+        marker_tip_Option2 = new MarkerOptions().icon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_tip_layout2, null)));
 
         aMap.setOnMapTouchListener(this);
         aMap.setOnMapClickListener(this);
@@ -1190,7 +1340,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         isForeground = true;
         super.onResume();
 
-        Log.e("main===bike", "main====onResume==="+type+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
+        Log.e("bf===onResume", "==="+type+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
 
 
 
@@ -2083,9 +2233,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                 Log.e("scanCode_lock===1", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
-                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+                if (access_token == null || "".equals(access_token)){
                     ToastUtil.showMessageApp(context,"请先登录账号");
-                    UIHelper.goToAct(context,LoginActivity.class);
+                    UIHelper.goToAct(context, LoginActivity.class);
                     return;
                 }
                 if (SharedPreferencesUrls.getInstance().getString("iscert","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
@@ -2114,7 +2264,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 initmPopupWindowView();
                 break;
             case R.id.rl_authBtn:
-                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+                if (access_token == null || "".equals(access_token)){
                     UIHelper.goToAct(context,LoginActivity.class);
                 }else {
                     if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
@@ -2157,6 +2307,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             case R.id.mainUI_slideLayout:
                 UIHelper.goWebViewAct(context,"停车须知",Urls.phtml5 + uid);
 
+//                loadingDialog.show();
+
                 break;
             default:
 
@@ -2174,7 +2326,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         Log.e("BF===RefreshLogin", uid+"==="+access_token);
 
-        if (access_token == null || "".equals(access_token) || uid == null || "".equals(uid)) {
+        if (access_token == null || "".equals(access_token)) {
             ToastUtil.showMessageApp(context, "请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
         } else {
@@ -2182,6 +2334,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             params.add("uid", uid);
             params.add("access_token", access_token);
 
+/*
             HttpHelper.post(AppManager.getAppManager().currentActivity(), Urls.accesslogin, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
@@ -2206,23 +2359,25 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                     Log.e("RefreshLogin===", bean.getSpecialdays()+"==="+bean.getEbike_specialdays());
 
                                     String uid = bean.getUid();
-                                    String access_token = bean.getAccess_token();
+                                    String access_token = bean.getToken();
 
-                                    SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
-                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
-                                    SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
-                                    SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
-                                    SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
-                                    SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
-                                    SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
-                                    SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
-                                    SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
-                                    SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
-                                    SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
-                                    SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+//                                    SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
+//                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
+//                                    SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
+//                                    SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
+//                                    SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
+//                                    SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
+//                                    SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
+//                                    SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
+//                                    SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
+//                                    SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
+//                                    SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
+//                                    SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+
+                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getToken());
 
                                     new MyAsyncTask().execute();
-                                    if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+                                    if (access_token == null || "".equals(access_token)) {
                                         rl_authBtn.setVisibility(View.VISIBLE);
                                         tv_authBtn.setText("您还未登录，点我快速登录");
                                         rl_authBtn.setEnabled(true);
@@ -2262,7 +2417,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                     }
 
 
-//                                    if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+//                                    if (access_token == null || "".equals(access_token)){
 //                                        UIHelper.goToAct(context,LoginActivity.class);
 //                                    }else {
 //
@@ -2289,103 +2444,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                 }
             });
+*/
 
-//            HttpHelper.post(AppManager.getAppManager().currentActivity(), Urls.accesslogin, params,
-//                    new TextHttpResponseHandler() {
-//                        @Override
-//                        public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                            try {
-//                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-//                                if (result.getFlag().equals("Success")) {
-//                                    UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
-//                                    // 极光标记别名
-//
-//                                    Log.e("RefreshLogin===", bean.getSpecialdays()+"==="+bean.getEbike_specialdays());
-//
-//                                    String uid = bean.getUid();
-//                                    String access_token = bean.getAccess_token();
-//
-//                                    SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
-//                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
-//                                    SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
-//                                    SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
-//                                    SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
-//                                    SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
-//                                    SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
-//                                    SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
-//                                    SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
-//                                    SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
-//                                    SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
-//                                    SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
-//
-//                                    new MyAsyncTask().execute();
-//                                    if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
-//                                        authBtn.setVisibility(View.VISIBLE);
-//                                        authBtn.setText("您还未登录，点我快速登录");
-//                                        authBtn.setEnabled(true);
-//                                    } else {
-//                                        if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-//                                            switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-//                                                case 1:
-//                                                    authBtn.setEnabled(true);
-//                                                    authBtn.setVisibility(View.VISIBLE);
-//                                                    authBtn.setText("您还未认证，点我快速认证");
-//                                                    break;
-//                                                case 2:
-//                                                    getCurrentorder1(uid, access_token);
-//                                                    break;
-//                                                case 3:
-//                                                    authBtn.setEnabled(true);
-//                                                    authBtn.setVisibility(View.VISIBLE);
-//                                                    authBtn.setText("认证被驳回，请重新认证");
-//                                                    break;
-//                                                case 4:
-//                                                    authBtn.setEnabled(false);
-//                                                    authBtn.setVisibility(View.VISIBLE);
-//                                                    authBtn.setText("认证审核中");
-//                                                    break;
-//                                            }
-//                                        } else {
-//                                            authBtn.setVisibility(View.GONE);
-//                                        }
-//                                    }
-//                                    if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))||
-//                                            "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) ||
-//                                            SharedPreferencesUrls.getInstance().getString("money", "") == null ||
-//                                            "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))){
-//                                        rechargeBtn.setVisibility(View.VISIBLE);
-//                                    }else {
-//                                        rechargeBtn.setVisibility(View.GONE);
-//                                    }
-//
-//
-////                                    if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-////                                        UIHelper.goToAct(context,LoginActivity.class);
-////                                    }else {
-////
-////                                    }
-//
-//                                } else {
-//                                    if (BaseApplication.getInstance().getIBLE() != null){
-//                                        if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
-//                                            BaseApplication.getInstance().getIBLE().refreshCache();
-//                                            BaseApplication.getInstance().getIBLE().close();
-//                                            BaseApplication.getInstance().getIBLE().stopScan();
-//                                        }
-//                                    }
-//                                    SharedPreferencesUrls.getInstance().putString("uid", "");
-//                                    SharedPreferencesUrls.getInstance().putString("access_token","");
-//                                }
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(int statusCode, Header[] headers, String responseString,
-//                                              Throwable throwable) {
-//                        }
-//                    });
         }
     }
 
@@ -2617,7 +2677,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         Log.e("main===", "endBtn1===="+uid+"===="+access_token);
 
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+        if (access_token == null || "".equals(access_token)){
             ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context,LoginActivity.class);
         }else {
@@ -2798,7 +2858,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     public void endBtn3(){
         final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+        if (access_token == null || "".equals(access_token)){
             ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
         }else {
@@ -3796,7 +3856,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+        if (access_token == null || "".equals(access_token)) {
             ToastUtils.show("请先登录您的账号");
             UIHelper.goToAct(context, LoginActivity.class);
         } else {
@@ -3999,7 +4059,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private void addMaplocation(double latitude,double longitude){
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (uid != null && !"".equals(uid) && access_token != null && !"".equals(access_token)){
+        if (access_token != null && !"".equals(access_token)){
             RequestParams params = new RequestParams();
             params.put("uid",uid);
             params.put("access_token",access_token);

@@ -8,10 +8,11 @@
     <LinearLayout
         android:id="@+id/item_recharge_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp45"
-        android:layout_marginLeft="@dimen/dp10"
-        android:layout_marginTop="@dimen/dp10"
-        android:layout_marginRight="@dimen/dp10"
+        android:layout_height="70dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginRight="18dp"
         android:background="@drawable/recharge_money_bcg"
         android:gravity="center"
         android:orientation="horizontal">
@@ -22,6 +23,6 @@
             android:layout_height="wrap_content"
             android:text="10元"
             android:textColor="@drawable/recharge_tx_bcg"
-            android:textSize="@dimen/sp14"/>
+            android:textSize="@dimen/sp18"/>
     </LinearLayout>
 </LinearLayout>

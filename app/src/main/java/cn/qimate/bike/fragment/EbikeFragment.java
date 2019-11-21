@@ -188,6 +188,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     private LinearLayout ll_top;
     private LinearLayout ll_top_navi;
+    private TextView tv_navi_distance;
 
     protected AMap aMap;
     protected BitmapDescriptor successDescripter;
@@ -291,6 +292,10 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     private AMapNavi mAMapNavi;
     private RouteOverLay routeOverLay;
+    private MarkerOptions centerMarkerOptionLoading;
+
+    private MarkerOptions marker_tip_Option;
+    private MarkerOptions marker_tip_Option2;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_ebike, null);
@@ -481,7 +486,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 //        String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
             String ebike_specialdays = SharedPreferencesUrls.getInstance().getString("ebike_specialdays", "");
-            if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+            if (access_token == null || "".equals(access_token)) {
                 rl_authBtn.setVisibility(View.VISIBLE);
                 tv_authBtn.setText("您还未登录，点我快速登录");
                 rl_authBtn.setEnabled(true);
@@ -1001,7 +1006,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         HttpHelper.get(context, Urls.nearby, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                onStartCommon("正在加载");
+//                onStartCommon("正在加载");
+
+                centerMarker.setMarkerOptions(centerMarkerOptionLoading);
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -1127,8 +1134,18 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         marqueeLayout = activity.findViewById(R.id.mainUI_marqueeLayout2);
         closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
+        ArrayList<BitmapDescriptor> iconList = new ArrayList<>();
+        iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout1, null)));
+        iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout2, null)));
+        iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout3, null)));
+
+        //title一定要设，不然可能出现marker不显示
+        centerMarkerOptionLoading = new MarkerOptions();
+        centerMarkerOptionLoading.icons(iconList).period(2);
+
         ll_top = (LinearLayout)activity.findViewById(R.id.ll_top);
         ll_top_navi = (LinearLayout)activity.findViewById(R.id.ll_top_navi);
+        tv_navi_distance = activity.findViewById(R.id.tv_navi_distance);
 
         if(aMap==null){
             aMap = mapView.getMap();
@@ -1247,7 +1264,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         isForeground = true;
         super.onResume();
 
-        Log.e("main===ebike", "main====onResume==="+type+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
+        Log.e("ebf===onResume", "==="+type+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
 
 
 
@@ -2013,7 +2030,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             case R.id.mainUI_scanCode_lock2:
                 Log.e("scanCode_lock===2", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
-                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+                if (access_token == null || "".equals(access_token)){
                     ToastUtil.showMessageApp(context,"请先登录账号");
                     UIHelper.goToAct(context,LoginActivity.class);
                     return;
@@ -2044,8 +2061,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 initmPopupWindowView();
                 break;
             case R.id.rl_authBtn:
-                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-                    UIHelper.goToAct(context,LoginActivity.class);
+                if (access_token == null || "".equals(access_token)){
+                    UIHelper.goToAct(context, LoginActivity.class);
                 }else {
                     if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
                         switch (Tag){
@@ -2074,11 +2091,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                 RefreshLogin();
 
-//                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+//                if (access_token == null || "".equals(access_token)){
 //                    UIHelper.goToAct(context,LoginActivity.class);
 //                }else {
 //                    new MyAsyncTask().execute();
-//                    if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+//                    if (access_token == null || "".equals(access_token)) {
 //                        authBtn.setVisibility(View.VISIBLE);
 //                        authBtn.setText("您还未登录，点我快速登录");
 //                        authBtn.setEnabled(true);
@@ -2148,7 +2165,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         Log.e("EBF===RefreshLogin", uid+"==="+access_token);
 
-        if (access_token == null || "".equals(access_token) || uid == null || "".equals(uid)) {
+        if (access_token == null || "".equals(access_token)) {
             ToastUtil.showMessageApp(context, "请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
         } else {
@@ -2156,6 +2173,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             params.add("uid", uid);
             params.add("access_token", access_token);
 
+/*
             HttpHelper.post(AppManager.getAppManager().currentActivity(), Urls.accesslogin, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
@@ -2180,23 +2198,25 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                     Log.e("RefreshLogin===", bean.getSpecialdays()+"==="+bean.getEbike_specialdays());
 
                                     String uid = bean.getUid();
-                                    String access_token = bean.getAccess_token();
+                                    String access_token = bean.getToken();
 
-                                    SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
-                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
-                                    SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
-                                    SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
-                                    SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
-                                    SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
-                                    SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
-                                    SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
-                                    SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
-                                    SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
-                                    SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
-                                    SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+//                                    SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
+//                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
+//                                    SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
+//                                    SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
+//                                    SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
+//                                    SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
+//                                    SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
+//                                    SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
+//                                    SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
+//                                    SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
+//                                    SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
+//                                    SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+
+                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getToken());
 
                                     new MyAsyncTask().execute();
-                                    if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+                                    if (access_token == null || "".equals(access_token)) {
                                         rl_authBtn.setVisibility(View.VISIBLE);
                                         tv_authBtn.setText("您还未登录，点我快速登录");
                                         rl_authBtn.setEnabled(true);
@@ -2256,6 +2276,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                 }
             });
+*/
         }
     }
 
@@ -2473,7 +2494,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         Log.e("main===", "endBtn1===="+uid+"===="+access_token);
 
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+        if (access_token == null || "".equals(access_token)){
             ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context,LoginActivity.class);
         }else {
@@ -2656,7 +2677,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     public void endBtn3(){
         final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+        if (access_token == null || "".equals(access_token)){
             ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
         }else {
@@ -3251,6 +3272,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         Log.e("drawRoutes===E", "==="+path.getAllLength());
 
+        tv_navi_distance.setText(path.getAllLength()+"米");
+
 //        routeOverlays.put(routeId, routeOverLay);
     }
 
@@ -3599,7 +3622,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+        if (access_token == null || "".equals(access_token)) {
             ToastUtils.show("请先登录您的账号");
             UIHelper.goToAct(context, LoginActivity.class);
         } else {
@@ -3798,7 +3821,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     private void addMaplocation(double latitude,double longitude){
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (uid != null && !"".equals(uid) && access_token != null && !"".equals(access_token)){
+        if (access_token != null && !"".equals(access_token)){
             RequestParams params = new RequestParams();
             params.put("uid",uid);
             params.put("access_token",access_token);
