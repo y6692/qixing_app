@@ -4443,18 +4443,18 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             params.put("xinbiao_name", "");
             params.put("xinbiao_mac", macList.size() > 0?macList.get(0):"");
 
-            if(major!=0){
+            if(major!=0){   //车在信标范围里
                 Log.e("submit===221", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
                 params.put("back_type", "iBeacon_Lo");
-            }else if(isGPS_Lo){
+            }else if(isGPS_Lo){     //车在电子围栏里
                 params.put("back_type", "GPS_Lo");
-            }else if(macList.size() > 0){
+            }else if(macList.size() > 0){   //手机在信标范围里
                 Log.e("submit===222", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
                 params.put("back_type", "iBeacon_Pho");
-            }else if(force_backcar==1 && isTwo){
+            }else if(force_backcar==1 && isTwo){    //蓝牙连接失败，第二次可以还车
                 Log.e("submit===223", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
                 params.put("back_type", "no_lock");
-            }else{
+            }else{  //手机在电子围栏里
 //            }else if(isContainsList.contains(true)){
                 params.put("back_type", "GPS");
             }

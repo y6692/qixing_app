@@ -26,7 +26,13 @@ public class Urls {
 	public static String operating_areas = host2 + "/operating_areas";
 	//充值价格列表
 	public static String recharge_prices = host2 + "/recharge_prices";
+	//套餐卡列表接口
+	public static String cycling_cards = host2 + "/cycling_cards";
+	//我的套餐卡接口
+	public static String my_cycling_cards = host2 + "/user/cycling_cards";
 
+//	http://testnewmapi.7mate.cn/api/user/cycling_cards
+//	http://testnewmapi.7mate.cn/api/cycling_cards
 //	http://testnewmapi.7mate.cn/api/recharge_prices
 //	http://testnewmapi.7mate.cn/api/operating_areas
 //	http://testnewmapi.7mate.cn/api/cert

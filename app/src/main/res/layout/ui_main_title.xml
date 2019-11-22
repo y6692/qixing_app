@@ -57,11 +57,11 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text=""
-            android:textColor="@color/white"
+            android:textColor="#333333"
             android:textSize="@dimen/sp14"
             android:layout_alignParentRight="true"
             android:gravity="center"
-            android:paddingRight="@dimen/dp10"
+            android:paddingRight="@dimen/dp30"
             android:paddingLeft="@dimen/dp10"/>
     </RelativeLayout>
 </LinearLayout>
