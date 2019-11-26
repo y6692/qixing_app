@@ -1052,10 +1052,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
         if (access_token != null && !"".equals(access_token)) {
-            RequestParams params = new RequestParams();
-            params.put("uid", uid);
-            params.put("access_token", access_token);
-            HttpHelper.get(context, Urls.userIndex, params, new TextHttpResponseHandler() {
+//            RequestParams params = new RequestParams();
+//            params.put("uid", uid);
+//            params.put("access_token", access_token);
+            HttpHelper.get(context, Urls.user, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
                     if (loadingDialog != null && !loadingDialog.isShowing()) {

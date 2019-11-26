@@ -158,6 +158,7 @@ import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.core.widget.LoadingDialog2;
 import cn.qimate.bike.lock.utils.ToastUtils;
+import cn.qimate.bike.model.CarAuthorityBean;
 import cn.qimate.bike.model.CardinfoBean;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.NearbyBean;
@@ -287,6 +288,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private RouteOverLay routeOverLay;
     private MarkerOptions centerMarkerOptionLoading;
 
+    private MarkerOptions marker_park_Option;
     private MarkerOptions marker_tip_Option;
     private MarkerOptions marker_tip_Option2;
 
@@ -497,7 +499,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
             String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
 
-            Log.e("onHiddenChanged===bike2", "==="+access_token);
+            Log.e("onHiddenChanged===bike2", SharedPreferencesUrls.getInstance().getString("iscert", "")+"==="+access_token);
 
             if (access_token == null || "".equals(access_token)) {
                 rl_authBtn.setVisibility(View.VISIBLE);
@@ -688,6 +690,118 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void schoolRange(){
+        if(isHidden) return;
+
+        Log.e("main===schoolRange", isHidden+"===");
+
+        RequestParams params = new RequestParams();
+
+        HttpHelper.get(context, Urls.parking_ranges, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+                Log.e("main===schoolRange0", "==="+responseString);
+
+//                responseString = "{\"data\":[[{\"longitude\":\"119.920544\",\"latitude\":\"31.764389\"},{\"longitude\":\"119.921544\",\"latitude\":\"31.765389\"},{\"longitude\":\"119.922544\",\"latitude\":\"31.764389\"}]]}";
+
+                final ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+
+
+                            if (1==1 || result.getFlag().equals("Success")) {
+                                jsonArray = new JSONArray(result.getData());
+
+                                Log.e("main===schoolRange1", jsonArray.length()+"==="+jsonArray);
+
+                                if(isHidden) return;
+
+                                if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                                    isContainsList.clear();
+                                }
+
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    List<LatLng> list = new ArrayList<>();
+                                    List<LatLng> list2 = new ArrayList<>();
+                                    int flag=0;
+
+                                    JSONArray jsonArray2 = new JSONArray(jsonArray.getJSONObject(i).getString("ranges"));;
+                                    JSONObject jsonObject = new JSONObject(jsonArray.getJSONObject(i).getString("parking"));
+
+                                    Log.e("main===schoolRange2", jsonArray2.length()+"==="+jsonArray2);
+
+                                    for (int j = 0; j < jsonArray2.length(); j++) {
+                                        LatLng latLng = new LatLng(Double.parseDouble(jsonArray2.getJSONObject(j).getString("latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude")));
+
+                                        Log.e("main===schoolRange22", jsonArray2.length()+"==="+jsonArray2);
+
+                                        flag=0;
+                                        list.add(latLng);
+                                    }
+
+
+                                    Log.e("main===schoolRange3", "==="+list.size());
+
+                                    Polygon polygon = null;
+                                    PolygonOptions pOption = new PolygonOptions();
+
+                                    pOption.addAll(list);
+//                                    polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                            .strokeColor(Color.argb(255, 0, 135, 255))
+//                                            .fillColor(Color.argb(76, 0, 173, 255)));
+
+                                    polygon = aMap.addPolygon(pOption.strokeColor(Color.argb(0, 255, 255, 255)).fillColor(Color.argb(0, 255, 255, 255)));
+
+
+                                    Log.e("main===schoolRange4", jsonObject.getString("latitude")+"==="+polygon);
+
+                                    //        MarkerOptions centerMarkerOption = new MarkerOptions().position(new LatLng(y, x)).icon(freeDescripter);
+                                    marker_park_Option.position(new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude"))));
+                                    aMap.addMarker(marker_park_Option);
+
+
+                                    if(!isHidden){
+                                        pOptions.add(polygon);
+
+                                        isContainsList.add(polygon.contains(myLocation));
+                                    }else{
+                                    }
+
+
+
+                                }
+
+                                Log.e("main===schoolRange5", pOptions.size()+"==="+pOptions+"==="+isContainsList.size()+"==="+isContainsList);
+
+                            }else {
+                                ToastUtil.showMessageApp(context,result.getMsg());
+                            }
+                        }catch (Exception e){
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    private void schoolRange2(){
         if(isHidden) return;
 
         Log.e("main===schoolRange0", isHidden+"==="+jsonArray);
@@ -1231,11 +1345,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         centerMarkerOptionLoading.icons(iconList).period(2);
 //        centerMarkerOption.position(myLocation).icons(iconList).period(2);
 
-
 //        lockLoading = new LoadingDialog2(context);
 //        lockLoading.setCancelable(false);
 //        lockLoading.setCanceledOnTouchOutside(false);
-
 
         ll_top = activity.findViewById(R.id.ll_top);
         ll_top_navi = activity.findViewById(R.id.ll_top_navi);
@@ -1268,6 +1380,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         freeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.free_icon);
         bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
 
+        marker_park_Option = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.park_icon));
         marker_tip_Option = new MarkerOptions().icon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_tip_layout, null)));
         marker_tip_Option2 = new MarkerOptions().icon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_tip_layout2, null)));
 
@@ -1291,8 +1404,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         cartBtn.setOnClickListener(this);
         slideLayout.setOnClickListener(this);
-
-
 
 //        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
 //        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
@@ -1340,7 +1451,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         isForeground = true;
         super.onResume();
 
-        Log.e("bf===onResume", "==="+type+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
+        Log.e("b===onResume", "==="+type+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
 
 
 
@@ -2231,28 +2342,81 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 break;
             case R.id.mainUI_scanCode_lock:
 
-                Log.e("scanCode_lock===1", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
+                Log.e("scanCode_lock===1", SharedPreferencesUrls.getInstance().getString("iscert","")+"==="+access_token+"===");
 
                 if (access_token == null || "".equals(access_token)){
                     ToastUtil.showMessageApp(context,"请先登录账号");
                     UIHelper.goToAct(context, LoginActivity.class);
                     return;
                 }
+
+//                未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 3需要充值余额或购买骑行卡 4有待支付行程 5有待支付调度费 6有待支付赔偿费
+
                 if (SharedPreferencesUrls.getInstance().getString("iscert","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
                     switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert",""))){
                         case 1:
+//                            getCurrentorder2(uid,access_token);
+
+
+                            if (Build.VERSION.SDK_INT >= 23) {
+                                int checkPermission = activity.checkSelfPermission(Manifest.permission.CAMERA);
+                                if (checkPermission != PERMISSION_GRANTED) {
+                                    flag = 1;
+
+                                    if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                                        requestPermissions(new String[] { Manifest.permission.CAMERA }, 100);
+                                    } else {
+                                        CustomDialog.Builder customBuilder1 = new CustomDialog.Builder(context);
+                                        customBuilder1.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.cancel();
+                                                    }
+                                                }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                                requestPermissions(
+                                                        new String[] { Manifest.permission.CAMERA },
+                                                        100);
+                                            }
+                                        });
+                                        customBuilder1.create().show();
+                                    }
+//                                    if (loadingDialog1 != null && loadingDialog1.isShowing()){
+//                                        loadingDialog1.dismiss();
+//                                    }
+                                    return;
+                                }
+                            }
+                            try {
+
+                                closeBroadcast();
+                                deactivate();
+
+                                intent = new Intent();
+                                intent.setClass(context, ActivityScanerCode.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+
+                            } catch (Exception e) {
+                                UIHelper.showToastMsg(context, "相机打开失败,请检查相机是否可正常使用", R.drawable.ic_error);
+                            }
+//                            dialog.cancel();
+//                            if (loadingDialog1 != null && loadingDialog1.isShowing()){
+//                                loadingDialog1.dismiss();
+//                            }
+
+                            break;
+                        case 2:
                             ToastUtil.showMessageApp(context,"您还未认证,请先认证");
                             UIHelper.goToAct(context, RealNameAuthActivity.class);
                             break;
-                        case 2:
-                            getCurrentorder2(uid,access_token);
-                            break;
                         case 3:
-                            ToastUtil.showMessageApp(context,"认证被驳回，请重新认证");
-                            UIHelper.goToAct(context,RealNameAuthActivity.class);
+                            ToastUtil.showMessageApp(context,"认证审核中，请点击刷新");
                             break;
                         case 4:
-                            ToastUtil.showMessageApp(context,"认证审核中，请点击刷新");
+                            ToastUtil.showMessageApp(context,"认证被驳回，请重新认证");
+                            UIHelper.goToAct(context,RealNameAuthActivity.class);
                             break;
                     }
                 }else {
@@ -2324,17 +2488,73 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
         String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
 
-        Log.e("BF===RefreshLogin", uid+"==="+access_token);
+        Log.e("B===RefreshLogin", uid+"==="+access_token);
 
         if (access_token == null || "".equals(access_token)) {
             ToastUtil.showMessageApp(context, "请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
         } else {
+            HttpHelper.get(AppManager.getAppManager().currentActivity(), Urls.car_authority, new TextHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+                        Log.e("car_authority===b", "==="+responseString);
+
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        CarAuthorityBean bean = JSON.parseObject(result.getData(), CarAuthorityBean.class);
+
+                        SharedPreferencesUrls.getInstance().putString("iscert", ""+bean.getUnauthorized_code());
+
+//						if (result.getFlag().equals("Success")) {
+//							UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+//							// 极光标记别名
+//
+//
+//
+////									setAlias(bean.getUid());
+////									SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
+////									SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
+////									SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
+////									SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
+////									SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
+////									SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
+////									SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
+////									SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
+////									SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
+////									SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
+////									SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
+////									SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+//
+//							SharedPreferencesUrls.getInstance().putString("access_token", bean.getToken());
+//						} else {
+//							setAlias("");
+//							if (BaseApplication.getInstance().getIBLE() != null){
+//								if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+//									BaseApplication.getInstance().getIBLE().refreshCache();
+//									BaseApplication.getInstance().getIBLE().close();
+//									BaseApplication.getInstance().getIBLE().stopScan();
+//								}
+//							}
+//							SharedPreferencesUrls.getInstance().putString("uid", "");
+//							SharedPreferencesUrls.getInstance().putString("access_token","");
+//						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString,
+                                      Throwable throwable) {
+                }
+            });
+
+
+/*
             RequestParams params = new RequestParams();
             params.add("uid", uid);
             params.add("access_token", access_token);
-
-/*
             HttpHelper.post(AppManager.getAppManager().currentActivity(), Urls.accesslogin, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {

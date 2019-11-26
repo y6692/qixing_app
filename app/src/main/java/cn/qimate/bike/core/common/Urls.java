@@ -17,20 +17,74 @@ public class Urls {
 //	public static String host = HTTP + "uat.7mate.cn";
 //  public static String host = HTTP + "192.168.206.10:8345";
 
+	//注册登录接口
 	public static String authorizations = host2 + "/authorizations";
+	//获取验证码接口
 	public static String verificationcode = host2 + "/verificationcode";
+	//获取上传凭证接口
 	public static String uploadtoken = host2 + "/qiniu/uploadtoken";
+	//提交认证接口_post、认证信息接口_get
 	public static String cert = host2 + "/cert";
-
 	//运营区域接口
 	public static String operating_areas = host2 + "/operating_areas";
+	//电子围栏接口
+	public static String parking_ranges = host2 + "/parking_ranges";
 	//充值价格列表
 	public static String recharge_prices = host2 + "/recharge_prices";
 	//套餐卡列表接口
 	public static String cycling_cards = host2 + "/cycling_cards";
 	//我的套餐卡接口
 	public static String my_cycling_cards = host2 + "/user/cycling_cards";
+	//我的套餐卡接口
+	public static String car_authority = host2 + "/user/car_authority";
+	//车辆信息接口
+	public static String car = host2 + "/car/";
+	//下单权限接口
+	public static String order_authority = host2 + "/order/authority";
+	//下单接口
+	public static String order = host2 + "/order";
+	//上报车锁状态接口
+	public static String car_notification = host2 + "/order/car_notification";
+	//当前骑行订单接口
+	public static String cycling = host2 + "/order/cycling";
+	//上锁接口
+	public static String lock = host2 + "/car/lock";
+	//开锁接口
+	public static String unlock = host2 + "/car/unlock";
+	//泺平锁获取开锁秘钥接口
+	public static String rent = host2 + "/car/lp/rent";
+	//广告接口
+	public static String banner = host2 + "/banner/";
+	//获取协议接口
+	public static String agreement = host2 + "/agreement/";
+	//提交问题反馈接口
+	public static String feedback = host2 + "/feedback";
+	//停车点接口
+	public static String parkings = host2 + "/parkings";
+	//人工客服接口
+	public static String service_phones = host2 + "/service/phones";
+	//用户信息接口
+	public static String user = host2 + "/user";
+	//退出登录接口
+	public static String authorizations2 = host2 + "/authorizations";
 
+//	http://testnewmapi.7mate.cn/api/parking_ranges
+//	http://testnewmapi.7mate.cn/api/authorizations
+//	http://testnewmapi.7mate.cn/api/user
+//	http://testnewmapi.7mate.cn/api/service/phones
+//	http://testnewmapi.7mate.cn/api/parkings
+//	http://testnewmapi.7mate.cn/api/feedback
+//	http://testnewmapi.7mate.cn/api/agreement/{name}
+//	http://testnewmapi.7mate.cn/api/banner/{position}
+//	http://testnewmapi.7mate.cn/api/car/lp/rent
+//	http://testnewmapi.7mate.cn/api/car/unlock
+//	http://testnewmapi.7mate.cn/api/car/lock
+//	http://testnewmapi.7mate.cn/api/order/cycling
+//	http://testnewmapi.7mate.cn/api/order/car_notification
+//	http://testnewmapi.7mate.cn/api/order
+//	http://testnewmapi.7mate.cn/api/order/authority
+//	http://testnewmapi.7mate.cn/api/car/{number}
+//	http://testnewmapi.7mate.cn/api/user/car_authority
 //	http://testnewmapi.7mate.cn/api/user/cycling_cards
 //	http://testnewmapi.7mate.cn/api/cycling_cards
 //	http://testnewmapi.7mate.cn/api/recharge_prices
@@ -76,7 +130,7 @@ public class Urls {
 	/**上传图片*/
 	public static String uploadsImg = host + "/index.php?g=App&m=Index&a=uploadsImg";
 	/**意见反馈*/
-	public static String feedback = host + "/index.php?g=App&m=Index&a=feedback";
+//	public static String feedback = host + "/index.php?g=App&m=Index&a=feedback";
 	/**我的骑行记录列表*/
 	public static String myOrderlist = host + "/index.php?g=App&m=User&a=myOrderlist";
 	/**myOrderdetail*/
@@ -205,7 +259,7 @@ public class Urls {
 	/**微信支付单车费用接口*/
 	public static String wxpayBike = host + "/index.php?g=App&m=WxpayBike&a=wxpay";
 	/**泺平锁加密接口*/
-	public static String rent = host + "/index.php?g=App&m=Index&a=rent";
+//	public static String rent = host + "/index.php?g=App&m=Index&a=rent";
 
 	/**常见热门问题接口*/
 	public static String question = host + "/index.php?g=App&m=Question&a=index";

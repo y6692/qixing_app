@@ -864,6 +864,10 @@ public class AsyncHttpClient {
         return post(null, url, params, responseHandler);
     }
 
+    public RequestHandle post(Context context, String url, ResponseHandlerInterface responseHandler) {
+        return post(context, url, responseHandler);
+    }
+
     /**
      * Perform a HTTP POST request and track the Android Context which initiated the request.
      *

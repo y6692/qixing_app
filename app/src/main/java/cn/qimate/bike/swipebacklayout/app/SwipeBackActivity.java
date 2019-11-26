@@ -24,6 +24,7 @@ import java.util.Set;
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
+import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.base.BaseFragmentActivity;
 import cn.qimate.bike.ble.BLEService;
 import cn.qimate.bike.core.common.AppManager;
@@ -35,6 +36,7 @@ import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.swipebacklayout.SwipeBackLayout;
+import cn.qimate.bike.util.ToastUtil;
 
 public class SwipeBackActivity extends BaseFragmentActivity implements SwipeBackActivityBase {
 
@@ -165,6 +167,10 @@ public class SwipeBackActivity extends BaseFragmentActivity implements SwipeBack
 			}
 		});
 
+		Log.e("onFailureCommon===", s + "====");
+
+		ToastUtil.showMessageApp(context,"请先登录账号");
+		UIHelper.goToAct(context, LoginActivity.class);
 	}
 
 }

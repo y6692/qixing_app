@@ -60,15 +60,19 @@ public class HttpHelper {
 
 		Log.e("header===0", "===");
 
-		try {
-			url = url + "&act=1&platform=Android&version="
-					+ context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			url = url + "&act=1&platform=Android&version="
+//					+ context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+//		} catch (NameNotFoundException e) {
+//			e.printStackTrace();
+//		}
 
 
+		String token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
+
+		client.addHeader("Authorization", token);
+		client.addHeader("Accept", "application/vnd.ws.v1+json");
 		client.get(context, url, responseHandler);
 	}
 
@@ -96,6 +100,13 @@ public class HttpHelper {
 		client.addHeader("Authorization", token);
 		client.addHeader("Accept", "application/vnd.ws.v1+json");
 		client.get(context, url, params, responseHandler);
+	}
+
+	public static void post(Context context, String url, AsyncHttpResponseHandler responseHandler) {
+
+		client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
+		client.addHeader("Accept", "application/vnd.ws.v1+json");
+		client.post(context, url, responseHandler);
 	}
 
 	/**
@@ -148,4 +159,10 @@ public class HttpHelper {
 		client.post(context, url, params, responseHandler);
 	}
 
+	public static void delete(Context context, String url, AsyncHttpResponseHandler responseHandler) {
+
+		client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
+		client.addHeader("Accept", "application/vnd.ws.v1+json");
+		client.delete(context, url, responseHandler);
+	}
 }

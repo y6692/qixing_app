@@ -32,6 +32,7 @@ import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.full.SplashActivity;
+import cn.qimate.bike.model.CarAuthorityBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.swipebacklayout.SwipeBackLayout;
@@ -217,13 +218,73 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 		String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 		String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
 
-		Log.e("BFA===RefreshLogin", uid+"==="+access_token);
+		Log.e("BF===RefreshLogin", uid+"==="+access_token);
 
 		if (access_token == null || "".equals(access_token)) {
 			setAlias("");
 			ToastUtil.showMessageApp(context, "请先登录账号");
 			UIHelper.goToAct(context, LoginActivity.class);
 		} else {
+//			RequestParams params = new RequestParams();
+//			params.add("uid", uid);
+//			params.add("access_token", access_token);
+			HttpHelper.get(AppManager.getAppManager().currentActivity(), Urls.car_authority, new TextHttpResponseHandler() {
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, String responseString) {
+					try {
+						Log.e("car_authority===", "==="+responseString);
+
+						ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+						CarAuthorityBean bean = JSON.parseObject(result.getData(), CarAuthorityBean.class);
+
+						SharedPreferencesUrls.getInstance().putString("iscert", ""+bean.getUnauthorized_code());
+
+//						if (result.getFlag().equals("Success")) {
+//							UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+//							// 极光标记别名
+//
+//
+//
+////									setAlias(bean.getUid());
+////									SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
+////									SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
+////									SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
+////									SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
+////									SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
+////									SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
+////									SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
+////									SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
+////									SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
+////									SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
+////									SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
+////									SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+//
+//							SharedPreferencesUrls.getInstance().putString("access_token", bean.getToken());
+//						} else {
+//							setAlias("");
+//							if (BaseApplication.getInstance().getIBLE() != null){
+//								if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+//									BaseApplication.getInstance().getIBLE().refreshCache();
+//									BaseApplication.getInstance().getIBLE().close();
+//									BaseApplication.getInstance().getIBLE().stopScan();
+//								}
+//							}
+//							SharedPreferencesUrls.getInstance().putString("uid", "");
+//							SharedPreferencesUrls.getInstance().putString("access_token","");
+//						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers, String responseString,
+									  Throwable throwable) {
+				}
+			});
+
+
 //			RequestParams params = new RequestParams();
 //			params.add("uid", uid);
 //			params.add("access_token", access_token);
