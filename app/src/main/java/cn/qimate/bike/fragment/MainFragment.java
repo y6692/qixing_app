@@ -37,7 +37,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -139,6 +141,7 @@ import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.TabEntity;
 import cn.qimate.bike.model.TabTopEntity;
 import cn.qimate.bike.model.UserMsgBean;
+import cn.qimate.bike.util.HtmlTagHandler;
 import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
@@ -154,6 +157,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     private View v;
     Unbinder unbinder;
+
+    private static MainFragment mainFragment;
+    private final static int SCANNIN_GREQUEST_CODE = 1;
+
+    private LinearLayout scanLock, myCommissionLayout, myLocationLayout, linkLayout;
+
+    public static  MainFragment getInstance() {
+        return mainFragment;
+    }
 
     CommonTabLayout tab;
 //    TabLayout tab;
@@ -191,9 +203,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private LinearLayout rl_ad;
 
 
+
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_main, null);
         unbinder = ButterKnife.bind(this, v);
+
+        mainFragment = this;
+
         return v;
     }
 
@@ -225,6 +241,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     private void initView(){
 
+        scanLock = (LinearLayout) activity.findViewById(R.id.mainUI_scanCode_lock);
+
+        scanLock.setOnClickListener(this);
+
         bikeFragment = new BikeFragment();
         ebikeFragment = new EbikeFragment();
         mFragments.add(bikeFragment);
@@ -239,6 +259,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }
 
         tab = getActivity().findViewById(R.id.tab);
+
 
         tab.setTabData(mTabEntities, getActivity(), R.id.fl_change2, mFragments);
         tab.setCurrentTab(0);
@@ -313,13 +334,107 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
-    public void initmPopupWindowView(){
+    public void changeTab(int index) {
+
+
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.commitAllowingStateLoss();
+
+//        if(tab==null){
+//            tab = getActivity().findViewById(R.id.tab);
+//        }
+
+        Log.e("main===changeTab", "==="+tab);
+
+        tab.setCurrentTab(index);
+
+
+
+//        if (dialogTag == null) {
+//            dialogParent.setCancelable(false);
+//            transaction.add(dialogParent, "dialog_event");
+//            transaction.commitAllowingStateLoss();
+//        }
+//        transaction.show(ebikeFragment);
+
+    }
+
+//    private void changeFragment(Fragment fromFragment, Fragment toFragment) {
+//
+////        if (nowFragment != toFragment) {
+////            nowFragment = toFragment;
+////        }
+//
+//        FragmentManager fm = getSupportFragmentManager();
+//        FragmentTransaction ft = fm.beginTransaction();
+//
+//        if (toFragment.isAdded() == false) {
+//            ft.hide(fromFragment).add(R.id.center_view_main_activity, toFragment).commit();
+//        } else {
+//            ft.hide(fromFragment).show(toFragment).commit();
+//        }
+//
+//    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.e("mf===requestCode", requestCode+"==="+resultCode);
+
+
+
+        switch (requestCode) {
+
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    String price = data.getStringExtra("price");
+
+                    Log.e("mf===requestCode1", "==="+price);
+
+//                    String result = data.getStringExtra("QR_CODE");
+//                    upcarmap(result);
+//                    lock(result);
+
+                    price = "<b><font color=\"#000000\">my html text</font></b>";
+                    price = "<p style=\"color: #000000; font-size: 26px;\">my html text</p>";
+                    price = "<p style=\"color: #00ff00\">my html text</p>";
+                    price = "<p style=\"font-size:26px\">my html text</p>";
+                    price = "<p style=\"color:#00ff00\"><font size=\"20\">my html text</font></p>";
+                    price = "<font size=\"5\">my html text</font>";
+
+                    price = "<p><font color=\"#000000\" size=\"20px\">" + "要显示的数据" + "</font></p>";
+
+
+                    initmPopupRentWindowView(price);
+//                    initmPopupRentWindowView("<html>"+price+"<\\/html>");
+                } else {
+                    Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();
+                }
+
+                Log.e("requestCode===1", "==="+resultCode);
+                break;
+
+            default:
+
+                break;
+
+        }
+
+    }
+
+    public void initmPopupRentWindowView(String price){
 
         // 获取自定义布局文件的视图
         View customView = getLayoutInflater().inflate(R.layout.pop_rent_bike, null, false);
         // 创建PopupWindow宽度和高度
         RelativeLayout pop_win_bg = (RelativeLayout) customView.findViewById(R.id.pop_rent_bg);
         ImageView iv_popup_window_back = (ImageView) customView.findViewById(R.id.popupWindow_rent_back);
+        TextView tv_price = (TextView) customView.findViewById(R.id.tv_price);
+
+//        tv_price.setText(Html.fromHtml(price));
+        tv_price.setText(Html.fromHtml(price, null, new HtmlTagHandler("font")));
+
+
         // 获取截图的Bitmap
         Bitmap bitmap = UtilScreenCapture.getDrawing(getActivity());
         if (bitmap != null) {
@@ -417,10 +532,88 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
 //                break;
 
+
+
+            case R.id.mainUI_scanCode_lock:
+                Log.e("scanCode_lock===2", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
+
+                if (access_token == null || "".equals(access_token)){
+                    ToastUtil.showMessageApp(context,"请先登录账号");
+                    UIHelper.goToAct(context,LoginActivity.class);
+                    return;
+                }
+                if (SharedPreferencesUrls.getInstance().getString("iscert","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
+                    switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert",""))){
+
+                        case 1:
+//                            getCurrentorder2(uid,access_token);
+
+                            if (Build.VERSION.SDK_INT >= 23) {
+                                int checkPermission = activity.checkSelfPermission(Manifest.permission.CAMERA);
+                                if (checkPermission != PERMISSION_GRANTED) {
+//                                    flag = 1;
+
+                                    if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                                        requestPermissions(new String[] { Manifest.permission.CAMERA }, 100);
+                                    } else {
+                                        CustomDialog.Builder customBuilder1 = new CustomDialog.Builder(context);
+                                        customBuilder1.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.cancel();
+                                                    }
+                                                }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                                requestPermissions(
+                                                        new String[] { Manifest.permission.CAMERA },
+                                                        100);
+                                            }
+                                        });
+                                        customBuilder1.create().show();
+                                    }
+//                                    if (loadingDialog1 != null && loadingDialog1.isShowing()){
+//                                        loadingDialog1.dismiss();
+//                                    }
+                                    return;
+                                }
+                            }
+                            try {
+
+//                                closeBroadcast();
+//                                deactivate();
+
+                                Intent intent = new Intent();
+                                intent.setClass(context, ActivityScanerCode.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+
+                            } catch (Exception e) {
+                                UIHelper.showToastMsg(context, "相机打开失败,请检查相机是否可正常使用", R.drawable.ic_error);
+                            }
+//                            dialog.cancel();
+//                            if (loadingDialog1 != null && loadingDialog1.isShowing()){
+//                                loadingDialog1.dismiss();
+//                            }
+
+                            break;
+                        case 2:
+                            ToastUtil.showMessageApp(context,"您还未认证,请先认证");
+                            UIHelper.goToAct(context, RealNameAuthActivity.class);
+                            break;
+                        case 3:
+                            ToastUtil.showMessageApp(context,"认证审核中，请点击刷新");
+                            break;
+                        case 4:
+                            ToastUtil.showMessageApp(context,"认证被驳回，请重新认证");
+                            UIHelper.goToAct(context,RealNameAuthActivity.class);
+                    }
+                }else {
+                    ToastUtil.showMessageApp(context,"您还未认证,请先认证");
+                }
+                break;
+
             default:
-
-
-
                 break;
         }
     }
@@ -492,7 +685,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     public void OnBannerClick(int position) {
         Toast.makeText(context, "你点了第" + (position + 1) + "张轮播图", Toast.LENGTH_SHORT).show();
 
-        initmPopupWindowView();
+//        initmPopupWindowView();
     }
 
 

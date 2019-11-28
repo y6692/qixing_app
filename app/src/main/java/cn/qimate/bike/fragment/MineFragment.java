@@ -23,6 +23,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,6 +89,7 @@ import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.img.NetUtil;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.model.UserBean;
 import cn.qimate.bike.model.UserIndexBean;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
@@ -108,7 +110,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
     private LoadingDialog loadingDialog;
     private PullToZoomScrollViewEx scrollView;
-    private TextView rightBtn;
+    private ImageView rightBtn;
     private ImageView backImage;
     private ImageView settingImage;
     private ImageView headerImageView;
@@ -223,104 +225,59 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        imageUri = Uri.parse("file:///sdcard/temp.jpg");
-        iv_popup_window_back = (ImageView) getActivity().findViewById(R.id.popupWindow_back);
-        rl_popup_window = (RelativeLayout) getActivity().findViewById(R.id.popupWindow);
+//        imageUri = Uri.parse("file:///sdcard/temp.jpg");
+//        iv_popup_window_back = (ImageView) getActivity().findViewById(R.id.popupWindow_back);
+//        rl_popup_window = (RelativeLayout) getActivity().findViewById(R.id.popupWindow);
+//
+//        takePhotoBtn = (Button) getActivity().findViewById(R.id.takePhotoBtn);
+//        pickPhotoBtn = (Button) getActivity().findViewById(R.id.pickPhotoBtn);
+//        cancelBtn = (Button) getActivity().findViewById(R.id.cancelBtn);
+//
+//        takePhotoBtn.setOnClickListener(itemsOnClick);
+//        pickPhotoBtn.setOnClickListener(itemsOnClick);
+//        cancelBtn.setOnClickListener(itemsOnClick);
 
-        takePhotoBtn = (Button) getActivity().findViewById(R.id.takePhotoBtn);
-        pickPhotoBtn = (Button) getActivity().findViewById(R.id.pickPhotoBtn);
-        cancelBtn = (Button) getActivity().findViewById(R.id.cancelBtn);
-
-        takePhotoBtn.setOnClickListener(itemsOnClick);
-        pickPhotoBtn.setOnClickListener(itemsOnClick);
-        cancelBtn.setOnClickListener(itemsOnClick);
-
-        rightBtn = (TextView) getActivity().findViewById(R.id.personUI_rightBtn);
-        backImage = getActivity().findViewById(R.id.personUI_backImage);
-        settingImage = getActivity().findViewById(R.id.personUI_title_settingBtn);
+        rightBtn = (ImageView) getActivity().findViewById(R.id.personUI_rightBtn);
         headerImageView = getActivity().findViewById(R.id.personUI_bottom_header);
-        authState = getActivity().findViewById(R.id.personUI_bottom_authState);
         userName = getActivity().findViewById(R.id.personUI_userName);
-        superVip = getActivity().findViewById(R.id.personUI_superVip);
-        myIntegral = getActivity().findViewById(R.id.personUI_bottom_myIntegral);
 
-        curRouteLayout = getActivity().findViewById(R.id.personUI_bottom_curRouteLayout);
-        hisRouteLayout = getActivity().findViewById(R.id.personUI_bottom_hisRouteLayout);
-        myPurseLayout = getActivity().findViewById(R.id.personUI_bottom_myPurseLayout);
-        myRouteLayout = getActivity().findViewById(R.id.personUI_bottom_myRouteLayout);
-        actionCenterLayout = getActivity().findViewById(R.id.personUI_bottom_actionCenterLayout);
-        serviceCenterLayout = getActivity().findViewById(R.id.personUI_bottom_serviceCenterLayout);
-        settingLayout = getActivity().findViewById(R.id.personUI_bottom_settingLayout);
-
-        myIntegralLayout = getActivity().findViewById(R.id.personUI_bottom_myIntegralLayout);
-        myMsgLayout = getActivity().findViewById(R.id.personUI_bottom_myMsgLayout);
-        changePsdLayout = getActivity().findViewById(R.id.personUI_bottom_changePsdLayout);
-        helpCenterLayout = getActivity().findViewById(R.id.personUI_bottom_helpCenterLayout);
-        aboutUsLayout = getActivity().findViewById(R.id.personUI_bottom_aboutUsLayout);
-        billing_ruleLayout = getActivity().findViewById(R.id.personUI_bottom_billing_ruleLayout);
-        questionLayout = getActivity().findViewById(R.id.personUI_bottom_billing_questionLayout);
-        insuranceLayout = getActivity().findViewById(R.id.personUI_bottom_billing_insuranceLayout);
-        checkUpdataLayout = getActivity().findViewById(R.id.personUI_bottom_checkUpdataLayout);
-        logoutLayout = getActivity().findViewById(R.id.personUI_logoutLayout);
-
-        dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
-        View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_frist_view, null);
-        dialog.setContentView(dialogView);
-        dialog.setCanceledOnTouchOutside(false);
-
-//        titleImage = dialogView.findViewById(R.id.ui_fristView_title);
-//        exImage_1 = dialogView.findViewById(R.id.ui_fristView_exImage_1);
-//        exImage_2 = dialogView.findViewById(R.id.ui_fristView_exImage_2);
-//        exImage_3 = dialogView.findViewById(R.id.ui_fristView_exImage_3);
-        closeBtn = dialogView.findViewById(R.id.ui_fristView_closeBtn);
-
-//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
-//        params.height = (int) (getActivity().getWindowManager().getDefaultDisplay().getWidth() * 0.16);
-//        titleImage.setLayoutParams(params);
+//        curRouteLayout = getActivity().findViewById(R.id.personUI_bottom_curRouteLayout);
+//        hisRouteLayout = getActivity().findViewById(R.id.personUI_bottom_hisRouteLayout);
+//        myPurseLayout = getActivity().findViewById(R.id.personUI_bottom_myPurseLayout);
+//        myRouteLayout = getActivity().findViewById(R.id.personUI_bottom_myRouteLayout);
+//        actionCenterLayout = getActivity().findViewById(R.id.personUI_bottom_actionCenterLayout);
+//        serviceCenterLayout = getActivity().findViewById(R.id.personUI_bottom_serviceCenterLayout);
+//        settingLayout = getActivity().findViewById(R.id.personUI_bottom_settingLayout);
 //
-//        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
-//        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-//        exImage_1.setLayoutParams(params1);
+//        myIntegralLayout = getActivity().findViewById(R.id.personUI_bottom_myIntegralLayout);
+//        myMsgLayout = getActivity().findViewById(R.id.personUI_bottom_myMsgLayout);
+//        changePsdLayout = getActivity().findViewById(R.id.personUI_bottom_changePsdLayout);
+//        helpCenterLayout = getActivity().findViewById(R.id.personUI_bottom_helpCenterLayout);
+//        aboutUsLayout = getActivity().findViewById(R.id.personUI_bottom_aboutUsLayout);
+//        billing_ruleLayout = getActivity().findViewById(R.id.personUI_bottom_billing_ruleLayout);
+//        questionLayout = getActivity().findViewById(R.id.personUI_bottom_billing_questionLayout);
+//        insuranceLayout = getActivity().findViewById(R.id.personUI_bottom_billing_insuranceLayout);
+//        checkUpdataLayout = getActivity().findViewById(R.id.personUI_bottom_checkUpdataLayout);
+//        logoutLayout = getActivity().findViewById(R.id.personUI_logoutLayout);
 //
-//        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
-//        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-//        exImage_2.setLayoutParams(params2);
+//        dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+//        View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_frist_view, null);
+//        dialog.setContentView(dialogView);
+//        dialog.setCanceledOnTouchOutside(false);
 //
-//        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
-//        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-//        exImage_3.setLayoutParams(params3);
-
-        rightBtn.setOnClickListener(this);
-//        backImage.setOnClickListener(this);
-//        settingImage.setOnClickListener(this);
-        headerImageView.setOnClickListener(this);
-//        curRouteLayout.setOnClickListener(this);
-//        hisRouteLayout.setOnClickListener(this);
-
-        myIntegralLayout.setOnClickListener(this);
-
-        myPurseLayout.setOnClickListener(this);
-        myRouteLayout.setOnClickListener(this);
-        actionCenterLayout.setOnClickListener(this);
-        serviceCenterLayout.setOnClickListener(this);
-        settingLayout.setOnClickListener(this);
-
+//        closeBtn = dialogView.findViewById(R.id.ui_fristView_closeBtn);
+//
+//
+//        rightBtn.setOnClickListener(this);
+//        headerImageView.setOnClickListener(this);
 //        myIntegralLayout.setOnClickListener(this);
-//        myMsgLayout.setOnClickListener(this);
-//        changePsdLayout.setOnClickListener(this);
-//        helpCenterLayout.setOnClickListener(this);
-//        aboutUsLayout.setOnClickListener(this);
-//        logoutLayout.setOnClickListener(this);
-//        superVip.setOnClickListener(this);
-//        billing_ruleLayout.setOnClickListener(this);
-//        questionLayout.setOnClickListener(this);
-//        insuranceLayout.setOnClickListener(this);
-//        checkUpdataLayout.setOnClickListener(this);
-//        myCommissionLayout.setOnClickListener(this);
+//        myPurseLayout.setOnClickListener(this);
+//        myRouteLayout.setOnClickListener(this);
+//        actionCenterLayout.setOnClickListener(this);
+//        serviceCenterLayout.setOnClickListener(this);
+//        settingLayout.setOnClickListener(this);
+//        closeBtn.setOnClickListener(myOnClickLister);
 
-//        exImage_1.setOnClickListener(myOnClickLister);
-//        exImage_2.setOnClickListener(myOnClickLister);
-        closeBtn.setOnClickListener(myOnClickLister);
 //        billRule();
     }
 
@@ -360,22 +317,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         String bikenum = SharedPreferencesUrls.getInstance().getString("bikenum","");
         String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays","");
         if (access_token == null || "".equals(access_token)) {
-//            settingImage.setVisibility(View.GONE);
-            superVip.setVisibility(View.GONE);
-//            billing_ruleLayout.setVisibility(View.GONE);
+//            superVip.setVisibility(View.GONE);
         } else {
-//            settingImage.setVisibility(View.VISIBLE);
-//            initHttp();
-            if (("0".equals(bikenum) || bikenum == null || "".equals(bikenum))
-                    && ("0".equals(specialdays) || specialdays == null || "".equals(specialdays))){
-                superVip.setVisibility(View.GONE);
-            }else {
-                superVip.setVisibility(View.VISIBLE);
-            }
-//            if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
-//                billing_ruleLayout.setVisibility(View.VISIBLE);
+            initHttp();
+//            if (("0".equals(bikenum) || bikenum == null || "".equals(bikenum))
+//                    && ("0".equals(specialdays) || specialdays == null || "".equals(specialdays))){
+//                superVip.setVisibility(View.GONE);
 //            }else {
-//                billing_ruleLayout.setVisibility(View.GONE);
+//                superVip.setVisibility(View.VISIBLE);
 //            }
         }
 
@@ -1075,31 +1024,36 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
                     try {
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                        if (result.getFlag().equals("Success")) {
-                            UserIndexBean bean = JSON.parseObject(result.getData(), UserIndexBean.class);
-//                            myPurse.setText(bean.getMoney());
-                            myIntegral.setText(bean.getPoints());
-                            userName.setText(bean.getTelphone());
-                            if (bean.getHeadimg() != null && !"".equals(bean.getHeadimg())) {
-                                if ("gif".equalsIgnoreCase(bean.getHeadimg().substring(bean.getHeadimg().lastIndexOf(".") + 1,
-                                        bean.getHeadimg().length()))) {
-                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg())
-                                            .asGif().centerCrop().into(headerImageView);
-                                } else {
-                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg())
-                                            .asBitmap().centerCrop().into(headerImageView);
-                                }
-                            }
-                            if ("2".equals(bean.getIscert())) {
-                                authState.setVisibility(View.VISIBLE);
-                            } else {
-                                authState.setVisibility(View.GONE);
-                            }
+                        Log.e("mf===initHttp", "==="+responseString);
 
-                        } else {
-                            Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
-                        }
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        UserBean bean = JSON.parseObject(result.getData(), UserBean.class);
+//                            myPurse.setText(bean.getMoney());
+//                            myIntegral.setText(bean.getPoints());
+                        userName.setText(bean.getPhone());
+//                            if (bean.getHeadimg() != null && !"".equals(bean.getHeadimg())) {
+//                                if ("gif".equalsIgnoreCase(bean.getHeadimg().substring(bean.getHeadimg().lastIndexOf(".") + 1,
+//                                        bean.getHeadimg().length()))) {
+//                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg())
+//                                            .asGif().centerCrop().into(headerImageView);
+//                                } else {
+//                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg())
+//                                            .asBitmap().centerCrop().into(headerImageView);
+//                                }
+//                            }
+//                            if ("2".equals(bean.getIscert())) {
+//                                authState.setVisibility(View.VISIBLE);
+//                            } else {
+//                                authState.setVisibility(View.GONE);
+//                            }
+
+//                        if (result.getFlag().equals("Success")) {
+//
+//
+//                        } else {
+//                            Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+//                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

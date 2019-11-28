@@ -126,7 +126,7 @@ public class HttpHelper {
 //			e.printStackTrace();
 //		}
 
-		client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
+//		client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
 		client.addHeader("Accept", "application/vnd.ws.v1+json");
 		client.post(context, url, params, responseHandler);
 	}

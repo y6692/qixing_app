@@ -15,15 +15,19 @@ public class CarBean {
     private String school_name; //学校名称
     private String school_area; //学校区域
     private int lock_id;    //锁ID
-    private String lock_name;   //锁名称
+    private String lock_name;   //锁名称(英文)
+    private String lock_title;   //锁名称别名(中文)
     private String vendor_lock_id;  //厂商锁ID、deviceuuid
     private String lock_no; //锁lock_no
     private String lock_mac;    //锁mac
     private String lock_secretkey;  //锁秘钥、行运兔bleid
-    private int lock_status;    //锁状态 1正常 2离线
+    private int lock_status;    //车锁状态 0未知 1已上锁 2已开锁 3离线
+    private String lock_code;   //车锁操作状态码 701离线 702超时 703骑行中 704第三方服务器内部错误 705设备内存错误
     private String lock_status_updated_at;  //锁状态更新时间
-    private int electricity;    //电量
+    private String electricity;    //电量
     private String electricity_updated_at;  //电量更新时间
+    private String mileage;   //续航里程
+    private String price;    //价格描述
     private String longitude;   //经度
     private String latitude;    //纬度
     private String location_updated_at; //位置更新时间
@@ -108,6 +112,14 @@ public class CarBean {
         this.lock_name = lock_name;
     }
 
+    public String getLock_title() {
+        return lock_title;
+    }
+
+    public void setLock_title(String lock_title) {
+        this.lock_title = lock_title;
+    }
+
     public String getVendor_lock_id() {
         return vendor_lock_id;
     }
@@ -148,6 +160,14 @@ public class CarBean {
         this.lock_status = lock_status;
     }
 
+    public String getLock_code() {
+        return lock_code;
+    }
+
+    public void setLock_code(String lock_code) {
+        this.lock_code = lock_code;
+    }
+
     public String getLock_status_updated_at() {
         return lock_status_updated_at;
     }
@@ -156,11 +176,11 @@ public class CarBean {
         this.lock_status_updated_at = lock_status_updated_at;
     }
 
-    public int getElectricity() {
+    public String getElectricity() {
         return electricity;
     }
 
-    public void setElectricity(int electricity) {
+    public void setElectricity(String electricity) {
         this.electricity = electricity;
     }
 
@@ -170,6 +190,22 @@ public class CarBean {
 
     public void setElectricity_updated_at(String electricity_updated_at) {
         this.electricity_updated_at = electricity_updated_at;
+    }
+
+    public String getMileage() {
+        return mileage;
+    }
+
+    public void setMileage(String mileage) {
+        this.mileage = mileage;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public String getLongitude() {

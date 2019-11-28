@@ -130,13 +130,13 @@
             android:gravity="center_horizontal"
             >
 
+            <!--android:textSize="@dimen/sp16"-->
+            <!--android:textColor="#666666"-->
 
             <TextView
-                android:id="@+id/tv4"
+                android:id="@+id/tv_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp16"
-                android:textColor="#666666"
                 android:text="1小时内免费，超过1小时"/>
 
         </LinearLayout>

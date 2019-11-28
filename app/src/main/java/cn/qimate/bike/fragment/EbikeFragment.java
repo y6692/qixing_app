@@ -294,6 +294,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     private RouteOverLay routeOverLay;
     private MarkerOptions centerMarkerOptionLoading;
 
+    private MarkerOptions marker_park_Option;
     private MarkerOptions marker_tip_Option;
     private MarkerOptions marker_tip_Option2;
 
@@ -410,6 +411,10 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
 //            mapView.onResume();
 
+            if(aMap==null){
+                aMap = mapView.getMap();
+            }
+
             pOptions.clear();
             isContainsList.clear();
             aMap.clear();
@@ -444,15 +449,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             aMap.setOnCameraChangeListener(this);
 //            setUpLocationStyle();
 
-//            if (mlocationClient != null) {
-//                mlocationClient.setLocationListener(this);
-//                mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-//                mLocationOption.setInterval(2 * 1000);
-//                mLocationOption.setLocationCacheEnable(false);
-////            mLocationOption.setOnceLocationLatest(true);
-//                mlocationClient.setLocationOption(mLocationOption);
-//                mlocationClient.startLocation();
-//            }
 
             if(centerMarker!=null){
                 centerMarker.remove();
@@ -471,6 +467,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             }
 
             schoolRange();
+            operating_areas();
 
             if(referLatitude!=0 && referLongitude!=0){
                 myLocation = new LatLng(referLatitude, referLongitude);
@@ -503,43 +500,29 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                         case 1:
                             rl_authBtn.setEnabled(true);
                             rl_authBtn.setVisibility(View.VISIBLE);
-                            tv_authBtn.setText("您还未认证，点我快速认证");
+                            tv_authBtn.setText("您还未登录，点我快速登录");
+
                             break;
                         case 2:
 
-                            getCurrentorder1(uid, access_token);
-                            break;
-                        case 3:
                             rl_authBtn.setEnabled(true);
                             rl_authBtn.setVisibility(View.VISIBLE);
-                            tv_authBtn.setText("认证被驳回，请重新认证");
+                            tv_authBtn.setText("您还未认证，点我快速认证");
                             break;
-                        case 4:
+                        case 3:
+
                             rl_authBtn.setEnabled(false);
                             rl_authBtn.setVisibility(View.VISIBLE);
                             tv_authBtn.setText("认证审核中");
                             break;
+                        case 4:
+                            rl_authBtn.setEnabled(true);
+                            rl_authBtn.setVisibility(View.VISIBLE);
+                            tv_authBtn.setText("认证被驳回，请重新认证");
+                            break;
                     }
                 } else {
                     rl_authBtn.setVisibility(View.GONE);
-                }
-                if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))
-                        || "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) || SharedPreferencesUrls.getInstance().getString("money", "") == null ||
-                        "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))) {
-                    rechargeBtn.setVisibility(View.VISIBLE);
-                } else {
-                    rechargeBtn.setVisibility(View.GONE);
-                }
-
-                Log.e("type===2", type+"==="+ebike_specialdays);
-
-
-                if (("0".equals(ebike_specialdays) || ebike_specialdays == null || "".equals(ebike_specialdays))
-                        && ("0".equals(ebike_specialdays) || ebike_specialdays == null || "".equals(ebike_specialdays))) {
-                    cartBtn.setVisibility(View.GONE);
-                } else {
-                    cartBtn.setVisibility(View.VISIBLE);
-                    cartBtn.setText("免费" + ebike_specialdays + "天,每次前一个小时免费,点击续费");
                 }
 
             }
@@ -550,16 +533,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
             Log.e("ll_top===E", "==="+ll_top.isShown());
 
-//            mapView.onResume();
-
-
-//            setUpMap();
-//            mapView.setVisibility(View.VISIBLE);
-//            mapView.onResume();
-//
-//            if (aMap != null) {
-//                setUpMap();
-//            }
         }
     }
 
@@ -630,7 +603,247 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         });
     }
 
+    private void operating_areas(){
+        if(isHidden) return;
+
+        Log.e("main===operating_areas", isHidden+"===");
+
+        RequestParams params = new RequestParams();
+
+        HttpHelper.get(context, Urls.operating_areas, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+                Log.e("main===operating_areas1", "==="+responseString);
+
+                responseString = "{\"data\":[[{\"longitude\":\"119.920544\",\"latitude\":\"31.764389\"},{\"longitude\":\"119.921544\",\"latitude\":\"31.765389\"},{\"longitude\":\"119.922544\",\"latitude\":\"31.764389\"}]]}";
+
+                final ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+
+
+                            if (1==1 || result.getFlag().equals("Success")) {
+                                jsonArray = new JSONArray(result.getData());
+
+                                Log.e("main===operating_areas1", "==="+jsonArray);
+
+                                if(isHidden) return;
+
+                                if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                                    isContainsList.clear();
+                                }
+
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    List<LatLng> list = new ArrayList<>();
+                                    List<LatLng> list2 = new ArrayList<>();
+                                    int flag=0;
+
+                                    for (int j = 0; j < jsonArray.getJSONArray(i).length(); j ++){
+
+                                        JSONObject jsonObject = jsonArray.getJSONArray(i).getJSONObject(j);
+
+                                        LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
+
+                                        Log.e("main===operating_areas2", "==="+latLng);
+
+                                        flag=0;
+                                        list.add(latLng);
+
+
+//                                        if(jsonObject.getInt("is_yhq")==0){
+//                                            flag=0;
+//                                            list.add(latLng);
+//
+//                                        }else{
+//                                            flag=1;
+//                                            list2.add(latLng);
+//
+////                                    MarkerOptions centerMarkerOption = new MarkerOptions().position(latLng).icon(freeDescripter);
+////                                    aMap.addMarker(centerMarkerOption);
+//
+//                                        }
+                                    }
+
+                                    Log.e("main===operating_areas3", "==="+list.size());
+
+                                    Polygon polygon = null;
+                                    PolygonOptions pOption = new PolygonOptions();
+
+                                    pOption.addAll(list);
+                                    polygon = aMap.addPolygon(pOption.strokeWidth(2)
+                                            .strokeColor(Color.argb(255, 0, 135, 255))
+                                            .fillColor(Color.argb(76, 0, 173, 255)));
+
+                                    Log.e("main===operating_areas4", "==="+polygon);
+
+                                    getMaxPoint(list);
+
+//                                    if(flag==0){
+//                                        pOption.addAll(list);
+//                                        polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                                .strokeColor(Color.argb(255, 228, 59, 74))
+//                                                .fillColor(Color.argb(75, 230, 0, 18)));
+//                                    }else{
+//                                        pOption.addAll(list2);
+//                                        polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                                .strokeColor(Color.argb(255, 255, 80, 23))
+//                                                .fillColor(Color.argb(75, 255, 80, 23)));
+//
+//                                        getCenterPoint(list2);
+//                                    }
+
+
+
+                                    if(!isHidden){
+                                        pOptions.add(polygon);
+
+                                        isContainsList.add(polygon.contains(myLocation));
+                                    }else{
+                                    }
+
+                                }
+                            }else {
+                                ToastUtil.showMessageApp(context,result.getMsg());
+                            }
+                        }catch (Exception e){
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
     private void schoolRange(){
+        if(isHidden) return;
+
+        Log.e("main_eb===schoolRange", isHidden+"===");
+
+        RequestParams params = new RequestParams();
+
+        HttpHelper.get(context, Urls.parking_ranges, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+                Log.e("main_eb===schoolRange0", "==="+responseString);
+
+//                responseString = "{\"data\":[[{\"longitude\":\"119.920544\",\"latitude\":\"31.764389\"},{\"longitude\":\"119.921544\",\"latitude\":\"31.765389\"},{\"longitude\":\"119.922544\",\"latitude\":\"31.764389\"}]]}";
+
+                final ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+
+
+                            if (1==1 || result.getFlag().equals("Success")) {
+                                jsonArray = new JSONArray(result.getData());
+
+                                Log.e("main_eb===schoolRange1", jsonArray.length()+"==="+jsonArray);
+
+                                if(isHidden) return;
+
+                                if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                                    isContainsList.clear();
+                                }
+
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    List<LatLng> list = new ArrayList<>();
+                                    List<LatLng> list2 = new ArrayList<>();
+                                    int flag=0;
+
+                                    JSONArray jsonArray2 = new JSONArray(jsonArray.getJSONObject(i).getString("ranges"));;
+                                    JSONObject jsonObject = new JSONObject(jsonArray.getJSONObject(i).getString("parking"));
+
+                                    Log.e("main_eb===schoolRange2", jsonArray2.length()+"==="+jsonArray2);
+
+                                    for (int j = 0; j < jsonArray2.length(); j++) {
+                                        LatLng latLng = new LatLng(Double.parseDouble(jsonArray2.getJSONObject(j).getString("latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude")));
+
+                                        Log.e("main_eb===schoolRange22", jsonArray2.length()+"==="+jsonArray2);
+
+                                        flag=0;
+                                        list.add(latLng);
+                                    }
+
+
+                                    Log.e("main_eb===schoolRange3", "==="+list.size());
+
+                                    Polygon polygon = null;
+                                    PolygonOptions pOption = new PolygonOptions();
+
+                                    pOption.addAll(list);
+//                                    polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                            .strokeColor(Color.argb(255, 0, 135, 255))
+//                                            .fillColor(Color.argb(76, 0, 173, 255)));
+
+                                    polygon = aMap.addPolygon(pOption.strokeColor(Color.argb(0, 255, 255, 255)).fillColor(Color.argb(0, 255, 255, 255)));
+
+
+                                    Log.e("main_eb===schoolRange4", jsonObject.getString("latitude")+"==="+polygon);
+
+                                    //        MarkerOptions centerMarkerOption = new MarkerOptions().position(new LatLng(y, x)).icon(freeDescripter);
+                                    marker_park_Option.position(new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude"))));
+                                    aMap.addMarker(marker_park_Option);
+
+
+                                    if(!isHidden){
+                                        pOptions.add(polygon);
+
+                                        isContainsList.add(polygon.contains(myLocation));
+                                    }else{
+                                    }
+
+
+
+                                }
+
+                                Log.e("main_eb===schoolRange5", pOptions.size()+"==="+pOptions+"==="+isContainsList.size()+"==="+isContainsList);
+
+                            }else {
+                                ToastUtil.showMessageApp(context,result.getMsg());
+                            }
+                        }catch (Exception e){
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    private void schoolRange2(){
         Log.e("main===schoolRange2", isHidden+"==="+jsonArray2);
 
         if(isHidden) return;
@@ -755,7 +968,38 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     }
 
 
+    public LatLng getMaxPoint(List<LatLng> list) {
+        double x = 0.0;
+        double y = 0.0;
 
+        double m = 0.0;
+        double m1 = 0.0;
+
+        for (int i = 0; i < list.size(); i++) {
+//            x = x + list.get(i).longitude;
+//            y = y + list.get(i).latitude;
+
+            m1 = list.get(i).latitude;
+
+            if(i == 0 || m1 > m){
+                m = m1;
+
+                x = list.get(i).longitude;
+                y = list.get(i).latitude;
+            }else{
+                continue;
+            }
+        }
+
+//        MarkerOptions centerMarkerOption = new MarkerOptions().position(new LatLng(y, x)).icon(freeDescripter);
+        marker_tip_Option.position(new LatLng(y, x));
+        aMap.addMarker(marker_tip_Option);
+
+//        centerList.add(new LatLng(y, x));
+//        Log.e("getCenterPoint===2", x+"==="+y);
+
+        return new LatLng(y, x);
+    }
 
 
     @Override
@@ -1123,7 +1367,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         myLocationLayout =  (LinearLayout) activity.findViewById(R.id.mainUI_myLocationLayout2);
         linkLayout = (LinearLayout) activity.findViewById(R.id.mainUI_linkServiceLayout2);
         myLocationBtn = (ImageView) activity.findViewById(R.id.mainUI_myLocation2);
-        scanLock = (LinearLayout) activity.findViewById(R.id.mainUI_scanCode_lock2);
+//        scanLock = (LinearLayout) activity.findViewById(R.id.mainUI_scanCode_lock2);
         linkBtn = (ImageView) activity.findViewById(R.id.mainUI_linkService_btn2);
         rl_authBtn = activity.findViewById(R.id.rl_authBtn);
         tv_authBtn = activity.findViewById(R.id.tv_authBtn);
@@ -1166,6 +1410,10 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         bikeDescripter_yellow = BitmapDescriptorFactory.fromResource(R.drawable.ebike_yellow_icon);
         bikeDescripter_green = BitmapDescriptorFactory.fromResource(R.drawable.ebike_green_icon);
 
+        marker_park_Option = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.park_icon));
+        marker_tip_Option = new MarkerOptions().icon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_tip_layout, null)));
+        marker_tip_Option2 = new MarkerOptions().icon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_tip_layout2, null)));
+
         aMap.setOnMapTouchListener(this);
         aMap.setOnMapClickListener(this);
         setUpLocationStyle();
@@ -1177,7 +1425,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         myCommissionLayout.setOnClickListener(this);
         myLocationLayout.setOnClickListener(this);
         linkLayout.setOnClickListener(this);
-        scanLock.setOnClickListener(this);
+//        scanLock.setOnClickListener(this);
         linkBtn.setOnClickListener(this);
         rl_authBtn.setOnClickListener(this);
         rechargeBtn.setOnClickListener(this);
@@ -1264,13 +1512,13 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         isForeground = true;
         super.onResume();
 
+
         Log.e("ebf===onResume", "==="+type+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
 
-
-
-
         if(!"4".equals(type) && !"7".equals(type)){
-            ((MainActivity)getActivity()).changeTab(0);
+            MainFragment.getInstance().changeTab(0);
+//            ((MainActivity)getActivity()).changeTab(0);
+//            ((MainFragment)getParentFragment()).changeTab(0);
 //            return;
         }
 
@@ -1314,6 +1562,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         if(!isHidden && ("4".equals(type) || "7".equals(type))){
             getFeedbackStatus();
         }
+
 
 
     }
@@ -2027,61 +2276,37 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                     aMap.animateCamera(update);
                 }
                 break;
-            case R.id.mainUI_scanCode_lock2:
-                Log.e("scanCode_lock===2", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
-                if (access_token == null || "".equals(access_token)){
-                    ToastUtil.showMessageApp(context,"请先登录账号");
-                    UIHelper.goToAct(context,LoginActivity.class);
-                    return;
-                }
-                if (SharedPreferencesUrls.getInstance().getString("iscert","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
-                    switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert",""))){
-                        case 1:
-                            ToastUtil.showMessageApp(context,"您还未认证,请先认证");
-                            UIHelper.goToAct(context, RealNameAuthActivity.class);
-                            break;
-                        case 2:
-                            getCurrentorder2(uid,access_token);
-                            break;
-                        case 3:
-                            ToastUtil.showMessageApp(context,"认证被驳回，请重新认证");
-                            UIHelper.goToAct(context,RealNameAuthActivity.class);
-                            break;
-                        case 4:
-                            ToastUtil.showMessageApp(context,"认证审核中，请点击刷新");
-                            break;
-                    }
-                }else {
-                    ToastUtil.showMessageApp(context,"您还未认证,请先认证");
-                }
-                break;
             case R.id.mainUI_linkServiceLayout2:
             case R.id.mainUI_linkService_btn2:
                 initmPopupWindowView();
                 break;
             case R.id.rl_authBtn:
-                if (access_token == null || "".equals(access_token)){
+                if ("1".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
                     UIHelper.goToAct(context, LoginActivity.class);
-                }else {
-                    if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
-                        switch (Tag){
-                            case 0:
-                                closeBroadcast();
-                                deactivate();
-
-                                UIHelper.goToAct(context, CurRoadBikingActivity.class);
-                                break;
-                            case 1:
-                                UIHelper.goToAct(context, CurRoadBikedActivity.class);
-                                break;
-                            default:
-                                break;
-                        }
-                    }else {
-                        UIHelper.goToAct(context,RealNameAuthActivity.class);
-                    }
                 }
+
+//                if (access_token == null || "".equals(access_token)){
+//                    UIHelper.goToAct(context, LoginActivity.class);
+//                }else {
+//                    if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
+//                        switch (Tag){
+//                            case 0:
+//                                closeBroadcast();
+//                                deactivate();
+//
+//                                UIHelper.goToAct(context, CurRoadBikingActivity.class);
+//                                break;
+//                            case 1:
+//                                UIHelper.goToAct(context, CurRoadBikedActivity.class);
+//                                break;
+//                            default:
+//                                break;
+//                        }
+//                    }else {
+//                        UIHelper.goToAct(context,RealNameAuthActivity.class);
+//                    }
+//                }
                 break;
             case R.id.mainUI_rechargeBtn:
                 UIHelper.goToAct(context, MyPurseActivity.class);
@@ -2154,9 +2379,117 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             case R.id.mainUI_slideLayout2:
                 UIHelper.goWebViewAct(context,"停车须知",Urls.ebike_phtml5 + uid);
                 break;
+
             default:
                 break;
         }
+    }
+
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+//                ToastUtil.showMessage(context, resultCode + "====" + requestCode);
+
+                Log.e("ebf===requestCode", requestCode+"==="+resultCode);
+
+
+
+                if (resultCode == RESULT_OK) {
+                    switch (requestCode) {
+                        case 1:
+
+                            String price = data.getStringExtra("price");
+
+                            Log.e("ebf===requestCode1", "==="+price);
+
+                            break;
+
+                        case 188:
+
+//                    mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+//                        @Override
+//                        public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+//                            k++;
+//                            Log.e("main===LeScan", device + "====" + rssi + "====" + k);
+//
+//                            if (!macList.contains(""+device)){
+//                                macList.add(""+device);
+//                            }
+//
+//                        }
+//                    };
+
+                            BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
+                            mBluetoothAdapter = bluetoothManager.getAdapter();
+
+                            if (mBluetoothAdapter == null) {
+                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                                activity.finish();
+                                return;
+                            }
+                            if (!mBluetoothAdapter.isEnabled()) {
+                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                                startActivityForResult(enableBtIntent, 188);
+                            }else{
+//                        startXB();
+//
+//                        if (lockLoading != null && !lockLoading.isShowing()){
+//                            lockLoading.setTitle("还车点确认中");
+//                            lockLoading.show();
+//                        }
+//
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                try {
+//                                    int n=0;
+//                                    while(macList.size() == 0){
+//
+//                                        Thread.sleep(1000);
+//                                        n++;
+//
+//                                        Log.e("main===", "n====" + n);
+//
+//                                        if(n>=6) break;
+//
+//                                    }
+//                                } catch (InterruptedException e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//                                m_myHandler.sendEmptyMessage(3);
+//
+//                            }
+//                        }).start();
+                            }
+
+
+                            break;
+
+                        default:
+                            break;
+
+                    }
+                } else {
+                    switch (requestCode) {
+                        case PRIVATE_CODE:
+                            openGPSSettings();
+                            break;
+
+                        case 188:
+                            ToastUtil.showMessageApp(context, "需要打开蓝牙");
+                            AppManager.getAppManager().AppExit(context);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        });
+
     }
 
     public void RefreshLogin() {
@@ -3034,99 +3367,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     }
 
 
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        m_myHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                ToastUtil.showMessage(context, resultCode + "====" + requestCode);
 
-                if (resultCode == RESULT_OK) {
-                    switch (requestCode) {
-                        case 188:
-
-//                    mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-//                        @Override
-//                        public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-//                            k++;
-//                            Log.e("main===LeScan", device + "====" + rssi + "====" + k);
-//
-//                            if (!macList.contains(""+device)){
-//                                macList.add(""+device);
-//                            }
-//
-//                        }
-//                    };
-
-                            BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
-                            mBluetoothAdapter = bluetoothManager.getAdapter();
-
-                            if (mBluetoothAdapter == null) {
-                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                                activity.finish();
-                                return;
-                            }
-                            if (!mBluetoothAdapter.isEnabled()) {
-                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                                startActivityForResult(enableBtIntent, 188);
-                            }else{
-//                        startXB();
-//
-//                        if (lockLoading != null && !lockLoading.isShowing()){
-//                            lockLoading.setTitle("还车点确认中");
-//                            lockLoading.show();
-//                        }
-//
-//                        new Thread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                try {
-//                                    int n=0;
-//                                    while(macList.size() == 0){
-//
-//                                        Thread.sleep(1000);
-//                                        n++;
-//
-//                                        Log.e("main===", "n====" + n);
-//
-//                                        if(n>=6) break;
-//
-//                                    }
-//                                } catch (InterruptedException e) {
-//                                    e.printStackTrace();
-//                                }
-//
-//                                m_myHandler.sendEmptyMessage(3);
-//
-//                            }
-//                        }).start();
-                            }
-
-
-                            break;
-
-                        default:
-                            break;
-
-                    }
-                } else {
-                    switch (requestCode) {
-                        case PRIVATE_CODE:
-                            openGPSSettings();
-                            break;
-
-                        case 188:
-                            ToastUtil.showMessageApp(context, "需要打开蓝牙");
-                            AppManager.getAppManager().AppExit(context);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        });
-
-    }
 
 
 
