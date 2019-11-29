@@ -78,35 +78,35 @@
             </LinearLayout>
 
 
-            <LinearLayout
-                android:id="@+id/mainUI_myLocationLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="80dp"
-                android:layout_marginLeft="@dimen/dp10"
-                android:orientation="vertical"
-                android:background="@drawable/back_bd"
-                android:gravity="center">
+            <!--<LinearLayout-->
+                <!--android:id="@+id/mainUI_myLocationLayout"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_marginBottom="80dp"-->
+                <!--android:layout_marginLeft="@dimen/dp10"-->
+                <!--android:orientation="vertical"-->
+                <!--android:background="@drawable/back_bd"-->
+                <!--android:gravity="center">-->
 
-                <!--android:src="@drawable/btn_location"-->
-                <!--android:src="@drawable/loading_large"-->
+                <!--&lt;!&ndash;android:src="@drawable/btn_location"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:src="@drawable/loading_large"&ndash;&gt;-->
 
-                <ImageView
-                    android:id="@+id/mainUI_myLocation7"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:background="@null"
-                    android:src="@drawable/btn_location"
-                    android:layout_alignParentLeft="true"/>
+                <!--<ImageView-->
+                    <!--android:id="@+id/mainUI_myLocation7"-->
+                    <!--android:layout_width="35dp"-->
+                    <!--android:layout_height="35dp"-->
+                    <!--android:background="@null"-->
+                    <!--android:src="@drawable/btn_location"-->
+                    <!--android:layout_alignParentLeft="true"/>-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp12"
-                    android:textColor="@color/tx_black"
-                    android:text="定位"/>
-            </LinearLayout>
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textSize="@dimen/sp12"-->
+                    <!--android:textColor="@color/tx_black"-->
+                    <!--android:text="定位"/>-->
+            <!--</LinearLayout>-->
 
 
 

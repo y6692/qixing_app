@@ -304,6 +304,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     private void initView(){
 
+        if(aMap==null){
+            aMap = mapView.getMap();
+        }
+
         customBuilder = new CustomDialog.Builder(context);
         customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
         customDialog = customBuilder.create();
@@ -311,12 +315,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         rl_authBtn = activity.findViewById(R.id.rl_authBtn);
         tv_authBtn = activity.findViewById(R.id.tv_authBtn);
         refreshLayout = (LinearLayout) activity.findViewById(R.id.mainUI_refreshLayout);
+        myLocationLayout =  (LinearLayout) activity.findViewById(R.id.mainUI_myLocationLayout);
         slideLayout = (LinearLayout)activity.findViewById(R.id.mainUI_slideLayout);
         linkLayout = (LinearLayout) activity.findViewById(R.id.mainUI_linkServiceLayout);
         scanLock = (LinearLayout) activity.findViewById(R.id.mainUI_scanCode_lock);
 
         rl_authBtn.setOnClickListener(this);
         refreshLayout.setOnClickListener(this);
+        myLocationLayout.setOnClickListener(this);
         slideLayout.setOnClickListener(this);
         linkLayout.setOnClickListener(this);
         scanLock.setOnClickListener(this);
@@ -460,17 +466,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 }
                 break;
 
-//            case R.id.ui_adv_closeBtn:
-//                if (advDialog != null && advDialog.isShowing()) {
-//                    advDialog.dismiss();
-//                }
-//                break;
-//            case R.id.ui_adv_image:
-//
-//                Log.e("main===", "ui_adv==="+app_type+"==="+app_id+"==="+ad_link);
-//
-//                UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
-//                break;
 
             case R.id.mainUI_refreshLayout:
                 Log.e("refreshLayout===0", "==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
@@ -479,13 +474,20 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                 break;
 
-//            case R.id.mainUI_myLocationLayout:
-//                if (myLocation != null) {
-//                    CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
-//                    aMap.animateCamera(update);
-//                }
-//
-//                break;
+            case R.id.mainUI_myLocationLayout:
+                if(!bikeFragment.isHidden()){
+                    if (bikeFragment.myLocation != null) {
+                        CameraUpdate update = CameraUpdateFactory.changeLatLng(bikeFragment.myLocation);
+                        aMap.animateCamera(update);
+                    }
+                }else{
+                    if (ebikeFragment.myLocation != null) {
+                        CameraUpdate update = CameraUpdateFactory.changeLatLng(ebikeFragment.myLocation);
+                        aMap.animateCamera(update);
+                    }
+                }
+
+                break;
 
             case R.id.mainUI_slideLayout:
 
@@ -511,8 +513,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 initmPopupWindowView();
                 break;
 
+            case R.id.ll_rent:
+                Log.e("ll_rent===onClick", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
+
+
+                break;
+
             case R.id.mainUI_scanCode_lock:
-                Log.e("scanCode_lock===2", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
+                Log.e("scanCode_lock===mf", SharedPreferencesUrls.getInstance().getString("iscert","")+"==="+uid+"==="+access_token);
 
                 if (access_token == null || "".equals(access_token)){
                     ToastUtil.showMessageApp(context,"请先登录账号");
@@ -563,7 +571,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 Intent intent = new Intent();
                                 intent.setClass(context, ActivityScanerCode.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+                                activity.startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
 
                             } catch (Exception e) {
                                 UIHelper.showToastMsg(context, "相机打开失败,请检查相机是否可正常使用", R.drawable.ic_error);
@@ -593,6 +601,50 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.e("mf===requestCode", requestCode+"==="+resultCode);
+
+        switch (requestCode) {
+
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    String price = data.getStringExtra("price");
+
+                    Log.e("mf===requestCode1", "==="+price);
+
+//                    String result = data.getStringExtra("QR_CODE");
+//                    upcarmap(result);
+//                    lock(result);
+
+                    price = "<b><font color=\"#000000\">my html text</font></b>";
+                    price = "<p style=\"color: #000000; font-size: 26px;\">my html text</p>";
+                    price = "<p style=\"color: #00ff00\">my html text</p>";
+                    price = "<p style=\"font-size:26px\">my html text</p>";
+                    price = "<p style=\"color:#00ff00\"><font size=\"20\">my html text</font></p>";
+                    price = "<font size=\"5\">my html text</font>";
+
+                    price = "<p><font color=\"#000000\" size=\"20px\">" + "要显示的数据" + "</font></p>";
+
+
+                    initmPopupRentWindowView(price);
+//                    initmPopupRentWindowView("<html>"+price+"<\\/html>");
+                } else {
+                    Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();
+                }
+
+                Log.e("requestCode===1", "==="+resultCode);
+                break;
+
+            default:
+
+                break;
+
+        }
+
     }
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -900,51 +952,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //
 //    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.e("mf===requestCode", requestCode+"==="+resultCode);
-
-
-
-        switch (requestCode) {
-
-            case 1:
-                if (resultCode == RESULT_OK) {
-                    String price = data.getStringExtra("price");
-
-                    Log.e("mf===requestCode1", "==="+price);
-
-//                    String result = data.getStringExtra("QR_CODE");
-//                    upcarmap(result);
-//                    lock(result);
-
-                    price = "<b><font color=\"#000000\">my html text</font></b>";
-                    price = "<p style=\"color: #000000; font-size: 26px;\">my html text</p>";
-                    price = "<p style=\"color: #00ff00\">my html text</p>";
-                    price = "<p style=\"font-size:26px\">my html text</p>";
-                    price = "<p style=\"color:#00ff00\"><font size=\"20\">my html text</font></p>";
-                    price = "<font size=\"5\">my html text</font>";
-
-                    price = "<p><font color=\"#000000\" size=\"20px\">" + "要显示的数据" + "</font></p>";
-
-
-                    initmPopupRentWindowView(price);
-//                    initmPopupRentWindowView("<html>"+price+"<\\/html>");
-                } else {
-                    Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();
-                }
-
-                Log.e("requestCode===1", "==="+resultCode);
-                break;
-
-            default:
-
-                break;
-
-        }
-
-    }
 
     public void initmPopupRentWindowView(String price){
 
@@ -953,11 +961,17 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         // 创建PopupWindow宽度和高度
         RelativeLayout pop_win_bg = (RelativeLayout) customView.findViewById(R.id.pop_rent_bg);
         ImageView iv_popup_window_back = (ImageView) customView.findViewById(R.id.popupWindow_rent_back);
+        ImageView iv_rent_cancelBtn = (ImageView) customView.findViewById(R.id.iv_rent_cancelBtn);
         TextView tv_price = (TextView) customView.findViewById(R.id.tv_price);
+        LinearLayout ll_change_car = (LinearLayout) customView.findViewById(R.id.ll_change_car);
+        LinearLayout ll_rent = (LinearLayout) customView.findViewById(R.id.ll_rent);
 
 //        tv_price.setText(Html.fromHtml(price));
         tv_price.setText(Html.fromHtml(price, null, new HtmlTagHandler("font")));
 
+        iv_rent_cancelBtn.setOnClickListener(this);
+        ll_change_car.setOnClickListener(this);
+        ll_rent.setOnClickListener(this);
 
         // 获取截图的Bitmap
         Bitmap bitmap = UtilScreenCapture.getDrawing(getActivity());

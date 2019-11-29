@@ -203,7 +203,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
     private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
     private boolean mFirstFix = true;
-    private LatLng myLocation = null;
+    public LatLng myLocation = null;
     private Circle mCircle;
 
     private BitmapDescriptor bikeDescripter;
@@ -269,8 +269,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     protected InternalReceiver internalReceiver = null;
 
     private BluetoothAdapter mBluetoothAdapter;
-    LocationManager locationManager;
-    String provider = LocationManager.GPS_PROVIDER;
+
 //	String provider = LocationManager.NETWORK_PROVIDER;
 
     public List<Boolean> isContainsList;
@@ -468,56 +467,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 addChooseMarker();
                 addCircle(myLocation, accuracy);
             }
-
-            /*
-            String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
-            String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-//        String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
-            String ebike_specialdays = SharedPreferencesUrls.getInstance().getString("ebike_specialdays", "");
-            if (access_token == null || "".equals(access_token)) {
-                rl_authBtn.setVisibility(View.VISIBLE);
-                tv_authBtn.setText("您还未登录，点我快速登录");
-                rl_authBtn.setEnabled(true);
-                cartBtn.setVisibility(View.GONE);
-                refreshLayout.setVisibility(View.GONE);
-                rechargeBtn.setVisibility(View.GONE);
-            } else {
-                refreshLayout.setVisibility(View.VISIBLE);
-                if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-
-                    Log.e("authBtn===2", "==="+Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", "")));
-
-                    switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                        case 1:
-                            rl_authBtn.setEnabled(true);
-                            rl_authBtn.setVisibility(View.VISIBLE);
-                            tv_authBtn.setText("您还未登录，点我快速登录");
-
-                            break;
-                        case 2:
-
-                            rl_authBtn.setEnabled(true);
-                            rl_authBtn.setVisibility(View.VISIBLE);
-                            tv_authBtn.setText("您还未认证，点我快速认证");
-                            break;
-                        case 3:
-
-                            rl_authBtn.setEnabled(false);
-                            rl_authBtn.setVisibility(View.VISIBLE);
-                            tv_authBtn.setText("认证审核中");
-                            break;
-                        case 4:
-                            rl_authBtn.setEnabled(true);
-                            rl_authBtn.setVisibility(View.VISIBLE);
-                            tv_authBtn.setText("认证被驳回，请重新认证");
-                            break;
-                    }
-                } else {
-                    rl_authBtn.setVisibility(View.GONE);
-                }
-
-            }
-            */
 
             ll_top.setVisibility(View.VISIBLE);
             ll_top_navi.setVisibility(View.GONE);
@@ -959,7 +908,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     }
 
-
     public LatLng getMaxPoint(List<LatLng> list) {
         double x = 0.0;
         double y = 0.0;
@@ -992,7 +940,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         return new LatLng(y, x);
     }
-
 
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
@@ -1143,9 +1090,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     public void onTouch(MotionEvent motionEvent) {
         Log.e("main===onTouch_EB",  ll_top.isShown()+"===" + routeOverLay+"===" + ll_top_navi);
 
-
-
-
         if (motionEvent.getAction() == MotionEvent.ACTION_UP || motionEvent.getAction() == MotionEvent.ACTION_CANCEL || motionEvent.getAction() == MotionEvent.ACTION_OUTSIDE || motionEvent.getActionMasked() == MotionEvent.ACTION_POINTER_UP){
             isUp = true;
         }else {
@@ -1220,7 +1164,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
     }
 
-
     public void onCameraChange(CameraPosition cameraPosition) {
 //        Log.e("onCameraChange===", "==="+centerMarker);
 
@@ -1229,7 +1172,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
-    /**附近车接口* */
     private void initNearby(double latitude, double longitude){
         if(isHidden) return;
 
@@ -1356,9 +1298,10 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //        leftBtn = (ImageView) activity.findViewById(R.id.mainUI_leftBtn);
 //        rightBtn = (ImageView) activity.findViewById(R.id.mainUI_rightBtn);
         myCommissionLayout =  (LinearLayout) activity.findViewById(R.id.personUI_bottom_billing_myCommissionLayout2);
-        myLocationLayout =  (LinearLayout) activity.findViewById(R.id.mainUI_myLocationLayout2);
+        marqueeLayout = activity.findViewById(R.id.mainUI_marqueeLayout2);
+//        myLocationLayout =  (LinearLayout) activity.findViewById(R.id.mainUI_myLocationLayout2);
 //        linkLayout = (LinearLayout) activity.findViewById(R.id.mainUI_linkServiceLayout2);
-        myLocationBtn = (ImageView) activity.findViewById(R.id.mainUI_myLocation2);
+//        myLocationBtn = (ImageView) activity.findViewById(R.id.mainUI_myLocation2);
 //        scanLock = (LinearLayout) activity.findViewById(R.id.mainUI_scanCode_lock2);
 //        linkBtn = (ImageView) activity.findViewById(R.id.mainUI_linkService_btn2);
 //        rl_authBtn = activity.findViewById(R.id.rl_authBtn);
@@ -1367,7 +1310,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //        rechargeBtn = (Button)activity.findViewById(R.id.mainUI_rechargeBtn);
 //        refreshLayout = (LinearLayout) activity.findViewById(R.id.mainUI_refreshLayout2);
 //        slideLayout = (LinearLayout)activity.findViewById(R.id.mainUI_slideLayout2);
-        marqueeLayout = activity.findViewById(R.id.mainUI_marqueeLayout2);
 //        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
         ArrayList<BitmapDescriptor> iconList = new ArrayList<>();
@@ -1413,9 +1355,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //        leftBtn.setOnClickListener(this);
 //        rightBtn.setOnClickListener(this);
         marqueeLayout.setOnClickListener(this);
-        myLocationBtn.setOnClickListener(this);
         myCommissionLayout.setOnClickListener(this);
-        myLocationLayout.setOnClickListener(this);
+//        myLocationLayout.setOnClickListener(this);
+//        myLocationBtn.setOnClickListener(this);
 //        linkLayout.setOnClickListener(this);
 //        scanLock.setOnClickListener(this);
 //        linkBtn.setOnClickListener(this);
@@ -1472,32 +1414,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     }
 
-    private View.OnClickListener myOnClickLister = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-//                case R.id.ui_fristView_exImage_1:
-//                    if (dialog != null && dialog.isShowing()) {
-//                        dialog.dismiss();
-//                    }
-//                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
-//                    break;
-//                case R.id.ui_fristView_exImage_2:
-//                    if (dialog != null && dialog.isShowing()) {
-//                        dialog.dismiss();
-//                    }
-//                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
-//                    break;
-//                case R.id.ui_fristView_closeBtn:
-//                    if (dialog != null && dialog.isShowing()) {
-//                        dialog.dismiss();
-//                    }
-//                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     @Override
     public void onResume() {
@@ -1516,7 +1432,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         tz = 0;
 
-        JPushInterface.onResume(context);
 //        if(mapView!=null){
 //            mapView.onResume();
 //        }
@@ -1554,8 +1469,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //        if(!isHidden && ("4".equals(type) || "7".equals(type))){
 //            getFeedbackStatus();
 //        }
-
-
 
     }
 
@@ -1682,8 +1595,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);// 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
 //        aMap.setLoadOfflineData(true);
-
-
     }
 
     @Override
@@ -1754,92 +1665,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         mlocationClient = null;
     }
 
-
-
-
-//    private void getCurrentorder1(String uid, String access_token) {
-//        RequestParams params = new RequestParams();
-//        params.put("uid", uid);
-//        params.put("access_token", access_token);
-//        HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
-//            @Override
-//            public void onStart() {
-//                onStartCommon("正在加载");
-//            }
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                onFailureCommon(throwable.toString());
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-//                m_myHandler.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-//                            if (result.getFlag().equals("Success")) {
-//                                if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-//                                    if ("[]".equals(result.getData()) || 0 == result.getData().length()) {
-//                                        rl_authBtn.setEnabled(false);
-//                                        rl_authBtn.setVisibility(View.GONE);
-//
-//                                        SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
-//                                        SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
-//
-//                                    } else {
-//                                        CurRoadBikingBean bean = JSON.parseObject(result.getData(), CurRoadBikingBean.class);
-//
-//                                        m_nowMac = bean.getMacinfo();
-//
-//                                        Log.e("main===ebike", "getMacinfo====" + bean.getMacinfo());
-//
-//                                        if (!"".equals(m_nowMac)) {
-//                                            oid = bean.getOid();
-//                                            osn = bean.getOsn();
-//                                            type = bean.getType();
-//
-//                                            SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
-//                                            SharedPreferencesUrls.getInstance().putString("oid", oid);
-//                                            SharedPreferencesUrls.getInstance().putString("osn", osn);
-//                                            SharedPreferencesUrls.getInstance().putString("type", type);
-//                                            SharedPreferencesUrls.getInstance().putString("deviceuuid", bean.getDeviceuuid());
-//                                        }
-//
-//                                        Log.e("main===ebike", "getStatus====" + bean.getStatus());
-//
-//                                        if ("1".equals(bean.getStatus())) {
-//                                            SharedPreferencesUrls.getInstance().putBoolean("isStop", false);
-//
-//                                            tv_authBtn.setText("您有一条进行中的行程，点我查看");
-//                                            Tag = 0;
-//                                        } else {
-//                                            SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
-//                                            SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
-//
-//                                            tv_authBtn.setText("您有一条未支付的行程，点我查看");
-//                                            Tag = 1;
-//                                        }
-//                                        rl_authBtn.setVisibility(View.VISIBLE);
-//                                        rl_authBtn.setEnabled(true);
-//                                    }
-//                                }
-//                            } else {
-//                                ToastUtils.show(result.getMsg());
-//                            }
-//                        } catch (Exception e) {
-//                        }
-//                        if (loadingDialog != null && loadingDialog.isShowing()) {
-//                            loadingDialog.dismiss();
-//                        }
-//                    }
-//                });
-//
-//            }
-//        });
-//    }
-
-
     @Override
     public void onStart() {
         super.onStart();
@@ -1889,7 +1714,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //			mlocationClient.stopLocation();//停止定位
 //		}
 
-        JPushInterface.onPause(context);
 		if(mapView!=null){
             mapView.onPause();
         }
@@ -1936,8 +1760,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         ToastUtil.showMessage(context, "main===onDestroy");
 
-
-
         deactivate();
 
         if (null != mlocationClient) {
@@ -1978,7 +1800,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
         }
     }
-
 
     protected void handleReceiver(final Context context, final Intent intent) {
         m_myHandler.post(new Runnable() {
@@ -2188,61 +2009,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     }
 
-
-
-
-    private boolean checkGPSIsOpen() {
-        boolean isOpen;
-        locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE); // 高精度
-        criteria.setAltitudeRequired(false);
-        criteria.setBearingRequired(false);
-        criteria.setCostAllowed(true);
-        criteria.setPowerRequirement(Criteria.POWER_LOW); // 低功耗
-        provider = locationManager.getBestProvider(criteria, true);
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        locationManager.requestLocationUpdates(provider, 2000, 500, locationListener);
-
-        isOpen = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        return isOpen;
-    }
-
-
-    private void openGPSSettings() {
-
-
-
-        if (checkGPSIsOpen()) {
-        } else {
-
-            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-            customBuilder.setTitle("温馨提示").setMessage("请在手机设置打开应用的位置权限并选择最精准的定位模式")
-                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            activity.finish();
-                        }
-                    })
-                    .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, PRIVATE_CODE);
-                        }
-                    });
-            customBuilder.create().show();
-
-        }
-    }
-
-
-
-
-
     @Override
     public void onClick(View view) {
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
@@ -2257,47 +2023,18 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 intent.putExtra("isBack",true);
                 context.startActivity(intent);
                 break;
-            case R.id.mainUI_myLocationLayout2:
-            case R.id.mainUI_myLocation2:
-                if (myLocation != null) {
-                    CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
-                    aMap.animateCamera(update);
-                }
-                break;
-
-//            case R.id.mainUI_linkServiceLayout2:
-//            case R.id.mainUI_linkService_btn2:
-//                initmPopupWindowView();
-//                break;
-
-            case R.id.ui_adv_image:
-
-                Log.e("main===", "ui_adv==="+app_type+"==="+app_id+"==="+ad_link);
-
-                UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
-                break;
-            case R.id.ui_adv_closeBtn:
-                if (advDialog != null && advDialog.isShowing()) {
-                    advDialog.dismiss();
-                }
-                break;
-//            case R.id.mainUI_cartBtn:
-//                intent = new Intent(context, PayMontCartActivity.class);
-//                intent.putExtra("carType",2);
-//                context.startActivity(intent);
-//                break;
-//            case R.id.mainUI_rechargeBtn:
-//                UIHelper.goToAct(context, MyPurseActivity.class);
-//                break;
-//            case R.id.mainUI_slideLayout2:
-//                UIHelper.goWebViewAct(context,"停车须知",Urls.ebike_phtml5 + uid);
+//            case R.id.mainUI_myLocationLayout2:
+//            case R.id.mainUI_myLocation2:
+//                if (myLocation != null) {
+//                    CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
+//                    aMap.animateCamera(update);
+//                }
 //                break;
 
             default:
                 break;
         }
     }
-
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
@@ -2307,8 +2044,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //                ToastUtil.showMessage(context, resultCode + "====" + requestCode);
 
                 Log.e("ebf===requestCode", requestCode+"==="+resultCode);
-
-
 
                 if (resultCode == RESULT_OK) {
                     switch (requestCode) {
@@ -2388,9 +2123,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                     }
                 } else {
                     switch (requestCode) {
-                        case PRIVATE_CODE:
-                            openGPSSettings();
-                            break;
+//                        case PRIVATE_CODE:
+//                            openGPSSettings();
+//                            break;
 
                         case 188:
                             ToastUtil.showMessageApp(context, "需要打开蓝牙");
@@ -2405,172 +2140,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     }
 
-    public void RefreshLogin() {
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-        String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
-
-        Log.e("EBF===RefreshLogin", uid+"==="+access_token);
-
-        if (access_token == null || "".equals(access_token)) {
-            ToastUtil.showMessageApp(context, "请先登录账号");
-            UIHelper.goToAct(context, LoginActivity.class);
-        } else {
-            RequestParams params = new RequestParams();
-            params.add("uid", uid);
-            params.add("access_token", access_token);
-
-/*
-            HttpHelper.post(AppManager.getAppManager().currentActivity(), Urls.accesslogin, params, new TextHttpResponseHandler() {
-                @Override
-                public void onStart() {
-                    onStartCommon("正在刷新");
-                }
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    onFailureCommon(throwable.toString());
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                    m_myHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                                if (result.getFlag().equals("Success")) {
-                                    UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
-                                    // 极光标记别名
-
-                                    Log.e("RefreshLogin===", bean.getSpecialdays()+"==="+bean.getEbike_specialdays());
-
-                                    String uid = bean.getUid();
-                                    String access_token = bean.getToken();
-
-//                                    SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
-//                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
-//                                    SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
-//                                    SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
-//                                    SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
-//                                    SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
-//                                    SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
-//                                    SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
-//                                    SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
-//                                    SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
-//                                    SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
-//                                    SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
-
-                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getToken());
-
-                                    new MyAsyncTask().execute();
-                                    if (access_token == null || "".equals(access_token)) {
-                                        rl_authBtn.setVisibility(View.VISIBLE);
-                                        tv_authBtn.setText("您还未登录，点我快速登录");
-                                        rl_authBtn.setEnabled(true);
-                                    } else {
-                                        if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                                            switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                                                case 1:
-                                                    rl_authBtn.setEnabled(true);
-                                                    rl_authBtn.setVisibility(View.VISIBLE);
-                                                    tv_authBtn.setText("您还未认证，点我快速认证");
-                                                    break;
-                                                case 2:
-                                                    getCurrentorder1(uid, access_token);
-                                                    break;
-                                                case 3:
-                                                    rl_authBtn.setEnabled(true);
-                                                    rl_authBtn.setVisibility(View.VISIBLE);
-                                                    tv_authBtn.setText("认证被驳回，请重新认证");
-                                                    break;
-                                                case 4:
-                                                    rl_authBtn.setEnabled(false);
-                                                    rl_authBtn.setVisibility(View.VISIBLE);
-                                                    tv_authBtn.setText("认证审核中");
-                                                    break;
-                                            }
-                                        } else {
-                                            rl_authBtn.setVisibility(View.GONE);
-                                        }
-                                    }
-                                    if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))||
-                                            "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) ||
-                                            SharedPreferencesUrls.getInstance().getString("money", "") == null ||
-                                            "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))){
-                                        rechargeBtn.setVisibility(View.VISIBLE);
-                                    }else {
-                                        rechargeBtn.setVisibility(View.GONE);
-                                    }
-
-                                } else {
-                                    if (BaseApplication.getInstance().getIBLE() != null){
-                                        if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
-                                            BaseApplication.getInstance().getIBLE().refreshCache();
-                                            BaseApplication.getInstance().getIBLE().close();
-                                            BaseApplication.getInstance().getIBLE().stopScan();
-                                        }
-                                    }
-                                    SharedPreferencesUrls.getInstance().putString("uid", "");
-                                    SharedPreferencesUrls.getInstance().putString("access_token","");
-                                }
-                            } catch (Exception e) {
-                            }
-                            if (loadingDialog != null && loadingDialog.isShowing()) {
-                                loadingDialog.dismiss();
-                            }
-                        }
-                    });
-
-                }
-            });
-*/
-        }
-    }
-
-
-    private final LocationListener locationListener = new LocationListener() {
-
-        @Override
-        public void onLocationChanged(Location location) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String arg0) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String arg0) {
-
-        }
-
-        @Override
-        public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-
-        }
-
-    };
-
-
-//    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-//
-//        @Override
-//        public void onReceive(Context context, final Intent intent) {
-//            m_myHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if(!isHidden && ("4".equals(type) || "7".equals(type))){
-//                        Log.e("broadcastReceiver===2", "==="+intent);
-//
-////                        getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
-//                        getFeedbackStatus();
-//                    }
-//                }
-//            });
-//        }
-//    };
-
-
     private String parseAdvData(int rssi, byte[] scanRecord) {
         byte[] bytes = ParseLeAdvData.adv_report_parse(ParseLeAdvData.BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA, scanRecord);
         if (bytes[0] == 0x01 && bytes[1] == 0x02) {
@@ -2578,8 +2147,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         }
         return "";
     }
-
-
 
     private void stopXB() {
         if (!"1".equals(type)) {
@@ -2689,7 +2256,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             }
         });
     }
-
 
     public void carClose(){
         RequestParams params = new RequestParams();
@@ -2917,7 +2483,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
-
     public void endBtn3(){
         final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
@@ -3083,8 +2648,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
-
-
     private void closeBroadcast() {
         try {
             stopXB();
@@ -3105,7 +2668,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             ToastUtil.showMessage(context, "eee====" + e);
         }
     }
-
 
     private void addChooseMarker() {
         Log.e("addChooseMarker===EB", "==="+centerMarker);
@@ -3146,12 +2708,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     }
 
-
-    /**
-     * 添加Circle
-     * @param latlng  坐标
-     * @param radius  半径
-     */
     private void addCircle(LatLng latlng, double radius) {
         if(mCircle == null){
             CircleOptions options = new CircleOptions();
@@ -3163,11 +2719,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             mCircle = aMap.addCircle(options);
         }
     }
-
-
-
-
-
 
     protected   void connect() {
 //		BaseApplication.getInstance().getIBLE().resetBluetoothAdapter();
@@ -3206,14 +2757,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     }
 
     @Override
-    public void onInitNaviFailure() {
-
-    }
+    public void onInitNaviFailure() {}
 
     @Override
     public void onInitNaviSuccess() {
         Log.e("onInitNaviSuccess===E", "===");
-
     }
 
     @Override
@@ -3254,14 +2802,10 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     }
 
     @Override
-    public void onStartNavi(int i) {
-
-    }
+    public void onStartNavi(int i) {}
 
     @Override
-    public void onTrafficStatusUpdate() {
-
-    }
+    public void onTrafficStatusUpdate() {}
 
     @Override
     public void onLocationChange(AMapNaviLocation aMapNaviLocation) {
@@ -3373,8 +2917,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     }
 
-
-
     @Override
     public void notifyParallelRoad(int i) {
 
@@ -3424,106 +2966,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     public void onNaviRouteNotify(AMapNaviRouteNotifyData aMapNaviRouteNotifyData) {
 
     }
-
-    private class MyAsyncTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            if (loadingDialog != null && !loadingDialog.isShowing()) {
-                loadingDialog.setTitle("正在刷新");
-                loadingDialog.show();
-            }
-        }
-
-        @Override
-        protected Void doInBackground(Void... arg0) {
-            try {
-                Thread.sleep(3000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            if (loadingDialog != null && loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
-            ToastUtil.showMessage(context, "刷新成功");
-        }
-    }
-
-//    public void initmPopupWindowView(){
-//
-//        // 获取自定义布局文件的视图
-//        View customView = getLayoutInflater().inflate(R.layout.pop_menu, null, false);
-//        // 创建PopupWindow宽度和高度
-//        RelativeLayout pop_win_bg = (RelativeLayout) customView.findViewById(R.id.pop_win_bg);
-//        ImageView iv_popup_window_back = (ImageView) customView.findViewById(R.id.popupWindow_back);
-//        // 获取截图的Bitmap
-//        Bitmap bitmap = UtilScreenCapture.getDrawing(activity);
-//        if (bitmap != null) {
-//            // 将截屏Bitma放入ImageView
-//            iv_popup_window_back.setImageBitmap(bitmap);
-//            // 将ImageView进行高斯模糊【25是最高模糊等级】【0x77000000是蒙上一层颜色，此参数可不填】
-//            UtilBitmap.blurImageView(context, iv_popup_window_back, 10,0xAA000000);
-//        } else {
-//            // 获取的Bitmap为null时，用半透明代替
-//            iv_popup_window_back.setBackgroundColor(0x77000000);
-//        }
-//        // 打开弹窗
-//        UtilAnim.showToUp(pop_win_bg, iv_popup_window_back);
-//        // 创建PopupWindow宽度和高度
-//        final PopupWindow popupwindow = new PopupWindow(customView, LinearLayout.LayoutParams.MATCH_PARENT,
-//                LinearLayout.LayoutParams.MATCH_PARENT, true);
-//        /**
-//         * 设置动画效果 ,从上到下加载方式等，不设置自动的下拉，最好 [动画效果不好，不加实现下拉效果，不错]
-//         */
-//        popupwindow.setAnimationStyle(R.style.PopupAnimation);
-//        popupwindow.setOutsideTouchable(false);
-//
-//        LinearLayout feedbackLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_feedbackLayout);
-//        LinearLayout helpLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_helpLayout);
-//        final LinearLayout callLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_callLayout);
-//        TextView cancleBtn = (TextView)customView.findViewById(R.id.pop_menu_cancleBtn);
-//
-//        View.OnClickListener listener = new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                switch (v.getId()){
-//                    case R.id.pop_menu_feedbackLayout:
-//                        UIHelper.goToAct(context, ServiceCenter0Activity.class);
-//                        break;
-//                    case R.id.pop_menu_helpLayout:
-//                        WindowManager windowManager = activity.getWindowManager();
-//                        Display display = windowManager.getDefaultDisplay();
-//                        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-//                        lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-//                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-//                        dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-//                        dialog.getWindow().setAttributes(lp);
-//                        dialog.show();
-//                        break;
-//                    case R.id.pop_menu_callLayout:
-//                        UIHelper.goToAct(context, ServiceCenterActivity.class);
-//                        break;
-//                    case R.id.pop_menu_cancleBtn:
-//
-//                        break;
-//                }
-//                popupwindow.dismiss();
-//            }
-//        };
-//
-//        feedbackLayout.setOnClickListener(listener);
-//        helpLayout.setOnClickListener(listener);
-//        callLayout.setOnClickListener(listener);
-//        cancleBtn.setOnClickListener(listener);
-//
-//        popupwindow.showAtLocation(customView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-//    }
-
 
     protected void getCurrentorder2(String uid, String access_token){
         RequestParams params = new RequestParams();
@@ -3590,10 +3032,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             }
         });
     }
-    /**
-     *
-     * 保险接口
-     * */
+
     private void cardCheck() {
 
         String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
@@ -3766,16 +3205,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
-
-    /**
-     * 方法必须重写
-     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
-
 
     private void setUpLocationStyle() {
         // 自定义系统定位蓝点
@@ -3792,7 +3226,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         myLocationStyle.strokeColor(android.R.color.transparent);
         aMap.setMyLocationStyle(myLocationStyle);
     }
-
 
     private void addMaplocation(double latitude,double longitude){
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
@@ -3828,7 +3261,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             });
         }
     }
-
 
     @Override
     public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults) {
@@ -3960,8 +3392,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     }
 
-
-
     protected void registerReceiver(IntentFilter intentfilter) {
         if (internalReceiver == null) {
             internalReceiver = new InternalReceiver();
@@ -3970,8 +3400,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     }
 
     protected class InternalReceiver extends BroadcastReceiver {
-
-        //	protected BroadcastReceiver broadcastReceiver2 = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
 

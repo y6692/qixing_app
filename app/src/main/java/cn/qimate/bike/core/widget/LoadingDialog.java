@@ -90,6 +90,7 @@ public class LoadingDialog extends Dialog {
 //						.diskCacheStrategy(DiskCacheStrategy.NONE)
 //				.crossFade().into(iv_route);
 
+//		Glide.with(context).load(R.drawable.loading_large).crossFade().into(iv_route);
 		gifDrawable.start();
 
 		handler.sendEmptyMessage(CHANGE_TITLE_WHAT);

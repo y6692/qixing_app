@@ -211,7 +211,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
     private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
     private boolean mFirstFix = true;
-    private LatLng myLocation = null;
+    public LatLng myLocation = null;
     private Circle mCircle;
 
     private BitmapDescriptor bikeDescripter;
@@ -1067,8 +1067,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
-
-
     private void animMarker() {
         isMovingMarker = false;
         if (animator != null) {
@@ -1113,14 +1111,12 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //        MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation) .icon(BitmapDescriptorFactory.fromView(view));
     }
 
-
     public void onCameraChange(CameraPosition cameraPosition) {
         if (centerMarker != null) {
             setMovingMarker();
         }
     }
 
-    /**附近车接口 */
     private void initNearby(double latitude, double longitude){
 
         if(isHidden) return;
@@ -1203,20 +1199,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void initView() {
-        openGPSSettings();
-
-        if (Build.VERSION.SDK_INT >= 23) {
-            int checkPermission = activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
-                } else {
-                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
-                }
-                return;
-            }
-        }
-
         loadingDialog = new LoadingDialog(context);
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
@@ -1257,12 +1239,13 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //        dialog.setContentView(dialogView);
 //        dialog.setCanceledOnTouchOutside(false);
 
-        marquee = (TextView) activity.findViewById(R.id.mainUI_marquee);
 //        title = (TextView) activity.findViewById(R.id.mainUI_title);
 //        leftBtn = (ImageView) activity.findViewById(R.id.mainUI_leftBtn);
 //        rightBtn = (ImageView) activity.findViewById(R.id.mainUI_rightBtn);
+        marquee = (TextView) activity.findViewById(R.id.mainUI_marquee);
         myCommissionLayout =  (LinearLayout) activity.findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
-        myLocationLayout =  (LinearLayout) activity.findViewById(R.id.mainUI_myLocationLayout);
+        marqueeLayout = (LinearLayout)activity.findViewById(R.id.mainUI_marqueeLayout);
+//        myLocationLayout =  (LinearLayout) activity.findViewById(R.id.mainUI_myLocationLayout);
 //        linkLayout = (LinearLayout) activity.findViewById(R.id.mainUI_linkServiceLayout);
 //        scanLock = (LinearLayout) activity.findViewById(R.id.mainUI_scanCode_lock);
 //        linkBtn = (ImageView) activity.findViewById(R.id.mainUI_linkService_btn);
@@ -1272,7 +1255,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //        rechargeBtn = (Button)activity.findViewById(R.id.mainUI_rechargeBtn);
 //        refreshLayout = (LinearLayout) activity.findViewById(R.id.mainUI_refreshLayout);
 //        slideLayout = (LinearLayout)activity.findViewById(R.id.mainUI_slideLayout);
-        marqueeLayout = (LinearLayout)activity.findViewById(R.id.mainUI_marqueeLayout);
 //        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
 //        ImageView iv_myLocation =  activity.findViewById(R.id.mainUI_myLocation7);
@@ -1335,14 +1317,14 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //        rightBtn.setOnClickListener(this);
 
         myCommissionLayout.setOnClickListener(this);
-        myLocationLayout.setOnClickListener(this);
+        marqueeLayout.setOnClickListener(this);
+//        myLocationLayout.setOnClickListener(this);
 //        linkLayout.setOnClickListener(this);
 //        scanLock.setOnClickListener(this);
 //        linkBtn.setOnClickListener(this);
 //        rl_authBtn.setOnClickListener(this);
 //        rechargeBtn.setOnClickListener(this);
 //        refreshLayout.setOnClickListener(this);
-        marqueeLayout.setOnClickListener(this);
 //        closeBtn.setOnClickListener(myOnClickLister);
 
 //        cartBtn.setOnClickListener(this);
@@ -1362,32 +1344,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
-    private View.OnClickListener myOnClickLister = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-//                case R.id.ui_fristView_exImage_1:
-//                    if (dialog != null && dialog.isShowing()) {
-//                        dialog.dismiss();
-//                    }
-//                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
-//                    break;
-//                case R.id.ui_fristView_exImage_2:
-//                    if (dialog != null && dialog.isShowing()) {
-//                        dialog.dismiss();
-//                    }
-//                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
-//                    break;
-//                case R.id.ui_fristView_closeBtn:
-//                    if (dialog != null && dialog.isShowing()) {
-//                        dialog.dismiss();
-//                    }
-//                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     @Override
     public void onResume() {
@@ -1416,7 +1372,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         tz = 0;
 
-        JPushInterface.onResume(context);
+
 //        if(mapView!=null){
 //            mapView.onResume();
 //        }
@@ -1461,8 +1417,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //            getFeedbackStatus();
 //        }
 
-
-
     }
 
 
@@ -1471,8 +1425,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         @Override
         public boolean handleMessage(Message mes) {
             switch (mes.what) {
-
-
                 case 33:
                     ImageView iv_myLocation =  activity.findViewById(R.id.mainUI_myLocation7);
                     AnimationDrawable animDrawable = (AnimationDrawable) iv_myLocation.getBackground();
@@ -1776,9 +1728,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-
-
-
     @Override
     public void onStart() {
         super.onStart();
@@ -1826,7 +1775,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //			mlocationClient.stopLocation();//停止定位
 //		}
 
-        JPushInterface.onPause(context);
+
 //		if(mapView!=null){
 //            mapView.onPause();
 //        }
@@ -1916,7 +1865,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
         }
     }
-
 
     protected void handleReceiver(final Context context, final Intent intent) {
 
@@ -2127,61 +2075,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
-
-
-
-    private boolean checkGPSIsOpen() {
-        boolean isOpen;
-        locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE); // 高精度
-        criteria.setAltitudeRequired(false);
-        criteria.setBearingRequired(false);
-        criteria.setCostAllowed(true);
-        criteria.setPowerRequirement(Criteria.POWER_LOW); // 低功耗
-        provider = locationManager.getBestProvider(criteria, true);
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        locationManager.requestLocationUpdates(provider, 2000, 500, locationListener);
-
-        isOpen = locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER);
-        return isOpen;
-    }
-
-
-    private void openGPSSettings() {
-
-
-
-        if (checkGPSIsOpen()) {
-        } else {
-
-            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-            customBuilder.setTitle("温馨提示").setMessage("请在手机设置打开应用的位置权限并选择最精准的定位模式")
-                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            activity.finish();
-                        }
-                    })
-                    .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, PRIVATE_CODE);
-                        }
-                    });
-            customBuilder.create().show();
-
-        }
-    }
-
-
-
-
-
     @Override
     public void onClick(View view) {
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
@@ -2196,218 +2089,20 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 intent.putExtra("isBack",true);
                 context.startActivity(intent);
                 break;
-            case R.id.mainUI_myLocationLayout:
-                if (myLocation != null) {
-                    CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
-                    aMap.animateCamera(update);
-                }
 
-//                m_myHandler.sendEmptyMessage(33);
-
-                break;
-//            case R.id.mainUI_scanCode_lock:
-//
-//                Log.e("scanCode_lock===1", SharedPreferencesUrls.getInstance().getString("iscert","")+"==="+access_token+"===");
-//
-//                if (access_token == null || "".equals(access_token)){
-//                    ToastUtil.showMessageApp(context,"请先登录账号");
-//                    UIHelper.goToAct(context, LoginActivity.class);
-//                    return;
+//            case R.id.mainUI_myLocationLayout:
+//                if (myLocation != null) {
+//                    CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
+//                    aMap.animateCamera(update);
 //                }
 //
-////                未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 3需要充值余额或购买骑行卡 4有待支付行程 5有待支付调度费 6有待支付赔偿费
+////                m_myHandler.sendEmptyMessage(33);
 //
-//                if (SharedPreferencesUrls.getInstance().getString("iscert","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
-//                    switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert",""))){
-//                        case 1:
-////                            getCurrentorder2(uid,access_token);
-//
-//
-//                            if (Build.VERSION.SDK_INT >= 23) {
-//                                int checkPermission = activity.checkSelfPermission(Manifest.permission.CAMERA);
-//                                if (checkPermission != PERMISSION_GRANTED) {
-//                                    flag = 1;
-//
-//                                    if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-//                                        requestPermissions(new String[] { Manifest.permission.CAMERA }, 100);
-//                                    } else {
-//                                        CustomDialog.Builder customBuilder1 = new CustomDialog.Builder(context);
-//                                        customBuilder1.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
-//                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                                                    public void onClick(DialogInterface dialog, int which) {
-//                                                        dialog.cancel();
-//                                                    }
-//                                                }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-//                                            public void onClick(DialogInterface dialog, int which) {
-//                                                dialog.cancel();
-//                                                requestPermissions(
-//                                                        new String[] { Manifest.permission.CAMERA },
-//                                                        100);
-//                                            }
-//                                        });
-//                                        customBuilder1.create().show();
-//                                    }
-////                                    if (loadingDialog1 != null && loadingDialog1.isShowing()){
-////                                        loadingDialog1.dismiss();
-////                                    }
-//                                    return;
-//                                }
-//                            }
-//                            try {
-//
-//                                closeBroadcast();
-//                                deactivate();
-//
-//                                intent = new Intent();
-//                                intent.setClass(context, ActivityScanerCode.class);
-//                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
-//
-//                            } catch (Exception e) {
-//                                UIHelper.showToastMsg(context, "相机打开失败,请检查相机是否可正常使用", R.drawable.ic_error);
-//                            }
-////                            dialog.cancel();
-////                            if (loadingDialog1 != null && loadingDialog1.isShowing()){
-////                                loadingDialog1.dismiss();
-////                            }
-//
-//                            break;
-//                        case 2:
-//                            ToastUtil.showMessageApp(context,"您还未认证,请先认证");
-//                            UIHelper.goToAct(context, RealNameAuthActivity.class);
-//                            break;
-//                        case 3:
-//                            ToastUtil.showMessageApp(context,"认证审核中，请点击刷新");
-//                            break;
-//                        case 4:
-//                            ToastUtil.showMessageApp(context,"认证被驳回，请重新认证");
-//                            UIHelper.goToAct(context,RealNameAuthActivity.class);
-//                            break;
-//                    }
-//                }else {
-//                    ToastUtil.showMessageApp(context,"您还未认证,请先认证");
-//                }
-//                break;
-
-
-//            case R.id.mainUI_rechargeBtn:
-//                UIHelper.goToAct(context, MyPurseActivity.class);
-//                break;
-//            case R.id.mainUI_cartBtn:
-//                intent = new Intent(context, PayMontCartActivity.class);
-//                intent.putExtra("carType",1);
-//                context.startActivity(intent);
-//                break;
-//            case R.id.mainUI_slideLayout:
-//                UIHelper.goWebViewAct(context,"停车须知",Urls.phtml5 + uid);
 //                break;
             default:
-
-
-
-
-
                 break;
         }
     }
-
-    public void RefreshLogin() {
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-        String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
-
-        Log.e("B===RefreshLogin", uid+"==="+access_token);
-
-        if (access_token == null || "".equals(access_token)) {
-            ToastUtil.showMessageApp(context, "请先登录账号");
-            UIHelper.goToAct(context, LoginActivity.class);
-        } else {
-            HttpHelper.get(AppManager.getAppManager().currentActivity(), Urls.car_authority, new TextHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-                        Log.e("car_authority===b", "==="+responseString);
-
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-
-                        CarAuthorityBean bean = JSON.parseObject(result.getData(), CarAuthorityBean.class);
-
-                        SharedPreferencesUrls.getInstance().putString("iscert", ""+bean.getUnauthorized_code());
-
-//						if (result.getFlag().equals("Success")) {
-//							UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
-//							// 极光标记别名
-//
-//
-//
-////									setAlias(bean.getUid());
-////									SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
-////									SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
-////									SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
-////									SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
-////									SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
-////									SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
-////									SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
-////									SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
-////									SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
-////									SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
-////									SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
-////									SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
-//
-//							SharedPreferencesUrls.getInstance().putString("access_token", bean.getToken());
-//						} else {
-//							setAlias("");
-//							if (BaseApplication.getInstance().getIBLE() != null){
-//								if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
-//									BaseApplication.getInstance().getIBLE().refreshCache();
-//									BaseApplication.getInstance().getIBLE().close();
-//									BaseApplication.getInstance().getIBLE().stopScan();
-//								}
-//							}
-//							SharedPreferencesUrls.getInstance().putString("uid", "");
-//							SharedPreferencesUrls.getInstance().putString("access_token","");
-//						}
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString,
-                                      Throwable throwable) {
-                }
-            });
-
-        }
-    }
-
-
-    private final LocationListener locationListener = new LocationListener() {
-
-        @Override
-        public void onLocationChanged(Location location) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String arg0) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String arg0) {
-
-        }
-
-        @Override
-        public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-
-        }
-
-    };
-
-
-
-
 
     private String parseAdvData(int rssi, byte[] scanRecord) {
         byte[] bytes = ParseLeAdvData.adv_report_parse(ParseLeAdvData.BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA, scanRecord);
@@ -2533,7 +2228,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             }
         });
     }
-
 
     public void carClose(){
         RequestParams params = new RequestParams();
@@ -2765,7 +2459,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-
     public void endBtn3(){
         final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
@@ -2931,8 +2624,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-
-
     private void closeBroadcast() {
         try {
             stopXB();
@@ -2953,9 +2644,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             ToastUtil.showMessage(context, "eee====" + e);
         }
     }
-
-
-
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, Intent data) {
@@ -3035,9 +2723,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     }
                 } else {
                     switch (requestCode) {
-                        case PRIVATE_CODE:
-                            openGPSSettings();
-                            break;
+//                        case PRIVATE_CODE:
+//                            openGPSSettings();
+//                            break;
 
                         case 188:
                             ToastUtil.showMessageApp(context, "需要打开蓝牙");
@@ -3051,15 +2739,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         });
 
     }
-
-
-
-
-
-
-
-
-
 
     private void addChooseMarker() {
         // 加入自定义标签
@@ -3110,23 +2789,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
-    public View getInfoWindow() {
-        View view = View.inflate(context, R.layout.marker_info_layout, null);
-//        TextView tvCity = (TextView) view.findViewById(R.id.tv_city);
-//        TextView tvTemp = (TextView) view.findViewById(R.id.tv_temp);
-//        ImageView ivIcon = (ImageView) view.findViewById(R.id.iv_icon);
-//        tvCity.setText(city);
-//        tvTemp.setText(temp);
-//        ivIcon.setImageResource(icon);
-        return view;
-    }
-
-
-    /**
-     * 添加Circle
-     * @param latlng  坐标
-     * @param radius  半径
-     */
     private void addCircle(LatLng latlng, double radius) {
         if(mCircle == null){
             CircleOptions options = new CircleOptions();
@@ -3139,7 +2801,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    protected   void connect() {
+    protected  void connect() {
 //		BaseApplication.getInstance().getIBLE().resetBluetoothAdapter();
 
         BaseApplication.getInstance().getIBLE().stopScan();
@@ -3200,17 +2862,12 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-
     @Override
-    public void onInitNaviFailure() {
-
-    }
+    public void onInitNaviFailure() { }
 
     @Override
     public void onInitNaviSuccess() {
         Log.e("onInitNaviSuccess===", "===");
-
-
     }
 
     @Override
@@ -3253,208 +2910,106 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     @Override
-    public void onStartNavi(int i) {
-
-    }
+    public void onStartNavi(int i) {}
 
     @Override
-    public void onTrafficStatusUpdate() {
-
-    }
+    public void onTrafficStatusUpdate() {}
 
     @Override
-    public void onLocationChange(AMapNaviLocation aMapNaviLocation) {
-
-    }
+    public void onLocationChange(AMapNaviLocation aMapNaviLocation) {}
 
     @Override
-    public void onGetNavigationText(int i, String s) {
-
-    }
+    public void onGetNavigationText(int i, String s) {}
 
     @Override
-    public void onGetNavigationText(String s) {
-
-    }
+    public void onGetNavigationText(String s) {}
 
     @Override
-    public void onEndEmulatorNavi() {
-
-    }
+    public void onEndEmulatorNavi() {}
 
     @Override
-    public void onArriveDestination() {
-
-    }
+    public void onArriveDestination() {}
 
     @Override
-    public void onCalculateRouteFailure(int i) {
-
-    }
+    public void onCalculateRouteFailure(int i) {}
 
     @Override
-    public void onReCalculateRouteForYaw() {
-
-    }
+    public void onReCalculateRouteForYaw() {}
 
     @Override
-    public void onReCalculateRouteForTrafficJam() {
-
-    }
+    public void onReCalculateRouteForTrafficJam() {}
 
     @Override
-    public void onArrivedWayPoint(int i) {
-
-    }
+    public void onArrivedWayPoint(int i) {}
 
     @Override
-    public void onGpsOpenStatus(boolean b) {
-
-    }
+    public void onGpsOpenStatus(boolean b) {}
 
     @Override
-    public void onNaviInfoUpdate(NaviInfo naviInfo) {
-
-    }
+    public void onNaviInfoUpdate(NaviInfo naviInfo) {}
 
     @Override
-    public void onNaviInfoUpdated(AMapNaviInfo aMapNaviInfo) {
-
-    }
+    public void onNaviInfoUpdated(AMapNaviInfo aMapNaviInfo) {}
 
     @Override
-    public void updateCameraInfo(AMapNaviCameraInfo[] aMapNaviCameraInfos) {
-
-    }
+    public void updateCameraInfo(AMapNaviCameraInfo[] aMapNaviCameraInfos) {}
 
     @Override
-    public void updateIntervalCameraInfo(AMapNaviCameraInfo aMapNaviCameraInfo, AMapNaviCameraInfo aMapNaviCameraInfo1, int i) {
-
-    }
+    public void updateIntervalCameraInfo(AMapNaviCameraInfo aMapNaviCameraInfo, AMapNaviCameraInfo aMapNaviCameraInfo1, int i) {}
 
     @Override
-    public void onServiceAreaUpdate(AMapServiceAreaInfo[] aMapServiceAreaInfos) {
-
-    }
+    public void onServiceAreaUpdate(AMapServiceAreaInfo[] aMapServiceAreaInfos) {}
 
     @Override
-    public void showCross(AMapNaviCross aMapNaviCross) {
-
-    }
+    public void showCross(AMapNaviCross aMapNaviCross) {}
 
     @Override
-    public void hideCross() {
-
-    }
+    public void hideCross() {}
 
     @Override
-    public void showModeCross(AMapModelCross aMapModelCross) {
-
-    }
+    public void showModeCross(AMapModelCross aMapModelCross) {}
 
     @Override
-    public void hideModeCross() {
-
-    }
+    public void hideModeCross() {}
 
     @Override
-    public void showLaneInfo(AMapLaneInfo[] aMapLaneInfos, byte[] bytes, byte[] bytes1) {
-
-    }
+    public void showLaneInfo(AMapLaneInfo[] aMapLaneInfos, byte[] bytes, byte[] bytes1) {}
 
     @Override
-    public void showLaneInfo(AMapLaneInfo aMapLaneInfo) {
-
-    }
+    public void showLaneInfo(AMapLaneInfo aMapLaneInfo) {}
 
     @Override
-    public void hideLaneInfo() {
-
-    }
-
-
+    public void hideLaneInfo() {}
 
     @Override
-    public void notifyParallelRoad(int i) {
-
-    }
+    public void notifyParallelRoad(int i) {}
 
     @Override
-    public void OnUpdateTrafficFacility(AMapNaviTrafficFacilityInfo[] aMapNaviTrafficFacilityInfos) {
-
-    }
+    public void OnUpdateTrafficFacility(AMapNaviTrafficFacilityInfo[] aMapNaviTrafficFacilityInfos) {}
 
     @Override
-    public void OnUpdateTrafficFacility(AMapNaviTrafficFacilityInfo aMapNaviTrafficFacilityInfo) {
-
-    }
+    public void OnUpdateTrafficFacility(AMapNaviTrafficFacilityInfo aMapNaviTrafficFacilityInfo) {}
 
     @Override
-    public void OnUpdateTrafficFacility(TrafficFacilityInfo trafficFacilityInfo) {
-
-    }
+    public void OnUpdateTrafficFacility(TrafficFacilityInfo trafficFacilityInfo) {}
 
     @Override
-    public void updateAimlessModeStatistics(AimLessModeStat aimLessModeStat) {
-
-    }
+    public void updateAimlessModeStatistics(AimLessModeStat aimLessModeStat) {}
 
     @Override
-    public void updateAimlessModeCongestionInfo(AimLessModeCongestionInfo aimLessModeCongestionInfo) {
-
-    }
+    public void updateAimlessModeCongestionInfo(AimLessModeCongestionInfo aimLessModeCongestionInfo) {}
 
     @Override
-    public void onPlayRing(int i) {
-
-    }
+    public void onPlayRing(int i) {}
 
     @Override
-    public void onCalculateRouteSuccess(AMapCalcRouteResult aMapCalcRouteResult) {
-
-    }
+    public void onCalculateRouteSuccess(AMapCalcRouteResult aMapCalcRouteResult) {}
 
     @Override
-    public void onCalculateRouteFailure(AMapCalcRouteResult aMapCalcRouteResult) {
-
-    }
+    public void onCalculateRouteFailure(AMapCalcRouteResult aMapCalcRouteResult) {}
 
     @Override
-    public void onNaviRouteNotify(AMapNaviRouteNotifyData aMapNaviRouteNotifyData) {
-
-    }
-
-    private class MyAsyncTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            if (loadingDialog != null && !loadingDialog.isShowing()) {
-                loadingDialog.setTitle("正在刷新");
-                loadingDialog.show();
-            }
-        }
-
-        @Override
-        protected Void doInBackground(Void... arg0) {
-            try {
-                Thread.sleep(3000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            if (loadingDialog != null && loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
-            ToastUtil.showMessage(context, "刷新成功");
-        }
-    }
-
-
-
+    public void onNaviRouteNotify(AMapNaviRouteNotifyData aMapNaviRouteNotifyData) {}
 
     protected void getCurrentorder2(String uid, String access_token){
         RequestParams params = new RequestParams();
@@ -3518,10 +3073,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             }
         });
     }
-    /**
-     *
-     * 保险接口
-     * */
+
     private void cardCheck() {
 
         String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
@@ -3695,16 +3247,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-
-    /**
-     * 方法必须重写
-     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
-
 
     private void setUpLocationStyle() {
         // 自定义系统定位蓝点
@@ -3721,10 +3268,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         myLocationStyle.strokeColor(android.R.color.transparent);
         aMap.setMyLocationStyle(myLocationStyle);
     }
-
-
-
-
 
     private void addMaplocation(double latitude,double longitude){
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
@@ -3760,76 +3303,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             });
         }
     }
-
-
-
-//    private void schoolrangeList(){
-//        RequestParams params = new RequestParams();
-//        HttpHelper.get(context, schoolrangeList, params, new TextHttpResponseHandler() {
-//            @Override
-//            public void onStart() {
-//                if (loadingDialog != null && !loadingDialog.isShowing()) {
-//                    loadingDialog.setTitle("正在加载");
-//                    loadingDialog.show();
-//                }
-//            }
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
-//                UIHelper.ToastError(context, throwable.toString());
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                try {
-//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-//                    if (result.getFlag().equals("Success")) {
-//                        JSONArray jsonArray = new JSONArray(result.getData());
-//                        if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
-//                            isContainsList.clear();
-//                        }
-//                        for (int i = 0; i < jsonArray.length(); i++) {
-//                            List<LatLng> list = new ArrayList<>();
-//                            for (int j = 0; j < jsonArray.getJSONArray(i).length(); j ++){
-//                                JSONObject jsonObject = jsonArray.getJSONArray(i).getJSONObject(j);
-//                                LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")),
-//                                        Double.parseDouble(jsonObject.getString("longitude")));
-//                                list.add(latLng);
-//                            }
-//                            Polygon polygon = null;
-//                            PolygonOptions pOption = new PolygonOptions();
-//                            pOption.addAll(list);
-////                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
-////                                    .strokeColor(Color.argb(160, 255, 0, 0))
-////                                    .fillColor(Color.argb(160, 255, 0, 0)));
-//
-////                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
-////                                    .strokeColor(Color.argb(160, 0, 0, 255))
-////                                    .fillColor(Color.argb(160, 0, 0, 255)));
-//
-//                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
-//                                    .strokeColor(Color.argb(255, 0, 255, 0))
-//                                    .fillColor(Color.argb(255, 0, 255, 0)));
-//
-//                            pOptions.add(polygon);
-//                            isContainsList.add(polygon.contains(myLocation));
-//                        }
-//                    }else {
-//                        ToastUtil.showMessageApp(context,result.getMsg());
-//                    }
-//                }catch (Exception e){
-//                }
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
-//            }
-//        });
-//    }
-
-
-
 
     @Override
     public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults) {
@@ -3960,8 +3433,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
-
-
     protected void registerReceiver(IntentFilter intentfilter) {
         if (internalReceiver == null) {
             internalReceiver = new InternalReceiver();
@@ -3970,8 +3441,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     protected class InternalReceiver extends BroadcastReceiver {
-
-        //	protected BroadcastReceiver broadcastReceiver2 = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
 

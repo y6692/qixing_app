@@ -5,21 +5,20 @@ import android.support.v4.app.ActivityCompat;
 
 import java.lang.ref.WeakReference;
 
-import cn.qimate.bike.activity.MainActivity;
 import permissions.dispatcher.GrantableRequest;
 import permissions.dispatcher.PermissionUtils;
 
-public final class MainActivityPermissionsDispatcher {
+public final class ActivityScanerCodePermissionsDispatcher {
   private static final int REQUEST_CONNECTDEVICE = 0;
 
   private static final String[] PERMISSION_CONNECTDEVICE = new String[] {"android.permission.ACCESS_COARSE_LOCATION","android.permission.BLUETOOTH"};
 
   private static GrantableRequest PENDING_CONNECTDEVICE;
 
-  private MainActivityPermissionsDispatcher() {
+  private ActivityScanerCodePermissionsDispatcher() {
   }
 
-  public static void connectDeviceWithPermissionCheck(MainActivity target, String imei) {
+  static void connectDeviceWithPermissionCheck(ActivityScanerCode target, String imei) {
     if (PermissionUtils.hasSelfPermissions(target, PERMISSION_CONNECTDEVICE)) {
       target.connectDevice(imei);
     } else {
@@ -28,7 +27,7 @@ public final class MainActivityPermissionsDispatcher {
     }
   }
 
-  static void onRequestPermissionsResult(MainActivity target, int requestCode, int[] grantResults) {
+  static void onRequestPermissionsResult(ActivityScanerCode target, int requestCode, int[] grantResults) {
     switch (requestCode) {
       case REQUEST_CONNECTDEVICE:
       if (PermissionUtils.verifyPermissions(grantResults)) {
@@ -44,18 +43,18 @@ public final class MainActivityPermissionsDispatcher {
   }
 
   private static final class MainActivityConnectDevicePermissionRequest implements GrantableRequest {
-    private final WeakReference<MainActivity> weakTarget;
+    private final WeakReference<ActivityScanerCode> weakTarget;
 
     private final String imei;
 
-    private MainActivityConnectDevicePermissionRequest(MainActivity target, String imei) {
-      this.weakTarget = new WeakReference<MainActivity>(target);
+    private MainActivityConnectDevicePermissionRequest(ActivityScanerCode target, String imei) {
+      this.weakTarget = new WeakReference<ActivityScanerCode>(target);
       this.imei = imei;
     }
 
     @Override
     public void proceed() {
-      MainActivity target = weakTarget.get();
+      ActivityScanerCode target = weakTarget.get();
       if (target == null) return;
       ActivityCompat.requestPermissions(target, PERMISSION_CONNECTDEVICE, REQUEST_CONNECTDEVICE);
     }
@@ -66,7 +65,7 @@ public final class MainActivityPermissionsDispatcher {
 
     @Override
     public void grant() {
-      MainActivity target = weakTarget.get();
+      ActivityScanerCode target = weakTarget.get();
       if (target == null) return;
       target.connectDevice(imei);
     }

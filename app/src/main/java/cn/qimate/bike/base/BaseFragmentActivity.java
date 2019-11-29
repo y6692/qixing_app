@@ -71,6 +71,7 @@ import cn.qimate.bike.activity.HistoryRoadDetailActivity;
 import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.activity.Main2Activity;
 import cn.qimate.bike.activity.MainActivity;
+import cn.qimate.bike.ble.BLEService;
 import cn.qimate.bike.ble.utils.ParseLeAdvData;
 import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.HttpHelper;
@@ -110,6 +111,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 	public static String osn = "";
 	public static String type = "";
 
+	public BLEService bleService = new BLEService();
 
 	private LatLng myLocation = null;
 	private boolean mFirstFix = true;
