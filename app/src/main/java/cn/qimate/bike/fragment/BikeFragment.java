@@ -218,16 +218,17 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private Handler handler = new Handler();
     private Marker centerMarker;
     private boolean isMovingMarker = false;
-    private RelativeLayout rl_authBtn;
-    private TextView tv_authBtn;
+//    private RelativeLayout rl_authBtn;
+////    private TextView tv_authBtn;
 //    private Button authBtn;
-    private Button rechargeBtn;
+//    private Button cartBtn;
+//    private Button rechargeBtn;
     private int Tag = 0;
 
     private List<Marker> bikeMarkerList;
     private boolean isUp = false;
-    private LinearLayout refreshLayout;
-    private Button cartBtn;
+//    private LinearLayout refreshLayout;
+
     private LinearLayout slideLayout;
     private LinearLayout marqueeLayout;
     private int imageWith = 0;
@@ -240,7 +241,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     protected OnLocationChangedListener mListener;
     CustomDialog.Builder customBuilder;
-    private CustomDialog customDialog;
+//    private CustomDialog customDialog;
     private CustomDialog customDialog2;
     private CustomDialog customDialog3;
     private CustomDialog customDialog4;
@@ -260,7 +261,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private boolean first3 = true;
 //    private boolean isStop = false;
 
-    private Dialog dialog;
+//    private Dialog dialog;
 
     private TextView marquee;
     protected InternalReceiver internalReceiver = null;
@@ -326,41 +327,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //        mapView = (MapView) activity.findViewById(R.id.mainUI_map);
 //        mapView.onCreate(savedInstanceState);
 
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        filter.addAction(Intent.ACTION_USER_PRESENT);
-        activity.registerReceiver(mScreenReceiver, filter);
-
-        //注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
-        filter = new IntentFilter("data.broadcast.action");
-        activity.registerReceiver(broadcastReceiver, filter);
-
         initView();
 
         ToastUtil.showMessage(context, SharedPreferencesUrls.getInstance().getString("userName", "") + "===" + SharedPreferencesUrls.getInstance().getString("uid", "") + "<==>" + SharedPreferencesUrls.getInstance().getString("access_token", ""));
-
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
-        customDialog = customBuilder.create();
-
-        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog3 = customBuilder.create();
-
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog4 = customBuilder.create();
 
         m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
         Log.e("main===bike", "m_nowMac====" + m_nowMac);
@@ -373,7 +342,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         Log.e("onHiddenChanged===bike", hidden+"==="+type+"==="+referLatitude);
 
         isHidden = hidden;
-
 
 //        else{
 //            changeTab(1);
@@ -403,7 +371,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 ll_top_navi.setVisibility(View.GONE);
             }
 
-
 //            schoolRange();
         }else{
             //resume
@@ -413,7 +380,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             if(aMap==null){
                 aMap = mapView.getMap();
             }
-
 
             pOptions.clear();
             isContainsList.clear();
@@ -500,79 +466,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 addCircle(myLocation, accuracy);
             }
 
-            String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
-            String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-            String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
 
-            Log.e("onHiddenChanged===bike2", SharedPreferencesUrls.getInstance().getString("iscert", "")+"==="+access_token);
-
-            if (access_token == null || "".equals(access_token)) {
-                rl_authBtn.setEnabled(true);
-                rl_authBtn.setVisibility(View.VISIBLE);
-                tv_authBtn.setText("您还未登录，点我快速登录");
-
-                cartBtn.setVisibility(View.GONE);
-                refreshLayout.setVisibility(View.GONE);
-                rechargeBtn.setVisibility(View.GONE);
-            } else {
-                refreshLayout.setVisibility(View.VISIBLE);
-                if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                    switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                        case 1:
-                            rl_authBtn.setEnabled(true);
-                            rl_authBtn.setVisibility(View.VISIBLE);
-                            tv_authBtn.setText("您还未登录，点我快速登录");
-
-                            break;
-                        case 2:
-
-                            rl_authBtn.setEnabled(true);
-                            rl_authBtn.setVisibility(View.VISIBLE);
-                            tv_authBtn.setText("您还未认证，点我快速认证");
-                            break;
-                        case 3:
-
-                            rl_authBtn.setEnabled(false);
-                            rl_authBtn.setVisibility(View.VISIBLE);
-                            tv_authBtn.setText("认证审核中");
-                            break;
-                        case 4:
-                            rl_authBtn.setEnabled(true);
-                            rl_authBtn.setVisibility(View.VISIBLE);
-                            tv_authBtn.setText("认证被驳回，请重新认证");
-
-//                        case 2:
-//                            ToastUtil.showMessageApp(context,"您还未认证,请先认证");
-//                            UIHelper.goToAct(context, RealNameAuthActivity.class);
-//                            break;
-//                        case 3:
-//                            ToastUtil.showMessageApp(context,"认证审核中，请点击刷新");
-//                            break;
-//                        case 4:
-//                            ToastUtil.showMessageApp(context,"认证被驳回，请重新认证");
-//                            UIHelper.goToAct(context,RealNameAuthActivity.class);
-                            break;
-                    }
-                } else {
-                    rl_authBtn.setVisibility(View.GONE);
-                }
-//                if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))
-//                        || "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) || SharedPreferencesUrls.getInstance().getString("money", "") == null ||
-//                        "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))) {
-//                    rechargeBtn.setVisibility(View.VISIBLE);
-//                } else {
-//                    rechargeBtn.setVisibility(View.GONE);
-//                }
-//
-//                if (("0".equals(specialdays) || specialdays == null || "".equals(specialdays))
-//                        && ("0".equals(specialdays) || specialdays == null || "".equals(specialdays))) {
-//                    cartBtn.setVisibility(View.GONE);
-//                } else {
-//                    cartBtn.setVisibility(View.VISIBLE);
-//                    cartBtn.setText("免费" + specialdays + "天,每次前一个小时免费,点击续费");
-//                }
-
-            }
 
             ll_top.setVisibility(View.VISIBLE);
             ll_top_navi.setVisibility(View.GONE);
@@ -1327,13 +1221,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-
-
         lockLoading = new LoadingDialog2(context);
         lockLoading.setCancelable(false);
         lockLoading.setCanceledOnTouchOutside(false);
-
-
 
         loadingDialog1 = new LoadingDialog(context);
         loadingDialog1.setCancelable(false);
@@ -1343,10 +1233,29 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         loadingDialog2.setCancelable(false);
         loadingDialog2.setCanceledOnTouchOutside(false);
 
-        dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
-        View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_frist_view, null);
-        dialog.setContentView(dialogView);
-        dialog.setCanceledOnTouchOutside(false);
+
+        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
+                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        customDialog3 = customBuilder.create();
+
+        customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域")
+                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        customDialog4 = customBuilder.create();
+
+//        dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+//        View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_frist_view, null);
+//        dialog.setContentView(dialogView);
+//        dialog.setCanceledOnTouchOutside(false);
 
         marquee = (TextView) activity.findViewById(R.id.mainUI_marquee);
 //        title = (TextView) activity.findViewById(R.id.mainUI_title);
@@ -1354,17 +1263,17 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //        rightBtn = (ImageView) activity.findViewById(R.id.mainUI_rightBtn);
         myCommissionLayout =  (LinearLayout) activity.findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
         myLocationLayout =  (LinearLayout) activity.findViewById(R.id.mainUI_myLocationLayout);
-        linkLayout = (LinearLayout) activity.findViewById(R.id.mainUI_linkServiceLayout);
+//        linkLayout = (LinearLayout) activity.findViewById(R.id.mainUI_linkServiceLayout);
 //        scanLock = (LinearLayout) activity.findViewById(R.id.mainUI_scanCode_lock);
-        linkBtn = (ImageView) activity.findViewById(R.id.mainUI_linkService_btn);
-        rl_authBtn = activity.findViewById(R.id.rl_authBtn);
-        tv_authBtn = activity.findViewById(R.id.tv_authBtn);
-        cartBtn = (Button)activity.findViewById(R.id.mainUI_cartBtn);
-        rechargeBtn = (Button)activity.findViewById(R.id.mainUI_rechargeBtn);
-        refreshLayout = (LinearLayout) activity.findViewById(R.id.mainUI_refreshLayout);
-        slideLayout = (LinearLayout)activity.findViewById(R.id.mainUI_slideLayout);
+//        linkBtn = (ImageView) activity.findViewById(R.id.mainUI_linkService_btn);
+//        rl_authBtn = activity.findViewById(R.id.rl_authBtn);
+//        tv_authBtn = activity.findViewById(R.id.tv_authBtn);
+//        cartBtn = (Button)activity.findViewById(R.id.mainUI_cartBtn);
+//        rechargeBtn = (Button)activity.findViewById(R.id.mainUI_rechargeBtn);
+//        refreshLayout = (LinearLayout) activity.findViewById(R.id.mainUI_refreshLayout);
+//        slideLayout = (LinearLayout)activity.findViewById(R.id.mainUI_slideLayout);
         marqueeLayout = (LinearLayout)activity.findViewById(R.id.mainUI_marqueeLayout);
-        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
+//        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
 //        ImageView iv_myLocation =  activity.findViewById(R.id.mainUI_myLocation7);
 //        Glide.with(context).load(R.drawable.loading_large).crossFade().into(iv_myLocation);
@@ -1427,17 +1336,17 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         myCommissionLayout.setOnClickListener(this);
         myLocationLayout.setOnClickListener(this);
-        linkLayout.setOnClickListener(this);
+//        linkLayout.setOnClickListener(this);
 //        scanLock.setOnClickListener(this);
-        linkBtn.setOnClickListener(this);
-        rl_authBtn.setOnClickListener(this);
-        rechargeBtn.setOnClickListener(this);
-        refreshLayout.setOnClickListener(this);
+//        linkBtn.setOnClickListener(this);
+//        rl_authBtn.setOnClickListener(this);
+//        rechargeBtn.setOnClickListener(this);
+//        refreshLayout.setOnClickListener(this);
         marqueeLayout.setOnClickListener(this);
-        closeBtn.setOnClickListener(myOnClickLister);
+//        closeBtn.setOnClickListener(myOnClickLister);
 
-        cartBtn.setOnClickListener(this);
-        slideLayout.setOnClickListener(this);
+//        cartBtn.setOnClickListener(this);
+//        slideLayout.setOnClickListener(this);
 
 //        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
 //        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
@@ -1469,11 +1378,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //                    }
 //                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
 //                    break;
-                case R.id.ui_fristView_closeBtn:
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    break;
+//                case R.id.ui_fristView_closeBtn:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    break;
                 default:
                     break;
             }
@@ -1548,9 +1457,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //            ToastUtil.showMessage(this, "eee====" + e);
 //        }
 
-        if(!isHidden && !"4".equals(type) && !"7".equals(type)){
-            getFeedbackStatus();
-        }
+//        if(!isHidden && !"4".equals(type) && !"7".equals(type)){
+//            getFeedbackStatus();
+//        }
 
 
 
@@ -1868,87 +1777,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     }
 
 
-    private void getCurrentorder1(String uid, String access_token) {
-        RequestParams params = new RequestParams();
-        params.put("uid", uid);
-        params.put("access_token", access_token);
-        HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                onStartCommon("正在加载");
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                            if (result.getFlag().equals("Success")) {
-                                if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                                    if ("[]".equals(result.getData()) || 0 == result.getData().length()) {
-                                        rl_authBtn.setEnabled(false);
-                                        rl_authBtn.setVisibility(View.GONE);
-
-                                        SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
-                                        SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
-
-                                    } else {
-                                        CurRoadBikingBean bean = JSON.parseObject(result.getData(), CurRoadBikingBean.class);
-
-                                        m_nowMac = bean.getMacinfo();
-
-                                        Log.e("main===bike", "getMacinfo====" + bean.getMacinfo());
-
-                                        if (!"".equals(m_nowMac)) {
-                                            oid = bean.getOid();
-                                            osn = bean.getOsn();
-                                            type = bean.getType();
-
-                                            SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
-                                            SharedPreferencesUrls.getInstance().putString("oid", oid);
-                                            SharedPreferencesUrls.getInstance().putString("osn", osn);
-                                            SharedPreferencesUrls.getInstance().putString("type", type);
-                                            SharedPreferencesUrls.getInstance().putString("deviceuuid", bean.getDeviceuuid());
-                                        }
-
-                                        Log.e("main===bike", "getStatus====" + bean.getStatus());
-
-                                        if ("1".equals(bean.getStatus())) {
-                                            SharedPreferencesUrls.getInstance().putBoolean("isStop", false);
-
-                                            tv_authBtn.setText("您有一条进行中的行程，点我查看");
-                                            Tag = 0;
-                                        } else {
-                                            SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
-                                            SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
-
-                                            tv_authBtn.setText("您有一条未支付的行程，点我查看");
-                                            Tag = 1;
-                                        }
-                                        rl_authBtn.setVisibility(View.VISIBLE);
-                                        rl_authBtn.setEnabled(true);
-                                    }
-                                }
-                            } else {
-                                ToastUtils.show(result.getMsg());
-                            }
-                        } catch (Exception e) {
-                        }
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
-                        }
-                    }
-                });
-
-            }
-        });
-    }
 
 
     @Override
@@ -2052,10 +1880,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         if (null != mlocationClient) {
             mlocationClient.onDestroy();
         }
-        if (broadcastReceiver != null) {
-            activity.unregisterReceiver(broadcastReceiver);
-            broadcastReceiver = null;
-        }
+
 
 //		if (broadcastReceiver2 != null) {
 //			unregisterReceiver(broadcastReceiver2);
@@ -2377,9 +2202,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     aMap.animateCamera(update);
                 }
 
-                m_myHandler.sendEmptyMessage(33);
-
-
+//                m_myHandler.sendEmptyMessage(33);
 
                 break;
 //            case R.id.mainUI_scanCode_lock:
@@ -2465,57 +2288,19 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //                    ToastUtil.showMessageApp(context,"您还未认证,请先认证");
 //                }
 //                break;
-            case R.id.mainUI_linkServiceLayout:
-            case R.id.mainUI_linkService_btn:
-                initmPopupWindowView();
-                break;
-            case R.id.rl_authBtn:
-                if (access_token == null || "".equals(access_token)){
-                    UIHelper.goToAct(context,LoginActivity.class);
-                }else {
-                    if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
-                        switch (Tag){
-                            case 0:
-                                closeBroadcast();
-                                deactivate();
-
-                                UIHelper.goToAct(context, CurRoadBikingActivity.class);
-                                break;
-                            case 1:
-                                UIHelper.goToAct(context, CurRoadBikedActivity.class);
-                                break;
-                            default:
-                                break;
-                        }
-                    }else {
-                        UIHelper.goToAct(context,RealNameAuthActivity.class);
-                    }
-                }
-                break;
-            case R.id.mainUI_rechargeBtn:
-                UIHelper.goToAct(context, MyPurseActivity.class);
-                break;
-            case R.id.mainUI_refreshLayout:
-                Log.e("refreshLayout===1", "==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
-
-                RefreshLogin();
-
-//                schoolRange();
-
-                break;
 
 
-            case R.id.mainUI_cartBtn:
-                intent = new Intent(context, PayMontCartActivity.class);
-                intent.putExtra("carType",1);
-                context.startActivity(intent);
-                break;
-            case R.id.mainUI_slideLayout:
-                UIHelper.goWebViewAct(context,"停车须知",Urls.phtml5 + uid);
-
-//                loadingDialog.show();
-
-                break;
+//            case R.id.mainUI_rechargeBtn:
+//                UIHelper.goToAct(context, MyPurseActivity.class);
+//                break;
+//            case R.id.mainUI_cartBtn:
+//                intent = new Intent(context, PayMontCartActivity.class);
+//                intent.putExtra("carType",1);
+//                context.startActivity(intent);
+//                break;
+//            case R.id.mainUI_slideLayout:
+//                UIHelper.goWebViewAct(context,"停车须知",Urls.phtml5 + uid);
+//                break;
             default:
 
 
@@ -2592,122 +2377,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 }
             });
 
-
-/*
-            RequestParams params = new RequestParams();
-            params.add("uid", uid);
-            params.add("access_token", access_token);
-            HttpHelper.post(AppManager.getAppManager().currentActivity(), Urls.accesslogin, params, new TextHttpResponseHandler() {
-                @Override
-                public void onStart() {
-                    onStartCommon("正在刷新");
-                }
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    onFailureCommon(throwable.toString());
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                    m_myHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                                if (result.getFlag().equals("Success")) {
-                                    UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
-                                    // 极光标记别名
-
-                                    Log.e("RefreshLogin===", bean.getSpecialdays()+"==="+bean.getEbike_specialdays());
-
-                                    String uid = bean.getUid();
-                                    String access_token = bean.getToken();
-
-//                                    SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
-//                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
-//                                    SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
-//                                    SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
-//                                    SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
-//                                    SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
-//                                    SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
-//                                    SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
-//                                    SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
-//                                    SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
-//                                    SharedPreferencesUrls.getInstance().putString("ebike_specialdays", bean.getEbike_specialdays());
-//                                    SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
-
-                                    SharedPreferencesUrls.getInstance().putString("access_token", bean.getToken());
-
-                                    new MyAsyncTask().execute();
-                                    if (access_token == null || "".equals(access_token)) {
-                                        rl_authBtn.setVisibility(View.VISIBLE);
-                                        tv_authBtn.setText("您还未登录，点我快速登录");
-                                        rl_authBtn.setEnabled(true);
-                                    } else {
-                                        if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                                            switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                                                case 1:
-                                                    rl_authBtn.setEnabled(true);
-                                                    rl_authBtn.setVisibility(View.VISIBLE);
-                                                    tv_authBtn.setText("您还未认证，点我快速认证");
-                                                    break;
-                                                case 2:
-                                                    getCurrentorder1(uid, access_token);
-                                                    break;
-                                                case 3:
-                                                    rl_authBtn.setEnabled(true);
-                                                    rl_authBtn.setVisibility(View.VISIBLE);
-                                                    tv_authBtn.setText("认证被驳回，请重新认证");
-                                                    break;
-                                                case 4:
-                                                    rl_authBtn.setEnabled(false);
-                                                    rl_authBtn.setVisibility(View.VISIBLE);
-                                                    tv_authBtn.setText("认证审核中");
-                                                    break;
-                                            }
-                                        } else {
-                                            rl_authBtn.setVisibility(View.GONE);
-                                        }
-                                    }
-                                    if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))||
-                                            "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) ||
-                                            SharedPreferencesUrls.getInstance().getString("money", "") == null ||
-                                            "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))){
-                                        rechargeBtn.setVisibility(View.VISIBLE);
-                                    }else {
-                                        rechargeBtn.setVisibility(View.GONE);
-                                    }
-
-
-//                                    if (access_token == null || "".equals(access_token)){
-//                                        UIHelper.goToAct(context,LoginActivity.class);
-//                                    }else {
-//
-//                                    }
-
-                                } else {
-                                    if (BaseApplication.getInstance().getIBLE() != null){
-                                        if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
-                                            BaseApplication.getInstance().getIBLE().refreshCache();
-                                            BaseApplication.getInstance().getIBLE().close();
-                                            BaseApplication.getInstance().getIBLE().stopScan();
-                                        }
-                                    }
-                                    SharedPreferencesUrls.getInstance().putString("uid", "");
-                                    SharedPreferencesUrls.getInstance().putString("access_token","");
-                                }
-                            } catch (Exception e) {
-                            }
-                            if (loadingDialog != null && loadingDialog.isShowing()) {
-                                loadingDialog.dismiss();
-                            }
-                        }
-                    });
-
-                }
-            });
-*/
-
         }
     }
 
@@ -2737,27 +2406,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     };
 
 
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
-        @Override
-        public void onReceive(Context context, final Intent intent) {
-            Log.e("broadcastReceiver===0", "==="+intent);
-
-            m_myHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if(!isHidden && !"4".equals(type) && !"7".equals(type)){
-                        Log.e("broadcastReceiver===1", "==="+intent);
-
-                        getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
-                        getFeedbackStatus();
-                    }
-                }
-            });
-
-
-        }
-    };
 
 
     private String parseAdvData(int rssi, byte[] scanRecord) {
@@ -3284,131 +2933,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 
 
-    BroadcastReceiver mScreenReceiver = new BroadcastReceiver() {
-        private String action = null;
-
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-
-
-            m_myHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    action = intent.getAction();
-
-                    Log.e("main===", "===Screen");
-
-//			if (!screen) return;
-
-                    if (Intent.ACTION_SCREEN_OFF.equals(action)) { // 锁屏
-                        screen = false;
-                        change = false;
-
-//				closeBroadcast();
-//
-//				if (mlocationClient != null) {
-//					mlocationClient.stopLocation(); // 启动定位
-//				}
-
-                        ToastUtil.showMessage(context, "===off");
-                        Log.e("main===", "===off");
-
-                    } else if (Intent.ACTION_SCREEN_ON.equals(action)) { // 开屏
-
-                        ToastUtil.showMessage(context, "===on");
-                        Log.e("main===", "===on");
-
-                    } else if (Intent.ACTION_USER_PRESENT.equals(action)) { // 解锁
-
-                        ToastUtil.showMessage(context, "===present");
-                        Log.e("main===", tz + ">>>present===" + m_nowMac);
-
-                        if (tz == 0) {
-                            if (!"".equals(m_nowMac) && !SharedPreferencesUrls.getInstance().getBoolean("switcher",false)) {
-
-                                if (CurRoadBikingActivity.flagm == 1) return;
-
-                                if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                                    ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-                                    activity.finish();
-                                }
-                                //蓝牙锁
-                                if (mBluetoothAdapter == null) {
-                                    BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
-                                    mBluetoothAdapter = bluetoothManager.getAdapter();
-                                }
-
-                                Log.e("main===", "present===1");
-
-                                if (mBluetoothAdapter == null) {
-                                    ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                                    activity.finish();
-                                    return;
-                                }
-
-                                Log.e("main===", "present===2==="+CurRoadBikingActivity.flagm);
-
-                                if (!mBluetoothAdapter.isEnabled()) {
-                                    Log.e("main===", "present===3==="+CurRoadBikingActivity.flagm);
-
-                                    flag = 1;
-                                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                                    startActivityForResult(enableBtIntent, 188);
-                                }else{
-//                            startXB();
-//
-//                            if (lockLoading != null && !lockLoading.isShowing()){
-//                                lockLoading.setTitle("还车点确认中");
-//                                lockLoading.show();
-//                            }
-//
-//                            new Thread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    try {
-//                                        int n=0;
-//                                        while(macList.size() == 0){
-//
-//                                            Thread.sleep(1000);
-//                                            n++;
-//
-//                                            Log.e("main===", "n====" + n);
-//
-//                                            if(n>=6) break;
-//
-//                                        }
-//                                    } catch (InterruptedException e) {
-//                                        e.printStackTrace();
-//                                    }
-//
-//                                    m_myHandler.sendEmptyMessage(3);
-//                                }
-//                            }).start();
-
-                                }
-                            }
-                        } else if (tz == 1 && !FeedbackActivity.isForeground) {
-                            UIHelper.goToAct(context, FeedbackActivity.class);
-                            Log.e("main===", "main===Feedback");
-                        } else if (tz == 2 && !HistoryRoadDetailActivity.isForeground) {
-                            Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
-                            intent.putExtra("oid", oid);
-                            startActivity(intent);
-                            Log.e("main===", "main===HistoryRoadDetail");
-                        } else if (tz == 3 && !CurRoadBikedActivity.isForeground && !HistoryRoadDetailActivity.isForeground) {
-                            UIHelper.goToAct(context, CurRoadBikedActivity.class);
-                            Log.e("main===", "main===CurRoadBiked");
-                        }
-                    }
-                }
-            });
-
-        }
-    };
-
-
-
-
     private void closeBroadcast() {
         try {
             stopXB();
@@ -3430,53 +2954,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    private void getFeedbackStatus() {
-        RequestParams params = new RequestParams();
-        params.put("telphone", SharedPreferencesUrls.getInstance().getString("userName", ""));
-        HttpHelper.get(context, Urls.getFeedbackStatus, params, new TextHttpResponseHandler() {
 
-            @Override
-            public void onStart() {
-                onStartCommon("正在加载");
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                            if (result.getFlag().equals("Success")) {
-//						ToastUtil.showMessageApp(context,"数据更新成功==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
-
-                                Log.e("getFeedbackStatus===1", result.data +"===" + SharedPreferencesUrls.getInstance().getBoolean("isStop", true));
-
-                                if ("2".equals(result.data) && !SharedPreferencesUrls.getInstance().getBoolean("isStop", true)) {
-                                    customDialog.show();
-                                } else {
-                                    customDialog.dismiss();
-                                }
-
-
-                            } else {
-                                ToastUtil.showMessageApp(context, result.getMsg());
-                            }
-                        } catch (Exception e) {
-                        }
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
-                        }
-                    }
-                });
-
-            }
-        });
-    }
 
 
     @Override
@@ -3975,77 +3453,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    public void initmPopupWindowView(){
 
-        // 获取自定义布局文件的视图
-        View customView = getLayoutInflater().inflate(R.layout.pop_menu, null, false);
-        // 创建PopupWindow宽度和高度
-        RelativeLayout pop_win_bg = (RelativeLayout) customView.findViewById(R.id.pop_win_bg);
-        ImageView iv_popup_window_back = (ImageView) customView.findViewById(R.id.popupWindow_back);
-        // 获取截图的Bitmap
-        Bitmap bitmap = UtilScreenCapture.getDrawing(activity);
-        if (bitmap != null) {
-            // 将截屏Bitma放入ImageView
-            iv_popup_window_back.setImageBitmap(bitmap);
-            // 将ImageView进行高斯模糊【25是最高模糊等级】【0x77000000是蒙上一层颜色，此参数可不填】
-            UtilBitmap.blurImageView(context, iv_popup_window_back, 10,0xAA000000);
-        } else {
-            // 获取的Bitmap为null时，用半透明代替
-            iv_popup_window_back.setBackgroundColor(0x77000000);
-        }
-        // 打开弹窗
-        UtilAnim.showToUp(pop_win_bg, iv_popup_window_back);
-        // 创建PopupWindow宽度和高度
-        final PopupWindow popupwindow = new PopupWindow(customView, LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT, true);
-        /**
-         * 设置动画效果 ,从上到下加载方式等，不设置自动的下拉，最好 [动画效果不好，不加实现下拉效果，不错]
-         */
-        popupwindow.setAnimationStyle(R.style.PopupAnimation);
-        popupwindow.setOutsideTouchable(false);
-
-        LinearLayout feedbackLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_feedbackLayout);
-        LinearLayout helpLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_helpLayout);
-        final LinearLayout callLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_callLayout);
-        TextView cancleBtn = (TextView)customView.findViewById(R.id.pop_menu_cancleBtn);
-
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()){
-                    case R.id.pop_menu_feedbackLayout:
-                        UIHelper.goToAct(context, ServiceCenter0Activity.class);
-                        break;
-                    case R.id.pop_menu_helpLayout:
-//                        WindowManager windowManager = activity.getWindowManager();
-//                        Display display = windowManager.getDefaultDisplay();
-//                        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-//                        lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-//                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                        dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-//                        dialog.getWindow().setAttributes(lp);
-                        dialog.show();
-
-                        break;
-                    case R.id.pop_menu_callLayout:
-                        UIHelper.goToAct(context, ServiceCenterActivity.class);
-
-                        break;
-                    case R.id.pop_menu_cancleBtn:
-
-                        break;
-                }
-                popupwindow.dismiss();
-            }
-        };
-
-        feedbackLayout.setOnClickListener(listener);
-        helpLayout.setOnClickListener(listener);
-        callLayout.setOnClickListener(listener);
-        cancleBtn.setOnClickListener(listener);
-
-        popupwindow.showAtLocation(customView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-    }
 
 
     protected void getCurrentorder2(String uid, String access_token){

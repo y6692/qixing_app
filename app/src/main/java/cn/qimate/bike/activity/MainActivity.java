@@ -162,7 +162,11 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //        IntentFilter filter = new IntentFilter("data.broadcast.action");
 //        registerReceiver(mReceiver, filter);
 
-
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        registerReceiver(mScreenReceiver, filter);
 
         m_myHandler.sendEmptyMessage(1);
 
@@ -274,6 +278,93 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     }
 
+    BroadcastReceiver mScreenReceiver = new BroadcastReceiver() {
+        private String action = null;
+
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+
+
+            m_myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    action = intent.getAction();
+
+                    Log.e("mScreenReceiver===mf", "===Screen");
+
+//			if (!screen) return;
+
+                    if (Intent.ACTION_SCREEN_OFF.equals(action)) { // 锁屏
+//                        screen = false;
+//                        change = false;
+
+
+                        ToastUtil.showMessage(context, "===off");
+                        Log.e("main===off", "===");
+
+                    } else if (Intent.ACTION_SCREEN_ON.equals(action)) { // 开屏
+
+                        ToastUtil.showMessage(context, "===on");
+                        Log.e("main===on", "===");
+
+                    } else if (Intent.ACTION_USER_PRESENT.equals(action)) { // 解锁
+
+//                        ToastUtil.showMessage(context, "===present");
+//                        Log.e("main===", tz + ">>>present===" + m_nowMac);
+//
+//                        if (tz == 0) {
+//                            if (!"".equals(m_nowMac) && !SharedPreferencesUrls.getInstance().getBoolean("switcher",false)) {
+//
+//                                if (CurRoadBikingActivity.flagm == 1) return;
+//
+//                                if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//                                    ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+//                                    activity.finish();
+//                                }
+//                                //蓝牙锁
+//                                if (mBluetoothAdapter == null) {
+//                                    BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
+//                                    mBluetoothAdapter = bluetoothManager.getAdapter();
+//                                }
+//
+//                                Log.e("main===", "present===1");
+//
+//                                if (mBluetoothAdapter == null) {
+//                                    ToastUtil.showMessageApp(context, "获取蓝牙失败");
+//                                    activity.finish();
+//                                    return;
+//                                }
+//
+//                                Log.e("main===", "present===2==="+CurRoadBikingActivity.flagm);
+//
+//                                if (!mBluetoothAdapter.isEnabled()) {
+//                                    Log.e("main===", "present===3==="+CurRoadBikingActivity.flagm);
+//
+//                                    flag = 1;
+//                                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                                    startActivityForResult(enableBtIntent, 188);
+//                                }else{
+//
+//                                }
+//                            }
+//                        } else if (tz == 1 && !FeedbackActivity.isForeground) {
+//                            UIHelper.goToAct(context, FeedbackActivity.class);
+//                            Log.e("main===", "main===Feedback");
+//                        } else if (tz == 2 && !HistoryRoadDetailActivity.isForeground) {
+//                            Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
+//                            intent.putExtra("oid", oid);
+//                            startActivity(intent);
+//                            Log.e("main===", "main===HistoryRoadDetail");
+//                        } else if (tz == 3 && !CurRoadBikedActivity.isForeground && !HistoryRoadDetailActivity.isForeground) {
+//                            UIHelper.goToAct(context, CurRoadBikedActivity.class);
+//                            Log.e("main===", "main===CurRoadBiked");
+//                        }
+                    }
+                }
+            });
+
+        }
+    };
 
 
     protected Handler m_myHandler = new Handler(new Handler.Callback() {
