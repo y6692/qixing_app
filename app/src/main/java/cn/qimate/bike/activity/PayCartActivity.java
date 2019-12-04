@@ -135,7 +135,7 @@ public class PayCartActivity extends SwipeBackActivity implements View.OnClickLi
 //  public void btn(View view) {
 //    int viewId = view.getId();
 //    if (viewId == R.id.ll_bike) {
-//      UIHelper.goToAct(this, MainActivity.class);
+//      UIHelper.goToAct(this, MainFragment.class);
 //      scrollToFinishActivity();
 //    } else if (viewId == R.id.ll_purse) {
 //      UIHelper.goToAct(this, MyPurseActivity.class);

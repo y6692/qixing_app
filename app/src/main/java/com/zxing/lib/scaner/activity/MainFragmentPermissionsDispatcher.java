@@ -5,30 +5,30 @@ import android.support.v4.app.ActivityCompat;
 
 import java.lang.ref.WeakReference;
 
-import cn.qimate.bike.activity.MainActivity;
+import cn.qimate.bike.fragment.MainFragment;
 import permissions.dispatcher.GrantableRequest;
 import permissions.dispatcher.PermissionUtils;
 
-public final class MainActivityPermissionsDispatcher {
+public final class MainFragmentPermissionsDispatcher {
   private static final int REQUEST_CONNECTDEVICE = 0;
 
   private static final String[] PERMISSION_CONNECTDEVICE = new String[] {"android.permission.ACCESS_COARSE_LOCATION","android.permission.BLUETOOTH"};
 
   private static GrantableRequest PENDING_CONNECTDEVICE;
 
-  private MainActivityPermissionsDispatcher() {
+  private MainFragmentPermissionsDispatcher() {
   }
 
-  public static void connectDeviceWithPermissionCheck(MainActivity target, String imei) {
-    if (PermissionUtils.hasSelfPermissions(target, PERMISSION_CONNECTDEVICE)) {
+  public static void connectDeviceWithPermissionCheck(MainFragment target, String imei) {
+    if (PermissionUtils.hasSelfPermissions(target.getContext(), PERMISSION_CONNECTDEVICE)) {
       target.connectDevice(imei);
     } else {
       PENDING_CONNECTDEVICE = new MainActivityConnectDevicePermissionRequest(target, imei);
-      ActivityCompat.requestPermissions(target, PERMISSION_CONNECTDEVICE, REQUEST_CONNECTDEVICE);
+      ActivityCompat.requestPermissions(target.getActivity(), PERMISSION_CONNECTDEVICE, REQUEST_CONNECTDEVICE);
     }
   }
 
-  static void onRequestPermissionsResult(MainActivity target, int requestCode, int[] grantResults) {
+  static void onRequestPermissionsResult(MainFragment target, int requestCode, int[] grantResults) {
     switch (requestCode) {
       case REQUEST_CONNECTDEVICE:
       if (PermissionUtils.verifyPermissions(grantResults)) {
@@ -44,20 +44,20 @@ public final class MainActivityPermissionsDispatcher {
   }
 
   private static final class MainActivityConnectDevicePermissionRequest implements GrantableRequest {
-    private final WeakReference<MainActivity> weakTarget;
+    private final WeakReference<MainFragment> weakTarget;
 
     private final String imei;
 
-    private MainActivityConnectDevicePermissionRequest(MainActivity target, String imei) {
-      this.weakTarget = new WeakReference<MainActivity>(target);
+    private MainActivityConnectDevicePermissionRequest(MainFragment target, String imei) {
+      this.weakTarget = new WeakReference<MainFragment>(target);
       this.imei = imei;
     }
 
     @Override
     public void proceed() {
-      MainActivity target = weakTarget.get();
+      MainFragment target = weakTarget.get();
       if (target == null) return;
-      ActivityCompat.requestPermissions(target, PERMISSION_CONNECTDEVICE, REQUEST_CONNECTDEVICE);
+      ActivityCompat.requestPermissions(target.getActivity(), PERMISSION_CONNECTDEVICE, REQUEST_CONNECTDEVICE);
     }
 
     @Override
@@ -66,7 +66,7 @@ public final class MainActivityPermissionsDispatcher {
 
     @Override
     public void grant() {
-      MainActivity target = weakTarget.get();
+      MainFragment target = weakTarget.get();
       if (target == null) return;
       target.connectDevice(imei);
     }

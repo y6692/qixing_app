@@ -38,7 +38,7 @@ public class HtmlTagHandler implements TagHandler {
 		@Override
 		public void onClick(View view) {
 			// 具体代码，可以是跳转页面，可以是弹出对话框，下面是跳转页面
-			// context.startActivity(new Intent(mContext,MainActivity.class));
+			// context.startActivity(new Intent(mContext,MainFragment.class));
 		}
 	}
 }

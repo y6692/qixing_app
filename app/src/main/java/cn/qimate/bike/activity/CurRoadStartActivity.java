@@ -287,7 +287,7 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
 ////                    }
 //                ToastUtil.showMessageApp(context,"恭喜您，您已成功上锁");
 //
-//                if(MainActivity.screen){
+//                if(MainFragment.screen){
 //                    endBtn();
 //                }
 //
@@ -339,7 +339,7 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
 //                        if ("1".equals(result.getData())){
 //                            ToastUtil.showMessageApp(context, result.getMsg());
 //                            if ("已为您免单,欢迎反馈问题".equals(result.getMsg())){
-//                                MainActivity.tz = 1;
+//                                MainFragment.tz = 1;
 //
 //                                ToastUtil.showMessage(context,"context==="+context);
 //
@@ -348,13 +348,13 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
 //                                UIHelper.goToAct(context, FeedbackActivity.class);
 //                                scrollToFinishActivity();
 //                            }else {
-//                                MainActivity.tz = 2;
+//                                MainFragment.tz = 2;
 //                                Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
 //                                intent.putExtra("oid", oid);
 //                                startActivity(intent);
 //                            }
 //                        }else {
-//                            MainActivity.tz = 3;
+//                            MainFragment.tz = 3;
 //                            ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
 //                            UIHelper.goToAct(context,CurRoadBikedActivity.class);
 //                        }

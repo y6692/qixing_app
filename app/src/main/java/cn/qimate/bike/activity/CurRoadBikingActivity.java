@@ -108,7 +108,6 @@ import com.xiaoantech.sdk.listeners.BleCallback;
 import com.xiaoantech.sdk.listeners.BleStateChangeListener;
 import com.xiaoantech.sdk.listeners.ScanResultCallback;
 import com.zxing.lib.scaner.activity.ActivityScanerCode;
-import com.zxing.lib.scaner.activity.MainActivityPermissionsDispatcher;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -837,7 +836,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                    ClientManager.getClient().disconnect(m_nowMac);
 
                     Log.e("initView===5", isTz+"==="+isLookPsdBtn);
-
 
                     if(isTz){
                         WindowManager windowManager = getWindowManager();
@@ -1573,7 +1571,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     case Config.TOKEN_ACTION:
                         Log.e("biking===TOKEN_ACTION", isEndBtn+"==="+stopScan);
 //                        lookPsdBtn.setEnabled(true);
-
 
                         isEndBtn = false;
                         isStop = true;

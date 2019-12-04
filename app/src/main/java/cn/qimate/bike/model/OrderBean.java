@@ -6,6 +6,7 @@ public class OrderBean {
 	private String order_sn;	//订单编号
 	private String car_number;	//车辆编号
 	private int lock_id;	//锁ID(原锁类型)
+	private String car_lock_mac;
 	private String estimated_cost;	//预估费用
 	private String car_start_time;	//借车时间
 	private String car_end_time;	//结束时间
@@ -41,6 +42,14 @@ public class OrderBean {
 
 	public void setLock_id(int lock_id) {
 		this.lock_id = lock_id;
+	}
+
+	public String getCar_lock_mac() {
+		return car_lock_mac;
+	}
+
+	public void setCar_lock_mac(String car_lock_mac) {
+		this.car_lock_mac = car_lock_mac;
 	}
 
 	public String getEstimated_cost() {

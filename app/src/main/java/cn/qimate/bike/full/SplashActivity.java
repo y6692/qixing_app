@@ -343,7 +343,7 @@ public class SplashActivity extends BaseActivity {
 ////			handler.removeMessages(0);
 //
 //			if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-//				UIHelper.goToAct(context, MainActivity.class);
+//				UIHelper.goToAct(context, MainFragment.class);
 //			} else {
 //				SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
 //				SharedPreferencesUrls.getInstance().putInt("version", getVersion());

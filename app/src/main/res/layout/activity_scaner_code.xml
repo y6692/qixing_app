@@ -317,7 +317,11 @@
                 android:layout_alignParentBottom="true"
                 android:orientation="horizontal"
                 android:background="@drawable/block_input_bcg"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 >
+
+                <requestFocus />
 
                 <cn.qimate.bike.core.widget.ClearEditText
                     android:id="@+id/pop_circlesMenu_bikeNumEdit"
@@ -329,6 +333,7 @@
                     android:background="@drawable/shape_et_codenum"
                     android:drawableRight="@drawable/delete_selector"
                     android:gravity="center"
+
                     android:hint="请输入车辆编号"
                     android:lineSpacingExtra="@dimen/dp5"
                     android:paddingBottom="0dp"

@@ -121,7 +121,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.rl_coupon:
-//                ((MainActivity)getActivity()).changeTab(1);
+//                ((MainFragment)getActivity()).changeTab(1);
                 UIHelper.goToAct(context, CurRoadBikedActivity.class);
 
                 break;

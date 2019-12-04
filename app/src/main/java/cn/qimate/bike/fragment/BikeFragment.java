@@ -137,7 +137,6 @@ import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.activity.HistoryRoadDetailActivity;
 import cn.qimate.bike.activity.InsureanceActivity;
 import cn.qimate.bike.activity.LoginActivity;
-import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.activity.MyPurseActivity;
 import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.activity.PersonAlterActivity;
@@ -176,7 +175,7 @@ import static cn.qimate.bike.activity.CurRoadBikingActivity.bytes2hex03;
 
 @SuppressLint("NewApi")
 public class BikeFragment extends BaseFragment implements View.OnClickListener, LocationSource,
-        AMapLocationListener, AMap.OnCameraChangeListener, AMap.OnMapTouchListener, OnConnectionListener, AMap.OnMapClickListener, AMapNaviListener {
+        AMapLocationListener, AMap.OnCameraChangeListener, AMap.OnMapTouchListener, OnConnectionListener {
 
     Unbinder unbinder;
 
@@ -196,9 +195,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private LinearLayout scanLock, myCommissionLayout, myLocationLayout, linkLayout;
     private ImageView closeBtn;
 
-    private LinearLayout ll_top;
-    private LinearLayout ll_top_navi;
-    private TextView tv_navi_distance;
+//    private LinearLayout ll_top;
+//    private LinearLayout ll_top_navi;
+//    private TextView tv_navi_distance;
 
     protected AMap aMap;
     protected BitmapDescriptor successDescripter;
@@ -264,14 +263,14 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //    private Dialog dialog;
 
     private TextView marquee;
-    protected InternalReceiver internalReceiver = null;
+//    protected InternalReceiver internalReceiver = null;
 
     private BluetoothAdapter mBluetoothAdapter;
     LocationManager locationManager;
     String provider = LocationManager.GPS_PROVIDER;
 //	String provider = LocationManager.NETWORK_PROVIDER;
 
-    public List<Boolean> isContainsList;
+
     public List<String> macList;
     public List<String> macList2;
     public List<Polygon> pOptions;
@@ -285,8 +284,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private int carType = 1;
 
     private Bundle savedIS;
-    private AMapNavi mAMapNavi;
-    private RouteOverLay routeOverLay;
+//    private AMapNavi mAMapNavi;
+//    private RouteOverLay routeOverLay;
     private MarkerOptions centerMarkerOptionLoading;
 
     private MarkerOptions marker_park_Option;
@@ -306,9 +305,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         CrashHandler.getInstance().setmContext(context);
 
-//        aMap = ((MainActivity)activity).aMap;
-//        successDescripter = ((MainActivity)activity).successDescripter;
-//        mapView = ((MainActivity)activity).mapView;
+//        aMap = ((MainFragment)activity).aMap;
+//        successDescripter = ((MainFragment)activity).successDescripter;
+//        mapView = ((MainFragment)activity).mapView;
 
         mapView = activity.findViewById(R.id.mainUI_map);
 
@@ -366,10 +365,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //                mAMapNavi.destroy();
 //            }
 
-            if(ll_top!=null){
-                ll_top.setVisibility(View.VISIBLE);
-                ll_top_navi.setVisibility(View.GONE);
-            }
+//            if(ll_top!=null){
+//                ll_top.setVisibility(View.VISIBLE);
+//                ll_top_navi.setVisibility(View.GONE);
+//            }
 
 //            schoolRange();
         }else{
@@ -392,39 +391,39 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 //            m_myHandler.sendEmptyMessage(4);
 
-            mAMapNavi = AMapNavi.getInstance(context);
-            mAMapNavi.addAMapNaviListener(this);
+//            mAMapNavi = AMapNavi.getInstance(context);
+//            mAMapNavi.addAMapNaviListener(this);
 
 
-            aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-
-//                    curMarker = marker;
+//            aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
+//                @Override
+//                public boolean onMarkerClick(Marker marker) {
 //
-//                    marker.setTitle(marker.getTitle());
-
-                    ll_top.setVisibility(View.GONE);
-                    ll_top_navi.setVisibility(View.VISIBLE);
-
-
-//                    Log.e("onMarkerClick===", marker.getTitle()+"==="+marker.getTitle().split("-")[0]);
-                    Log.e("onMarkerClick===", mAMapNavi+"==="+referLatitude+"==="+referLongitude+"==="+marker.getPosition().latitude+"==="+marker.getPosition().longitude);
-
-//                    31.764391===119.920551===31.765937===119.921452
-                    mAMapNavi.calculateRideRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
-
-
-//                    codenum = marker.getTitle().split("-")[0];
-//                    quantity = marker.getTitle().split("-")[1];
+////                    curMarker = marker;
+////
+////                    marker.setTitle(marker.getTitle());
 //
-//                    initmPopupWindowView();
-                    return true;
-                }
-            });
+//                    ll_top.setVisibility(View.GONE);
+//                    ll_top_navi.setVisibility(View.VISIBLE);
+//
+//
+////                    Log.e("onMarkerClick===", marker.getTitle()+"==="+marker.getTitle().split("-")[0]);
+//                    Log.e("onMarkerClick===", mAMapNavi+"==="+referLatitude+"==="+referLongitude+"==="+marker.getPosition().latitude+"==="+marker.getPosition().longitude);
+//
+////                    31.764391===119.920551===31.765937===119.921452
+//                    mAMapNavi.calculateRideRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
+//
+//
+////                    codenum = marker.getTitle().split("-")[0];
+////                    quantity = marker.getTitle().split("-")[1];
+////
+////                    initmPopupWindowView();
+//                    return true;
+//                }
+//            });
 
             aMap.setOnMapTouchListener(this);
-            aMap.setOnMapClickListener(this);
+//            aMap.setOnMapClickListener(this);
             aMap.setOnCameraChangeListener(this);
 //            setUpLocationStyle();
 
@@ -468,8 +467,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 
 
-            ll_top.setVisibility(View.VISIBLE);
-            ll_top_navi.setVisibility(View.GONE);
+//            ll_top.setVisibility(View.VISIBLE);
+//            ll_top_navi.setVisibility(View.GONE);
 
 
         }
@@ -585,12 +584,12 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 
 
-                                    if(!isHidden){
-                                        pOptions.add(polygon);
-
-                                        isContainsList.add(polygon.contains(myLocation));
-                                    }else{
-                                    }
+//                                    if(!isHidden){
+//                                        pOptions.add(polygon);
+//
+//                                        isContainsList.add(polygon.contains(myLocation));
+//                                    }else{
+//                                    }
 
                                 }
                             }else {
@@ -661,6 +660,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                     isContainsList.clear();
                                 }
 
+                                if (!listPoint.isEmpty() || 0 != listPoint.size()){
+                                    listPoint.clear();
+                                }
+
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     List<LatLng> list = new ArrayList<>();
                                     List<LatLng> list2 = new ArrayList<>();
@@ -678,6 +681,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                         flag=0;
                                         list.add(latLng);
+
+                                        listPoint.add(latLng);
                                     }
 
 
@@ -707,12 +712,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                         isContainsList.add(polygon.contains(myLocation));
                                     }else{
                                     }
-
-
-
                                 }
 
-                                Log.e("main_b===schoolRange5", pOptions.size()+"==="+pOptions+"==="+isContainsList.size()+"==="+isContainsList);
+                                Log.e("main_b===schoolRange5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
 
                             }else {
                                 ToastUtil.showMessageApp(context,result.getMsg());
@@ -1274,9 +1276,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //        lockLoading.setCancelable(false);
 //        lockLoading.setCanceledOnTouchOutside(false);
 
-        ll_top = activity.findViewById(R.id.ll_top);
-        ll_top_navi = activity.findViewById(R.id.ll_top_navi);
-        tv_navi_distance = activity.findViewById(R.id.tv_navi_distance);
+
 
         Log.e("BF===initView", "==="+aMap);
 
@@ -1310,7 +1310,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         marker_tip_Option2 = new MarkerOptions().icon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_tip_layout2, null)));
 
         aMap.setOnMapTouchListener(this);
-        aMap.setOnMapClickListener(this);
+//        aMap.setOnMapClickListener(this);
         setUpLocationStyle();
 
 //        leftBtn.setOnClickListener(this);
@@ -1356,7 +1356,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 
         if("4".equals(type) || "7".equals(type)){
-//            ((MainActivity)getActivity()).changeTab(1);
+//            ((MainFragment)getActivity()).changeTab(1);
 //            if(getParentFragment()!=null){
 //                ((MainFragment)getParentFragment()).changeTab(1);
 //            }
@@ -1366,7 +1366,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //            return;
         }
 //        else{
-//            ((MainActivity)getActivity()).changeTab(0);
+//            ((MainFragment)getActivity()).changeTab(0);
 //        }
 
 
@@ -1866,214 +1866,214 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    protected void handleReceiver(final Context context, final Intent intent) {
-
-        m_myHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                // 广播处理
-                if (intent == null) {
-                    return;
-                }
-
-                String action = intent.getAction();
-                String data = intent.getStringExtra("data");
-
-                Log.e("main===", "handleReceiver===" + action + "===" + data);
-
-                switch (action) {
-                    case BluetoothAdapter.ACTION_STATE_CHANGED:
-
-                        ToastUtil.showMessage(context, "main===蓝牙CHANGED");
-                        int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                        switch (blueState) {
-                            case BluetoothAdapter.STATE_TURNING_ON:
-                                break;
-
-                            case BluetoothAdapter.STATE_ON:
-                                break;
-
-                            case BluetoothAdapter.STATE_TURNING_OFF:
-                                ToastUtil.showMessage(context, "main===TURNING_OFF");
-                                break;
-
-                            case BluetoothAdapter.STATE_OFF:
-                                ToastUtil.showMessage(context, "main===OFF");
-                                break;
-                        }
-
-                        break;
-                    case Config.TOKEN_ACTION:
-                        isConnect = true;
-
-                        if (customDialog3 != null && customDialog3.isShowing()) {
-                            customDialog3.dismiss();
-                        }
-                        if (customDialog4 != null && customDialog4.isShowing()) {
-                            customDialog4.dismiss();
-                        }
-
-
-                        if (mlocationClient != null) {
-                            mlocationClient.startLocation();//停止定位
-                        }
-
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                BaseApplication.getInstance().getIBLE().getBattery();
-                            }
-                        }, 500);
-                        if (null != lockLoading && lockLoading.isShowing()) {
-                            lockLoading.dismiss();
-                        }
-//					isStop = true;
-                        ToastUtil.showMessageApp(context, "设备连接成功");
-
-
-                        break;
-                    case Config.BATTERY_ACTION:
-                        if (isConnect) {
-                        }
-
-                        macList2 = new ArrayList<> (macList);
-
-                        Log.e("main===", "main===BATTERY_ACTION==="+macList2+"==="+type);
-                        BaseApplication.getInstance().getIBLE().getLockStatus();
-
-                        break;
-                    case Config.OPEN_ACTION:
-                        ToastUtil.showMessage(context, "####===3");
-                        break;
-                    case Config.CLOSE_ACTION:
-                        ToastUtil.showMessage(context, "####===4");
-                        break;
-                    case Config.LOCK_STATUS_ACTION:
-
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
-                        }
-                        if (lockLoading != null && lockLoading.isShowing()) {
-                            lockLoading.dismiss();
-                        }
-
-                        if (TextUtils.isEmpty(data)) {
-                            ToastUtil.showMessageApp(context, "锁已关闭");
-                            Log.e("main===", "main===锁已关闭==="+macList2+"==="+type+"==="+first3);
-                            //锁已关闭
-
-                            if (mBluetoothAdapter == null) {
-                                BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
-                                mBluetoothAdapter = bluetoothManager.getAdapter();
-                            }
-
-                            if (mBluetoothAdapter == null) {
-                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                                activity.finish();
-                                return;
-                            }
-
-                            if (!mBluetoothAdapter.isEnabled()) {
-                                flag = 1;
-                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                                startActivityForResult(enableBtIntent, 188);
-                            }else{
-
-                                if("3".equals(type)){
-                                    if (!isContainsList.contains(true) && macList2.size() <= 0) {
-                                        customDialog4.show();
-
-                                    } else {
-                                        submit(uid, access_token);
-                                    }
-                                }else{
-                                    if (!isContainsList.contains(true) && macList2.size() <= 0) {
-                                        customDialog3.show();
-
-                                    } else {
-                                        submit(uid, access_token);
-                                    }
-                                }
-
-                            }
-                        } else {
-                            //锁已开启
-                            ToastUtil.showMessageApp(context, "您还未上锁，请给车上锁后还车");
-                        }
-                        break;
-                    case Config.LOCK_RESULT:
-
-                        PowerManager pm = (PowerManager) activity.getSystemService(Context.POWER_SERVICE);
-                        boolean screenOn = pm.isScreenOn();
-                        if (!screenOn) {
-                            // 获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
-                            @SuppressLint("InvalidWakeLockTag") PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "bright");
-                            wl.acquire();
-//					wl.acquire(10000); // 点亮屏幕
-                            wl.release(); // 释放
-                        }
-
-                        // 屏幕解锁
-                        KeyguardManager keyguardManager = (KeyguardManager) activity.getSystemService(KEYGUARD_SERVICE);
-                        KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("");
-//				KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("unLock");
-                        // 屏幕锁定
-//				keyguardLock.reenableKeyguard();
-                        keyguardLock.disableKeyguard(); // 解锁
-
-                        if (mlocationClient != null) {
-                            mlocationClient.startLocation();
-                        }
-
-
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
-                        }
-                        if (lockLoading != null && lockLoading.isShowing()) {
-                            lockLoading.dismiss();
-                        }
-
-                        ToastUtil.showMessageApp(context, "恭喜您，您已成功上锁");
-                        Log.e("main===", "main===恭喜您，您已成功上锁");
-
-//                //自动还车
-//                if(SharedPreferencesUrls.getInstance().getBoolean("switcher", false)) break;
+//    protected void handleReceiver(final Context context, final Intent intent) {
 //
-//                startXB();
-//
-//                if (lockLoading != null && !lockLoading.isShowing()){
-//                    lockLoading.setTitle("还车点确认中");
-//                    lockLoading.show();
+//        m_myHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                // 广播处理
+//                if (intent == null) {
+//                    return;
 //                }
 //
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            int n=0;
-//                            while(macList.size() == 0){
+//                String action = intent.getAction();
+//                String data = intent.getStringExtra("data");
 //
-//                                Thread.sleep(1000);
-//                                n++;
+//                Log.e("main===", "handleReceiver===" + action + "===" + data);
 //
-//                                if(n>=6) break;
+//                switch (action) {
+//                    case BluetoothAdapter.ACTION_STATE_CHANGED:
 //
-//                            }
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
+//                        ToastUtil.showMessage(context, "main===蓝牙CHANGED");
+//                        int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
+//                        switch (blueState) {
+//                            case BluetoothAdapter.STATE_TURNING_ON:
+//                                break;
+//
+//                            case BluetoothAdapter.STATE_ON:
+//                                break;
+//
+//                            case BluetoothAdapter.STATE_TURNING_OFF:
+//                                ToastUtil.showMessage(context, "main===TURNING_OFF");
+//                                break;
+//
+//                            case BluetoothAdapter.STATE_OFF:
+//                                ToastUtil.showMessage(context, "main===OFF");
+//                                break;
 //                        }
 //
-//                        m_myHandler.sendEmptyMessage(2);
+//                        break;
+//                    case Config.TOKEN_ACTION:
+//                        isConnect = true;
 //
-//                    }
-//                }).start();
-
-                        break;
-                }
-            }
-        });
-
-    }
+//                        if (customDialog3 != null && customDialog3.isShowing()) {
+//                            customDialog3.dismiss();
+//                        }
+//                        if (customDialog4 != null && customDialog4.isShowing()) {
+//                            customDialog4.dismiss();
+//                        }
+//
+//
+//                        if (mlocationClient != null) {
+//                            mlocationClient.startLocation();//停止定位
+//                        }
+//
+//                        handler.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                BaseApplication.getInstance().getIBLE().getBattery();
+//                            }
+//                        }, 500);
+//                        if (null != lockLoading && lockLoading.isShowing()) {
+//                            lockLoading.dismiss();
+//                        }
+////					isStop = true;
+//                        ToastUtil.showMessageApp(context, "设备连接成功");
+//
+//
+//                        break;
+//                    case Config.BATTERY_ACTION:
+//                        if (isConnect) {
+//                        }
+//
+//                        macList2 = new ArrayList<> (macList);
+//
+//                        Log.e("main===", "main===BATTERY_ACTION==="+macList2+"==="+type);
+//                        BaseApplication.getInstance().getIBLE().getLockStatus();
+//
+//                        break;
+//                    case Config.OPEN_ACTION:
+//                        ToastUtil.showMessage(context, "####===3");
+//                        break;
+//                    case Config.CLOSE_ACTION:
+//                        ToastUtil.showMessage(context, "####===4");
+//                        break;
+//                    case Config.LOCK_STATUS_ACTION:
+//
+//                        if (loadingDialog != null && loadingDialog.isShowing()) {
+//                            loadingDialog.dismiss();
+//                        }
+//                        if (lockLoading != null && lockLoading.isShowing()) {
+//                            lockLoading.dismiss();
+//                        }
+//
+//                        if (TextUtils.isEmpty(data)) {
+//                            ToastUtil.showMessageApp(context, "锁已关闭");
+//                            Log.e("main===", "main===锁已关闭==="+macList2+"==="+type+"==="+first3);
+//                            //锁已关闭
+//
+//                            if (mBluetoothAdapter == null) {
+//                                BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
+//                                mBluetoothAdapter = bluetoothManager.getAdapter();
+//                            }
+//
+//                            if (mBluetoothAdapter == null) {
+//                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
+//                                activity.finish();
+//                                return;
+//                            }
+//
+//                            if (!mBluetoothAdapter.isEnabled()) {
+//                                flag = 1;
+//                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                                startActivityForResult(enableBtIntent, 188);
+//                            }else{
+//
+//                                if("3".equals(type)){
+//                                    if (!isContainsList.contains(true) && macList2.size() <= 0) {
+//                                        customDialog4.show();
+//
+//                                    } else {
+//                                        submit(uid, access_token);
+//                                    }
+//                                }else{
+//                                    if (!isContainsList.contains(true) && macList2.size() <= 0) {
+//                                        customDialog3.show();
+//
+//                                    } else {
+//                                        submit(uid, access_token);
+//                                    }
+//                                }
+//
+//                            }
+//                        } else {
+//                            //锁已开启
+//                            ToastUtil.showMessageApp(context, "您还未上锁，请给车上锁后还车");
+//                        }
+//                        break;
+//                    case Config.LOCK_RESULT:
+//
+//                        PowerManager pm = (PowerManager) activity.getSystemService(Context.POWER_SERVICE);
+//                        boolean screenOn = pm.isScreenOn();
+//                        if (!screenOn) {
+//                            // 获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
+//                            @SuppressLint("InvalidWakeLockTag") PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "bright");
+//                            wl.acquire();
+////					wl.acquire(10000); // 点亮屏幕
+//                            wl.release(); // 释放
+//                        }
+//
+//                        // 屏幕解锁
+//                        KeyguardManager keyguardManager = (KeyguardManager) activity.getSystemService(KEYGUARD_SERVICE);
+//                        KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("");
+////				KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("unLock");
+//                        // 屏幕锁定
+////				keyguardLock.reenableKeyguard();
+//                        keyguardLock.disableKeyguard(); // 解锁
+//
+//                        if (mlocationClient != null) {
+//                            mlocationClient.startLocation();
+//                        }
+//
+//
+//                        if (loadingDialog != null && loadingDialog.isShowing()) {
+//                            loadingDialog.dismiss();
+//                        }
+//                        if (lockLoading != null && lockLoading.isShowing()) {
+//                            lockLoading.dismiss();
+//                        }
+//
+//                        ToastUtil.showMessageApp(context, "恭喜您，您已成功上锁");
+//                        Log.e("main===", "main===恭喜您，您已成功上锁");
+//
+////                //自动还车
+////                if(SharedPreferencesUrls.getInstance().getBoolean("switcher", false)) break;
+////
+////                startXB();
+////
+////                if (lockLoading != null && !lockLoading.isShowing()){
+////                    lockLoading.setTitle("还车点确认中");
+////                    lockLoading.show();
+////                }
+////
+////                new Thread(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        try {
+////                            int n=0;
+////                            while(macList.size() == 0){
+////
+////                                Thread.sleep(1000);
+////                                n++;
+////
+////                                if(n>=6) break;
+////
+////                            }
+////                        } catch (InterruptedException e) {
+////                            e.printStackTrace();
+////                        }
+////
+////                        m_myHandler.sendEmptyMessage(2);
+////
+////                    }
+////                }).start();
+//
+//                        break;
+//                }
+//            }
+//        });
+//
+//    }
 
     @Override
     public void onClick(View view) {
@@ -2632,13 +2632,13 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             macList.clear();
             macList2.clear();
 
-            if (internalReceiver != null) {
-                activity.unregisterReceiver(internalReceiver);
-                internalReceiver = null;
-            }
+//            if (internalReceiver != null) {
+//                activity.unregisterReceiver(internalReceiver);
+//                internalReceiver = null;
+//            }
 
-            ToastUtil.showMessage(context, "main====closeBroadcast===" + internalReceiver);
-            Log.e("main====", "closeBroadcast===" + internalReceiver);
+            ToastUtil.showMessage(context, "main====closeBroadcast===");
+            Log.e("main====", "closeBroadcast===");
 
         } catch (Exception e) {
             ToastUtil.showMessage(context, "eee====" + e);
@@ -2837,21 +2837,21 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         });
     }
 
-    @Override
-    public void onMapClick(LatLng point) {
-        Log.e("onMapClick===", ll_top.isShown()+"===" + routeOverLay+"===" + ll_top_navi);
-
-        if(!ll_top.isShown()){
-            routeOverLay.removeFromMap();
-
-            ll_top.setVisibility(View.VISIBLE);
-            ll_top_navi.setVisibility(View.GONE);
-        }
-    }
+//    @Override
+//    public void onMapClick(LatLng point) {
+//        Log.e("onMapClick===", ll_top.isShown()+"===" + routeOverLay+"===" + ll_top_navi);
+//
+//        if(!ll_top.isShown()){
+//            routeOverLay.removeFromMap();
+//
+//            ll_top.setVisibility(View.VISIBLE);
+//            ll_top_navi.setVisibility(View.GONE);
+//        }
+//    }
 
     @Override
     public void onTouch(MotionEvent motionEvent) {
-        Log.e("main===onTouch", ll_top.isShown()+"===" + routeOverLay+"===" + ll_top_navi);
+        Log.e("main===onTouch", "===");
 
         if (motionEvent.getAction() == MotionEvent.ACTION_UP ||
                 motionEvent.getAction() == MotionEvent.ACTION_CANCEL || motionEvent.getAction() == MotionEvent.ACTION_OUTSIDE
@@ -2862,154 +2862,154 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    @Override
-    public void onInitNaviFailure() { }
-
-    @Override
-    public void onInitNaviSuccess() {
-        Log.e("onInitNaviSuccess===", "===");
-    }
-
-    @Override
-    public void onCalculateRouteSuccess(int[] ints) {
-        if(isHidden) return;
-
-        Log.e("onCalculateRouteSuc=", "==="+routeOverLay);
-
-//        routeOverlays.clear();
-//        ways.clear();
-
-        if(routeOverLay != null){
-            routeOverLay.removeFromMap();
-        }
-
-//        mAMapNavi.startNavi(NaviType.EMULATOR);
-
-        AMapNaviPath path = mAMapNavi.getNaviPath();
-
-        drawRoutes(-1, path);   // 单路径不需要进行路径选择，直接传入－1即可
-//        showMarkInfo(path);
-    }
-
-    private void drawRoutes(int routeId, AMapNaviPath path) {
-//        calculateSuccess = true;
-        aMap.moveCamera(CameraUpdateFactory.changeTilt(0));
-        //路径绘制图层
-        routeOverLay = new RouteOverLay(aMap, path, context);
-        routeOverLay.setTrafficLine(false);
-        routeOverLay.setStartPointBitmap(null);
-        routeOverLay.setEndPointBitmap(null);
-        routeOverLay.addToMap();
-
-
-        Log.e("drawRoutes===", "==="+path.getAllLength());
-
-        tv_navi_distance.setText(path.getAllLength()+"米");
-
-//        routeOverlays.put(routeId, routeOverLay);
-    }
-
-    @Override
-    public void onStartNavi(int i) {}
-
-    @Override
-    public void onTrafficStatusUpdate() {}
-
-    @Override
-    public void onLocationChange(AMapNaviLocation aMapNaviLocation) {}
-
-    @Override
-    public void onGetNavigationText(int i, String s) {}
-
-    @Override
-    public void onGetNavigationText(String s) {}
-
-    @Override
-    public void onEndEmulatorNavi() {}
-
-    @Override
-    public void onArriveDestination() {}
-
-    @Override
-    public void onCalculateRouteFailure(int i) {}
-
-    @Override
-    public void onReCalculateRouteForYaw() {}
-
-    @Override
-    public void onReCalculateRouteForTrafficJam() {}
-
-    @Override
-    public void onArrivedWayPoint(int i) {}
-
-    @Override
-    public void onGpsOpenStatus(boolean b) {}
-
-    @Override
-    public void onNaviInfoUpdate(NaviInfo naviInfo) {}
-
-    @Override
-    public void onNaviInfoUpdated(AMapNaviInfo aMapNaviInfo) {}
-
-    @Override
-    public void updateCameraInfo(AMapNaviCameraInfo[] aMapNaviCameraInfos) {}
-
-    @Override
-    public void updateIntervalCameraInfo(AMapNaviCameraInfo aMapNaviCameraInfo, AMapNaviCameraInfo aMapNaviCameraInfo1, int i) {}
-
-    @Override
-    public void onServiceAreaUpdate(AMapServiceAreaInfo[] aMapServiceAreaInfos) {}
-
-    @Override
-    public void showCross(AMapNaviCross aMapNaviCross) {}
-
-    @Override
-    public void hideCross() {}
-
-    @Override
-    public void showModeCross(AMapModelCross aMapModelCross) {}
-
-    @Override
-    public void hideModeCross() {}
-
-    @Override
-    public void showLaneInfo(AMapLaneInfo[] aMapLaneInfos, byte[] bytes, byte[] bytes1) {}
-
-    @Override
-    public void showLaneInfo(AMapLaneInfo aMapLaneInfo) {}
-
-    @Override
-    public void hideLaneInfo() {}
-
-    @Override
-    public void notifyParallelRoad(int i) {}
-
-    @Override
-    public void OnUpdateTrafficFacility(AMapNaviTrafficFacilityInfo[] aMapNaviTrafficFacilityInfos) {}
-
-    @Override
-    public void OnUpdateTrafficFacility(AMapNaviTrafficFacilityInfo aMapNaviTrafficFacilityInfo) {}
-
-    @Override
-    public void OnUpdateTrafficFacility(TrafficFacilityInfo trafficFacilityInfo) {}
-
-    @Override
-    public void updateAimlessModeStatistics(AimLessModeStat aimLessModeStat) {}
-
-    @Override
-    public void updateAimlessModeCongestionInfo(AimLessModeCongestionInfo aimLessModeCongestionInfo) {}
-
-    @Override
-    public void onPlayRing(int i) {}
-
-    @Override
-    public void onCalculateRouteSuccess(AMapCalcRouteResult aMapCalcRouteResult) {}
-
-    @Override
-    public void onCalculateRouteFailure(AMapCalcRouteResult aMapCalcRouteResult) {}
-
-    @Override
-    public void onNaviRouteNotify(AMapNaviRouteNotifyData aMapNaviRouteNotifyData) {}
+//    @Override
+//    public void onInitNaviFailure() { }
+//
+//    @Override
+//    public void onInitNaviSuccess() {
+//        Log.e("onInitNaviSuccess===", "===");
+//    }
+//
+//    @Override
+//    public void onCalculateRouteSuccess(int[] ints) {
+//        if(isHidden) return;
+//
+//        Log.e("onCalculateRouteSuc=", "==="+routeOverLay);
+//
+////        routeOverlays.clear();
+////        ways.clear();
+//
+//        if(routeOverLay != null){
+//            routeOverLay.removeFromMap();
+//        }
+//
+////        mAMapNavi.startNavi(NaviType.EMULATOR);
+//
+//        AMapNaviPath path = mAMapNavi.getNaviPath();
+//
+//        drawRoutes(-1, path);   // 单路径不需要进行路径选择，直接传入－1即可
+////        showMarkInfo(path);
+//    }
+//
+//    private void drawRoutes(int routeId, AMapNaviPath path) {
+////        calculateSuccess = true;
+//        aMap.moveCamera(CameraUpdateFactory.changeTilt(0));
+//        //路径绘制图层
+//        routeOverLay = new RouteOverLay(aMap, path, context);
+//        routeOverLay.setTrafficLine(false);
+//        routeOverLay.setStartPointBitmap(null);
+//        routeOverLay.setEndPointBitmap(null);
+//        routeOverLay.addToMap();
+//
+//
+//        Log.e("drawRoutes===", "==="+path.getAllLength());
+//
+//        tv_navi_distance.setText(path.getAllLength()+"米");
+//
+////        routeOverlays.put(routeId, routeOverLay);
+//    }
+//
+//    @Override
+//    public void onStartNavi(int i) {}
+//
+//    @Override
+//    public void onTrafficStatusUpdate() {}
+//
+//    @Override
+//    public void onLocationChange(AMapNaviLocation aMapNaviLocation) {}
+//
+//    @Override
+//    public void onGetNavigationText(int i, String s) {}
+//
+//    @Override
+//    public void onGetNavigationText(String s) {}
+//
+//    @Override
+//    public void onEndEmulatorNavi() {}
+//
+//    @Override
+//    public void onArriveDestination() {}
+//
+//    @Override
+//    public void onCalculateRouteFailure(int i) {}
+//
+//    @Override
+//    public void onReCalculateRouteForYaw() {}
+//
+//    @Override
+//    public void onReCalculateRouteForTrafficJam() {}
+//
+//    @Override
+//    public void onArrivedWayPoint(int i) {}
+//
+//    @Override
+//    public void onGpsOpenStatus(boolean b) {}
+//
+//    @Override
+//    public void onNaviInfoUpdate(NaviInfo naviInfo) {}
+//
+//    @Override
+//    public void onNaviInfoUpdated(AMapNaviInfo aMapNaviInfo) {}
+//
+//    @Override
+//    public void updateCameraInfo(AMapNaviCameraInfo[] aMapNaviCameraInfos) {}
+//
+//    @Override
+//    public void updateIntervalCameraInfo(AMapNaviCameraInfo aMapNaviCameraInfo, AMapNaviCameraInfo aMapNaviCameraInfo1, int i) {}
+//
+//    @Override
+//    public void onServiceAreaUpdate(AMapServiceAreaInfo[] aMapServiceAreaInfos) {}
+//
+//    @Override
+//    public void showCross(AMapNaviCross aMapNaviCross) {}
+//
+//    @Override
+//    public void hideCross() {}
+//
+//    @Override
+//    public void showModeCross(AMapModelCross aMapModelCross) {}
+//
+//    @Override
+//    public void hideModeCross() {}
+//
+//    @Override
+//    public void showLaneInfo(AMapLaneInfo[] aMapLaneInfos, byte[] bytes, byte[] bytes1) {}
+//
+//    @Override
+//    public void showLaneInfo(AMapLaneInfo aMapLaneInfo) {}
+//
+//    @Override
+//    public void hideLaneInfo() {}
+//
+//    @Override
+//    public void notifyParallelRoad(int i) {}
+//
+//    @Override
+//    public void OnUpdateTrafficFacility(AMapNaviTrafficFacilityInfo[] aMapNaviTrafficFacilityInfos) {}
+//
+//    @Override
+//    public void OnUpdateTrafficFacility(AMapNaviTrafficFacilityInfo aMapNaviTrafficFacilityInfo) {}
+//
+//    @Override
+//    public void OnUpdateTrafficFacility(TrafficFacilityInfo trafficFacilityInfo) {}
+//
+//    @Override
+//    public void updateAimlessModeStatistics(AimLessModeStat aimLessModeStat) {}
+//
+//    @Override
+//    public void updateAimlessModeCongestionInfo(AimLessModeCongestionInfo aimLessModeCongestionInfo) {}
+//
+//    @Override
+//    public void onPlayRing(int i) {}
+//
+//    @Override
+//    public void onCalculateRouteSuccess(AMapCalcRouteResult aMapCalcRouteResult) {}
+//
+//    @Override
+//    public void onCalculateRouteFailure(AMapCalcRouteResult aMapCalcRouteResult) {}
+//
+//    @Override
+//    public void onNaviRouteNotify(AMapNaviRouteNotifyData aMapNaviRouteNotifyData) {}
 
     protected void getCurrentorder2(String uid, String access_token){
         RequestParams params = new RequestParams();
@@ -3433,19 +3433,19 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
-    protected void registerReceiver(IntentFilter intentfilter) {
-        if (internalReceiver == null) {
-            internalReceiver = new InternalReceiver();
-        }
-        activity.registerReceiver(internalReceiver, intentfilter);
-    }
-
-    protected class InternalReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            handleReceiver(context, intent);
-
-        }
-    };
+//    protected void registerReceiver(IntentFilter intentfilter) {
+//        if (internalReceiver == null) {
+//            internalReceiver = new InternalReceiver();
+//        }
+//        activity.registerReceiver(internalReceiver, intentfilter);
+//    }
+//
+//    protected class InternalReceiver extends BroadcastReceiver {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//
+//            handleReceiver(context, intent);
+//
+//        }
+//    };
 }

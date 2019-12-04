@@ -13,18 +13,22 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.LatLng;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
 import com.zxing.lib.scaner.activity.ActivityScanerCode;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.activity.LoginActivity;
+import cn.qimate.bike.ble.BLEService;
 import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
@@ -52,6 +56,8 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 	protected LoadingDialog loadingDialog;
 	protected Context context;
 
+	public BLEService bleService = new BLEService();
+
 //	protected AMap aMap;
 //	protected BitmapDescriptor successDescripter;
 //	protected MapView mapView;
@@ -62,6 +68,8 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 	public static String osn = "";
 	public static String type = "";
 
+	public static List<Boolean> isContainsList;
+	public static List<LatLng> listPoint = new ArrayList<>();
 
 
 	public static double referLatitude = 0.0;

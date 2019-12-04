@@ -70,7 +70,6 @@ import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.activity.HistoryRoadDetailActivity;
 import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.activity.Main2Activity;
-import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.ble.BLEService;
 import cn.qimate.bike.ble.utils.ParseLeAdvData;
 import cn.qimate.bike.core.common.AppManager;
@@ -111,7 +110,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 	public static String osn = "";
 	public static String type = "";
 
-	public BLEService bleService = new BLEService();
+
 
 	private LatLng myLocation = null;
 	private boolean mFirstFix = true;
@@ -183,13 +182,13 @@ public class BaseFragmentActivity extends AppCompatActivity
 
         //|| context instanceof CurRoadStartActivity || context instanceof ActivityScanerCode  || context instanceof CurRoadBikingActivity
 
-//		if(context instanceof MainActivity ){
-////		if(context instanceof MainActivity){
+//		if(context instanceof MainFragment ){
+////		if(context instanceof MainFragment){
 //
 //			if("".equals(m_nowMac)){
 //				getCurrentorder(uid, access_token);
 //			}
-////			else if(context instanceof MainActivity){
+////			else if(context instanceof MainFragment){
 ////				connect();
 ////			}
 //		}

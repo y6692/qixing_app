@@ -566,7 +566,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             mCropLayout2.setVisibility(View.GONE);
             ll_input.setVisibility(View.VISIBLE);
 
-            bikeNumEdit.setText("");
+//            bikeNumEdit.setText("");
+//            bikeNumEdit.findFocus();
+//            bikeNumEdit.focusSearch(View.FOCUS_LEFT);
+//            bikeNumEdit.forceLayout();
+
+            bikeNumEdit.requestFocus();
 
 //            WindowManager windowManager = getWindowManager();
 //            Display display = windowManager.getDefaultDisplay();
