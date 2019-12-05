@@ -703,8 +703,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                     public void run() {
 
                         try {
-
-
                             if (1==1 || result.getFlag().equals("Success")) {
                                 jsonArray = new JSONArray(result.getData());
 
@@ -753,10 +751,10 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                     polygon = aMap.addPolygon(pOption.strokeColor(Color.argb(0, 255, 255, 255)).fillColor(Color.argb(0, 255, 255, 255)));
 
 
-                                    Log.e("main_eb===schoolRange4", jsonObject.getString("latitude")+"==="+polygon);
+                                    Log.e("main_eb===schoolRange4", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
 
-                                    //        MarkerOptions centerMarkerOption = new MarkerOptions().position(new LatLng(y, x)).icon(freeDescripter);
-                                    marker_park_Option.position(new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude"))));
+//                                  MarkerOptions centerMarkerOption = new MarkerOptions().position(new LatLng(y, x)).icon(freeDescripter);
+                                    marker_park_Option.title(jsonObject.getString("name")).position(new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude"))));
                                     aMap.addMarker(marker_park_Option);
 
 

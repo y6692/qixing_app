@@ -1187,13 +1187,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                             type = ""+bean.getLock_id();
                             bleid = bean.getLock_secretkey();
-//                            if("7".equals(type)){
-//                                deviceuuid = bean.getVendor_lock_id();
-//                            }
                             deviceuuid = bean.getVendor_lock_id();
-
                             codenum = bean.getNumber();
                             m_nowMac = bean.getLock_mac();
+                            String price = bean.getPrice();
+                            String electricity = bean.getElectricity();
+                            String mileage = bean.getMileage();
 
 
                             Intent rIntent = new Intent();
@@ -1202,7 +1201,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             rIntent.putExtra("type", type);
                             rIntent.putExtra("bleid", bleid);
                             rIntent.putExtra("deviceuuid", deviceuuid);
-                            rIntent.putExtra("price", bean.getPrice());
+                            rIntent.putExtra("price", price);
+                            rIntent.putExtra("electricity", electricity);
+                            rIntent.putExtra("mileage", mileage);
 
                             setResult(RESULT_OK, rIntent);
                             scrollToFinishActivity();

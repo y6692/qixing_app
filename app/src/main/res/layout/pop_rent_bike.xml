@@ -16,7 +16,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="351dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/pop_rent_bcg"
         android:layout_alignParentBottom="true">
@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp16"
-                android:textColor="@color/tx_black"
+                android:textColor="#666666"
                 android:text="单车编号："/>
 
             <TextView
@@ -67,12 +67,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp16"
-                android:textColor="#666666"
+                android:textColor="#9c9c9c"
                 android:text="123456"/>
 
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/ll_electricity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -84,20 +86,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp16"
-                android:textColor="@color/tx_black"
+                android:textColor="#666666"
                 android:text="当前电量："/>
 
             <TextView
-                android:id="@+id/tv2"
+                android:id="@+id/tv_electricity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp16"
-                android:textColor="#666666"
+                android:textColor="#9c9c9c"
                 android:text="123456"/>
 
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/ll_mileage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -109,15 +113,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp16"
-                android:textColor="@color/tx_black"
+                android:textColor="#666666"
                 android:text="续航里程："/>
 
             <TextView
-                android:id="@+id/tv3"
+                android:id="@+id/tv_mileage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp16"
-                android:textColor="#666666"
+                android:textColor="#9c9c9c"
                 android:text="123456"/>
 
         </LinearLayout>
@@ -194,10 +198,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="34dp"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
             >
-
 
             <LinearLayout
                 android:id="@+id/ll_change_car"

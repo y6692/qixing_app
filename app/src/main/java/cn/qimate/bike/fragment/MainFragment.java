@@ -234,6 +234,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private String bleid = "";
     private String deviceuuid = "";
     private String price = "";
+    private String electricity = "";
+    private String mileage = "";
 
     private String keySource = "";
     //密钥索引
@@ -247,7 +249,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     private String tel = "13188888888";
 
-    private LinearLayout scanLock, myCommissionLayout, myLocationLayout, linkLayout, ll_top_biking, ll_biking_openAgain, ll_biking_endBtn, ll_biking_errorEnd;
+    private LinearLayout scanLock, myCommissionLayout, myLocationLayout, linkLayout, rl_ad, refreshLayout, slideLayout,
+            ll_top_biking, ll_biking_openAgain, ll_biking_endBtn, ll_biking_errorEnd,
+            ll_estimated_cost, ll_electricity, ll_bike, ll_ebike;
+
+    private RelativeLayout rl_authBtn;
+    private TextView tv_authBtn, tv_againBtn, tv_estimated_cost, tv_car_start_time, tv_car_start_time2, tv_estimated_cost2, tv_car_mileage, tv_car_electricity;
 
     public static  MainFragment getInstance() {
         return mainFragment;
@@ -291,15 +298,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private CustomDialog customDialog9;
     protected LoadingDialogWithHelp loadingDialogWithHelp;
 
-    private LinearLayout rl_ad;
-    private LinearLayout refreshLayout;
-    private LinearLayout slideLayout;
-    private RelativeLayout rl_authBtn;
-    private TextView tv_authBtn;
-    private TextView tv_againBtn;
+
 
     private LinearLayout ll_top;
     private LinearLayout ll_top_navi;
+    private TextView tv_navi_name;
     private TextView tv_navi_distance;
     private TextView tv_biking_codenum;
 
@@ -487,16 +490,42 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 type = ""+bean.getLock_id();
                                 m_nowMac = bean.getCar_lock_mac();
 
+                                ll_top_navi.setVisibility(View.GONE);
+                                ll_top.setVisibility(View.VISIBLE);
                                 rl_ad.setVisibility(View.GONE);
                                 ll_top_biking.setVisibility(View.VISIBLE);
+
                                 tv_biking_codenum.setText(codenum);     //TODO
+                                tv_estimated_cost.setText(bean.getEstimated_cost());
+                                tv_estimated_cost2.setText(bean.getEstimated_cost());
+                                tv_car_start_time.setText(bean.getCar_start_time());
+                                tv_car_start_time2.setText(bean.getCar_start_time());
+                                tv_car_mileage.setText(mileage);
+                                tv_car_electricity.setText(electricity);
+
+                                Log.e("mf===cycling22", type+"===" + bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
                                 if ("4".equals(type) || "7".equals(type)) {
+                                    Log.e("mf===cycling3", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+
+                                    ll_estimated_cost.setVisibility(View.GONE);
+                                    ll_electricity.setVisibility(View.VISIBLE);
+                                    ll_bike.setVisibility(View.GONE);
+                                    ll_ebike.setVisibility(View.VISIBLE);
+
+
                                     if ("0".equals(SharedPreferencesUrls.getInstance().getString("tempStat", "0"))) {
                                         tv_againBtn.setText("临时上锁");
                                     } else {
                                         tv_againBtn.setText("再次开锁");
                                     }
+                                }else{
+                                    Log.e("mf===cycling4", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+
+                                    ll_estimated_cost.setVisibility(View.VISIBLE);
+                                    ll_electricity.setVisibility(View.GONE);
+                                    ll_bike.setVisibility(View.VISIBLE);
+                                    ll_ebike.setVisibility(View.GONE);
                                 }
 
 
@@ -519,7 +548,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                     if (mBluetoothAdapter == null) {
                                         ToastUtil.showMessageApp(context, "获取蓝牙失败");
-//                                      finish();
                                         return;
                                     }
 
@@ -537,30 +565,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                             isOpenLock = false;
                                             connect();
-
-//                                            m_myHandler.postDelayed(new Runnable() {
-//                                                @Override
-//                                                public void run() {
-//                                                    if (!isLookPsdBtn){
-//                                                        if (loadingDialog != null && loadingDialog.isShowing()) {
-//                                                            loadingDialog.dismiss();
-//                                                        }
-//                                                        Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
-//                                                        BaseApplication.getInstance().getIBLE().refreshCache();
-//                                                        BaseApplication.getInstance().getIBLE().disconnect();
-//                                                        BaseApplication.getInstance().getIBLE().close();
-//
-////                                                      scrollToFinishActivity();
-//                                                    }
-//                                                }
-//                                            }, 15 * 1000);
-
-//                                            m_myHandler.postDelayed(new Runnable() {
-//                                                @Override
-//                                                public void run() {
-//
-//                                                }
-//                                            }, 2 * 1000);
 
                                             closeBroadcast();     //TODO
                                             activity.registerReceiver(broadcastReceiver, Config.initFilter());
@@ -636,6 +640,90 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 //                                    cycling();
                                     refreshLayout.setVisibility(View.VISIBLE);
+                                }
+
+                            }
+
+                        } catch (Exception e) {
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                        }
+
+                    }
+                });
+            }
+        });
+
+    }
+
+    private void cycling2() {
+        Log.e("mf===cycling2", "===");
+
+        HttpHelper.get(context, Urls.cycling, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("mf===cycling2_1", responseString + "===" + result.data);
+
+                            OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
+
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+
+                            if(null != bean.getOrder_sn()){
+                                Log.e("mf===cycling2_2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+
+                                oid = bean.getOrder_sn();
+                                codenum = bean.getCar_number();
+                                type = ""+bean.getLock_id();
+                                m_nowMac = bean.getCar_lock_mac();
+
+                                ll_top_navi.setVisibility(View.GONE);
+                                ll_top.setVisibility(View.VISIBLE);
+                                rl_ad.setVisibility(View.GONE);
+                                ll_top_biking.setVisibility(View.VISIBLE);
+
+                                tv_biking_codenum.setText(codenum);     //TODO
+                                tv_estimated_cost.setText(bean.getEstimated_cost());
+                                tv_estimated_cost2.setText(bean.getEstimated_cost());
+                                tv_car_start_time.setText(bean.getCar_start_time());
+                                tv_car_start_time2.setText(bean.getCar_start_time());
+                                tv_car_mileage.setText(mileage);
+                                tv_car_electricity.setText(electricity);
+
+                                if ("4".equals(type) || "7".equals(type)) {
+                                    ll_estimated_cost.setVisibility(View.GONE);
+                                    ll_electricity.setVisibility(View.VISIBLE);
+                                    ll_bike.setVisibility(View.GONE);
+                                    ll_ebike.setVisibility(View.VISIBLE);
+
+
+//                                    if ("0".equals(SharedPreferencesUrls.getInstance().getString("tempStat", "0"))) {
+//                                        tv_againBtn.setText("临时上锁");
+//                                    } else {
+//                                        tv_againBtn.setText("再次开锁");
+//                                    }
+                                }else{
+                                    ll_estimated_cost.setVisibility(View.VISIBLE);
+                                    ll_electricity.setVisibility(View.GONE);
+                                    ll_bike.setVisibility(View.VISIBLE);
+                                    ll_ebike.setVisibility(View.GONE);
                                 }
 
                             }
@@ -835,24 +923,24 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-//                    curMarker = marker;
-//                    marker.setTitle(marker.getTitle());
+//              curMarker = marker;
+//              marker.setTitle(marker.getTitle());
 
                 ll_top.setVisibility(View.GONE);
                 ll_top_navi.setVisibility(View.VISIBLE);
 
 
-//                    Log.e("onMarkerClick===", marker.getTitle()+"==="+marker.getTitle().split("-")[0]);
+//              Log.e("onMarkerClick===", marker.getTitle()+"==="+marker.getTitle().split("-")[0]);
                 Log.e("onMarkerClick===", mAMapNavi+"==="+referLatitude+"==="+referLongitude+"==="+marker.getPosition().latitude+"==="+marker.getPosition().longitude);
 
-//                    31.764391===119.920551===31.765937===119.921452
+                tv_navi_name.setText(marker.getTitle());
                 mAMapNavi.calculateRideRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
 
 
-//                    codenum = marker.getTitle().split("-")[0];
-//                    quantity = marker.getTitle().split("-")[1];
+//              codenum = marker.getTitle().split("-")[0];
+//              quantity = marker.getTitle().split("-")[1];
 //
-//                    initmPopupWindowView();
+//              initmPopupWindowView();
                 return true;
             }
         });
@@ -942,9 +1030,21 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         ll_top = activity.findViewById(R.id.ll_top);
         ll_top_navi = activity.findViewById(R.id.ll_top_navi);
+        tv_navi_name = activity.findViewById(R.id.tv_navi_name);
         tv_navi_distance = activity.findViewById(R.id.tv_navi_distance);
+
         ll_top_biking = activity.findViewById(R.id.ll_top_biking);
         tv_biking_codenum = activity.findViewById(R.id.tv_biking_codenum);
+        ll_estimated_cost = activity.findViewById(R.id.ll_estimated_cost);
+        ll_electricity = activity.findViewById(R.id.ll_electricity);
+        ll_bike = activity.findViewById(R.id.ll_bike);
+        ll_ebike = activity.findViewById(R.id.ll_ebike);
+        tv_estimated_cost = activity.findViewById(R.id.tv_estimated_cost);
+        tv_car_start_time = activity.findViewById(R.id.tv_car_start_time);
+        tv_car_start_time2 = activity.findViewById(R.id.tv_car_start_time2);
+        tv_estimated_cost2 = activity.findViewById(R.id.tv_estimated_cost2);
+        tv_car_mileage = activity.findViewById(R.id.tv_car_mileage);
+        tv_car_electricity = activity.findViewById(R.id.tv_car_electricity);
 
         ll_biking_openAgain = activity.findViewById(R.id.ll_biking_openAgain);
         ll_biking_endBtn = activity.findViewById(R.id.ll_biking_endBtn);
@@ -1926,8 +2026,23 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         ImageView iv_rent_cancelBtn = (ImageView) customView.findViewById(R.id.iv_rent_cancelBtn);
         TextView tv_codenum = (TextView) customView.findViewById(R.id.tv_codenum);
         TextView tv_price = (TextView) customView.findViewById(R.id.tv_price);
+        TextView tv_electricity = (TextView) customView.findViewById(R.id.tv_electricity);
+        TextView tv_mileage= (TextView) customView.findViewById(R.id.tv_mileage);
+        LinearLayout ll_electricity = (LinearLayout) customView.findViewById(R.id.ll_electricity);
+        LinearLayout ll_mileage = (LinearLayout) customView.findViewById(R.id.ll_mileage);
         LinearLayout ll_change_car = (LinearLayout) customView.findViewById(R.id.ll_change_car);
         LinearLayout ll_rent = (LinearLayout) customView.findViewById(R.id.ll_rent);
+
+        if("4".equals(type) || "7".equals(type)){
+            ll_electricity.setVisibility(View.VISIBLE);
+            ll_mileage.setVisibility(View.VISIBLE);
+
+            tv_electricity.setText(electricity);
+            tv_mileage.setText(mileage);
+        }else{
+            ll_electricity.setVisibility(View.GONE);
+            ll_mileage.setVisibility(View.GONE);
+        }
 
         tv_codenum.setText(codenum);
 //        tv_price.setText(Html.fromHtml(price));
@@ -1953,9 +2068,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         UtilAnim.showToUp(pop_win_bg, iv_popup_window_back);
         // 创建PopupWindow宽度和高度
         popupwindow = new PopupWindow(customView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
-        /**
-         * 设置动画效果 ,从上到下加载方式等，不设置自动的下拉，最好 [动画效果不好，不加实现下拉效果，不错]
-         */
+        //设置动画效果 ,从上到下加载方式等，不设置自动的下拉，最好 [动画效果不好，不加实现下拉效果，不错]
         popupwindow.setAnimationStyle(R.style.PopupAnimation);
         popupwindow.setOutsideTouchable(false);
 
@@ -2871,10 +2984,35 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 if(!isAgain){
                                     popupwindow.dismiss();
 
-                                    rl_ad.setVisibility(View.GONE);
-                                    ll_top_biking.setVisibility(View.VISIBLE);
+                                    cycling2();
 
-                                    tv_biking_codenum.setText(codenum);
+//                                    ll_top_navi.setVisibility(View.GONE);
+//                                    ll_top.setVisibility(View.VISIBLE);
+//                                    rl_ad.setVisibility(View.GONE);
+//                                    ll_top_biking.setVisibility(View.VISIBLE);
+//
+//                                    tv_biking_codenum.setText(codenum);     //TODO
+//                                    tv_estimated_cost.setText(bean.getEstimated_cost());
+//                                    tv_estimated_cost2.setText(bean.getEstimated_cost());
+//                                    tv_car_start_time.setText(bean.getCar_start_time());
+//                                    tv_car_start_time2.setText(bean.getCar_start_time());
+//                                    tv_car_mileage.setText(""+mileage);
+//                                    tv_car_electricity.setText(""+electricity);
+//
+//                                    if ("4".equals(type) || "7".equals(type)) {
+//                                        ll_estimated_cost.setVisibility(View.GONE);
+//                                        ll_electricity.setVisibility(View.VISIBLE);
+//                                        ll_mileage.setVisibility(View.GONE);
+//                                        ll_bike.setVisibility(View.GONE);
+//                                        ll_ebike.setVisibility(View.VISIBLE);
+//
+//                                    }else{
+//                                        ll_estimated_cost.setVisibility(View.VISIBLE);
+//                                        ll_electricity.setVisibility(View.GONE);
+//                                        ll_mileage.setVisibility(View.VISIBLE);
+//                                        ll_bike.setVisibility(View.VISIBLE);
+//                                        ll_ebike.setVisibility(View.GONE);
+//                                    }
                                 }
 
                             }else if(lock_status == 3){
@@ -5830,6 +5968,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             bleid = data.getStringExtra("bleid");
                             deviceuuid = data.getStringExtra("deviceuuid");
                             price = data.getStringExtra("price");
+                            electricity = data.getStringExtra("electricity");
+                            mileage = data.getStringExtra("mileage");
 
                             Log.e("mf===requestCode1", type+"==="+bleid +"==="+deviceuuid+"==="+price);
 

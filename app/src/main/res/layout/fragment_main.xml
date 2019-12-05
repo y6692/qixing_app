@@ -92,11 +92,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-
             >
 
             <LinearLayout
-
                 android:id="@+id/rl_ad"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
@@ -123,7 +121,10 @@
 
             </LinearLayout>
 
+            <!--android:visibility="gone"-->
+
             <LinearLayout
+
                 android:id="@+id/ll_top_biking"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -132,49 +133,255 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginLeft="18dp"
                 android:layout_marginRight="18dp"
-                android:visibility="gone"
                 >
 
-
-                <RelativeLayout
-                    android:id="@+id/rl_biking"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_below="@+id/rl_ad"
-                    >
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="0dp"
+                    android:orientation="horizontal"
+                    android:layout_alignParentLeft="true">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:layout_marginLeft="13dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_marginLeft="0dp"
+                        android:orientation="vertical"
+                        android:layout_alignParentLeft="true">
+
+                        <TextView
+                            android:id="@+id/tv_biking_codenum"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:text="112233"
+                            android:textColor="#333333"
+                            android:textSize="@dimen/sp14"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            android:text="单车编号"
+                            android:textColor="#666666"
+                            android:textSize="@dimen/sp14"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_estimated_cost"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_marginLeft="0dp"
+                        android:orientation="vertical"
+                        android:layout_alignParentLeft="true"
+                        >
+
+                        <TextView
+                            android:id="@+id/tv_estimated_cost"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:text="￥1.00"
+                            android:textColor="#FF0000"
+                            android:textSize="@dimen/sp14"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            android:text="预计费用"
+                            android:textColor="#666666"
+                            android:textSize="@dimen/sp14"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_electricity"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_marginLeft="0dp"
+                        android:orientation="vertical"
+                        android:layout_alignParentLeft="true"
+                        android:visibility="gone"
+                        >
+
+                        <TextView
+                            android:id="@+id/tv_car_electricity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:text="83%"
+                            android:textColor="#FF0000"
+                            android:textSize="@dimen/sp14"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            android:text="当前电量"
+                            android:textColor="#666666"
+                            android:textSize="@dimen/sp14"
+                            />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:background="#E5E5E5"
+                    />
+
+                <LinearLayout
+
+                    android:id="@+id/ll_bike"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="21dp"
+                    android:layout_marginLeft="30dp"
+                    android:orientation="horizontal"
+                    android:layout_alignParentLeft="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="借车时间："
+                        android:textColor="#717171"
+                        android:textSize="@dimen/sp14"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_car_start_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:text="2019-2-20 12:00"
+                        android:textColor="#3A3A3A"
+                        android:textSize="@dimen/sp14"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_ebike"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="9dp"
+                    android:layout_marginLeft="30dp"
+                    android:orientation="vertical"
+                    android:layout_alignParentLeft="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_alignParentLeft="true">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="单车编号："
-                            android:textColor="#EC3F4C"
-                            android:textSize="@dimen/sp12"
-                            android:layout_marginLeft="7dp"/>
+                            android:layout_marginTop="1dp"
+                            android:text="续航里程："
+                            android:textColor="#717171"
+                            android:textSize="@dimen/sp14"
+                            />
 
                         <TextView
-                            android:id="@+id/tv_biking_codenum"
+                            android:id="@+id/tv_car_mileage"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="10001"
-                            android:textColor="#EC3F4C"
-                            android:textSize="@dimen/sp12"
-                            android:layout_marginLeft="7dp"/>
+                            android:layout_marginLeft="0dp"
+                            android:text="20KM"
+                            android:textColor="#3A3A3A"
+                            android:textSize="@dimen/sp14"
+                            />
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal"
+                        android:layout_alignParentLeft="true">
 
-                </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            android:text="借车时间："
+                            android:textColor="#717171"
+                            android:textSize="@dimen/sp14"
+                            />
+
+                        <TextView
+                            android:id="@+id/tv_car_start_time2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:text="2019-2-20 12:00"
+                            android:textColor="#3A3A3A"
+                            android:textSize="@dimen/sp14"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal"
+                        android:layout_alignParentLeft="true">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            android:text="预计费用："
+                            android:textColor="#717171"
+                            android:textSize="@dimen/sp14"
+                            />
+
+                        <TextView
+                            android:id="@+id/tv_estimated_cost2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:text="￥1.00"
+                            android:textColor="#FF0000"
+                            android:textSize="@dimen/sp14"
+                            />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="9dp"
                     android:orientation="horizontal"
                     >
 
@@ -345,7 +552,6 @@
             android:visibility="gone"
             >
 
-
             <RelativeLayout
                 android:id="@+id/rl_navi"
                 android:layout_width="match_parent"
@@ -357,30 +563,80 @@
                 android:layout_marginRight="18dp">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:layout_marginLeft="13dp"
+                    android:layout_marginLeft="0dp"
                     android:orientation="horizontal"
                     android:layout_alignParentLeft="true">
 
-                    <TextView
-                        android:id="@+id/tv_navi_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="大学"
-                        android:textColor="#EC3F4C"
-                        android:textSize="@dimen/sp12"
-                        android:layout_marginLeft="7dp"/>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_marginLeft="0dp"
+                        android:orientation="vertical"
+                        android:layout_alignParentLeft="true">
 
-                    <TextView
-                        android:id="@+id/tv_navi_distance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="10米"
-                        android:textColor="#EC3F4C"
-                        android:textSize="@dimen/sp12"
-                        android:layout_marginLeft="7dp"/>
+                        <TextView
+                            android:id="@+id/tv_navi_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:text="大学"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp16"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="可借车位置"
+                            android:textColor="#666666"
+                            android:textSize="@dimen/sp14"
+                            />
+
+                    </LinearLayout>
+                    
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="26dp"
+                        android:background="#C9C9C9"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_marginLeft="0dp"
+                        android:orientation="vertical"
+                        android:layout_alignParentLeft="true">
+
+                        <TextView
+                            android:id="@+id/tv_navi_distance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:text="200米"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp16"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="距离"
+                            android:textColor="#666666"
+                            android:textSize="@dimen/sp14"
+                            />
+
+                    </LinearLayout>
+
+
                 </LinearLayout>
 
 
