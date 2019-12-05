@@ -273,7 +273,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     public List<String> macList;
     public List<String> macList2;
-    public List<Polygon> pOptions;
+
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback;
     private int n=0;
@@ -1397,10 +1397,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 
-        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-        oid = SharedPreferencesUrls.getInstance().getString("oid", "");
-        osn = SharedPreferencesUrls.getInstance().getString("osn", "");
-        type = SharedPreferencesUrls.getInstance().getString("type", "");
+//        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+//        oid = SharedPreferencesUrls.getInstance().getString("oid", "");
+//        osn = SharedPreferencesUrls.getInstance().getString("osn", "");
+//        type = SharedPreferencesUrls.getInstance().getString("type", "");
 
         ToastUtil.showMessage(context, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getString("iscert", "") + ">>>" + m_nowMac);
 
@@ -1609,7 +1609,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
             if ((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
 
-            Log.e("main===Changed", isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + amapLocation.getLatitude() );
+            Log.e("main===Changed", isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
             ToastUtil.showMessage(context, isContainsList.contains(true) + "》》》" + near + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
 
             if (amapLocation != null && amapLocation.getErrorCode() == 0) {

@@ -315,11 +315,13 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         CrashHandler.getInstance().setmContext(this);
 
-        registerReceiver(broadcastReceiver, Config.initFilter());
-        GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
-        BaseApplication.getInstance().getIBLE().refreshCache();
-        BaseApplication.getInstance().getIBLE().close();
-        BaseApplication.getInstance().getIBLE().disconnect();
+//        registerReceiver(broadcastReceiver, Config.initFilter());
+//        GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+//
+//        BaseApplication.getInstance().getIBLE().refreshCache();
+//        BaseApplication.getInstance().getIBLE().close();
+//        BaseApplication.getInstance().getIBLE().disconnect();
+
         //界面控件初始化
         initView();
         //权限初始化
@@ -644,30 +646,30 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
             Log.e("scan===onDestroy", m_nowMac+"==="+type+"==="+isTz);
 
-            if(!isTz){
-                if("5".equals(type)  || "6".equals(type)){
-                    ClientManager.getClient().stopSearch();
-
-                    ClientManager.getClient().disconnect(m_nowMac);
-                    ClientManager.getClient().disconnect(m_nowMac);
-                    ClientManager.getClient().disconnect(m_nowMac);
-                    ClientManager.getClient().disconnect(m_nowMac);
-                    ClientManager.getClient().disconnect(m_nowMac);
-                    ClientManager.getClient().disconnect(m_nowMac);
-
-                    ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
-
-                }else if("7".equals(type)){
-                    if (apiClient != null) {
-                        apiClient.onDestroy();
-                    }
-                }else{
-                    BaseApplication.getInstance().getIBLE().stopScan();
-                    BaseApplication.getInstance().getIBLE().refreshCache();
-                    BaseApplication.getInstance().getIBLE().close();
-                    BaseApplication.getInstance().getIBLE().disconnect();
-                }
-            }
+//            if(!isTz){
+//                if("5".equals(type)  || "6".equals(type)){
+//                    ClientManager.getClient().stopSearch();
+//
+//                    ClientManager.getClient().disconnect(m_nowMac);
+//                    ClientManager.getClient().disconnect(m_nowMac);
+//                    ClientManager.getClient().disconnect(m_nowMac);
+//                    ClientManager.getClient().disconnect(m_nowMac);
+//                    ClientManager.getClient().disconnect(m_nowMac);
+//                    ClientManager.getClient().disconnect(m_nowMac);
+//
+//                    ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+//
+//                }else if("7".equals(type)){
+//                    if (apiClient != null) {
+//                        apiClient.onDestroy();
+//                    }
+//                }else{
+//                    BaseApplication.getInstance().getIBLE().stopScan();
+//                    BaseApplication.getInstance().getIBLE().refreshCache();
+//                    BaseApplication.getInstance().getIBLE().close();
+//                    BaseApplication.getInstance().getIBLE().disconnect();
+//                }
+//            }
 
             super.onDestroy();
 

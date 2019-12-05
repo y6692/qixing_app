@@ -174,10 +174,10 @@ public class BaseFragmentActivity extends AppCompatActivity
 		uid = SharedPreferencesUrls.getInstance().getString("uid","");
 		access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
-		m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-		oid = SharedPreferencesUrls.getInstance().getString("oid", "");
-		osn = SharedPreferencesUrls.getInstance().getString("osn", "");
-		type = SharedPreferencesUrls.getInstance().getString("type", "");
+//		m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+//		oid = SharedPreferencesUrls.getInstance().getString("oid", "");
+//		osn = SharedPreferencesUrls.getInstance().getString("osn", "");
+//		type = SharedPreferencesUrls.getInstance().getString("type", "");
 
 
         //|| context instanceof CurRoadStartActivity || context instanceof ActivityScanerCode  || context instanceof CurRoadBikingActivity

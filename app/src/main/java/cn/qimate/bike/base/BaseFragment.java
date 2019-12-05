@@ -14,6 +14,7 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Polygon;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
 import com.zxing.lib.scaner.activity.ActivityScanerCode;
 
@@ -68,6 +69,7 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 	public static String osn = "";
 	public static String type = "";
 
+	public static List<Polygon> pOptions;
 	public static List<Boolean> isContainsList;
 	public static List<LatLng> listPoint = new ArrayList<>();
 
@@ -85,10 +87,10 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 		uid = SharedPreferencesUrls.getInstance().getString("uid","");	
 		access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
-		m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-		oid = SharedPreferencesUrls.getInstance().getString("oid", "");
-		osn = SharedPreferencesUrls.getInstance().getString("osn", "");
-		type = SharedPreferencesUrls.getInstance().getString("type", "");
+//		m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+//		oid = SharedPreferencesUrls.getInstance().getString("oid", "");
+//		osn = SharedPreferencesUrls.getInstance().getString("osn", "");
+//		type = SharedPreferencesUrls.getInstance().getString("type", "");
 
 		context = getActivity();
 

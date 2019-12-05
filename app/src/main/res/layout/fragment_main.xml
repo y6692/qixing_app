@@ -191,7 +191,7 @@
                         >
 
                         <TextView
-                            android:id="@+id/tv_nextBtn"
+                            android:id="@+id/tv_againBtn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="再次开锁"

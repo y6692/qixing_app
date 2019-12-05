@@ -276,7 +276,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     public List<String> macList;
     public List<String> macList2;
-    public List<Polygon> pOptions;
     public List<LatLng> centerList = new ArrayList<LatLng>();
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback;
@@ -1455,10 +1454,10 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 
-        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-        oid = SharedPreferencesUrls.getInstance().getString("oid", "");
-        osn = SharedPreferencesUrls.getInstance().getString("osn", "");
-        type = SharedPreferencesUrls.getInstance().getString("type", "");
+//        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+//        oid = SharedPreferencesUrls.getInstance().getString("oid", "");
+//        osn = SharedPreferencesUrls.getInstance().getString("osn", "");
+//        type = SharedPreferencesUrls.getInstance().getString("type", "");
 
         ToastUtil.showMessage(context, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + ">>>" + m_nowMac);
 
