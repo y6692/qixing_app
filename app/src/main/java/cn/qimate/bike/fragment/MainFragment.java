@@ -187,6 +187,7 @@ import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.core.widget.LoadingDialogWithHelp;
 import cn.qimate.bike.lock.utils.ToastUtils;
+import cn.qimate.bike.model.CarAuthorityBean;
 import cn.qimate.bike.model.CarBean;
 import cn.qimate.bike.model.CardinfoBean;
 import cn.qimate.bike.model.CurRoadBikingBean;
@@ -249,12 +250,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     private String tel = "13188888888";
 
-    private LinearLayout scanLock, myCommissionLayout, myLocationLayout, linkLayout, rl_ad, refreshLayout, slideLayout,
-            ll_top_biking, ll_biking_openAgain, ll_biking_endBtn, ll_biking_errorEnd,
-            ll_estimated_cost, ll_electricity, ll_bike, ll_ebike;
+    private LinearLayout scanLock, myCommissionLayout, myLocationLayout, linkLayout, rl_ad, ll_top, ll_top_navi, refreshLayout, slideLayout,
+            ll_top_biking, ll_biking_openAgain, ll_biking_endBtn, ll_biking_errorEnd, ll_estimated_cost, ll_electricity, ll_bike, ll_ebike,
+            ll_top_pay;
 
     private RelativeLayout rl_authBtn;
-    private TextView tv_authBtn, tv_againBtn, tv_estimated_cost, tv_car_start_time, tv_car_start_time2, tv_estimated_cost2, tv_car_mileage, tv_car_electricity;
+    private TextView tv_authBtn, tv_navi_name, tv_navi_distance,
+            tv_biking_codenum, tv_againBtn, tv_estimated_cost, tv_car_start_time, tv_car_start_time2, tv_estimated_cost2, tv_car_mileage, tv_car_electricity,
+            tv_pay_codenum, tv_order_amount, tv_pay_car_start_time, tv_pay_car_end_time, tv_payBtn;
 
     public static  MainFragment getInstance() {
         return mainFragment;
@@ -298,19 +301,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private CustomDialog customDialog9;
     protected LoadingDialogWithHelp loadingDialogWithHelp;
 
-
-
-    private LinearLayout ll_top;
-    private LinearLayout ll_top_navi;
-    private TextView tv_navi_name;
-    private TextView tv_navi_distance;
-    private TextView tv_biking_codenum;
-
     private AMapNavi mAMapNavi;
     private RouteOverLay routeOverLay;
 
     PopupWindow popupwindow;
-
 
     static private final int REQUEST_CODE_ASK_PERMISSIONS = 101;
     private static final int PRIVATE_CODE = 1315;//开启GPS权限
@@ -349,10 +343,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private boolean isAgain = false;
     private String backType = "";
     private boolean isOpenLock = false;
-
-
-
-
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_main, null);
@@ -448,7 +438,78 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         macList2 = new ArrayList<>();
         initView();
 
-        cycling();
+        car_authority();
+
+    }
+
+    public void car_authority() {
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+        String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
+
+        Log.e("mf===car_authority", uid+"==="+access_token);
+
+        if (access_token == null || "".equals(access_token)) {
+            ToastUtil.showMessageApp(context, "请先登录账号");
+            UIHelper.goToAct(context, LoginActivity.class);
+        } else {
+            HttpHelper.get(AppManager.getAppManager().currentActivity(), Urls.car_authority, new TextHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+                        Log.e("mf===car_authority1", "==="+responseString);
+
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        CarAuthorityBean bean = JSON.parseObject(result.getData(), CarAuthorityBean.class);
+
+                        SharedPreferencesUrls.getInstance().putString("iscert", ""+bean.getUnauthorized_code());
+
+                        int unauthorized_code = bean.getUnauthorized_code();
+
+                        if(unauthorized_code < 4) {
+                            ll_top_navi.setVisibility(View.GONE);
+                            ll_top.setVisibility(View.VISIBLE);
+                            rl_ad.setVisibility(View.GONE);
+                            ll_top_biking.setVisibility(View.VISIBLE);
+                        }
+
+//                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 3需要充值余额或购买骑行卡 4有待支付行程 5有待支付调度费 6有待支付赔偿费
+
+                        bean.setUnauthorized_code(4);
+
+                        unauthorized_code = bean.getUnauthorized_code();
+
+                        if(unauthorized_code>=4){
+                            ll_top_biking.setVisibility(View.GONE);
+                            ll_top_navi.setVisibility(View.GONE);
+                            ll_top.setVisibility(View.VISIBLE);
+                            rl_ad.setVisibility(View.GONE);
+                            ll_top_pay.setVisibility(View.VISIBLE);
+
+                            if(unauthorized_code==4){
+                                tv_payBtn.setText("骑行支付");
+                            }else if(unauthorized_code==5){
+                                tv_payBtn.setText("赔偿费支付");
+                            }else if(unauthorized_code==6){
+                                tv_payBtn.setText("调度费支付");
+                            }
+                        }
+
+                        cycling();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString,
+                                      Throwable throwable) {
+                }
+            });
+
+
+        }
     }
 
     private void cycling() {
@@ -490,10 +551,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 type = ""+bean.getLock_id();
                                 m_nowMac = bean.getCar_lock_mac();
 
-                                ll_top_navi.setVisibility(View.GONE);
-                                ll_top.setVisibility(View.VISIBLE);
-                                rl_ad.setVisibility(View.GONE);
-                                ll_top_biking.setVisibility(View.VISIBLE);
+
 
                                 tv_biking_codenum.setText(codenum);     //TODO
                                 tv_estimated_cost.setText(bean.getEstimated_cost());
@@ -502,6 +560,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 tv_car_start_time2.setText(bean.getCar_start_time());
                                 tv_car_mileage.setText(mileage);
                                 tv_car_electricity.setText(electricity);
+
+                                tv_pay_codenum.setText(bean.getCar_number());
+                                tv_pay_car_start_time.setText(bean.getCar_start_time());
+                                tv_pay_car_end_time.setText(bean.getCar_end_time());
+                                tv_order_amount.setText(bean.getOrder_amount());
 
                                 Log.e("mf===cycling22", type+"===" + bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
@@ -1045,12 +1108,19 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         tv_estimated_cost2 = activity.findViewById(R.id.tv_estimated_cost2);
         tv_car_mileage = activity.findViewById(R.id.tv_car_mileage);
         tv_car_electricity = activity.findViewById(R.id.tv_car_electricity);
-
         ll_biking_openAgain = activity.findViewById(R.id.ll_biking_openAgain);
         ll_biking_endBtn = activity.findViewById(R.id.ll_biking_endBtn);
         ll_biking_errorEnd = activity.findViewById(R.id.ll_biking_errorEnd);
-
         tv_againBtn = activity.findViewById(R.id.tv_againBtn);
+
+        ll_top_pay = activity.findViewById(R.id.ll_top_pay);
+        tv_pay_codenum = activity.findViewById(R.id.tv_pay_codenum);
+        tv_order_amount = activity.findViewById(R.id.tv_order_amount);
+        tv_pay_car_start_time = activity.findViewById(R.id.tv_pay_car_start_time);
+        tv_pay_car_end_time = activity.findViewById(R.id.tv_pay_car_end_time);
+        tv_payBtn = activity.findViewById(R.id.tv_payBtn);
+
+
 
 
         rl_authBtn.setOnClickListener(this);
