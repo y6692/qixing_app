@@ -90,7 +90,7 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 //		m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
 //		oid = SharedPreferencesUrls.getInstance().getString("oid", "");
 //		osn = SharedPreferencesUrls.getInstance().getString("osn", "");
-//		type = SharedPreferencesUrls.getInstance().getString("type", "");
+		type = SharedPreferencesUrls.getInstance().getString("type", "");
 
 		context = getActivity();
 

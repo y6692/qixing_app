@@ -3568,18 +3568,18 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                 if(major!=0){
                     Log.e("submit===221", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
-                    params.put("back_type", "iBeacon_Lo");
+                    params.put("back_type", "iBeacon_Lo");   //4锁与信标
                 }else if(isGPS_Lo){
-                    params.put("back_type", "GPS_Lo");
+                    params.put("back_type", "GPS_Lo");      //2锁gps在电子围栏
                 }else if(macList.size() > 0){
                     Log.e("submit===222", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
-                    params.put("back_type", "iBeacon_Pho");
+                    params.put("back_type", "iBeacon_Pho");     // 3信标
                 }else if(force_backcar==1 && isTwo){
                     Log.e("submit===223", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
-                    params.put("back_type", "no_lock");
+                    params.put("back_type", "no_lock");     //没锁第二次强制还车
                 }else{
 //                  }else if(isContainsList.contains(true)){
-                    params.put("back_type", "GPS");
+                    params.put("back_type", "GPS");     // 1手机gps在电子围栏
                 }
 
                 if (macList2.size() > 0){
@@ -6359,10 +6359,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
      *
      * */
     private void schoolRange(){
-
         Log.e("biking===schoolRange0", type+"==="+jsonArray);
-
-
 
         if(jsonArray != null){
             m_myHandler.post(new Runnable() {

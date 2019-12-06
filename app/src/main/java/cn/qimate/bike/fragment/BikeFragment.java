@@ -292,6 +292,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private MarkerOptions marker_tip_Option;
     private MarkerOptions marker_tip_Option2;
 
+    private boolean firstH = true;
+
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_bike, null);
         unbinder = ButterKnife.bind(this, v);
@@ -340,12 +342,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         Log.e("onHiddenChanged===bike", hidden+"==="+type+"==="+referLatitude);
 
-        isHidden = hidden;
 
-//        else{
-//            changeTab(1);
-//            changeTab(0);
-//        }
+
+
+        isHidden = hidden;
 
         if (loadingDialog != null && loadingDialog.isShowing()){
             loadingDialog.dismiss();
@@ -373,6 +373,15 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //            schoolRange();
         }else{
             //resume
+
+            if(firstH){
+                firstH = false;
+
+                if("4".equals(type) || "7".equals(type)){
+                    MainFragment.getInstance().changeTab(1);
+                    return;
+                }
+            }
 
 //            mapView.onResume();
 
@@ -465,12 +474,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 addCircle(myLocation, accuracy);
             }
 
-
-
-//            ll_top.setVisibility(View.VISIBLE);
-//            ll_top_navi.setVisibility(View.GONE);
-
-
         }
     }
 
@@ -511,7 +514,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 
                             if (1==1 || result.getFlag().equals("Success")) {
-                                jsonArray = new JSONArray(result.getData());
+                                JSONArray jsonArray = new JSONArray(result.getData());
 
                                 Log.e("main===operating_areas1", "==="+jsonArray);
 
@@ -610,125 +613,194 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private void schoolRange(){
         if(isHidden) return;
 
-        Log.e("main_b===schoolRange", isHidden+"===");
+        Log.e("main_b===schoolRange", isHidden+"==="+jsonArray);
 
-        RequestParams params = new RequestParams();
+        if(jsonArray != null){
 
-        HttpHelper.get(context, Urls.parking_ranges, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                if(!isHidden){
-                    onStartCommon("正在加载");
+            Log.e("main_b===schoolRange20", loadingDialog+"==="+loadingDialog.isShowing());
+
+            onStartCommon("正在加载");
+
+            m_myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+
+                    try{
+                        if(isHidden) return;
+
+                        Log.e("main_b===schoolRange21", loadingDialog+"==="+loadingDialog.isShowing());
+
+                        if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                            isContainsList.clear();
+                        }
+
+                        if (!listPoint.isEmpty() || 0 != listPoint.size()){
+                            listPoint.clear();
+                        }
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            List<LatLng> list = new ArrayList<>();
+                            List<LatLng> list2 = new ArrayList<>();
+                            int flag=0;
+
+                            JSONArray jsonArray2 = new JSONArray(jsonArray.getJSONObject(i).getString("ranges"));;
+                            JSONObject jsonObject = new JSONObject(jsonArray.getJSONObject(i).getString("parking"));
+
+                            Log.e("main_b===schoolRange22", jsonArray2.length()+"==="+jsonArray2);
+
+                            for (int j = 0; j < jsonArray2.length(); j++) {
+                                LatLng latLng = new LatLng(Double.parseDouble(jsonArray2.getJSONObject(j).getString("latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude")));
+
+                                Log.e("main_b===schoolRange222", jsonArray2.length()+"==="+jsonArray2);
+
+                                flag=0;
+                                list.add(latLng);
+
+                                listPoint.add(latLng);
+                            }
+
+                            Log.e("main_b===schoolRange23", "==="+list.size());
+
+                            Polygon polygon = null;
+                            PolygonOptions pOption = new PolygonOptions();
+
+                            pOption.addAll(list);
+
+                            polygon = aMap.addPolygon(pOption.strokeColor(Color.argb(0, 255, 255, 255)).fillColor(Color.argb(0, 255, 255, 255)));
+
+                            Log.e("main_b===schoolRange24", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
+
+                            marker_park_Option.title(jsonObject.getString("name")).position(new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude"))));
+                            aMap.addMarker(marker_park_Option);
+
+
+                            if(!isHidden){
+                                pOptions.add(polygon);
+
+                                isContainsList.add(polygon.contains(myLocation));
+                            }else{
+                            }
+                        }
+                    }catch (Exception e){
+                    }
+
+                    Log.e("main_b===schoolRange25", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+
+                }
+            });
+
+
+        }else{
+            RequestParams params = new RequestParams();
+
+            HttpHelper.get(context, Urls.parking_ranges, params, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if(!isHidden){
+                        onStartCommon("正在加载");
+                    }
+
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    onFailureCommon(throwable.toString());
                 }
 
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
-            }
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    Log.e("main_b===schoolRange0", "==="+responseString);
 
-                Log.e("main_b===schoolRange0", "==="+responseString);
+                    final ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-//                responseString = "{\"data\":[[{\"longitude\":\"119.920544\",\"latitude\":\"31.764389\"},{\"longitude\":\"119.921544\",\"latitude\":\"31.765389\"},{\"longitude\":\"119.922544\",\"latitude\":\"31.764389\"}]]}";
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                if (1==1 || result.getFlag().equals("Success")) {
+                                    jsonArray = new JSONArray(result.getData());
 
-                final ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                    Log.e("main_b===schoolRange1", jsonArray.length()+"==="+jsonArray);
 
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        try {
-
-
-                            if (1==1 || result.getFlag().equals("Success")) {
-                                jsonArray = new JSONArray(result.getData());
-
-                                Log.e("main_b===schoolRange1", jsonArray.length()+"==="+jsonArray);
-
-                                if(isHidden){
-//                                    if (loadingDialog != null && loadingDialog.isShowing()){
-//                                        loadingDialog.dismiss();
-//                                    }
-
-                                    return;
-                                }
-
-                                if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
-                                    isContainsList.clear();
-                                }
-
-                                if (!listPoint.isEmpty() || 0 != listPoint.size()){
-                                    listPoint.clear();
-                                }
-
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    List<LatLng> list = new ArrayList<>();
-                                    List<LatLng> list2 = new ArrayList<>();
-                                    int flag=0;
-
-                                    JSONArray jsonArray2 = new JSONArray(jsonArray.getJSONObject(i).getString("ranges"));;
-                                    JSONObject jsonObject = new JSONObject(jsonArray.getJSONObject(i).getString("parking"));
-
-                                    Log.e("main_b===schoolRange2", jsonArray2.length()+"==="+jsonArray2);
-
-                                    for (int j = 0; j < jsonArray2.length(); j++) {
-                                        LatLng latLng = new LatLng(Double.parseDouble(jsonArray2.getJSONObject(j).getString("latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude")));
-
-                                        Log.e("main_b===schoolRange22", jsonArray2.length()+"==="+jsonArray2);
-
-                                        flag=0;
-                                        list.add(latLng);
-
-                                        listPoint.add(latLng);
+                                    if(isHidden){
+                                        return;
                                     }
 
 
-                                    Log.e("main_b===schoolRange3", "==="+list.size());
 
-                                    Polygon polygon = null;
-                                    PolygonOptions pOption = new PolygonOptions();
-
-                                    pOption.addAll(list);
-//                                    polygon = aMap.addPolygon(pOption.strokeWidth(2)
-//                                            .strokeColor(Color.argb(255, 0, 135, 255))
-//                                            .fillColor(Color.argb(76, 0, 173, 255)));
-
-                                    polygon = aMap.addPolygon(pOption.strokeColor(Color.argb(0, 255, 255, 255)).fillColor(Color.argb(0, 255, 255, 255)));
-
-
-                                    Log.e("main_b===schoolRange4", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
-
-                                    //        MarkerOptions centerMarkerOption = new MarkerOptions().position(new LatLng(y, x)).icon(freeDescripter);
-                                    marker_park_Option.title(jsonObject.getString("name")).position(new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude"))));
-                                    aMap.addMarker(marker_park_Option);
-
-
-                                    if(!isHidden){
-                                        pOptions.add(polygon);
-
-                                        isContainsList.add(polygon.contains(myLocation));
-                                    }else{
+                                    if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                                        isContainsList.clear();
                                     }
+
+                                    if (!listPoint.isEmpty() || 0 != listPoint.size()){
+                                        listPoint.clear();
+                                    }
+
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        List<LatLng> list = new ArrayList<>();
+                                        List<LatLng> list2 = new ArrayList<>();
+                                        int flag=0;
+
+                                        JSONArray jsonArray2 = new JSONArray(jsonArray.getJSONObject(i).getString("ranges"));;
+                                        JSONObject jsonObject = new JSONObject(jsonArray.getJSONObject(i).getString("parking"));
+
+                                        Log.e("main_b===schoolRange2", jsonArray2.length()+"==="+jsonArray2);
+
+                                        for (int j = 0; j < jsonArray2.length(); j++) {
+                                            LatLng latLng = new LatLng(Double.parseDouble(jsonArray2.getJSONObject(j).getString("latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude")));
+
+                                            Log.e("main_b===schoolRange22", jsonArray2.length()+"==="+jsonArray2);
+
+                                            flag=0;
+                                            list.add(latLng);
+
+                                            listPoint.add(latLng);
+                                        }
+
+                                        Log.e("main_b===schoolRange3", "==="+list.size());
+
+                                        Polygon polygon = null;
+                                        PolygonOptions pOption = new PolygonOptions();
+
+                                        pOption.addAll(list);
+
+                                        polygon = aMap.addPolygon(pOption.strokeColor(Color.argb(0, 255, 255, 255)).fillColor(Color.argb(0, 255, 255, 255)));
+
+                                        Log.e("main_b===schoolRange4", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
+
+                                        marker_park_Option.title(jsonObject.getString("name")).position(new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude"))));
+                                        aMap.addMarker(marker_park_Option);
+
+
+                                        if(!isHidden){
+                                            pOptions.add(polygon);
+
+                                            isContainsList.add(polygon.contains(myLocation));
+                                        }else{
+                                        }
+                                    }
+
+                                    Log.e("main_b===schoolRange5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
+
+                                }else {
+                                    ToastUtil.showMessageApp(context,result.getMsg());
                                 }
-
-                                Log.e("main_b===schoolRange5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
-
-                            }else {
-                                ToastUtil.showMessageApp(context,result.getMsg());
+                            }catch (Exception e){
                             }
-                        }catch (Exception e){
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
                         }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                    }
-                });
+                    });
 
-            }
-        });
+                }
+            });
+        }
+
     }
 
     private void schoolRange2(){
@@ -1356,18 +1428,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 
         if("4".equals(type) || "7".equals(type)){
-//            ((MainFragment)getActivity()).changeTab(1);
-//            if(getParentFragment()!=null){
-//                ((MainFragment)getParentFragment()).changeTab(1);
-//            }
-
-//            MainFragment.getInstance().tab.setCurrentTab(0);
             MainFragment.getInstance().changeTab(1);
-//            return;
         }
-//        else{
-//            ((MainFragment)getActivity()).changeTab(0);
-//        }
 
 
         tz = 0;

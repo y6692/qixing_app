@@ -1,13 +1,8 @@
 package cn.qimate.bike.fragment;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.KeyguardManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -19,39 +14,28 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -60,27 +44,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
-import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptor;
-import com.amap.api.maps.model.BitmapDescriptorFactory;
-import com.amap.api.maps.model.CameraPosition;
-import com.amap.api.maps.model.Circle;
-import com.amap.api.maps.model.CircleOptions;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
-import com.amap.api.maps.model.MarkerOptions;
-import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polygon;
 import com.amap.api.maps.model.PolygonOptions;
 import com.amap.api.navi.AMapNavi;
@@ -152,23 +123,13 @@ import java.util.UUID;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.http.rdata.RRent;
-import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.ActionCenterActivity;
 import cn.qimate.bike.activity.ClientManager;
-import cn.qimate.bike.activity.CouponActivity;
-import cn.qimate.bike.activity.CrashHandler;
-import cn.qimate.bike.activity.CurRoadBikedActivity;
-import cn.qimate.bike.activity.CurRoadBikingActivity;
 import cn.qimate.bike.activity.CurRoadStartActivity;
-import cn.qimate.bike.activity.FeedbackActivity;
-import cn.qimate.bike.activity.HistoryRoadDetailActivity;
-import cn.qimate.bike.activity.InsureanceActivity;
 import cn.qimate.bike.activity.LoginActivity;
-import cn.qimate.bike.activity.MyPurseActivity;
-import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.activity.PersonAlterActivity;
 import cn.qimate.bike.activity.RealNameAuthActivity;
 import cn.qimate.bike.activity.ServiceCenter0Activity;
@@ -176,7 +137,6 @@ import cn.qimate.bike.activity.ServiceCenterActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.ble.BLEService;
-import cn.qimate.bike.ble.utils.ParseLeAdvData;
 import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.Md5Helper;
@@ -189,15 +149,11 @@ import cn.qimate.bike.core.widget.LoadingDialogWithHelp;
 import cn.qimate.bike.lock.utils.ToastUtils;
 import cn.qimate.bike.model.CarAuthorityBean;
 import cn.qimate.bike.model.CarBean;
-import cn.qimate.bike.model.CardinfoBean;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.KeyBean;
-import cn.qimate.bike.model.NearbyBean;
 import cn.qimate.bike.model.OrderBean;
 import cn.qimate.bike.model.ResultConsel;
-import cn.qimate.bike.model.TabEntity;
 import cn.qimate.bike.model.TabTopEntity;
-import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.util.ByteUtil;
 import cn.qimate.bike.util.HtmlTagHandler;
 import cn.qimate.bike.util.IoBuffer;
@@ -208,21 +164,20 @@ import cn.qimate.bike.util.UtilScreenCapture;
 import permissions.dispatcher.NeedsPermission;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.KEYGUARD_SERVICE;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static cn.qimate.bike.activity.CurRoadBikingActivity.bytes2hex03;
 import static com.sofi.blelocker.library.Constants.STATUS_CONNECTED;
 
 @SuppressLint("NewApi")
 public class MainFragment extends BaseFragment implements View.OnClickListener, OnBannerListener, OnConnectionListener, BleStateChangeListener, ScanResultCallback, AMap.OnMapClickListener, AMapNaviListener {
 
-
-
     private View v;
     Unbinder unbinder;
 
     private static MainFragment mainFragment;
+
     private final static int SCANNIN_GREQUEST_CODE = 1;
+    static private final int REQUEST_CODE_ASK_PERMISSIONS = 101;
+    private static final int PRIVATE_CODE = 1315;//开启GPS权限
 
     private static final String TAG = MainFragment.class.getSimpleName();
 
@@ -245,9 +200,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     String keys = null;
     //服务器时间戳，精确到秒，用于锁同步时间
     long serverTime;
-
-
-
     private String tel = "13188888888";
 
     private LinearLayout scanLock, myCommissionLayout, myLocationLayout, linkLayout, rl_ad, ll_top, ll_top_navi, refreshLayout, slideLayout,
@@ -264,8 +216,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     CommonTabLayout tab;
-//    TabLayout tab;
-//    ViewPager vp;
 
     private ImageView leftBtn, rightBtn;
 
@@ -306,18 +256,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     PopupWindow popupwindow;
 
-    static private final int REQUEST_CODE_ASK_PERMISSIONS = 101;
-    private static final int PRIVATE_CODE = 1315;//开启GPS权限
-
     LocationManager locationManager;
     String provider = LocationManager.GPS_PROVIDER;
+
+    private ScanManager scanManager;
+    private BluetoothAdapter.LeScanCallback mLeScanCallback;
 
     private List<Object> macList;
     private List<Object> macList2;
     public List<LatLng> centerList = new ArrayList<LatLng>();
-
-    private ScanManager scanManager;
-    private BluetoothAdapter.LeScanCallback mLeScanCallback;
 
     private boolean isConnect = false;
     private boolean isStop = false;
@@ -337,6 +284,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     String transtype = "";
     int major = 0;
     int minor = 0;
+    private boolean isGPS_Lo = false;
     private boolean scan = false;
     private boolean isTemp = false;
     private boolean isLookPsdBtn = false;
@@ -444,9 +392,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     public void car_authority() {
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-        String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
 
-        Log.e("mf===car_authority", uid+"==="+access_token);
+        Log.e("mf===car_authority", "==="+access_token);
 
         if (access_token == null || "".equals(access_token)) {
             ToastUtil.showMessageApp(context, "请先登录账号");
@@ -466,7 +413,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                         int unauthorized_code = bean.getUnauthorized_code();
 
-                        if(unauthorized_code < 4) {
+                        if(unauthorized_code==3) {
                             ll_top_navi.setVisibility(View.GONE);
                             ll_top.setVisibility(View.VISIBLE);
                             rl_ad.setVisibility(View.GONE);
@@ -475,7 +422,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 //                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 3需要充值余额或购买骑行卡 4有待支付行程 5有待支付调度费 6有待支付赔偿费
 
-                        bean.setUnauthorized_code(4);
+//                        bean.setUnauthorized_code(4);
 
                         unauthorized_code = bean.getUnauthorized_code();
 
@@ -550,8 +497,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 codenum = bean.getCar_number();
                                 type = ""+bean.getLock_id();
                                 m_nowMac = bean.getCar_lock_mac();
+//                                force_backcar = bean.getForce_backcar();  //TODO
 
-
+                                SharedPreferencesUrls.getInstance().getString("type", type);
 
                                 tv_biking_codenum.setText(codenum);     //TODO
                                 tv_estimated_cost.setText(bean.getEstimated_cost());
@@ -571,6 +519,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 if ("4".equals(type) || "7".equals(type)) {
                                     Log.e("mf===cycling3", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
+                                    changeTab(1);
+
                                     ll_estimated_cost.setVisibility(View.GONE);
                                     ll_electricity.setVisibility(View.VISIBLE);
                                     ll_bike.setVisibility(View.GONE);
@@ -582,8 +532,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     } else {
                                         tv_againBtn.setText("再次开锁");
                                     }
+
+
                                 }else{
                                     Log.e("mf===cycling4", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+
+                                    changeTab(0);
 
                                     ll_estimated_cost.setVisibility(View.VISIBLE);
                                     ll_electricity.setVisibility(View.GONE);
@@ -592,7 +546,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 }
 
 
-                                uid = SharedPreferencesUrls.getInstance().getString("uid","");
                                 access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
                                 if (access_token == null || "".equals(access_token)){
@@ -835,11 +788,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }else{
             //resume
 
-            String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
             String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
             String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
-
-
 
             if (access_token == null || "".equals(access_token)) {
                 rl_authBtn.setEnabled(true);
@@ -884,8 +834,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
             }
 
-
-            Log.e("onHiddenChanged===mf2", isContainsList+"===");
         }
     }
 
@@ -1148,7 +1096,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         tab = getActivity().findViewById(R.id.tab);
 
         tab.setTabData(mTabEntities, getActivity(), R.id.fl_change2, mFragments);
-        tab.setCurrentTab(0);
+
+//        changeTab(1);
+//        tab.setCurrentTab(1);
 
 //        FragmentManager fragmentManager = getChildFragmentManager();
 //        FragmentTransaction ft= fragmentManager.beginTransaction();
@@ -1207,10 +1157,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onClick(View view) {
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
-        Log.e("onClick===mf", uid+"==="+access_token);
+        Log.e("onClick===mf", "==="+access_token);
 
         switch (view.getId()){
             case R.id.rl_ad:
@@ -1263,9 +1212,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 
             case R.id.mainUI_refreshLayout:
-                Log.e("refreshLayout===0", isConnect+"==="+isLookPsdBtn+"==="+isContainsList+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
+                Log.e("refreshLayout===0", parking()+"==="+isConnect+"==="+isLookPsdBtn+"==="+isContainsList+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
 
                 RefreshLogin();
+
 
                 break;
 
@@ -1285,17 +1235,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 break;
 
             case R.id.mainUI_slideLayout:
-
-//                @SuppressLint("ResourceType")
-//                EbikeFragment fragment = (EbikeFragment)getChildFragmentManager().findFragmentById(1);
-//                BikeFragment bikeFragment = (BikeFragment)getChildFragmentManager().findFragmentByTag("bikeFragment");
-//                EbikeFragment ebikeFragment = (EbikeFragment)getChildFragmentManager().findFragmentByTag("ebikeFragment");
-//                usingFragment.initData2(false);
-
                 Log.e("fragment===", bikeFragment.isHidden()+"==="+ebikeFragment.isHidden());
 
                 if(!bikeFragment.isHidden()){
-                    UIHelper.goWebViewAct(context,"停车须知",Urls.phtml5 + uid);
+                    UIHelper.goWebViewAct(context,"停车须知",Urls.phtml5 + uid);    //TODO
                 }else{
                     UIHelper.goWebViewAct(context,"停车须知",Urls.ebike_phtml5 + uid);
                 }
@@ -1308,14 +1251,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
             case R.id.ll_change_car:
             case R.id.iv_rent_cancelBtn:
-                Log.e("ll_rent_cancelB=onClick", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
+                Log.e("ll_rent_cancelB=onClick", "==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
                 popupwindow.dismiss();
 
                 break;
 
             case R.id.ll_rent:
-                Log.e("ll_rent===onClick", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
+                Log.e("ll_rent===onClick", "==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
                 order();
 
@@ -1324,9 +1267,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             case R.id.ll_biking_openAgain:
                 String tvAgain = tv_againBtn.getText().toString().trim();
 
-                Log.e("ll_openAgain===onClick", tvAgain+"==="+type+"==="+uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
+                Log.e("ll_openAgain===onClick", tvAgain+"==="+type+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
                 isAgain = true;
+                isEndBtn = false;
 
                 if (loadingDialog != null && loadingDialog.isShowing()) {
                     loadingDialog.dismiss();
@@ -1451,7 +1395,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             }
                         }
                     }else if("3".equals(type)){
-//                    unlock();   //TODO
+//                      unlock();   //TODO
                         if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                             ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                             popupwindow.dismiss();
@@ -1646,8 +1590,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 break;
 
             case R.id.ll_biking_endBtn:
-                Log.e("ll_endBtn===onClick", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
+                Log.e("ll_endBtn===onClick", access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
+                isAgain = false;
+                isEndBtn = true;
+                
                 if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                 }
@@ -1667,9 +1614,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                     return;
                 }
-
-                isAgain = false;
-                isEndBtn = true;
 
                 clickCount++;
 
@@ -1719,12 +1663,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 break;
 
             case R.id.ll_biking_errorEnd:
-                Log.e("ll_errorEnd===onClick", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
+                Log.e("ll_errorEnd===onClick", access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
                 break;
 
             case R.id.mainUI_scanCode_lock:
-                Log.e("scanCode_lock===mf", SharedPreferencesUrls.getInstance().getString("iscert","")+"==="+uid+"==="+access_token);
+                Log.e("scanCode_lock===mf", SharedPreferencesUrls.getInstance().getString("iscert","")+"==="+access_token);
 
                 if (access_token == null || "".equals(access_token)){
                     ToastUtil.showMessageApp(context,"请先登录账号");
@@ -1735,8 +1679,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert",""))){
 
                         case 1:
-//                            getCurrentorder2(uid,access_token);
-
                             if (Build.VERSION.SDK_INT >= 23) {
                                 int checkPermission = activity.checkSelfPermission(Manifest.permission.CAMERA);
                                 if (checkPermission != PERMISSION_GRANTED) {
@@ -2050,7 +1992,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //            tab = getActivity().findViewById(R.id.tab);
 //        }
 
-        Log.e("main===changeTab", "==="+tab);
+        Log.e("main===changeTab", index+"==="+tab);
 
         tab.setCurrentTab(index);
 
@@ -2169,9 +2111,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         UtilAnim.showToUp(pop_win_bg, iv_popup_window_back);
         // 创建PopupWindow宽度和高度
         final PopupWindow popupwindow = new PopupWindow(customView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
-        /**
-         * 设置动画效果 ,从上到下加载方式等，不设置自动的下拉，最好 [动画效果不好，不加实现下拉效果，不错]
-         */
+        //设置动画效果 ,从上到下加载方式等，不设置自动的下拉，最好 [动画效果不好，不加实现下拉效果，不错]
         popupwindow.setAnimationStyle(R.style.PopupAnimation);
         popupwindow.setOutsideTouchable(false);
 
@@ -2317,14 +2257,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             Log.e("mf===car4", isContainsList + "===" + isContainsList.contains(true)  + "===" + bean.getLatitude()+"===="+bean.getLongitude());
 
                             if(isContainsList.contains(true)){
-//                                isGPS_Lo = true;
-                                backType = "2";
-
-//                                closeEbike_XA();
+                                isGPS_Lo = true;
 
                                 endBtn7();
                             }else{
-//                                isGPS_Lo = false;
+                                isGPS_Lo = false;
 
                                 startXB();
 
@@ -2404,6 +2341,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 loadingDialog.dismiss();
                             }
 
+                            SharedPreferencesUrls.getInstance().putString("type", type);
+
                             Log.e("order===2",  isLookPsdBtn + "===" + type+"===" + jsonObject.getString("order_sn"));
 
                             oid = jsonObject.getString("order_sn");
@@ -2445,7 +2384,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             if ("1".equals(type)) {          //单车机械锁
                                 UIHelper.goToAct(context, CurRoadStartActivity.class);
                                 popupwindow.dismiss();
-//                                scrollToFinishActivity();
                             } else if ("2".equals(type)) {    //单车蓝牙锁
 
 //                                unlock();
@@ -2453,7 +2391,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                                     popupwindow.dismiss();
-//                                    scrollToFinishActivity();
                                 }
                                 //蓝牙锁
                                 BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
@@ -2463,15 +2400,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 if (mBluetoothAdapter == null) {
                                     ToastUtil.showMessageApp(context, "获取蓝牙失败");
                                     popupwindow.dismiss();
-//                                    scrollToFinishActivity();
                                     return;
                                 }
                                 if (!mBluetoothAdapter.isEnabled()) {
                                     Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                                     startActivityForResult(enableBtIntent, 188);
                                 } else {
-
-
                                     if (!TextUtils.isEmpty(m_nowMac)) {
                                         isOpenLock = true;
                                         connect();
@@ -2484,7 +2418,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                                     popupwindow.dismiss();
-//                                    scrollToFinishActivity();
                                 }
                                 BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
                                 mBluetoothAdapter = bluetoothManager.getAdapter();
@@ -2492,7 +2425,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 if (mBluetoothAdapter == null) {
                                     ToastUtil.showMessageApp(context, "获取蓝牙失败");
                                     popupwindow.dismiss();
-//                                    scrollToFinishActivity();
                                     return;
                                 }
                                 if (!mBluetoothAdapter.isEnabled()) {
@@ -2501,6 +2433,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 } else {
                                     if (!TextUtils.isEmpty(m_nowMac)) {
                                         Log.e("scan===3_1", "==="+m_nowMac);
+
+                                        //TODO
 
                                         if (!TextUtils.isEmpty(m_nowMac)) {
                                             isOpenLock = true;
@@ -2516,7 +2450,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                                     popupwindow.dismiss();
-//                                    scrollToFinishActivity();
                                 }
                                 BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
                                 mBluetoothAdapter = bluetoothManager.getAdapter();
@@ -2529,7 +2462,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 if (mBluetoothAdapter == null) {
                                     ToastUtil.showMessageApp(context, "获取蓝牙失败");
                                     popupwindow.dismiss();
-//                                    scrollToFinishActivity();
                                     return;
                                 }
                                 if (!mBluetoothAdapter.isEnabled()) {
@@ -2563,7 +2495,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                                     popupwindow.dismiss();
-//                                    scrollToFinishActivity();
                                 }
                                 //蓝牙锁
                                 BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
@@ -2573,7 +2504,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 if (mBluetoothAdapter == null) {
                                     ToastUtil.showMessageApp(context, "获取蓝牙失败");
                                     popupwindow.dismiss();
-//                                    scrollToFinishActivity();
                                     return;
                                 }
                                 if (!mBluetoothAdapter.isEnabled()) {
@@ -2630,7 +2560,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                                     popupwindow.dismiss();
-//                                    scrollToFinishActivity();
                                 }
                                 //蓝牙锁
                                 BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
@@ -2640,7 +2569,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 if (mBluetoothAdapter == null) {
                                     ToastUtil.showMessageApp(context, "获取蓝牙失败");
                                     popupwindow.dismiss();
-//                                    scrollToFinishActivity();
                                     return;
                                 }
                                 if (!mBluetoothAdapter.isEnabled()) {
@@ -2686,7 +2614,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
 
-
+    //助力车关锁
     private void lock() {
         Log.e("mf===lock", "===");
 
@@ -2713,7 +2641,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             Log.e("mf===lock1", responseString + "===" + result.data);
 
                             n=0;
-                            carLoop2();
+                            carLoopClose();
 
                         } catch (Exception e) {
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
@@ -2727,6 +2655,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         });
     }
 
+    //助力车开锁
     private void unlock() {
         Log.e("mf===unlock", "===");
 
@@ -2753,9 +2682,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             Log.e("mf===unlock1", type + "===" + codenum + "===" + responseString + "===" + result.data);
 
                             n=0;
-                            carLoop();
-
-
+                            carLoopOpen();
                         } catch (Exception e) {
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
                         }
@@ -2768,8 +2695,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         });
     }
 
-    private void carLoop() {
-        Log.e("mf===carLoop", "===" + codenum);
+    //助力车开锁_轮询
+    private void carLoopOpen() {
+        Log.e("mf===carLoopOpen", "===" + codenum);
 
         HttpHelper.get(context, Urls.car + URLEncoder.encode(codenum), new TextHttpResponseHandler() {
             @Override
@@ -2789,18 +2717,19 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            Log.e("mf===carLoop1", responseString + "===" + result.data);
+                            Log.e("mf===carLoopOpen1", responseString + "===" + result.data);
 
                             CarBean bean = JSON.parseObject(result.getData(), CarBean.class);
 
-                            Log.e("mf===carLoop2", bean.getNumber()+"===" + bean.getLock_status());
+                            Log.e("mf===carLoopOpen2", bean.getNumber()+"===" + bean.getLock_status());
 
+//                            车锁状态 0未知 1已上锁 2已开锁 3离线
                             if(2 != bean.getLock_status()){
-                                queryCarStatus();
+                                queryCarStatusOpen();
                             }else{
 //                                isConnect = true;
 
-                                car_notification(isAgain?2:1, 1, 0, 2, 0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                                car_notification(1, 0, 2, 0,"");
 
                                 if(isAgain){
                                     tv_againBtn.setText("临时上锁");
@@ -2826,29 +2755,23 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         });
     }
 
-    private void queryCarStatus() {
+    //助力车开锁_轮询
+    private void queryCarStatusOpen() {
         if(n<5){
             n++;
 
             m_myHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Log.e("mf===queryCarStatus", "===");
+                    Log.e("mf===queryCarStatusOpen", "===");
 
-                    carLoop();
-
+                    carLoopOpen();
                 }
             }, 1 * 1000);
         }else{
             ToastUtil.showMessageApp(context, "开锁失败");
 
-            if(!isAgain){
-                car_notification(1, 2, 4, 2,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
-
-                popupwindow.dismiss();
-            }else{
-                car_notification(2, 2, 4, 2,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
-            }
+            car_notification(2, 4, 2,0,"type"+type+"网络开锁超时");
 
             if (loadingDialog != null && loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
@@ -2856,8 +2779,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    private void carLoop2() {
-        Log.e("mf===carLoop2", isAgain+"===" + codenum);
+    //助力车关锁_轮询
+    private void carLoopClose() {
+        Log.e("mf===carLoopClose", isAgain+"===" + codenum);
 
         HttpHelper.get(context, Urls.car + URLEncoder.encode(codenum), new TextHttpResponseHandler() {
             @Override
@@ -2877,18 +2801,18 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            Log.e("mf===carLoop2_1", responseString + "===" + result.data);
+                            Log.e("mf===carLoopClose_1", responseString + "===" + result.data);
 
                             CarBean bean = JSON.parseObject(result.getData(), CarBean.class);
 
-                            Log.e("mf===carLoop2_2", bean.getNumber()+"===" + bean.getLock_status());
+                            Log.e("mf===carLoopClose_2", bean.getNumber()+"===" + bean.getLock_status());
 
                             if(1 != bean.getLock_status()){
-                                queryCarStatus2();
+                                queryCarStatusClose();
                             }else{
 //                                isConnect = true;
 
-                                car_notification(isAgain?2:1, 3, 0, 4, isAgain?0:1,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                                car_notification(3, 0, 4, isAgain?0:1,"");
 
                                 if(isAgain){
                                     tv_againBtn.setText("再次开锁");
@@ -2914,23 +2838,24 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         });
     }
 
-    private void queryCarStatus2() {
+    //助力车关锁_轮询2
+    private void queryCarStatusClose() {
         if(n<5){
             n++;
 
             m_myHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Log.e("mf===queryCarStatus2", "===");
+                    Log.e("mf=queryCarStatusClose", "===");
 
-                    carLoop2();
+                    carLoopClose();
 
                 }
             }, 1 * 1000);
         }else{
             ToastUtil.showMessageApp(context, "关锁失败");
 
-            car_notification(isAgain?2:1, 2, 4, 2,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+            car_notification(2, 4, 2,0,"type"+type+"网络关锁超时");
 
             if (loadingDialog != null && loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
@@ -2938,6 +2863,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
+    //泺平_开锁
     protected void rent(){
 
         Log.e("rent===000",m_nowMac+"==="+keySource);
@@ -2984,15 +2910,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 openBleLock(null);
                             }
 
-
-
-//                            if (result.getFlag().equals("Success")) {
-//
-////                                getCurrentorder2(uid, access_token);
-//
-//                            }else {
-//                                ToastUtil.showMessageApp(context, result.getMsg());
-//                            }
                         }catch (Exception e){
 
                         }
@@ -3009,21 +2926,99 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         });
     }
 
-    private void car_notification(int scene, final int lock_status, int failure_code, int report_type, int back_type, String failure_desc, String parking, String longitude, String latitude) {
-        Log.e("mf===car_notification", isAgain + "===" + scene +"==="+ lock_status+"==="+ report_type +"==="+ back_type +"==="+ oid+"==="+ Md5Helper.encode(oid+":lock_status:"+lock_status));
+    private String parking(){
+        Log.e("mf===parking", jsonArray+"==="+jsonArray2);
+
+
+        if(jsonArray != null){
+
+            try{
+
+                Log.e("mf===parking1", jsonArray+"==="+jsonArray.length());
+
+                for ( int i = 0; i < pOptions.size(); i++){
+
+                    Log.e("mf===parking12", i+"==="+pOptions.get(i)+"==="+pOptions.get(i).contains(new LatLng(referLatitude, referLongitude)));
+
+                    if(pOptions.get(i).contains(new LatLng(referLatitude, referLongitude))){
+                        Log.e("mf===parking13", "==="+jsonArray.getJSONObject(i));
+
+                        return ""+jsonArray.getJSONObject(i);
+                    }
+                }
+
+                return "";
+
+            }catch (Exception e){
+                Log.e("mf===parking_e", "==="+e);
+                return "";
+            }
+        }
+
+        if(jsonArray2 != null){
+
+            Log.e("mf===parking2", "===");
+
+            try{
+
+                Log.e("mf===parking21", jsonArray2+"==="+jsonArray2.length());
+
+                for ( int i = 0; i < pOptions.size(); i++){
+
+                    Log.e("mf===parking22", i+"==="+pOptions.get(i)+"==="+pOptions.get(i).contains(new LatLng(referLatitude, referLongitude)));
+
+                    if(pOptions.get(i).contains(new LatLng(referLatitude, referLongitude))){
+                        Log.e("mf===parking23", "==="+jsonArray2.getJSONObject(i));
+
+                        return ""+jsonArray2.getJSONObject(i);
+                    }
+                }
+
+                return "";
+
+            }catch (Exception e){
+                Log.e("mf===parking_e", "==="+e);
+                return "";
+            }
+        }
+
+        return "";
+    }
+
+    private void car_notification(final int lock_status, int failure_code, int report_type, int back_type, String failure_desc) {
+        Log.e("mf===car_notification", isAgain + "===" + (isAgain?2:1) +"==="+ lock_status+"==="+ report_type +"==="+ back_type +"==="+ oid+"==="+ referLatitude+"==="+referLongitude);
 
         RequestParams params = new RequestParams();
-        params.put("scene", scene); //场景值 必传 1借还车上报 2再次开(关)锁上报
+        params.put("scene", isAgain?2:1); //场景值 必传 1借还车上报 2再次开(关)锁上报
         params.put("lock_status", Md5Helper.encode(oid+":lock_status:"+lock_status));    //车锁状态 1开锁成功 2开锁失败 3上锁成功 4上锁失败【上传时order_sn:拼接上lock_status:再拼接车锁状态码md5加密后上传，例如md5('191004143208756404:lock_status:1')】
         params.put("failure_code", failure_code);   //0代表成功 1连接不上蓝牙 2蓝牙开锁超时 3网络开锁请求失败(接口无响应或异常) 4网络开锁超时（接口有响应但返回超时码） 5网络开锁失败
         params.put("failure_desc", failure_desc);
-        params.put("parking", parking);
-        params.put("longitude", longitude);
-        params.put("latitude", latitude);
+        params.put("parking", parking());
+        params.put("longitude", referLongitude);
+        params.put("latitude", referLatitude);
         params.put("report_type", Md5Helper.encode(oid+":report_type:"+report_type));     //1蓝牙开锁 2网络开锁 3蓝牙上锁 4网络上锁 【需加密，加密方式同上，例如md5('191004143208756404:report_type:1')】
         if(back_type!=0){
 //            params.put("back_type", Md5Helper.encode(oid+":back_type:"+(!"1".equals(backType)?backType:back_type)));      //1手机gps在电子围栏 2锁gps在电子围栏 3信标 4锁与信标【需加密，加密方式同上，例如md5('191004143208756404:back_type:1')】
-            params.put("back_type", Md5Helper.encode(oid+":back_type:"+backType));
+
+            if(major!=0){
+                Log.e("mf===car_notification1", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
+                params.put("back_type", Md5Helper.encode(oid+":back_type:"+4));     // 4锁与信标
+            }else if(isGPS_Lo){
+                Log.e("mf===car_notification2", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
+                params.put("back_type", Md5Helper.encode(oid+":back_type:"+2));     // 2锁gps在电子围栏
+            }else if(macList.size() > 0){
+                Log.e("mf===car_notification3", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
+                params.put("back_type", Md5Helper.encode(oid+":back_type:"+3));     // 3信标
+            }else if(force_backcar==1 && isTwo){
+                Log.e("mf===car_notification4", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
+                params.put("back_type", Md5Helper.encode(oid+":back_type:"+5));     // 没锁第二次强制还车
+            }else{
+//                  }else if(isContainsList.contains(true)){
+                Log.e("mf===car_notification5", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
+                params.put("back_type", Md5Helper.encode(oid+":back_type:"+1));     // 1手机gps在电子围栏
+            }
+
+//            params.put("back_type", Md5Helper.encode(oid+":back_type:"+backType));
         }
 
         HttpHelper.post(context, Urls.car_notification, params, new TextHttpResponseHandler() {
@@ -3046,7 +3041,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            Log.e("mf===car_notification1", responseString + "====" + lock_status);
+                            Log.e("mf===car_notification0", responseString + "====" + lock_status);
 
                             if(lock_status == 1) {
                                 ToastUtil.showMessageApp(context, "恭喜您,开锁成功!");
@@ -3328,25 +3323,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     //泺平===与设备，开锁
     private void openBleLock(RRent.ResultBean resultBean) {
-//        UIHelper.showProgress(this, "open_bike_status");
-//        ClientManager.getClient().openLock(mac, "18112348925", resultBean.getServerTime(),
-
-//        Log.e("scan===openBleLock", resultBean.getServerTime()+"==="+resultBean.getKeys()+"==="+resultBean.getEncryptionKey());
-
         Log.e("mf===openBleLock", serverTime+"==="+keys+"==="+encryptionKey);
 
         ClientManager.getClient().openLock(m_nowMac,"000000000000", (int) serverTime, keys, encryptionKey, new IEmptyResponse(){
-            //        ClientManager.getClient().openLock(m_nowMac,"000000000000", 1560316059, "EFD72E14D4F1CAA9F919B6FE0066579F", 179, new IEmptyResponse(){
-//        ClientManager.getClient().openLock(m_nowMac,"000000000000", resultBean.getServerTime(), resultBean.getKeys(), resultBean.getEncryptionKey(), new IEmptyResponse(){
             @Override
             public void onResponseFail(final int code) {
                 m_myHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         Log.e("openLock===Fail", m_nowMac+"==="+Code.toString(code));
-//                              UIHelper.dismiss();
-//                              UIHelper.showToast(DeviceDetailActivity.this, Code.toString(code));
-
 
                         getBleRecord();
 //                      deleteBleRecord(null);
@@ -3360,35 +3345,19 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
 
-                            if(!activity.isFinishing()){
-//                              tzEnd();
-                                car_notification(1, 1, 0, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
-
-
-                            }
+                            car_notification(1, 0, 1,0,"");
                         }else{
-//                                    submit(uid, access_token);
-
-                            car_notification(1, 2, 1, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
-
+                            car_notification(2, 1, 1,0,"type"+type+"openBleLock开锁失败");
                         }
 
-
-
-
-//                                ToastUtil.showMessageApp(context, Code.toString(code));
+//                      ToastUtil.showMessageApp(context, Code.toString(code));
                     }
                 });
 
-
-
-//                        submit(uid, access_token);
             }
 
             @Override
             public void onResponseSuccess() {
-//                        UIHelper.dismiss();
-
                 Log.e("openLock===Success", "===");
 
                 getBleRecord();
@@ -3404,15 +3373,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     //与设备，开锁
     private void openAgainBleLock(RRent.ResultBean resultBean) {
-//        UIHelper.showProgress(this, "open_bike_status");
-//        ClientManager.getClient().openLock(mac, "18112348925", resultBean.getServerTime(),
-
-//        Log.e("openBleLock===", resultBean.getServerTime()+"==="+resultBean.getKeys()+"==="+resultBean.getEncryptionKey());
-
         Log.e("biking=openAgainBleLock", serverTime+"==="+keys+"==="+encryptionKey);
 
         ClientManager.getClient().openLock(m_nowMac,"000000000000", (int) serverTime, keys, encryptionKey, new IEmptyResponse(){
-            //      ClientManager.getClient().openLock(m_nowMac,"000000000000", resultBean.getServerTime(), resultBean.getKeys(), resultBean.getEncryptionKey(), new IEmptyResponse(){
             @Override
             public void onResponseFail(final int code) {
                 m_myHandler.post(new Runnable() {
@@ -3425,8 +3388,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         ToastUtil.showMessageApp(context, Code.toString(code));
                     }
                 });
-
-
             }
 
             @Override
@@ -3445,7 +3406,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         ToastUtil.showMessageApp(context, "开锁成功");
 
                         //TODO
-                        car_notification(2, 1, 0, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                        car_notification(1, 0, 1,0,"");
 
                     }
                 });
@@ -3529,11 +3490,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                         ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
 
-                        if(!activity.isFinishing()){
-//                            tzEnd();
-                            car_notification(1, 1, 0, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
-                            popupwindow.dismiss();
-                        }
+                        car_notification(1, 0, 1,0,"");
                     }
                 });
 
@@ -3772,9 +3729,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 //                            customDialog10.show();
                         }else {
-//                            submit(uid, access_token);
 
-                            car_notification(1, 3, 0, 3,1,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                            car_notification(3, 0, 3,1,"");
 
                         }
 
@@ -3867,7 +3823,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if(!bleService.connect){
                     cn++;
 
-                    if(cn<15){
+                    if(cn<10){
                         checkConnect();
                     }else{
 
@@ -3876,11 +3832,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
                         }else{
-                            if(!activity.isFinishing()){
-//                                car_notification(1, 2, 2, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
-
-                                unlock();
-                            }
+                            unlock();
                         }
 
 //                        popupwindow.dismiss();
@@ -3888,8 +3840,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     }
 
                 }else{
-//                    getCurrentorder2(uid, access_token);
-
                     bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
 
                     m_myHandler.postDelayed(new Runnable() {
@@ -3914,9 +3864,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                         Log.e("checkConnect===5", oid+"==="+bleService.cc);
                                         ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
 
-                                        if(!activity.isFinishing()){
-                                            car_notification(isAgain?2:1, 1, 0, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
-                                        }
+                                        car_notification(1, 0, 1,0,"");
 
                                         if(isAgain){
                                             tv_againBtn.setText("临时上锁");
@@ -3924,17 +3872,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                         }
 
                                     }else{
-//                                        closeEbike();
-                                        if(!activity.isFinishing()){
-//                                            tzEnd();
-
-//                                            car_notification(1, 2, 1, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
-
-                                            unlock();
-                                        }
+                                        unlock();
                                     }
-
-//                                    popupwindow.dismiss();
 
                                     Log.e("checkConnect===6", "==="+bleService.cc);
 
@@ -3957,7 +3896,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if(!bleService.connect){
                     cn++;
 
-                    if(cn<15){
+                    if(cn<10){
                         checkConnect2();
                     }else{
 
@@ -3966,20 +3905,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
                         }else{
-                            if(!activity.isFinishing()){
-//                                car_notification(1, 2, 2, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
-
-                                unlock();
-                            }
+                            unlock();
                         }
-
-//                        popupwindow.dismiss();
 
                     }
 
                 }else{
-//                    getCurrentorder2(uid, access_token);
-
                     bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
 
                     m_myHandler.postDelayed(new Runnable() {
@@ -4001,7 +3932,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 //                                        ToastUtil.showMessageApp(context,"恭喜您,关锁成功!");
 
-                                        car_notification(isAgain?2:1, 3, 0, 3, isAgain?0:1,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                                        car_notification(3, 0, 3, isAgain?0:1,"");
 
                                         if(isAgain){
                                             tv_againBtn.setText("再次开锁");
@@ -4022,40 +3953,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 }
                             }, 500);
 
-//                            m_myHandler.postDelayed(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    Log.e("checkConnect===4", bleService.cc+"==="+"B1 25 80 00 00 56 ".equals(bleService.cc));
-//
-//                                    if("B1 25 80 00 00 56 1".equals(bleService.cc)){
-//                                        if (loadingDialog != null && loadingDialog.isShowing()){
-//                                            loadingDialog.dismiss();
-//                                        }
-//
-//                                        Log.e("checkConnect===5", oid+"==="+bleService.cc);
-//                                        ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
-//
-//                                        if(!activity.isFinishing()){
-////                                            tzEnd();
-//                                            car_notification(1, 1, 0, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
-//                                        }
-//                                    }else{
-////                                        closeEbike();
-//                                        if(!activity.isFinishing()){
-////                                            tzEnd();
-//
-////                                            car_notification(1, 2, 1, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
-//
-//                                            unlock();
-//                                        }
-//                                    }
-//
-////                                    popupwindow.dismiss();
-//
-//                                    Log.e("checkConnect===6", "==="+bleService.cc);
-//
-//                                }
-//                            }, 500);
                         }
                     }, 500);
                 }
@@ -4281,24 +4178,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //            }
 //        }
 
-
-//        if(isOpenLock){
-//            unlock();
-//        }
-
-//        m_myHandler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                if("".equals(oid)){
-//                    Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
-//                }else{
-//                    car_notification(1, 2, 2, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
-//                }
-//
-//                popupwindow.dismiss();
-//            }
-//        });
     }
 
     public void xiaoanOpen_blue() {
@@ -4315,7 +4194,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 //                          ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
 
-                            car_notification(isAgain?2:1, 1, 0, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                            car_notification(1, 0, 1,0,"");
 
                             if(isAgain){
                                 tv_againBtn.setText("临时上锁");
@@ -4351,7 +4230,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             macList2 = new ArrayList<> (macList);
 
-                            car_notification(isAgain?2:1, 3, 0, 3, isAgain?0:1,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                            car_notification(3, 0, 3, isAgain?0:1,"");
 
                             if(isAgain){
                                 tv_againBtn.setText("再次开锁");
@@ -4449,6 +4328,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onResume() {
         super.onResume();
+
+        Log.e("mf===onResume", isHidden()+"==="+type);
 
         mapView.onResume();
 
@@ -4660,7 +4541,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 unlock();
             }
         }else{
-            car_notification(isAgain?2:1, 2, 2, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+            car_notification(2, 2, 1,0,"type"+type+"onTimeOut开锁超时");
         }
     }
 
@@ -4685,7 +4566,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 unlock();
             }
         }else{
-            car_notification(isAgain?2:1, 2, 1, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+            car_notification(2, 1, 1,0,"type"+type+"onDisconnect开锁蓝牙连接失败");
         }
     }
 
@@ -4776,7 +4657,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                         popupwindow.dismiss();
                                     }
 
-                                    car_notification(isAgain?2:1, 2, 1, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                                    car_notification(2, 1, 1,0,"type"+type+"OPEN_ACTION开锁失败");
                                 }
                             } else {
                                 isOpen = true;
@@ -4784,24 +4665,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
                                 Log.e("mf===", "OPEN_ACTION==="+isOpen);
 
-
-
                                 m_myHandler.sendEmptyMessage(7);
                             }
                             break;
                         case Config.CLOSE_ACTION:
-                            if (TextUtils.isEmpty(data)) {
-                            } else {
-                            }
-
                             Log.e("mf===", "CLOSE_ACTION===");
 
                             break;
                         case Config.RESET_ACTION:
-                            if (TextUtils.isEmpty(data)) {
-                            } else {
-                            }
-
                             Log.e("mf===", "RESET_ACTION===");
 
                             break;
@@ -4815,13 +4686,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 loadingDialog.dismiss();
                             }
 
-//                            if(isEndBtn){
-//                                m_myHandler.sendEmptyMessage(6);
-//                            }
-
-//                            if (lockLoading != null && lockLoading.isShowing()){
-//                                lockLoading.dismiss();
-//                            }
                             if (TextUtils.isEmpty(data)) {
                                 ToastUtil.showMessageApp(context,"锁已关闭");
                                 Log.e("biking===", "biking===锁已关闭==="+first3);
@@ -4831,7 +4695,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 m_myHandler.sendEmptyMessage(6);
 
                                 Log.e("biking===", "biking2===锁已关闭" + macList2.size());
-
                             } else {
                                 //锁已开启
                                 ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
@@ -4839,10 +4702,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             break;
                         case Config.LOCK_RESULT:
-                            if (TextUtils.isEmpty(data)) {
-                            } else {
-                            }
-
                             break;
                     }
                 }
@@ -4881,7 +4740,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         loadingDialog.show();
                     }
 
-//                    rl_msg.setVisibility(View.GONE);
+//                    rl_msg.setVisibility(View.GONE);  //TODO
 //                    if (polyline != null) {
 //                        polyline.remove();
 //                    }
@@ -4889,19 +4748,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     if(macList.size()>0 || isContainsList.contains(true)){
                         isTemp = false;
 
-                        if("4".equals(type)){
+                        if("2".equals(type)){
+                            endBtn();
+                        }else if("3".equals(type)){
+                            endBtn3();
+                        }else if("4".equals(type)){
                             endBtn4();
                         }else if("5".equals(type) || "6".equals(type)){
                             endBtn5();
                         }else if("7".equals(type)){
                             endBtn7();
-                        }else{
-
-                            if("3".equals(type)){
-                                endBtn3();
-                            }else{
-                                endBtn();
-                            }
                         }
 
                     }else{
@@ -4913,13 +4769,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     break;
                 case 6:
                     //蓝牙还车成功
-                    car_notification(1, 3, 0, 3,1,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                    car_notification(3, 0, 3, 1, "");
 
                     break;
 
                 case 7:
                     //蓝牙开锁成功
-                    car_notification(isAgain?2:1, 1, 0, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                    car_notification(1, 0, 1,0,"");
 
                     break;
 
@@ -4943,7 +4799,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 //                                memberEvent2();
 
-//                                Toast.makeText(context,"请重启软件，开启定位服务,输编号用车",5 * 1000).show();
                                 Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
 
                                 ClientManager.getClient().stopSearch();
@@ -4958,7 +4813,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                                scrollToFinishActivity();
                             }
                         }
-                    }, 15 * 1000);
+                    }, 10 * 1000);
                     break;
 
                 case 0x99://搜索超时
@@ -4986,7 +4841,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 BaseApplication.getInstance().getIBLE().refreshCache();
                                 BaseApplication.getInstance().getIBLE().close();
                                 BaseApplication.getInstance().getIBLE().disconnect();
-//                                scrollToFinishActivity();
 
                                 Log.e("0x99===timeout", isLookPsdBtn+"==="+isStop+"==="+type);
 
@@ -4995,7 +4849,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                         unlock();
                                     }
                                 }else{
-                                    car_notification(isAgain?2:1, 2, 2, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                                    car_notification(2, 2, 1,0,"type"+type+"0x99开锁超时");
                                 }
 
                             }
@@ -5012,8 +4866,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     //蓝牙锁type2
     public void endBtn(){
-//        oid = "19120309293774228796";
-//        m_nowMac = "50:8C:B1:87:1E:FA";
         Log.e("biking===endBtn_0", isLookPsdBtn+"==="+force_backcar+"==="+isTwo+"==="+macList.size()+"==="+isContainsList.contains(true));
 
         if(force_backcar==1 && isTwo){
@@ -5027,7 +4879,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             return;
         }
 
-        final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (access_token == null || "".equals(access_token)){
             ToastUtil.showMessageApp(context,"请先登录账号");
@@ -5035,7 +4886,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }else {
             Log.e("biking===endBtn",macList.size()+"==="+isContainsList.contains(true)+"==="+type+"==="+isContainsList);
 
-//            rl_msg.setVisibility(View.GONE);
+//            rl_msg.setVisibility(View.GONE);  //TODO
 //            if (polyline != null) {
 //                polyline.remove();
 //            }
@@ -5220,7 +5071,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 }
                             }
                         }
-                    }, 15 * 1000);
+                    }, 10 * 1000);
 
                     isOpenLock = false;
                     connect();
@@ -5237,7 +5088,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     public void endBtn3(){
-        final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (access_token == null || "".equals(access_token)){
             ToastUtil.showMessageApp(context,"请先登录账号");
@@ -5294,7 +5144,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     }else{
 //                                        carClose();
 //                                        lock(); //TODO
-                                        car_notification(1, 3, 0, 3,3,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                                        car_notification(3, 0, 3, 3, "");
 
                                     }
                                 }
@@ -5336,7 +5186,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 }else{
 //                                    carClose();
 //                                    lock();     //TODO
-                                    car_notification(1, 3, 0, 3,3,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                                    car_notification(3, 0, 3,3,"");
 
                                 }
                             }
@@ -5350,7 +5200,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             }
 
             if (isContainsList.contains(true)){
-
 //                flag = 2;
                 if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
@@ -5392,14 +5241,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                         clickCountDeal();
                                     }else{
 //                                        lock();     //TODO
-                                        car_notification(1, 3, 0, 3,1,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                                        car_notification(3, 0, 3,1,"");
                                     }
                                 }
 
                             }
                         }
                     }, 10 * 1000);
-
 
                 }else {
                     if (loadingDialog != null && !loadingDialog.isShowing()){
@@ -5422,7 +5270,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             if(!isLookPsdBtn){
                                 stopScan = true;
-//                                  BaseApplication.getInstance().getIBLE().stopScan();
+//                              BaseApplication.getInstance().getIBLE().stopScan();
                                 BaseApplication.getInstance().getIBLE().refreshCache();
                                 BaseApplication.getInstance().getIBLE().close();
                                 BaseApplication.getInstance().getIBLE().disconnect();
@@ -5442,7 +5290,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     clickCountDeal();
                                 }else{
 //                                    lock();     //TODO
-                                    car_notification(1, 3, 0, 3,1,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                                    car_notification(3, 0, 3, 1, "");
                                 }
                             }
                         }
@@ -5461,7 +5309,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     public void endBtn4(){
-        final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (access_token == null || "".equals(access_token)){
             ToastUtil.showMessageApp(context,"请先登录账号");
@@ -5480,7 +5327,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                     popupwindow.dismiss();
-//                  scrollToFinishActivity();
                 }
                 BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
                 mBluetoothAdapter = bluetoothManager.getAdapter();
@@ -5493,7 +5339,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if (mBluetoothAdapter == null) {
                     ToastUtil.showMessageApp(context, "获取蓝牙失败");
                     popupwindow.dismiss();
-//                  scrollToFinishActivity();
                     return;
                 }
                 if (!mBluetoothAdapter.isEnabled()) {
@@ -5517,7 +5362,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                     popupwindow.dismiss();
-//                  scrollToFinishActivity();
                 }
                 BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
                 mBluetoothAdapter = bluetoothManager.getAdapter();
@@ -5530,7 +5374,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if (mBluetoothAdapter == null) {
                     ToastUtil.showMessageApp(context, "获取蓝牙失败");
                     popupwindow.dismiss();
-//                  scrollToFinishActivity();
                     return;
                 }
                 if (!mBluetoothAdapter.isEnabled()) {
@@ -5556,7 +5399,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     public void endBtn5(){
-        final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (access_token == null || "".equals(access_token)){
             ToastUtil.showMessageApp(context,"请先登录账号");
@@ -5593,7 +5435,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     public void endBtn7(){
-        final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (access_token == null || "".equals(access_token)){
             ToastUtil.showMessageApp(context,"请先登录账号");
@@ -5614,7 +5455,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                     popupwindow.dismiss();
-//                                    scrollToFinishActivity();
                 }
                 //蓝牙锁
                 BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
@@ -5624,7 +5464,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if (mBluetoothAdapter == null) {
                     ToastUtil.showMessageApp(context, "获取蓝牙失败");
                     popupwindow.dismiss();
-//                                    scrollToFinishActivity();
                     return;
                 }
                 if (!mBluetoothAdapter.isEnabled()) {
@@ -5670,7 +5509,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                     popupwindow.dismiss();
-//                                    scrollToFinishActivity();
                 }
                 //蓝牙锁
                 BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
@@ -5680,7 +5518,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if (mBluetoothAdapter == null) {
                     ToastUtil.showMessageApp(context, "获取蓝牙失败");
                     popupwindow.dismiss();
-//                                    scrollToFinishActivity();
                     return;
                 }
                 if (!mBluetoothAdapter.isEnabled()) {
@@ -5746,7 +5583,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     public void queryState(){
         if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-//            scrollToFinishActivity();
         }
         //蓝牙锁
         BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
@@ -5754,7 +5590,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         if (mBluetoothAdapter == null) {
             ToastUtil.showMessageApp(context, "获取蓝牙失败");
-//            scrollToFinishActivity();
             return;
         }
         if (!mBluetoothAdapter.isEnabled()) {
@@ -5814,7 +5649,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                            scrollToFinishActivity();
                         }
                     }
-                }, 15 * 1000);
+                }, 10 * 1000);
             }else{
                 if (loadingDialog != null && !loadingDialog.isShowing()){
                     loadingDialog.setTitle("正在连接");
@@ -5909,7 +5744,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         routeOverLay.setStartPointBitmap(null);
         routeOverLay.setEndPointBitmap(null);
         routeOverLay.addToMap();
-
 
         Log.e("drawRoutes===", "==="+path.getAllLength());
 
@@ -6073,6 +5907,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             transtype = "";
                             major = 0;
                             minor = 0;
+                            isGPS_Lo = false;
                             scan = false;
                             isTemp = false;
                             backType = "";
@@ -6092,7 +5927,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             if (mBluetoothAdapter == null) {
                                 ToastUtil.showMessageApp(context, "获取蓝牙失败");
-//                                      finish();
                                 return;
                             }
 
@@ -6115,7 +5949,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 }else if ("5".equals(type)  || "6".equals(type)) {
                                     Log.e("initView===5", "==="+isLookPsdBtn);
 
-                                    //                        ll_1.setVisibility(View.VISIBLE);
+//                                    ll_1.setVisibility(View.VISIBLE);
 
 //                                    WindowManager windowManager = getWindowManager();     //TODO
 //                                    Display display = windowManager.getDefaultDisplay();
@@ -6129,11 +5963,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
                                     ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
 
-
-
                                 }else if ("7".equals(type)) {
-
-
                                 }
 
                                 if ("4".equals(type) || "7".equals(type)) {
@@ -6324,23 +6154,34 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             Log.e("188===fail", oid+"===");
 
                             if("".equals(oid)){
-//                                scrollToFinishActivity();
+//                              scrollToFinishActivity();
                             }else{
-                                car_notification(isAgain?2:1, 2, 1, 1,0,"", "", SharedPreferencesUrls.getInstance().getString("longitude", ""), SharedPreferencesUrls.getInstance().getString("latitude", ""));
+                                car_notification(2, 1, 1,0,"type"+type+"=188未打开蓝牙");
                             }
-
                         }
-
-
                     default:
-
                         break;
 
                 }
-
             }
         });
+    }
 
+    private void ss(){
+        String tvAgain = tv_againBtn.getText().toString().trim();
+        if(isAgain){
+            if("再次开锁".equals(tvAgain)){
+                xiaoanOpen_blue();
+            }else{
+                xiaoanClose_blue();
+            }
+        }else{
+            if(isEndBtn){
+                xiaoanClose_blue();
+            }else{
+                xiaoanOpen_blue();
+            }
+        }
     }
 
 //    protected void registerReceiver(IntentFilter intentfilter) {
