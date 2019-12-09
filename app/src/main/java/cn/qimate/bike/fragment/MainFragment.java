@@ -422,8 +422,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 //                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 3需要充值余额或购买骑行卡 4有待支付行程 5有待支付调度费 6有待支付赔偿费
 
-//                        bean.setUnauthorized_code(4);
-
+//                        bean.setUnauthorized_code(4);     //TODO
                         unauthorized_code = bean.getUnauthorized_code();
 
                         if(unauthorized_code>=4){
