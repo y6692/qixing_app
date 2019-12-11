@@ -180,8 +180,8 @@ dependencies {
     //    implementation project(':verification-view')
     implementation files('libs/AMap3DMap_7.1.0_AMapNavi_7.1.0_20191030.jar')
 
-    compile 'com.qiniu:qiniu-android-sdk:7.3.3'
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
+    implementation 'com.qiniu:qiniu-android-sdk:7.3.3'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
 }
 
 afterEvaluate {

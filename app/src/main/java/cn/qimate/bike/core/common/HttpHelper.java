@@ -2,8 +2,14 @@ package cn.qimate.bike.core.common;
 
 import org.apache.http.impl.cookie.BasicClientCookie;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import java.util.Date;
@@ -13,10 +19,11 @@ import cn.loopj.android.http.AsyncHttpResponseHandler;
 import cn.loopj.android.http.PersistentCookieStore;
 import cn.loopj.android.http.RequestParams;
 import cn.qimate.bike.util.SHA1;
+import cn.qimate.bike.util.SystemUtil;
 
 /**
  * 网络请求帮助类
- * 
+ *
  * @author Bo.Zhang
  *
  */
@@ -35,7 +42,7 @@ public class HttpHelper {
 
 	/**
 	 * 添加cookie
-	 * 
+	 *
 	 * @param context
 	 * @param hostUrl
 	 */
@@ -51,14 +58,13 @@ public class HttpHelper {
 
 	/**
 	 * get请求
-	 * 
+	 *
 	 * @param context
 	 * @param url
 	 * @param responseHandler
 	 */
 	public static void get(Context context, String url, AsyncHttpResponseHandler responseHandler) {
 
-		Log.e("header===0", "===");
 
 //		try {
 //			url = url + "&act=1&platform=Android&version="
@@ -68,8 +74,9 @@ public class HttpHelper {
 //		}
 
 
-		String token = SharedPreferencesUrls.getInstance().getString("access_token","");
+		String token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 
+		Log.e("header===0", "===" + token);
 
 		client.addHeader("Authorization", token);
 		client.addHeader("Accept", "application/vnd.ws.v1+json");
@@ -78,7 +85,7 @@ public class HttpHelper {
 
 	/**
 	 * get请求
-	 * 
+	 *
 	 * @param context
 	 * @param url
 	 * @param params
@@ -93,9 +100,9 @@ public class HttpHelper {
 //		}
 
 
-		String token = SharedPreferencesUrls.getInstance().getString("access_token","");
+		String token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 
-		Log.e("header===", "==="+token);
+		Log.e("header===", "===" + token);
 
 		client.addHeader("Authorization", token);
 		client.addHeader("Accept", "application/vnd.ws.v1+json");
@@ -104,14 +111,14 @@ public class HttpHelper {
 
 	public static void post(Context context, String url, AsyncHttpResponseHandler responseHandler) {
 
-		client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
+		client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token", ""));
 		client.addHeader("Accept", "application/vnd.ws.v1+json");
 		client.post(context, url, responseHandler);
 	}
 
 	/**
 	 * post请求
-	 * 
+	 *
 	 * @param context
 	 * @param url
 	 * @param params
@@ -126,9 +133,48 @@ public class HttpHelper {
 //			e.printStackTrace();
 //		}
 
-//		client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
-		client.addHeader("Accept", "application/vnd.ws.v1+json");
-		client.post(context, url, params, responseHandler);
+//
+		Log.e("post===0", SharedPreferencesUrls.getInstance().getString("access_token","")+"===");
+
+
+		try {
+//			TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+//			if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//				return;
+//			}
+
+			client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
+			client.addHeader("Accept", "application/vnd.ws.v1+json");
+			client.addHeader("Phone_Brand", new Build().MANUFACTURER.toUpperCase());
+			client.addHeader("Phone_Model", new Build().MODEL);
+			client.addHeader("Phone_System", "Android");
+			client.addHeader("Phone_System_Version", SystemUtil.getSystemVersion());
+			client.addHeader("App_Version", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
+//			client.addHeader("Device_UUID", "" + tm.getDeviceId());
+			client.addHeader("Client", "Android_APP");
+
+			Log.e("post===", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+SystemUtil.getSystemVersion()+"==="+context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName+"===");
+
+			client.post(context, url, params, responseHandler);
+
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+		}
+	}
+
+	public int getVersion(Context context) {
+		try {
+			PackageManager manager = context.getPackageManager();
+			PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+			int version = info.versionCode;
+
+			Log.e("getVersion===", "==="+version);
+
+			return version;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
 	}
 
 	/**

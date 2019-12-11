@@ -95,7 +95,7 @@ public class SchoolSelectActivity extends SwipeBackActivity implements View.OnCl
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("信用记录");
 
-        btnQuery = (Button)findViewById(R.id.btn_click_one);
+//        btnQuery = (Button)findViewById(R.id.btn_click_one);
         et_school = (EditText)findViewById(R.id.et_school);
 
         // list投资列表
@@ -132,7 +132,7 @@ public class SchoolSelectActivity extends SwipeBackActivity implements View.OnCl
 
         ll_back.setOnClickListener(this);
         footerLayout.setOnClickListener(this);
-        btnQuery.setOnClickListener(this);
+//        btnQuery.setOnClickListener(this);
 
         et_school.addTextChangedListener(new TextWatcher() {
 
@@ -184,10 +184,10 @@ public class SchoolSelectActivity extends SwipeBackActivity implements View.OnCl
                 scrollToFinishActivity();
                 break;
 
-            case R.id.btn_click_one:
-                querySchoolList();
-
-                break;
+//            case R.id.btn_click_one:
+//                querySchoolList();
+//
+//                break;
 
             case R.id.footer_Layout:
                 if (!isLast) {
@@ -268,7 +268,7 @@ public class SchoolSelectActivity extends SwipeBackActivity implements View.OnCl
 
                                 }
 
-
+                                setFooterType(2);
 
                                 Log.e("getSchoolList===2", datas.size()+"==="+schoolList.size());
 

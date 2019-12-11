@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical" >
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp40">
+
+        <ImageView
+            android:id="@+id/mainUI_title_rightBtn"
+            android:layout_width="15dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="36dp"
+            android:src="@drawable/x"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <cn.qimate.bike.core.widget.MyScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="85dp"
+                    android:layout_marginLeft="36dp"
+                    android:text="欢迎使用7MA出行"
+                    android:textColor="#000000"
+                    android:textSize="30sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:text="我们将发送6位动态码\n以验证您的手机号码"
+                    android:textColor="@color/tx_black"
+                    android:textSize="16sp"
+                    android:lineSpacingExtra="6dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="39dp"
+                    android:layout_marginTop="35dp"
+                    android:layout_marginLeft="@dimen/dp30"
+                    android:layout_marginRight="@dimen/dp30"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="+86"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp18" />
+
+                    <cn.qimate.bike.core.widget.ClearEditText
+                        android:id="@+id/loginUI_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:hint="输入手机号"
+                        android:inputType="numberDecimal"
+                        android:maxLength="11"
+                        android:paddingBottom="0dp"
+                        android:paddingLeft="10dp"
+                        android:textColorHint="#B2B2B2"
+                        android:textSize="@dimen/sp18" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="@dimen/dp30"
+                    android:layout_marginRight="@dimen/dp30"
+                    android:background="#9C9C9C" />
+
+                <TextView
+                    android:id="@+id/loginUI_change_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="27dp"
+                    android:layout_marginLeft="30dp"
+                    android:gravity="center_vertical"
+                    android:text="换绑手机号"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/sp16" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <Button
+                        android:id="@+id/loginUI_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp40"
+                        android:layout_marginTop="123dp"
+                        android:layout_marginLeft="48dp"
+                        android:layout_marginRight="48dp"
+                        android:background="@drawable/btn_bcg_press"
+                        android:gravity="center"
+                        android:maxHeight="0dp"
+                        android:text="开始使用"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp18" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp12"
+                        android:text="点击开始使用即表示同意"
+                        android:layout_alignParentRight="true"/>
+
+                    <TextView
+                        android:id="@+id/loginUI_serviceProtocol"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FF0000"
+                        android:textSize="@dimen/sp12"
+                        android:text="《服务协议》"
+                        android:layout_alignParentRight="true"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </cn.qimate.bike.core.widget.MyScrollView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_height"
+            android:background="#a3a2a2" />
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

@@ -36,6 +36,8 @@
             android:layout_height="3dp"
             android:background="@drawable/divider_bcg" />
 
+        <!--plaColumnNumber：竖屏显示多少列-->
+        <!--plaLandscapeColumnNumber：横屏显示多少列-->
         <com.huewu.pla.lib.MultiColumnListView
             xmlns:pla="http://schemas.android.com/apk/res-auto"
             android:id="@+id/rechargeUI_moneyList"
@@ -45,15 +47,14 @@
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             pla:plaColumnNumber="2"
-            pla:plaLandscapeColumnNumber="3"/>
+            pla:plaLandscapeColumnNumber="3"
+            />
 
         <LinearLayout
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -123,7 +124,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp15"
+                android:textSize="@dimen/sp18"
                 android:textColor="@color/white"
                 android:text="下一步"
                 />

@@ -2,6 +2,7 @@ package cn.qimate.bike.activity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.zxing.lib.scaner.activity.ActivityScanerCode;
 
 import org.apache.http.Header;
 
@@ -63,26 +65,18 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
     private Context context;
     private LoadingDialog loadingDialog;
-    private ImageView backImg;
-    private TextView title;
-    private TextView rightBtn;
-
-    private LinearLayout headLayout;
-    private EditText userNameEdit;
-    private EditText passwordEdit;
+    private ImageView rightBtn;
+    private EditText phoneEdit;
+    private TextView change_phone;
     private Button loginBtn;
-    private TextView noteLogin;
-    private TextView findPsd;
-    private ImageView checkBox;
-    private boolean isHidepsd = true;
+    private TextView serviceProtocol;
 
-    private TelephonyManager tm;
     public static boolean isForeground = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_login);
+        setContentView(R.layout.activity_login);
         context = this;
         initView();
 
@@ -121,31 +115,28 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+//        tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
-        title = (TextView) findViewById(R.id.mainUI_title_titleText);
-        title.setText("登录");
-        rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
-        rightBtn.setText("注册");
+        rightBtn = (ImageView) findViewById(R.id.mainUI_title_rightBtn);
 
-        headLayout = (LinearLayout) findViewById(R.id.loginUI_headLayout);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) headLayout.getLayoutParams();
-        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.4);
-        headLayout.setLayoutParams(params);
-
-        userNameEdit = (EditText) findViewById(R.id.loginUI_userName);
-        passwordEdit = (EditText) findViewById(R.id.LoginUI_password);
+        phoneEdit = (EditText) findViewById(R.id.loginUI_phone);
+        change_phone = (TextView) findViewById(R.id.loginUI_change_phone);
         loginBtn = (Button) findViewById(R.id.loginUI_btn);
-        noteLogin = (TextView) findViewById(R.id.loginUI_noteLogin);
-        findPsd = (TextView) findViewById(R.id.loginUI_findPsd);
-        checkBox = (ImageView) findViewById(R.id.LoginUI_checkBox);
+        serviceProtocol = (TextView) findViewById(R.id.loginUI_serviceProtocol);
 
-        if (SharedPreferencesUrls.getInstance().getString("userName", "") != null &&
-                !"".equals(SharedPreferencesUrls.getInstance().getString("userName", ""))) {
-            userNameEdit.setText(SharedPreferencesUrls.getInstance().getString("userName", ""));
+
+        if (SharedPreferencesUrls.getInstance().getString("userName", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("userName", ""))) {
+            phoneEdit.setText(SharedPreferencesUrls.getInstance().getString("userName", ""));
         }
-        userNameEdit.addTextChangedListener(new TextWatcher() {
+
+        if (StringUtil.isPhoner(phoneEdit.getText().toString().trim())) {
+            SharedPreferencesUrls.getInstance().putString("userName", phoneEdit.getText().toString().trim());
+            loginBtn.setBackgroundResource(R.drawable.btn_bcg_normal);
+        }else{
+            loginBtn.setBackgroundResource(R.drawable.btn_bcg_press);
+        }
+
+        phoneEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -158,35 +149,32 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (StringUtil.isPhoner(userNameEdit.getText().toString().trim())) {
-                    SharedPreferencesUrls.getInstance().putString("userName", userNameEdit.getText().toString().trim());
+
+                if (StringUtil.isPhoner(phoneEdit.getText().toString().trim())) {
+                    SharedPreferencesUrls.getInstance().putString("userName", phoneEdit.getText().toString().trim());
+                    loginBtn.setBackgroundResource(R.drawable.btn_bcg_normal);
+                }else{
+                    loginBtn.setBackgroundResource(R.drawable.btn_bcg_press);
                 }
             }
         });
 
-        backImg.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
+        change_phone.setOnClickListener(this);
         loginBtn.setOnClickListener(this);
-        noteLogin.setOnClickListener(this);
-        findPsd.setOnClickListener(this);
-        checkBox.setOnClickListener(this);
+        serviceProtocol.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         isForeground = true;
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
-                scrollToFinishActivity();
-                break;
             case R.id.mainUI_title_rightBtn:
-                UIHelper.goToAct(context, RegisterActivity.class);
                 scrollToFinishActivity();
                 break;
             case R.id.loginUI_btn:
 
-                String telphone = userNameEdit.getText().toString();
-                String password = passwordEdit.getText().toString();
+                String telphone = phoneEdit.getText().toString();
                 if (telphone == null || "".equals(telphone)) {
                     Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
                     return;
@@ -195,38 +183,22 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                     Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (password == null || "".equals(password)) {
-                    Toast.makeText(context, "请输入您的密码", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                LoginHttp(telphone, password);
-                break;
-            case R.id.loginUI_noteLogin:
-                UIHelper.goToAct(context, NoteLoginActivity.class);
-                scrollToFinishActivity();
 
-                Log.e("LA===onClick", "==="+isForeground);
+//                UIHelper.goToAct(context, NoteLoginActivity.class);
+//                scrollToFinishActivity();
+
+                Intent intent = new Intent();
+                intent.setClass(context, NoteLoginActivity.class);
+                intent.putExtra("telphone",telphone);
+                startActivity(intent);
+
+
                 break;
-            case R.id.loginUI_findPsd:
+            case R.id.loginUI_change_phone:
+                UIHelper.goToAct(context, ChangePhoneActivity.class);
+                break;
+            case R.id.loginUI_serviceProtocol:
                 UIHelper.goToAct(context, FindPsdActivity.class);
-                break;
-            case R.id.LoginUI_checkBox:
-                if (isHidepsd) {
-                    isHidepsd = false;
-                    checkBox.setImageResource(R.drawable.checkbox_pressed);
-                    // 设置EditText文本为可见的
-                    passwordEdit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                } else {
-                    isHidepsd = true;
-                    checkBox.setImageResource(R.drawable.checkbox_normal);
-                    passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                }
-                // 切换后将EditText光标置于末尾
-                CharSequence charSequence = passwordEdit.getText();
-                if (charSequence instanceof Spannable) {
-                    Spannable spanText = (Spannable) charSequence;
-                    Selection.setSelection(spanText, charSequence.length());
-                }
                 break;
         }
     }

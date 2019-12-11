@@ -25,6 +25,10 @@ public class Urls {
 	public static String uploadtoken = host2 + "/qiniu/uploadtoken";
 	//提交认证接口_post、认证信息接口_get
 	public static String cert = host2 + "/cert";
+
+	//广告接口
+	public static String banner = host2 + "/banner/";
+
 	//运营区域接口
 	public static String operating_areas = host2 + "/operating_areas";
 	//电子围栏接口
@@ -53,8 +57,7 @@ public class Urls {
 	public static String unlock = host2 + "/car/unlock";
 	//泺平锁获取开锁秘钥接口
 	public static String rent = host2 + "/car/lp/rent";
-	//广告接口
-	public static String banner = host2 + "/banner/";
+
 	//获取协议接口
 	public static String agreement = host2 + "/agreement/";
 	//提交问题反馈接口
@@ -67,7 +70,14 @@ public class Urls {
 	public static String user = host2 + "/user";
 	//退出登录接口
 	public static String authorizations2 = host2 + "/authorizations";
+	//订单/账单列表接口
+	public static String orders= host2 + "/orders";
+	//订单/账单列表接口
+	public static String pay= host2 + "/payment/pay";
 
+//	http://testnewmapi.7mate.cn/api/payment/pay
+//	http://testnewmapi.7mate.cn/api/orders
+//	http://testnewmapi.7mate.cn/api/banner/{position}
 //	http://testnewmapi.7mate.cn/api/parking_ranges
 //	http://testnewmapi.7mate.cn/api/authorizations
 //	http://testnewmapi.7mate.cn/api/user
@@ -92,6 +102,7 @@ public class Urls {
 //	http://testnewmapi.7mate.cn/api/cert
 //	http://testnewmapi.7mate.cn/api/qiniu/uploadtoken
 //	http://testnewmapi.7mate.cn/api/authorizations
+
 
 	/***上传坐标*/
 	public static String locationHost = HTTP + "106.14.188.246";

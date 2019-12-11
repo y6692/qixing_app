@@ -72,24 +72,24 @@
     <LinearLayout
         android:id="@+id/ll_tab"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        android:background="#ffffff"
         android:orientation="vertical">
         <View android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="#dcdcdc"></View>
+            android:background="#E6E6E6"></View>
         <com.flyco.tablayout.CommonTabLayout
             android:id="@+id/tab"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="#ffffff"
-            app:tl_iconHeight="30dp"
             app:tl_iconWidth="30dp"
+            app:tl_iconHeight="24dp"
             app:tl_indicator_color="@color/white"
             app:tl_indicator_height="0dp"
             app:tl_textSelectColor="#FD5558"
             app:tl_textUnselectColor="#666666"
             app:tl_textsize="12sp"
-            app:tl_underline_color="#DDDDDD"
+            app:tl_underline_color="#E6E6E6"
             app:tl_underline_height="1dp"/>
     </LinearLayout>
 

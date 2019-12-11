@@ -102,6 +102,7 @@
             android:name=".full.SplashActivity"
             >
 
+
         </activity>
 
         <!--android:screenOrientation="portrait"-->
@@ -111,10 +112,52 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
+
+        </activity>
+
+        <activity
+            android:name=".activity.CarFaultActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
+
+        <activity
+            android:name=".activity.UnpayRouteActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.UnpayOtherActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+        </activity>
+
+        <activity
+            android:name=".activity.SettlementPlatformActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
+
+        <activity
+            android:name=".activity.LoginActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
+
+        <activity
+            android:name=".activity.ChangePhoneActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
         </activity>
 
         <activity
@@ -128,8 +171,15 @@
             android:name=".activity.RechargeActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
-
         </activity>
+
+        <activity
+            android:name=".activity.ExchangeActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
+        <activity
+            android:name=".activity.BillActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <activity
             android:name=".activity.PayCartActivity"
@@ -152,7 +202,7 @@
 
         </activity>
 
-        <!--android:exported="false"-->
+
 
 
 
@@ -166,13 +216,7 @@
         <!--android:windowSoftInputMode="stateVisible|adjustResize"-->
         <!--android:windowSoftInputMode="adjustUnspecified|stateHidden"-->
 
-        <activity
-            android:name=".activity.LoginActivity"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
-
-        </activity>
 
 
 

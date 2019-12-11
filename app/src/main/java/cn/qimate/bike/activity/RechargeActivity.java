@@ -38,6 +38,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
@@ -92,12 +93,14 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         registerReceiver(broadcastReceiver, filter);
         initView();
     }
+
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             scrollToFinishActivity();
         }
     };
+
     private void initView(){
 
         loadingDialog = new LoadingDialog(context);
@@ -132,6 +135,8 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
 //        WeChatTypeLayout.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 //        dealLayout.setOnClickListener(this);
+
+
     }
 
     @Override

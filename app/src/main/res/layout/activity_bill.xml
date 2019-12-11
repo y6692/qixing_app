@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ui_main"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/ui_main_title"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="30dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="账单"
+            android:textSize="30sp"
+            android:textColor="@color/tx_black"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="30dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="交易类型"
+            android:textSize="16sp"
+            android:textColor="#888888"/>
+
+        <RelativeLayout
+            android:id="@+id/ll_bill"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="30dp"
+
+            >
+
+            <TextView
+                android:id="@+id/tv_bill"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp30"
+                android:background="@drawable/shape_bill_edit"
+                android:paddingLeft="12dp"
+                android:gravity="center_vertical"
+                android:text="123"
+                android:textSize="@dimen/sp16"
+                android:textColor="@color/tx_black"/>
+
+            <!--<cn.qimate.bike.core.widget.ClearEditText-->
+                <!--android:id="@+id/et_bill"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="@dimen/dp30"-->
+                <!--android:background="@drawable/shape_bill_edit"-->
+                <!--android:paddingLeft="12dp"-->
+                <!--android:hint=""-->
+                <!--android:inputType="text"-->
+                <!--android:textSize="@dimen/sp16"-->
+                <!--android:textColorHint="#B2B2B2"-->
+                <!--android:textColor="@color/tx_black"/>-->
+            
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="13dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/arrow_down"
+                />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@drawable/divider_bcg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/ui_backgroud">
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/layout_swipe_list" />
+    </LinearLayout>
+</LinearLayout>

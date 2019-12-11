@@ -11,44 +11,60 @@
         layout="@layout/ui_main_title"/>
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="18dp"
+        android:layout_marginLeft="30dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="免押金认证"
+            android:textSize="30sp"
+            android:textColor="@color/tx_black"/>
+    </LinearLayout>
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@drawable/divider_bcg" />
+
+    <LinearLayout
         android:id="@+id/ll_1"
         android:layout_width="match_parent"
-        android:layout_height="43dp"
+        android:layout_height="40dp"
         android:orientation="horizontal"
-        android:layout_marginTop="28dp"
-        android:layout_marginLeft="@dimen/dp20"
-        android:layout_marginRight="19dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="@dimen/dp40"
+        android:layout_marginRight="@dimen/dp40"
         >
-
-        <!--android:drawableLeft="@drawable/date_icon"-->
 
         <cn.qimate.bike.core.widget.ClearEditText
             android:id="@+id/et_school"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/shape_feedback_edit2"
-            android:paddingLeft="12dp"
-
-            android:drawableRight="@drawable/delete_selector"
-            android:drawablePadding="13dp"
+            android:background="@drawable/shape_school_select_edit"
+            android:paddingLeft="30dp"
             android:hint="搜索学校"
             android:inputType="text"
-            android:textSize="@dimen/sp15"
+            android:textSize="@dimen/sp16"
             android:gravity="center_vertical"
             android:textColorHint="#B2B2B2"
             android:textColor="@color/tx_black"/>
 
-        <Button
-            android:id="@+id/btn_click_one"
-            android:layout_width="83dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/block_bcg9"
-            android:text="查询"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp15"
-            android:gravity="center"
-            />
+        <!--<Button-->
+            <!--android:id="@+id/btn_click_one"-->
+            <!--android:layout_width="83dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@drawable/block_bcg9"-->
+            <!--android:text="查询"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="@dimen/sp15"-->
+            <!--android:gravity="center"-->
+            <!--/>-->
 
     </LinearLayout>
 

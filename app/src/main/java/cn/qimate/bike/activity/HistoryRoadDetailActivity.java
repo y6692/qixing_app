@@ -284,7 +284,7 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
                             loadingDialog.dismiss();
                         }
                         UIHelper.ToastError(context, throwable.toString());
-                        initBanner();
+//                        initBanner();
                     }
                 });
             }
@@ -307,7 +307,7 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
                     } else {
                         UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
                     }
-                    initBanner();
+//                    initBanner();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -319,29 +319,30 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
 
         });
     }
-    private void initBanner() {
-        if (datas == null || datas.isEmpty()) {
-            gallery.start(context, null, imageId, 0, pointLayout, R.drawable.point_sel, R.drawable.point_nos);
-        } else {
-            imageStrs = new String[datas.size()];
-            for (int i = 0; i < datas.size(); i++) {
-                imageStrs[i] = datas.get(i).getAd_file();
-            }
-            gallery.start(context, imageStrs, imageId, 3000, pointLayout, R.drawable.point_sel, R.drawable.point_nos);
+//    private void initBanner() {
+//        if (datas == null || datas.isEmpty()) {
+//            gallery.start(context, null, imageId, 0, pointLayout, R.drawable.point_sel, R.drawable.point_nos);
+//        } else {
+//            imageStrs = new String[datas.size()];
+//            for (int i = 0; i < datas.size(); i++) {
+//                imageStrs[i] = datas.get(i).getAd_file();
+//            }
+//            gallery.start(context, imageStrs, imageId, 3000, pointLayout, R.drawable.point_sel, R.drawable.point_nos);
+//
+//            gallery.setMyOnItemClickListener(new MyPagerGalleryView.MyOnItemClickListener() {
+//
+//                @Override
+//                public void onItemClick(int curIndex) {
+//
+//                    Log.e("initBanner===", datas.get(curIndex).getApp_type()+"==="+datas.get(curIndex).getApp_id()+"==="+datas.get(curIndex).getAd_link());
+//
+//                    UIHelper.bannerGoAct(context, datas.get(curIndex).getApp_type(), datas.get(curIndex).getApp_id(),
+//                            datas.get(curIndex).getAd_link());
+//                }
+//            });
+//        }
+//    }
 
-            gallery.setMyOnItemClickListener(new MyPagerGalleryView.MyOnItemClickListener() {
-
-                @Override
-                public void onItemClick(int curIndex) {
-
-                    Log.e("initBanner===", datas.get(curIndex).getApp_type()+"==="+datas.get(curIndex).getApp_id()+"==="+datas.get(curIndex).getAd_link());
-
-                    UIHelper.bannerGoAct(context, datas.get(curIndex).getApp_type(), datas.get(curIndex).getApp_id(),
-                            datas.get(curIndex).getAd_link());
-                }
-            });
-        }
-    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

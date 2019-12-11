@@ -5,26 +5,30 @@
     android:background="@drawable/item01_bg"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#f7f7f7"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/dp15"
-        android:paddingRight="@dimen/dp15"
-        android:paddingTop="@dimen/dp15">
+        android:paddingLeft="73dp"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/item_school_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/tx_black_light"
-            android:textSize="@dimen/sp14"
-            android:gravity="center_vertical"/>
+            android:textColor="#666666"
+            android:textSize="@dimen/sp16"
+            />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="#F1F1F1"/>
+
 </LinearLayout>

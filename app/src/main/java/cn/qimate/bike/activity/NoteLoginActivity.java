@@ -75,13 +75,20 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
     private LinearLayout content;
     private VerificationCodeView icv;
 
+    private TextView tv_telphone;
+    private TextView time;
+    private TextView no_note;
 
+    private String telphone = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_note_login);
+        setContentView(R.layout.activity_note_login);
         context = this;
+
+        telphone = getIntent().getStringExtra("telphone");
+
         initView();
 
 
@@ -103,44 +110,37 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         loadingDialog.setCanceledOnTouchOutside(false);
 
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
-        title = (TextView) findViewById(R.id.mainUI_title_titleText);
-        title.setText("快捷登录");
 
-        headLayout = (LinearLayout) findViewById(R.id.noteLoginUI_headLayout);
-        headLayout = (LinearLayout) findViewById(R.id.noteLoginUI_headLayout);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) headLayout.getLayoutParams();
-        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.4);
-        headLayout.setLayoutParams(params);
+//        userNameEdit = (EditText) findViewById(R.id.noteLoginUI_userName);
+//        codeEdit = (EditText) findViewById(R.id.noteLoginUI_phoneNum_code);
 
-        userNameEdit = (EditText) findViewById(R.id.noteLoginUI_userName);
-        codeEdit = (EditText) findViewById(R.id.noteLoginUI_phoneNum_code);
+        tv_telphone = (TextView) findViewById(R.id.tv_telphone);
+        time = (TextView) findViewById(R.id.noteLoginUI_time);
+        no_note = (TextView) findViewById(R.id.noteLoginUI_no_note);
 
-        if (SharedPreferencesUrls.getInstance().getString("userName", "") != null && !"".equals(
-                SharedPreferencesUrls.getInstance().getString("userName", ""))) {
-            userNameEdit.setText(SharedPreferencesUrls.getInstance().getString("userName", ""));
-        }
-        codeBtn = (Button) findViewById(R.id.noteLoginUI_noteCode);
-        loginBtn = (Button) findViewById(R.id.noteLoginUI_btn);
-        findPsd = (TextView) findViewById(R.id.noteLoginUI_findPsd);
-
-        backImg.setOnClickListener(this);
-        codeBtn.setOnClickListener(this);
-        loginBtn.setOnClickListener(this);
-        findPsd.setOnClickListener(this);
-
+        tv_telphone.setText(telphone);
 
 
         content = (LinearLayout) findViewById(R.id.note_content);
         icv = (VerificationCodeView) findViewById(R.id.icv);
 
-//        final VerificationCodeView codeView = new VerificationCodeView(this);
-//
-//        content.addView(codeView);
+
+        backImg.setOnClickListener(this);
+        time.setOnClickListener(this);
+        no_note.setOnClickListener(this);
+
+
+
 
         icv.setInputCompleteListener(new VerificationCodeView.InputCompleteListener() {
             @Override
             public void inputComplete() {
-                Log.e("icv_input", icv.getInputContent());
+                Log.e("icv_input", icv.getInputContent()+"===");
+
+                if(icv.getInputContent().length()==6){
+                    loginHttp(icv.getInputContent());
+                }
+
             }
 
             @Override
@@ -149,63 +149,42 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
             }
         });
 
-//        codeView.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                codeView.setEtNumber(5);
-//            }
-//        }, 5000);
-//
-//        codeView.setInputCompleteListener(new VerificationCodeView.InputCompleteListener() {
-//            @Override
-//            public void inputComplete() {
-//                Log.e("codeView_input", codeView.getInputContent());
-//            }
-//
-//            @Override
-//            public void deleteContent() {
-//                Log.e("codeView_delete", codeView.getInputContent());
-//            }
-//        });
+
+        sendCode();
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onClick(View v) {
-        String telphone = userNameEdit.getText().toString();
+//        String telphone = userNameEdit.getText().toString();
         switch (v.getId()) {
             case R.id.mainUI_title_backBtn:
                 scrollToFinishActivity();
                 break;
-            case R.id.noteLoginUI_noteCode:
-                if (telphone == null || "".equals(telphone)) {
-                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (!StringUtil.isPhoner(telphone)) {
-                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                sendCode(telphone);
+            case R.id.noteLoginUI_time:
+//                if (telphone == null || "".equals(telphone)) {
+//                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                if (!StringUtil.isPhoner(telphone)) {
+//                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+                sendCode();
+
                 break;
-            case R.id.noteLoginUI_btn:
-                String code = codeEdit.getText().toString();
-                if (telphone == null || "".equals(telphone)) {
-                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (!StringUtil.isPhoner(telphone)) {
-                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (code == null || "".equals(code)) {
-                    Toast.makeText(context, "请输入您的验证码", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                loginHttp(telphone, code);
-                break;
-            case R.id.noteLoginUI_findPsd:
-                UIHelper.goToAct(context, FindPsdActivity.class);
+            case R.id.noteLoginUI_no_note:
+//                if (telphone == null || "".equals(telphone)) {
+//                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                if (!StringUtil.isPhoner(telphone)) {
+//                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                sendCode(telphone);
+
                 break;
         }
     }
@@ -235,7 +214,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
 
     }
 
-    private void sendCode(String telphone) {
+    private void sendCode() {
 
 //        "Accept": "application/vnd.ws.v1+json",
 //        "Phone_Brand": "IPHONE",
@@ -250,11 +229,9 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         try{
             RequestParams params = new RequestParams();
             params.add("phone", telphone);
-//            params.add("phone", "18151207269");
             params.add("scene", "1");
 
             HttpHelper.post(context, Urls.verificationcode, params, new TextHttpResponseHandler() {
-//            HttpHelper.post(context, Urls.verificationcode, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
                     if (loadingDialog != null && !loadingDialog.isShowing()) {
@@ -272,15 +249,18 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
 
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                        if (result.getFlag().equals("Success")) {
 
-                            handler.sendEmptyMessage(2);
+                        handler.sendEmptyMessage(2);
 
-                            // 开始60秒倒计时
-                            handler.sendEmptyMessageDelayed(1, 1000);
-                        } else {
-                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-                        }
+                        // 开始60秒倒计时
+                        handler.sendEmptyMessageDelayed(1, 1000);
+
+//                        if (result.getFlag().equals("Success")) {
+//
+//
+//                        } else {
+//                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+//                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
@@ -294,6 +274,8 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
 
+                    Log.e("verificationcode===fail", throwable.toString()+"==="+responseString);
+
                     if (loadingDialog != null && loadingDialog.isShowing()){
                         loadingDialog.dismiss();
                     }
@@ -306,12 +288,11 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
 
     }
 
-    private void loginHttp(String telphone, String telcode) {
+    private void loginHttp(String telcode) {
 
         RequestParams params = new RequestParams();
         params.put("phone", telphone);
         params.put("verification_code", telcode);
-//        params.put("verification_code", "a");
 
         HttpHelper.post(context, Urls.authorizations, params, new TextHttpResponseHandler() {
             @Override
@@ -359,6 +340,8 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
 
                         SharedPreferencesUrls.getInstance().putString("access_token", "Bearer "+bean.getToken());
                         Toast.makeText(context,"恭喜您,登录成功",Toast.LENGTH_SHORT).show();
+
+                        UIHelper.goToAct(context, MainActivity.class);
                         scrollToFinishActivity();
 
                     }else{
@@ -710,10 +693,10 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         public void handleMessage(android.os.Message msg) {
             if (msg.what == 1) {
                 if (num != 1) {
-                    codeBtn.setText((--num) + "秒");
+                    time.setText((--num) + "s 后点击重新获取");
                 } else {
-                    codeBtn.setText("重新获取");
-                    codeBtn.setEnabled(true);
+                    time.setText("重新获取");
+                    time.setEnabled(true);
                     isCode = false;
                 }
                 if (isCode) {
@@ -722,8 +705,8 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
             }else{
                 num = 60;
                 isCode = true;
-                codeBtn.setText(num + "秒");
-                codeBtn.setEnabled(false);
+                time.setText(num + "s 后点击重新获取");
+                time.setEnabled(false);
             }
         };
     };

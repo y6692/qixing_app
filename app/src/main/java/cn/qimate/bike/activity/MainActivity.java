@@ -129,6 +129,7 @@ import cn.qimate.bike.fragment.EbikeFragment;
 import cn.qimate.bike.fragment.MainFragment;
 import cn.qimate.bike.fragment.MineFragment;
 import cn.qimate.bike.fragment.PurseFragment;
+import cn.qimate.bike.model.BannerBean;
 import cn.qimate.bike.model.CarBean;
 import cn.qimate.bike.model.KeyBean;
 import cn.qimate.bike.model.OrderBean;
@@ -144,6 +145,7 @@ import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
+import cn.qimate.bike.view.RoundImageView;
 import okhttp3.Request;
 import permissions.dispatcher.NeedsPermission;
 
@@ -151,7 +153,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.sofi.blelocker.library.Constants.STATUS_CONNECTED;
 
 @SuppressLint("NewApi")
-public class MainActivity extends BaseFragmentActivity implements View.OnClickListener {
+public class MainActivity extends BaseFragmentActivity implements View.OnClickListener, OnBannerListener {
 
     private Activity mActivity = this;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -191,11 +193,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     public static final String KEY_EXTRAS = "extras";
 
 
-
-    //    @BindView(R.id.fl_change) FrameLayout flChange;
-//    @BindView(R.id.tab)
     CommonTabLayout tab;
-//    @BindView(R.id.ll_tab) LinearLayout llTab;
 
     private Context mContext;
 
@@ -203,18 +201,14 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     private ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
     private String[] mTitles = { "首页", "钱包", "会员中心" };
     private int[] mIconUnselectIds = {
-            R.drawable.bike, R.drawable.purse, R.drawable.mine
+            R.mipmap.bike, R.mipmap.purse, R.mipmap.mine
     };
     private int[] mIconSelectIds = {
-            R.drawable.bike2, R.drawable.purse2, R.drawable.mine2
+            R.mipmap.bike2, R.mipmap.purse2, R.mipmap.mine2
     };
     private MainFragment mainFragment;
     private PurseFragment purseFragment;
     private MineFragment mineFragment;
-
-//    public AMap aMap;
-//    public BitmapDescriptor successDescripter;
-//    public MapView mapView;
 
 
     private Dialog dialog;
@@ -230,14 +224,17 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     private String app_type;
     private String app_id;
 
-
     private ImageView closeBtn;
     private Dialog advDialog;
     private ImageView advImageView;
     private ImageView advCloseBtn;
 
+    private LinearLayout rl_ad;
 
-
+    private Banner mBanner;
+    private MyImageLoader mMyImageLoader;
+    private ArrayList<String> imagePath;
+    private ArrayList<String> imageTitle;
 
 
     @Override
@@ -249,11 +246,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         CrashHandler.getInstance().setmContext(this);
 
         type = SharedPreferencesUrls.getInstance().getString("type", "");
-
-
-
-//        IntentFilter filter = new IntentFilter("data.broadcast.action");
-//        registerReceiver(mReceiver, filter);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_ON);
@@ -267,10 +259,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         initData();
         initView();
-//        initListener();
-//        initLocation();
-//        AppApplication.getApp().scan();
-
     }
 
     private void initData() {
@@ -287,7 +275,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         Log.e("main===initData", "===");
 
         for (int i = 0; i < mTitles.length; i++) {
-//            mTabEntities.add(new TabTopEntity(mTitles[i]));
             mTabEntities.add(new TabEntity(mTitles[i], mIconSelectIds[i], mIconUnselectIds[i]));
         }
     }
@@ -324,14 +311,28 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
 
 
-
-//        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
-//        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
-//        advImageView.setLayoutParams(params4);
-
-//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
-//        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
-//        titleImage.setLayoutParams(params);
+//        imagePath = new ArrayList<>();
+//        imageTitle = new ArrayList<>();
+//
+//        mMyImageLoader = new MyImageLoader();
+//        mBanner = findViewById(R.id.purse_banner);
+//        //设置样式，里面有很多种样式可以自己都看看效果
+//        mBanner.setBannerStyle(0);
+//        //设置图片加载器
+//        mBanner.setImageLoader(mMyImageLoader);
+//        //设置轮播的动画效果,里面有很多种特效,可以都看看效果。
+//        mBanner.setBannerAnimation(Transformer.ZoomOutSlide);
+//        //轮播图片的文字
+////      mBanner.setBannerTitles(imageTitle);
+//        //设置轮播间隔时间
+//        mBanner.setDelayTime(3000);
+//        //设置是否为自动轮播，默认是true
+//        mBanner.isAutoPlay(true);
+//        //设置指示器的位置，小点点，居中显示
+//        mBanner.setIndicatorGravity(BannerConfig.CENTER);
+//
+//        rl_ad = findViewById(R.id.rl_purse_ad);
+//        rl_ad.setOnClickListener(this);
 
         if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
             SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
@@ -343,8 +344,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
             dialog.getWindow().setAttributes(lp);
             dialog.show();
-        }
-        else {
+        } else {
 //            initHttp();
 
             new Thread(new Runnable() {
@@ -357,12 +357,30 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //        exImage_1.setOnClickListener(myOnClickLister);
 //        exImage_2.setOnClickListener(myOnClickLister);
 
-
-
         advImageView.setOnClickListener(this);
         advCloseBtn.setOnClickListener(this);
         closeBtn.setOnClickListener(myOnClickLister);
 
+    }
+
+    @Override
+    public void OnBannerClick(int position) {
+        Toast.makeText(context, "你点了第" + (position + 1) + "张轮播图", Toast.LENGTH_SHORT).show();
+
+//        initmPopupWindowView();
+    }
+
+    private class MyImageLoader extends ImageLoader {
+        @Override
+        public void displayImage(Context context, Object path, ImageView imageView) {
+            Glide.with(context.getApplicationContext()).load(path).into(imageView);
+        }
+
+        @Override
+        public ImageView createImageView(Context context) {
+            RoundImageView img = new RoundImageView(context);
+            return img;
+        }
     }
 
     BroadcastReceiver mScreenReceiver = new BroadcastReceiver() {
@@ -454,12 +472,85 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     };
 
 
+    private void initHttp() {
+        Log.e("ma===banner", "===");
 
+        HttpHelper.get(context, Urls.banner + 2, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e("ma===banner=fail", "===" + throwable.toString());
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Log.e("ma===banner0", responseString + "===");
+
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            JSONArray ja_banners = new JSONArray(new JSONObject(result.getData()).getString("banners"));
+
+                            Log.e("ma===banner1", ja_banners.length() + "===" + result.data);
+
+                            for (int i = 0; i < 1; i++) {
+                                BannerBean bean = JSON.parseObject(ja_banners.get(i).toString(), BannerBean.class);
+
+                                Log.e("ma===banner2", bean.getImage_url()+"===");
+
+                                imageUrl = bean.getImage_url();
+
+//                                imagePath.add(imageUrl);
+
+                                if (imageUrl != null && !"".equals(imageUrl)){
+                                    WindowManager windowManager = getWindowManager();
+                                    Display display = windowManager.getDefaultDisplay();
+
+                                    Log.e("display===", "==="+display.getWidth());
+
+                                    WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
+                                    lp.width = (int) (display.getWidth() * 1);
+                                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                                    advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+                                    advDialog.getWindow().setAttributes(lp);
+                                    advDialog.show();
+                                    // 加载图片
+                                    if(imageUrl.endsWith(".gif")){
+                                        Glide.with(context).load(imageUrl).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(advImageView);
+                                    }else{
+                                        Glide.with(context).load(imageUrl).into(advImageView);
+                                    }
+                                }
+                            }
+
+//                            mBanner.setBannerTitles(imageTitle);
+//                            mBanner.setImages(imagePath).setOnBannerListener(MainActivity.this).start();
+
+                        } catch (Exception e) {
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+                        }
+
+                    }
+                });
+            }
+        });
+    }
 
     /**
      * 获取广告
      * */
-    private void initHttp(){
+    private void initHttp2(){
         RequestParams params = new RequestParams();
         params.put("adsid","11");
 

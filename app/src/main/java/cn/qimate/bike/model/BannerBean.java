@@ -1,42 +1,45 @@
 package cn.qimate.bike.model;
 
+/**
+ * Created by LDY on 2017/2/10.
+ */
+
 public class BannerBean {
 
-	private String ad_link;
-	private String ad_file;
-	private String app_type;
-	private String app_id;
+    private String image_url;  //图片url
+    private String h5_title;  //h5标题（针对跳转类型为h5）
+    private String action_type;  //跳转类型 h5、app等
+    private String action_content;  //跳转内容
 
-	public String getAd_link() {
-		return ad_link;
-	}
+    public String getImage_url() {
+        return image_url;
+    }
 
-	public void setAd_link(String ad_link) {
-		this.ad_link = ad_link;
-	}
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
 
-	public String getAd_file() {
-		return ad_file;
-	}
+    public String getH5_title() {
+        return h5_title;
+    }
 
-	public void setAd_file(String ad_file) {
-		this.ad_file = ad_file;
-	}
+    public void setH5_title(String h5_title) {
+        this.h5_title = h5_title;
+    }
 
-	public String getApp_type() {
-		return app_type;
-	}
+    public String getAction_type() {
+        return action_type;
+    }
 
-	public void setApp_type(String app_type) {
-		this.app_type = app_type;
-	}
+    public void setAction_type(String action_type) {
+        this.action_type = action_type;
+    }
 
-	public String getApp_id() {
-		return app_id;
-	}
+    public String getAction_content() {
+        return action_content;
+    }
 
-	public void setApp_id(String app_id) {
-		this.app_id = app_id;
-	}
-
+    public void setAction_content(String action_content) {
+        this.action_content = action_content;
+    }
 }

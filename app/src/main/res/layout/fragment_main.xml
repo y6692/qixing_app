@@ -859,13 +859,13 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="@dimen/dp30"
-            android:layout_marginBottom="96dp"
+            android:layout_marginBottom="91dp"
             android:gravity="center"
             >
 
             <ImageView
-                android:layout_width="@dimen/dp40"
-                android:layout_height="@dimen/dp40"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:src="@drawable/refresh_icon"
                 android:scaleType="centerInside"/>
 
@@ -876,7 +876,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="25dp"
             android:layout_marginLeft="@dimen/dp30"
             android:orientation="vertical"
             android:gravity="center">
@@ -886,8 +886,8 @@
 
             <ImageView
                 android:id="@+id/mainUI_myLocation7"
-                android:layout_width="@dimen/dp40"
-                android:layout_height="@dimen/dp40"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:background="@null"
                 android:src="@drawable/btn_location"
                 android:layout_alignParentLeft="true"/>
@@ -898,7 +898,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="30dp"
+            android:paddingBottom="25dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="@dimen/dp30"
@@ -909,10 +909,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:layout_marginBottom="26dp">
+                android:layout_marginBottom="16dp">
                 <ImageView
-                    android:layout_width="@dimen/dp40"
-                    android:layout_height="@dimen/dp40"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:background="@null"
                     android:src="@drawable/slide_icon"
                     android:layout_alignParentRight="true"
@@ -926,8 +926,8 @@
                 android:orientation="vertical">
                 <ImageView
                     android:id="@+id/mainUI_linkService_btn"
-                    android:layout_width="@dimen/dp40"
-                    android:layout_height="@dimen/dp40"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:background="@null"
                     android:src="@drawable/link_service_icon"
                     android:layout_alignParentRight="true"

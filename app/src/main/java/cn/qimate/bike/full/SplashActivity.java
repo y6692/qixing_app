@@ -20,9 +20,11 @@ import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -37,6 +39,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.utils.GlobalParameterUtils;
@@ -71,6 +74,7 @@ import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
+import cn.qimate.bike.model.BannerBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.util.ToastUtil;
 import okhttp3.Response;
@@ -138,33 +142,6 @@ public class SplashActivity extends BaseActivity {
 
 		init();
 
-
-//		Log.e("tz===000", "===");
-//
-//		RequestParams params = new RequestParams();
-//		params.put("id", "1");
-//		HttpHelper.post(context, "http://192.168.1.108/web2/test.php?g=App", params, new TextHttpResponseHandler() {
-//			@Override
-//			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//				Log.e("tz===Fail", "==="+responseString);
-//			}
-//
-//
-//			@Override
-//			public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//				try {
-//
-//
-//					ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-//
-//					JSONObject jsonObject = new JSONObject(result.getData());
-//
-//					Log.e("tz===Succ", responseString+"==="+jsonObject.getString("name"));
-//				} catch (Exception e) {
-//
-//				}
-//			}
-//		});
 	}
 
 	@Override
@@ -271,9 +248,8 @@ public class SplashActivity extends BaseActivity {
 		loadingImage.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String uid = SharedPreferencesUrls.getInstance().getString("uid","");
 				String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-				if (uid != null && !"".equals(uid) && access_token != null && !"".equals(access_token)){
+				if (access_token != null && !"".equals(access_token)){
 
 //					ad_link = "http://www.7mate.cn/App/Helper/event.html";
 //					app_type = "4";
@@ -534,11 +510,72 @@ public class SplashActivity extends BaseActivity {
 		return super.onKeyDown(keyCode, event);
 	}
 
+	private void initHttp() {
+		Log.e("sa===banner", "===");
+
+		HttpHelper.get(context, Urls.banner + 1, new TextHttpResponseHandler() {
+			@Override
+			public void onStart() {
+				onStartCommon("正在加载");
+			}
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+				Log.e("sa===banner=fail", "===" + throwable.toString());
+				onFailureCommon(throwable.toString());
+			}
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+				m_myHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							Log.e("sa===banner0", responseString + "===");
+
+							ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+							JSONArray ja_banners = new JSONArray(new JSONObject(result.getData()).getString("banners"));
+
+							Log.e("sa===banner1", ja_banners.length() + "===" + result.data);
+
+							for (int i = 0; i < 1; i++) {
+								BannerBean bean = JSON.parseObject(ja_banners.get(i).toString(), BannerBean.class);
+
+								Log.e("sa===banner2", bean.getImage_url()+"===");
+
+								imageUrl = bean.getImage_url();
+
+//                                imagePath.add(imageUrl);
+
+								if (imageUrl == null || "".equals(imageUrl)) {
+//								loadingImage.setBackgroundResource(R.drawable.enter_bg);
+								} else {
+									// 加载图片
+									Glide.with(context).load(imageUrl).into(loadingImage);
+								}
+							}
+
+//                            mBanner.setBannerTitles(imageTitle);
+//                            mBanner.setImages(imagePath).setOnBannerListener(MainActivity.this).start();
+
+						} catch (Exception e) {
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+
+							if (loadingDialog != null && loadingDialog.isShowing()) {
+								loadingDialog.dismiss();
+							}
+						}
+
+					}
+				});
+			}
+		});
+	}
 
 	/**
 	 * 获取启动页图广告
 	 * */
-	private void initHttp() {
+	private void initHttp2() {
 
 		if (NetworkUtils.getNetWorkType(context) == NetworkUtils.NONETWORK) {
 //			loadingImage.setBackgroundResource(R.drawable.enter_bg);
