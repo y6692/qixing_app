@@ -276,7 +276,11 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
                             try {
                                 Log.e("pay===2", jsonObject.getString("payinfo")+"===");
 
-                                result = alipay.pay(jsonObject.getString("payinfo"), true);
+                                String payinfo = jsonObject.getString("payinfo");
+
+//                                payinfo = "partner=\\"2088621211667181\\"&seller_id=\\"publicbicycles@163.com\\"&out_trade_no=\\"M201912111949196915\\"&subject=\\"\\u652f\\u4ed8M201912111949196915\\"&body=\\"\u652f\u4ed8\u67d2\u739b\u6708\u5361\u8ba2\u5355\"&total_fee=\"45.90\"&notify_url=\"http:\/\/app.7mate.cn\/App\/AlipayMonth\/callback.html\"&service=\"mobile.securitypay.pay\"&payment_type=\"1\"&_input_charset=\"utf-8\"&it_b_pay=\"30m\"&return_url=\"m.alipay.com\"&sign=\"dbnW7cObywGWjTz09urH8TEHedJ73vNCnDinmnV24lSap302ePopAD3DG28LZMCSwjjRJq5ANTfsE8CwbLmsFcYQoj9MXFjLL3buM16eppmCQr1SP3xEY9r2eLbTnN%2FQypapYP890qW9l3weqoaJWyaVbI%2BvEJSvvbjyJt8ZLsI%3D\"&sign_type=\"RSA\"";
+
+                                result = alipay.pay(payinfo, true);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

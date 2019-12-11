@@ -388,6 +388,8 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                     @Override
                     public void run() {
                         try {
+                            Log.e("monthAlipay===", "==="+responseString);
+
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                             if (result.getFlag().equals("Success")) {
                                 final String payInfo = result.getData();
