@@ -488,11 +488,15 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                     @Override
                     public void run() {
                         try {
+                            Log.e("wxpay===", "==="+responseString);
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                             if (result.getFlag().equals("Success")) {
                                 api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
                                 api.registerApp("wx86d98ec252f67d07");
                                 JSONObject jsonObject = new JSONObject(result.getData());
+
+                                Log.e("wxpay===1", "==="+jsonObject);
+
                                 PayReq req = new PayReq();
                                 req.appId = jsonObject.getString("appid");// wpay.getAppid();//
                                 // 微信appId
