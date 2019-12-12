@@ -133,6 +133,14 @@
         </activity>
 
         <activity
+            android:name=".activity.LoginActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
+
+        <activity
             android:name=".activity.PayDemoActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
@@ -153,13 +161,7 @@
 
         </activity>
 
-        <activity
-            android:name=".activity.LoginActivity"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
-
-        </activity>
 
         <activity
             android:name=".activity.ChangePhoneActivity"

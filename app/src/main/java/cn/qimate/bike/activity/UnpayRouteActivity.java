@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.alipay.sdk.app.PayTask;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.utils.GlobalParameterUtils;
@@ -274,9 +273,11 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
                     api.registerApp("wx86d98ec252f67d07");
                     JSONObject jsonObject2 = new JSONObject(result.getData());
 
-//                    String payinfo = jsonObject2.getString("payinfo");
+                    String payinfo = jsonObject2.getString("payinfo");
 
-                    String payinfo = "{\"appid\":\"wx86d98ec252f67d07\",\"noncestr\":\"p8tSBfNaKTrDxuA37JKUBpDm1qe4maqb\",\"package\":\"Sign=WXPay\",\"partnerid\":\"1489420872\",\"prepayid\":\"wx11200539512208dad2422cb81357385600\",\"sign\":\"7D866235FE557709FC14D3FE60543257\",\"timestamp\":1576065939}";
+                    Log.e("pay===2", payinfo +"===");
+
+//                    String payinfo = "{\"appid\":\"wx86d98ec252f67d07\",\"noncestr\":\"p8tSBfNaKTrDxuA37JKUBpDm1qe4maqb\",\"package\":\"Sign=WXPay\",\"partnerid\":\"1489420872\",\"prepayid\":\"wx11200539512208dad2422cb81357385600\",\"sign\":\"7D866235FE557709FC14D3FE60543257\",\"timestamp\":1576065939}";
 
                     JSONObject jsonObject = new JSONObject(payinfo);
 
@@ -304,7 +305,6 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
                         Toast.makeText(context, "请下载最新版微信App", Toast.LENGTH_LONG).show();
                     }
 
-                    Log.e("pay===2", req.appId +"===" +req.sign+"===" +req.timeStamp);
 
 //                    Runnable payRunnable = new Runnable() {
 //                        @Override
