@@ -133,8 +133,16 @@
         </activity>
 
         <activity
+            android:name=".activity.PayDemoActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
+
+        <activity
             android:name=".activity.UnpayOtherActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
 
         </activity>
 

@@ -30,6 +30,8 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
@@ -89,8 +91,8 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
         backImg.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
-//        cycling();
-        pay();
+        cycling();
+//        pay();
     }
 
     private void cycling() {
@@ -184,6 +186,41 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
 
                 pay();
 
+//                Runnable payRunnable = new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        // 构造PayTask 对象
+//                        PayTask alipay = new PayTask(UnpayRouteActivity.this);
+//                        // 调用支付接口，获取支付结果
+////                        String result = null;
+//                        Map<String, String> result
+//
+//                        try {
+////                            Log.e("pay===2", jsonObject.getString("payinfo")+"===");
+////
+//                            String payinfo = jsonObject.getString("payinfo");
+//
+////                            String payinfo = "partner=\"2088621211667181\"&seller_id=\"publicbicycles@163.com\"&out_trade_no=\"M201912111949196915\"&subject=\"支付M201912111949196915\"&body=\"支付柒玛月卡订单\"&total_fee=\"45.90\"&notify_url=\"http://app.7mate.cn/App/AlipayMonth/callback.html\"&service=\"mobile.securitypay.pay\"&payment_type=\"1\"&_input_charset=\"utf-8\"&it_b_pay=\"30m\"&return_url=\"m.alipay.com\"&sign=\"dbnW7cObywGWjTz09urH8TEHedJ73vNCnDinmnV24lSap302ePopAD3DG28LZMCSwjjRJq5ANTfsE8CwbLmsFcYQoj9MXFjLL3buM16eppmCQr1SP3xEY9r2eLbTnN%2FQypapYP890qW9l3weqoaJWyaVbI%2BvEJSvvbjyJt8ZLsI%3D\"&sign_type=\"RSA\"";
+//
+//                            Log.e("pay===#", payinfo+"===");
+//
+//                            result = alipay.payV2(payinfo, true);
+//                            Log.i("msp", result.toString());
+//
+//
+////                            result = alipay.pay(payinfo, true);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                        Message msg = new Message();
+//                        msg.what = SDK_PAY_FLAG;
+//                        msg.obj = result;
+//                        mHandler.sendMessage(msg);
+//                    }
+//                };
+//                Thread payThread = new Thread(payRunnable);
+//                payThread.start();
+
                 break;
         }
     }
@@ -192,7 +229,7 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
 
     private void pay(){
         RequestParams params = new RequestParams();
-        params.put("payment_id",3);
+        params.put("payment_id",2);
         params.put("order_id", 3);
         params.put("order_type",1);
 
@@ -230,69 +267,80 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
 
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                    OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
-                    final  JSONObject jsonObject = new JSONObject(result.getData());
+//                    OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
+//                    final  JSONObject jsonObject = new JSONObject(result.getData());
 
-//                    api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
-//                    api.registerApp("wx86d98ec252f67d07");
-//                    JSONObject jsonObject2 = new JSONObject(result.getData());
+                    api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
+                    api.registerApp("wx86d98ec252f67d07");
+                    JSONObject jsonObject2 = new JSONObject(result.getData());
+
+//                    String payinfo = jsonObject2.getString("payinfo");
+
+                    String payinfo = "{\"appid\":\"wx86d98ec252f67d07\",\"noncestr\":\"p8tSBfNaKTrDxuA37JKUBpDm1qe4maqb\",\"package\":\"Sign=WXPay\",\"partnerid\":\"1489420872\",\"prepayid\":\"wx11200539512208dad2422cb81357385600\",\"sign\":\"7D866235FE557709FC14D3FE60543257\",\"timestamp\":1576065939}";
+
+                    JSONObject jsonObject = new JSONObject(payinfo);
+
+
+                    PayReq req = new PayReq();
+                    req.appId = jsonObject.getString("appid");// wpay.getAppid();//
+                    // 微信appId
+                    req.packageValue = jsonObject.getString("package");// wpay.getPackageValue();//
+                    // 包
+                    req.extData = "app data"; // optional
+                    req.timeStamp = jsonObject.getString("timestamp");// wpay.getTimeStamp();//
+                    // 时间戳
+                    req.partnerId = jsonObject.getString("partnerid");// wpay.getPartnerId();//
+                    // 商户号"
+                    req.prepayId = jsonObject.getString("prepayid");// wpay.getPrepayId();//
+                    // 预支付订单号
+                    req.nonceStr = jsonObject.getString("noncestr");// wpay.getNonceStr();//
+                    // 随机字符串
+                    req.sign = jsonObject.getString("sign");// wpay.getSign();//
+                    // 后台返回的签名
+                    // 调微信支付
+                    if (api.isWXAppInstalled() && api.isWXAppSupportAPI()) {
+                        api.sendReq(req);
+                    } else {
+                        Toast.makeText(context, "请下载最新版微信App", Toast.LENGTH_LONG).show();
+                    }
+
+                    Log.e("pay===2", req.appId +"===" +req.sign+"===" +req.timeStamp);
+
+//                    Runnable payRunnable = new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            // 构造PayTask 对象
+//                            PayTask alipay = new PayTask(UnpayRouteActivity.this);
+//                            // 调用支付接口，获取支付结果
+////                            String result = null;
+//                            Map<String, String> result = null;
 //
-//                    JSONObject jsonObject = new JSONObject(jsonObject2.getString("payinfo"));
+//                            try {
+//                                Log.e("pay===2", jsonObject.getString("payinfo")+"===");
 //
+//                                String payinfo = jsonObject.getString("payinfo");
 //
-//                    PayReq req = new PayReq();
-//                    req.appId = jsonObject.getString("appid");// wpay.getAppid();//
-//                    // 微信appId
-//                    req.packageValue = jsonObject.getString("package");// wpay.getPackageValue();//
-//                    // 包
-//                    req.extData = "app data"; // optional
-//                    req.timeStamp = jsonObject.getString("timestamp");// wpay.getTimeStamp();//
-//                    // 时间戳
-//                    req.partnerId = jsonObject.getString("partnerid");// wpay.getPartnerId();//
-//                    // 商户号"
-//                    req.prepayId = jsonObject.getString("prepayid");// wpay.getPrepayId();//
-//                    // 预支付订单号
-//                    req.nonceStr = jsonObject.getString("noncestr");// wpay.getNonceStr();//
-//                    // 随机字符串
-//                    req.sign = jsonObject.getString("sign");// wpay.getSign();//
-//                    // 后台返回的签名
-//                    // 调微信支付
-//                    if (api.isWXAppInstalled() && api.isWXAppSupportAPI()) {
-//                        api.sendReq(req);
-//                    } else {
-//                        Toast.makeText(context, "请下载最新版微信App", Toast.LENGTH_LONG).show();
-//                    }
+////                                payinfo = "partner=\"2088621211667181\"&seller_id=\"publicbicycles@163.com\"&out_trade_no=\"M201912111949196915\"&subject=\"\u652f\u4ed8M201912111949196915\"&body=\"\u652f\u4ed8\u67d2\u739b\u6708\u5361\u8ba2\u5355\"&total_fee=\"45.90\"&notify_url=\"http://app.7mate.cn/App/AlipayMonth/callback.html\"&service=\"mobile.securitypay.pay\"&payment_type=\"1\"&_input_charset=\"utf-8\"&it_b_pay=\"30m\"&return_url=\"m.alipay.com\"&sign=\"dbnW7cObywGWjTz09urH8TEHedJ73vNCnDinmnV24lSap302ePopAD3DG28LZMCSwjjRJq5ANTfsE8CwbLmsFcYQoj9MXFjLL3buM16eppmCQr1SP3xEY9r2eLbTnN%2FQypapYP890qW9l3weqoaJWyaVbI%2BvEJSvvbjyJt8ZLsI%3D\"&sign_type=\"RSA\"";
 //
-//                    Log.e("pay===2", req.appId +"===" +req.sign);
-
-                    Runnable payRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            // 构造PayTask 对象
-                            PayTask alipay = new PayTask(UnpayRouteActivity.this);
-                            // 调用支付接口，获取支付结果
-                            String result = null;
-
-                            try {
-                                Log.e("pay===2", jsonObject.getString("payinfo")+"===");
-
-                                String payinfo = jsonObject.getString("payinfo");
-
-//                                payinfo = "partner=\\"2088621211667181\\"&seller_id=\\"publicbicycles@163.com\\"&out_trade_no=\\"M201912111949196915\\"&subject=\\"\\u652f\\u4ed8M201912111949196915\\"&body=\\"\u652f\u4ed8\u67d2\u739b\u6708\u5361\u8ba2\u5355\"&total_fee=\"45.90\"&notify_url=\"http:\/\/app.7mate.cn\/App\/AlipayMonth\/callback.html\"&service=\"mobile.securitypay.pay\"&payment_type=\"1\"&_input_charset=\"utf-8\"&it_b_pay=\"30m\"&return_url=\"m.alipay.com\"&sign=\"dbnW7cObywGWjTz09urH8TEHedJ73vNCnDinmnV24lSap302ePopAD3DG28LZMCSwjjRJq5ANTfsE8CwbLmsFcYQoj9MXFjLL3buM16eppmCQr1SP3xEY9r2eLbTnN%2FQypapYP890qW9l3weqoaJWyaVbI%2BvEJSvvbjyJt8ZLsI%3D\"&sign_type=\"RSA\"";
-
-                                result = alipay.pay(payinfo, true);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            Message msg = new Message();
-                            msg.what = SDK_PAY_FLAG;
-                            msg.obj = result;
-                            mHandler.sendMessage(msg);
-                        }
-                    };
-                    // 必须异步调用
-                    Thread payThread = new Thread(payRunnable);
-                    payThread.start();
+////                                payinfo = "app_id=\"2016082000295641\"&format=\"JSON\"&charset=\"utf-8\"&sign_type=\"RSA2\"&version=\"1.0\"&notify_url=\"http%3A%2F%2Fwww.7mate.cn%2Fapi%2Fpayment%2Fali_notify\"&timestamp=\"2019-12-11+19%3A25%3A57\"&biz_content=\"%7B%22out_trade_no%22%3A%2220191211192557735862468%22%2C%22\n" +
+////                                        "total_fee%22%3A100%2C%22body%22%3A%227MA%5Cu51fa%5Cu884c%5Cu9a91%5Cu884c%5Cu8ba2%5Cu535519121118210723625416%22%2C%22product_code%22%3A%22QUICK_MSECURITY_PAY%22%7D\"&method=\"alipay.trade.app.pay\"&sign=\"YG9K2BgCwBEK%2BoJ549B4AQLp%2FQa4BsbUWjBcKm7fY16%2FpLv1h1Kq1s%2B1dhBJwh%2B2ZRRYNYjkDWEeUGkkJ7U%2F%2By06e674lM8wzQPeCOBWH%2BjygJ2UJd9U2e%2FdSbQrwlIFBCmtJlagD5%2FIcgczWbYjGVRiT8ZxZpgx7OcsbIBh9UlQNzh6KKd9w0fXbkDKf5BfmAjZwT6ENaJ5Ir%2FBiC%2FAw%2Fxb%2Fe4nNITti5TqncrF8uN2FUzNbdPYuYkoFPiSUWtxZHgvyK6y83Mo%2Bo76gNTRmGAhOuvWckLF%2B2senT9Q7YTka2MNxMeBZqqRFlL8qK42%2FQ307s7UCrd0OSuJAXYv8w%3D%3D\"";
+//
+////                                result = alipay.pay(payinfo, true);
+//                                result = alipay.payV2(payinfo, true);
+//                                Log.e("msp", result.toString());
+//
+////
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                            Message msg = new Message();
+//                            msg.what = SDK_PAY_FLAG;
+//                            msg.obj = result;
+//                            mHandler.sendMessage(msg);
+//                        }
+//                    };
+//                    Thread payThread = new Thread(payRunnable);
+//                    payThread.start();
 
 //                    if (result.getFlag().equals("Success")) {
 //                        osn = result.getData();
@@ -320,31 +368,46 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SDK_PAY_FLAG: {
-                    PayResult payResult = new PayResult((String) msg.obj);
+//                    PayResult payResult = new PayResult((String) msg.obj);
+
+                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+
                     String resultInfo = payResult.getResult();// 同步返回需要验证的信息
                     String resultStatus = payResult.getResultStatus();
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
-                    if (TextUtils.equals(resultStatus, "9000")) {
-                        Toast.makeText(context, "恭喜您,支付成功", Toast.LENGTH_SHORT).show();
 
-//                        if("1".equals(gamestatus)){
-//                            UIHelper.goToAct(context,MainActivity.class);
-//                        }else{
-//                            Intent intent = new Intent(context, WebviewActivity.class);
-//                            intent.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
-//                            intent.putExtra("title", "活动详情");
-//                            startActivity(intent);
-//                        }
-//
-//                        scrollToFinishActivity();
+
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+//                        showAlert(PayDemoActivity.this, "pay_success" + payResult);
+                        Toast.makeText(context, "pay_success" + payResult, Toast.LENGTH_SHORT).show();
                     } else {
-                        if (TextUtils.equals(resultStatus, "8000")) {
-                            Toast.makeText(context, "支付结果确认中", Toast.LENGTH_SHORT).show();
-                        } else {
-                            // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
-                            Toast.makeText(context, "支付失败", Toast.LENGTH_SHORT).show();
-                        }
+                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+//                        showAlert(PayDemoActivity.this, "pay_failed" + payResult);
+                        Toast.makeText(context, "pay_failed" + payResult, Toast.LENGTH_SHORT).show();
                     }
+
+//                    if (TextUtils.equals(resultStatus, "9000")) {
+//                        Toast.makeText(context, "恭喜您,支付成功", Toast.LENGTH_SHORT).show();
+//
+////                        if("1".equals(gamestatus)){
+////                            UIHelper.goToAct(context,MainActivity.class);
+////                        }else{
+////                            Intent intent = new Intent(context, WebviewActivity.class);
+////                            intent.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
+////                            intent.putExtra("title", "活动详情");
+////                            startActivity(intent);
+////                        }
+////
+////                        scrollToFinishActivity();
+//                    } else {
+//                        if (TextUtils.equals(resultStatus, "8000")) {
+//                            Toast.makeText(context, "支付结果确认中", Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
+//                            Toast.makeText(context, "支付失败", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
                     break;
                 }
                 default:
