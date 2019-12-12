@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alipay.sdk.app.PayTask;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.utils.GlobalParameterUtils;
@@ -228,8 +229,8 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
 
     private void pay(){
         RequestParams params = new RequestParams();
-        params.put("payment_id",2);
-        params.put("order_id", 3);
+        params.put("payment_id",3);
+        params.put("order_id", 1);
         params.put("order_type",1);
 
 //        payment_id	Int
@@ -267,7 +268,7 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
 //                    OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
-//                    final  JSONObject jsonObject = new JSONObject(result.getData());
+
 
                     api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
                     api.registerApp("wx86d98ec252f67d07");
@@ -305,7 +306,7 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
                         Toast.makeText(context, "请下载最新版微信App", Toast.LENGTH_LONG).show();
                     }
 
-
+//                    final  JSONObject jsonObject = new JSONObject(result.getData());
 //                    Runnable payRunnable = new Runnable() {
 //                        @Override
 //                        public void run() {
@@ -324,6 +325,9 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
 //
 ////                                payinfo = "app_id=\"2016082000295641\"&format=\"JSON\"&charset=\"utf-8\"&sign_type=\"RSA2\"&version=\"1.0\"&notify_url=\"http%3A%2F%2Fwww.7mate.cn%2Fapi%2Fpayment%2Fali_notify\"&timestamp=\"2019-12-11+19%3A25%3A57\"&biz_content=\"%7B%22out_trade_no%22%3A%2220191211192557735862468%22%2C%22\n" +
 ////                                        "total_fee%22%3A100%2C%22body%22%3A%227MA%5Cu51fa%5Cu884c%5Cu9a91%5Cu884c%5Cu8ba2%5Cu535519121118210723625416%22%2C%22product_code%22%3A%22QUICK_MSECURITY_PAY%22%7D\"&method=\"alipay.trade.app.pay\"&sign=\"YG9K2BgCwBEK%2BoJ549B4AQLp%2FQa4BsbUWjBcKm7fY16%2FpLv1h1Kq1s%2B1dhBJwh%2B2ZRRYNYjkDWEeUGkkJ7U%2F%2By06e674lM8wzQPeCOBWH%2BjygJ2UJd9U2e%2FdSbQrwlIFBCmtJlagD5%2FIcgczWbYjGVRiT8ZxZpgx7OcsbIBh9UlQNzh6KKd9w0fXbkDKf5BfmAjZwT6ENaJ5Ir%2FBiC%2FAw%2Fxb%2Fe4nNITti5TqncrF8uN2FUzNbdPYuYkoFPiSUWtxZHgvyK6y83Mo%2Bo76gNTRmGAhOuvWckLF%2B2senT9Q7YTka2MNxMeBZqqRFlL8qK42%2FQ307s7UCrd0OSuJAXYv8w%3D%3D\"";
+//
+////                                payinfo = "partner=\"2088621211667181\"&seller_id=\"publicbicycles@163.com\"&out_trade_no=\"M201912111949196915\"&subject=\"\u652f\u4ed8M201912111949196915\"&body=\"\u652f\u4ed8\u67d2\u739b\u6708\u5361\u8ba2\u5355\"&total_fee=\"45.90\"&notify_url=\"http://app.7mate.cn/App/AlipayMonth/callback.html\"&service=\"mobile.securitypay.pay\"&payment_type=\"1\"&_input_charset=\"utf-8\"&it_b_pay=\"30m\"&return_url=\"m.alipay.com\"&sign=\"dbnW7cObywGWjTz09urH8TEHedJ73vNCnDinmnV24lSap302ePopAD3DG28LZMCSwjjRJq5ANTfsE8CwbLmsFcYQoj9MXFjLL3buM16eppmCQr1SP3xEY9r2eLbTnN%2FQypapYP890qW9l3weqoaJWyaVbI%2BvEJSvvbjyJt8ZLsI%3D\"&sign_type=\"RSA\"";
+//
 //
 ////                                result = alipay.pay(payinfo, true);
 //                                result = alipay.payV2(payinfo, true);
@@ -370,7 +374,11 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
                 case SDK_PAY_FLAG: {
 //                    PayResult payResult = new PayResult((String) msg.obj);
 
+                    Log.e("mHandler===1", msg.obj+"===");
+
                     PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+
+                    Log.e("mHandler===2", payResult+"===");
 
                     String resultInfo = payResult.getResult();// 同步返回需要验证的信息
                     String resultStatus = payResult.getResultStatus();

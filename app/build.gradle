@@ -179,9 +179,10 @@ dependencies {
     implementation files('libs/AMap3DMap_7.1.0_AMapNavi_7.1.0_20191030.jar')
     implementation 'com.qiniu:qiniu-android-sdk:7.3.3'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
-//    implementation files('libs/alipaySdk-20180601.jar')
+    //    implementation files('libs/alipaySdk-20180601.jar')
     implementation(name: 'alipaySdk-15.6.8-20191021122514', ext: 'aar')
-//    implementation(name: 'alipaySdk-15.6.8-20191021122455-noUtdid', ext: 'aar')
+//        implementation(name: 'alipaySdk-15.6.8-20191021122455-noUtdid', ext: 'aar')
+//    implementation files('libs/alipaySdk-20180601.jar')
 }
 
 afterEvaluate {
