@@ -105,6 +105,10 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
         setContentView(R.layout.activity_car_fault);
         context = this;
         init();
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
     }
 
     private void init(){
@@ -118,7 +122,7 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
         mFragments.add(bikeFaultFragment);
         mFragments.add(ebikeFaultFragment);
 
-        Log.e("main===initData", "===");
+        Log.e("cfa===initData", "===");
 
         for (int i = 0; i < mTitles.length; i++) {
             mTabEntities.add(new TabTopEntity(mTitles[i]));
@@ -147,37 +151,6 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
         }
     }
 
-    class MyPagerAdapter extends FragmentPagerAdapter {
-        private String[] titles = new String[]{"单车", "助力车"};
-        private List<Fragment> fragmentList;
-
-        public MyPagerAdapter(FragmentManager fm) {
-            super(fm);
-
-            BikeFaultFragment bikeFaultFragment = new BikeFaultFragment();
-            EbikeFaultFragment ebikeFaultFragment = new EbikeFaultFragment();
-
-            fragmentList = new ArrayList<>();
-            fragmentList.add(bikeFaultFragment);
-            fragmentList.add(ebikeFaultFragment);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragmentList.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-
-            return titles[position];
-        }
-    }
 
 
 }

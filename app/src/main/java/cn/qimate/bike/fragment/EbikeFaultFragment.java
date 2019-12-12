@@ -43,17 +43,24 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.UpCancellationSignal;
+import com.qiniu.android.storage.UpCompletionHandler;
+import com.qiniu.android.storage.UpProgressHandler;
+import com.qiniu.android.storage.UploadOptions;
 
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +75,7 @@ import cn.nostra13.universalimageloader.core.listener.ImageLoadingProgressListen
 import cn.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.base.BaseViewHolder;
@@ -75,12 +83,15 @@ import cn.qimate.bike.core.common.BitmapUtils1;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.NetworkUtils;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
+import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.core.widget.MyGridView;
 import cn.qimate.bike.img.NetUtil;
 import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.model.UpTokenBean;
+import cn.qimate.bike.util.QiNiuInitialize;
 import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
@@ -133,7 +144,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 
 
     private List<String> TagsList;
-    private List<String> imageUrlList;
+    private List<Bitmap> imageUrlList;
     final static int MAX = 4;
 
     /**
@@ -169,8 +180,11 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
     private String bikeCode = "";
     private String fid = "";
 
+    private String upToken = "";
+    private Bitmap upBitmap;
+
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_bike_fault, null);
+        v = inflater.inflate(R.layout.fragment_ebike_fault, null);
         unbinder = ButterKnife.bind(this, v);
 
         return v;
@@ -190,31 +204,31 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
         m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
 //        bikeCode = getIntent().getStringExtra("bikeCode");
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int checkPermission = activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },0);
-                } else {
-                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                    finishMine();
-                                }
-                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            EbikeFaultFragment.this.requestPermissions(
-                                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },0);
-                        }
-                    });
-                    customBuilder.create().show();
-                }
-                return;
-            }
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            int checkPermission = activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+//            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+//                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+//                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },0);
+//                } else {
+//                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+//                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
+//                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.cancel();
+//                                    finishMine();
+//                                }
+//                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.cancel();
+//                            EbikeFaultFragment.this.requestPermissions(
+//                                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },0);
+//                        }
+//                    });
+//                    customBuilder.create().show();
+//                }
+//                return;
+//            }
+//        }
         initView();
 
     }
@@ -258,59 +272,35 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
         loadingDialog.setCanceledOnTouchOutside(false);
 
         backImg = activity.findViewById(R.id.mainUI_title_backBtn);
-//        title = (TextView) findViewById(R.id.mainUI_title_titleText);
-//        title.setText("问题反馈");
 
-//        imageUri = Uri.parse("file:///sdcard/temp.jpg");
-//        iv_popup_window_back = (ImageView)findViewById(R.id.popupWindow_back);
-//        rl_popup_window = (RelativeLayout)findViewById(R.id.popupWindow);
-//
-//        takePhotoBtn = (Button)findViewById(R.id.takePhotoBtn);
-//        pickPhotoBtn = (Button)findViewById(R.id.pickPhotoBtn);
-//        cancelBtn = (Button)findViewById(R.id.cancelBtn);
-//
-//        pickPhotoBtn.setVisibility(View.GONE);
-//        takePhotoBtn.setOnClickListener(itemsOnClick);
-//        pickPhotoBtn.setOnClickListener(itemsOnClick);
-//        cancelBtn.setOnClickListener(itemsOnClick);
+        imageUri = Uri.parse("file:///sdcard/temp.jpg");
+        iv_popup_window_back = activity.findViewById(R.id.popupWindow_back2);
+        rl_popup_window = activity.findViewById(R.id.popupWindow2);
 
-        bikeCodeEdit = (EditText)activity.findViewById(R.id.bikeFaultUI_codenum);
+        takePhotoBtn = activity.findViewById(R.id.takePhotoBtn2);
+        pickPhotoBtn = activity.findViewById(R.id.pickPhotoBtn2);
+        cancelBtn = activity.findViewById(R.id.cancelBtn2);
+
+        pickPhotoBtn.setVisibility(View.GONE);
+        takePhotoBtn.setOnClickListener(itemsOnClick);
+        pickPhotoBtn.setOnClickListener(itemsOnClick);
+        cancelBtn.setOnClickListener(itemsOnClick);
+
+        bikeCodeEdit = (EditText)activity.findViewById(R.id.ebikeFaultUI_codenum);
         bikeCodeEdit.setText(bikeCode);
 
-        Tag1 = activity.findViewById(R.id.bikeFaultUI_type_Tag1);
-        Tag2 = activity.findViewById(R.id.bikeFaultUI_type_Tag2);
-        Tag3 = activity.findViewById(R.id.bikeFaultUI_type_Tag3);
-        Tag4 = activity.findViewById(R.id.bikeFaultUI_type_Tag4);
-        Tag5 = activity.findViewById(R.id.bikeFaultUI_type_Tag5);
-        Tag6 = activity.findViewById(R.id.bikeFaultUI_type_Tag6);
+        Tag1 = activity.findViewById(R.id.ebikeFaultUI_type_Tag1);
+        Tag2 = activity.findViewById(R.id.ebikeFaultUI_type_Tag2);
+        Tag3 = activity.findViewById(R.id.ebikeFaultUI_type_Tag3);
+        Tag4 = activity.findViewById(R.id.ebikeFaultUI_type_Tag4);
+        Tag5 = activity.findViewById(R.id.ebikeFaultUI_type_Tag5);
+        Tag6 = activity.findViewById(R.id.ebikeFaultUI_type_Tag6);
 
-//        ll_2 = (LinearLayout)findViewById(R.id.ll_2);
-//        ll_3 = (LinearLayout)findViewById(R.id.ll_3);
-//        ll_4 = (LinearLayout)findViewById(R.id.ll_4);
-//        ll_5 = (LinearLayout)findViewById(R.id.ll_5);
 
-//        if("4".equals(type) || "7".equals(type)){
-//            Tag1.setText("关锁失败");
-//            Tag2.setText("在还车点提示不在");
-//            Tag3.setText("电量低");
-//            ll_2.setVisibility(View.VISIBLE);
-//            ll_3.setVisibility(View.VISIBLE);
-//            ll_4.setVisibility(View.GONE);
-//            ll_5.setVisibility(View.GONE);
-//        }else{
-//            Tag1.setText("锁未弹开");
-//            Tag2.setText("单车损坏");
-//            Tag3.setText("私锁私用");
-//            ll_2.setVisibility(View.GONE);
-//            ll_3.setVisibility(View.GONE);
-//            ll_4.setVisibility(View.VISIBLE);
-//            ll_5.setVisibility(View.VISIBLE);
-//        }
-
-        restCauseEdit = activity.findViewById(R.id.bikeFaultUI_restCause);
-        addressEdit = activity.findViewById(R.id.bikeFaultUI_address);
-        photoMyGridview = activity.findViewById(R.id.bikeFaultUI_photoGridView);
-        submitBtn = activity.findViewById(R.id.bikeFaultUI_submitBtn);
+        restCauseEdit = activity.findViewById(R.id.ebikeFaultUI_restCause);
+        addressEdit = activity.findViewById(R.id.ebikeFaultUI_address);
+        photoMyGridview = activity.findViewById(R.id.ebikeFaultUI_photoGridView);
+        submitBtn = activity.findViewById(R.id.ebikeFaultUI_submitBtn);
 
         myAdapter = new PhotoGridviewAdapter(context);
         photoMyGridview.setAdapter(myAdapter);
@@ -415,6 +405,9 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(photoMyGridview.getWindowToken(), 0);
+
+                Log.e("photoMyGridview===eb", position+"==="+imageUrlList.size());
+
                 if (position == imageUrlList.size()) {
                     clickPopupWindow();
                 }else {
@@ -452,6 +445,71 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
             }
         });
         initLocation();
+
+        if (access_token == null || "".equals(access_token)){
+            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context, LoginActivity.class);
+        }else {
+            getUpToken();
+        }
+    }
+
+    public void getUpToken() {
+        RequestParams params = new RequestParams();
+//        params.put("uid",uid);
+//        params.put("access_token",access_token);
+        HttpHelper.get(context, Urls.uploadtoken, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Log.e("uploadtoken===", "==="+responseString);
+
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+//                            Log.e("uploadtoken===1", result.getData()+"==="+result.getStatus_code());
+
+                            UpTokenBean bean = JSON.parseObject(result.getData(), UpTokenBean.class);
+
+                            Log.e("uploadtoken===2", bean+"==="+bean.getToken());
+
+                            if (null != bean.getToken()) {
+
+                                upToken = bean.getToken();
+
+//                                SharedPreferencesUrls.getInstance().putString("access_token", "Bearer "+bean.getToken());
+                                Toast.makeText(context,"恭喜您,获取成功",Toast.LENGTH_SHORT).show();
+//                                scrollToFinishActivity();
+
+//                                uploadImage();
+                            }else{
+                                Toast.makeText(context, result.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+
+            }
+        });
+
     }
 
     @Override
@@ -462,7 +520,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 
                 scrollToFinishActivity();
                 break;
-            case R.id.bikeFaultUI_type_Tag1:
+            case R.id.ebikeFaultUI_type_Tag1:
                 if (isSelected1){
                     isSelected1 = false;
 //                    if (TagsList.contains(Tag1.getText().toString())){
@@ -470,19 +528,19 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 //                    }
 //                    Tag1.setTextColor(Color.parseColor("#666666"));
 //                    Tag1.setBackgroundResource(R.drawable.shape_feedback);
-                    Tag1.setImageResource(R.drawable.lock_icon2);
+                    Tag1.setImageResource(R.drawable.lock_icon4);
                 }else {
                     isSelected1 = true;
 //                    if (!TagsList.contains(Tag1.getText().toString())){
 //                        TagsList.add(Tag1.getText().toString());
 //                    }
 //                    Tag1.setTextColor(Color.parseColor("#f57752"));
-                    Tag1.setBackgroundResource(R.drawable.lock_icon);
+                    Tag1.setImageResource(R.drawable.lock_icon3);
                 }
                 pd();
                 break;
 
-//            case R.id.bikeFaultUI_type_Tag2:
+//            case R.id.ebikeFaultUI_type_Tag2:
 //                if (isSelected2){
 //                    isSelected2 = false;
 //                    if (TagsList.contains(Tag2.getText().toString())){
@@ -501,7 +559,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 //                pd();
 //                break;
 //
-//            case R.id.bikeFaultUI_type_Tag3:
+//            case R.id.ebikeFaultUI_type_Tag3:
 //                if (isSelected3){
 //                    isSelected3 = false;
 //                    if (TagsList.contains(Tag3.getText().toString())){
@@ -520,7 +578,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 //                pd();
 //                break;
 //
-//            case R.id.bikeFaultUI_type_Tag4:
+//            case R.id.ebikeFaultUI_type_Tag4:
 //                if (isSelected4){
 //                    isSelected4 = false;
 //                    if (TagsList.contains(Tag4.getText().toString())){
@@ -539,7 +597,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 //                pd();
 //                break;
 //
-//            case R.id.bikeFaultUI_type_Tag5:
+//            case R.id.ebikeFaultUI_type_Tag5:
 //                if (isSelected5){
 //                    isSelected5 = false;
 //                    if (TagsList.contains(Tag5.getText().toString())){
@@ -558,7 +616,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 //                pd();
 //                break;
 //
-//            case R.id.bikeFaultUI_type_Tag6:
+//            case R.id.ebikeFaultUI_type_Tag6:
 //                if (isSelected6){
 //                    isSelected6 = false;
 //                    if (TagsList.contains(Tag6.getText().toString())){
@@ -577,7 +635,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 //                pd();
 //                break;
 
-            case R.id.bikeFaultUI_submitBtn:
+            case R.id.ebikeFaultUI_submitBtn:
                 submit();
                 break;
             default:
@@ -812,33 +870,46 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
                         }
                         break;
                     case REQUESTCODE_TAKE:// 调用相机拍照
-//                if (data != null){
-//                    if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
-//                        File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
-//                        if (Uri.fromFile(temp) != null) {
-//                            urlpath = getRealFilePath(context, Uri.fromFile(temp));
-//                            if (loadingDialog != null && !loadingDialog.isShowing()) {
-//                                loadingDialog.setTitle("请稍等");
-//                                loadingDialog.show();
-//                            }
-//                            new Thread(uploadImageRunnable).start();
-//                        }
-////                    }
-//                    }else {
-//                        ToastUtil.showMessageApp(context,"未找到存储卡，无法存储照片！");
-//                    }
-//                }
 
-                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+//                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+//                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
+//                            if (Uri.fromFile(temp) != null) {
+//                                urlpath = getRealFilePath(context, Uri.fromFile(temp));
+//                                if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                                    loadingDialog.setTitle("请稍等");
+//                                    loadingDialog.show();
+//                                }
+//                                new Thread(uploadImageRunnable).start();
+//                            }
+//                        }else {
+//                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+//                        }
+
+                        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+
                             File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
                             if (Uri.fromFile(temp) != null) {
                                 urlpath = getRealFilePath(context, Uri.fromFile(temp));
-                                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                                    loadingDialog.setTitle("请稍等");
-                                    loadingDialog.show();
-                                }
-                                new Thread(uploadImageRunnable).start();
+                                Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
+
+//                                File picture = new File(urlpath);
+                                Uri filepath = Uri.fromFile(temp);
+//                                upBitmap = BitmapFactory.decodeFile(urlpath);
+
+
+                                compress(); //压缩图片
+
+//                                if(photo == 1){
+//                                    uploadImage.setImageBitmap(upBitmap);
+//                                }else{
+//                                    uploadImage2.setImageBitmap(upBitmap);
+//                                }
+
+                                Log.e("REQUESTCODE_TAKE===3", "==="+filepath.getPath());
+
+                                uploadImage();
                             }
+
                         }else {
                             Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                         }
@@ -855,6 +926,97 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
         });
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void uploadImage() {
+        //定义数据上传结束后的处理动作
+        final UpCompletionHandler upCompletionHandler = new UpCompletionHandler() {
+            @Override
+            public void complete(String key, ResponseInfo info, JSONObject response) {
+
+//                JSONObject jsonObject = new JSONObject(info.timeStamp);
+
+                Log.e("uploadImage===eb0", "==="+response);
+
+                try {
+                    JSONObject jsonObject = new JSONObject(response.getString("image"));
+
+                    //TODO
+//                    if(photo == 1){
+//                        imageurl = jsonObject.getString("key");
+//                    }else{
+//                        imageurl2 = jsonObject.getString("key");
+//                    }
+
+                    Log.e("UpCompletion===eb", jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        final UploadOptions uploadOptions = new UploadOptions(null, null, false, new UpProgressHandler() {
+            @Override
+            public void progress(String key, final double percent) {
+                //百分数格式化
+                NumberFormat fmt = NumberFormat.getPercentInstance();
+                fmt.setMaximumFractionDigits(2);//最多两位百分小数，如25.23%
+
+                Log.e("progress===", "==="+fmt.format(percent));
+
+//                tv.setText("图片已经上传:" + fmt.format(percent));
+            }
+        }, new UpCancellationSignal() {
+            @Override
+            public boolean isCancelled() {
+                return false;
+            }
+        });
+        try {
+            //上传图片jjj
+            Log.e("uploadImage===eb", "==="+upToken);
+
+            QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //获取资源文件中的图片
+    public byte[] getByte() {
+//        Resources res = getResources();
+//        Bitmap bm = BitmapFactory.decodeResource(res, R.drawable.bike3);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bm.compress(Bitmap.CompressFormat.PNG, 80, baos);
+        Log.e("getByte===1", upBitmap+"===");
+        upBitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
+//        upBitmap.compress(Bitmap.CompressFormat.PNG, 10, baos);
+        Log.e("getByte===2", upBitmap+"==="+baos.toByteArray().length);
+
+//        QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
+
+        return baos.toByteArray();
+    }
+
+    void compress(){
+        // 设置参数
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true; // 只获取图片的大小信息，而不是将整张图片载入在内存中，避免内存溢出
+        BitmapFactory.decodeFile(urlpath, options);
+        int height = options.outHeight;
+        int width= options.outWidth;
+        int inSampleSize = 2; // 默认像素压缩比例，压缩为原图的1/2
+        int minLen = Math.min(height, width); // 原图的最小边长
+        if(minLen > 100) { // 如果原始图像的最小边长大于100dp（此处单位我认为是dp，而非px）
+            float ratio = (float)minLen / 100.0f; // 计算像素压缩比例
+            inSampleSize = (int)ratio;
+        }
+        options.inJustDecodeBounds = false; // 计算好压缩比例后，这次可以去加载原图了
+        options.inSampleSize = inSampleSize; // 设置为刚才计算的压缩比例
+        upBitmap = BitmapFactory.decodeFile(urlpath, options); // 解码文件
+
+        imageUrlList.add(upBitmap);
+        myAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -1006,52 +1168,52 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
-                case 0:
-
-                    try {
-                        // 返回数据示例，根据需求和后台数据灵活处理
-                        JSONObject jsonObject = new JSONObject(resultStr);
-                        // 服务端以字符串“1”作为操作成功标记
-                        if (jsonObject.optString("flag").equals("Success")) {
-                            BitmapFactory.Options option = new BitmapFactory.Options();
-                            // 压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图，3为三分之一
-                            option.inSampleSize = 1;
-                            imageUrlList.add(jsonObject.optString("data"));
-                            ToastUtil.showMessageApp(context, "图片上传成功");
-
-                            Log.e("picture===", "==="+imageUrlList);
-
-                            if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                                    restCauseEdit.getText().toString().trim() == null
-                                            || "".equals(restCauseEdit.getText().toString().trim()))){
-                                submitBtn.setEnabled(false);
-                            }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                                submitBtn.setEnabled(false);
-                            }else{
-                                if (bikeCodeEdit.getText().toString().trim() != null &&
-                                        !"".equals(bikeCodeEdit.getText().toString().trim())){
-                                    submitBtn.setEnabled(true);
-                                }else {
-                                    submitBtn.setEnabled(false);
-                                }
-                            }
-
-                            isComplete = false;
-                            myAdapter.notifyDataSetChanged();
-                        } else {
-                            if (loadingDialog != null && loadingDialog.isShowing()) {
-                                loadingDialog.dismiss();
-                            }
-                            ToastUtil.showMessageApp(context, jsonObject.optString("msg"));
-                        }
-
-                    } catch (JSONException e) {
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
-                        }
-                    }
-
-                    break;
+//                case 0:
+//
+//                    try {
+//                        // 返回数据示例，根据需求和后台数据灵活处理
+//                        JSONObject jsonObject = new JSONObject(resultStr);
+//                        // 服务端以字符串“1”作为操作成功标记
+//                        if (jsonObject.optString("flag").equals("Success")) {
+//                            BitmapFactory.Options option = new BitmapFactory.Options();
+//                            // 压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图，3为三分之一
+//                            option.inSampleSize = 1;
+//                            imageUrlList.add(jsonObject.optString("data"));
+//                            ToastUtil.showMessageApp(context, "图片上传成功");
+//
+//                            Log.e("picture===", "==="+imageUrlList);
+//
+//                            if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+//                                    restCauseEdit.getText().toString().trim() == null
+//                                            || "".equals(restCauseEdit.getText().toString().trim()))){
+//                                submitBtn.setEnabled(false);
+//                            }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+//                                submitBtn.setEnabled(false);
+//                            }else{
+//                                if (bikeCodeEdit.getText().toString().trim() != null &&
+//                                        !"".equals(bikeCodeEdit.getText().toString().trim())){
+//                                    submitBtn.setEnabled(true);
+//                                }else {
+//                                    submitBtn.setEnabled(false);
+//                                }
+//                            }
+//
+//                            isComplete = false;
+//                            myAdapter.notifyDataSetChanged();
+//                        } else {
+//                            if (loadingDialog != null && loadingDialog.isShowing()) {
+//                                loadingDialog.dismiss();
+//                            }
+//                            ToastUtil.showMessageApp(context, jsonObject.optString("msg"));
+//                        }
+//
+//                    } catch (JSONException e) {
+//                        if (loadingDialog != null && loadingDialog.isShowing()) {
+//                            loadingDialog.dismiss();
+//                        }
+//                    }
+//
+//                    break;
 
                 case 1:
                     pos = 0;
@@ -1173,32 +1335,32 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
                     imageView.setVisibility(View.GONE);
                 }
             } else {
+                imageView.setImageBitmap(imageUrlList.get(position));
 
-
-                if(!isComplete){
-
-                    ImageLoader.getInstance().displayImage(Urls.host + imageUrlList.get(position), imageView, new SimpleImageLoadingListener(){
-
-                        @Override
-                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                            Log.e("Complete===", "==="+isComplete);
-
-                            isComplete = true;
-
-                            if (loadingDialog != null) {
-                                loadingDialog.dismiss();
-                            }
-                        }
-
-                    }, new ImageLoadingProgressListener(){
-
-                        @Override
-                        public void onProgressUpdate(String imageUri, View view, int current, int total) {
-                            Log.e("Update===", "==="+current);
-                        }
-                    });
-
-                }
+//                if(!isComplete){
+//
+//                    ImageLoader.getInstance().displayImage(Urls.host + imageUrlList.get(position), imageView, new SimpleImageLoadingListener(){
+//
+//                        @Override
+//                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+//                            Log.e("Complete===", "==="+isComplete);
+//
+//                            isComplete = true;
+//
+//                            if (loadingDialog != null) {
+//                                loadingDialog.dismiss();
+//                            }
+//                        }
+//
+//                    }, new ImageLoadingProgressListener(){
+//
+//                        @Override
+//                        public void onProgressUpdate(String imageUri, View view, int current, int total) {
+//                            Log.e("Update===", "==="+current);
+//                        }
+//                    });
+//
+//                }
             }
 //            notifyDataSetChanged();
 
@@ -1215,7 +1377,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
             clickClosePopupWindow();
             switch (v.getId()) {
                 // 拍照
-                case R.id.takePhotoBtn:
+                case R.id.takePhotoBtn2:
                     if (Build.VERSION.SDK_INT >= 23) {
                         int checkPermission = context.checkSelfPermission(Manifest.permission.CAMERA);
                         if (checkPermission != PackageManager.PERMISSION_GRANTED) {
@@ -1289,7 +1451,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 
                     break;
                 // 相册选择图片
-                case R.id.pickPhotoBtn:
+                case R.id.pickPhotoBtn2:
 //                    if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
 ////                        Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
 ////                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

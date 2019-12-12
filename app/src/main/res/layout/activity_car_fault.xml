@@ -21,7 +21,7 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="42dp"
             android:text="车辆故障"
             android:textSize="30sp"
             android:textColor="@color/tx_black"/>
@@ -38,7 +38,7 @@
         <LinearLayout
             android:id="@+id/ll_2"
             android:layout_width="match_parent"
-            android:layout_height="31dp"
+            android:layout_height="32dp"
             android:layout_marginTop="6dp"
             android:background="@drawable/block_bcg"
             android:orientation="vertical">

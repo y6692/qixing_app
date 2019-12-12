@@ -80,6 +80,14 @@ public class HttpHelper {
 
 		client.addHeader("Authorization", token);
 		client.addHeader("Accept", "application/vnd.ws.v1+json");
+
+		client.addHeader("Phone_Brand", new Build().MANUFACTURER.toUpperCase());
+		client.addHeader("Phone_Model", new Build().MODEL);
+		client.addHeader("Phone_System", "Android");
+		client.addHeader("Phone_System_Version", SystemUtil.getSystemVersion());
+		client.addHeader("App_Version", getVersionName(context));
+//			client.addHeader("Device_UUID", "" + tm.getDeviceId());
+
 		client.get(context, url, responseHandler);
 	}
 
@@ -106,6 +114,14 @@ public class HttpHelper {
 
 		client.addHeader("Authorization", token);
 		client.addHeader("Accept", "application/vnd.ws.v1+json");
+
+		client.addHeader("Phone_Brand", new Build().MANUFACTURER.toUpperCase());
+		client.addHeader("Phone_Model", new Build().MODEL);
+		client.addHeader("Phone_System", "Android");
+		client.addHeader("Phone_System_Version", SystemUtil.getSystemVersion());
+		client.addHeader("App_Version", getVersionName(context));
+//			client.addHeader("Device_UUID", "" + tm.getDeviceId());
+
 		client.get(context, url, params, responseHandler);
 	}
 
@@ -113,6 +129,14 @@ public class HttpHelper {
 
 		client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token", ""));
 		client.addHeader("Accept", "application/vnd.ws.v1+json");
+
+		client.addHeader("Phone_Brand", new Build().MANUFACTURER.toUpperCase());
+		client.addHeader("Phone_Model", new Build().MODEL);
+		client.addHeader("Phone_System", "Android");
+		client.addHeader("Phone_System_Version", SystemUtil.getSystemVersion());
+		client.addHeader("App_Version", getVersionName(context));
+//			client.addHeader("Device_UUID", "" + tm.getDeviceId());
+
 		client.post(context, url, responseHandler);
 	}
 
@@ -162,20 +186,7 @@ public class HttpHelper {
 		}
 	}
 
-	public int getVersion(Context context) {
-		try {
-			PackageManager manager = context.getPackageManager();
-			PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
-			int version = info.versionCode;
 
-			Log.e("getVersion===", "==="+version);
-
-			return version;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return -1;
-		}
-	}
 
 	/**
 	 * post请求带head
@@ -202,6 +213,13 @@ public class HttpHelper {
 
 		client.addHeader("Accept", "application/vnd.ws.v1+json");
 
+		client.addHeader("Phone_Brand", new Build().MANUFACTURER.toUpperCase());
+		client.addHeader("Phone_Model", new Build().MODEL);
+		client.addHeader("Phone_System", "Android");
+		client.addHeader("Phone_System_Version", SystemUtil.getSystemVersion());
+		client.addHeader("App_Version", getVersionName(context));
+//			client.addHeader("Device_UUID", "" + tm.getDeviceId());
+
 		client.post(context, url, params, responseHandler);
 	}
 
@@ -209,6 +227,39 @@ public class HttpHelper {
 
 		client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
 		client.addHeader("Accept", "application/vnd.ws.v1+json");
+
+
+		client.addHeader("Phone_Brand", new Build().MANUFACTURER.toUpperCase());
+		client.addHeader("Phone_Model", new Build().MODEL);
+		client.addHeader("Phone_System", "Android");
+		client.addHeader("Phone_System_Version", SystemUtil.getSystemVersion());
+		client.addHeader("App_Version", getVersionName(context));
+//			client.addHeader("Device_UUID", "" + tm.getDeviceId());
+
 		client.delete(context, url, responseHandler);
+	}
+
+	public static String getVersionName(Context context) {
+		try {
+			return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	public int getVersion(Context context) {
+		try {
+			PackageManager manager = context.getPackageManager();
+			PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+			int version = info.versionCode;
+
+			Log.e("getVersion===", "==="+version);
+
+			return version;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
 	}
 }

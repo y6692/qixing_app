@@ -58,6 +58,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -161,6 +162,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
     private String upToken = "";
 
     private Bitmap upBitmap;
+    File picture;
 
 
     private Handler handler = new Handler() {
@@ -529,14 +531,16 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
 //                JSONObject jsonObject = new JSONObject(info.timeStamp);
 
+                Log.e("uploadImage===0", "==="+response);
+
                 try {
                     JSONObject jsonObject = new JSONObject(response.getString("image"));
 
-                    if(photo == 1){
-                        imageurl = jsonObject.getString("key");
-                    }else{
-                        imageurl2 = jsonObject.getString("key");
-                    }
+//                    if(photo == 1){
+//                        imageurl = jsonObject.getString("key");
+//                    }else{
+//                        imageurl2 = jsonObject.getString("key");
+//                    }
 
                     Log.e("UpCompletion===", jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
                 } catch (JSONException e) {
@@ -594,6 +598,21 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
             //上传图片jjj
             Log.e("uploadImage===", "==="+upToken);
 
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            Log.e("uploadImage===1", upBitmap+"===");
+//            upBitmap.compress(Bitmap.CompressFormat.PNG, 10, baos);
+//
+//            Log.e("uploadImage===2", upBitmap+"==="+baos.toByteArray().length);
+
+
+
+//            int bytes = upBitmap.getByteCount();
+//            ByteBuffer buf = ByteBuffer.allocate(bytes);
+//            upBitmap.copyPixelsToBuffer(buf);
+//            byte[] byteArray = buf.array();
+
+//            QiNiuInitialize.getSingleton().put(buf.array(), null, upToken, upCompletionHandler, uploadOptions);
+//            QiNiuInitialize.getSingleton().put(baos.toByteArray(), null, upToken, upCompletionHandler, uploadOptions);
             QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
         } catch (Exception e) {
             e.printStackTrace();
@@ -606,7 +625,13 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //        Bitmap bm = BitmapFactory.decodeResource(res, R.drawable.bike3);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 //        bm.compress(Bitmap.CompressFormat.PNG, 80, baos);
+        Log.e("getByte===1", upBitmap+"===");
         upBitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
+//        upBitmap.compress(Bitmap.CompressFormat.PNG, 10, baos);
+        Log.e("getByte===2", upBitmap+"==="+baos.toByteArray().length);
+
+//        QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
+
         return baos.toByteArray();
     }
 
@@ -1089,11 +1114,13 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //
 
 //                                        File picture = new File(Environment.getExternalStorageDirectory(), "com.gamefox.samecity.fish/activity/bill1.png");
-                                        File picture = new File(urlpath);
+                                        picture = new File(urlpath);
 //                                        Uri filepath;
                                         Uri filepath = Uri.fromFile(picture);
 //                                        Bitmap bitmap = BitmapFactory.decodeFile(filepath.getPath());
-                                        upBitmap = BitmapFactory.decodeFile(urlpath);
+//                                        upBitmap = BitmapFactory.decodeFile(urlpath);
+
+                                        compress(); //压缩图片
 
                                         if(photo == 1){
                                             uploadImage.setImageBitmap(upBitmap);
@@ -1166,15 +1193,47 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                         break;
                     case REQUESTCODE_TAKE:// 调用相机拍照
                         if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+
+//                            if (imageUri != null) {
+//                                Log.e("REQUESTCODE_TAKE===", data+"===");
+//                                urlpath  = FileUtil.getFilePathByUri(context, data.getData());
+
                             File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
                             if (Uri.fromFile(temp) != null) {
                                 urlpath = getRealFilePath(context, Uri.fromFile(temp));
-                                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                                    loadingDialog.setTitle("请稍等");
-                                    loadingDialog.show();
+                                Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
+
+//                                File picture = new File(urlpath);
+                                Uri filepath = Uri.fromFile(temp);
+//                                upBitmap = BitmapFactory.decodeFile(urlpath);
+
+
+                                compress(); //压缩图片
+
+                                if(photo == 1){
+                                    uploadImage.setImageBitmap(upBitmap);
+                                }else{
+                                    uploadImage2.setImageBitmap(upBitmap);
                                 }
-                                new Thread(uploadImageRunnable).start();
+
+                                Log.e("REQUESTCODE_TAKE===3", photo+"==="+upBitmap+"==="+filepath.getPath());
+
+                                uploadImage();
                             }
+
+//                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
+//                            if (Uri.fromFile(temp) != null) {
+//                                urlpath = getRealFilePath(context, Uri.fromFile(temp));
+//
+//                                Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
+//
+//                                if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                                    loadingDialog.setTitle("请稍等");
+//                                    loadingDialog.show();
+//                                }
+//
+//                                new Thread(uploadImageRunnable).start();
+//                            }
                         }else {
                             Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                         }
@@ -1189,6 +1248,24 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         });
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    void compress(){
+        // 设置参数
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true; // 只获取图片的大小信息，而不是将整张图片载入在内存中，避免内存溢出
+        BitmapFactory.decodeFile(urlpath, options);
+        int height = options.outHeight;
+        int width= options.outWidth;
+        int inSampleSize = 2; // 默认像素压缩比例，压缩为原图的1/2
+        int minLen = Math.min(height, width); // 原图的最小边长
+        if(minLen > 100) { // 如果原始图像的最小边长大于100dp（此处单位我认为是dp，而非px）
+            float ratio = (float)minLen / 100.0f; // 计算像素压缩比例
+            inSampleSize = (int)ratio;
+        }
+        options.inJustDecodeBounds = false; // 计算好压缩比例后，这次可以去加载原图了
+        options.inSampleSize = inSampleSize; // 设置为刚才计算的压缩比例
+        upBitmap = BitmapFactory.decodeFile(urlpath, options); // 解码文件
     }
 
     /**
@@ -1446,8 +1523,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(RealNameAuthActivity.this,
-                                    BuildConfig.APPLICATION_ID + ".fileprovider",
-                                    file));
+                                    BuildConfig.APPLICATION_ID + ".fileprovider", file));
 
                         }else {
                             takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
@@ -1557,7 +1633,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
                                     }else {
                                         // 下面这句指定调用相机拍照后的照片存储的路径
-//                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+//                                      takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
 
                                         takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                                     }

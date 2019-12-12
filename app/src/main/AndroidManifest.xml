@@ -115,22 +115,22 @@
 
         </activity>
 
-        <activity
-            android:name=".activity.CarFaultActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
-
-        </activity>
 
         <activity
             android:name=".activity.UnpayRouteActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
+
+        <activity
+            android:name=".activity.RealNameAuthActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
+
 
         <activity
             android:name=".activity.LoginActivity"
@@ -138,6 +138,16 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
+        </activity>
+
+        <activity
+            android:name=".activity.CarFaultActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity
@@ -227,15 +237,16 @@
         <!--android:windowSoftInputMode="adjustUnspecified|stateHidden"-->
 
 
-
-
-
         <activity
-            android:name=".activity.RealNameAuthActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+            android:name="com.zxing.lib.scaner.activity.ActivityScanerCode2"
+            android:windowSoftInputMode="adjustResize"
+            >
 
 
         </activity>
+
+
+
 
         <activity
             android:name=".activity.NoteTestActivity">

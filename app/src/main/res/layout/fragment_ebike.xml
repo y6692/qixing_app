@@ -231,32 +231,6 @@
                     <!--android:layout_marginTop="@dimen/dp15"/>-->
             <!--</RelativeLayout>-->
 
-            <LinearLayout
-                android:id="@+id/mainUI_refreshLayout2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="@dimen/dp10"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="@dimen/dp10"
-                android:gravity="center"
-                android:background="@drawable/back_bd"
-                android:visibility="gone"
-                >
-
-                <ImageView
-                    android:layout_width="@dimen/dp35"
-                    android:layout_height="@dimen/dp35"
-                    android:src="@drawable/refresh_icon"
-                    android:scaleType="centerInside"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp12"
-                    android:textColor="@color/tx_black"
-                    android:text="刷新"/>
-            </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

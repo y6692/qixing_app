@@ -103,15 +103,13 @@ public class UtilAnim {
      * @param duration  动画持续时间(单位毫秒)
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static void hideToDown(final View view, final View view_back,
-                                  int duration) {
+    public static void hideToDown(final View view, final View view_back, int duration) {
         if (view_back == null) {
             return;
         }
 
         // 背景渐变动画
-        ObjectAnimator anim = ObjectAnimator.ofFloat(view_back, "Alpha", 1, 0)
-                .setDuration(duration);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(view_back, "Alpha", 1, 0).setDuration(duration);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // 弹窗圆形动画

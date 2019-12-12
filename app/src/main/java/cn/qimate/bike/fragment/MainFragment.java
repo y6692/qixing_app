@@ -391,8 +391,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         macList2 = new ArrayList<>();
         initView();
 
-        car_authority();
-
     }
 
     public void car_authority() {
@@ -404,7 +402,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             ToastUtil.showMessageApp(context, "请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
         } else {
-            HttpHelper.get(AppManager.getAppManager().currentActivity(), Urls.car_authority, new TextHttpResponseHandler() {
+            HttpHelper.get(context, Urls.car_authority, new TextHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
                     try {
@@ -792,51 +790,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }else{
             //resume
 
-            String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-            String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
 
-            if (access_token == null || "".equals(access_token)) {
-                rl_authBtn.setEnabled(true);
-                rl_authBtn.setVisibility(View.VISIBLE);
-                tv_authBtn.setText("您还未登录，点我快速登录");
-
-                refreshLayout.setVisibility(View.GONE);
-//                cartBtn.setVisibility(View.GONE);
-//                rechargeBtn.setVisibility(View.GONE);
-            } else {
-                refreshLayout.setVisibility(View.VISIBLE);
-                if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                    switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                        case 1:
-                            rl_authBtn.setEnabled(true);
-                            rl_authBtn.setVisibility(View.VISIBLE);
-                            tv_authBtn.setText("您还未登录，点我快速登录");
-
-                            break;
-                        case 2:
-
-                            rl_authBtn.setEnabled(true);
-                            rl_authBtn.setVisibility(View.VISIBLE);
-                            tv_authBtn.setText("您还未认证，点我快速认证");
-                            break;
-                        case 3:
-
-                            rl_authBtn.setEnabled(false);
-                            rl_authBtn.setVisibility(View.VISIBLE);
-                            tv_authBtn.setText("认证审核中");
-                            break;
-                        case 4:
-                            rl_authBtn.setEnabled(true);
-                            rl_authBtn.setVisibility(View.VISIBLE);
-                            tv_authBtn.setText("认证被驳回，请重新认证");
-
-                            break;
-                    }
-                } else {
-                    rl_authBtn.setVisibility(View.GONE);
-                }
-
-            }
 
         }
     }
@@ -884,7 +838,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }
 
     };
-
 
     private void openGPSSettings() {
         if (checkGPSIsOpen()) {
@@ -937,10 +890,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-
-//              curMarker = marker;
-//              marker.setTitle(marker.getTitle());
-
                 ll_top.setVisibility(View.GONE);
                 ll_top_navi.setVisibility(View.VISIBLE);
 
@@ -951,11 +900,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 tv_navi_name.setText(marker.getTitle());
                 mAMapNavi.calculateRideRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
 
-
-//              codenum = marker.getTitle().split("-")[0];
-//              quantity = marker.getTitle().split("-")[1];
-//
-//              initmPopupWindowView();
                 return true;
             }
         });
@@ -1037,11 +981,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         rl_authBtn = activity.findViewById(R.id.rl_authBtn);
         tv_authBtn = activity.findViewById(R.id.tv_authBtn);
-        refreshLayout = (LinearLayout) activity.findViewById(R.id.mainUI_refreshLayout);
-        myLocationLayout =  (LinearLayout) activity.findViewById(R.id.mainUI_myLocationLayout);
-        slideLayout = (LinearLayout)activity.findViewById(R.id.mainUI_slideLayout);
-        linkLayout = (LinearLayout) activity.findViewById(R.id.mainUI_linkServiceLayout);
-        scanLock = (LinearLayout) activity.findViewById(R.id.mainUI_scanCode_lock);
+        refreshLayout = activity.findViewById(R.id.mainUI_refreshLayout);
+        myLocationLayout =  activity.findViewById(R.id.mainUI_myLocationLayout);
+        slideLayout = activity.findViewById(R.id.mainUI_slideLayout);
+        linkLayout = activity.findViewById(R.id.mainUI_linkServiceLayout);
+        scanLock = activity.findViewById(R.id.mainUI_scanCode_lock);
 
         ll_top = activity.findViewById(R.id.ll_top);
         ll_top_navi = activity.findViewById(R.id.ll_top_navi);
@@ -1090,7 +1034,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         mFragments.add(bikeFragment);
         mFragments.add(ebikeFragment);
 
-        Log.e("main===initData", "===");
+
 
         for (int i = 0; i < mTitles.length; i++) {
             mTabEntities.add(new TabTopEntity(mTitles[i]));
@@ -1121,25 +1065,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         imagePath = new ArrayList<>();
         imageTitle = new ArrayList<>();
-//        imagePath.add(R.drawable.bike_month_cart_icon);
-//        imagePath.add(R.drawable.ebike_month_cart_icon);
-//        imagePath.add(R.drawable.frist_view_title);
-
-
-//        imagePath.add("http://q0xo2if8t.bkt.clouddn.com/FqguvppVLDfrXQkHYzArr_kSbESY?e=1575949549&token=FXDJS_lmH1Gfs-Ni9I9kpPf6MZFTGz5U5BP1CgNu:deWI0QzfJtkukZZHtzLIC_Co25s=");
-//        imagePath.add("http://q0xo2if8t.bkt.clouddn.com/FqguvppVLDfrXQkHYzArr_kSbESY?e=1575949549&token=FXDJS_lmH1Gfs-Ni9I9kpPf6MZFTGz5U5BP1CgNu:deWI0QzfJtkukZZHtzLIC_Co25s=");
-//        imagePath.add("http://q0xo2if8t.bkt.clouddn.com/FqguvppVLDfrXQkHYzArr_kSbESY?e=1575949549&token=FXDJS_lmH1Gfs-Ni9I9kpPf6MZFTGz5U5BP1CgNu:deWI0QzfJtkukZZHtzLIC_Co25s=");
-
-//        imagePath.add("http://q0xo2if8t.bkt.clouddn.com/FqguvppVLDfrXQkHYzArr_kSbESY?e=1575950513&token=FXDJS_lmH1Gfs-Ni9I9kpPf6MZFTGz5U5BP1CgNu:MRf-MhUpCHTkPn67HQOuiha25pM====");
-//        imagePath.add("http://q0xo2if8t.bkt.clouddn.com/FqguvppVLDfrXQkHYzArr_kSbESY?e=1575950513&token=FXDJS_lmH1Gfs-Ni9I9kpPf6MZFTGz5U5BP1CgNu:MRf-MhUpCHTkPn67HQOuiha25pM====");
-//        imagePath.add("http://q0xo2if8t.bkt.clouddn.com/FqguvppVLDfrXQkHYzArr_kSbESY?e=1575950513&token=FXDJS_lmH1Gfs-Ni9I9kpPf6MZFTGz5U5BP1CgNu:MRf-MhUpCHTkPn67HQOuiha25pM====");
-//
-//
-//
-//
-//        imageTitle.add("我是海鸟一号");
-//        imageTitle.add("我是海鸟二号");
-//        imageTitle.add("我是海鸟三号");
 
         mMyImageLoader = new MyImageLoader();
         mBanner = activity.findViewById(R.id.banner);
@@ -1164,6 +1089,55 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         rightBtn.setOnClickListener(this);
         rl_ad.setOnClickListener(this);
 
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+        String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
+
+        Log.e("mf===initView", access_token+"===");
+
+        if (access_token == null || "".equals(access_token)) {
+            rl_authBtn.setEnabled(true);
+            rl_authBtn.setVisibility(View.VISIBLE);
+            tv_authBtn.setText("您还未登录，点我快速登录");
+
+            refreshLayout.setVisibility(View.GONE);
+//                cartBtn.setVisibility(View.GONE);
+//                rechargeBtn.setVisibility(View.GONE);
+        } else {
+            refreshLayout.setVisibility(View.VISIBLE);
+            if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+                switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+                    case 1:
+                        rl_authBtn.setEnabled(true);
+                        rl_authBtn.setVisibility(View.VISIBLE);
+                        tv_authBtn.setText("您还未登录，点我快速登录");
+
+                        break;
+                    case 2:
+
+                        rl_authBtn.setEnabled(true);
+                        rl_authBtn.setVisibility(View.VISIBLE);
+                        tv_authBtn.setText("您还未认证，点我快速认证");
+                        break;
+                    case 3:
+
+                        rl_authBtn.setEnabled(false);
+                        rl_authBtn.setVisibility(View.VISIBLE);
+                        tv_authBtn.setText("认证审核中");
+                        break;
+                    case 4:
+                        rl_authBtn.setEnabled(true);
+                        rl_authBtn.setVisibility(View.VISIBLE);
+                        tv_authBtn.setText("认证被驳回，请重新认证");
+
+                        break;
+                }
+            } else {
+                rl_authBtn.setVisibility(View.GONE);
+            }
+
+        }
+
+        car_authority();
         banner();
     }
 

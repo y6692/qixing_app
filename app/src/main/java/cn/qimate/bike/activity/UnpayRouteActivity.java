@@ -229,18 +229,9 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
 
     private void pay(){
         RequestParams params = new RequestParams();
-        params.put("payment_id",3);
-        params.put("order_id", 1);
-        params.put("order_type",1);
-
-//        payment_id	Int
-//        支付方式ID 支付方式 1：余额支付 2：微信app支付 3：支付宝app支付 4：微信小程序支付 5：支付宝小程序支付 6：微信h5支付 7：支付宝h5支付
-//
-//        order_id	Int
-//        订单ID
-//
-//        order_type	Int
-//        订单类型 1骑行订单 2购买骑行卡订单 3调度费订单 4赔偿费订单 5充值订单(普通充值、认证充值)
+        params.put("payment_id",2);     //支付方式ID 支付方式 1：余额支付 2：微信app支付 3：支付宝app支付 4：微信小程序支付 5：支付宝小程序支付 6：微信h5支付 7：支付宝h5支付
+        params.put("order_id", order_id);      //订单ID
+        params.put("order_type",1);     //订单类型 1骑行订单 2购买骑行卡订单 3调度费订单 4赔偿费订单 5充值订单(普通充值、认证充值)
 
         Log.e("pay===", order_id+"===");
 
@@ -254,6 +245,8 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e("pay===fail", responseString+"==="+throwable.toString());
+
                 if (loadingDialog != null && loadingDialog.isShowing()){
                     loadingDialog.dismiss();
                 }

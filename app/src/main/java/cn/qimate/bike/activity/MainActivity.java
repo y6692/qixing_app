@@ -272,7 +272,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         mFragments.add(mineFragment);
 
 
-        Log.e("main===initData", "===");
+        Log.e("ma===initData", "===");
 
         for (int i = 0; i < mTitles.length; i++) {
             mTabEntities.add(new TabEntity(mTitles[i], mIconSelectIds[i], mIconUnselectIds[i]));

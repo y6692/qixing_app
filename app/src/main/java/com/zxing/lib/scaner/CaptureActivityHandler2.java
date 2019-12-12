@@ -13,15 +13,15 @@ import com.zxing.lib.scaner.activity.ActivityScanerCode2;
  * @author vondear
  * 描述: 扫描消息转发
  */
-public final class CaptureActivityHandler extends Handler {
+public final class CaptureActivityHandler2 extends Handler {
 
-    DecodeThread decodeThread = null;
-    ActivityScanerCode activity = null;
+    DecodeThread2 decodeThread = null;
+    ActivityScanerCode2 activity = null;
     private State state;
 
-    public CaptureActivityHandler(ActivityScanerCode activity) {
+    public CaptureActivityHandler2(ActivityScanerCode2 activity) {
         this.activity = activity;
-        decodeThread = new DecodeThread(activity);
+        decodeThread = new DecodeThread2(activity);
         decodeThread.start();
         state = State.SUCCESS;
         CameraManager.get().startPreview();
