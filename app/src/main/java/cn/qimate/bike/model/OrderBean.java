@@ -11,6 +11,10 @@ public class OrderBean {
 	private String car_start_time;	//借车时间
 	private String car_end_time;	//结束时间
 	private String order_amount;	//订单金额
+	private int order_state;	//订单状态 订单状态 0已取消 10已下单 20进行中 30待支付 40已完成
+	private String electricity;	//订单金额
+	private String mileage;	//订单金额
+
 
 	public int getOrder_id() {
 		return order_id;
@@ -82,5 +86,29 @@ public class OrderBean {
 
 	public void setOrder_amount(String order_amount) {
 		this.order_amount = order_amount;
+	}
+
+	public int getOrder_state() {
+		return order_state;
+	}
+
+	public void setOrder_state(int order_state) {
+		this.order_state = order_state;
+	}
+
+	public String getElectricity() {
+		return electricity;
+	}
+
+	public void setElectricity(String electricity) {
+		this.electricity = electricity;
+	}
+
+	public String getMileage() {
+		return mileage;
+	}
+
+	public void setMileage(String mileage) {
+		this.mileage = mileage;
 	}
 }

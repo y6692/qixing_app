@@ -229,7 +229,7 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
 
     private void pay(){
         RequestParams params = new RequestParams();
-        params.put("payment_id",2);     //支付方式ID 支付方式 1：余额支付 2：微信app支付 3：支付宝app支付 4：微信小程序支付 5：支付宝小程序支付 6：微信h5支付 7：支付宝h5支付
+        params.put("payment_id",1);     //支付方式ID 支付方式 1：余额支付 2：微信app支付 3：支付宝app支付 4：微信小程序支付 5：支付宝小程序支付 6：微信h5支付 7：支付宝h5支付
         params.put("order_id", order_id);      //订单ID
         params.put("order_type",1);     //订单类型 1骑行订单 2购买骑行卡订单 3调度费订单 4赔偿费订单 5充值订单(普通充值、认证充值)
 
@@ -263,41 +263,41 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
 //                    OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
 
 
-                    api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
-                    api.registerApp("wx86d98ec252f67d07");
-                    JSONObject jsonObject2 = new JSONObject(result.getData());
-
-                    String payinfo = jsonObject2.getString("payinfo");
-
-                    Log.e("pay===2", payinfo +"===");
-
-//                    String payinfo = "{\"appid\":\"wx86d98ec252f67d07\",\"noncestr\":\"p8tSBfNaKTrDxuA37JKUBpDm1qe4maqb\",\"package\":\"Sign=WXPay\",\"partnerid\":\"1489420872\",\"prepayid\":\"wx11200539512208dad2422cb81357385600\",\"sign\":\"7D866235FE557709FC14D3FE60543257\",\"timestamp\":1576065939}";
-
-                    JSONObject jsonObject = new JSONObject(payinfo);
-
-
-                    PayReq req = new PayReq();
-                    req.appId = jsonObject.getString("appid");// wpay.getAppid();//
-                    // 微信appId
-                    req.packageValue = jsonObject.getString("package");// wpay.getPackageValue();//
-                    // 包
-                    req.extData = "app data"; // optional
-                    req.timeStamp = jsonObject.getString("timestamp");// wpay.getTimeStamp();//
-                    // 时间戳
-                    req.partnerId = jsonObject.getString("partnerid");// wpay.getPartnerId();//
-                    // 商户号"
-                    req.prepayId = jsonObject.getString("prepayid");// wpay.getPrepayId();//
-                    // 预支付订单号
-                    req.nonceStr = jsonObject.getString("noncestr");// wpay.getNonceStr();//
-                    // 随机字符串
-                    req.sign = jsonObject.getString("sign");// wpay.getSign();//
-                    // 后台返回的签名
-                    // 调微信支付
-                    if (api.isWXAppInstalled() && api.isWXAppSupportAPI()) {
-                        api.sendReq(req);
-                    } else {
-                        Toast.makeText(context, "请下载最新版微信App", Toast.LENGTH_LONG).show();
-                    }
+//                    api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
+//                    api.registerApp("wx86d98ec252f67d07");
+//                    JSONObject jsonObject2 = new JSONObject(result.getData());
+//
+//                    String payinfo = jsonObject2.getString("payinfo");
+//
+//                    Log.e("pay===2", payinfo +"===");
+//
+////                    String payinfo = "{\"appid\":\"wx86d98ec252f67d07\",\"noncestr\":\"p8tSBfNaKTrDxuA37JKUBpDm1qe4maqb\",\"package\":\"Sign=WXPay\",\"partnerid\":\"1489420872\",\"prepayid\":\"wx11200539512208dad2422cb81357385600\",\"sign\":\"7D866235FE557709FC14D3FE60543257\",\"timestamp\":1576065939}";
+//
+//                    JSONObject jsonObject = new JSONObject(payinfo);
+//
+//
+//                    PayReq req = new PayReq();
+//                    req.appId = jsonObject.getString("appid");// wpay.getAppid();//
+//                    // 微信appId
+//                    req.packageValue = jsonObject.getString("package");// wpay.getPackageValue();//
+//                    // 包
+//                    req.extData = "app data"; // optional
+//                    req.timeStamp = jsonObject.getString("timestamp");// wpay.getTimeStamp();//
+//                    // 时间戳
+//                    req.partnerId = jsonObject.getString("partnerid");// wpay.getPartnerId();//
+//                    // 商户号"
+//                    req.prepayId = jsonObject.getString("prepayid");// wpay.getPrepayId();//
+//                    // 预支付订单号
+//                    req.nonceStr = jsonObject.getString("noncestr");// wpay.getNonceStr();//
+//                    // 随机字符串
+//                    req.sign = jsonObject.getString("sign");// wpay.getSign();//
+//                    // 后台返回的签名
+//                    // 调微信支付
+//                    if (api.isWXAppInstalled() && api.isWXAppSupportAPI()) {
+//                        api.sendReq(req);
+//                    } else {
+//                        Toast.makeText(context, "请下载最新版微信App", Toast.LENGTH_LONG).show();
+//                    }
 
 //                    final  JSONObject jsonObject = new JSONObject(result.getData());
 //                    Runnable payRunnable = new Runnable() {

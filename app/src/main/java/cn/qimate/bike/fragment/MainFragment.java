@@ -130,6 +130,7 @@ import cn.qimate.bike.R;
 import cn.qimate.bike.activity.ActionCenterActivity;
 import cn.qimate.bike.activity.CarFaultActivity;
 import cn.qimate.bike.activity.ClientManager;
+import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadStartActivity;
 import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.activity.LoginActivity;
@@ -137,6 +138,7 @@ import cn.qimate.bike.activity.PersonAlterActivity;
 import cn.qimate.bike.activity.RealNameAuthActivity;
 import cn.qimate.bike.activity.ServiceCenter0Activity;
 import cn.qimate.bike.activity.ServiceCenterActivity;
+import cn.qimate.bike.activity.UnpayRouteActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.ble.BLEService;
@@ -2354,7 +2356,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void order() {
-        Log.e("order===", "===");
+        Log.e("order===", "==="+codenum);
 
         RequestParams params = new RequestParams();
         params.put("order_type", 1);
@@ -2701,6 +2703,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+                Log.e("mf===lock_fail", responseString + "===" + throwable.toString());
                 onFailureCommon(throwable.toString());
             }
 
@@ -2719,11 +2723,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             if(isAgain){
                                 tv_againBtn.setText("再次开锁");
                                 SharedPreferencesUrls.getInstance().putString("tempStat","1");
+                            }else{
+                                n=0;
+                                carLoopClose();
                             }
 
 
-//                            n=0;
-//                            carLoopClose();
+
 
                         } catch (Exception e) {
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
@@ -2879,13 +2885,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private void carLoopClose() {
         Log.e("mf===carLoopClose", isAgain+"===" + codenum);
 
-        HttpHelper.get(context, Urls.car + URLEncoder.encode(codenum), new TextHttpResponseHandler() {
+        HttpHelper.get(context, Urls.cycling, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e("mf===carLoopClose_fail", responseString + "===" + throwable.toString());
                 onFailureCommon(throwable.toString());
             }
 
@@ -2897,27 +2904,25 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            Log.e("mf===carLoopClose_1", responseString + "===" + result.data);
+                            Log.e("mf===carLoopClose1", responseString + "===" + result.data);
 
-                            CarBean bean = JSON.parseObject(result.getData(), CarBean.class);
+                            OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
 
-                            Log.e("mf===carLoopClose_2", bean.getNumber()+"===" + bean.getLock_status());
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
 
-                            if(1 != bean.getLock_status()){
+                            if(30 != bean.getOrder_state()){
                                 queryCarStatusClose();
                             }else{
 //                                isConnect = true;
 
-                                car_notification(3, 0,  isAgain?0:1);
+//                                car_notification(3, 0,  isAgain?0:1);
 
-                                if(isAgain){
-                                    tv_againBtn.setText("再次开锁");
-                                    SharedPreferencesUrls.getInstance().putString("tempStat","1");
-                                }
 
-                                if (loadingDialog != null && loadingDialog.isShowing()) {
-                                    loadingDialog.dismiss();
-                                }
+                                end();
+
+
                             }
 
                         } catch (Exception e) {
@@ -2932,6 +2937,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 });
             }
         });
+    }
+
+    private void end() {
+        ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
+        UIHelper.goToAct(context, UnpayRouteActivity.class);
     }
 
     //助力车关锁_轮询2
@@ -3182,7 +3192,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     rl_ad.setVisibility(View.VISIBLE);
                                     ll_top_biking.setVisibility(View.GONE);
 
-                                    ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
+//                                    ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
 //                                  UIHelper.goToAct(context, CurRoadBikedActivity.class);        //TODO
 
                                     if("5".equals(type)  || "6".equals(type)){
@@ -3208,6 +3218,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                         BaseApplication.getInstance().getIBLE().close();
                                         BaseApplication.getInstance().getIBLE().disconnect();
                                     }
+
+                                    end();
+
                                 }
                             }
 
