@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import cn.qimate.bike.R;
@@ -29,11 +30,19 @@ public class MyMessageAdapter extends BaseViewAdapter<MyMessageBean>{
         if (null == convertView) {
             convertView = inflater.inflate(R.layout.item_my_message, null);
         }
-        TextView dates = BaseViewHolder.get(convertView,R.id.item_message_dates);
-        TextView info = BaseViewHolder.get(convertView,R.id.item_message_info);
+        TextView title = BaseViewHolder.get(convertView,R.id.item_message_title);
+        TextView content = BaseViewHolder.get(convertView,R.id.item_message_content);
+        ImageView isRead = BaseViewHolder.get(convertView,R.id.item_message_isRead);
         MyMessageBean bean = getDatas().get(position);
-        dates.setText(bean.getMes_addtime());
-        info.setText(bean.getMes_content());
+        title.setText(bean.getTitle());
+        content.setText(bean.getContent());
+
+        if(bean.getIs_read()==0){
+            isRead.setVisibility(View.VISIBLE);
+        }else{
+            isRead.setVisibility(View.GONE);
+        }
+
         return convertView;
     }
 }

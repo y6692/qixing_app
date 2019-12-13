@@ -250,7 +250,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //        settingLayout = getActivity().findViewById(R.id.personUI_bottom_settingLayout);
 //
 //        myIntegralLayout = getActivity().findViewById(R.id.personUI_bottom_myIntegralLayout);
-//        myMsgLayout = getActivity().findViewById(R.id.personUI_bottom_myMsgLayout);
+        myMsgLayout = getActivity().findViewById(R.id.personUI_myMeaaageLayout);
 //        changePsdLayout = getActivity().findViewById(R.id.personUI_bottom_changePsdLayout);
 //        helpCenterLayout = getActivity().findViewById(R.id.personUI_bottom_helpCenterLayout);
 //        aboutUsLayout = getActivity().findViewById(R.id.personUI_bottom_aboutUsLayout);
@@ -277,6 +277,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //        serviceCenterLayout.setOnClickListener(this);
 //        settingLayout.setOnClickListener(this);
 //        closeBtn.setOnClickListener(myOnClickLister);
+
+        myMsgLayout.setOnClickListener(this);
+
 
 //        billRule();
     }
@@ -804,9 +807,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             case R.id.personUI_bottom_myPurseLayout:
                 ((MainActivity)getActivity()).changeTab(2);
                 break;
-            case R.id.personUI_bottom_myRouteLayout:
-//                UIHelper.goToAct(context, MyRouteActivity.class);
-                break;
             case R.id.personUI_bottom_actionCenterLayout:
                 UIHelper.goToAct(context, ActionCenterActivity.class);
                 break;
@@ -820,7 +820,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             case R.id.personUI_bottom_myIntegralLayout:
 //                UIHelper.goToAct(context, CreditScoreActivity.class);
                 break;
-            case R.id.personUI_bottom_myMsgLayout:
+            case R.id.personUI_myMeaaageLayout:
                 UIHelper.goToAct(context, MyMessageActivity.class);
                 break;
             case R.id.personUI_bottom_changePsdLayout:

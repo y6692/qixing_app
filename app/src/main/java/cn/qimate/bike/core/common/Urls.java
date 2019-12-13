@@ -57,7 +57,6 @@ public class Urls {
 	public static String unlock = host2 + "/car/unlock";
 	//泺平锁获取开锁秘钥接口
 	public static String rent = host2 + "/car/lp/rent";
-
 	//获取协议接口
 	public static String agreement = host2 + "/agreement/";
 	//提交问题反馈接口
@@ -74,7 +73,16 @@ public class Urls {
 	public static String orders= host2 + "/orders";
 	//订单/账单列表接口
 	public static String pay= host2 + "/payment/pay";
+	//我的消息列表接口
+	public static String notices= host2 + "/notices";
+	//客服中心接口
+	public static String services= host2 + "/services";
+	//人工客服接口
+	public static String phones= host2 + "/service/phones";
 
+//	http://testnewmapi.7mate.cn/api/service/phones
+//	http://testnewmapi.7mate.cn/api/services
+//	http://testnewmapi.7mate.cn/api/notices
 //	http://testnewmapi.7mate.cn/api/payment/pay
 //	http://testnewmapi.7mate.cn/api/orders
 //	http://testnewmapi.7mate.cn/api/banner/{position}

@@ -1,8 +1,10 @@
 package cn.qimate.bike.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,8 +76,6 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
     private void initView(){
 
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
-        title = (TextView) findViewById(R.id.mainUI_title_titleText);
-        title.setText("我的消息");
 
         // list投资列表
         footerView = LayoutInflater.from(context).inflate(R.layout.footer_item, null);
@@ -111,6 +111,30 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+
+        MyMessageBean bean = myAdapter.getDatas().get(position);
+
+
+        Log.e("mma===onItemClick", bean+"==="+ bean.getAction_type());
+
+        String title = bean.getTitle();
+        String created_at = bean.getCreated_at();
+        String action_content = bean.getAction_content();
+
+
+        Intent intent = new Intent(context, MyMessageDatailActivity.class);
+        intent.putExtra("title", title);
+        intent.putExtra("created_at", created_at);
+        intent.putExtra("action_content", action_content);
+        startActivity(intent);
+
+//        if ("[]".equals(s)){
+//            UIHelper.goWebViewAct(context, myAdapter.getDatas().get(position).getTitle(), myAdapter.getDatas().get(position).getH5_url());
+//        }else{
+//            Intent intent = new Intent(context, ServiceCenter2Activity.class);
+//            intent.putExtra("data", s);
+//            startActivity(intent);
+//        }
     }
 
     @Override
@@ -156,18 +180,15 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
     }
     private void initHttp(){
 
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+        if (access_token == null || "".equals(access_token)){
             Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
             return;
         }
         RequestParams params = new RequestParams();
-        params.put("uid",uid);
-        params.put("access_token",access_token);
         params.put("page",showPage);
         params.put("pagesize", GlobalConfig.PAGE_SIZE);
-        HttpHelper.get(context, Urls.messageList, params, new TextHttpResponseHandler() {
+        HttpHelper.get(context, Urls.notices, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 setFooterType(1);
@@ -184,31 +205,37 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if ("Success".equals(result.getFlag())) {
-                        JSONArray array = new JSONArray(result.getData());
-                        if (array.length() == 0 && showPage == 1) {
-                            footerLayout.setVisibility(View.VISIBLE);
-                            setFooterType(4);
-                            return;
-                        } else if (array.length() < GlobalConfig.PAGE_SIZE && showPage == 1) {
-                            footerLayout.setVisibility(View.GONE);
-                            setFooterType(5);
-                        } else if (array.length() < GlobalConfig.PAGE_SIZE) {
-                            footerLayout.setVisibility(View.VISIBLE);
-                            setFooterType(2);
-                        } else if (array.length() >= 10) {
-                            footerLayout.setVisibility(View.VISIBLE);
-                            setFooterType(0);
-                        }
-                        for (int i = 0; i < array.length(); i++) {
-                            MyMessageBean bean = JSON.parseObject(array.getJSONObject(i).toString(), MyMessageBean.class);
-                            datas.add(bean);
-                        }
+                    Log.e("notices===", "==="+responseString);
 
-                    } else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                    JSONArray array = new JSONArray(result.getData());
+                    if (array.length() == 0 && showPage == 1) {
+                        footerLayout.setVisibility(View.VISIBLE);
+                        setFooterType(4);
+                        return;
+                    } else if (array.length() < GlobalConfig.PAGE_SIZE && showPage == 1) {
+                        footerLayout.setVisibility(View.GONE);
+                        setFooterType(5);
+                    } else if (array.length() < GlobalConfig.PAGE_SIZE) {
+                        footerLayout.setVisibility(View.VISIBLE);
+                        setFooterType(2);
+                    } else if (array.length() >= 10) {
+                        footerLayout.setVisibility(View.VISIBLE);
+                        setFooterType(0);
                     }
+                    for (int i = 0; i < array.length(); i++) {
+                        MyMessageBean bean = JSON.parseObject(array.getJSONObject(i).toString(), MyMessageBean.class);
+                        datas.add(bean);
+                    }
+
+
+//                    if ("Success".equals(result.getFlag())) {
+//
+//
+//                    } else {
+//                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+//                    }
                 } catch (Exception e) {
 
                 } finally {

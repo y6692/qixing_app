@@ -89,9 +89,6 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
         ll_back = (LinearLayout) findViewById(R.id.ll_backBtn);
 
         pvOptions = new OptionsPickerView(context,false);
-//        pvOptions1 = new OptionsPickerView(context,false);
-//        pvOptions2 = new OptionsPickerView(context,false);
-
         pvOptions.setTitle("交易类型");
 
         // list投资列表

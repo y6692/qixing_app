@@ -280,17 +280,19 @@
                             </LinearLayout>
                         </LinearLayout>
 
-                        <RelativeLayout
+                        <LinearLayout
+                            android:visibility="gone"
+                            android:id="@+id/bikeFaultUI_ll_restCause"
                             android:layout_width="match_parent"
-                            android:layout_height="19dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="14dp"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:orientation="vertical">
 
                             <cn.qimate.bike.core.widget.ClearEditText
                                 android:id="@+id/bikeFaultUI_restCause"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="19dp"
                                 android:background="@null"
                                 android:hint="请填写其他原因"
                                 android:inputType="numberDecimal"
@@ -300,12 +302,14 @@
                                 android:textColorHint="#B2B2B2"
                                 android:textSize="@dimen/sp12" />
 
-                        </RelativeLayout>
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="#9C9C9C" />
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="#9C9C9C" />
+                        </LinearLayout>
+
+
 
                     </LinearLayout>
 

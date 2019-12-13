@@ -1,4 +1,4 @@
-package cn.qimate.bike.fragment;
+package cn.qimate.bike.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -25,7 +25,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +49,6 @@ import com.qiniu.android.storage.UpCancellationSignal;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadOptions;
-import com.zxing.lib.scaner.activity.ActivityScanerCode;
 import com.zxing.lib.scaner.activity.ActivityScanerCode2;
 
 import org.apache.http.Header;
@@ -72,15 +70,11 @@ import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
-import cn.nostra13.universalimageloader.core.ImageLoader;
-import cn.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
-import cn.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
-import cn.qimate.bike.activity.CrashHandler;
-import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.base.BaseViewHolder;
@@ -109,7 +103,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Administrator on 2017/2/14 0014.
  */
 @SuppressLint("NewApi")
-public class BikeFaultFragment extends BaseFragment implements View.OnClickListener{
+public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.OnClickListener{
 
     private View v;
     Unbinder unbinder;
@@ -118,15 +112,16 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
     private AMapLocationClientOption locationOption = new AMapLocationClientOption();
 
     private Context context;
-    private Activity activity;
 //    private LoadingDialog loadingDialog;
     private ImageView backImg;
     private TextView title;
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
-    private EditText bikeCodeEdit;
+    private TextView bikeCodeEdit;
     private ImageView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6;
-    private TextView Tag1_1,Tag1_2,Tag1_3;
+    private TextView Tag1_1,Tag1_2;
+    private RelativeLayout rl_question;
+    private TextView tv_question;
     private LinearLayout ll_restCauseEdit;
     private EditText restCauseEdit;
     private EditText addressEdit;
@@ -137,21 +132,11 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
     private boolean isSelected1 = false;
     private boolean isSelected1_1 = false;
     private boolean isSelected1_2 = false;
-    private boolean isSelected1_3 = false;
     private boolean isSelected2 = false;
     private boolean isSelected3 = false;
     private boolean isSelected4 = false;
     private boolean isSelected5 = false;
     private boolean isSelected6 = false;
-    private boolean isSelected7 = false;
-    private boolean isSelected8 = false;
-    private boolean isSelected9 = false;
-    private boolean isSelected10 = false;
-    private boolean isSelected11 = false;
-    private boolean isSelected12 = false;
-    private boolean isSelected13 = false;
-    private boolean isSelected14 = false;
-    private boolean isSelected15 = false;
 
 
 
@@ -197,56 +182,28 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
     private String upToken = "";
     private Bitmap upBitmap;
 
-    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_bike_fault, null);
-        unbinder = ButterKnife.bind(this, v);
-
-        return v;
-    }
+    private OptionsPickerView pvOptions;
+    private ArrayList<String> item = new ArrayList<>();
 
 
-    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        context = getActivity();
-        activity = getActivity();
-//        datas = new ArrayList<>();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_end_bike_feed_back);
+        context = this;
+
+        CrashHandler.getInstance().setmContext(this);
 
         TagsList = new ArrayList<>();
-        imageUrlList = new ArrayList<Bitmap>();
-//        bitmapList = new ArrayList<Bitmap>();
+        imageUrlList = new ArrayList<>();
 
         type = SharedPreferencesUrls.getInstance().getString("type", "");
         m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-//        bikeCode = getIntent().getStringExtra("bikeCode");
+        bikeCode = getIntent().getStringExtra("bikeCode");
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            int checkPermission = activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-//            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-//                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-//                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },0);
-//                } else {
-//                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-//                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
-//                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    dialog.cancel();
-//                                    finishMine();
-//                                }
-//                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.cancel();
-//                            BikeFaultFragment.this.requestPermissions(
-//                                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },0);
-//                        }
-//                    });
-//                    customBuilder.create().show();
-//                }
-//                return;
-//            }
-//        }
         initView();
-
     }
+
 
 
     private void initView(){
@@ -255,50 +212,51 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        backImg = activity.findViewById(R.id.mainUI_title_backBtn);
+        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+
+        pvOptions = new OptionsPickerView(context,false);
+        pvOptions.setTitle("问题类型");
 
         imageUri = Uri.parse("file:///sdcard/temp.jpg");
-        iv_popup_window_back = activity.findViewById(R.id.popupWindow_back);
-        rl_popup_window = activity.findViewById(R.id.popupWindow);
+        iv_popup_window_back = (ImageView)findViewById(R.id.popupWindow_back);
+        rl_popup_window = (RelativeLayout) findViewById(R.id.popupWindow);
 
-        takePhotoBtn = activity.findViewById(R.id.takePhotoBtn);
-        pickPhotoBtn = activity.findViewById(R.id.pickPhotoBtn);
-        cancelBtn = activity.findViewById(R.id.cancelBtn);
+        takePhotoBtn = (Button)findViewById(R.id.takePhotoBtn);
+        pickPhotoBtn = (Button)findViewById(R.id.pickPhotoBtn);
+        cancelBtn = (Button)findViewById(R.id.cancelBtn);
 
         pickPhotoBtn.setVisibility(View.GONE);
         takePhotoBtn.setOnClickListener(itemsOnClick);
         pickPhotoBtn.setOnClickListener(itemsOnClick);
         cancelBtn.setOnClickListener(itemsOnClick);
 
-        bikeCodeEdit = activity.findViewById(R.id.bikeFaultUI_codenum);
-        iv_scan = activity.findViewById(R.id.bikeFaultUI_scan);
+        bikeCodeEdit = (TextView) findViewById(R.id.endBikeFeedBackUI_codenum);
 
-        Tag1 = activity.findViewById(R.id.bikeFaultUI_type_Tag1);
-        Tag1_1 = activity.findViewById(R.id.bikeFaultUI_type_Tag1_1);
-        Tag1_2 = activity.findViewById(R.id.bikeFaultUI_type_Tag1_2);
-        Tag1_3 = activity.findViewById(R.id.bikeFaultUI_type_Tag1_3);
-        Tag2 = activity.findViewById(R.id.bikeFaultUI_type_Tag2);
-        Tag3 = activity.findViewById(R.id.bikeFaultUI_type_Tag3);
-        Tag4 = activity.findViewById(R.id.bikeFaultUI_type_Tag4);
-        Tag5 = activity.findViewById(R.id.bikeFaultUI_type_Tag5);
-        Tag6 = activity.findViewById(R.id.bikeFaultUI_type_Tag6);
+        Tag1 = (ImageView)findViewById(R.id.endBikeFeedBackUI_type_Tag1);
+        Tag1_1 = (TextView)findViewById(R.id.endBikeFeedBackUI_type_Tag1_1);
+        Tag1_2 = (TextView)findViewById(R.id.endBikeFeedBackUI_type_Tag1_2);
+        Tag2 = (ImageView)findViewById(R.id.endBikeFeedBackUI_type_Tag2);
+        Tag3 = (ImageView)findViewById(R.id.endBikeFeedBackUI_type_Tag3);
+        Tag4 = (ImageView)findViewById(R.id.endBikeFeedBackUI_type_Tag4);
+        Tag5 = (ImageView)findViewById(R.id.endBikeFeedBackUI_type_Tag5);
+        Tag6 = (ImageView)findViewById(R.id.endBikeFeedBackUI_type_Tag6);
 
-
-        ll_restCauseEdit = activity.findViewById(R.id.bikeFaultUI_ll_restCause);
-        restCauseEdit = activity.findViewById(R.id.bikeFaultUI_restCause);
-        addressEdit = activity.findViewById(R.id.bikeFaultUI_address);
-        photoMyGridview = activity.findViewById(R.id.bikeFaultUI_photoGridView);
-        submitBtn = activity.findViewById(R.id.bikeFaultUI_submitBtn);
+        rl_question = (RelativeLayout)findViewById(R.id.endBikeFeedBackUI_rl_question);
+        tv_question = (TextView)findViewById(R.id.endBikeFeedBackUI_tv_question);
+        ll_restCauseEdit = (LinearLayout) findViewById(R.id.endBikeFeedBackUI_ll_restCause);
+        restCauseEdit = (EditText) findViewById(R.id.endBikeFeedBackUI_restCause);
+        addressEdit = (EditText)findViewById(R.id.endBikeFeedBackUI_address);
+        photoMyGridview = (MyGridView) findViewById(R.id.endBikeFeedBackUI_photoGridView);
+        submitBtn = (Button)findViewById(R.id.endBikeFeedBackUI_submitBtn);
 
         myAdapter = new PhotoGridviewAdapter(context);
         photoMyGridview.setAdapter(myAdapter);
 
         backImg.setOnClickListener(this);
-        iv_scan.setOnClickListener(this);
+        rl_question.setOnClickListener(this);
         Tag1.setOnClickListener(this);
         Tag1_1.setOnClickListener(this);
         Tag1_2.setOnClickListener(this);
-        Tag1_3.setOnClickListener(this);
         Tag2.setOnClickListener(this);
         Tag3.setOnClickListener(this);
         Tag4.setOnClickListener(this);
@@ -436,7 +394,33 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                 }
             }
         });
-        initLocation();
+
+
+        item.add("不在车旁");
+        item.add("车辆故障");
+        item.add("蓝牙连接失败");
+        item.add("校外不想骑回");
+        item.add("定位错误");
+        item.add("其他");
+
+        pvOptions.setPicker(item);
+        pvOptions.setCyclic(false, false, false);
+        pvOptions.setSelectOptions(0, 0, 0);
+
+        pvOptions.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3) {
+
+//                order_type = options1;
+                tv_question.setText(item.get(options1));
+
+//                initHttp();
+
+            }
+        });
+
+//        initLocation();
 
         if (access_token == null || "".equals(access_token)){
             Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
@@ -521,16 +505,12 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                 scrollToFinishActivity();
                 break;
 
-            case R.id.bikeFaultUI_scan:
-                Intent intent = new Intent();
-                intent.setClass(context, ActivityScanerCode2.class);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                intent.putExtra("isChangeKey",false);
-                startActivityForResult(intent, 101);
+            case R.id.endBikeFeedBackUI_rl_question:
+                pvOptions.show();
 
                 break;
 
-            case R.id.bikeFaultUI_type_Tag1:
+            case R.id.endBikeFeedBackUI_type_Tag1:
                 if (isSelected1){
                     isSelected1 = false;
 //                    if (TagsList.contains(Tag1.getText().toString())){
@@ -540,13 +520,10 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
 
                     isSelected1_1 = false;
                     isSelected1_2 = false;
-                    isSelected1_3 = false;
                     Tag1_1.setTextColor(Color.parseColor("#FD555B"));
                     Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
                     Tag1_2.setTextColor(Color.parseColor("#FD555B"));
                     Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
-                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
 
                     Tag1.setImageResource(R.drawable.lock_icon);    //未选中
                 }else {
@@ -558,20 +535,17 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
 
                     isSelected1_1 = true;
                     isSelected1_2 = true;
-                    isSelected1_3 = true;
                     Tag1_1.setTextColor(Color.parseColor("#FFFFFF"));
                     Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg2);
                     Tag1_2.setTextColor(Color.parseColor("#FFFFFF"));
                     Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
-                    Tag1_3.setTextColor(Color.parseColor("#FFFFFF"));
-                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg2);
 
                     Tag1.setImageResource(R.drawable.lock_icon2);   //选中
                 }
                 pd();
                 break;
 
-            case R.id.bikeFaultUI_type_Tag1_1:
+            case R.id.endBikeFeedBackUI_type_Tag1_1:
                 if (isSelected1_1){
                     isSelected1_1 = false;
 //                    if (TagsList.contains(Tag1.getText().toString())){
@@ -591,7 +565,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
 
                 }
 
-                if(isSelected1_1 || isSelected1_2 || isSelected1_3){
+                if(isSelected1_1 || isSelected1_2){
                     Tag1.setImageResource(R.drawable.lock_icon2);
                 }else{
                     Tag1.setImageResource(R.drawable.lock_icon);
@@ -600,7 +574,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                 pd();
                 break;
 
-            case R.id.bikeFaultUI_type_Tag1_2:
+            case R.id.endBikeFeedBackUI_type_Tag1_2:
                 if (isSelected1_2){
                     isSelected1_2 = false;
 //                    if (TagsList.contains(Tag1.getText().toString())){
@@ -617,7 +591,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                     Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
                 }
 
-                if(isSelected1_1 || isSelected1_2 || isSelected1_3){
+                if(isSelected1_1 || isSelected1_2){
                     Tag1.setImageResource(R.drawable.lock_icon2);
                 }else{
                     Tag1.setImageResource(R.drawable.lock_icon);
@@ -626,33 +600,8 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                 pd();
                 break;
 
-            case R.id.bikeFaultUI_type_Tag1_3:
-                if (isSelected1_3){
-                    isSelected1_3 = false;
-//                    if (TagsList.contains(Tag1.getText().toString())){
-//                        TagsList.remove(Tag1.getText().toString());
-//                    }
-                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
-                }else {
-                    isSelected1_3 = true;
-//                    if (!TagsList.contains(Tag1.getText().toString())){
-//                        TagsList.add(Tag1.getText().toString());
-//                    }
-                    Tag1_3.setTextColor(Color.parseColor("#FFFFFF"));
-                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg2);
-                }
 
-                if(isSelected1_1 || isSelected1_2 || isSelected1_3){
-                    Tag1.setImageResource(R.drawable.lock_icon2);
-                }else{
-                    Tag1.setImageResource(R.drawable.lock_icon);
-                }
-
-                pd();
-                break;
-
-            case R.id.bikeFaultUI_type_Tag2:
+            case R.id.endBikeFeedBackUI_type_Tag2:
                 if (isSelected2){
                     isSelected2 = false;
 //                    if (TagsList.contains(Tag2.getText().toString())){
@@ -671,7 +620,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                 pd();
                 break;
 //
-//            case R.id.bikeFaultUI_type_Tag3:
+//            case R.id.endBikeFeedBackUI_type_Tag3:
 //                if (isSelected3){
 //                    isSelected3 = false;
 //                    if (TagsList.contains(Tag3.getText().toString())){
@@ -690,7 +639,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
 //                pd();
 //                break;
 //
-//            case R.id.bikeFaultUI_type_Tag4:
+//            case R.id.endBikeFeedBackUI_type_Tag4:
 //                if (isSelected4){
 //                    isSelected4 = false;
 //                    if (TagsList.contains(Tag4.getText().toString())){
@@ -709,7 +658,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
 //                pd();
 //                break;
 //
-//            case R.id.bikeFaultUI_type_Tag5:
+//            case R.id.endBikeFeedBackUI_type_Tag5:
 //                if (isSelected5){
 //                    isSelected5 = false;
 //                    if (TagsList.contains(Tag5.getText().toString())){
@@ -728,7 +677,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
 //                pd();
 //                break;
 //
-            case R.id.bikeFaultUI_type_Tag6:
+            case R.id.endBikeFeedBackUI_type_Tag6:
                 if (isSelected6){
                     isSelected6 = false;
 //                    if (TagsList.contains(Tag6.getText().toString())){
@@ -751,7 +700,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                 pd();
                 break;
 
-            case R.id.bikeFaultUI_submitBtn:
+            case R.id.endBikeFeedBackUI_submitBtn:
                 submit();
                 break;
             default:
@@ -917,7 +866,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
     void memberEvent() {
         RequestParams params = new RequestParams();
         try {
-            Log.e("feedback===memberEvent0", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+Build.VERSION.RELEASE+"==="+activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName);
+            Log.e("feedback===memberEvent0", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+Build.VERSION.RELEASE+"==="+getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
 
             params.put("uid", uid);
             params.put("access_token", access_token);
@@ -925,7 +874,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
             params.put("phone_model", new Build().MODEL);
             params.put("phone_system", "Android");
             params.put("phone_system_version", Build.VERSION.RELEASE);     //手机系统版本 必传 如：13.1.2
-            params.put("app_version", activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName);      //应用版本 必传 如：1.8.2
+            params.put("app_version", getPackageManager().getPackageInfo(getPackageName(), 0).versionName);      //应用版本 必传 如：1.8.2
             params.put("event", "4");
             params.put("event_id", fid);
             params.put("event_content", "submit_feedback");
@@ -1014,7 +963,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
 //                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
 //                        }
 
-                        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
 
                             File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
                             if (Uri.fromFile(temp) != null) {
@@ -1563,7 +1512,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.cancel();
 
-                                        BikeFaultFragment.this.requestPermissions(new String[] { Manifest.permission.CAMERA },
+                                        EndBikeFeedBackActivity.this.requestPermissions(new String[] { Manifest.permission.CAMERA },
                                                 101);
 
                                     }
@@ -1631,7 +1580,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                                     Intent localIntent = new Intent();
                                     localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-                                    localIntent.setData(Uri.fromParts("package", activity.getPackageName(), null));
+                                    localIntent.setData(Uri.fromParts("package", getPackageName(), null));
                                     startActivity(localIntent);
                                     finishMine();
                                 }
@@ -1699,7 +1648,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                                     Intent localIntent = new Intent();
                                     localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-                                    localIntent.setData(Uri.fromParts("package", activity.getPackageName(), null));
+                                    localIntent.setData(Uri.fromParts("package", getPackageName(), null));
                                     startActivity(localIntent);
                                     finishMine();
                                 }
@@ -1733,7 +1682,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
      */
     private void clickPopupWindow() {
         // 获取截图的Bitmap
-        Bitmap bitmap = UtilScreenCapture.getDrawing(activity);
+        Bitmap bitmap = UtilScreenCapture.getDrawing(this);
 
         if (bitmap != null) {
             // 将截屏Bitma放入ImageView
@@ -1767,7 +1716,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
     private void initLocation(){
         if (NetworkUtils.getNetWorkType(context) != NetworkUtils.NONETWORK) {
             //初始化client
-            locationClient = new AMapLocationClient(activity.getApplicationContext());
+            locationClient = new AMapLocationClient(getApplicationContext());
             //设置定位参数
             locationClient.setLocationOption(getDefaultOption());
             // 设置定位监听
@@ -1825,7 +1774,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                             Intent localIntent = new Intent();
                             localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-                            localIntent.setData(Uri.fromParts("package", activity.getPackageName(), null));
+                            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
                             startActivity(localIntent);
                             finishMine();
                         }

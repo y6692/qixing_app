@@ -124,7 +124,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
     private EditText bikeCodeEdit;
     private ImageView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6;
     private TextView Tag1_1,Tag1_2;
-    private LinearLayout ll_2,ll_3,ll_4,ll_5;
+    private LinearLayout ll_restCauseEdit;
     private EditText restCauseEdit;
     private EditText addressEdit;
     private PhotoGridviewAdapter myAdapter;
@@ -306,7 +306,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
         Tag5 = activity.findViewById(R.id.ebikeFaultUI_type_Tag5);
         Tag6 = activity.findViewById(R.id.ebikeFaultUI_type_Tag6);
 
-
+        ll_restCauseEdit = activity.findViewById(R.id.ebikeFaultUI_ll_restCause);
         restCauseEdit = activity.findViewById(R.id.ebikeFaultUI_restCause);
         addressEdit = activity.findViewById(R.id.ebikeFaultUI_address);
         photoMyGridview = activity.findViewById(R.id.ebikeFaultUI_photoGridView);
@@ -709,24 +709,28 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 //                pd();
 //                break;
 //
-//            case R.id.ebikeFaultUI_type_Tag6:
-//                if (isSelected6){
-//                    isSelected6 = false;
+            case R.id.ebikeFaultUI_type_Tag6:
+                if (isSelected6){
+                    isSelected6 = false;
 //                    if (TagsList.contains(Tag6.getText().toString())){
 //                        TagsList.remove(Tag6.getText().toString());
 //                    }
 //                    Tag6.setTextColor(Color.parseColor("#666666"));
-//                    Tag6.setBackgroundResource(R.drawable.shape_feedback);
-//                }else {
-//                    isSelected6 = true;
+
+                    ll_restCauseEdit.setVisibility(View.GONE);
+                    Tag6.setImageResource(R.drawable.other_icon);
+                }else {
+                    isSelected6 = true;
 //                    if (!TagsList.contains(Tag6.getText().toString())){
 //                        TagsList.add(Tag6.getText().toString());
 //                    }
 //                    Tag6.setTextColor(Color.parseColor("#f57752"));
-//                    Tag6.setBackgroundResource(R.drawable.shape_feedback_selectd);
-//                }
-//                pd();
-//                break;
+
+                    ll_restCauseEdit.setVisibility(View.VISIBLE);
+                    Tag6.setImageResource(R.drawable.other_icon2);
+                }
+                pd();
+                break;
 
             case R.id.ebikeFaultUI_submitBtn:
                 submit();
