@@ -51,6 +51,7 @@ import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadOptions;
 import com.zxing.lib.scaner.activity.ActivityScanerCode;
+import com.zxing.lib.scaner.activity.ActivityScanerCode2;
 
 import org.apache.http.Header;
 import org.json.JSONException;
@@ -125,6 +126,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
 
     private EditText bikeCodeEdit;
     private ImageView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6;
+    private TextView Tag1_1,Tag1_2,Tag1_3;
     private LinearLayout ll_2,ll_3,ll_4,ll_5;
     private EditText restCauseEdit;
     private EditText addressEdit;
@@ -133,6 +135,9 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
     private Button submitBtn;
 
     private boolean isSelected1 = false;
+    private boolean isSelected1_1 = false;
+    private boolean isSelected1_2 = false;
+    private boolean isSelected1_3 = false;
     private boolean isSelected2 = false;
     private boolean isSelected3 = false;
     private boolean isSelected4 = false;
@@ -266,11 +271,12 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
         cancelBtn.setOnClickListener(itemsOnClick);
 
         bikeCodeEdit = activity.findViewById(R.id.bikeFaultUI_codenum);
-
-
         iv_scan = activity.findViewById(R.id.bikeFaultUI_scan);
 
         Tag1 = activity.findViewById(R.id.bikeFaultUI_type_Tag1);
+        Tag1_1 = activity.findViewById(R.id.bikeFaultUI_type_Tag1_1);
+        Tag1_2 = activity.findViewById(R.id.bikeFaultUI_type_Tag1_2);
+        Tag1_3 = activity.findViewById(R.id.bikeFaultUI_type_Tag1_3);
         Tag2 = activity.findViewById(R.id.bikeFaultUI_type_Tag2);
         Tag3 = activity.findViewById(R.id.bikeFaultUI_type_Tag3);
         Tag4 = activity.findViewById(R.id.bikeFaultUI_type_Tag4);
@@ -311,6 +317,9 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
         backImg.setOnClickListener(this);
         iv_scan.setOnClickListener(this);
         Tag1.setOnClickListener(this);
+        Tag1_1.setOnClickListener(this);
+        Tag1_2.setOnClickListener(this);
+        Tag1_3.setOnClickListener(this);
         Tag2.setOnClickListener(this);
         Tag3.setOnClickListener(this);
         Tag4.setOnClickListener(this);
@@ -535,7 +544,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
 
             case R.id.bikeFaultUI_scan:
                 Intent intent = new Intent();
-                intent.setClass(context, ActivityScanerCode.class);
+                intent.setClass(context, ActivityScanerCode2.class);
 //                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //                intent.putExtra("isChangeKey",false);
                 startActivityForResult(intent, 101);
@@ -549,36 +558,139 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
 //                        TagsList.remove(Tag1.getText().toString());
 //                    }
 //                    Tag1.setTextColor(Color.parseColor("#666666"));
-                    Tag1.setImageResource(R.drawable.lock_icon2);
+
+                    isSelected1_1 = false;
+                    isSelected1_2 = false;
+                    isSelected1_3 = false;
+                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
+                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
+                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
+
+                    Tag1.setImageResource(R.drawable.lock_icon);    //未选中
                 }else {
                     isSelected1 = true;
 //                    if (!TagsList.contains(Tag1.getText().toString())){
 //                        TagsList.add(Tag1.getText().toString());
 //                    }
 //                    Tag1.setTextColor(Color.parseColor("#f57752"));
-                    Tag1.setImageResource(R.drawable.lock_icon);
+
+                    isSelected1_1 = true;
+                    isSelected1_2 = true;
+                    isSelected1_3 = true;
+                    Tag1_1.setTextColor(Color.parseColor("#FFFFFF"));
+                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg2);
+                    Tag1_2.setTextColor(Color.parseColor("#FFFFFF"));
+                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
+                    Tag1_3.setTextColor(Color.parseColor("#FFFFFF"));
+                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg2);
+
+                    Tag1.setImageResource(R.drawable.lock_icon2);   //选中
                 }
                 pd();
                 break;
 
-//            case R.id.bikeFaultUI_type_Tag2:
-//                if (isSelected2){
-//                    isSelected2 = false;
+            case R.id.bikeFaultUI_type_Tag1_1:
+                if (isSelected1_1){
+                    isSelected1_1 = false;
+//                    if (TagsList.contains(Tag1.getText().toString())){
+//                        TagsList.remove(Tag1.getText().toString());
+//                    }
+                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
+
+
+                }else {
+                    isSelected1_1 = true;
+//                    if (!TagsList.contains(Tag1.getText().toString())){
+//                        TagsList.add(Tag1.getText().toString());
+//                    }
+                    Tag1_1.setTextColor(Color.parseColor("#FFFFFF"));
+                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg2);
+
+                }
+
+                if(isSelected1_1 || isSelected1_2 || isSelected1_3){
+                    Tag1.setImageResource(R.drawable.lock_icon2);
+                }else{
+                    Tag1.setImageResource(R.drawable.lock_icon);
+                }
+
+                pd();
+                break;
+
+            case R.id.bikeFaultUI_type_Tag1_2:
+                if (isSelected1_2){
+                    isSelected1_2 = false;
+//                    if (TagsList.contains(Tag1.getText().toString())){
+//                        TagsList.remove(Tag1.getText().toString());
+//                    }
+                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
+                }else {
+                    isSelected1_2 = true;
+//                    if (!TagsList.contains(Tag1.getText().toString())){
+//                        TagsList.add(Tag1.getText().toString());
+//                    }
+                    Tag1_2.setTextColor(Color.parseColor("#FFFFFF"));
+                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
+                }
+
+                if(isSelected1_1 || isSelected1_2 || isSelected1_3){
+                    Tag1.setImageResource(R.drawable.lock_icon2);
+                }else{
+                    Tag1.setImageResource(R.drawable.lock_icon);
+                }
+
+                pd();
+                break;
+
+            case R.id.bikeFaultUI_type_Tag1_3:
+                if (isSelected1_3){
+                    isSelected1_3 = false;
+//                    if (TagsList.contains(Tag1.getText().toString())){
+//                        TagsList.remove(Tag1.getText().toString());
+//                    }
+                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
+                }else {
+                    isSelected1_3 = true;
+//                    if (!TagsList.contains(Tag1.getText().toString())){
+//                        TagsList.add(Tag1.getText().toString());
+//                    }
+                    Tag1_3.setTextColor(Color.parseColor("#FFFFFF"));
+                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg2);
+                }
+
+                if(isSelected1_1 || isSelected1_2 || isSelected1_3){
+                    Tag1.setImageResource(R.drawable.lock_icon2);
+                }else{
+                    Tag1.setImageResource(R.drawable.lock_icon);
+                }
+
+                pd();
+                break;
+
+            case R.id.bikeFaultUI_type_Tag2:
+                if (isSelected2){
+                    isSelected2 = false;
 //                    if (TagsList.contains(Tag2.getText().toString())){
 //                        TagsList.remove(Tag2.getText().toString());
 //                    }
 //                    Tag2.setTextColor(Color.parseColor("#666666"));
-//                    Tag2.setBackgroundResource(R.drawable.shape_feedback);
-//                }else {
-//                    isSelected2 = true;
+                    Tag2.setImageResource(R.drawable.brake_icon);
+                }else {
+                    isSelected2 = true;
 //                    if (!TagsList.contains(Tag2.getText().toString())){
 //                        TagsList.add(Tag2.getText().toString());
 //                    }
 //                    Tag2.setTextColor(Color.parseColor("#f57752"));
-//                    Tag2.setBackgroundResource(R.drawable.shape_feedback_selectd);
-//                }
-//                pd();
-//                break;
+                    Tag2.setImageResource(R.drawable.brake_icon2);
+                }
+                pd();
+                break;
 //
 //            case R.id.bikeFaultUI_type_Tag3:
 //                if (isSelected3){
@@ -870,15 +982,8 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                     case 101:
                         if (resultCode == RESULT_OK) {
                             String codenum = data.getStringExtra("codenum");
-//                            m_nowMac = data.getStringExtra("m_nowMac");
-//                            type = data.getStringExtra("type");
-//                            bleid = data.getStringExtra("bleid");
-//                            deviceuuid = data.getStringExtra("deviceuuid");
-//                            price = data.getStringExtra("price");
-//                            electricity = data.getStringExtra("electricity");
-//                            mileage = data.getStringExtra("mileage");
 
-                            Log.e("mf===requestCode1", type+"==="+codenum);
+                            Log.e("bff===101_b", type+"==="+codenum);
 
                             bikeCodeEdit.setText(codenum);
 

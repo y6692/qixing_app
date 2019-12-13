@@ -74,21 +74,38 @@ public class HttpHelper {
 //		}
 
 
-		String token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-
-		Log.e("header===0", "===" + token);
-
-		client.addHeader("Authorization", token);
-		client.addHeader("Accept", "application/vnd.ws.v1+json");
-
-		client.addHeader("Phone_Brand", new Build().MANUFACTURER.toUpperCase());
-		client.addHeader("Phone_Model", new Build().MODEL);
-		client.addHeader("Phone_System", "Android");
-		client.addHeader("Phone_System_Version", SystemUtil.getSystemVersion());
-		client.addHeader("App_Version", getVersionName(context));
-//			client.addHeader("Device_UUID", "" + tm.getDeviceId());
+		addHeader(context);
 
 		client.get(context, url, responseHandler);
+	}
+
+	public static void addHeader(Context context) {
+		try {
+
+			TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+			if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+				return;
+			}
+
+			Log.e("header===0", "===" + SharedPreferencesUrls.getInstance().getString("access_token",""));
+
+			client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
+			client.addHeader("Accept", "application/vnd.ws.v1+json");
+			client.addHeader("Phone-Brand", new Build().MANUFACTURER.toUpperCase());
+			client.addHeader("Phone-Model", new Build().MODEL);
+			client.addHeader("Phone-System", "Android");
+			client.addHeader("Phone-System-Version", SystemUtil.getSystemVersion());
+			client.addHeader("App-Version", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
+			client.addHeader("Device_UUID", "" + tm.getDeviceId());
+			client.addHeader("Client", "Android_APP");
+
+			Log.e("post===", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+SystemUtil.getSystemVersion()+"==="+context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName+"==="+tm.getDeviceId());
+
+
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+		}
+
 	}
 
 	/**
@@ -108,34 +125,14 @@ public class HttpHelper {
 //		}
 
 
-		String token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-
-		Log.e("header===", "===" + token);
-
-		client.addHeader("Authorization", token);
-		client.addHeader("Accept", "application/vnd.ws.v1+json");
-
-		client.addHeader("Phone_Brand", new Build().MANUFACTURER.toUpperCase());
-		client.addHeader("Phone_Model", new Build().MODEL);
-		client.addHeader("Phone_System", "Android");
-		client.addHeader("Phone_System_Version", SystemUtil.getSystemVersion());
-		client.addHeader("App_Version", getVersionName(context));
-//			client.addHeader("Device_UUID", "" + tm.getDeviceId());
+		addHeader(context);
 
 		client.get(context, url, params, responseHandler);
 	}
 
 	public static void post(Context context, String url, AsyncHttpResponseHandler responseHandler) {
 
-		client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token", ""));
-		client.addHeader("Accept", "application/vnd.ws.v1+json");
-
-		client.addHeader("Phone_Brand", new Build().MANUFACTURER.toUpperCase());
-		client.addHeader("Phone_Model", new Build().MODEL);
-		client.addHeader("Phone_System", "Android");
-		client.addHeader("Phone_System_Version", SystemUtil.getSystemVersion());
-		client.addHeader("App_Version", getVersionName(context));
-//			client.addHeader("Device_UUID", "" + tm.getDeviceId());
+		addHeader(context);
 
 		client.post(context, url, responseHandler);
 	}
@@ -161,29 +158,9 @@ public class HttpHelper {
 		Log.e("post===0", SharedPreferencesUrls.getInstance().getString("access_token","")+"===");
 
 
-		try {
-//			TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-//			if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//				return;
-//			}
+		addHeader(context);
 
-			client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
-			client.addHeader("Accept", "application/vnd.ws.v1+json");
-			client.addHeader("Phone_Brand", new Build().MANUFACTURER.toUpperCase());
-			client.addHeader("Phone_Model", new Build().MODEL);
-			client.addHeader("Phone_System", "Android");
-			client.addHeader("Phone_System_Version", SystemUtil.getSystemVersion());
-			client.addHeader("App_Version", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
-//			client.addHeader("Device_UUID", "" + tm.getDeviceId());
-			client.addHeader("Client", "Android_APP");
-
-			Log.e("post===", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+SystemUtil.getSystemVersion()+"==="+context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName+"===");
-
-			client.post(context, url, params, responseHandler);
-
-		} catch (Exception e) {
-			e.printStackTrace(System.err);
-		}
+		client.post(context, url, params, responseHandler);
 	}
 
 
@@ -204,37 +181,21 @@ public class HttpHelper {
 //			e.printStackTrace();
 //		}
 
-		String time = ""+Math.round(new Date().getTime()/1000);
-		String sign = SHA1.encode(time+"ga4H9dwf"+"StfmzsxJ6NBQGRFd2lI5gWhZnPVboLjU4eCcwauHYrqKOE0739AM18iDyTkXvp");
+//		String time = ""+Math.round(new Date().getTime()/1000);
+//		String sign = SHA1.encode(time+"ga4H9dwf"+"StfmzsxJ6NBQGRFd2lI5gWhZnPVboLjU4eCcwauHYrqKOE0739AM18iDyTkXvp");
 
 //		client.addHeader("A-APPKEY", "ga4H9dwf");
 //		client.addHeader("A-TIMESTAMP", time);
 //		client.addHeader("A-SIGN", sign);
 
-		client.addHeader("Accept", "application/vnd.ws.v1+json");
-
-		client.addHeader("Phone_Brand", new Build().MANUFACTURER.toUpperCase());
-		client.addHeader("Phone_Model", new Build().MODEL);
-		client.addHeader("Phone_System", "Android");
-		client.addHeader("Phone_System_Version", SystemUtil.getSystemVersion());
-		client.addHeader("App_Version", getVersionName(context));
-//			client.addHeader("Device_UUID", "" + tm.getDeviceId());
+		addHeader(context);
 
 		client.post(context, url, params, responseHandler);
 	}
 
 	public static void delete(Context context, String url, AsyncHttpResponseHandler responseHandler) {
 
-		client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
-		client.addHeader("Accept", "application/vnd.ws.v1+json");
-
-
-		client.addHeader("Phone_Brand", new Build().MANUFACTURER.toUpperCase());
-		client.addHeader("Phone_Model", new Build().MODEL);
-		client.addHeader("Phone_System", "Android");
-		client.addHeader("Phone_System_Version", SystemUtil.getSystemVersion());
-		client.addHeader("App_Version", getVersionName(context));
-//			client.addHeader("Device_UUID", "" + tm.getDeviceId());
+		addHeader(context);
 
 		client.delete(context, url, responseHandler);
 	}

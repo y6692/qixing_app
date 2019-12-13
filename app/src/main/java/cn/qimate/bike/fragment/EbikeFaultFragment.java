@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,6 +49,8 @@ import com.qiniu.android.storage.UpCancellationSignal;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadOptions;
+import com.zxing.lib.scaner.activity.ActivityScanerCode;
+import com.zxing.lib.scaner.activity.ActivityScanerCode2;
 
 import org.apache.http.Header;
 import org.json.JSONException;
@@ -97,6 +100,8 @@ import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by Administrator on 2017/2/14 0014.
  */
@@ -118,6 +123,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 
     private EditText bikeCodeEdit;
     private ImageView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6;
+    private TextView Tag1_1,Tag1_2;
     private LinearLayout ll_2,ll_3,ll_4,ll_5;
     private EditText restCauseEdit;
     private EditText addressEdit;
@@ -126,6 +132,8 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
     private Button submitBtn;
 
     private boolean isSelected1 = false;
+    private boolean isSelected1_1 = false;
+    private boolean isSelected1_2 = false;
     private boolean isSelected2 = false;
     private boolean isSelected3 = false;
     private boolean isSelected4 = false;
@@ -173,7 +181,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 
     private boolean isComplete = false;
 
-    private ImageView imageView;
+    private ImageView iv_scan;
     private int pos;
     private boolean isSubmit = false;
 
@@ -286,10 +294,12 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
         pickPhotoBtn.setOnClickListener(itemsOnClick);
         cancelBtn.setOnClickListener(itemsOnClick);
 
-        bikeCodeEdit = (EditText)activity.findViewById(R.id.ebikeFaultUI_codenum);
-        bikeCodeEdit.setText(bikeCode);
+        bikeCodeEdit = activity.findViewById(R.id.ebikeFaultUI_codenum);
+        iv_scan = activity.findViewById(R.id.ebikeFaultUI_scan);
 
         Tag1 = activity.findViewById(R.id.ebikeFaultUI_type_Tag1);
+        Tag1_1 = activity.findViewById(R.id.ebikeFaultUI_type_Tag1_1);
+        Tag1_2 = activity.findViewById(R.id.ebikeFaultUI_type_Tag1_2);
         Tag2 = activity.findViewById(R.id.ebikeFaultUI_type_Tag2);
         Tag3 = activity.findViewById(R.id.ebikeFaultUI_type_Tag3);
         Tag4 = activity.findViewById(R.id.ebikeFaultUI_type_Tag4);
@@ -306,7 +316,10 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
         photoMyGridview.setAdapter(myAdapter);
 
         backImg.setOnClickListener(this);
+        iv_scan.setOnClickListener(this);
         Tag1.setOnClickListener(this);
+        Tag1_1.setOnClickListener(this);
+        Tag1_2.setOnClickListener(this);
         Tag2.setOnClickListener(this);
         Tag3.setOnClickListener(this);
         Tag4.setOnClickListener(this);
@@ -520,6 +533,15 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 
                 scrollToFinishActivity();
                 break;
+
+            case R.id.ebikeFaultUI_scan:
+                Intent intent = new Intent();
+                intent.setClass(context, ActivityScanerCode2.class);
+//                intent.putExtra("isChangeKey",false);
+                startActivityForResult(intent, 101);
+
+                break;
+
             case R.id.ebikeFaultUI_type_Tag1:
                 if (isSelected1){
                     isSelected1 = false;
@@ -528,36 +550,107 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 //                    }
 //                    Tag1.setTextColor(Color.parseColor("#666666"));
 //                    Tag1.setBackgroundResource(R.drawable.shape_feedback);
-                    Tag1.setImageResource(R.drawable.lock_icon4);
+
+                    isSelected1_1 = false;
+                    isSelected1_2 = false;
+                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
+                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
+
+                    Tag1.setImageResource(R.drawable.lock_icon3);
                 }else {
                     isSelected1 = true;
 //                    if (!TagsList.contains(Tag1.getText().toString())){
 //                        TagsList.add(Tag1.getText().toString());
 //                    }
 //                    Tag1.setTextColor(Color.parseColor("#f57752"));
-                    Tag1.setImageResource(R.drawable.lock_icon3);
+
+                    isSelected1_1 = true;
+                    isSelected1_2 = true;
+                    Tag1_1.setTextColor(Color.parseColor("#FFFFFF"));
+                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg2);
+                    Tag1_2.setTextColor(Color.parseColor("#FFFFFF"));
+                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
+
+                    Tag1.setImageResource(R.drawable.lock_icon4);
                 }
                 pd();
                 break;
 
-//            case R.id.ebikeFaultUI_type_Tag2:
-//                if (isSelected2){
-//                    isSelected2 = false;
+            case R.id.ebikeFaultUI_type_Tag1_1:
+                if (isSelected1_1){
+                    isSelected1_1 = false;
+//                    if (TagsList.contains(Tag1.getText().toString())){
+//                        TagsList.remove(Tag1.getText().toString());
+//                    }
+                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
+
+
+                }else {
+                    isSelected1_1 = true;
+//                    if (!TagsList.contains(Tag1.getText().toString())){
+//                        TagsList.add(Tag1.getText().toString());
+//                    }
+                    Tag1_1.setTextColor(Color.parseColor("#FFFFFF"));
+                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg2);
+
+                }
+
+                if(isSelected1_1 || isSelected1_2){
+                    Tag1.setImageResource(R.drawable.lock_icon4);
+                }else{
+                    Tag1.setImageResource(R.drawable.lock_icon3);
+                }
+
+                pd();
+                break;
+            case R.id.ebikeFaultUI_type_Tag1_2:
+                if (isSelected1_2){
+                    isSelected1_2 = false;
+//                    if (TagsList.contains(Tag1.getText().toString())){
+//                        TagsList.remove(Tag1.getText().toString());
+//                    }
+                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
+                }else {
+                    isSelected1_2 = true;
+//                    if (!TagsList.contains(Tag1.getText().toString())){
+//                        TagsList.add(Tag1.getText().toString());
+//                    }
+                    Tag1_2.setTextColor(Color.parseColor("#FFFFFF"));
+                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
+                }
+
+                if(isSelected1_1 || isSelected1_2){
+                    Tag1.setImageResource(R.drawable.lock_icon2);
+                }else{
+                    Tag1.setImageResource(R.drawable.lock_icon);
+                }
+
+                pd();
+                break;
+
+
+            case R.id.ebikeFaultUI_type_Tag2:
+                if (isSelected2){
+                    isSelected2 = false;
 //                    if (TagsList.contains(Tag2.getText().toString())){
 //                        TagsList.remove(Tag2.getText().toString());
 //                    }
 //                    Tag2.setTextColor(Color.parseColor("#666666"));
-//                    Tag2.setBackgroundResource(R.drawable.shape_feedback);
-//                }else {
-//                    isSelected2 = true;
+                    Tag2.setImageResource(R.drawable.brake_icon);
+                }else {
+                    isSelected2 = true;
 //                    if (!TagsList.contains(Tag2.getText().toString())){
 //                        TagsList.add(Tag2.getText().toString());
 //                    }
 //                    Tag2.setTextColor(Color.parseColor("#f57752"));
-//                    Tag2.setBackgroundResource(R.drawable.shape_feedback_selectd);
-//                }
-//                pd();
-//                break;
+                    Tag2.setImageResource(R.drawable.brake_icon2);
+                }
+                pd();
+                break;
 //
 //            case R.id.ebikeFaultUI_type_Tag3:
 //                if (isSelected3){
@@ -848,6 +941,21 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
             @Override
             public void run() {
                 switch (requestCode) {
+                    case 101:
+                        if (resultCode == RESULT_OK) {
+                            String codenum = data.getStringExtra("codenum");
+
+                            Log.e("eff===101_eb", type+"==="+codenum);
+
+                            bikeCodeEdit.setText(codenum);
+
+                        } else {
+                            Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        Log.e("requestCode===1", "==="+resultCode);
+                        break;
+
                     case REQUESTCODE_PICK:// 直接从相册获取
                         if (data != null){
                             try {
@@ -1215,31 +1323,31 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 //
 //                    break;
 
-                case 1:
-                    pos = 0;
-
-                    ImageLoader.getInstance().displayImage(Urls.host + imageUrlList.get(pos), imageView, new SimpleImageLoadingListener(){
-
-                        @Override
-                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                            Log.e("Complete===", "==="+isComplete);
-
-                            isComplete = true;
-
-                            if (loadingDialog != null) {
-                                loadingDialog.dismiss();
-                            }
-                        }
-
-                    }, new ImageLoadingProgressListener(){
-
-                        @Override
-                        public void onProgressUpdate(String imageUri, View view, int current, int total) {
-                            Log.e("Update===", "==="+current);
-                        }
-                    });
-
-                    break;
+//                case 1:
+//                    pos = 0;
+//
+//                    ImageLoader.getInstance().displayImage(Urls.host + imageUrlList.get(pos), imageView, new SimpleImageLoadingListener(){
+//
+//                        @Override
+//                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+//                            Log.e("Complete===", "==="+isComplete);
+//
+//                            isComplete = true;
+//
+//                            if (loadingDialog != null) {
+//                                loadingDialog.dismiss();
+//                            }
+//                        }
+//
+//                    }, new ImageLoadingProgressListener(){
+//
+//                        @Override
+//                        public void onProgressUpdate(String imageUri, View view, int current, int total) {
+//                            Log.e("Update===", "==="+current);
+//                        }
+//                    });
+//
+//                    break;
 
                 default:
                     break;

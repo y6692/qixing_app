@@ -121,31 +121,34 @@
                                     android:text="无法还车"/>
 
                                 <TextView
+                                    android:id="@+id/bikeFaultUI_type_Tag1_1"
                                     android:layout_width="60dp"
                                     android:layout_height="20dp"
                                     android:layout_marginTop="4dp"
                                     android:gravity="center"
                                     android:background="@drawable/block_fault_bcg"
-                                    android:textColor="@color/white"
+                                    android:textColor="#FD555B"
                                     android:textSize="@dimen/sp8"
                                     android:text="锁未弹开"/>
 
                                 <TextView
+                                    android:id="@+id/bikeFaultUI_type_Tag1_2"
                                     android:layout_width="60dp"
                                     android:layout_height="20dp"
                                     android:layout_marginTop="4dp"
                                     android:gravity="center"
-                                    android:background="@drawable/block_fault_bcg2"
+                                    android:background="@drawable/block_fault_bcg"
                                     android:textColor="#FD555B"
                                     android:textSize="@dimen/sp8"
                                     android:text="无法关锁"/>
 
                                 <TextView
+                                    android:id="@+id/bikeFaultUI_type_Tag1_3"
                                     android:layout_width="60dp"
                                     android:layout_height="20dp"
                                     android:layout_marginTop="4dp"
                                     android:gravity="center"
-                                    android:background="@drawable/block_fault_bcg2"
+                                    android:background="@drawable/block_fault_bcg"
                                     android:textColor="#FD555B"
                                     android:textSize="@dimen/sp8"
                                     android:text="外形破损"/>
