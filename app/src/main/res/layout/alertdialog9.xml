@@ -30,7 +30,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/dp10"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/x"/>
+            android:src="@drawable/calendar_icon"/>
 
     </RelativeLayout>
 
@@ -48,7 +48,7 @@
             android:id="@+id/img_url"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_bad"/>
+            android:src="@drawable/ic_error"/>
 
         <TextView
             style="@style/DialogText"
