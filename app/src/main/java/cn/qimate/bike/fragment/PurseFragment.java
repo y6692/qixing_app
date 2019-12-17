@@ -50,6 +50,7 @@ import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.model.BannerBean;
 import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.model.UserBean;
 import cn.qimate.bike.view.RoundImageView;
 
 @SuppressLint("NewApi")
@@ -61,7 +62,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
     private Context context;
     private Activity activity;
 
-    private TextView tv_recharge;
+    private TextView tv_balance, tv_recharge;
 
     private RelativeLayout rl_payCart;
     private RelativeLayout rl_exchange;
@@ -109,10 +110,11 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
 //        title = (TextView) getActivity().findViewById(R.id.mainUI_title_titleText);
 //        title.setText("我的钱包");
 
-        tv_recharge = (TextView) getActivity().findViewById(R.id.tv_recharge);
-        rl_payCart = (RelativeLayout) getActivity().findViewById(R.id.rl_payCart);
-        rl_exchange= (RelativeLayout) getActivity().findViewById(R.id.rl_exchange);
-        rl_bill = (RelativeLayout) getActivity().findViewById(R.id.rl_bill);
+        tv_balance = getActivity().findViewById(R.id.tv_balance);
+        tv_recharge = getActivity().findViewById(R.id.tv_recharge);
+        rl_payCart = getActivity().findViewById(R.id.rl_payCart);
+        rl_exchange= getActivity().findViewById(R.id.rl_exchange);
+        rl_bill = getActivity().findViewById(R.id.rl_bill);
 
         tv_recharge.setOnClickListener(this);
         rl_payCart.setOnClickListener(this);
@@ -153,7 +155,54 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
         rl_ad = activity.findViewById(R.id.rl_purse_ad);
         rl_ad.setOnClickListener(this);
 
+        user();
         banner();
+    }
+
+    private void user() {
+        Log.e("spfa===user", "===");
+
+        HttpHelper.get(context, Urls.user, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("spfa===user1", responseString + "===" + result.data);
+
+                            UserBean bean = JSON.parseObject(result.getData(), UserBean.class);
+
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+
+
+                            tv_balance.setText(""+bean.getBalance());
+
+
+                        } catch (Exception e) {
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                        }
+
+                    }
+                });
+            }
+        });
+
     }
 
     private void banner() {

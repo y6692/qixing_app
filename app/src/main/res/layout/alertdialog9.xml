@@ -116,26 +116,26 @@
         android:layout_alignParentBottom="true"
         >
 
-        <Button
-            android:visibility="gone"
-            android:id="@+id/negativeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="换辆车试试"
-            android:textSize="@dimen/sp16"
-            android:textColor="@color/white"
-            android:layout_centerInParent="true"
-            />
-        <Button
-            android:visibility="gone"
-            android:id="@+id/positiveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="换辆车试试"
-            android:textSize="@dimen/sp16"
-            android:textColor="@color/white"
-            android:layout_centerInParent="true"
-            />
+        <!--<Button-->
+            <!--android:visibility="gone"-->
+            <!--android:id="@+id/negativeButton"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="换辆车试试"-->
+            <!--android:textSize="@dimen/sp16"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--/>-->
+        <!--<Button-->
+            <!--android:visibility="gone"-->
+            <!--android:id="@+id/positiveButton"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="换辆车试试"-->
+            <!--android:textSize="@dimen/sp16"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--/>-->
 
         <TextView
             android:id="@+id/positiveButton2"

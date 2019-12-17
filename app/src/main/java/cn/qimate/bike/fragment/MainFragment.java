@@ -134,10 +134,12 @@ import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadStartActivity;
 import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.activity.LoginActivity;
+import cn.qimate.bike.activity.MyOrderDetailActivity;
 import cn.qimate.bike.activity.PersonAlterActivity;
 import cn.qimate.bike.activity.RealNameAuthActivity;
 import cn.qimate.bike.activity.ServiceCenter0Activity;
 import cn.qimate.bike.activity.ServiceCenterActivity;
+import cn.qimate.bike.activity.SettlementPlatformActivity;
 import cn.qimate.bike.activity.UnpayRouteActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;
@@ -194,6 +196,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private String codenum = "";
     private String m_nowMac = "";
     private String type = "";
+    private String lock_no = "";
     private String bleid = "";
     private String deviceuuid = "";
     private String price = "";
@@ -209,7 +212,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     long serverTime;
     private String tel = "13188888888";
 
-    private LinearLayout scanLock, myCommissionLayout, myLocationLayout, linkLayout, rl_ad, ll_top, ll_top_navi, refreshLayout, slideLayout,
+    private LinearLayout ll_payBtn, scanLock, myCommissionLayout, myLocationLayout, linkLayout, rl_ad, ll_top, ll_top_navi, refreshLayout, slideLayout,
             ll_top_biking, ll_biking_openAgain, ll_biking_endBtn, ll_biking_errorEnd, ll_estimated_cost, ll_electricity, ll_bike, ll_ebike,
             ll_top_pay;
 
@@ -298,6 +301,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private boolean isAgain = false;
     private String backType = "";
     private boolean isOpenLock = false;
+    private int pay_scene = 1;
+    private boolean isWaitEbikeInfo = true;
+    private Thread ebikeInfoThread;
+
+
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_main, null);
@@ -406,6 +414,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         } else {
             HttpHelper.get(context, Urls.car_authority, new TextHttpResponseHandler() {
                 @Override
+                public void onStart() {
+                    onStartCommon("正在加载");
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    onFailureCommon(throwable.toString());
+                }
+                @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
                     try {
                         Log.e("mf===car_authority1", "==="+responseString);
@@ -416,52 +432,86 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                         SharedPreferencesUrls.getInstance().putString("iscert", ""+bean.getUnauthorized_code());
 
+                        Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder()+"==="+new JSONObject(bean.getOrder()).getInt("order_id"));
+
+                        order_id = new JSONObject(bean.getOrder()).getInt("order_id");
+
                         int unauthorized_code = bean.getUnauthorized_code();
 
-                        if(unauthorized_code==1) {
+//                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 5需要充值余额或购买骑行卡 6有进行中行程 7有待支付行程 8有待支付调度费 9有待支付赔偿费
+                        unauthorized_code = bean.getUnauthorized_code();
+
+                        if(unauthorized_code==6) {
                             ll_top_navi.setVisibility(View.GONE);
                             ll_top.setVisibility(View.VISIBLE);
                             rl_ad.setVisibility(View.GONE);
                             ll_top_biking.setVisibility(View.VISIBLE);
-                        }
 
-//                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 3需要充值余额或购买骑行卡 4有待支付行程 5有待支付调度费 6有待支付赔偿费
-
-//                        bean.setUnauthorized_code(4);     //TODO
-                        unauthorized_code = bean.getUnauthorized_code();
-
-                        if(unauthorized_code>=4){
+                            cycling();
+                            cyclingThread();
+                        }else if(unauthorized_code>=7){
                             ll_top_biking.setVisibility(View.GONE);
                             ll_top_navi.setVisibility(View.GONE);
                             ll_top.setVisibility(View.VISIBLE);
                             rl_ad.setVisibility(View.GONE);
                             ll_top_pay.setVisibility(View.VISIBLE);
 
-                            if(unauthorized_code==4){
+                            if(unauthorized_code==7){
+                                pay_scene = 1;
                                 tv_payBtn.setText("骑行支付");
-                            }else if(unauthorized_code==5){
-                                tv_payBtn.setText("赔偿费支付");
-                            }else if(unauthorized_code==6){
+                            }else if(unauthorized_code==8){
+                                pay_scene = 3;
                                 tv_payBtn.setText("调度费支付");
+                            }else if(unauthorized_code==9){
+                                pay_scene = 3;
+                                tv_payBtn.setText("赔偿费支付");
                             }
                         }
 
-                        cycling();
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
                 }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString,
-                                      Throwable throwable) {
-                }
             });
 
 
         }
     }
+
+    private void cyclingThread() {
+
+        Log.e("cyclingThread===", "==="+ebikeInfoThread);
+
+        if (ebikeInfoThread == null) {
+            Runnable ebikeInfoRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    while (isWaitEbikeInfo) {
+
+                        m_myHandler.sendEmptyMessage(4);
+
+                        try {
+                            Thread.sleep(30 * 1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            };
+
+            ebikeInfoThread = new Thread(ebikeInfoRunnable);
+            ebikeInfoThread.start();
+        }
+    }
+
+
 
     private void cycling() {
         Log.e("mf===cycling", "===");
@@ -486,7 +536,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            Log.e("mf===cycling1", responseString + "===" + result.data);
+                            Log.e("mf===cycling_1", responseString + "===" + result.data);
 
                             OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
 
@@ -495,7 +545,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             }
 
                             if(null != bean.getOrder_sn()){
-                                Log.e("mf===cycling2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+                                Log.e("mf===cycling_2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
                                 oid = bean.getOrder_sn();
                                 codenum = bean.getCar_number();
@@ -505,23 +555,23 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                 SharedPreferencesUrls.getInstance().getString("type", type);
 
-                                tv_biking_codenum.setText(codenum);     //TODO
-                                tv_estimated_cost.setText(bean.getEstimated_cost());
-                                tv_estimated_cost2.setText(bean.getEstimated_cost());
-                                tv_car_start_time.setText(bean.getCar_start_time());
-                                tv_car_start_time2.setText(bean.getCar_start_time());
-                                tv_car_mileage.setText(mileage);
-                                tv_car_electricity.setText(electricity);
+//                                tv_biking_codenum.setText(codenum);     //TODO
+//                                tv_estimated_cost.setText("¥"+bean.getEstimated_cost());
+//                                tv_estimated_cost2.setText("¥"+bean.getEstimated_cost());
+//                                tv_car_start_time.setText(bean.getCar_start_time());
+//                                tv_car_start_time2.setText(bean.getCar_start_time());
+//                                tv_car_mileage.setText(mileage);
+//                                tv_car_electricity.setText(electricity);
+//
+//                                tv_pay_codenum.setText(bean.getCar_number());
+//                                tv_pay_car_start_time.setText(bean.getCar_start_time());
+//                                tv_pay_car_end_time.setText(bean.getCar_end_time());
+//                                tv_order_amount.setText(bean.getOrder_amount());
 
-                                tv_pay_codenum.setText(bean.getCar_number());
-                                tv_pay_car_start_time.setText(bean.getCar_start_time());
-                                tv_pay_car_end_time.setText(bean.getCar_end_time());
-                                tv_order_amount.setText(bean.getOrder_amount());
-
-                                Log.e("mf===cycling22", type+"===" + bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+                                Log.e("mf===cycling_22", type+"===" + bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
                                 if ("4".equals(type) || "7".equals(type)) {
-                                    Log.e("mf===cycling3", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+                                    Log.e("mf===cycling_3", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
                                     changeTab(1);
 
@@ -539,7 +589,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 
                                 }else{
-                                    Log.e("mf===cycling4", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+                                    Log.e("mf===cycling_4", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
                                     changeTab(0);
 
@@ -713,6 +763,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 codenum = bean.getCar_number();
                                 type = ""+bean.getLock_id();
                                 m_nowMac = bean.getCar_lock_mac();
+                                mileage = bean.getMileage();
+                                electricity = bean.getElectricity();
 
                                 ll_top_navi.setVisibility(View.GONE);
                                 ll_top.setVisibility(View.VISIBLE);
@@ -720,8 +772,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 ll_top_biking.setVisibility(View.VISIBLE);
 
                                 tv_biking_codenum.setText(codenum);     //TODO
-                                tv_estimated_cost.setText(bean.getEstimated_cost());
-                                tv_estimated_cost2.setText(bean.getEstimated_cost());
+                                tv_estimated_cost.setText("¥"+bean.getEstimated_cost());
+                                tv_estimated_cost2.setText("¥"+bean.getEstimated_cost());
                                 tv_car_start_time.setText(bean.getCar_start_time());
                                 tv_car_start_time2.setText(bean.getCar_start_time());
                                 tv_car_mileage.setText(mileage);
@@ -733,12 +785,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     ll_bike.setVisibility(View.GONE);
                                     ll_ebike.setVisibility(View.VISIBLE);
 
-
-//                                    if ("0".equals(SharedPreferencesUrls.getInstance().getString("tempStat", "0"))) {
-//                                        tv_againBtn.setText("临时上锁");
-//                                    } else {
-//                                        tv_againBtn.setText("再次开锁");
-//                                    }
                                 }else{
                                     ll_estimated_cost.setVisibility(View.VISIBLE);
                                     ll_electricity.setVisibility(View.GONE);
@@ -910,12 +956,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
-        customDialog = customBuilder.create();
+//        customBuilder = new CustomDialog.Builder(context);    //TODO
+//        customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
+//        customDialog = customBuilder.create();
 
         customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("不在还车点，请至校内地图红色区域停车")
+        customBuilder.setTitle("温馨提示").setMessage("请前往最近的还车点还车")
                 .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -923,59 +969,68 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 });
         customDialog3 = customBuilder.create();
 
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("不在还车点，请至校内地图绿色区域停车")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog4 = customBuilder.create();
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("不在还车点，请至校内地图红色区域停车")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog3 = customBuilder.create();
 
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("上锁失败，请联系客服\n客服电话：0519—86999222")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog5 = customBuilder.create();
-
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("连接失败，请重试")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog6 = customBuilder.create();
-
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("关锁失败，请重试")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog7 = customBuilder.create();
-
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("开锁失败，请重试")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog8 = customBuilder.create();
-
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("请确认锁已关闭")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog9 = customBuilder.create();
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("不在还车点，请至校内地图绿色区域停车")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog4 = customBuilder.create();
+//
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("上锁失败，请联系客服\n客服电话：0519—86999222")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog5 = customBuilder.create();
+//
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("连接失败，请重试")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog6 = customBuilder.create();
+//
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("关锁失败，请重试")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog7 = customBuilder.create();
+//
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("开锁失败，请重试")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog8 = customBuilder.create();
+//
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("请确认锁已关闭")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog9 = customBuilder.create();
 
         loadingDialogWithHelp = new LoadingDialogWithHelp(context);
         loadingDialogWithHelp.setCancelable(false);
@@ -1016,6 +1071,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         tv_order_amount = activity.findViewById(R.id.tv_order_amount);
         tv_pay_car_start_time = activity.findViewById(R.id.tv_pay_car_start_time);
         tv_pay_car_end_time = activity.findViewById(R.id.tv_pay_car_end_time);
+        ll_payBtn = activity.findViewById(R.id.ll_payBtn);
         tv_payBtn = activity.findViewById(R.id.tv_payBtn);
 
 
@@ -1030,6 +1086,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         ll_biking_openAgain.setOnClickListener(this);
         ll_biking_endBtn.setOnClickListener(this);
         ll_biking_errorEnd.setOnClickListener(this);
+        ll_payBtn.setOnClickListener(this);
 
         bikeFragment = new BikeFragment();
         ebikeFragment = new EbikeFragment();
@@ -1167,8 +1224,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-
-
                             JSONArray ja_banners = new JSONArray(new JSONObject(result.getData()).getString("banners"));
 
                             Log.e("mf===banner1", ja_banners.length() + "===" + result.data);
@@ -1191,9 +1246,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         } catch (Exception e) {
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
 
-                            if (loadingDialog != null && loadingDialog.isShowing()) {
-                                loadingDialog.dismiss();
-                            }
+
+                        }
+
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
                         }
 
                     }
@@ -1231,6 +1288,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     return;
                 }
                 UIHelper.goToAct(context, PersonAlterActivity.class);
+                break;
+
+            case R.id.ll_payBtn:
+                if ("".equals(SharedPreferencesUrls.getInstance().getString("access_token",""))){
+                    UIHelper.goToAct(context, LoginActivity.class);
+                    ToastUtil.showMessageApp(context,"请先登录你的账号");
+                    return;
+                }
+
+                end();
                 break;
 
             case R.id.rl_authBtn:
@@ -1725,7 +1792,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if (SharedPreferencesUrls.getInstance().getString("iscert","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
                     switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert",""))){
 
-                        case 1:
+                        case 0:
                             if (Build.VERSION.SDK_INT >= 23) {
                                 int checkPermission = activity.checkSelfPermission(Manifest.permission.CAMERA);
                                 if (checkPermission != PERMISSION_GRANTED) {
@@ -1791,6 +1858,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 
                             break;
+                        case 1:
+                            ToastUtil.showMessageApp(context,"需要登录");
+                            UIHelper.goToAct(context, RealNameAuthActivity.class);
+                            break;
                         case 2:
                             ToastUtil.showMessageApp(context,"您还未认证,请先认证");
                             UIHelper.goToAct(context, RealNameAuthActivity.class);
@@ -1801,6 +1872,22 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         case 4:
                             ToastUtil.showMessageApp(context,"认证被驳回，请重新认证");
                             UIHelper.goToAct(context,RealNameAuthActivity.class);
+                            break;
+                        case 5:
+                            ToastUtil.showMessageApp(context,"需要充值余额或购买骑行卡");
+                            break;
+                        case 6:
+                            ToastUtil.showMessageApp(context,"有进行中行程");
+                            break;
+                        case 7:
+                            ToastUtil.showMessageApp(context,"有待支付行程");
+                            break;
+                        case 8:
+                            ToastUtil.showMessageApp(context,"有待支付调度费");
+                            break;
+                        case 9:
+                            ToastUtil.showMessageApp(context,"有待支付赔偿费");
+                            break;
                     }
                 }else {
                     ToastUtil.showMessageApp(context,"您还未认证,请先认证");
@@ -2393,6 +2480,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             Log.e("order===2",  isLookPsdBtn + "===" + type+"===" + jsonObject.getString("order_sn"));
 
+                            order_id = jsonObject.getInt("order_id");
                             oid = jsonObject.getString("order_sn");
 
                             isLookPsdBtn = false;
@@ -2776,15 +2864,17 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             }else{
                                 popupwindow.dismiss();
 
-                                cycling2();
+//                                cycling2();
+//                                cyclingThread();
+
+                                n=0;
+                                carLoopOpen();
                             }
 
                             if (loadingDialog != null && loadingDialog.isShowing()) {
                                 loadingDialog.dismiss();
                             }
 
-//                            n=0;
-//                            carLoopOpen();
                         } catch (Exception e) {
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
                         }
@@ -2801,13 +2891,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private void carLoopOpen() {
         Log.e("mf===carLoopOpen", "===" + codenum);
 
-        HttpHelper.get(context, Urls.car + URLEncoder.encode(codenum), new TextHttpResponseHandler() {
+        HttpHelper.get(context, Urls.order_detail+order_id, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e("mf===carLoopClose_fail", responseString + "===" + throwable.toString());
                 onFailureCommon(throwable.toString());
             }
 
@@ -2821,26 +2912,20 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             Log.e("mf===carLoopOpen1", responseString + "===" + result.data);
 
-                            CarBean bean = JSON.parseObject(result.getData(), CarBean.class);
+                            OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
 
-                            Log.e("mf===carLoopOpen2", bean.getNumber()+"===" + bean.getLock_status());
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
 
-//                            车锁状态 0未知 1已上锁 2已开锁 3离线
-                            if(2 != bean.getLock_status()){
+                            if(20 != bean.getOrder_state()){
                                 queryCarStatusOpen();
                             }else{
 //                                isConnect = true;
 
-                                car_notification(1, 0,  0);
+//                                car_notification(3, 0,  isAgain?0:1);
 
-                                if(isAgain){
-                                    tv_againBtn.setText("临时上锁");
-                                    SharedPreferencesUrls.getInstance().putString("tempStat","0");
-                                }
-
-                                if (loadingDialog != null && loadingDialog.isShowing()) {
-                                    loadingDialog.dismiss();
-                                }
+                                cyclingThread();
                             }
 
                         } catch (Exception e) {
@@ -2883,9 +2968,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     //助力车关锁_轮询
     private void carLoopClose() {
-        Log.e("mf===carLoopClose", isAgain+"===" + codenum);
+        Log.e("mf===carLoopClose", order_id+"===" + isAgain+"===" + codenum);
 
-        HttpHelper.get(context, Urls.cycling, new TextHttpResponseHandler() {
+        HttpHelper.get(context, Urls.order_detail+order_id, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 onStartCommon("正在加载");
@@ -2912,17 +2997,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 loadingDialog.dismiss();
                             }
 
-                            if(30 != bean.getOrder_state()){
+                            if(bean.getOrder_state() < 30){
                                 queryCarStatusClose();
                             }else{
 //                                isConnect = true;
 
 //                                car_notification(3, 0,  isAgain?0:1);
 
-
+                                pay_scene = 1;
                                 end();
-
-
                             }
 
                         } catch (Exception e) {
@@ -2940,8 +3023,46 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void end() {
+        rl_ad.setVisibility(View.VISIBLE);
+        ll_top_biking.setVisibility(View.GONE);
+        ll_top_pay.setVisibility(View.GONE);
+
+        if("5".equals(type)  || "6".equals(type)){
+            ClientManager.getClient().stopSearch();
+
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+
+            ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+            ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener2);
+
+        }else if("7".equals(type)){
+            if (apiClient != null) {
+                apiClient.onDestroy();
+            }
+        }else{
+            BaseApplication.getInstance().getIBLE().stopScan();
+            BaseApplication.getInstance().getIBLE().refreshCache();
+            BaseApplication.getInstance().getIBLE().close();
+            BaseApplication.getInstance().getIBLE().disconnect();
+        }
+
+        isWaitEbikeInfo = false;
+        if (ebikeInfoThread != null) {
+            ebikeInfoThread.interrupt();
+            ebikeInfoThread = null;
+        }
+
         ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
-        UIHelper.goToAct(context, UnpayRouteActivity.class);
+        Intent intent = new Intent(context, SettlementPlatformActivity.class);
+        intent.putExtra("pay_scene", pay_scene);
+        intent.putExtra("order_id", order_id);
+        startActivity(intent);
+//        UIHelper.goToAct(context, UnpayRouteActivity.class);
     }
 
     //助力车关锁_轮询2
@@ -2975,7 +3096,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         Log.e("rent===000",m_nowMac+"==="+keySource);
 
         RequestParams params = new RequestParams();
-        params.put("lock_mac", m_nowMac);
+        params.put("lock_no", lock_no);
         params.put("keySource",keySource);
         HttpHelper.get(context, Urls.rent, params, new TextHttpResponseHandler() {
             @Override
@@ -3155,70 +3276,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 if(!isAgain){
                                     popupwindow.dismiss();
 
-                                    cycling2();
+//                                    cycling2();
+                                    cyclingThread();
 
-//                                    ll_top_navi.setVisibility(View.GONE);
-//                                    ll_top.setVisibility(View.VISIBLE);
-//                                    rl_ad.setVisibility(View.GONE);
-//                                    ll_top_biking.setVisibility(View.VISIBLE);
-//
-//                                    tv_biking_codenum.setText(codenum);     //TODO
-//                                    tv_estimated_cost.setText(bean.getEstimated_cost());
-//                                    tv_estimated_cost2.setText(bean.getEstimated_cost());
-//                                    tv_car_start_time.setText(bean.getCar_start_time());
-//                                    tv_car_start_time2.setText(bean.getCar_start_time());
-//                                    tv_car_mileage.setText(""+mileage);
-//                                    tv_car_electricity.setText(""+electricity);
-//
-//                                    if ("4".equals(type) || "7".equals(type)) {
-//                                        ll_estimated_cost.setVisibility(View.GONE);
-//                                        ll_electricity.setVisibility(View.VISIBLE);
-//                                        ll_mileage.setVisibility(View.GONE);
-//                                        ll_bike.setVisibility(View.GONE);
-//                                        ll_ebike.setVisibility(View.VISIBLE);
-//
-//                                    }else{
-//                                        ll_estimated_cost.setVisibility(View.VISIBLE);
-//                                        ll_electricity.setVisibility(View.GONE);
-//                                        ll_mileage.setVisibility(View.VISIBLE);
-//                                        ll_bike.setVisibility(View.VISIBLE);
-//                                        ll_ebike.setVisibility(View.GONE);
-//                                    }
                                 }
 
                             }else if(action_type == 3){
 
                                 if(!isAgain){
-                                    rl_ad.setVisibility(View.VISIBLE);
-                                    ll_top_biking.setVisibility(View.GONE);
 
-//                                    ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
-//                                  UIHelper.goToAct(context, CurRoadBikedActivity.class);        //TODO
-
-                                    if("5".equals(type)  || "6".equals(type)){
-                                        ClientManager.getClient().stopSearch();
-
-                                        ClientManager.getClient().disconnect(m_nowMac);
-                                        ClientManager.getClient().disconnect(m_nowMac);
-                                        ClientManager.getClient().disconnect(m_nowMac);
-                                        ClientManager.getClient().disconnect(m_nowMac);
-                                        ClientManager.getClient().disconnect(m_nowMac);
-                                        ClientManager.getClient().disconnect(m_nowMac);
-
-                                        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
-                                        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener2);
-
-                                    }else if("7".equals(type)){
-                                        if (apiClient != null) {
-                                            apiClient.onDestroy();
-                                        }
-                                    }else{
-                                        BaseApplication.getInstance().getIBLE().stopScan();
-                                        BaseApplication.getInstance().getIBLE().refreshCache();
-                                        BaseApplication.getInstance().getIBLE().close();
-                                        BaseApplication.getInstance().getIBLE().disconnect();
-                                    }
-
+                                    pay_scene = 1;
                                     end();
 
                                 }
@@ -4497,6 +4564,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             broadcastReceiver2 = null;
         }
 
+        isWaitEbikeInfo = false;
+        if (ebikeInfoThread != null) {
+            ebikeInfoThread.interrupt();
+            ebikeInfoThread = null;
+        }
 
     }
 
@@ -4880,6 +4952,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 
                     break;
+                case 4:
+                    //蓝牙还车成功
+                    cycling2();
+
+                    break;
                 case 6:
                     //蓝牙还车成功
                     car_notification(3, 1, 1);
@@ -4999,7 +5076,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }else {
             Log.e("biking===endBtn",macList.size()+"==="+isContainsList.contains(true)+"==="+type+"==="+isContainsList);
 
-//            rl_msg.setVisibility(View.GONE);  //TODO
+//            rl_msg.setVisibility(View.GONE);
 //            if (polyline != null) {
 //                polyline.remove();
 //            }
@@ -5153,6 +5230,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         loadingDialog.show();
                     }
 
+                    isOpenLock = false;
+                    connect();
+
                     isLookPsdBtn = false;
                     m_myHandler.postDelayed(new Runnable() {
                         @Override
@@ -5186,16 +5266,18 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         }
                     }, 10 * 1000);
 
-                    isOpenLock = false;
-                    connect();
+
 
                 }
-            }
-//            else {        //TODO
+            }else {
 //                rl_msg.setVisibility(View.VISIBLE);
-//
 //                minPolygon();
-//            }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+
+                customDialog3.show();
+            }
 
         }
     }
@@ -5409,14 +5491,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     }, 10 * 1000);
 
                 }
-            }
-//            else {        //TODO
-//                rl_msg.setVisibility(View.GONE);
-//
+            }else {
+//                rl_msg.setVisibility(View.VISIBLE);
 //                minPolygon();
-//
-//                clickCountDeal();
-//            }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+
+                customDialog3.show();
+            }
         }
     }
 
@@ -5499,12 +5582,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                    checkConnect2();
 //                }
 
-            }
-//            else {        //TODO
-//                rl_msg.setVisibility(View.GONE);
-//
+            }else {
+//                rl_msg.setVisibility(View.VISIBLE);
 //                minPolygon();
-//            }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+
+                customDialog3.show();
+            }
 
 
         }
@@ -5535,11 +5621,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 queryState();
 
             }else {
-//                rl_msg.setVisibility(View.GONE);
-//
+//                rl_msg.setVisibility(View.VISIBLE);
 //                minPolygon();
-//
-//                clickCountDeal();
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+
+                customDialog3.show();
             }
 
 
@@ -5667,12 +5755,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     }
                 }
 
-            }
-//            else {        //TODO
-//                rl_msg.setVisibility(View.GONE);
-//
+            }else {
+//                rl_msg.setVisibility(View.VISIBLE);
 //                minPolygon();
-//            }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+
+                customDialog3.show();
+            }
 
 
         }
@@ -5981,6 +6072,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             codenum = data.getStringExtra("codenum");
                             m_nowMac = data.getStringExtra("m_nowMac");
                             type = data.getStringExtra("type");
+                            lock_no = data.getStringExtra("lock_no");
                             bleid = data.getStringExtra("bleid");
                             deviceuuid = data.getStringExtra("deviceuuid");
                             price = data.getStringExtra("price");
@@ -6027,6 +6119,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             isConnect = false;
                             isLookPsdBtn = false;
                             isAgain = false;
+                            pay_scene = 1;
+                            isWaitEbikeInfo = true;
+                            ebikeInfoThread = null;
 
                             if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                                 ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
@@ -6080,29 +6175,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                 if ("4".equals(type) || "7".equals(type)) {
 
-//                                    ebikeInfoLayout.setVisibility(View.VISIBLE);      //TODO
-//
-//                                    if (ebikeInfoThread == null) {
-//                                        Runnable ebikeInfoRunnable = new Runnable() {
-//                                            @Override
-//                                            public void run() {
-//                                                while (isWaitEbikeInfo) {
-//
-//                                                    m_myHandler.sendEmptyMessage(4);
-//
-//                                                    try {
-//                                                        Thread.sleep(30 * 1000);
-//                                                    } catch (InterruptedException e) {
-//                                                        e.printStackTrace();
-//                                                    }
-//
-//                                                }
-//                                            }
-//                                        };
-//
-//                                        ebikeInfoThread = new Thread(ebikeInfoRunnable);
-//                                        ebikeInfoThread.start();
-//                                    }
 
                                     SharedPreferencesUrls.getInstance().putString("tempStat", "0");
                                     tv_againBtn.setText("临时上锁");

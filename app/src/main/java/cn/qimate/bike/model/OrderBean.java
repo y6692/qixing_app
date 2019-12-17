@@ -16,6 +16,7 @@ public class OrderBean {
 	private String mileage;	//订单金额
 
 
+
 	public int getOrder_id() {
 		return order_id;
 	}

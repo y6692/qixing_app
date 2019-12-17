@@ -169,8 +169,8 @@ public class SwipeBackActivity extends BaseFragmentActivity implements SwipeBack
 
 		Log.e("onFailureCommon===", s + "====");
 
-		ToastUtil.showMessageApp(context,"请先登录账号");
-		UIHelper.goToAct(context, LoginActivity.class);
+//		ToastUtil.showMessageApp(context,"请先登录账号");
+//		UIHelper.goToAct(context, LoginActivity.class);
 	}
 
 }

@@ -70,16 +70,23 @@ public class Urls {
 	//退出登录接口
 	public static String authorizations2 = host2 + "/authorizations";
 	//订单/账单列表接口
-	public static String orders= host2 + "/orders";
+	public static String orders = host2 + "/orders";
 	//订单/账单列表接口
-	public static String pay= host2 + "/payment/pay";
+	public static String pay = host2 + "/payment/pay";
 	//我的消息列表接口
-	public static String notices= host2 + "/notices";
+	public static String notices = host2 + "/notices";
 	//客服中心接口
-	public static String services= host2 + "/services";
+	public static String services = host2 + "/services";
 	//人工客服接口
-	public static String phones= host2 + "/service/phones";
+	public static String phones = host2 + "/service/phones";
+	//获取支付方式接口
+	public static String payments = host2 + "/payments";
+	//骑行订单详情接口
+	public static String order_detail = host2 + "/order/cycling/";
 
+//	http://testnewmapi.7mate.cn/api/order/cycling/{id}
+//	http://testnewmapi.7mate.cn/api/user
+//	http://testnewmapi.7mate.cn/api/payments
 //	http://testnewmapi.7mate.cn/api/service/phones
 //	http://testnewmapi.7mate.cn/api/services
 //	http://testnewmapi.7mate.cn/api/notices

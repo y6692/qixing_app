@@ -112,10 +112,37 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
+
+        </activity>
+
+        <activity
+            android:name=".activity.AuthCenterActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
+
+        <activity
+            android:name=".activity.RealNameAuthActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+        </activity>
+
+        <activity
+            android:name=".activity.DepositFreeAuthActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.SettlementPlatformActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
         </activity>
 
         <activity
@@ -134,11 +161,18 @@
         </activity>
 
         <activity
-            android:name=".activity.RealNameAuthActivity"
+            android:name=".activity.MyOrderActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
+        </activity>
+
+        <activity
+            android:name=".activity.MyOrderDetailActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
         </activity>
+
+
 
 
         <activity
@@ -170,12 +204,7 @@
 
         </activity>
 
-        <activity
-            android:name=".activity.SettlementPlatformActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
-
-        </activity>
 
 
 

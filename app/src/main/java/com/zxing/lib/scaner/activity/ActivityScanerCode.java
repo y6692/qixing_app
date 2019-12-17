@@ -1199,6 +1199,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             rIntent.putExtra("codenum", codenum);
                             rIntent.putExtra("m_nowMac", m_nowMac);
                             rIntent.putExtra("type", type);
+                            rIntent.putExtra("lock_no", bean.getLock_no());
                             rIntent.putExtra("bleid", bleid);
                             rIntent.putExtra("deviceuuid", deviceuuid);
                             rIntent.putExtra("price", price);

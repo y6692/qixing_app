@@ -9,8 +9,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,14 +23,17 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
-import cn.qimate.bike.adapter.MyMessageAdapter;
+import cn.qimate.bike.adapter.BillAdapter;
+import cn.qimate.bike.adapter.OrderAdapter;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
+import cn.qimate.bike.model.BillBean;
 import cn.qimate.bike.model.GlobalConfig;
 import cn.qimate.bike.model.MyMessageBean;
 import cn.qimate.bike.model.ResultConsel;
@@ -39,12 +43,11 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
  * Created by Administrator1 on 2017/2/14.
  */
 
-public class MyMessageActivity extends SwipeBackActivity implements View.OnClickListener,SwipeRefreshLayout.OnRefreshListener,
+public class MyOrderActivity extends SwipeBackActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
         AdapterView.OnItemClickListener {
 
     private Context context = this;
-    private ImageView backImg;
-    private TextView title;
+    private LinearLayout ll_back;
     // List
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView myList;
@@ -58,24 +61,35 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
 
     private View footerLayout;
 
-    private MyMessageAdapter myAdapter;
-    private List<MyMessageBean> datas;
+    private OrderAdapter myAdapter;
+    private List<BillBean> datas;
 
     private boolean isRefresh = true;// 是否刷新中
     private boolean isLast = false;
     private int showPage = 1;
 
+    private OptionsPickerView pvOptions;
+
+    private RelativeLayout ll_bill;
+    private TextView tv_bill;
+    private ArrayList<String> item = new ArrayList<>();
+
+    private int order_type = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_my_message);
+        setContentView(R.layout.activity_my_order);
         datas = new ArrayList<>();
         initView();
     }
 
     private void initView(){
 
-        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        ll_back = (LinearLayout) findViewById(R.id.ll_backBtn);
+
+        pvOptions = new OptionsPickerView(context,false);
+        pvOptions.setTitle("交易类型");
 
         // list投资列表
         footerView = LayoutInflater.from(context).inflate(R.layout.footer_item, null);
@@ -95,43 +109,59 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(android.R.color.holo_green_dark), getResources().getColor(android.R.color.holo_green_light),
                 getResources().getColor(android.R.color.holo_orange_light), getResources().getColor(android.R.color.holo_red_light));
 
+        ll_bill = (RelativeLayout)findViewById(R.id.ll_bill);
+        tv_bill = (TextView)findViewById(R.id.tv_bill);
+
         myList.setOnItemClickListener(this);
         if(datas.isEmpty()){
             initHttp();
         }
 
-        myAdapter = new MyMessageAdapter(context);
+        myAdapter = new OrderAdapter(context);
         myAdapter.setDatas(datas);
         myList.setAdapter(myAdapter);
 
-        backImg.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
+        ll_bill.setOnClickListener(this);
         footerLayout.setOnClickListener(this);
+
+//        1骑行订单 2购买骑行卡订单 3调度费订单 4赔偿费订单 5充值订单
+        item.add("骑行订单");
+        item.add("购买骑行卡订单");
+        item.add("调度费订单");
+        item.add("调度费订单");
+        item.add("充值订单");
+
+        pvOptions.setPicker(item);
+        pvOptions.setCyclic(false, false, false);
+        pvOptions.setSelectOptions(0, 0, 0);
+
+        pvOptions.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3) {
+
+                order_type = options1;
+                tv_bill.setText(item.get(options1));
+
+                initHttp();
+
+            }
+        });
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        MyMessageBean bean = myAdapter.getDatas().get(position);
+        BillBean bean = myAdapter.getDatas().get(position);
 
-        Log.e("mma===onItemClick", bean+"==="+ bean.getAction_type());
+        Log.e("moa===onItemClick", bean+"==="+bean.getOrder_id());
 
-        String title = bean.getTitle();
-        String created_at = bean.getCreated_at();
-        String action_content = bean.getAction_content();
+        int order_id = bean.getOrder_id();
 
 
-        Intent intent = new Intent(context, MyMessageDatailActivity.class);
-        intent.putExtra("title", title);
-        intent.putExtra("created_at", created_at);
-        intent.putExtra("action_content", action_content);
+        Intent intent = new Intent(context, MyOrderDetailActivity.class);
+        intent.putExtra("order_id", order_id);
         startActivity(intent);
-
-//        if ("[]".equals(s)){
-//            UIHelper.goWebViewAct(context, myAdapter.getDatas().get(position).getTitle(), myAdapter.getDatas().get(position).getH5_url());
-//        }else{
-//            Intent intent = new Intent(context, ServiceCenter2Activity.class);
-//            intent.putExtra("data", s);
-//            startActivity(intent);
-//        }
     }
 
     @Override
@@ -160,8 +190,12 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.mainUI_title_backBtn:
+            case R.id.ll_backBtn:
                 scrollToFinishActivity();
+                break;
+
+            case R.id.ll_bill:
+                pvOptions.show();
                 break;
 
             case R.id.footer_Layout:
@@ -183,9 +217,10 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
             return;
         }
         RequestParams params = new RequestParams();
-        params.put("page",showPage);
+        params.put("order_type", 1);
+        params.put("page",showPage);    //TODO
         params.put("pagesize", GlobalConfig.PAGE_SIZE);
-        HttpHelper.get(context, Urls.notices, params, new TextHttpResponseHandler() {
+        HttpHelper.get(context, Urls.orders, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 setFooterType(1);
@@ -202,7 +237,8 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 try {
-                    Log.e("notices===", "==="+responseString);
+
+                    Log.e("orders===", "==="+responseString);
 
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
@@ -221,11 +257,19 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
                         footerLayout.setVisibility(View.VISIBLE);
                         setFooterType(0);
                     }
+
+                    Log.e("orders===1", "==="+array.length());
+
                     for (int i = 0; i < array.length(); i++) {
-                        MyMessageBean bean = JSON.parseObject(array.getJSONObject(i).toString(), MyMessageBean.class);
+
+                        Log.e("orders===2", "==="+array.getJSONObject(i).toString());
+
+                        BillBean bean = JSON.parseObject(array.getJSONObject(i).toString(), BillBean.class);
+
+                        Log.e("orders===3", "==="+bean.getOrder_type());
+
                         datas.add(bean);
                     }
-
 
 //                    if ("Success".equals(result.getFlag())) {
 //

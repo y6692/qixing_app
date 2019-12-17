@@ -6,8 +6,8 @@
 
     <gradient
         android:angle="0"
-        android:endColor="#00FFD2"
-        android:startColor="#00B4FF"/>
+        android:endColor="#FC4B68"
+        android:startColor="#FF9E7C"/>
 
 
     <!-- 圆角半径 -->

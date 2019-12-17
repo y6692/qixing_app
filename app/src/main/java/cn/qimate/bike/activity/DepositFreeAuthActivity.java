@@ -4,12 +4,10 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,13 +35,12 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCancellationSignal;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadOptions;
-import com.vondear.rxtools.RxFileTool;
+import com.zxing.lib.scaner.activity.ActivityScanerCode;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -53,15 +50,12 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +67,6 @@ import cn.nostra13.universalimageloader.core.ImageLoader;
 import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.core.common.BitmapUtils1;
-import cn.qimate.bike.core.common.DisplayUtil;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
@@ -82,14 +75,12 @@ import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.img.NetUtil;
 import cn.qimate.bike.model.AuthStateBean;
-import cn.qimate.bike.model.GradeListBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.SchoolListBean;
 import cn.qimate.bike.model.UpTokenBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.FileUtil;
 import cn.qimate.bike.util.QiNiuInitialize;
-import cn.qimate.bike.util.SHA1;
 import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
@@ -101,7 +92,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  * Created by Administrator1 on 2017/2/15.
  */
 
-public class RealNameAuthActivity extends SwipeBackActivity implements View.OnClickListener {
+public class DepositFreeAuthActivity extends SwipeBackActivity implements View.OnClickListener {
 
     private Context context;
 //    private LoadingDialog loadingDialog;
@@ -111,8 +102,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
     private LinearLayout ll_1, ll_2, ll_3;
     private RelativeLayout schoolLayout;
-    private TextView schoolText;
-    private EditText realNameEdit, identityNumberEdit;
+    private TextView schoolText, timeText;
+    private EditText realNameEdit, studentEdit;
     private Button submitBtn;
 
 //    private RelativeLayout uploadImageLayout;
@@ -147,7 +138,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //    private OptionsPickerView pvOptions1;
 //    private OptionsPickerView pvOptions2;
 //    private String sex = "";
-    private String school = "";
+
 
     // 输入法
     private List<SchoolListBean> schoolList;
@@ -166,7 +157,10 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
     File picture;
 
     private String realname;
-    private String identityNumber;
+    private String school = "";
+    private String student_id = "";
+    private String school_id = "";
+    private String time = "";
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -181,7 +175,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_real_name_auth);
+        setContentView(R.layout.activity_deposit_free_auth);
         context = this;
 
         CrashHandler.getInstance().setmContext(this);
@@ -206,7 +200,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         // 选项选择器
         pvOptions = new OptionsPickerView(context,false);
 
-        pvOptions.setTitle("选择学校");
+        pvOptions.setTitle("选择入学时间");
 
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
@@ -220,71 +214,74 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         pickPhotoBtn.setOnClickListener(itemsOnClick);
         cancelBtn.setOnClickListener(itemsOnClick);
 
-//        headLayout = (LinearLayout)findViewById(R.id.ui_realNameAuth_headLayout);
-//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) headLayout.getLayoutParams();
-//        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.2);
-//        headLayout.setLayoutParams(params);
 
-        schoolLayout = (RelativeLayout)findViewById(R.id.ui_realNameAuth_schoolLayout);
-        schoolText = (TextView)findViewById(R.id.ui_realNameAuth_schoolText);
-        realNameEdit = (EditText)findViewById(R.id.ui_realNameAuth_realName);
-        identityNumberEdit = (EditText)findViewById(R.id.ui_realNameAuth_identity_number);
-        submitBtn = (Button) findViewById(R.id.ui_realNameAuth_submitBtn);
+//        schoolLayout = (RelativeLayout)findViewById(R.id.ui_realNameAuth_schoolLayout);
+//        schoolText = (TextView)findViewById(R.id.ui_realNameAuth_schoolText);
+        realNameEdit = (EditText)findViewById(R.id.ui_deposit_free_auth_realName);
+        studentEdit = (EditText)findViewById(R.id.ui_deposit_free_auth_student);
+        schoolText = (TextView)findViewById(R.id.ui_deposit_free_auth_school);
+        timeText = (TextView)findViewById(R.id.ui_deposit_free_auth_time);
+        submitBtn = (Button) findViewById(R.id.ui_deposit_free_auth_submitBtn);
 
         ll_1 = (LinearLayout)findViewById(R.id.ll_1);
         ll_2 = (LinearLayout)findViewById(R.id.ll_2);
         ll_3 = (LinearLayout)findViewById(R.id.ll_3);
 //        uploadImageLayout = (RelativeLayout)findViewById(R.id.ui_realNameAuth_uploadImageLayout);
-        uploadImage = (ImageView)findViewById(R.id.ui_realNameAuth_uploadImage);
-        uploadImage2 = (ImageView)findViewById(R.id.ui_realNameAuth_uploadImage2);
+        uploadImage = (ImageView)findViewById(R.id.ui_deposit_free_auth_uploadImage);
+        uploadImage2 = (ImageView)findViewById(R.id.ui_deposit_free_auth_uploadImage2);
 //        addImageLayout = (RelativeLayout)findViewById(R.id.ui_realNameAuth_addImageLayout);
 
-//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) uploadImage.getLayoutParams();
-//        params.height = (DisplayUtil.getWindowWidth(this) - DisplayUtil.dip2px(context, 20)) * 540 / 856;
-//        uploadImage.setLayoutParams(params);
-//        uploadImage2.setLayoutParams(params);
 
         if (schoolList.isEmpty() || item1.isEmpty()){
             getSchoolList();
         }
         backImg.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
-        schoolLayout.setOnClickListener(this);
+        schoolText.setOnClickListener(this);
+        timeText.setOnClickListener(this);
         uploadImage.setOnClickListener(this);
         uploadImage2.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
-        // 设置默认选中的三级项目
-        // 监听确定选择按钮
+        item.add("1");
+        item.add("2");
+        item.add("3");
+        item.add("4");
+
+        pvOptions.setPicker(item);
+        pvOptions.setCyclic(false, false, false);
+        pvOptions.setSelectOptions(0, 0, 0);
+
         pvOptions.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
 
             @Override
             public void onOptionsSelect(int options1, int option2, int options3) {
-                school = item1.get(options1)[0];
-                schoolText.setText(school);
+                timeText.setText(item.get(options1));
 
-                cert_method = item1.get(options1)[1];
-
-                Log.e("pvOptions===", "==="+cert_method);
-
-                if("0".equals(cert_method)){
-                    isVisible = true;
-                    ll_1.setVisibility(View.VISIBLE);
-                    ll_2.setVisibility(View.GONE);
-                    ll_3.setVisibility(View.GONE);
-                }else if("1".equals(cert_method) || "2".equals(cert_method)){
-                    isVisible = false;
-                    ll_1.setVisibility(View.GONE);
-                }else{
-                    isVisible = true;
-                    ll_1.setVisibility(View.VISIBLE);
-                    ll_2.setVisibility(View.VISIBLE);
-                    ll_3.setVisibility(View.VISIBLE);
-                }
+//                school = item1.get(options1)[0];
+//                schoolText.setText(school);
+//
+//                cert_method = item1.get(options1)[1];
+//
+//                Log.e("pvOptions===", "==="+cert_method);
+//
+//                if("0".equals(cert_method)){
+//                    isVisible = true;
+//                    ll_1.setVisibility(View.VISIBLE);
+//                    ll_2.setVisibility(View.GONE);
+//                    ll_3.setVisibility(View.GONE);
+//                }else if("1".equals(cert_method) || "2".equals(cert_method)){
+//                    isVisible = false;
+//                    ll_1.setVisibility(View.GONE);
+//                }else{
+//                    isVisible = true;
+//                    ll_1.setVisibility(View.VISIBLE);
+//                    ll_2.setVisibility(View.VISIBLE);
+//                    ll_3.setVisibility(View.VISIBLE);
+//                }
             }
         });
 
-//        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
         Log.e("RNA===initView", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
@@ -293,14 +290,6 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
             Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
             UIHelper.goToAct(context,LoginActivity.class);
         }else {
-//            if (!"1".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))
-//                    && SharedPreferencesUrls.getInstance().getString("iscert","") != null &&
-//                    !"".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
-//                initHttp(uid,access_token);
-//            }
-
-//            initHttp(uid, access_token);
-
             getUpToken();
         }
 //        getGradeList();
@@ -309,90 +298,55 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
     @Override
     public void onClick(View v){
-        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         switch (v.getId()){
             case R.id.mainUI_title_backBtn:
                 scrollToFinishActivity();
                 break;
             case R.id.mainUI_title_rightBtn:
-                if (Build.VERSION.SDK_INT >= 23) {
-                    int checkPermission = checkSelfPermission(Manifest.permission.CALL_PHONE);
-                    if (checkPermission != PERMISSION_GRANTED) {
-                        if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
-                            requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
-                        } else {
-                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开拨打电话权限！")
-                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                        }
-                                    }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                    requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
-                                }
-                            });
-                            customBuilder.create().show();
-                        }
-                        return;
-                    }
-                }
-                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-//                customBuilder.setTitle("温馨提示").setMessage("确认拨打" + "0519-86999222" + "吗?")
-                customBuilder.setTitle("点击号码一键拨打").setType(7)
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        })
-//                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.cancel();
-//                        Intent intent=new Intent();
-//                        intent.setAction(Intent.ACTION_CALL);
-//                        intent.setData(Uri.parse("tel:" + "0519-86999222"));
-//                        startActivity(intent);
-//                    }
-//                })
-                ;
-                customBuilder.create().show();
+                UIHelper.goToAct(context, ServiceCenterActivity.class);
                 break;
-            case R.id.ui_realNameAuth_schoolLayout:
+
+            case R.id.ui_deposit_free_auth_school:
+                Intent intent = new Intent();
+                intent.setClass(context, SchoolSelectActivity.class);
+                startActivityForResult(intent, 10);
+                break;
+
+            case R.id.ui_deposit_free_auth_time:
                 pvOptions.show();
                 break;
-//            case R.id.ui_realNameAuth_sexLayout:
-//                pvOptions1.show();
-//                break;
-//            case R.id.ui_realNameAuth_classLayout:
-//                pvOptions2.show();
-//                break;
-            case R.id.ui_realNameAuth_uploadImage:
+
+            case R.id.ui_deposit_free_auth_uploadImage:
                 photo = 1;
                 clickPopupWindow();
                 break;
-            case R.id.ui_realNameAuth_uploadImage2:
+            case R.id.ui_deposit_free_auth_uploadImage2:
                 photo = 2;
                 clickPopupWindow();
                 break;
-            case R.id.ui_realNameAuth_submitBtn:
+            case R.id.ui_deposit_free_auth_submitBtn:
                 String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
                 realname = realNameEdit.getText().toString();
-                identityNumber = identityNumberEdit.getText().toString();
+                student_id = studentEdit.getText().toString();
+                time = timeText.getText().toString();
                 if (access_token == null || "".equals(access_token)){
                     Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
                 }else {
-//                    if (school == null || "".equals(school)){
-//                        Toast.makeText(context,"请选择学校",Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
+
                     if (realname == null || "".equals(realname)){
                         Toast.makeText(context,"请填写您的真实姓名",Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if (identityNumber == null || "".equals(identityNumber)){
-                        Toast.makeText(context,"请填写您的身份证号码",Toast.LENGTH_SHORT).show();
+                    if (student_id == null || "".equals(student_id)){
+                        Toast.makeText(context,"请填写您的学号",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (school_id == null || "".equals(school_id)){
+                        Toast.makeText(context,"请选择学校",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (time == null || "".equals(time)){
+                        Toast.makeText(context,"请选择入学时间",Toast.LENGTH_SHORT).show();
                         return;
                     }
 //                    if (isVisible){
@@ -504,34 +458,6 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                     e.printStackTrace();
                 }
 
-
-
-
-
-//                {ver:7.3.3,ResponseInfo:1574237736489492,status:200, reqId:HpgAAAAlr6vh0NgV, xlog:X-Log, xvia:, host:upload.qiniu.com, path:/, ip:/180.101.136.11:80, port:80, duration:183.000000 s, time:1574237736, sent:25256,error:null}==={"image":null,"ret":"success"}
-
-//                http://q0xo2if8t.bkt.clouddn.com/y2.png?e=1574241198&token=FXDJS_lmH1Gfs-Ni9I9kpPf6MZFTGz5U5BP1CgNu:q2uGajiCFq6t7E-9CxrYXWF0bIQ=&attname=
-
-//                Glide.with(context)
-//                        .load("http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken)
-//                        .crossFade()
-//                        .into(uploadImage);
-
-//                Glide.with(context)
-//                        .load("/storage/emulated/0/com.gamefox.samecity.fish/activity/bill1.png")
-//                        .crossFade()
-//                        .into(uploadImage);
-
-//                ImageLoader.getInstance().displayImage("/storage/emulated/0/com.gamefox.samecity.fish/activity/bill1.png", uploadImage);
-
-//                Glide.with(context)
-//                        .load("http://q0xo2if8t.bkt.clouddn.com/y3.png?e=1574242008&token=FXDJS_lmH1Gfs-Ni9I9kpPf6MZFTGz5U5BP1CgNu:cbzS4BHzqrRF8-iENlvHv7v8i94=&attname=")
-////                        .fitCenter()
-////                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                        .crossFade()
-//                        .into(uploadImage);
-
-//                Glide.with(context).load(Urls.host+"/Public/uploads/201911/201911201609453660.jpg").crossFade().into(uploadImage);
             }
         };
         final UploadOptions uploadOptions = new UploadOptions(null, null, false, new UpProgressHandler() {
@@ -623,14 +549,14 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                 imageurl2 = bean.getStunumfile2();
                                 schoolText.setText(school);
                                 realNameEdit.setText(bean.getRealname());
-                                identityNumberEdit.setText(bean.getStunum());
+                                studentEdit.setText(bean.getStunum());
 
                                 cert_method = bean.getCert_method();
 
                                 if("1".equals(bean.getIscert())){
                                     schoolText.setText("");
                                     realNameEdit.setText("");
-                                    identityNumberEdit.setText("");
+                                    studentEdit.setText("");
 //                                    imageurl = "";
 //                                    imageurl2 = "";
                                     isVisible = false;
@@ -871,12 +797,14 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
     private void SubmitBtn(){
 
-        Log.e("SubmitBtn===0", realname+"==="+identityNumber+"==="+imageurl+"==="+imageurl2);
+        Log.e("SubmitBtn===0", realname+"==="+student_id+"==="+school_id+"==="+time+"==="+imageurl+"==="+imageurl2);
 
         RequestParams params = new RequestParams();
         params.put("type", 1);
         params.put("user_name", realname);
-        params.put("identity_number", identityNumber);
+        params.put("student_id", student_id);
+        params.put("school_id", Integer.parseInt(school_id));
+        params.put("admission_time", time);
         params.put("cert_photo", imageurl);
         params.put("holding_cert_photo", imageurl2);
 
@@ -951,21 +879,21 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                 if (schoolList.size() != 0 || !schoolList.isEmpty()){
                                     schoolList.clear();
                                 }
-                                if (item.size() != 0 || !item.isEmpty()){
-                                    item.clear();
-                                }
-                                if (item1.size() != 0 || !item1.isEmpty()){
-                                    item1.clear();
-                                }
+//                                if (item.size() != 0 || !item.isEmpty()){
+//                                    item.clear();
+//                                }
+//                                if (item1.size() != 0 || !item1.isEmpty()){
+//                                    item1.clear();
+//                                }
                                 for (int i = 0; i < JSONArray.length();i++){
                                     SchoolListBean bean = JSON.parseObject(JSONArray.getJSONObject(i).toString(),SchoolListBean.class);
                                     schoolList.add(bean);
 //                                    item.add(bean.getSchool()+"_"+bean.getCert_method());
-                                    item.add(bean.getSchool());
-                                    item1.add(new String[]{bean.getSchool(), bean.getCert_method()});
+//                                    item.add(bean.getSchool());
+//                                    item1.add(new String[]{bean.getSchool(), bean.getCert_method()});
 
                                 }
-                                handler.sendEmptyMessage(0x123);
+//                                handler.sendEmptyMessage(0x123);
                             }else {
                                 Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
                             }
@@ -988,10 +916,28 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
             @Override
             public void run() {
                 switch (requestCode) {
+
+                    case 10:
+                        if (resultCode == RESULT_OK) {
+
+                            school_id = data.getStringExtra("school_id");
+                            String school_name = data.getStringExtra("school_name");
+
+                            Log.e("requestCode===10", school_id+"==="+school_name);
+
+                            schoolText.setText(school_name);
+
+                        } else {
+//                            Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();
+                        }
+
+
+                        break;
+
                     case REQUESTCODE_PICK:// 直接从相册获取
                         if (data != null){
                             try {
-                                if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                                     if (imageUri != null) {
 //                                        urlpath = getRealFilePath(context, data.getData());
                                         urlpath  = FileUtil.getFilePathByUri(context, data.getData());
@@ -1028,60 +974,9 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                             uploadImage2.setImageBitmap(upBitmap);
                                         }
 
-
                                         Log.e("REQUESTCODE_PICK===3", data.getData()+"==="+filepath.getPath());
 
                                         uploadImage();
-
-
-
-//                                        Bitmap bitmap= null;
-//                                        try {
-//                                            bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(filepath));
-//                                        } catch (FileNotFoundException e) {
-//                                            e.printStackTrace();
-//                                        }
-
-//                                        if (Build.VERSION.SDK_INT < 24) {
-//                                            filepath = Uri.fromFile(picture);
-//                                        } else {
-//                                            Log.e("REQUESTCODE_PICK===2", "===");
-//
-//                                            filepath = FileProvider.getUriForFile(context, "com.example.cameraalbumtest.fileprovider", picture);
-//
-//
-//
-//                                        }
-//
-//                                        Bitmap bitmap = BitmapFactory.decodeFile(filepath.getPath());
-
-
-
-//                                        Bundle bundle = data.getExtras();
-//
-//                                        Log.e("REQUESTCODE_PICK===", data+"==="+bundle);
-//
-//                                        if (bundle != null) {
-//                                            Bitmap bitmap = bundle.getParcelable("dat");
-//
-//                                            Log.e("REQUESTCODE_PICK===2", "==="+bitmap);
-//
-//                                            uploadImage.setImageBitmap(bitmap);
-//                                            // 把裁剪后的图片保存至本地 返回路径
-////                                            String urlpath = FileUtilcll.saveFile(this, "crop.jpg", bitmap);
-////                                            L.e("裁剪图片地址->" + urlpath);
-//                                        }
-
-//                                        Uri uri = data.getData();
-//                                        String filePath = FileUtil.getFilePathByUri(this, uri);
-//
-//                                        if (!TextUtils.isEmpty(filePath)) {
-//                                            RequestOptions requestOptions1 = new RequestOptions().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE);
-//                                            //将照片显示在 ivImage上
-//                                            Glide.with(this).load(filePath).apply(requestOptions1).into(ivImage);
-//                                        }
-
-//                                        new Thread(uploadImageRunnable).start();
                                     }
                                 }else {
                                     Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
@@ -1092,7 +987,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                         }
                         break;
                     case REQUESTCODE_TAKE:// 调用相机拍照
-                        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
 
 //                            if (imageUri != null) {
 //                                Log.e("REQUESTCODE_TAKE===", data+"===");
@@ -1388,7 +1283,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.cancel();
 
-                                        RealNameAuthActivity.this.requestPermissions(new String[] { Manifest.permission.CAMERA },
+                                        DepositFreeAuthActivity.this.requestPermissions(new String[] { Manifest.permission.CAMERA },
                                                 101);
 
                                     }
@@ -1398,7 +1293,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             return;
                         }
                     }
-                    if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                         Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, RxFileTool.getUriForFile(context,
@@ -1422,7 +1317,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(RealNameAuthActivity.this,
+                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(DepositFreeAuthActivity.this,
                                     BuildConfig.APPLICATION_ID + ".fileprovider", file));
 
                         }else {
@@ -1437,7 +1332,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                     break;
                 // 相册选择图片
                 case R.id.pickPhotoBtn:
-                    if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                         Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
                         // 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
                         pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
@@ -1493,7 +1388,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             // Permission Granted
                             if (permissions[0].equals(Manifest.permission.CAMERA)) {
 
-                                if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                                     Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
 
@@ -1515,7 +1410,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                     }
 
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                        takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(RealNameAuthActivity.this,
+                                        takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(DepositFreeAuthActivity.this,
                                                 BuildConfig.APPLICATION_ID + ".fileprovider",
 //                                        "com.vondear.rxtools.fileprovider",
                                                 file));

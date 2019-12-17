@@ -112,13 +112,14 @@
 
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/personUI_bottom_myPurseLayout"
+            android:id="@+id/personUI_myOrderLayout"
             android:layout_width="match_parent"
             android:layout_height="24dp"
             android:layout_marginTop="31dp"

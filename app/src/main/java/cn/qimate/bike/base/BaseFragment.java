@@ -65,6 +65,7 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 
 
 	public static String m_nowMac = "";  //"A8:1B:6A:B4:E7:C9"
+	public static int order_id;
 	public static String oid = "";
 	public static String osn = "";
 	public static String type = "";

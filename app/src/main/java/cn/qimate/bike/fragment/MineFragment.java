@@ -72,6 +72,7 @@ import cn.qimate.bike.activity.InsureanceActivity;
 import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.activity.MyMessageActivity;
+import cn.qimate.bike.activity.MyOrderActivity;
 import cn.qimate.bike.activity.ServiceCenterActivity;
 import cn.qimate.bike.activity.SettingActivity;
 import cn.qimate.bike.activity.SuperVipActivity;
@@ -117,7 +118,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private ImageView authState;
     private TextView userName;
     private LinearLayout curRouteLayout, hisRouteLayout;
-    private RelativeLayout myPurseLayout, myRouteLayout, actionCenterLayout, serviceCenterLayout, settingLayout, myIntegralLayout, myMsgLayout, changePsdLayout,
+    private RelativeLayout myPurseLayout, myRouteLayout, actionCenterLayout, serviceCenterLayout, settingLayout, myOrderLayout, myMsgLayout, changePsdLayout,
             helpCenterLayout, aboutUsLayout,billing_ruleLayout,questionLayout,insuranceLayout;
 
     private RelativeLayout checkUpdataLayout;
@@ -249,7 +250,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //        serviceCenterLayout = getActivity().findViewById(R.id.personUI_bottom_serviceCenterLayout);
 //        settingLayout = getActivity().findViewById(R.id.personUI_bottom_settingLayout);
 //
-//        myIntegralLayout = getActivity().findViewById(R.id.personUI_bottom_myIntegralLayout);
+        myOrderLayout = getActivity().findViewById(R.id.personUI_myOrderLayout);
         myMsgLayout = getActivity().findViewById(R.id.personUI_myMeaaageLayout);
 //        changePsdLayout = getActivity().findViewById(R.id.personUI_bottom_changePsdLayout);
 //        helpCenterLayout = getActivity().findViewById(R.id.personUI_bottom_helpCenterLayout);
@@ -278,6 +279,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //        settingLayout.setOnClickListener(this);
 //        closeBtn.setOnClickListener(myOnClickLister);
 
+        myOrderLayout.setOnClickListener(this);
         myMsgLayout.setOnClickListener(this);
 
 
@@ -794,6 +796,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //                UIHelper.goToAct(context, PersonInfoActivity.class);
 
                 break;
+
+            case R.id.personUI_myOrderLayout:
+                UIHelper.goToAct(context, MyOrderActivity.class);
+
+                break;
+
             case R.id.personUI_bottom_curRouteLayout:
                 getCurrentorder(uid, access_token);
                 break;

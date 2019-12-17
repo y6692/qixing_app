@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#F1F1F1"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:gravity="center_vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:text="订单编号"
+                android:textColor="#666666"
+                android:textSize="@dimen/sp18" />
+            <TextView
+                android:id="@+id/item_order_sn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:text="123"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp14" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/item_order_state"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="30dp"
+            android:text="待支付"
+            android:textColor="#FF6A00"
+            android:textSize="@dimen/sp12" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DADADA"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        >
+
+        <LinearLayout
+            android:layout_width="107dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+
+            <ImageView
+                android:id="@+id/item_iv_bike"
+                android:layout_width="62dp"
+                android:layout_height="40dp"
+                android:src="@drawable/bike_icon2"
+                />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="107dp"
+            android:layout_marginTop="9dp"
+            android:orientation="vertical"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="22dp"
+                    android:gravity="left|center_vertical"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="单车编号"
+                        android:textColor="#666666"
+                        android:textSize="@dimen/sp16" />
+                    <TextView
+                        android:id="@+id/item_car_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp15"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp16" />
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_marginTop="8dp"
+                android:gravity="left|center_vertical"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="订单时间"
+                    android:textColor="#666666"
+                    android:textSize="@dimen/sp16" />
+                <TextView
+                    android:id="@+id/item_payment_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp15"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/sp16" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_marginTop="8dp"
+                android:gravity="left|center_vertical"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="订单类型"
+                    android:textColor="#666666"
+                    android:textSize="@dimen/sp16" />
+                <TextView
+                    android:id="@+id/item_car_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp15"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/sp16" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_marginTop="8dp"
+                android:gravity="left|center_vertical"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="订单价格"
+                    android:textColor="#666666"
+                    android:textSize="@dimen/sp16" />
+                <TextView
+                    android:id="@+id/item_order_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp15"
+                    android:textColor="#FF1700"
+                    android:textSize="@dimen/sp16" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:layout_width="8dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="35dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/yjt"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/item_rl_pay"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:gravity="center_vertical"
+        >
+
+
+        <TextView
+            android:id="@+id/item_payBtn"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:background="@drawable/btn_bcg_order"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"
+            android:text="去支付"
+            android:textColor="#59A30F"
+            android:textSize="@dimen/sp12" />
+
+    </RelativeLayout>
+
+</LinearLayout>

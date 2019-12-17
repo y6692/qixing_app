@@ -1,6 +1,7 @@
 package cn.qimate.bike.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
@@ -151,7 +152,13 @@ public class SchoolSelectActivity extends SwipeBackActivity implements View.OnCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        SchoolListBean bean = myAdapter.getDatas().get(position);
 
+        Intent rIntent = new Intent();
+        rIntent.putExtra("school_id", bean.getId());
+        rIntent.putExtra("school_name", bean.getSchool());
+        setResult(RESULT_OK, rIntent);
+        scrollToFinishActivity();
     }
 
     @Override

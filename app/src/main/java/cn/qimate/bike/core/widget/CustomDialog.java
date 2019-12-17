@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -231,6 +232,8 @@ public class CustomDialog extends Dialog {
 
 			View layout;
 
+			Log.e("CustomDialog===", type+"===");
+
 			if(type==1){
 				layout = inflater.inflate(R.layout.alertdialog2, null);
 			}else{
@@ -254,39 +257,42 @@ public class CustomDialog extends Dialog {
 
 
                 // set the confirm button
-                if (positiveButtonText != null) {
-                    ((Button) layout.findViewById(R.id.positiveButton)).setText(positiveButtonText);
-                    if (positiveButtonClickListener != null) {
-                        ((Button) layout.findViewById(R.id.positiveButton)).setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                positiveButtonClickListener.onClick(dialog, DialogInterface.BUTTON_POSITIVE);
-                            }
-                        });
-                    }
-                } else {
-                    // if no confirm button just set the visibility to GONE
-                    layout.findViewById(R.id.positiveButton).setVisibility(View.GONE);
-                }
-                // set the cancel button
-                if (negativeButtonText != null) {
-                    ((Button) layout.findViewById(R.id.negativeButton)).setText(negativeButtonText);
-                    if (negativeButtonClickListener != null) {
-                        ((Button) layout.findViewById(R.id.negativeButton)).setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                negativeButtonClickListener.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
-                            }
-                        });
-                    }
-                } else {
-                    // if no confirm button just set the visibility to GONE
-                    layout.findViewById(R.id.negativeButton).setVisibility(View.GONE);
-                }
+//                if (positiveButtonText != null) {
+//                    ((Button) layout.findViewById(R.id.positiveButton)).setText(positiveButtonText);
+//                    if (positiveButtonClickListener != null) {
+//                        ((Button) layout.findViewById(R.id.positiveButton)).setOnClickListener(new View.OnClickListener() {
+//                            public void onClick(View v) {
+//                                positiveButtonClickListener.onClick(dialog, DialogInterface.BUTTON_POSITIVE);
+//                            }
+//                        });
+//                    }
+//                } else {
+//                    // if no confirm button just set the visibility to GONE
+//                    layout.findViewById(R.id.positiveButton).setVisibility(View.GONE);
+//                }
+//                // set the cancel button
+//                if (negativeButtonText != null) {
+//                    ((Button) layout.findViewById(R.id.negativeButton)).setText(negativeButtonText);
+//                    if (negativeButtonClickListener != null) {
+//                        ((Button) layout.findViewById(R.id.negativeButton)).setOnClickListener(new View.OnClickListener() {
+//                            public void onClick(View v) {
+//                                negativeButtonClickListener.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
+//                            }
+//                        });
+//                    }
+//                } else {
+//                    // if no confirm button just set the visibility to GONE
+//                    layout.findViewById(R.id.negativeButton).setVisibility(View.GONE);
+//                }
 			}
 
 //			dialog.addContentView(layout, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 			dialog.addContentView(layout, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			// set the dialog title
-			((TextView) layout.findViewById(R.id.title)).setText(title);
+			if(type!=0){
+				((TextView) layout.findViewById(R.id.title)).setText(title);
+			}
+
 
 			if(type==4){
 				TextView tv_electricity = ((TextView) layout.findViewById(R.id.electricity));
@@ -326,15 +332,24 @@ public class CustomDialog extends Dialog {
 					}
 				});
 
-			}else{
-				TextView hintText = ((TextView) layout.findViewById(R.id.hintText));
-				if (hintText != null) {
-					if (isHint){
-						hintText.setVisibility(View.GONE);
-					}else {
-						hintText.setVisibility(View.VISIBLE);
-					}
-				}
+			}else if(type==0){
+//				TextView hintText = ((TextView) layout.findViewById(R.id.hintText));
+//				if (hintText != null) {
+//					if (isHint){
+//						hintText.setVisibility(View.GONE);
+//					}else {
+//						hintText.setVisibility(View.VISIBLE);
+//					}
+//				}
+
+                ImageView alert_cancelBtn = (ImageView) layout.findViewById(R.id.alert_cancelBtn);
+
+                alert_cancelBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
 			}
 
 
