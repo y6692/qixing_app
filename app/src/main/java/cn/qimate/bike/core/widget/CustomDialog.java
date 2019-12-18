@@ -235,9 +235,11 @@ public class CustomDialog extends Dialog {
 			Log.e("CustomDialog===", type+"===");
 
 			if(type==1){
-				layout = inflater.inflate(R.layout.alertdialog2, null);
+				layout = inflater.inflate(R.layout.alertdialog, null);
 			}else{
 				if(type==2){
+					layout = inflater.inflate(R.layout.alertdialog2, null);
+				}else if(type==3){
 					layout = inflater.inflate(R.layout.alertdialog3, null);
 				}else if(type==4){
 					layout = inflater.inflate(R.layout.alertdialog4, null);
@@ -249,7 +251,7 @@ public class CustomDialog extends Dialog {
 					layout = inflater.inflate(R.layout.alertdialog7, null);
 				}else if(type==8){	//客服电话
 					layout = inflater.inflate(R.layout.alertdialog8, null);
-				}else if(type==9){	//客服电话
+				}else if(type==9){	//维护
 					layout = inflater.inflate(R.layout.alertdialog9, null);
 				}else{
 					layout = inflater.inflate(R.layout.alertdialog, null);
@@ -257,33 +259,36 @@ public class CustomDialog extends Dialog {
 
 
                 // set the confirm button
-//                if (positiveButtonText != null) {
-//                    ((Button) layout.findViewById(R.id.positiveButton)).setText(positiveButtonText);
-//                    if (positiveButtonClickListener != null) {
-//                        ((Button) layout.findViewById(R.id.positiveButton)).setOnClickListener(new View.OnClickListener() {
-//                            public void onClick(View v) {
-//                                positiveButtonClickListener.onClick(dialog, DialogInterface.BUTTON_POSITIVE);
-//                            }
-//                        });
-//                    }
-//                } else {
-//                    // if no confirm button just set the visibility to GONE
-//                    layout.findViewById(R.id.positiveButton).setVisibility(View.GONE);
-//                }
-//                // set the cancel button
-//                if (negativeButtonText != null) {
-//                    ((Button) layout.findViewById(R.id.negativeButton)).setText(negativeButtonText);
-//                    if (negativeButtonClickListener != null) {
-//                        ((Button) layout.findViewById(R.id.negativeButton)).setOnClickListener(new View.OnClickListener() {
-//                            public void onClick(View v) {
-//                                negativeButtonClickListener.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
-//                            }
-//                        });
-//                    }
-//                } else {
-//                    // if no confirm button just set the visibility to GONE
-//                    layout.findViewById(R.id.negativeButton).setVisibility(View.GONE);
-//                }
+				if(type!=0){
+					if (positiveButtonText != null) {
+						((Button) layout.findViewById(R.id.positiveButton)).setText(positiveButtonText);
+						if (positiveButtonClickListener != null) {
+							((Button) layout.findViewById(R.id.positiveButton)).setOnClickListener(new View.OnClickListener() {
+								public void onClick(View v) {
+									positiveButtonClickListener.onClick(dialog, DialogInterface.BUTTON_POSITIVE);
+								}
+							});
+						}
+					} else {
+						// if no confirm button just set the visibility to GONE
+						layout.findViewById(R.id.positiveButton).setVisibility(View.GONE);
+					}
+					// set the cancel button
+					if (negativeButtonText != null) {
+						((Button) layout.findViewById(R.id.negativeButton)).setText(negativeButtonText);
+						if (negativeButtonClickListener != null) {
+							((Button) layout.findViewById(R.id.negativeButton)).setOnClickListener(new View.OnClickListener() {
+								public void onClick(View v) {
+									negativeButtonClickListener.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
+								}
+							});
+						}
+					} else {
+						// if no confirm button just set the visibility to GONE
+						layout.findViewById(R.id.negativeButton).setVisibility(View.GONE);
+					}
+				}
+
 			}
 
 //			dialog.addContentView(layout, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));

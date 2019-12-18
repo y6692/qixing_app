@@ -419,7 +419,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    onFailureCommon(throwable.toString());
+                    onFailureCommon("mf===car_authority", throwable.toString());
                 }
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
@@ -432,20 +432,32 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                         SharedPreferencesUrls.getInstance().putString("iscert", ""+bean.getUnauthorized_code());
 
-                        Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder()+"==="+new JSONObject(bean.getOrder()).getInt("order_id"));
+                        Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder());
+//                        Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder()+"==="+new JSONObject(bean.getOrder()).getInt("order_id"));
 
-                        order_id = new JSONObject(bean.getOrder()).getInt("order_id");
 
                         int unauthorized_code = bean.getUnauthorized_code();
 
 //                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 5需要充值余额或购买骑行卡 6有进行中行程 7有待支付行程 8有待支付调度费 9有待支付赔偿费
                         unauthorized_code = bean.getUnauthorized_code();
 
-                        if(unauthorized_code==6) {
+                        if(unauthorized_code==1) {
+                            tv_authBtn.setText("您还未登录，点我快速登录");
+                        }else if(unauthorized_code==2) {
+                            tv_authBtn.setText("您还未认证，点我快速认证");
+                        }else if(unauthorized_code==3) {
+                            tv_authBtn.setText("认证审核中");
+                        }else if(unauthorized_code==4) {
+                            tv_authBtn.setText("认证被驳回，请重新认证");
+                        }else if(unauthorized_code==5) {
+//                            tv_authBtn.setText("需要充值余额或购买骑行卡");   //TODO
+                        }else if(unauthorized_code==6) {
                             ll_top_navi.setVisibility(View.GONE);
                             ll_top.setVisibility(View.VISIBLE);
                             rl_ad.setVisibility(View.GONE);
                             ll_top_biking.setVisibility(View.VISIBLE);
+
+                            order_id = new JSONObject(bean.getOrder()).getInt("order_id");
 
                             cycling();
                             cyclingThread();
@@ -523,7 +535,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
+                onFailureCommon("mf===cycling", throwable.toString());
             }
 
             @Override
@@ -553,7 +565,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 m_nowMac = bean.getCar_lock_mac();
 //                                force_backcar = bean.getForce_backcar();  //TODO
 
-                                SharedPreferencesUrls.getInstance().getString("type", type);
+                                SharedPreferencesUrls.getInstance().putString("type", type);
 
 //                                tv_biking_codenum.setText(codenum);     //TODO
 //                                tv_estimated_cost.setText("¥"+bean.getEstimated_cost());
@@ -735,7 +747,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
+                onFailureCommon("mf===cycling2", throwable.toString());
             }
 
             @Override
@@ -1148,56 +1160,70 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         rightBtn.setOnClickListener(this);
         rl_ad.setOnClickListener(this);
 
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-        String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
 
-        Log.e("mf===initView", access_token+"===");
 
-        if (access_token == null || "".equals(access_token)) {
-            rl_authBtn.setEnabled(true);
-            rl_authBtn.setVisibility(View.VISIBLE);
-            tv_authBtn.setText("您还未登录，点我快速登录");
 
-            refreshLayout.setVisibility(View.GONE);
-//                cartBtn.setVisibility(View.GONE);
-//                rechargeBtn.setVisibility(View.GONE);
-        } else {
-            refreshLayout.setVisibility(View.VISIBLE);
-            if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                    case 1:
-                        rl_authBtn.setEnabled(true);
-                        rl_authBtn.setVisibility(View.VISIBLE);
-                        tv_authBtn.setText("您还未登录，点我快速登录");
+    }
 
-                        break;
-                    case 2:
+    @Override
+    public void onResume() {
+        super.onResume();
 
-                        rl_authBtn.setEnabled(true);
-                        rl_authBtn.setVisibility(View.VISIBLE);
-                        tv_authBtn.setText("您还未认证，点我快速认证");
-                        break;
-                    case 3:
+        Log.e("mf===onResume", SharedPreferencesUrls.getInstance().getString("iscert", "")+"==="+type);
 
-                        rl_authBtn.setEnabled(false);
-                        rl_authBtn.setVisibility(View.VISIBLE);
-                        tv_authBtn.setText("认证审核中");
-                        break;
-                    case 4:
-                        rl_authBtn.setEnabled(true);
-                        rl_authBtn.setVisibility(View.VISIBLE);
-                        tv_authBtn.setText("认证被驳回，请重新认证");
-
-                        break;
-                }
-            } else {
-                rl_authBtn.setVisibility(View.GONE);
-            }
-
-        }
+        mapView.onResume();
 
         car_authority();
         banner();
+
+//        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+//
+//        Log.e("mf===onResume", access_token+"===");
+//
+//        if (access_token == null || "".equals(access_token)) {
+//            rl_authBtn.setEnabled(true);
+//            rl_authBtn.setVisibility(View.VISIBLE);
+//            tv_authBtn.setText("您还未登录，点我快速登录");
+//
+//            refreshLayout.setVisibility(View.GONE);
+////                cartBtn.setVisibility(View.GONE);
+////                rechargeBtn.setVisibility(View.GONE);
+//        } else {
+//            refreshLayout.setVisibility(View.VISIBLE);
+//            if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+//                switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+//                    case 1:
+//                        rl_authBtn.setEnabled(true);
+//                        rl_authBtn.setVisibility(View.VISIBLE);
+//                        tv_authBtn.setText("您还未登录，点我快速登录");
+//
+//                        break;
+//                    case 2:
+//
+//                        rl_authBtn.setEnabled(true);
+//                        rl_authBtn.setVisibility(View.VISIBLE);
+//                        tv_authBtn.setText("您还未认证，点我快速认证");
+//                        break;
+//                    case 3:
+//
+//                        rl_authBtn.setEnabled(false);
+//                        rl_authBtn.setVisibility(View.VISIBLE);
+//                        tv_authBtn.setText("认证审核中");
+//                        break;
+//                    case 4:
+//                        rl_authBtn.setEnabled(true);
+//                        rl_authBtn.setVisibility(View.VISIBLE);
+//                        tv_authBtn.setText("认证被驳回，请重新认证");
+//
+//                        break;
+//                }
+//            } else {
+//                rl_authBtn.setVisibility(View.GONE);
+//            }
+//
+//        }
+
+//        getFeedbackStatus();
     }
 
     private void banner() {
@@ -1211,7 +1237,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.e("mf===banner=fail", "===" + throwable.toString());
-                onFailureCommon(throwable.toString());
+                onFailureCommon("mf===banner", throwable.toString());
             }
 
             @Override
@@ -1305,22 +1331,25 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     UIHelper.goToAct(context,LoginActivity.class);
                 }else {
 //                    if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
-//                        switch (Tag){
-//                            case 0:
-//                                closeBroadcast();
-//                                deactivate();
 //
-//                                UIHelper.goToAct(context, CurRoadBikingActivity.class);
-//                                break;
-//                            case 1:
-//                                UIHelper.goToAct(context, CurRoadBikedActivity.class);
-//                                break;
-//                            default:
-//                                break;
-//                        }
 //                    }else {
 //                        UIHelper.goToAct(context,RealNameAuthActivity.class);
 //                    }
+
+                    switch (SharedPreferencesUrls.getInstance().getString("iscert","")){
+                        case "1":
+//                            closeBroadcast();
+//                            deactivate();
+
+                            UIHelper.goToAct(context, LoginActivity.class);
+                            break;
+
+                        case "3":   //TODO
+                            UIHelper.goToAct(context, RealNameAuthActivity.class);
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 break;
 
@@ -4498,16 +4527,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
 
-        Log.e("mf===onResume", isHidden()+"==="+type);
-
-        mapView.onResume();
-
-//        getFeedbackStatus();
-    }
 
     @Override
     public void onPause() {

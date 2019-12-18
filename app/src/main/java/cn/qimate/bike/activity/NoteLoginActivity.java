@@ -129,9 +129,6 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         time.setOnClickListener(this);
         no_note.setOnClickListener(this);
 
-
-
-
         icv.setInputCompleteListener(new VerificationCodeView.InputCompleteListener() {
             @Override
             public void inputComplete() {
@@ -150,7 +147,12 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         });
 
 
-        sendCode();
+//        sendCode();
+
+        handler.sendEmptyMessage(2);
+
+        // 开始60秒倒计时
+        handler.sendEmptyMessageDelayed(1, 1000);
 
     }
 
@@ -324,19 +326,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                     Log.e("authorizations===2", bean+"==="+bean.getToken());
 
                     if (null != bean.getToken()) {
-//                        UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
-//                        // 极光标记别名
-//                        setAlias(bean.getUid());
-//                        SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
-//                        SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
-//                        SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
-//                        SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
-//                        SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
-//                        SharedPreferencesUrls.getInstance().putString("headimg", bean.getHeadimg());
-//                        SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
-//                        SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
-//                        SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
-//                        SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
+
 
                         SharedPreferencesUrls.getInstance().putString("access_token", "Bearer "+bean.getToken());
                         Toast.makeText(context,"恭喜您,登录成功",Toast.LENGTH_SHORT).show();

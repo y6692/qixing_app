@@ -73,6 +73,8 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
     public static boolean isForeground = false;
 
+    private String telphone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,7 +176,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                 break;
             case R.id.loginUI_btn:
 
-                String telphone = phoneEdit.getText().toString();
+                telphone = phoneEdit.getText().toString();
                 if (telphone == null || "".equals(telphone)) {
                     Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
                     return;
@@ -184,13 +186,8 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                     return;
                 }
 
-//                UIHelper.goToAct(context, NoteLoginActivity.class);
-//                scrollToFinishActivity();
 
-                Intent intent = new Intent();
-                intent.setClass(context, NoteLoginActivity.class);
-                intent.putExtra("telphone",telphone);
-                startActivity(intent);
+                sendCode();
 
 
                 break;
@@ -201,6 +198,73 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                 UIHelper.goToAct(context, FindPsdActivity.class);
                 break;
         }
+    }
+
+    private void sendCode() {
+
+        Log.e("verificationcode===0", "==="+telphone);
+
+        try{
+            RequestParams params = new RequestParams();
+            params.add("phone", telphone);
+            params.add("scene", "1");
+
+            HttpHelper.post(context, Urls.verificationcode, params, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+                }
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+                        Log.e("verificationcode===", "==="+responseString);
+
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        Intent intent = new Intent();
+                        intent.setClass(context, NoteLoginActivity.class);
+                        intent.putExtra("telphone",telphone);
+                        startActivity(intent);
+
+
+
+//                        if (result.getFlag().equals("Success")) {
+//
+//
+//                        } else {
+//                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+//                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+                    Log.e("verificationcode===fail", throwable.toString()+"==="+responseString);
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
+            });
+        }catch (Exception e){
+            Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void LoginHttp(String telphone, String password) {

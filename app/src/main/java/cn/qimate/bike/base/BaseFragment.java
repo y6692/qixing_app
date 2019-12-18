@@ -186,10 +186,27 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 				if (loadingDialog != null && loadingDialog.isShowing()){
 					loadingDialog.dismiss();
 				}
+
+				Log.e("onFailureCommon===", "==="+s);
+
 				UIHelper.ToastError(context, s);
 			}
 		});
+	}
 
+	public void onFailureCommon(final String title, final String s) {
+		m_myHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (loadingDialog != null && loadingDialog.isShowing()){
+					loadingDialog.dismiss();
+				}
+
+				Log.e("onFailureCommon===", title+"==="+s);
+
+				UIHelper.ToastError(context, s);
+			}
+		});
 	}
 
 	Handler m_myHandler = new Handler(new Handler.Callback() {

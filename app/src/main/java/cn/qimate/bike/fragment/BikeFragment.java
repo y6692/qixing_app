@@ -480,7 +480,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private void operating_areas(){
         if(isHidden) return;
 
-        Log.e("main===operating_areas", isHidden+"===");
+        Log.e("bf===operating_areas0", isHidden+"===");
 
         RequestParams params = new RequestParams();
 
@@ -494,13 +494,13 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
+                onFailureCommon("bf===operating_areas", throwable.toString());
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
 
-                Log.e("main===operating_areas1", "==="+responseString);
+                Log.e("bf===operating_areas", "==="+responseString);
 
                 responseString = "{\"data\":[[{\"longitude\":\"119.920544\",\"latitude\":\"31.764389\"},{\"longitude\":\"119.921544\",\"latitude\":\"31.765389\"},{\"longitude\":\"119.922544\",\"latitude\":\"31.764389\"}]]}";
 
@@ -516,7 +516,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                             if (1==1 || result.getFlag().equals("Success")) {
                                 JSONArray jsonArray = new JSONArray(result.getData());
 
-                                Log.e("main===operating_areas1", "==="+jsonArray);
+                                Log.e("bf===operating_areas1", "==="+jsonArray);
 
                                 if(isHidden) return;
 
@@ -535,7 +535,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                         LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
 
-                                        Log.e("main===operating_areas2", "==="+latLng);
+                                        Log.e("bf===operating_areas2", "==="+latLng);
 
                                         flag=0;
                                         list.add(latLng);
@@ -555,7 +555,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //                                        }
                                     }
 
-                                    Log.e("main===operating_areas3", "==="+list.size());
+                                    Log.e("bf===operating_areas3", "==="+list.size());
 
                                     Polygon polygon = null;
                                     PolygonOptions pOption = new PolygonOptions();
@@ -567,7 +567,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //#0087FF
 //                                    #00ADFF
 
-                                    Log.e("main===operating_areas4", "==="+polygon);
+                                    Log.e("bf===operating_areas4", "==="+polygon);
 
                                     getMaxPoint(list);
 
@@ -707,7 +707,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    onFailureCommon(throwable.toString());
+                    onFailureCommon("bf===schoolRange", throwable.toString());
                 }
 
                 @Override
@@ -1193,83 +1193,83 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     private void initNearby(double latitude, double longitude){
 
-        if(isHidden) return;
-
-        Log.e("main===initNearby0", latitude+"==="+longitude);
-
-        RequestParams params = new RequestParams();
-        params.put("latitude", latitude);
-        params.put("longitude", longitude);
-        params.put("type", 1);
-        HttpHelper.get(context, Urls.nearby, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-//                onStartCommon("正在加载");
-
-//                ArrayList<BitmapDescriptor> iconList = new ArrayList<>();
-//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout1, null)));
-//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout2, null)));
-//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout3, null)));
+//        if(isHidden) return;
 //
-//                MarkerOptions centerMarkerOption = new MarkerOptions();
-//                centerMarkerOption.position(myLocation).icons(iconList).period(2);
-
-                centerMarker.setMarkerOptions(centerMarkerOptionLoading);
-//                centerMarker.setIcon(iconList);
-//                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
-
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-
-                if(isHidden) return;
-
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        JSONArray array = new JSONArray(result.getData());
-
-                        Log.e("initNearby===Bike", "==="+array.length());
-
-                        for (Marker marker : bikeMarkerList){
-                            if (marker != null){
-                                marker.remove();
-                            }
-                        }
-                        if (!bikeMarkerList.isEmpty() || 0 != bikeMarkerList.size()){
-                            bikeMarkerList.clear();
-                        }
-                        if (0 == array.length()){
-                            ToastUtils.show("附近没有单车");
-                        }else {
-                            for (int i = 0; i < array.length(); i++){
-                                NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
-                                // 加入自定义标签
-
-//                                Log.e("initNearby===Bike", bean.getLatitude()+"==="+bean.getLongitude());
-
-                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
-                                Marker bikeMarker = aMap.addMarker(bikeMarkerOption);
-                                bikeMarkerList.add(bikeMarker);
-                            }
-
-                        }
-                    } else {
-                        ToastUtils.show(result.getMsg());
-                    }
-                } catch (Exception e) {
-
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-            }
-        });
+//        Log.e("main===initNearby0", latitude+"==="+longitude);
+//
+//        RequestParams params = new RequestParams();
+//        params.put("latitude", latitude);
+//        params.put("longitude", longitude);
+//        params.put("type", 1);
+//        HttpHelper.get(context, Urls.nearby, params, new TextHttpResponseHandler() {
+//            @Override
+//            public void onStart() {
+////                onStartCommon("正在加载");
+//
+////                ArrayList<BitmapDescriptor> iconList = new ArrayList<>();
+////                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout1, null)));
+////                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout2, null)));
+////                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout3, null)));
+////
+////                MarkerOptions centerMarkerOption = new MarkerOptions();
+////                centerMarkerOption.position(myLocation).icons(iconList).period(2);
+//
+//                centerMarker.setMarkerOptions(centerMarkerOptionLoading);
+////                centerMarker.setIcon(iconList);
+////                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
+//
+//            }
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                onFailureCommon(throwable.toString());
+//            }
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+//
+//                if(isHidden) return;
+//
+//                try {
+//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//                    if (result.getFlag().equals("Success")) {
+//                        JSONArray array = new JSONArray(result.getData());
+//
+//                        Log.e("initNearby===Bike", "==="+array.length());
+//
+//                        for (Marker marker : bikeMarkerList){
+//                            if (marker != null){
+//                                marker.remove();
+//                            }
+//                        }
+//                        if (!bikeMarkerList.isEmpty() || 0 != bikeMarkerList.size()){
+//                            bikeMarkerList.clear();
+//                        }
+//                        if (0 == array.length()){
+//                            ToastUtils.show("附近没有单车");
+//                        }else {
+//                            for (int i = 0; i < array.length(); i++){
+//                                NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
+//                                // 加入自定义标签
+//
+////                                Log.e("initNearby===Bike", bean.getLatitude()+"==="+bean.getLongitude());
+//
+//                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
+//                                Marker bikeMarker = aMap.addMarker(bikeMarkerOption);
+//                                bikeMarkerList.add(bikeMarker);
+//                            }
+//
+//                        }
+//                    } else {
+//                        ToastUtils.show(result.getMsg());
+//                    }
+//                } catch (Exception e) {
+//
+//                }
+//                if (loadingDialog != null && loadingDialog.isShowing()){
+//                    loadingDialog.dismiss();
+//                }
+//            }
+//        });
     }
 
     private void initView() {

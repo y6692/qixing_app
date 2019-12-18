@@ -471,4 +471,18 @@ public class BaseFragmentActivity extends AppCompatActivity
 
 	}
 
+	public void onFailureCommon(final String title, final String s) {
+		m_myHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (loadingDialog != null && loadingDialog.isShowing()){
+					loadingDialog.dismiss();
+				}
+
+				Log.e("onFailureCommon===", title+"==="+s);
+
+				UIHelper.ToastError(context, s);
+			}
+		});
+	}
 }

@@ -342,27 +342,27 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         ToastUtil.showMessage(context, SharedPreferencesUrls.getInstance().getString("userName", "") + "===" + SharedPreferencesUrls.getInstance().getString("uid", "") + "<==>" + SharedPreferencesUrls.getInstance().getString("access_token", ""));
 
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
-        customDialog = customBuilder.create();
-
-        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图绿色区域，或打开手机GPS并重启软件再试")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog3 = customBuilder.create();
-
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图绿色区域")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog4 = customBuilder.create();
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
+//        customDialog = customBuilder.create();
+//
+//        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图绿色区域，或打开手机GPS并重启软件再试")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog3 = customBuilder.create();
+//
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图绿色区域")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog4 = customBuilder.create();
 
         m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
         Log.e("main===ebike", "m_nowMac====" + m_nowMac);
@@ -561,7 +561,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     private void operating_areas(){
         if(isHidden) return;
 
-        Log.e("main===operating_areas", isHidden+"===");
+        Log.e("ebf===operating_areas0", isHidden+"===");
 
         RequestParams params = new RequestParams();
 
@@ -572,13 +572,13 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
+                onFailureCommon("ebf===operating_areas", throwable.toString());
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
 
-                Log.e("main===operating_areas1", "==="+responseString);
+                Log.e("ebf===operating_areas", "==="+responseString);
 
                 responseString = "{\"data\":[[{\"longitude\":\"119.920544\",\"latitude\":\"31.764389\"},{\"longitude\":\"119.921544\",\"latitude\":\"31.765389\"},{\"longitude\":\"119.922544\",\"latitude\":\"31.764389\"}]]}";
 
@@ -594,7 +594,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                             if (1==1 || result.getFlag().equals("Success")) {
                                 JSONArray jsonArray = new JSONArray(result.getData());
 
-                                Log.e("main===operating_areas1", "==="+jsonArray);
+                                Log.e("ebf===operating_areas1", "==="+jsonArray);
 
                                 if(isHidden) return;
 
@@ -613,7 +613,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                         LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
 
-                                        Log.e("main===operating_areas2", "==="+latLng);
+                                        Log.e("ebf===operating_areas2", "==="+latLng);
 
                                         flag=0;
                                         list.add(latLng);
@@ -633,7 +633,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //                                        }
                                     }
 
-                                    Log.e("main===operating_areas3", "==="+list.size());
+                                    Log.e("ebf===operating_areas3", "==="+list.size());
 
                                     Polygon polygon = null;
                                     PolygonOptions pOption = new PolygonOptions();
@@ -643,7 +643,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                             .strokeColor(Color.argb(255, 0, 135, 255))
                                             .fillColor(Color.argb(76, 0, 173, 255)));
 
-                                    Log.e("main===operating_areas4", "==="+polygon);
+                                    Log.e("ebf===operating_areas4", "==="+polygon);
 
                                     getMaxPoint(list);
 
@@ -776,7 +776,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    onFailureCommon(throwable.toString());
+                    onFailureCommon("ebf===schoolRange", throwable.toString());
                 }
 
                 @Override
@@ -1264,74 +1264,74 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void initNearby(double latitude, double longitude){
-        if(isHidden) return;
-
-        Log.e("initNearby===Ebike000", latitude+"==="+longitude);
-
-        RequestParams params = new RequestParams();
-        params.put("latitude",latitude);
-        params.put("longitude",longitude);
-        params.put("type", 2);
-        HttpHelper.get(context, Urls.nearby, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-//                onStartCommon("正在加载");
-
-                centerMarker.setMarkerOptions(centerMarkerOptionLoading);
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                if(isHidden) return;
-
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        JSONArray array = new JSONArray(result.getData());
-
-                        Log.e("initNearby===Ebike", "==="+array.length());
-
-                        for (Marker marker : bikeMarkerList){
-                            if (marker != null){
-                                marker.remove();
-                            }
-                        }
-                        if (!bikeMarkerList.isEmpty() || 0 != bikeMarkerList.size()){
-                            bikeMarkerList.clear();
-                        }
-                        if (0 == array.length()){
-                            ToastUtils.show("附近没有电单车");
-                        }else {
-                            for (int i = 0; i < array.length(); i++){
-                                NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
-                                // 加入自定义标签
+//        if(isHidden) return;
+//
+//        Log.e("initNearby===Ebike000", latitude+"==="+longitude);
+//
+//        RequestParams params = new RequestParams();
+//        params.put("latitude",latitude);
+//        params.put("longitude",longitude);
+//        params.put("type", 2);
+//        HttpHelper.get(context, Urls.nearby, params, new TextHttpResponseHandler() {
+//            @Override
+//            public void onStart() {
+////                onStartCommon("正在加载");
+//
+//                centerMarker.setMarkerOptions(centerMarkerOptionLoading);
+//            }
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                onFailureCommon(throwable.toString());
+//            }
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+//                if(isHidden) return;
+//
+//                try {
+//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//                    if (result.getFlag().equals("Success")) {
+//                        JSONArray array = new JSONArray(result.getData());
+//
+//                        Log.e("initNearby===Ebike", "==="+array.length());
+//
+//                        for (Marker marker : bikeMarkerList){
+//                            if (marker != null){
+//                                marker.remove();
+//                            }
+//                        }
+//                        if (!bikeMarkerList.isEmpty() || 0 != bikeMarkerList.size()){
+//                            bikeMarkerList.clear();
+//                        }
+//                        if (0 == array.length()){
+//                            ToastUtils.show("附近没有电单车");
+//                        }else {
+//                            for (int i = 0; i < array.length(); i++){
+//                                NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
+//                                // 加入自定义标签
+////                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(
+////                                        Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
+//
 //                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(
-//                                        Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
-
-                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(
-                                        Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude())))
-                                        .icon("1".equals(bean.getQuantity_level())?bikeDescripter_green:"2".equals(bean.getQuantity_level())?bikeDescripter_yellow:bikeDescripter_red);
-
-
-                                Marker bikeMarker = aMap.addMarker(bikeMarkerOption);
-                                bikeMarkerList.add(bikeMarker);
-                            }
-                        }
-                    } else {
-                        ToastUtils.show(result.getMsg());
-                    }
-                } catch (Exception e) {
-
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-            }
-        });
+//                                        Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude())))
+//                                        .icon("1".equals(bean.getQuantity_level())?bikeDescripter_green:"2".equals(bean.getQuantity_level())?bikeDescripter_yellow:bikeDescripter_red);
+//
+//
+//                                Marker bikeMarker = aMap.addMarker(bikeMarkerOption);
+//                                bikeMarkerList.add(bikeMarker);
+//                            }
+//                        }
+//                    } else {
+//                        ToastUtils.show(result.getMsg());
+//                    }
+//                } catch (Exception e) {
+//
+//                }
+//                if (loadingDialog != null && loadingDialog.isShowing()){
+//                    loadingDialog.dismiss();
+//                }
+//            }
+//        });
     }
 
     private void initView() {

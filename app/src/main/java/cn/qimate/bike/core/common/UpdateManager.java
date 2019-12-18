@@ -116,6 +116,9 @@ public class UpdateManager {
 	private int type = 0;
 	private  String bikeCode = "";
 
+	CustomDialog.Builder customBuilder;
+	private CustomDialog customDialog;
+
 	public int getType() {
 		return type;
 	}
@@ -176,9 +179,11 @@ public class UpdateManager {
 		loadingDialog.setCancelable(false);
 		loadingDialog.setCanceledOnTouchOutside(false);
 
+		getCurrentVersion(context);
+
 		Log.e("checkAppUpdate==0", "===");
 
-		getCurrentVersion();
+
 
 		Log.e("checkAppUpdate==1", "===");
 
@@ -213,7 +218,10 @@ public class UpdateManager {
 								}
 							} else {
 								if(type==0){
-									Toast.makeText(context,"当前已是最新版本",Toast.LENGTH_SHORT).show();
+//									Toast.makeText(context,"当前已是最新版本",Toast.LENGTH_SHORT).show();
+
+									customDialog.show();
+
 								}else if(type==1){
 									Intent intent = new Intent(context, ClientServiceActivity.class);
 									intent.putExtra("bikeCode", bikeCode);
@@ -225,8 +233,6 @@ public class UpdateManager {
 								}else if(type==3){
 									UIHelper.goToAct(context, FeedbackActivity.class);
 								}
-
-
 
 							}
 						} else {
@@ -254,10 +260,19 @@ public class UpdateManager {
 	/**
 	 * 获取当前客户端版本信息
 	 */
-	private void getCurrentVersion() {
+	private void getCurrentVersion(Context context) {
 		try {
 			PackageInfo info = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
 			curVersionName = info.versionName;
+
+			customBuilder = new CustomDialog.Builder(context);
+			customBuilder.setTitle("温馨提示").setMessage("当前已为最新版本\n"+curVersionName)
+					.setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+						}
+					});
+			customDialog = customBuilder.create();
 		} catch (NameNotFoundException e) {
 			e.printStackTrace(System.err);
 		}

@@ -79,34 +79,7 @@ public class HttpHelper {
 		client.get(context, url, responseHandler);
 	}
 
-	public static void addHeader(Context context) {
-		try {
 
-			TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-			if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-				return;
-			}
-
-			Log.e("header===0", "===" + SharedPreferencesUrls.getInstance().getString("access_token",""));
-
-			client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
-			client.addHeader("Accept", "application/vnd.ws.v1+json");
-			client.addHeader("Phone-Brand", new Build().MANUFACTURER.toUpperCase());
-			client.addHeader("Phone-Model", new Build().MODEL);
-			client.addHeader("Phone-System", "Android");
-			client.addHeader("Phone-System-Version", SystemUtil.getSystemVersion());
-			client.addHeader("App-Version", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
-			client.addHeader("Device_UUID", "" + tm.getDeviceId());
-			client.addHeader("Client", "Android_APP");
-
-			Log.e("post===", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+SystemUtil.getSystemVersion()+"==="+context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName+"==="+tm.getDeviceId());
-
-
-		} catch (Exception e) {
-			e.printStackTrace(System.err);
-		}
-
-	}
 
 	/**
 	 * get请求
@@ -198,6 +171,35 @@ public class HttpHelper {
 		addHeader(context);
 
 		client.delete(context, url, responseHandler);
+	}
+
+	public static void addHeader(Context context) {
+		try {
+
+			TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+			if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+				return;
+			}
+
+			Log.e("header===0", "===" + SharedPreferencesUrls.getInstance().getString("access_token",""));
+
+			client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
+			client.addHeader("Accept", "application/vnd.ws.v1+json");
+			client.addHeader("Phone-Brand", new Build().MANUFACTURER.toUpperCase());
+			client.addHeader("Phone-Model", new Build().MODEL);
+			client.addHeader("Phone-System", "Android");
+			client.addHeader("Phone-System-Version", SystemUtil.getSystemVersion());
+			client.addHeader("App-Version", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
+			client.addHeader("Device_UUID", "" + tm.getDeviceId());
+			client.addHeader("Client", "Android_APP");
+
+			Log.e("post===", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+SystemUtil.getSystemVersion()+"==="+context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName+"==="+tm.getDeviceId());
+
+
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+		}
+
 	}
 
 	public static String getVersionName(Context context) {

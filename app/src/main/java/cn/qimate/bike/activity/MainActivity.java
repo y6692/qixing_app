@@ -279,7 +279,16 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
 
+        JPushInterface.onResume(context);
+
+        Log.e("ma===onResume", SharedPreferencesUrls.getInstance().getString("iscert", "") + "===" + type);
+
+        tab.setCurrentTab(0);
+    }
 
     private void initView() {
 
@@ -287,7 +296,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         tab = findViewById(R.id.tab);
 
         tab.setTabData(mTabEntities, MainActivity.this, R.id.fl_change, mFragments);
-        tab.setCurrentTab(0);
+
 
         dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_frist_view, null);
@@ -483,7 +492,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.e("ma===banner=fail", "===" + throwable.toString());
-                onFailureCommon(throwable.toString());
+                onFailureCommon("ma===banner", throwable.toString());
             }
 
             @Override
@@ -569,7 +578,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
+                onFailureCommon("ma===getIndexAd", throwable.toString());
             }
             @Override
             public void onSuccess(int statusCode, Header[] headers, final String responseString) {
@@ -720,29 +729,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         }
     }
 
-    @Override protected void onResume() {
-
-
-        super.onResume();
-
-        JPushInterface.onResume(context);
-
-//        mapView.onResume();
-
-        Log.e("main===onResume", "==="+type);
-
-
-
-//        ClientManager.getClient().registerBluetoothStateListener(mBluetoothStateListener);
-
-
-//        aMap = mapView.getMap();
-//
-//        aMap.clear();
-
-        Log.e("main===onResume2", "===");
-
-    }
 
     private BluetoothStateListener mBluetoothStateListener = new BluetoothStateListener() {
         @Override

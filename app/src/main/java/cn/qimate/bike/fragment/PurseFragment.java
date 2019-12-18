@@ -160,7 +160,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void user() {
-        Log.e("spfa===user", "===");
+        Log.e("pf===user", "===");
 
         HttpHelper.get(context, Urls.user, new TextHttpResponseHandler() {
             @Override
@@ -169,7 +169,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
+                onFailureCommon("pf===user", throwable.toString());
             }
 
             @Override
@@ -182,7 +182,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            Log.e("spfa===user1", responseString + "===" + result.data);
+                            Log.e("pf===user1", responseString + "===" + result.data);
 
                             UserBean bean = JSON.parseObject(result.getData(), UserBean.class);
 
@@ -216,7 +216,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.e("pf===banner=fail", "===" + throwable.toString());
-                onFailureCommon(throwable.toString());
+                onFailureCommon("pf===banner", throwable.toString());
             }
 
             @Override

@@ -17,7 +17,7 @@ public class Urls {
 //	public static String host = HTTP + "uat.7mate.cn";
 //  public static String host = HTTP + "192.168.206.10:8345";
 
-	//注册登录接口
+	//注册登录接口、退出登录接口delete
 	public static String authorizations = host2 + "/authorizations";
 	//获取验证码接口
 	public static String verificationcode = host2 + "/verificationcode";
@@ -67,8 +67,6 @@ public class Urls {
 	public static String service_phones = host2 + "/service/phones";
 	//用户信息接口
 	public static String user = host2 + "/user";
-	//退出登录接口
-	public static String authorizations2 = host2 + "/authorizations";
 	//订单/账单列表接口
 	public static String orders = host2 + "/orders";
 	//订单/账单列表接口
@@ -84,6 +82,7 @@ public class Urls {
 	//骑行订单详情接口
 	public static String order_detail = host2 + "/order/cycling/";
 
+//	http://testnewmapi.7mate.cn/api/authorizations
 //	http://testnewmapi.7mate.cn/api/order/cycling/{id}
 //	http://testnewmapi.7mate.cn/api/user
 //	http://testnewmapi.7mate.cn/api/payments

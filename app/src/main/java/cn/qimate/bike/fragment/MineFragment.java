@@ -269,7 +269,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //        closeBtn = dialogView.findViewById(R.id.ui_fristView_closeBtn);
 //
 //
-//        rightBtn.setOnClickListener(this);
+
 //        headerImageView.setOnClickListener(this);
 //        myIntegralLayout.setOnClickListener(this);
 //        myPurseLayout.setOnClickListener(this);
@@ -279,6 +279,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //        settingLayout.setOnClickListener(this);
 //        closeBtn.setOnClickListener(myOnClickLister);
 
+        rightBtn.setOnClickListener(this);
         myOrderLayout.setOnClickListener(this);
         myMsgLayout.setOnClickListener(this);
 
@@ -743,54 +744,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             return;
         }
         switch (v.getId()) {
-            case R.id.personUI_rightBtn:
-                if (Build.VERSION.SDK_INT >= 23) {
-                    int checkPermission = getActivity().checkSelfPermission(Manifest.permission.CALL_PHONE);
-                    if (checkPermission != PERMISSION_GRANTED) {
-                        if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
-                            requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
-                        } else {
-                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开拨打电话权限！")
-                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                        }
-                                    }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                    requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
-                                }
-                            });
-                            customBuilder.create().show();
-                        }
-                        return;
-                    }
-                }
-                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                customBuilder.setTitle("温馨提示").setMessage("确认拨打" + "0519-86999222" + "吗?")
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        Intent intent=new Intent();
-                        intent.setAction(Intent.ACTION_CALL);
-                        intent.setData(Uri.parse("tel:" + "0519-86999222"));
-                        startActivity(intent);
-                    }
-                });
-                customBuilder.create().show();
-                break;
-
             case R.id.personUI_backImage:
                 scrollToFinishActivity();
                 break;
-            case R.id.personUI_title_settingBtn:
+
+            case R.id.personUI_rightBtn:
                 UIHelper.goToAct(context, SettingActivity.class);
                 break;
+
             case R.id.personUI_bottom_header:
 //                clickPopupWindow();
 //                UIHelper.goToAct(context, PersonInfoActivity.class);
@@ -857,21 +818,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                         });
                 builder.create().show();
                 break;
-            case R.id.personUI_logoutLayout:
-                customBuilder = new CustomDialog.Builder(context);
-                customBuilder.setTitle("温馨提示").setMessage("确认退出吗?")
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        logout(uid, access_token);
-                    }
-                });
-                customBuilder.create().show();
-                break;
+
             case R.id.personUI_superVip:
                 UIHelper.goToAct(context, SuperVipActivity.class);
                 break;
