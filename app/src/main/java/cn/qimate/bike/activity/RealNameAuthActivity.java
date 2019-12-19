@@ -225,8 +225,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.2);
 //        headLayout.setLayoutParams(params);
 
-        schoolLayout = (RelativeLayout)findViewById(R.id.ui_realNameAuth_schoolLayout);
-        schoolText = (TextView)findViewById(R.id.ui_realNameAuth_schoolText);
+//        schoolLayout = (RelativeLayout)findViewById(R.id.ui_realNameAuth_schoolLayout);
+//        schoolText = (TextView)findViewById(R.id.ui_realNameAuth_schoolText);
         realNameEdit = (EditText)findViewById(R.id.ui_realNameAuth_realName);
         identityNumberEdit = (EditText)findViewById(R.id.ui_realNameAuth_identity_number);
         submitBtn = (Button) findViewById(R.id.ui_realNameAuth_submitBtn);
@@ -244,45 +244,15 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //        uploadImage.setLayoutParams(params);
 //        uploadImage2.setLayoutParams(params);
 
-        if (schoolList.isEmpty() || item1.isEmpty()){
-            getSchoolList();
-        }
+//        if (schoolList.isEmpty() || item1.isEmpty()){
+//            getSchoolList();
+//        }
         backImg.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
-        schoolLayout.setOnClickListener(this);
         uploadImage.setOnClickListener(this);
         uploadImage2.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
-        // 设置默认选中的三级项目
-        // 监听确定选择按钮
-        pvOptions.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
-
-            @Override
-            public void onOptionsSelect(int options1, int option2, int options3) {
-                school = item1.get(options1)[0];
-                schoolText.setText(school);
-
-                cert_method = item1.get(options1)[1];
-
-                Log.e("pvOptions===", "==="+cert_method);
-
-                if("0".equals(cert_method)){
-                    isVisible = true;
-                    ll_1.setVisibility(View.VISIBLE);
-                    ll_2.setVisibility(View.GONE);
-                    ll_3.setVisibility(View.GONE);
-                }else if("1".equals(cert_method) || "2".equals(cert_method)){
-                    isVisible = false;
-                    ll_1.setVisibility(View.GONE);
-                }else{
-                    isVisible = true;
-                    ll_1.setVisibility(View.VISIBLE);
-                    ll_2.setVisibility(View.VISIBLE);
-                    ll_3.setVisibility(View.VISIBLE);
-                }
-            }
-        });
 
 //        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");

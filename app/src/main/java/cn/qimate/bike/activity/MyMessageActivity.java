@@ -55,6 +55,8 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
     private View footerViewType03;
     private View footerViewType04;
     private View footerViewType05;
+    private ImageView iv_type05;
+    private TextView tv_type05;
 
     private View footerLayout;
 
@@ -84,6 +86,10 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
         footerViewType03 = footerView.findViewById(R.id.footer_Layout_type03);// 已无更多
         footerViewType04 = footerView.findViewById(R.id.footer_Layout_type04);// 刷新失败，请重试
         footerViewType05 = footerView.findViewById(R.id.footer_Layout_type05);// 暂无数据
+        iv_type05 = footerView.findViewById(R.id.footer_Layout_iv_type05);
+        tv_type05 = footerView.findViewById(R.id.footer_Layout_tv_type05);
+        iv_type05.setImageResource(R.drawable.no_msg_icon);
+        tv_type05.setText("您还未有消息！");
 
         footerLayout = footerView.findViewById(R.id.footer_Layout);
 
@@ -184,7 +190,7 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
         }
         RequestParams params = new RequestParams();
         params.put("page",showPage);
-        params.put("pagesize", GlobalConfig.PAGE_SIZE);
+        params.put("per_page", GlobalConfig.PAGE_SIZE);
         HttpHelper.get(context, Urls.notices, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {

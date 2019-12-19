@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -49,6 +50,7 @@ import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.RechargeBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.ToastUtil;
 
 /**
  * Created by yuanyi on 2019/12/9.
@@ -59,8 +61,10 @@ public class ExchangeActivity extends SwipeBackActivity implements View.OnClickL
     private Context context;
     private LoadingDialog loadingDialog;
     private LinearLayout backImg;
+    private EditText codeEdit;
     private LinearLayout submitBtn;
 
+    private String code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,7 @@ public class ExchangeActivity extends SwipeBackActivity implements View.OnClickL
 
         backImg = (LinearLayout) findViewById(R.id.ll_backBtn);
         submitBtn = (LinearLayout)findViewById(R.id.exchangeUI_submitBtn);
+        codeEdit = (EditText)findViewById(R.id.exchangeUI_code);
 
 
         backImg.setOnClickListener(this);
@@ -87,7 +92,6 @@ public class ExchangeActivity extends SwipeBackActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         switch (v.getId()){
             case R.id.ll_backBtn:
@@ -95,66 +99,74 @@ public class ExchangeActivity extends SwipeBackActivity implements View.OnClickL
                 break;
 
             case R.id.exchangeUI_submitBtn:
+                code = codeEdit.getText().toString();
+
                 if (access_token == null || "".equals(access_token)){
                     Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                Log.e("rid===", "===");
+                if (code == null || "".equals(code)){
+                    Toast.makeText(context,"请输入兑换码",Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-//                userRecharge(uid, access_token);
+                Log.e("submitBtn===", "===");
+
+                exchange();
                 break;
         }
     }
 
-//    private void userRecharge(final String uid, final String access_token){
-//        RequestParams params = new RequestParams();
-//        params.put("uid",uid);
-//        params.put("access_token",access_token);
-//        params.put("rid",rid);
-//        params.put("paytype",paytype);
+    private void exchange(){
+
+        Log.e("ea===exchange", "==="+code);
+
+        RequestParams params = new RequestParams();
+        params.put("exchange_code", code);
+
+        HttpHelper.post(context, Urls.exchange, params, new TextHttpResponseHandler() {     //TODO
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在提交");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+                Log.e("ea===exchange_fail", throwable.toString()+"==="+responseString);
+
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    Log.e("ea===exchange1", "==="+responseString);
+
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+
+                    ToastUtil.showMessageApp(context, result.getMessage());
+
+//                    if(result.getStatus_code()!=200){
 //
-//        Log.e("userRecharge===", rid+"==="+paytype);
-//
-//        HttpHelper.post(context, Urls.userRecharge, params, new TextHttpResponseHandler() {
-//            @Override
-//            public void onStart() {
-//                if (loadingDialog != null && !loadingDialog.isShowing()) {
-//                    loadingDialog.setTitle("正在提交");
-//                    loadingDialog.show();
-//                }
-//            }
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
-//                UIHelper.ToastError(context, throwable.toString());
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                try {
-//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-//                    if (result.getFlag().equals("Success")) {
-//                        osn = result.getData();
-//                        if ("1".equals(paytype)){
-//                            show_alipay(osn,uid,access_token);
-//                        }else {
-//                            show_wxpay(osn,uid,access_token);
-//                        }
-//                    } else {
-//                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
 //                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
-//            }
-//        });
-//    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

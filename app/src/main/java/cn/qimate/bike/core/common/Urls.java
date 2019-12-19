@@ -83,7 +83,10 @@ public class Urls {
 	public static String payments = host2 + "/payments";
 	//骑行订单详情接口
 	public static String order_detail = host2 + "/order/cycling/";
+	//兑换套餐卡接口
+	public static String exchange = host2 + "/cycling_card/exchange";
 
+//	http://testnewmapi.7mate.cn/api/cycling_card/exchange
 //	http://testnewmapi.7mate.cn/api/appeal
 //	http://testnewmapi.7mate.cn/api/authorizations
 //	http://testnewmapi.7mate.cn/api/order/cycling/{id}

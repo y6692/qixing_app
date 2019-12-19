@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -58,6 +59,8 @@ public class MyOrderActivity extends SwipeBackActivity implements View.OnClickLi
     private View footerViewType03;
     private View footerViewType04;
     private View footerViewType05;
+    private ImageView iv_type05;
+    private TextView tv_type05;
 
     private View footerLayout;
 
@@ -98,6 +101,10 @@ public class MyOrderActivity extends SwipeBackActivity implements View.OnClickLi
         footerViewType03 = footerView.findViewById(R.id.footer_Layout_type03);// 已无更多
         footerViewType04 = footerView.findViewById(R.id.footer_Layout_type04);// 刷新失败，请重试
         footerViewType05 = footerView.findViewById(R.id.footer_Layout_type05);// 暂无数据
+        iv_type05 = footerView.findViewById(R.id.footer_Layout_iv_type05);
+        tv_type05 = footerView.findViewById(R.id.footer_Layout_tv_type05);
+        iv_type05.setImageResource(R.drawable.no_order_icon);
+        tv_type05.setText("您还未有订单，请快下单吧！");
 
         footerLayout = footerView.findViewById(R.id.footer_Layout);
 
@@ -218,8 +225,8 @@ public class MyOrderActivity extends SwipeBackActivity implements View.OnClickLi
         }
         RequestParams params = new RequestParams();
         params.put("order_type", 1);
-        params.put("page",showPage);    //TODO
-        params.put("pagesize", GlobalConfig.PAGE_SIZE);
+        params.put("page",showPage);    //当前页码
+        params.put("per_page", GlobalConfig.PAGE_SIZE);
         HttpHelper.get(context, Urls.orders, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -243,6 +250,7 @@ public class MyOrderActivity extends SwipeBackActivity implements View.OnClickLi
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
                     JSONArray array = new JSONArray(result.getData());
+
                     if (array.length() == 0 && showPage == 1) {
                         footerLayout.setVisibility(View.VISIBLE);
                         setFooterType(4);
@@ -271,12 +279,6 @@ public class MyOrderActivity extends SwipeBackActivity implements View.OnClickLi
                         datas.add(bean);
                     }
 
-//                    if ("Success".equals(result.getFlag())) {
-//
-//
-//                    } else {
-//                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-//                    }
                 } catch (Exception e) {
 
                 } finally {

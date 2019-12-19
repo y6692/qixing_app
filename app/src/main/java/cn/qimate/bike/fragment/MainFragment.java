@@ -3,6 +3,7 @@ package cn.qimate.bike.fragment;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -32,10 +33,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -260,6 +263,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private CustomDialog customDialog8;
     private CustomDialog customDialog9;
     protected LoadingDialogWithHelp loadingDialogWithHelp;
+    private Dialog advDialog;
+    private TextView advAgainBtn;
+    private TextView advCloseBtn;
 
     private AMapNavi mAMapNavi;
     private RouteOverLay routeOverLay;
@@ -659,11 +665,19 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                             bleService.view = context;
                                             bleService.showValue = true;
                                         }else if ("5".equals(type)  || "6".equals(type)) {
-//                                          ClientManager.getClient().disconnect(m_nowMac);
 
                                             Log.e("initView===5", "==="+isLookPsdBtn);
 
-//                                          ll_1.setVisibility(View.VISIBLE);
+                                            if(!SharedPreferencesUrls.getInstance().getBoolean("isKnow", false)){
+                                                WindowManager windowManager = activity.getWindowManager();     //TODO
+                                                Display display = windowManager.getDefaultDisplay();
+                                                WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
+                                                lp.width = (int) (display.getWidth() * 1);
+                                                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                                                advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+                                                advDialog.getWindow().setAttributes(lp);
+                                                advDialog.show();
+                                            }
 
                                             if (loadingDialogWithHelp != null && !loadingDialogWithHelp.isShowing()){
                                                 loadingDialogWithHelp.setTitle("正在唤醒车锁");
@@ -968,6 +982,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
+        advDialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+        View advDialogView = LayoutInflater.from(context).inflate(R.layout.ui_adv_view3, null);
+        advDialog.setContentView(advDialogView);
+        advDialog.setCanceledOnTouchOutside(false);
+
+        advAgainBtn = (TextView)advDialogView.findViewById(R.id.ui_adv_againBtn);
+        advCloseBtn = (TextView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+
 //        customBuilder = new CustomDialog.Builder(context);    //TODO
 //        customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
 //        customDialog = customBuilder.create();
@@ -1159,8 +1181,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         leftBtn.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
         rl_ad.setOnClickListener(this);
-
-
+        advAgainBtn.setOnClickListener(this);
+        advCloseBtn.setOnClickListener(this);
 
 
     }
@@ -1314,6 +1336,21 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     return;
                 }
                 UIHelper.goToAct(context, PersonAlterActivity.class);
+                break;
+
+            case R.id.ui_adv_againBtn:
+                if (advDialog != null && advDialog.isShowing()) {
+                    advDialog.dismiss();
+                }
+
+                SharedPreferencesUrls.getInstance().putBoolean("isKnow", true);
+
+                break;
+
+            case R.id.ui_adv_closeBtn:
+                if (advDialog != null && advDialog.isShowing()) {
+                    advDialog.dismiss();
+                }
                 break;
 
             case R.id.ll_payBtn:
@@ -3310,6 +3347,19 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 //                                    cycling2();
                                     cyclingThread();
+
+                                    if("5".equals(type)  || "6".equals(type)){
+                                        if(!SharedPreferencesUrls.getInstance().getBoolean("isKnow", false)){
+                                            WindowManager windowManager = activity.getWindowManager();     //TODO
+                                            Display display = windowManager.getDefaultDisplay();
+                                            WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
+                                            lp.width = (int) (display.getWidth() * 1);
+                                            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                                            advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+                                            advDialog.getWindow().setAttributes(lp);
+                                            advDialog.show();
+                                        }
+                                    }
 
                                 }
 
@@ -6179,16 +6229,17 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 }else if ("5".equals(type)  || "6".equals(type)) {
                                     Log.e("initView===5", "==="+isLookPsdBtn);
 
-//                                    ll_1.setVisibility(View.VISIBLE);
+//                                    if(!SharedPreferencesUrls.getInstance().getBoolean("isKnow", false)){
+//                                        WindowManager windowManager = activity.getWindowManager();     //TODO
+//                                        Display display = windowManager.getDefaultDisplay();
+//                                        WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
+//                                        lp.width = (int) (display.getWidth() * 1);
+//                                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//                                        advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+//                                        advDialog.getWindow().setAttributes(lp);
+//                                        advDialog.show();
+//                                    }
 
-//                                    WindowManager windowManager = getWindowManager();     //TODO
-//                                    Display display = windowManager.getDefaultDisplay();
-//                                    WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
-//                                    lp.width = (int) (display.getWidth() * 1);
-//                                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-//                                    advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-//                                    advDialog.getWindow().setAttributes(lp);
-//                                    advDialog.show();
 
                                     ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
                                     ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);

@@ -59,7 +59,7 @@
                 android:background="@drawable/shape_bill_edit"
                 android:paddingLeft="12dp"
                 android:gravity="center_vertical"
-                android:text="123"
+                android:text="骑行订单"
                 android:textSize="@dimen/sp16"
                 android:textColor="@color/tx_black"/>
 

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -58,6 +59,8 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
     private View footerViewType03;
     private View footerViewType04;
     private View footerViewType05;
+    private ImageView iv_type05;
+    private TextView tv_type05;
 
     private View footerLayout;
 
@@ -74,7 +77,7 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
     private TextView tv_bill;
     private ArrayList<String> item = new ArrayList<>();
 
-    private int order_type = 0;
+    private int order_type = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +101,10 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
         footerViewType03 = footerView.findViewById(R.id.footer_Layout_type03);// 已无更多
         footerViewType04 = footerView.findViewById(R.id.footer_Layout_type04);// 刷新失败，请重试
         footerViewType05 = footerView.findViewById(R.id.footer_Layout_type05);// 暂无数据
+        iv_type05 = footerView.findViewById(R.id.footer_Layout_iv_type05);
+        tv_type05 = footerView.findViewById(R.id.footer_Layout_tv_type05);
+        iv_type05.setImageResource(R.drawable.no_bill_icon);
+        tv_type05.setText("您还未有账单…");
 
         footerLayout = footerView.findViewById(R.id.footer_Layout);
 
@@ -129,8 +136,8 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
         item.add("骑行订单");
         item.add("购买骑行卡订单");
         item.add("调度费订单");
-        item.add("调度费订单");
-        item.add("充值订单");
+        item.add("赔偿费订单");
+        item.add("充值订单");       //TODO  不支持的订单类型
 
         pvOptions.setPicker(item);
         pvOptions.setCyclic(false, false, false);
@@ -141,8 +148,11 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
             @Override
             public void onOptionsSelect(int options1, int option2, int options3) {
 
-                order_type = options1;
+                order_type = options1+1;
                 tv_bill.setText(item.get(options1));
+
+                datas.clear();
+                myAdapter.notifyDataSetChanged();
 
                 initHttp();
 
@@ -231,7 +241,7 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
         RequestParams params = new RequestParams();
         params.put("order_type", order_type);
         params.put("page",showPage);
-        params.put("pagesize", GlobalConfig.PAGE_SIZE);
+        params.put("per_page", GlobalConfig.PAGE_SIZE);
         HttpHelper.get(context, Urls.orders, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -255,6 +265,9 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
                     JSONArray array = new JSONArray(result.getData());
+
+                    Log.e("orders===1", datas.size()+"==="+order_type+"==="+array.length());
+
                     if (array.length() == 0 && showPage == 1) {
                         footerLayout.setVisibility(View.VISIBLE);
                         setFooterType(4);
@@ -270,25 +283,19 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
                         setFooterType(0);
                     }
 
-                    Log.e("orders===1", "==="+array.length());
+
 
                     for (int i = 0; i < array.length(); i++) {
 
                         Log.e("orders===2", "==="+array.getJSONObject(i).toString());
 
                         BillBean bean = JSON.parseObject(array.getJSONObject(i).toString(), BillBean.class);
-
+                        bean.setOrder_type(order_type);
                         Log.e("orders===3", "==="+bean.getOrder_type());
 
                         datas.add(bean);
                     }
 
-//                    if ("Success".equals(result.getFlag())) {
-//
-//
-//                    } else {
-//                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-//                    }
                 } catch (Exception e) {
 
                 } finally {

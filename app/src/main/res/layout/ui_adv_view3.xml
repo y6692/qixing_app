@@ -27,15 +27,48 @@
         <!--android:layout_height="@dimen/dp20"-->
         <!--android:layout_gravity="center_horizontal"-->
         <!--android:background="@color/white"/>-->
-        <ImageView
-            android:id="@+id/ui_adv_closeBtn"
-            android:layout_width="@dimen/dp30"
-            android:layout_height="@dimen/dp30"
-            android:layout_marginTop="30dp"
-            android:src="@drawable/close_icon"
-            android:background="@null"
-            android:layout_gravity="center_horizontal"
-            android:scaleType="centerInside"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp">
+
+            <TextView
+                android:id="@+id/ui_adv_againBtn"
+                android:layout_width="67dp"
+                android:layout_height="24dp"
+                android:background="@drawable/block_bcg_2"
+                android:layout_marginLeft="53dp"
+                android:gravity="center"
+                android:text="不再提醒"
+                android:textColor="#333333"
+                android:textSize="12sp"
+                />
+
+            <TextView
+                android:id="@+id/ui_adv_closeBtn"
+                android:layout_width="67dp"
+                android:layout_height="24dp"
+                android:background="@drawable/block_bcg_2"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="53dp"
+                android:gravity="center"
+                android:text="我知道了"
+                android:textColor="#333333"
+                android:textSize="12sp"
+                />
+
+        </RelativeLayout>
+
+        <!--<ImageView-->
+            <!--android:id="@+id/ui_adv_closeBtn"-->
+            <!--android:layout_width="@dimen/dp30"-->
+            <!--android:layout_height="@dimen/dp30"-->
+            <!--android:layout_marginTop="30dp"-->
+            <!--android:src="@drawable/close_icon"-->
+            <!--android:background="@null"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:scaleType="centerInside"/>-->
     </LinearLayout>
 
     <!--<LinearLayout-->

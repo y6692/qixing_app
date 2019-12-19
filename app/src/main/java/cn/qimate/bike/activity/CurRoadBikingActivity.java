@@ -436,9 +436,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         macList2 = new ArrayList<>();
         initView();
 
-
-
-
 //        customBuilder = new CustomDialog.Builder(context);
 //        customBuilder.setTitle("温馨提示").setMessage("不在还车点，请至校内地图红色区域停车")
 //                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
