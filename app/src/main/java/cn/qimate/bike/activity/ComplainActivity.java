@@ -24,7 +24,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,7 +39,6 @@ import com.qiniu.android.storage.UpCancellationSignal;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadOptions;
-import com.zxing.lib.scaner.activity.ActivityScanerCode;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -69,6 +67,7 @@ import cn.qimate.bike.R;
 import cn.qimate.bike.core.common.BitmapUtils1;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
+import cn.qimate.bike.core.common.StringUtil;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
@@ -89,21 +88,20 @@ import cn.qimate.bike.util.UtilScreenCapture;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 /**
- * Created by Administrator1 on 2017/2/15.
+ * Created by yuanyi on 2019/12/19.
  */
 
-public class DepositFreeAuthActivity extends SwipeBackActivity implements View.OnClickListener {
+public class ComplainActivity extends SwipeBackActivity implements View.OnClickListener {
 
     private Context context;
 //    private LoadingDialog loadingDialog;
     private ImageView backImg;
-    private TextView title, rightBtn;
+    private TextView title, rightBtn, getCodeText;
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
     private LinearLayout ll_1, ll_2, ll_3;
     private RelativeLayout schoolLayout;
-    private TextView schoolText, timeText;
-    private EditText realNameEdit, studentEdit;
+    private EditText oldPhoneEdit, pwdEdit, newPhoneEdit, codeEdit;
     private Button submitBtn;
 
 //    private RelativeLayout uploadImageLayout;
@@ -156,26 +154,19 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
     private Bitmap upBitmap;
     File picture;
 
-    private String realname;
-    private String school = "";
-    private String student_id = "";
-    private String school_id = "";
-    private String time = "";
+    private String oldPhone = "";
+    private String pwd = "";
+    private String newPhone = "";
+    private String code = "";
 
-    private Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            // 三级联动效果
-            pvOptions.setPicker(item);
-            pvOptions.setCyclic(false, false, false);
-            pvOptions.setSelectOptions(0, 0, 0);
-//            sexLatout.setClickable(true);
-        };
-    };
+    private boolean isCode;
+    private int num;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_deposit_free_auth);
+        setContentView(R.layout.activity_complain);
         context = this;
 
         CrashHandler.getInstance().setmContext(this);
@@ -203,8 +194,8 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
         pvOptions.setTitle("选择入学时间");
 
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
-        rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
-        rightBtn.setText("联系客服");
+//        rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
+//        rightBtn.setText("联系客服");
 
         takePhotoBtn = (Button)findViewById(R.id.takePhotoBtn);
         pickPhotoBtn = (Button)findViewById(R.id.pickPhotoBtn);
@@ -215,20 +206,19 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
         cancelBtn.setOnClickListener(itemsOnClick);
 
 
-//        schoolLayout = (RelativeLayout)findViewById(R.id.ui_realNameAuth_schoolLayout);
-//        schoolText = (TextView)findViewById(R.id.ui_realNameAuth_schoolText);
-        realNameEdit = (EditText)findViewById(R.id.ui_deposit_free_auth_realName);
-        studentEdit = (EditText)findViewById(R.id.ui_deposit_free_auth_student);
-        schoolText = (TextView)findViewById(R.id.ui_deposit_free_auth_school);
-        timeText = (TextView)findViewById(R.id.ui_deposit_free_auth_time);
-        submitBtn = (Button) findViewById(R.id.ui_deposit_free_auth_submitBtn);
+        oldPhoneEdit = (EditText)findViewById(R.id.ui_complain_old_phone);
+        pwdEdit = (EditText)findViewById(R.id.ui_complain_pwd);
+        newPhoneEdit = (EditText)findViewById(R.id.ui_complain_new_phone);
+        codeEdit = (EditText)findViewById(R.id.ui_complain_code);
+        getCodeText = (TextView)findViewById(R.id.ui_complain_getCode);
+        submitBtn = (Button) findViewById(R.id.ui_complain_submitBtn);
 
         ll_1 = (LinearLayout)findViewById(R.id.ll_1);
         ll_2 = (LinearLayout)findViewById(R.id.ll_2);
         ll_3 = (LinearLayout)findViewById(R.id.ll_3);
 //        uploadImageLayout = (RelativeLayout)findViewById(R.id.ui_realNameAuth_uploadImageLayout);
-        uploadImage = (ImageView)findViewById(R.id.ui_deposit_free_auth_uploadImage);
-        uploadImage2 = (ImageView)findViewById(R.id.ui_deposit_free_auth_uploadImage2);
+        uploadImage = (ImageView)findViewById(R.id.ui_complain_uploadImage);
+        uploadImage2 = (ImageView)findViewById(R.id.ui_complain_uploadImage2);
 //        addImageLayout = (RelativeLayout)findViewById(R.id.ui_realNameAuth_addImageLayout);
 
 
@@ -236,51 +226,11 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
             getSchoolList();
         }
         backImg.setOnClickListener(this);
-        rightBtn.setOnClickListener(this);
-        schoolText.setOnClickListener(this);
-        timeText.setOnClickListener(this);
+        getCodeText.setOnClickListener(this);
         uploadImage.setOnClickListener(this);
         uploadImage2.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
-        item.add("1");
-        item.add("2");
-        item.add("3");
-        item.add("4");
-
-        pvOptions.setPicker(item);
-        pvOptions.setCyclic(false, false, false);
-        pvOptions.setSelectOptions(0, 0, 0);
-
-        pvOptions.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
-
-            @Override
-            public void onOptionsSelect(int options1, int option2, int options3) {
-                timeText.setText(item.get(options1));
-
-//                school = item1.get(options1)[0];
-//                schoolText.setText(school);
-//
-//                cert_method = item1.get(options1)[1];
-//
-//                Log.e("pvOptions===", "==="+cert_method);
-//
-//                if("0".equals(cert_method)){
-//                    isVisible = true;
-//                    ll_1.setVisibility(View.VISIBLE);
-//                    ll_2.setVisibility(View.GONE);
-//                    ll_3.setVisibility(View.GONE);
-//                }else if("1".equals(cert_method) || "2".equals(cert_method)){
-//                    isVisible = false;
-//                    ll_1.setVisibility(View.GONE);
-//                }else{
-//                    isVisible = true;
-//                    ll_1.setVisibility(View.VISIBLE);
-//                    ll_2.setVisibility(View.VISIBLE);
-//                    ll_3.setVisibility(View.VISIBLE);
-//                }
-            }
-        });
 
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
@@ -302,51 +252,57 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
             case R.id.mainUI_title_backBtn:
                 scrollToFinishActivity();
                 break;
-            case R.id.mainUI_title_rightBtn:
-                UIHelper.goToAct(context, ServiceCenterActivity.class);
+//            case R.id.mainUI_title_rightBtn:
+//                UIHelper.goToAct(context, ServiceCenterActivity.class);
+//                break;
+
+            case R.id.ui_complain_getCode:
+
+                newPhone = newPhoneEdit.getText().toString();
+                if (newPhone == null || "".equals(newPhone)) {
+                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!StringUtil.isPhoner(newPhone)) {
+                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                sendCode();
                 break;
 
-            case R.id.ui_deposit_free_auth_school:
-                Intent intent = new Intent();
-                intent.setClass(context, SchoolSelectActivity.class);
-                startActivityForResult(intent, 10);
-                break;
-
-            case R.id.ui_deposit_free_auth_time:
-                pvOptions.show();
-                break;
-
-            case R.id.ui_deposit_free_auth_uploadImage:
+            case R.id.ui_complain_uploadImage:
                 photo = 1;
                 clickPopupWindow();
                 break;
-            case R.id.ui_deposit_free_auth_uploadImage2:
+            case R.id.ui_complain_uploadImage2:
                 photo = 2;
                 clickPopupWindow();
                 break;
-            case R.id.ui_deposit_free_auth_submitBtn:
+            case R.id.ui_complain_submitBtn:
                 String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-                realname = realNameEdit.getText().toString();
-                student_id = studentEdit.getText().toString();
-                time = timeText.getText().toString();
+                oldPhone = oldPhoneEdit.getText().toString();
+                pwd = pwdEdit.getText().toString();
+                newPhone = newPhoneEdit.getText().toString();
+                code = codeEdit.getText().toString();
                 if (access_token == null || "".equals(access_token)){
                     Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
                 }else {
 
-                    if (realname == null || "".equals(realname)){
-                        Toast.makeText(context,"请填写您的真实姓名",Toast.LENGTH_SHORT).show();
+                    if (oldPhone == null || "".equals(oldPhone)){
+                        Toast.makeText(context,"请填写您的原手机号",Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if (student_id == null || "".equals(student_id)){
-                        Toast.makeText(context,"请填写您的学号",Toast.LENGTH_SHORT).show();
+//                    if (pwd == null || "".equals(pwd)){
+//                        Toast.makeText(context,"请填写您的原密码",Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+                    if (newPhone == null || "".equals(newPhone)){
+                        Toast.makeText(context,"请填写您的新手机号",Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if (school_id == null || "".equals(school_id)){
-                        Toast.makeText(context,"请选择学校",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (time == null || "".equals(time)){
-                        Toast.makeText(context,"请选择入学时间",Toast.LENGTH_SHORT).show();
+                    if (code == null || "".equals(code)){
+                        Toast.makeText(context,"请输入验证码",Toast.LENGTH_SHORT).show();
                         return;
                     }
 //                    if (isVisible){
@@ -376,6 +332,79 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
         }
     }
 
+    private void sendCode() {
+
+        Log.e("verificationcode===0", "==="+newPhone);
+
+        try{
+            RequestParams params = new RequestParams();
+            params.add("phone", newPhone);
+            params.add("scene", 2);
+
+            HttpHelper.post(context, Urls.verificationcode, params, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+                }
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+                        Log.e("verificationcode===", "==="+responseString);
+
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        mHandler.sendEmptyMessage(2);
+
+                        // 开始60秒倒计时
+                        mHandler.sendEmptyMessageDelayed(1, 1000);
+
+//                        Intent intent = new Intent();
+//                        intent.setClass(context, NoteLoginActivity.class);
+//                        intent.putExtra("telphone",telphone);
+//                        startActivity(intent);
+
+
+
+//                        if (result.getFlag().equals("Success")) {
+//
+//
+//                        } else {
+//                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+//                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+                    Log.e("verificationcode===fail", throwable.toString()+"==="+responseString);
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
+            });
+        }catch (Exception e){
+            Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
     public void getUpToken() {
         RequestParams params = new RequestParams();
 //        params.put("uid",uid);
@@ -387,7 +416,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
+                onFailureCommon("ca===getUpToken", throwable.toString());
             }
 
             @Override
@@ -544,19 +573,19 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
                             if (result.getFlag().equals("Success")) {
                                 AuthStateBean bean = JSON.parseObject(result.getData(),AuthStateBean.class);
-                                school = bean.getSchool();
+//                                school = bean.getSchool();
+//                                schoolText.setText(school);
+//                                realNameEdit.setText(bean.getRealname());
+//                                studentEdit.setText(bean.getStunum());
                                 imageurl = bean.getStunumfile();
                                 imageurl2 = bean.getStunumfile2();
-                                schoolText.setText(school);
-                                realNameEdit.setText(bean.getRealname());
-                                studentEdit.setText(bean.getStunum());
 
                                 cert_method = bean.getCert_method();
 
                                 if("1".equals(bean.getIscert())){
-                                    schoolText.setText("");
-                                    realNameEdit.setText("");
-                                    studentEdit.setText("");
+//                                    schoolText.setText("");
+//                                    realNameEdit.setText("");
+//                                    studentEdit.setText("");
 //                                    imageurl = "";
 //                                    imageurl2 = "";
                                     isVisible = false;
@@ -618,198 +647,20 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
         });
     }
 
-    /**
-     * 自动认证
-     * */
-    private void AutoSubmitBtn(final String uid, final String access_token, final String realname, final String stunum) {
-        RequestParams params = new RequestParams();
-        params.put("xm", realname);
-        params.put("xh", stunum);
-
-        HttpHelper.postWithHead(context, Urls.autoauthentication, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                onStartCommon("正在提交");
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        //UIHelper.ToastError(context, throwable.toString());
-//                      Toast.makeText(context, "===zzz", Toast.LENGTH_SHORT).show();
-
-                        Log.e("AutoSubmitBtn===", "fail===");
-
-                        SubmitBtn();
-                    }
-                });
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-
-                            Log.e("AutoSubmitBtn===", "==="+responseString);
-
-//                            Toast.makeText(context,"==="+result.status,Toast.LENGTH_SHORT).show();
-
-                            if("0".equals(result.status)){
-                                SubmitBtn();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                    }
-                });
-            }
-        });
-
-    }
-
-    /**
-     * 手动认证
-     * */
-    private void SubmitBtn2(String uid, String access_token, String realname, String stunum){
-
-        RequestParams params = new RequestParams();
-        params.put("uid",uid);
-        params.put("access_token",access_token);
-        params.put("realname",realname);
-//        params.put("sex",sex);
-        params.put("school",school);
-//        params.put("grade",grade);
-        params.put("stunum",stunum);
-        params.put("stunumfile",imageurl);
-        HttpHelper.post(context, Urls.authentication, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                onStartCommon("正在提交");
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                            if (result.getFlag().equals("Success")) {
-                                Toast.makeText(context,"恭喜您,信息提交成功",Toast.LENGTH_SHORT).show();
-                                SharedPreferencesUrls.getInstance().putString("iscert","4");
-                                scrollToFinishActivity();
-                            } else {
-                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                    }
-                });
-
-            }
-        });
-    }
-
-    /**
-     * 认证
-     * */
-    private void SubmitBtn3(String uid, String access_token, String realname, String stunum){
-
-        Log.e("SubmitBtn===0", flag+"==="+uid+"==="+access_token+"==="+stunum+"==="+realname+"==="+school+"==="+cert_method);
-
-        RequestParams params = new RequestParams();
-        params.put("uid",uid);
-        params.put("access_token",access_token);
-        params.put("realname",realname);
-        params.put("school",school);
-        params.put("stunum",stunum);
-
-        if("3".equals(cert_method) || "4".equals(cert_method) || flag){
-            params.put("stunumfile", imageurl);
-            params.put("stunumfile2", imageurl2);
-        }
-
-        HttpHelper.post(context, Urls.certification, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                onStartCommon("正在提交");
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-
-                            Log.e("SubmitBtn===", "==="+responseString);
-
-                            if (result.getFlag().equals("Success")) {
-//                                Toast.makeText(context,"恭喜您,信息提交成功",Toast.LENGTH_SHORT).show();
-                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-                                SharedPreferencesUrls.getInstance().putString("iscert","4");
-                                scrollToFinishActivity();
-                            } else {
-
-                                if (result.getErrcode()==401) {
-                                    flag = true;
-                                    isVisible = true;
-                                    ll_1.setVisibility(View.VISIBLE);
-                                }
-
-                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                    }
-                });
-
-            }
-        });
-    }
 
     private void SubmitBtn(){
 
-        Log.e("SubmitBtn===0", realname+"==="+student_id+"==="+school_id+"==="+time+"==="+imageurl+"==="+imageurl2);
+        Log.e("SubmitBtn===0", oldPhone+"==="+pwd+"==="+newPhone+"==="+code+"==="+imageurl+"==="+imageurl2);
 
         RequestParams params = new RequestParams();
-        params.put("type", 1);
-        params.put("user_name", realname);
-        params.put("student_id", student_id);
-        params.put("school_id", Integer.parseInt(school_id));
-        params.put("admission_time", time);
+        params.put("old_phone", oldPhone);
+        params.put("old_password", pwd);
+        params.put("new_phone", newPhone);
+        params.put("verification_code", code);
         params.put("cert_photo", imageurl);
         params.put("holding_cert_photo", imageurl2);
 
-
-        HttpHelper.post(context, Urls.cert, params, new TextHttpResponseHandler() {     //TODO
+        HttpHelper.post(context, Urls.appeal, params, new TextHttpResponseHandler() {     //TODO
             @Override
             public void onStart() {
                 onStartCommon("正在提交");
@@ -920,12 +771,12 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                     case 10:
                         if (resultCode == RESULT_OK) {
 
-                            school_id = data.getStringExtra("school_id");
-                            String school_name = data.getStringExtra("school_name");
-
-                            Log.e("requestCode===10", school_id+"==="+school_name);
-
-                            schoolText.setText(school_name);
+//                            school_id = data.getStringExtra("school_id");
+//                            String school_name = data.getStringExtra("school_name");
+//
+//                            Log.e("requestCode===10", school_id+"==="+school_name);
+//
+//                            schoolText.setText(school_name);
 
                         } else {
 //                            Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();
@@ -1251,6 +1102,26 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                     }
                     break;
 
+                case 1:
+                    if (num != 1) {
+                        getCodeText.setText((--num) + "s 后点击重新获取");
+                    } else {
+                        getCodeText.setText("重新获取");
+                        getCodeText.setEnabled(true);
+                        isCode = false;
+                    }
+                    if (isCode) {
+                        mHandler.sendEmptyMessageDelayed(1, 1000);
+                    }
+                    break;
+
+                case 2:
+                    num = 60;
+                    isCode = true;
+                    getCodeText.setText(num + "s 后点击重新获取");
+                    getCodeText.setEnabled(false);
+                    break;
+
                 default:
                     break;
             }
@@ -1283,7 +1154,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.cancel();
 
-                                        DepositFreeAuthActivity.this.requestPermissions(new String[] { Manifest.permission.CAMERA },
+                                        ComplainActivity.this.requestPermissions(new String[] { Manifest.permission.CAMERA },
                                                 101);
 
                                     }
@@ -1317,7 +1188,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(DepositFreeAuthActivity.this,
+                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(ComplainActivity.this,
                                     BuildConfig.APPLICATION_ID + ".fileprovider", file));
 
                         }else {
@@ -1410,7 +1281,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                                     }
 
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                        takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(DepositFreeAuthActivity.this,
+                                        takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(ComplainActivity.this,
                                                 BuildConfig.APPLICATION_ID + ".fileprovider",
 //                                        "com.vondear.rxtools.fileprovider",
                                                 file));

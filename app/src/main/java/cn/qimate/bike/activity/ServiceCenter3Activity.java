@@ -409,7 +409,7 @@ public class ServiceCenter3Activity extends SwipeBackActivity implements View.On
             case R.id.mainUI_title_rightBtn:
 //                SharedPreferencesUrls.getInstance().putString("type", "1");
 
-                UpdateManager.getUpdateManager().setType(3).checkAppUpdate(ServiceCenter3Activity.this, context, true);
+                UpdateManager.getUpdateManager().setType(3).checkAppUpdate(ServiceCenter3Activity.this, context, 3, null);
 
 //                UIHelper.goToAct(context,FeedbackActivity.class);
                 break;

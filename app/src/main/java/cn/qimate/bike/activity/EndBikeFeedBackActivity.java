@@ -231,6 +231,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         cancelBtn.setOnClickListener(itemsOnClick);
 
         bikeCodeEdit = (TextView) findViewById(R.id.endBikeFeedBackUI_codenum);
+        bikeCodeEdit.setText(bikeCode);
 
         Tag1 = (ImageView)findViewById(R.id.endBikeFeedBackUI_type_Tag1);
         Tag1_1 = (TextView)findViewById(R.id.endBikeFeedBackUI_type_Tag1_1);
@@ -472,7 +473,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                                 upToken = bean.getToken();
 
 //                                SharedPreferencesUrls.getInstance().putString("access_token", "Bearer "+bean.getToken());
-                                Toast.makeText(context,"恭喜您,获取成功",Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(context,"恭喜您,获取成功",Toast.LENGTH_SHORT).show();
 //                                scrollToFinishActivity();
 
 //                                uploadImage();

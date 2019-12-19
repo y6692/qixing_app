@@ -457,7 +457,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                 upToken = bean.getToken();
 
 //                                SharedPreferencesUrls.getInstance().putString("access_token", "Bearer "+bean.getToken());
-                                Toast.makeText(context,"恭喜您,获取成功",Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(context,"恭喜您,获取成功",Toast.LENGTH_SHORT).show();
 //                                scrollToFinishActivity();
 
 //                                uploadImage();
@@ -901,7 +901,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
                             Log.e("SubmitBtn===", "==="+responseString);
 
-                            if(!"200".equals(result.getStatus_code())){
+                            if(result.getStatus_code()!=200){
                                 ToastUtil.showMessageApp(context, result.getMessage());
                             }
 

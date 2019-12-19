@@ -582,7 +582,7 @@ public class ServiceCenter0Activity extends SwipeBackActivity implements View.On
 //                SharedPreferencesUrls.getInstance().putString("type", "1");
 //                UIHelper.goToAct(context,FeedbackActivity.class);
 
-                UpdateManager.getUpdateManager().setType(2).setBikeCode(bikeCode).checkAppUpdate(ServiceCenter0Activity.this, context, true);
+                UpdateManager.getUpdateManager().setType(2).setBikeCode(bikeCode).checkAppUpdate(ServiceCenter0Activity.this, context, 3, null);
 
 //                Intent intent = new Intent(context, FeedbackActivity.class);
 //                intent.putExtra("bikeCode",bikeCode);

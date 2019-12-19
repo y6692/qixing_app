@@ -335,6 +335,10 @@ public class RequestParams {
     	put(key, value);
     }
 
+    public void add(String key, int value) {
+        put(key, value);
+    }
+
 //    public void add(String key, String value) {
 //        put(key, value);
 //    }

@@ -16,7 +16,7 @@
 
     <!-- targetSdkVersion >= 26 时需要配置此权限，否则无法进行安装app的动作 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
+    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
     <!--<uses-sdk tools:overrideLibrary="com.hubcloud.adhubsdk,com.ly.adpoymer" />-->
 
 
@@ -109,6 +109,13 @@
 
         <activity
             android:name=".activity.MainActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+        </activity>
+
+        <activity
+            android:name=".activity.ComplainActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 

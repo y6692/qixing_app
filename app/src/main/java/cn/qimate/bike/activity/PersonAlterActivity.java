@@ -836,7 +836,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                 break;
             case R.id.personUI_bottom_checkUpdataLayout:
                 // 版本更新
-                UpdateManager.getUpdateManager().setType(0).checkAppUpdate(this, context, true);
+                UpdateManager.getUpdateManager().setType(0).checkAppUpdate(this, context, 3, null);
                 break;
             default:
                 break;

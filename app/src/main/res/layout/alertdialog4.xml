@@ -1,207 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="180dp"
+    android:minWidth="180dp"
+    android:layout_height="127dp"
+    android:layout_gravity="center"
+
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:minWidth="240dip"
-    android:layout_height="wrap_content">
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#f57752"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/title"
-            style="@style/DialogText.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="@dimen/dp10"
-            android:textColor="#ffffff"
-            android:textSize="18sp"
-            />
-    </LinearLayout>
+    >
 
     <LinearLayout
         android:id="@+id/content"
-        android:orientation="horizontal"
-        android:background="@drawable/border"
-        android:layout_width="fill_parent"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/block_dialog_bcg"
         android:gravity="center"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         >
-        
+
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/park_icon"/>
+            android:id="@+id/img_url"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="23dp"
+            android:src="@drawable/operate_success_icon"/>
 
         <TextView
             style="@style/DialogText"
             android:id="@+id/message"
-            android:paddingBottom="@dimen/dp15"
-            android:paddingTop="@dimen/dp15"
-            android:gravity="left"
-            android:lineSpacingExtra="5dp"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/dp5"
-            android:paddingRight="@dimen/dp5"
-
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="20dp"
+            android:singleLine="false"
+            android:text="操作成功"
+            android:textSize="@dimen/sp18"
+            android:textColor="#4C4C4C"
             />
 
     </LinearLayout>
 
+
     <LinearLayout
-        android:orientation="horizontal"
-        android:background="@drawable/border"
-        android:layout_width="fill_parent"
+        android:id="@+id/ll_scan_positiveButton2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
         android:gravity="center"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
         >
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/DialogText"
-                android:id="@+id/electricity"
-                android:paddingTop="@dimen/dp15"
-                android:gravity="center"
-                android:lineSpacingExtra="5dp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/dp5"
-                android:paddingRight="@dimen/dp5"
-                android:text="70%"
-                />
-
-            <TextView
-                style="@style/DialogText"
-                android:paddingBottom="@dimen/dp15"
-                android:paddingTop="@dimen/dp5"
-                android:gravity="center"
-                android:lineSpacingExtra="5dp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/dp5"
-                android:paddingRight="@dimen/dp5"
-                android:text="剩余电量"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/DialogText"
-                android:id="@+id/mileage"
-                android:paddingTop="@dimen/dp15"
-                android:gravity="center"
-                android:lineSpacingExtra="5dp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/dp5"
-                android:paddingRight="@dimen/dp5"
-                android:text="20KM"
-                />
-
-            <TextView
-                style="@style/DialogText"
-                android:paddingBottom="@dimen/dp15"
-                android:paddingTop="@dimen/dp5"
-                android:gravity="center"
-                android:lineSpacingExtra="5dp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/dp5"
-                android:paddingRight="@dimen/dp5"
-                android:text="续航里程"
-                />
-
-        </LinearLayout>
-
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:background="@drawable/border"
-        android:layout_width="fill_parent"
+        <Button
+        android:visibility="gone"
+        android:id="@+id/negativeButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        >
+        android:text="换辆车试试"
+        android:textSize="@dimen/sp16"
+        android:textColor="@color/white"
+        android:layout_centerInParent="true"
+        />
+        <Button
+        android:visibility="gone"
+        android:id="@+id/positiveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="换辆车试试"
+        android:textSize="@dimen/sp16"
+        android:textColor="@color/white"
+        android:layout_centerInParent="true"
+        />
 
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/cost_icon"/>
-
-        <TextView
-            android:id="@+id/fee"
-            style="@style/DialogText"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:lineSpacingExtra="5dp"
-            android:paddingLeft="@dimen/dp5"
-            android:paddingTop="@dimen/dp15"
-            android:paddingRight="@dimen/dp5"
-            android:paddingBottom="@dimen/dp15"
-            android:text="15/1" />
-
+            android:id="@+id/iv_cancel"
+            android:layout_width="29dp"
+            android:layout_height="29dp"
+            android:src="@drawable/x2"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:background="#ffffff"
-        android:layout_width="fill_parent"
-        android:layout_height="40dp">
 
-
-        <Button
-            android:id="@+id/negativeButton"
-            android:layout_marginTop="0dip"
-            android:layout_width="0dip"
-            android:layout_weight="1"
-            android:background="@null"
-            android:layout_height="40dp"
-            android:textSize="@dimen/sp12"
-            android:singleLine="true"
-            android:gravity="center"/>
-        <ImageView
-            android:layout_marginLeft="1dp"
-            android:layout_marginRight="1dp"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/alertborder"/>
-        <Button
-            android:id="@+id/positiveButton"
-            android:layout_width="0dip"
-            android:layout_height="40dp"
-            android:layout_marginTop="0dip"
-            android:layout_weight="1"
-            android:background="@null"
-            android:singleLine="true"
-            android:textSize="@dimen/sp12"
-            android:textColor="#f57752"
-            android:gravity="center"/>
-
-    </LinearLayout>
 
 </LinearLayout>

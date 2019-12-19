@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageStats;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.RemoteException;
 import android.text.Selection;
 import android.text.Spannable;
 import android.util.Log;
@@ -25,13 +27,16 @@ import com.alibaba.fastjson.JSON;
 import org.apache.http.Header;
 import org.json.JSONArray;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.core.common.DataCleanManager;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
@@ -45,6 +50,8 @@ import cn.qimate.bike.model.UserIndexBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.ToastUtil;
 
+import static java.lang.System.getProperties;
+
 /**
  * Created by Administrator on 2017/2/12 0012.
  */
@@ -56,12 +63,14 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
 
     CustomDialog.Builder customBuilder;
     private CustomDialog customDialog;
+    private CustomDialog customDialog2;
 
     private RelativeLayout cleanLayout;
     private RelativeLayout checkUpdateLayout;
     private RelativeLayout aboutUsLayout;
     private RelativeLayout logoutLayout;
     private TextView tv_version;
+    private ImageView iv_isUpdate;
 
 
     @Override
@@ -92,12 +101,27 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
         });
         customDialog = customBuilder.create();
 
+        customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setType(4).setTitle("温馨提示").setMessage("操作成功")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        logout();
+                        dialog.cancel();
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        customDialog2 = customBuilder.create();
+
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         cleanLayout = (RelativeLayout)findViewById(R.id.settingUI_cleanLayout);
         checkUpdateLayout = (RelativeLayout)findViewById(R.id.settingUI_checkUpdateLayout);
         aboutUsLayout = (RelativeLayout)findViewById(R.id.settingUI_aboutUsLayout);
         logoutLayout = (RelativeLayout)findViewById(R.id.settingUI_logoutLayout);
         tv_version = (TextView)findViewById(R.id.tv_version);
+        iv_isUpdate = (ImageView)findViewById(R.id.iv_isUpdate);
 
         backImg.setOnClickListener(this);
         cleanLayout.setOnClickListener(this);
@@ -111,6 +135,8 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace(System.err);
         }
+
+        UpdateManager.getUpdateManager().checkAppUpdate(this, context, 3, iv_isUpdate);
 
 //        initHttp();
 
@@ -127,10 +153,44 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
                 break;
 
             case R.id.settingUI_cleanLayout:
+                DataCleanManager.clearAllCache(this);
+
+                Log.e("onClick===cleanLayout", "===");
+
+                customDialog2.show();
+
+//                // 清除编辑器保存的临时内容
+//                Properties props = getProperties();
+//                for (Object key : props.keySet()) {
+//                    String _key = key.toString();
+//                    if (_key.startsWith("temp"))
+//                        removeProperty(_key);
+//                }
+//                Core.getKJBitmap().cleanCache();
+//
+//                PackageManager pm = getPackageManager();
+//                //反射
+//                try {
+//                    Method method = PackageManager.class.getMethod("getPackageSizeInfo", new Class[]{String.class, IPackageStatsObserver.class});
+//                    method.invoke(pm, new Object[]{"com.wang.clearcache",new IPackageStatsObserver.Stub() {
+//
+//                        @Override
+//                        public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
+//                            long cachesize = pStats.cacheSize;
+//                            long codesize = pStats.codeSize;
+//                            long datasize = pStats.dataSize;
+//                            System.out.println("cachesize:"+ cachesize);
+//                            System.out.println("codesize:"+ codesize);
+//                            System.out.println("datasize"+ datasize);
+//                        }
+//                    }});
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
                 break;
 
             case R.id.settingUI_checkUpdateLayout:
-                UpdateManager.getUpdateManager().checkAppUpdate(this, context, true);
+                UpdateManager.getUpdateManager().checkAppUpdate(this, context, 1, iv_isUpdate);
                 break;
 
             case R.id.settingUI_aboutUsLayout:

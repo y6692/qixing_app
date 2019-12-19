@@ -40,6 +40,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -49,6 +50,7 @@ import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.ClientServiceActivity;
+import cn.qimate.bike.activity.EndBikeFeedBackActivity;
 import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
@@ -172,7 +174,7 @@ public class UpdateManager {
 	 * @param isShowMsg
 	 *            是否显示提示消息
 	 */
-	public void checkAppUpdate(Activity activity, final Context context, final boolean isShowMsg) {
+	public void checkAppUpdate(Activity activity, final Context context, final int isShowMsg, final ImageView iv) {
 		mContext = context;
 		mActivity = activity;
 		loadingDialog = new LoadingDialog(context);
@@ -211,28 +213,36 @@ public class UpdateManager {
 							Log.e("checkAppUpdate==", curVersionName+"==="+mUpdate.getAppVersion());
 
 							if (!curVersionName.equals(mUpdate.getAppVersion())) {
+							    if(iv!=null) iv.setVisibility(View.VISIBLE);
+
 								if ("2".equals(mUpdate.isForce())) {
 									showDownloadDialog();
 								} else {
 									showNoticeDialog();
 								}
 							} else {
-								if(type==0){
-//									Toast.makeText(context,"当前已是最新版本",Toast.LENGTH_SHORT).show();
+                                if(iv!=null) iv.setVisibility(View.GONE);
 
-									customDialog.show();
+								if(type==0){
+
+									if(isShowMsg==1){
+										customDialog.show();
+									}else if(isShowMsg==2){
+										Toast.makeText(context,"当前已是最新版本",Toast.LENGTH_SHORT).show();
+									}
 
 								}else if(type==1){
 									Intent intent = new Intent(context, ClientServiceActivity.class);
 									intent.putExtra("bikeCode", bikeCode);
 									context.startActivity(intent);
 								}else if(type==2){
-									Intent intent = new Intent(context, FeedbackActivity.class);
+									Intent intent = new Intent(context, EndBikeFeedBackActivity.class);
 									intent.putExtra("bikeCode",bikeCode);
 									context.startActivity(intent);
-								}else if(type==3){
-									UIHelper.goToAct(context, FeedbackActivity.class);
 								}
+//								else if(type==3){
+//									UIHelper.goToAct(context, EndBikeFeedbackActivity.class);
+//								}
 
 							}
 						} else {
@@ -487,8 +497,6 @@ public class UpdateManager {
 
 	/**
 	 * 下载apk
-	 *
-	 * @param url
 	 */
 	private void downloadApk() {
 		downLoadThread = new Thread(mdownApkRunnable);
@@ -502,8 +510,6 @@ public class UpdateManager {
 	 */
 	/**
 	 * 安装apk
-	 *
-	 * @param url
 	 */
 	private void installApk() {
 		File apkfile = new File(apkFilePath);

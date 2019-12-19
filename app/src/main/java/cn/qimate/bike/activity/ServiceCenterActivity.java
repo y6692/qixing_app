@@ -37,6 +37,7 @@ import cn.qimate.bike.R;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
+import cn.qimate.bike.core.common.UpdateManager;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.fragment.BikeFaultFragment;
@@ -72,11 +73,16 @@ public class ServiceCenterActivity extends SwipeBackActivity implements View.OnC
     String phone1;
     String phone2;
 
+    private String bikeCode = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_center);
         context = this;
+
+        bikeCode = getIntent().getStringExtra("bikeCode");
+
         init();
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -104,7 +110,6 @@ public class ServiceCenterActivity extends SwipeBackActivity implements View.OnC
         }
 
         tab = (CommonTabLayout) findViewById(R.id.tab);
-
         tab.setTabData(mTabEntities, this, R.id.fl_carFault, mFragments);
 
 
@@ -291,7 +296,8 @@ public class ServiceCenterActivity extends SwipeBackActivity implements View.OnC
                         break;
 
                     case R.id.pop_tv_feedback:
-                        UIHelper.goToAct(context, EndBikeFeedBackActivity.class);
+                        UpdateManager.getUpdateManager().setType(2).setBikeCode(bikeCode).checkAppUpdate(ServiceCenterActivity.this, context, 3, null);
+//                        UIHelper.goToAct(context, EndBikeFeedBackActivity.class);
 
                         break;
                     case R.id.ll_pop_cancelLayout:

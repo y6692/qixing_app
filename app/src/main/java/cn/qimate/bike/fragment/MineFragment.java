@@ -831,10 +831,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 intent1.putExtra("isBack",true);
                 context.startActivity(intent1);
                 break;
-            case R.id.personUI_bottom_checkUpdataLayout:
-                // 版本更新
-                UpdateManager.getUpdateManager().checkAppUpdate(getActivity(), context, true);
-                break;
             default:
                 break;
         }

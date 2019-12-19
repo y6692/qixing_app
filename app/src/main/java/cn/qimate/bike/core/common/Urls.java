@@ -25,6 +25,8 @@ public class Urls {
 	public static String uploadtoken = host2 + "/qiniu/uploadtoken";
 	//提交认证接口_post、认证信息接口_get
 	public static String cert = host2 + "/cert";
+	//申诉接口
+	public static String appeal = host2 + "/appeal";
 
 	//广告接口
 	public static String banner = host2 + "/banner/";
@@ -82,6 +84,7 @@ public class Urls {
 	//骑行订单详情接口
 	public static String order_detail = host2 + "/order/cycling/";
 
+//	http://testnewmapi.7mate.cn/api/appeal
 //	http://testnewmapi.7mate.cn/api/authorizations
 //	http://testnewmapi.7mate.cn/api/order/cycling/{id}
 //	http://testnewmapi.7mate.cn/api/user
@@ -212,7 +215,7 @@ public class Urls {
 	public static String schoolRange = host + "/index.php?g=App&m=SchoolRange&a=index";
 	/** 版本检测更新 */
 //	public static String updateApp = "http://web1.7mate.cn/index.php?g=App&m=Index&a=android";
-	public static String updateApp = host + "/index.php?g=App&m=Index&a=android";
+	public static String updateApp = host + "/index.php?g=App&m=Index&a=android";	//TODO
 	/**获取启动页图广告*/
 	public static String getIndexAd = host + "/index.php?g=App&m=Index&a=getIndexAd";
 	/**

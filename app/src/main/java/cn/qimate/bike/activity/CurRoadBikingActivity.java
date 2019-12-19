@@ -3046,7 +3046,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 break;
             case R.id.mainUI_title_rightBtn:
 
-                UpdateManager.getUpdateManager().setType(1).setBikeCode(bikeCode).checkAppUpdate(CurRoadBikingActivity.this, context, true);
+                UpdateManager.getUpdateManager().setType(1).setBikeCode(bikeCode).checkAppUpdate(CurRoadBikingActivity.this, context, 3, null);
 
                 Intent intent = new Intent(context,ClientServiceActivity.class);
 //                intent.putExtra("bikeCode",bikeCode);

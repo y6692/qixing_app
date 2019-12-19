@@ -1831,7 +1831,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                         requestPermissions(new String[] { Manifest.permission.CAMERA }, 100);
                                     } else {
                                         CustomDialog.Builder customBuilder1 = new CustomDialog.Builder(context);
-                                        customBuilder1.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                                        customBuilder1.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
                                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         dialog.cancel();
@@ -2342,7 +2342,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                         break;
                     case R.id.pop_menu_callLayout:
-                        UIHelper.goToAct(context, ServiceCenterActivity.class);
+//                        UIHelper.goToAct(context, ServiceCenterActivity.class);
+                        Intent intent = new Intent(context, ServiceCenterActivity.class);
+                        intent.putExtra("bikeCode", codenum);
+                        startActivity(intent);
 
                         break;
                 }

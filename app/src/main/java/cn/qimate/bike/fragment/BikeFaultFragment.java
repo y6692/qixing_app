@@ -488,7 +488,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                                 upToken = bean.getToken();
 
 //                                SharedPreferencesUrls.getInstance().putString("access_token", "Bearer "+bean.getToken());
-                                Toast.makeText(context,"恭喜您,获取成功",Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(context,"恭喜您,获取成功",Toast.LENGTH_SHORT).show();
 //                                scrollToFinishActivity();
 
 //                                uploadImage();

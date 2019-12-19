@@ -186,10 +186,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                     return;
                 }
 
-
                 sendCode();
-
-
                 break;
             case R.id.loginUI_change_phone:
                 UIHelper.goToAct(context, ChangePhoneActivity.class);

@@ -294,19 +294,28 @@ public class CustomDialog extends Dialog {
 //			dialog.addContentView(layout, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 			dialog.addContentView(layout, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			// set the dialog title
-			if(type!=0){
+			if(type!=0 && type!=4){
 				((TextView) layout.findViewById(R.id.title)).setText(title);
 			}
 
 
 			if(type==4){
-				TextView tv_electricity = ((TextView) layout.findViewById(R.id.electricity));
-				TextView tv_mileage = ((TextView) layout.findViewById(R.id.mileage));
-				TextView tv_fee = ((TextView) layout.findViewById(R.id.fee));
+//				TextView tv_electricity = ((TextView) layout.findViewById(R.id.electricity));
+//				TextView tv_mileage = ((TextView) layout.findViewById(R.id.mileage));
+//				TextView tv_fee = ((TextView) layout.findViewById(R.id.fee));
+//
+//				tv_electricity.setText(electricity);
+//				tv_mileage.setText(mileage);
+//				tv_fee.setText(fee);
 
-				tv_electricity.setText(electricity);
-				tv_mileage.setText(mileage);
-				tv_fee.setText(fee);
+				ImageView iv_cancel = (ImageView) layout.findViewById(R.id.iv_cancel);
+
+				iv_cancel.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+					}
+				});
 
 			}else if(type==5 || type==9){
 //				ImageView iv_img_url = ((ImageView) layout.findViewById(R.id.img_url));

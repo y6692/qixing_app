@@ -693,12 +693,12 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                     if (SharedPreferencesUrls.getInstance().getString("date","") != null &&
                             !"".equals(SharedPreferencesUrls.getInstance().getString("date",""))){
                         if (!format.equals(SharedPreferencesUrls.getInstance().getString("date",""))){
-                            UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, true);
+                            UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, 2, null);
                             SharedPreferencesUrls.getInstance().putString("date",""+format);
                         }
                     }else {
                         // 版本更新
-                        UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, true);
+                        UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, 2, null);
                         SharedPreferencesUrls.getInstance().putString("date",""+format);
                     }
                 }
@@ -716,13 +716,13 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 if (!date.equals(SharedPreferencesUrls.getInstance().getString("date",""))){
                     Log.e("getNetTime==2_2", "===");
 
-                    UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, true);
+                    UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, 2, null);
                     SharedPreferencesUrls.getInstance().putString("date",""+date);
                 }
             }else {
                 Log.e("getNetTime==23", "===");
                 // 版本更新
-                UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, true);
+                UpdateManager.getUpdateManager().checkAppUpdate(MainActivity.this, context, 2, null);
                 SharedPreferencesUrls.getInstance().putString("date",""+date);
             }
             e.printStackTrace();
