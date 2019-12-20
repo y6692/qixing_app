@@ -135,6 +135,7 @@ import cn.qimate.bike.activity.CarFaultActivity;
 import cn.qimate.bike.activity.ClientManager;
 import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadStartActivity;
+import cn.qimate.bike.activity.EndBikeFeedBackActivity;
 import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.activity.MyOrderDetailActivity;
@@ -307,7 +308,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private boolean isAgain = false;
     private String backType = "";
     private boolean isOpenLock = false;
-    private int pay_scene = 1;
+    private int order_type = 1;
     private boolean isWaitEbikeInfo = true;
     private Thread ebikeInfoThread;
 
@@ -475,13 +476,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             ll_top_pay.setVisibility(View.VISIBLE);
 
                             if(unauthorized_code==7){
-                                pay_scene = 1;
+                                order_type = 1;
                                 tv_payBtn.setText("骑行支付");
                             }else if(unauthorized_code==8){
-                                pay_scene = 3;
+                                order_type = 3;
                                 tv_payBtn.setText("调度费支付");
                             }else if(unauthorized_code==9){
-                                pay_scene = 3;
+                                order_type = 3;
                                 tv_payBtn.setText("赔偿费支付");
                             }
                         }
@@ -2372,7 +2373,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.pop_menu_feedbackLayout:
-                        UIHelper.goToAct(context, ServiceCenter0Activity.class);
+                        UIHelper.goToAct(context, EndBikeFeedBackActivity.class);
                         break;
                     case R.id.pop_menu_helpLayout:
                         UIHelper.goToAct(context, CarFaultActivity.class);
@@ -2515,8 +2516,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         Log.e("order===", "==="+codenum);
 
         RequestParams params = new RequestParams();
-        params.put("order_type", 1);
+        params.put("order_type", 1);        //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单
         params.put("car_number", URLEncoder.encode(codenum));
+//        params.put("card_code", "");        //套餐卡券码（order_type为2时必传）
+//        params.put("price", "");        //传价格数值 例如：20.00(order_type为3、4时必传)
 
         HttpHelper.post(context, Urls.order, params, new TextHttpResponseHandler() {
             @Override
@@ -3073,7 +3076,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 //                                car_notification(3, 0,  isAgain?0:1);
 
-                                pay_scene = 1;
+                                order_type = 1;
                                 end();
                             }
 
@@ -3128,7 +3131,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
         Intent intent = new Intent(context, SettlementPlatformActivity.class);
-        intent.putExtra("pay_scene", pay_scene);
+        intent.putExtra("order_type", order_type);
         intent.putExtra("order_id", order_id);
         startActivity(intent);
 //        UIHelper.goToAct(context, UnpayRouteActivity.class);
@@ -3367,7 +3370,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                 if(!isAgain){
 
-                                    pay_scene = 1;
+                                    order_type = 1;
                                     end();
 
                                 }
@@ -6192,7 +6195,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             isConnect = false;
                             isLookPsdBtn = false;
                             isAgain = false;
-                            pay_scene = 1;
+                            order_type = 1;
                             isWaitEbikeInfo = true;
                             ebikeInfoThread = null;
 

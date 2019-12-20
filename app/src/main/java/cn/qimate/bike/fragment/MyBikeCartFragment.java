@@ -311,7 +311,7 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
         RequestParams params = new RequestParams();
         params.put("tab", 1);
         params.put("page", showPage);
-        params.put("pagesize", GlobalConfig.PAGE_SIZE);
+        params.put("per_page", GlobalConfig.PAGE_SIZE);
 
         HttpHelper.get(context, Urls.my_cycling_cards, params, new TextHttpResponseHandler() {
             @Override

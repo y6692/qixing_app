@@ -132,12 +132,15 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
         ll_bill.setOnClickListener(this);
         footerLayout.setOnClickListener(this);
 
-//        1骑行订单 2购买骑行卡订单 3调度费订单 4赔偿费订单 5充值订单
+        //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单 7充值+认证充值订单 8调度费+赔偿费订单
         item.add("骑行订单");
-        item.add("购买骑行卡订单");
+        item.add("套餐卡订单");
+        item.add("充值订单");
+        item.add("认证充值订单");
         item.add("调度费订单");
         item.add("赔偿费订单");
-        item.add("充值订单");       //TODO  不支持的订单类型
+        item.add("充值+认证充值订单");
+        item.add("调度费+赔偿费订单");
 
         pvOptions.setPicker(item);
         pvOptions.setCyclic(false, false, false);

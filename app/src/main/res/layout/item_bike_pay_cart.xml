@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:orientation="vertical"
         android:background="@color/white">
@@ -96,7 +96,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/mainUI_scanCode_lock"
+                android:id="@+id/ll_payBtn"
                 android:layout_width="60dp"
                 android:layout_height="30dp"
                 android:orientation="horizontal"
@@ -120,6 +120,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="17dp"
+            android:layout_marginBottom="13dp"
             android:layout_marginLeft="30dp"
             android:orientation="horizontal"
             android:background="@color/white"

@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +29,9 @@ import com.amap.api.maps.model.Marker;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +41,7 @@ import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.PayMontCartActivity;
+import cn.qimate.bike.activity.SettlementPlatformActivity;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.base.BaseViewAdapter;
 import cn.qimate.bike.base.BaseViewHolder;
@@ -105,10 +109,12 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
 
     private View footerLayout;
 
-    String badtime="2115-02-08 20:20";
-    String codenum="";
-    String totalnum="";
+    private String badtime="2115-02-08 20:20";
+    private String codenum="";
+    private String totalnum="";
 
+//    private String card_code;
+    private String price;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_bike_cart, null);
@@ -127,23 +133,23 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
 
         initHttp();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            while (true){
-
-                try {
-                    Thread.sleep(30*1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                m_myHandler.sendEmptyMessage(1);
-            }
-
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            while (true){
+//
+//                try {
+//                    Thread.sleep(30*1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                m_myHandler.sendEmptyMessage(1);
+//            }
+//
+//            }
+//        }).start();
 
     }
 
@@ -186,7 +192,7 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
             //pause
         }else{
             //resume
-            resetList();
+//            resetList();
         }
     }
 
@@ -208,6 +214,7 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
         footerViewType04 = footerView.findViewById(R.id.footer_Layout_type04);// 刷新失败，请重试
         footerViewType05 = footerView.findViewById(R.id.footer_Layout_type05);// 暂无数据
         footerLayout = footerView.findViewById(R.id.footer_Layout);
+        footerViewType01.setVisibility(View.GONE);
 
 
         swipeRefreshLayout = (SwipeRefreshLayout)getActivity().findViewById(R.id.Layout_swipeParentLayout);
@@ -260,7 +267,9 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        Intent intent = new Intent(context, SettlementPlatformActivity.class);
+        intent.putExtra("order_type", 2);
+        context.startActivity(intent);
     }
 
     @SuppressLint("NewApi")
@@ -274,7 +283,7 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             if (null == convertView) {
                 convertView = inflater.inflate(R.layout.item_bike_pay_cart, null);
             }
@@ -282,14 +291,35 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
             TextView tv_price = BaseViewHolder.get(convertView,R.id.tv_price);
             TextView tv_original_price = BaseViewHolder.get(convertView,R.id.tv_original_price);
             TextView tv_desc = BaseViewHolder.get(convertView,R.id.tv_desc);
+            LinearLayout ll_payBtn = BaseViewHolder.get(convertView,R.id.ll_payBtn);
             final PayCartBean bean = getDatas().get(position);
 
             name.setText(bean.getName());
-            tv_price.setText(bean.getPrice());
+            final String card_code = bean.getCode();
+            String price = bean.getPrice();
+            tv_price.setText(price);
             tv_original_price.setText("¥"+bean.getOriginal_price());
             tv_desc.setText(bean.getDesc());
 
             tv_original_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+
+            ll_payBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+//                    PayCartBean bean = myAdapter.getDatas().get(position);
+
+                    Log.e("bcf===onClick", "==="+position+"==="+card_code);
+
+//                    int order_id = bean.getOrder_id();
+
+//                    order(bean.getCode());
+
+                    order(card_code);
+
+                }
+            });
+
 
 //            if("即将超时".equals(bean.getStatus_name())){
 //                num.setTextColor(getResources().getColor(R.color.red));
@@ -303,8 +333,71 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
+    private void order(String card_code) {
+        Log.e("order===", "==="+codenum);
+
+        RequestParams params = new RequestParams();
+        params.put("order_type", 2);        //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单
+//        params.put("car_number", URLEncoder.encode(codenum));
+        params.put("card_code", card_code);        //套餐卡券码（order_type为2时必传）
+//        params.put("price", "");        //传价格数值 例如：20.00(order_type为3、4时必传)
+
+        HttpHelper.post(context, Urls.order, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("order===1", responseString + "===" + result.data);
+
+                            JSONObject jsonObject = new JSONObject(result.getData());
+
+                            order_id = jsonObject.getInt("order_id");
+                            String order_amount = jsonObject.getString("order_amount");
+
+                            Log.e("order===1", order_id + "===" + order_amount );
+
+                            Intent intent = new Intent(context, SettlementPlatformActivity.class);
+                            intent.putExtra("order_type", 2);
+                            intent.putExtra("order_amount", order_amount);
+                            intent.putExtra("order_id", order_id);
+                            context.startActivity(intent);
+
+
+
+                        } catch (Exception e) {
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                        }
+
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+
+                    }
+                });
+
+
+            }
+        });
+    }
+
+
+
+
     private void initHttp(){
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (access_token == null || "".equals(access_token)){
             Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
@@ -312,24 +405,22 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
         }
         RequestParams params = new RequestParams();
         params.put("tab", 1);
-        params.put("page", showPage);
-        params.put("pagesize", GlobalConfig.PAGE_SIZE);
 
         HttpHelper.get(context, Urls.cycling_cards, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                setFooterType(1);
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e("cycling_cards===Fail","==="+responseString);
-
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
                 UIHelper.ToastError(context, throwable.toString());
-                swipeRefreshLayout.setRefreshing(false);
-                isRefresh = false;
-                setFooterType(3);
-                setFooterVisibility();
             }
 
             @Override
@@ -340,20 +431,20 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
                     JSONArray array = new JSONArray(result.getData());
-                    if (array.length() == 0 && showPage == 1) {
-                        footerLayout.setVisibility(View.VISIBLE);
-                        setFooterType(4);
-                        return;
-                    } else if (array.length() < GlobalConfig.PAGE_SIZE && showPage == 1) {
-                        footerLayout.setVisibility(View.GONE);
-                        setFooterType(5);
-                    } else if (array.length() < GlobalConfig.PAGE_SIZE) {
-                        footerLayout.setVisibility(View.VISIBLE);
-                        setFooterType(2);
-                    } else if (array.length() >= 10) {
-                        footerLayout.setVisibility(View.VISIBLE);
-                        setFooterType(0);
-                    }
+//                    if (array.length() == 0 && showPage == 1) {
+//                        footerLayout.setVisibility(View.VISIBLE);
+//                        setFooterType(4);
+//                        return;
+//                    } else if (array.length() < GlobalConfig.PAGE_SIZE && showPage == 1) {
+//                        footerLayout.setVisibility(View.GONE);
+//                        setFooterType(5);
+//                    } else if (array.length() < GlobalConfig.PAGE_SIZE) {
+//                        footerLayout.setVisibility(View.VISIBLE);
+//                        setFooterType(2);
+//                    } else if (array.length() >= 10) {
+//                        footerLayout.setVisibility(View.VISIBLE);
+//                        setFooterType(0);
+//                    }
 
                     for (int i = 0; i < array.length();i++){
                         PayCartBean bean = JSON.parseObject(array.getJSONObject(i).toString(), PayCartBean.class);
@@ -366,6 +457,8 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
 
                         datas.add(bean);
                     }
+
+                    myAdapter.notifyDataSetChanged();
 
 //                    Intent intent = new Intent("data.broadcast.action");
 //                    intent.putExtra("codenum", codenum);
@@ -380,13 +473,13 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-                    swipeRefreshLayout.setRefreshing(false);
-                    isRefresh = false;
-                    setFooterVisibility();
+//                    swipeRefreshLayout.setRefreshing(false);
+//                    isRefresh = false;
+//                    setFooterVisibility();
                 }
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
             }
         });
     }

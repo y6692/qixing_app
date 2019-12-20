@@ -126,23 +126,23 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
 
         initHttp();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            while (true){
-
-                try {
-                    Thread.sleep(30*1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                m_myHandler.sendEmptyMessage(1);
-            }
-
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            while (true){
+//
+//                try {
+//                    Thread.sleep(30*1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                m_myHandler.sendEmptyMessage(1);
+//            }
+//
+//            }
+//        }).start();
 
     }
 
@@ -185,7 +185,7 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
             //pause
         }else{
             //resume
-            resetList();
+//            resetList();
         }
     }
 
@@ -207,7 +207,7 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
         footerViewType04 = footerView.findViewById(R.id.footer_Layout_type04);// 刷新失败，请重试
         footerViewType05 = footerView.findViewById(R.id.footer_Layout_type05);// 暂无数据
         footerLayout = footerView.findViewById(R.id.footer_Layout);
-
+        footerViewType01.setVisibility(View.GONE);
 
         swipeRefreshLayout = (SwipeRefreshLayout)getActivity().findViewById(R.id.Layout_swipeParentLayout2);
         listview = (ListView)getActivity().findViewById(R.id.Layout_swipeListView2);
@@ -311,22 +311,22 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
         }
         RequestParams params = new RequestParams();
         params.put("tab", 2);
-        params.put("page", showPage);
-        params.put("pagesize", GlobalConfig.PAGE_SIZE);
 
         HttpHelper.get(context, Urls.cycling_cards, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                setFooterType(1);
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
                 UIHelper.ToastError(context, throwable.toString());
-                swipeRefreshLayout.setRefreshing(false);
-                isRefresh = false;
-                setFooterType(3);
-                setFooterVisibility();
             }
 
             @Override
@@ -337,20 +337,20 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
                     JSONArray array = new JSONArray(result.getData());
-                    if (array.length() == 0 && showPage == 1) {
-                        footerLayout.setVisibility(View.VISIBLE);
-                        setFooterType(4);
-                        return;
-                    } else if (array.length() < GlobalConfig.PAGE_SIZE && showPage == 1) {
-                        footerLayout.setVisibility(View.GONE);
-                        setFooterType(5);
-                    } else if (array.length() < GlobalConfig.PAGE_SIZE) {
-                        footerLayout.setVisibility(View.VISIBLE);
-                        setFooterType(2);
-                    } else if (array.length() >= 10) {
-                        footerLayout.setVisibility(View.VISIBLE);
-                        setFooterType(0);
-                    }
+//                    if (array.length() == 0 && showPage == 1) {
+//                        footerLayout.setVisibility(View.VISIBLE);
+//                        setFooterType(4);
+//                        return;
+//                    } else if (array.length() < GlobalConfig.PAGE_SIZE && showPage == 1) {
+//                        footerLayout.setVisibility(View.GONE);
+//                        setFooterType(5);
+//                    } else if (array.length() < GlobalConfig.PAGE_SIZE) {
+//                        footerLayout.setVisibility(View.VISIBLE);
+//                        setFooterType(2);
+//                    } else if (array.length() >= 10) {
+//                        footerLayout.setVisibility(View.VISIBLE);
+//                        setFooterType(0);
+//                    }
 
                     for (int i = 0; i < array.length();i++){
                         PayCartBean bean = JSON.parseObject(array.getJSONObject(i).toString(), PayCartBean.class);
@@ -363,6 +363,8 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
 
                         datas.add(bean);
                     }
+
+                    myAdapter.notifyDataSetChanged();
 
 //                    Intent intent = new Intent("data.broadcast.action");
 //                    intent.putExtra("codenum", codenum);
@@ -377,100 +379,17 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-                    swipeRefreshLayout.setRefreshing(false);
-                    isRefresh = false;
-                    setFooterVisibility();
+//                    swipeRefreshLayout.setRefreshing(false);
+//                    isRefresh = false;
+//                    setFooterVisibility();
                 }
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
             }
         });
     }
 
-    private void initHttp2(){
-
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (access_token == null || "".equals(access_token)){
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
-            return;
-        }
-        RequestParams params = new RequestParams();
-        params.put("uid",uid);
-        params.put("access_token",access_token);
-        params.put("page", showPage);
-        params.put("pagesize", GlobalConfig.PAGE_SIZE);
-
-//        HttpHelper.get(context, Urls.badcarList, params, new TextHttpResponseHandler() {
-//            @Override
-//            public void onStart() {
-//                setFooterType(1);
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                UIHelper.ToastError(context, throwable.toString());
-//                swipeRefreshLayout.setRefreshing(false);
-//                isRefresh = false;
-//                setFooterType(3);
-//                setFooterVisibility();
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                try {
-//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-//                    if (result.getFlag().equals("Success")) {
-//                        JSONArray array = new JSONArray(result.getData());
-//                        if (array.length() == 0 && showPage == 1) {
-//                            footerLayout.setVisibility(View.VISIBLE);
-//                            setFooterType(4);
-//                            return;
-//                        } else if (array.length() < GlobalConfig.PAGE_SIZE && showPage == 1) {
-//                            footerLayout.setVisibility(View.GONE);
-//                            setFooterType(5);
-//                        } else if (array.length() < GlobalConfig.PAGE_SIZE) {
-//                            footerLayout.setVisibility(View.VISIBLE);
-//                            setFooterType(2);
-//                        } else if (array.length() >= 10) {
-//                            footerLayout.setVisibility(View.VISIBLE);
-//                            setFooterType(0);
-//                        }
-//
-//                        for (int i = 0; i < array.length();i++){
-//                            BadCarBean bean = JSON.parseObject(array.getJSONObject(i).toString(), BadCarBean.class);
-//
-//                            if(i==0 && bean.getBadtime().compareTo(badtime)<0){
-//                                badtime = bean.getBadtime();
-//                                codenum = bean.getCodenum();
-//                                totalnum = bean.getTotalnum();
-//                            }
-//
-//                            datas.add(bean);
-//                        }
-//
-//                        Intent intent = new Intent("data.broadcast.action");
-//                        intent.putExtra("codenum", codenum);
-//                        intent.putExtra("count", Integer.parseInt(totalnum));
-//                        context.sendBroadcast(intent);
-//
-//                    } else {
-//                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                } finally {
-//                    swipeRefreshLayout.setRefreshing(false);
-//                    isRefresh = false;
-//                    setFooterVisibility();
-//                }
-////                if (loadingDialog != null && loadingDialog.isShowing()){
-////                    loadingDialog.dismiss();
-////                }
-//            }
-//        });
-    }
 
 
     private void setFooterType(int type) {

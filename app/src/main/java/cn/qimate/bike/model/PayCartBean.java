@@ -5,12 +5,20 @@ package cn.qimate.bike.model;
  */
 
 public class PayCartBean {
-
+    private String code;        //券码
     private String image;
     private String name;
     private String price;
     private String original_price;
     private String desc;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getImage() {
         return image;

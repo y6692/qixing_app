@@ -236,7 +236,7 @@
 
 
                     <ImageView
-                        android:id="@+id/ui_1"
+                        android:id="@+id/iv_balance"
                         android:layout_width="20dp"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
@@ -286,7 +286,7 @@
                         />
 
                     <ImageView
-                        android:id="@+id/ui_2"
+                        android:id="@+id/iv_alipay"
                         android:layout_width="20dp"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
@@ -338,7 +338,7 @@
                         />
 
                     <ImageView
-                        android:id="@+id/ui_curRoadBiked_alipayTypeImage"
+                        android:id="@+id/iv_wechat"
                         android:layout_width="20dp"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"

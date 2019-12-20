@@ -51,8 +51,8 @@ import cn.qimate.bike.util.ToastUtil;
  * Created by yuanyi on 2019/12/9.
  */
 public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClickListener{
-    private static final int SDK_PAY_FLAG = 1;
-    private IWXAPI api;
+
+
 
     private Context context;
     private LoadingDialog loadingDialog;
@@ -359,63 +359,7 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
         });
     }
 
-    @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
-        @SuppressWarnings("unused")
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case SDK_PAY_FLAG: {
-//                    PayResult payResult = new PayResult((String) msg.obj);
 
-                    Log.e("mHandler===1", msg.obj+"===");
-
-                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
-
-                    Log.e("mHandler===2", payResult+"===");
-
-                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
-                    String resultStatus = payResult.getResultStatus();
-                    // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
-
-
-                    if (TextUtils.equals(resultStatus, "9000")) {
-                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-//                        showAlert(PayDemoActivity.this, "pay_success" + payResult);
-                        Toast.makeText(context, "pay_success" + payResult, Toast.LENGTH_SHORT).show();
-                    } else {
-                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-//                        showAlert(PayDemoActivity.this, "pay_failed" + payResult);
-                        Toast.makeText(context, "pay_failed" + payResult, Toast.LENGTH_SHORT).show();
-                    }
-
-//                    if (TextUtils.equals(resultStatus, "9000")) {
-//                        Toast.makeText(context, "恭喜您,支付成功", Toast.LENGTH_SHORT).show();
-//
-////                        if("1".equals(gamestatus)){
-////                            UIHelper.goToAct(context,MainActivity.class);
-////                        }else{
-////                            Intent intent = new Intent(context, WebviewActivity.class);
-////                            intent.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
-////                            intent.putExtra("title", "活动详情");
-////                            startActivity(intent);
-////                        }
-////
-////                        scrollToFinishActivity();
-//                    } else {
-//                        if (TextUtils.equals(resultStatus, "8000")) {
-//                            Toast.makeText(context, "支付结果确认中", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
-//                            Toast.makeText(context, "支付失败", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-                    break;
-                }
-                default:
-                    break;
-            }
-        };
-    };
 
 
     @Override

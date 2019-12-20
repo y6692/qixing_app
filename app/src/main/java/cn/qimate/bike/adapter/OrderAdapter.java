@@ -73,7 +73,7 @@ public class OrderAdapter extends BaseViewAdapter<BillBean>{
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, SettlementPlatformActivity.class);
-                    intent.putExtra("pay_scene", 1);
+                    intent.putExtra("order_type", 1);
                     context.startActivity(intent);
                 }
             });

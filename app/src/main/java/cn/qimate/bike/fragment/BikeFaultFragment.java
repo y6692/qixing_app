@@ -143,15 +143,6 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
     private boolean isSelected4 = false;
     private boolean isSelected5 = false;
     private boolean isSelected6 = false;
-    private boolean isSelected7 = false;
-    private boolean isSelected8 = false;
-    private boolean isSelected9 = false;
-    private boolean isSelected10 = false;
-    private boolean isSelected11 = false;
-    private boolean isSelected12 = false;
-    private boolean isSelected13 = false;
-    private boolean isSelected14 = false;
-    private boolean isSelected15 = false;
 
 
 
@@ -592,8 +583,16 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                 }
 
                 if(isSelected1_1 || isSelected1_2 || isSelected1_3){
+                    isSelected1 = true;
+                    if (!TagsList.contains("无法还车")){
+                        TagsList.add("无法还车");
+                    }
                     Tag1.setImageResource(R.drawable.lock_icon2);
                 }else{
+                    isSelected1 = false;
+                    if (TagsList.contains("无法还车")){
+                        TagsList.remove("无法还车");
+                    }
                     Tag1.setImageResource(R.drawable.lock_icon);
                 }
 
@@ -618,8 +617,16 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                 }
 
                 if(isSelected1_1 || isSelected1_2 || isSelected1_3){
+                    isSelected1 = true;
+                    if (!TagsList.contains("无法还车")){
+                        TagsList.add("无法还车");
+                    }
                     Tag1.setImageResource(R.drawable.lock_icon2);
                 }else{
+                    isSelected1 = false;
+                    if (TagsList.contains("无法还车")){
+                        TagsList.remove("无法还车");
+                    }
                     Tag1.setImageResource(R.drawable.lock_icon);
                 }
 
@@ -644,8 +651,16 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                 }
 
                 if(isSelected1_1 || isSelected1_2 || isSelected1_3){
+                    isSelected1 = true;
+                    if (!TagsList.contains("无法还车")){
+                        TagsList.add("无法还车");
+                    }
                     Tag1.setImageResource(R.drawable.lock_icon2);
                 }else{
+                    isSelected1 = false;
+                    if (TagsList.contains("无法还车")){
+                        TagsList.remove("无法还车");
+                    }
                     Tag1.setImageResource(R.drawable.lock_icon);
                 }
 

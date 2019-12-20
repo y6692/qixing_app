@@ -188,184 +188,379 @@
 
                         </RelativeLayout>
 
-
                         <LinearLayout
+                            android:visibility="gone"
+                            android:id="@+id/ll_bike_fault"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="21dp">
+                            android:orientation="vertical">
 
                             <LinearLayout
-                                android:id="@+id/pop_menu_feedbackLayout"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:gravity="center_horizontal">
+                                android:orientation="horizontal"
+                                android:layout_marginTop="4dp">
 
-                                <ImageView
-                                    android:id="@+id/endBikeFeedBackUI_type_Tag1"
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
-                                    android:src="@drawable/lock_icon"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
+                                <LinearLayout
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:textColor="@color/tx_black"
-                                    android:textSize="@dimen/sp10"
-                                    android:text="车锁"/>
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
 
-                                <TextView
-                                    android:id="@+id/endBikeFeedBackUI_type_Tag1_1"
-                                    android:layout_width="60dp"
-                                    android:layout_height="20dp"
-                                    android:layout_marginTop="4dp"
-                                    android:gravity="center"
-                                    android:background="@drawable/block_fault_bcg"
-                                    android:textColor="#FD555B"
-                                    android:textSize="@dimen/sp8"
-                                    android:text="开锁失败"/>
+                                    <ImageView
+                                        android:id="@+id/endBikeFeedBackUI_type_Tag1"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:src="@drawable/lock_icon"/>
 
-                                <TextView
-                                    android:id="@+id/endBikeFeedBackUI_type_Tag1_2"
-                                    android:layout_width="60dp"
-                                    android:layout_height="20dp"
-                                    android:layout_marginTop="4dp"
-                                    android:gravity="center"
-                                    android:background="@drawable/block_fault_bcg"
-                                    android:textColor="#FD555B"
-                                    android:textSize="@dimen/sp8"
-                                    android:text="关锁失败"/>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:textColor="@color/tx_black"
+                                        android:textSize="@dimen/sp10"
+                                        android:text="无法还车"/>
 
+                                    <TextView
+                                        android:id="@+id/endBikeFeedBackUI_type_Tag1_1"
+                                        android:layout_width="60dp"
+                                        android:layout_height="20dp"
+                                        android:layout_marginTop="4dp"
+                                        android:gravity="center"
+                                        android:background="@drawable/block_fault_bcg"
+                                        android:textColor="#FD555B"
+                                        android:textSize="@dimen/sp8"
+                                        android:text="锁未弹开"/>
 
+                                    <TextView
+                                        android:id="@+id/endBikeFeedBackUI_type_Tag1_2"
+                                        android:layout_width="60dp"
+                                        android:layout_height="20dp"
+                                        android:layout_marginTop="4dp"
+                                        android:gravity="center"
+                                        android:background="@drawable/block_fault_bcg"
+                                        android:textColor="#FD555B"
+                                        android:textSize="@dimen/sp8"
+                                        android:text="无法关锁"/>
+
+                                    <TextView
+                                        android:id="@+id/endBikeFeedBackUI_type_Tag1_3"
+                                        android:layout_width="60dp"
+                                        android:layout_height="20dp"
+                                        android:layout_marginTop="4dp"
+                                        android:gravity="center"
+                                        android:background="@drawable/block_fault_bcg"
+                                        android:textColor="#FD555B"
+                                        android:textSize="@dimen/sp8"
+                                        android:text="外形破损"/>
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+
+                                    <ImageView
+                                        android:id="@+id/endBikeFeedBackUI_type_Tag2"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:src="@drawable/brake_icon"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:textColor="@color/tx_black"
+                                        android:textSize="@dimen/sp10"
+                                        android:text="刹车"/>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+
+                                    <ImageView
+                                        android:id="@+id/endBikeFeedBackUI_type_Tag3"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:src="@drawable/chain_icon"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:textColor="@color/tx_black"
+                                        android:textSize="@dimen/sp10"
+                                        android:text="链条"/>
+                                </LinearLayout>
                             </LinearLayout>
 
                             <LinearLayout
-                                android:id="@+id/pop_menu_helpLayout"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:gravity="center_horizontal">
+                                android:orientation="horizontal"
+                                android:layout_marginTop="4dp">
 
-                                <ImageView
-                                    android:id="@+id/endBikeFeedBackUI_type_Tag2"
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
-                                    android:src="@drawable/brake_icon"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
+                                <LinearLayout
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:textColor="@color/tx_black"
-                                    android:textSize="@dimen/sp10"
-                                    android:text="刹车"/>
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+
+                                    <ImageView
+                                        android:id="@+id/endBikeFeedBackUI_type_Tag4"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:src="@drawable/saddle_icon"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:textColor="@color/tx_black"
+                                        android:textSize="@dimen/sp10"
+                                        android:text="车座"/>
+
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+
+                                    <ImageView
+                                        android:id="@+id/endBikeFeedBackUI_type_Tag5"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:src="@drawable/pedal_icon"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:textColor="@color/tx_black"
+                                        android:textSize="@dimen/sp10"
+                                        android:text="脚踏"/>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+
+                                    <ImageView
+                                        android:id="@+id/endBikeFeedBackUI_type_Tag6"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:src="@drawable/other_icon"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:textColor="@color/tx_black"
+                                        android:textSize="@dimen/sp10"
+                                        android:text="其他"/>
+                                </LinearLayout>
                             </LinearLayout>
 
-                            <LinearLayout
-                                android:id="@+id/pop_menu_callLayout"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:gravity="center_horizontal">
-
-                                <ImageView
-                                    android:id="@+id/endBikeFeedBackUI_type_Tag3"
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
-                                    android:src="@drawable/chain_icon"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:textColor="@color/tx_black"
-                                    android:textSize="@dimen/sp10"
-                                    android:text="链条"/>
-                            </LinearLayout>
                         </LinearLayout>
 
                         <LinearLayout
+                            android:visibility="gone"
+                            android:id="@+id/ll_ebike_fault"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="14dp">
+                            android:orientation="vertical">
 
                             <LinearLayout
-                                android:id="@+id/endBikeFeedBackUI_1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:gravity="center_horizontal">
+                                android:orientation="horizontal"
+                                android:layout_marginTop="21dp">
 
-                                <ImageView
-                                    android:id="@+id/endBikeFeedBackUI_type_Tag4"
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
-                                    android:src="@drawable/no_assistance_icon"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
+                                <LinearLayout
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:textColor="@color/tx_black"
-                                    android:textSize="@dimen/sp10"
-                                    android:text="无助力"/>
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+
+                                    <ImageView
+                                        android:id="@+id/endBikeFeedBackUI_type2_Tag1"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:src="@drawable/lock_icon3"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:textColor="@color/tx_black"
+                                        android:textSize="@dimen/sp10"
+                                        android:text="车锁"/>
+
+                                    <TextView
+                                        android:id="@+id/endBikeFeedBackUI_type2_Tag1_1"
+                                        android:layout_width="60dp"
+                                        android:layout_height="20dp"
+                                        android:layout_marginTop="4dp"
+                                        android:gravity="center"
+                                        android:background="@drawable/block_fault_bcg"
+                                        android:textColor="#FD555B"
+                                        android:textSize="@dimen/sp8"
+                                        android:text="开锁失败"/>
+
+                                    <TextView
+                                        android:id="@+id/endBikeFeedBackUI_type2_Tag1_2"
+                                        android:layout_width="60dp"
+                                        android:layout_height="20dp"
+                                        android:layout_marginTop="4dp"
+                                        android:gravity="center"
+                                        android:background="@drawable/block_fault_bcg"
+                                        android:textColor="#FD555B"
+                                        android:textSize="@dimen/sp8"
+                                        android:text="关锁失败"/>
 
 
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+
+                                    <ImageView
+                                        android:id="@+id/endBikeFeedBackUI_type2_Tag2"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:src="@drawable/brake_icon"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:textColor="@color/tx_black"
+                                        android:textSize="@dimen/sp10"
+                                        android:text="刹车"/>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+
+                                    <ImageView
+                                        android:id="@+id/endBikeFeedBackUI_type2_Tag3"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:src="@drawable/chain_icon"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:textColor="@color/tx_black"
+                                        android:textSize="@dimen/sp10"
+                                        android:text="链条"/>
+                                </LinearLayout>
                             </LinearLayout>
 
                             <LinearLayout
-                                android:id="@+id/endBikeFeedBackUI_2"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:gravity="center_horizontal">
+                                android:orientation="horizontal"
+                                android:layout_marginTop="14dp">
 
-                                <ImageView
-                                    android:id="@+id/endBikeFeedBackUI_type_Tag5"
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
-                                    android:src="@drawable/pedal_icon"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
+                                <LinearLayout
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:textColor="@color/tx_black"
-                                    android:textSize="@dimen/sp10"
-                                    android:text="脚踏"/>
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+
+                                    <ImageView
+                                        android:id="@+id/endBikeFeedBackUI_type2_Tag4"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:src="@drawable/no_assistance_icon"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:textColor="@color/tx_black"
+                                        android:textSize="@dimen/sp10"
+                                        android:text="无助力"/>
+
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+
+                                    <ImageView
+                                        android:id="@+id/endBikeFeedBackUI_type2_Tag5"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:src="@drawable/pedal_icon"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:textColor="@color/tx_black"
+                                        android:textSize="@dimen/sp10"
+                                        android:text="脚踏"/>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+
+                                    <ImageView
+                                        android:id="@+id/endBikeFeedBackUI_type2_Tag6"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:src="@drawable/other_icon"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:textColor="@color/tx_black"
+                                        android:textSize="@dimen/sp10"
+                                        android:text="其他"/>
+                                </LinearLayout>
                             </LinearLayout>
 
-                            <LinearLayout
-                                android:id="@+id/endBikeFeedBackUI_3"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:gravity="center_horizontal">
 
-                                <ImageView
-                                    android:id="@+id/endBikeFeedBackUI_type_Tag6"
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
-                                    android:src="@drawable/other_icon"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:textColor="@color/tx_black"
-                                    android:textSize="@dimen/sp10"
-                                    android:text="其他"/>
-                            </LinearLayout>
                         </LinearLayout>
+
 
                         <LinearLayout
                             android:visibility="gone"
@@ -395,7 +590,6 @@
                                 android:background="#9C9C9C" />
 
                         </LinearLayout>
-
 
 
                     </LinearLayout>
