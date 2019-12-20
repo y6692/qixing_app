@@ -118,4 +118,10 @@ public interface IBLE {
      * @return
      */
     boolean refreshCache();
+
+    /**
+     * 信标
+     * @return
+     */
+    boolean xinbiao();
 }

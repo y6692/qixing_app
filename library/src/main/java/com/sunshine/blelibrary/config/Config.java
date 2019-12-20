@@ -59,6 +59,7 @@ public class Config {
     public static final String GSM_ID_ACTION = "com.sunshine.blelibrary.config.GSM_ID_ACTION";
     public static final String GSM_VERSION_ACTION = "com.sunshine.blelibrary.config.GSM_VERSION_ACTION";
     public static final String UPDATE_NEXT = "com.sunshine.blelibrary.config.UPDATE_NEXT";
+    public static final String XINBIAO_ACTION ="com.sunshine.blelibrary.config.xinbiao_ACTION ";
 
     public static final String BLE_DATA = "com.sunshine.blelibrary.config.BLE_DATA";
     public static final String UPDATE_VIEW = "com.sunshine.blelibrary.config.UPDATE_VIEW";
@@ -69,7 +70,6 @@ public class Config {
     public static final String GET_DEMAINNAME_SECOND = "com.sunshine.blelibrary.config.GET_DEMAINNAME_SECOND";
 
     public static final String GET_ICC_ID = "com.sunshine.blelibrary.config.GET_ICC_ID";
-
 
     public static IntentFilter initFilter() {
         IntentFilter intentFilter = new IntentFilter();
@@ -86,6 +86,7 @@ public class Config {
         intentFilter.addAction(SEND_AQ_ACTION);
         intentFilter.addAction(UPDATE_VERSION_ACTION);
         intentFilter.addAction(UPDATE_NEXT);
+        intentFilter.addAction(XINBIAO_ACTION);
         intentFilter.addAction(GET_MODE);
         intentFilter.addAction(SET_MODE);
         intentFilter.addAction(GEt_LOCK_WORK_STATUS);

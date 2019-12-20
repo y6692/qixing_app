@@ -94,10 +94,14 @@ public class Order {
          */
         GET_ICC_ID(0x0528),
 
+        XINBIAO(0x0585),
+
         /**
          * 获取域名demain
          */
         GET_DEMAIN_NAME(0x0530);
+
+
 
         final int value;
 

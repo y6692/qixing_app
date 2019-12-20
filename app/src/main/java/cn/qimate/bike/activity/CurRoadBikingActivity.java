@@ -1652,6 +1652,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         }
                         break;
                     case Config.CLOSE_ACTION:
+                        Log.e("biking===", "CLOSE_ACTION==="+isStop);
                         if (loadingDialog != null && loadingDialog.isShowing()){
                             loadingDialog.dismiss();
                         }
@@ -1678,6 +1679,13 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         if (TextUtils.isEmpty(data)) {
                             ToastUtil.showMessageApp(context,"锁已关闭");
                             Log.e("biking===", "biking===锁已关闭==="+first3);
+
+                            m_myHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    BaseApplication.getInstance().getIBLE().xinbiao();
+                                }
+                            }, 1000);
 
                             if(!isEndBtn) break;
 
@@ -1737,6 +1745,24 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                        m_myHandler.sendEmptyMessage(3);
 //                    }
 //                }).start();
+
+                        break;
+
+                    case Config.XINBIAO_ACTION:        //搜索信标
+
+//                    else if (decryptString.startsWith("0585")){
+
+
+
+//                        tvCz.setText("当前操作：搜索信标成功"+data.substring(2*10, 2*10+2)+"==="+data.substring(2*11, 2*11+2)+"==="+data);
+
+                        Log.e("XINBIAO_ACTION===", "当前操作：搜索信标成功"+data.substring(2*10, 2*10+2)+"==="+data.substring(2*11, 2*11+2)+"==="+data);
+
+                        if("000000000000".equals(data.substring(2*4, 2*10))){
+                            major = 0;
+                        }else{
+                            major = 1;
+                        }
 
                         break;
                 }
@@ -3456,7 +3482,99 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                    m_myHandler.sendEmptyMessage(3);
 //                    endBtn5();
 
-                    queryState();
+                    if("5".equals(type) || "6".equals(type)){
+                        queryState();
+                    }else{
+                        flag = 2;
+                        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                            ToastUtil.showMessageApp(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0");
+                            scrollToFinishActivity();
+                        }
+
+                        if (!BaseApplication.getInstance().getIBLE().isEnable()){
+                            BaseApplication.getInstance().getIBLE().enableBluetooth();
+                            return;
+                        }
+                        if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                            if (loadingDialog != null && !loadingDialog.isShowing()){
+                                loadingDialog.setTitle("请稍等");
+                                loadingDialog.show();
+                            }
+
+                            Log.e("biking===endBtn_2",macList.size()+"===");
+
+                            isStop = false;
+                            m_myHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (loadingDialog != null && loadingDialog.isShowing()){
+                                        loadingDialog.dismiss();
+                                    }
+
+                                    if(!isStop){
+                                        if(force_backcar==0){
+                                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                            customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+                                                    .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.cancel();
+                                                        }
+                                                    });
+                                            customBuilder.create().show();
+                                        }else{
+                                            clickCountDeal();
+                                        }
+                                    }
+                                }
+                            }, 10 * 1000);
+
+                            macList2 = new ArrayList<> (macList);
+                            BaseApplication.getInstance().getIBLE().getLockStatus();
+                        } else {
+                            Log.e("biking===endBtn_3",macList.size()+"===");
+
+                            if (lockLoading != null && !lockLoading.isShowing()){
+                                lockLoading.setTitle("正在连接");
+                                lockLoading.show();
+                            }
+
+                            isStop = false;
+                            m_myHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (lockLoading != null && lockLoading.isShowing()){
+                                        lockLoading.dismiss();
+                                    }
+
+                                    if(!isStop){
+                                        stopScan = true;
+//                              BaseApplication.getInstance().getIBLE().stopScan();
+                                        BaseApplication.getInstance().getIBLE().refreshCache();
+                                        BaseApplication.getInstance().getIBLE().close();
+                                        BaseApplication.getInstance().getIBLE().disconnect();
+
+                                        if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                                            if(force_backcar==0){
+                                                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                                customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+                                                        .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                dialog.cancel();
+                                                            }
+                                                        });
+                                                customBuilder.create().show();
+                                            }else{
+                                                clickCountDeal();
+                                            }
+                                        }
+                                    }
+                                }
+                            }, 10 * 1000);
+
+                            connect();
+                        }
+                    }
+
 
                 }
                 else if("7".equals(type)){
@@ -3528,6 +3646,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 if (mlocationClient != null) {
                     mlocationClient.startLocation();
                 }
+
+//                BaseApplication.getInstance().getIBLE().xinbiao();
 
 //                schoolRange();
 
@@ -5706,18 +5826,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     if("4".equals(type)){
                         endBtn4();
                     }else if("5".equals(type) || "6".equals(type)){
-
-
                         endBtn5();
                     }else if("7".equals(type)){
-//                        if (lockLoading != null && !lockLoading.isShowing()){
-//                            lockLoading.setTitle("正在连接");
-//                            lockLoading.show();
-//                        }
-
                         endBtn7();
                     }else{
-
                         if("3".equals(type)){
                             endBtn3();
                         }else{
