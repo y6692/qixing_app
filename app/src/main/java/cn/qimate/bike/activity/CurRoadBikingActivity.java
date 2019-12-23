@@ -1678,7 +1678,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         }
                         if (TextUtils.isEmpty(data)) {
                             ToastUtil.showMessageApp(context,"锁已关闭");
-                            Log.e("biking===", "biking===锁已关闭==="+first3);
+                            Log.e("biking===", "biking===锁已关闭==="+isEndBtn);
 
                             m_myHandler.postDelayed(new Runnable() {
                                 @Override
@@ -1687,15 +1687,21 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 }
                             }, 1000);
 
-                            if(!isEndBtn) break;
+                            if(isEndBtn){
+                                Log.e("biking===", "biking===锁已关闭===2"+isEndBtn);
 
-                            m_myHandler.sendEmptyMessage(6);
+                                m_myHandler.sendEmptyMessage(6);
 
-                            Log.e("biking===", "biking2===锁已关闭" + macList2.size());
+                                Log.e("biking===", "biking2===锁已关闭" + macList2.size());
+                            }
+
+
 
                         } else {
                             //锁已开启
                             ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+
+                            isEndBtn = false;
 
 //                            customDialog10.show();
 //                            clickCountDeal();
