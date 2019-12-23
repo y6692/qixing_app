@@ -225,6 +225,7 @@ public class MyOrderActivity extends SwipeBackActivity implements View.OnClickLi
         }
         RequestParams params = new RequestParams();
         params.put("order_type", 1);    //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单 7充值+认证充值订单 8调度费+赔偿费订单
+        params.put("origin", 1);        //来源 1我的订单 2账单 默认1
         params.put("page",showPage);    //当前页码
         params.put("per_page", GlobalConfig.PAGE_SIZE);
         HttpHelper.get(context, Urls.orders, params, new TextHttpResponseHandler() {

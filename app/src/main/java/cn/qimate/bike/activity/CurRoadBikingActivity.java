@@ -1684,6 +1684,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             //锁已开启
                             ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
+                            isEndBtn = false;
+
 //                            customDialog10.show();
 //                            clickCountDeal();
                         }

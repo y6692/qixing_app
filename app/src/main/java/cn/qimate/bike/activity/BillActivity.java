@@ -88,6 +88,14 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
     }
 
     private void initView(){
+        item.add("骑行订单");       //TODO
+        item.add("套餐卡订单");
+        item.add("充值订单");
+        item.add("认证充值订单");
+        item.add("调度费订单");
+        item.add("赔偿费订单");
+        item.add("充值+认证充值订单");
+        item.add("调度费+赔偿费订单");
 
         ll_back = (LinearLayout) findViewById(R.id.ll_backBtn);
 
@@ -119,6 +127,10 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
         ll_bill = (RelativeLayout)findViewById(R.id.ll_bill);
         tv_bill = (TextView)findViewById(R.id.tv_bill);
 
+        order_type = getIntent().getIntExtra("order_type", 1);
+        tv_bill.setText(item.get(order_type-1));
+
+
         myList.setOnItemClickListener(this);
         if(datas.isEmpty()){
             initHttp();
@@ -133,14 +145,7 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
         footerLayout.setOnClickListener(this);
 
         //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单 7充值+认证充值订单 8调度费+赔偿费订单
-        item.add("骑行订单");
-        item.add("套餐卡订单");
-        item.add("充值订单");
-        item.add("认证充值订单");
-        item.add("调度费订单");
-        item.add("赔偿费订单");
-        item.add("充值+认证充值订单");
-        item.add("调度费+赔偿费订单");
+
 
         pvOptions.setPicker(item);
         pvOptions.setCyclic(false, false, false);
@@ -236,6 +241,8 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
     }
     private void initHttp(){
 
+        Log.e("ba===orders", order_type+"==="+showPage+"===");
+
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (access_token == null || "".equals(access_token)){
             Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
@@ -243,7 +250,8 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
         }
         RequestParams params = new RequestParams();
         params.put("order_type", order_type);
-        params.put("page",showPage);
+        params.put("origin", 2);
+        params.put("page", showPage);
         params.put("per_page", GlobalConfig.PAGE_SIZE);
         HttpHelper.get(context, Urls.orders, params, new TextHttpResponseHandler() {
             @Override
@@ -285,8 +293,6 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
                         footerLayout.setVisibility(View.VISIBLE);
                         setFooterType(0);
                     }
-
-
 
                     for (int i = 0; i < array.length(); i++) {
 

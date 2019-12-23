@@ -56,6 +56,7 @@
             />
 
         <TextView
+            android:id="@+id/tv_unpay_other_order_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -179,7 +180,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/tv_unpay_other_order_amount"
+                    android:id="@+id/tv_unpay_other_parking_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -207,7 +208,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/tv_unpay_other_"
+                    android:id="@+id/tv_unpay_other_remark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

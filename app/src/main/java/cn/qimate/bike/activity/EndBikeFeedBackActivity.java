@@ -632,19 +632,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 
                 }
 
-                if(isSelected1_1 || isSelected1_2 || isSelected1_3){
-                    isSelected1 = true;
-                    if (!TagsList.contains("车锁")){
-                        TagsList.add("车锁");
-                    }
-                    Tag1.setImageResource(R.drawable.lock_icon2);
-                }else{
-                    isSelected1 = false;
-                    if (TagsList.contains("车锁")){
-                        TagsList.remove("车锁");
-                    }
-                    Tag1.setImageResource(R.drawable.lock_icon);
-                }
+                px1();
 
                 pd();
                 break;
@@ -666,19 +654,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                     Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
                 }
 
-                if(isSelected1_1 || isSelected1_2 || isSelected1_3){
-                    isSelected1 = true;
-                    if (!TagsList.contains("车锁")){
-                        TagsList.add("车锁");
-                    }
-                    Tag1.setImageResource(R.drawable.lock_icon2);
-                }else{
-                    isSelected1 = false;
-                    if (TagsList.contains("车锁")){
-                        TagsList.remove("车锁");
-                    }
-                    Tag1.setImageResource(R.drawable.lock_icon);
-                }
+                px1();
 
                 pd();
                 break;
@@ -686,33 +662,21 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
             case R.id.bikeFaultUI_type_Tag1_3:
                 if (isSelected1_3){
                     isSelected1_3 = false;
-                    if (TagsList.contains("外形破损")){
-                        TagsList.remove("外形破损");
+                    if (TagsList1.contains("外形破损")){
+                        TagsList1.remove("外形破损");
                     }
-//                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
                     Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
                 }else {
                     isSelected1_3 = true;
-                    if (!TagsList.contains("外形破损")){
-                        TagsList.add("外形破损");
+                    if (!TagsList1.contains("外形破损")){
+                        TagsList1.add("外形破损");
                     }
-//                    Tag1_3.setTextColor(Color.parseColor("#FFFFFF"));
+                    Tag1_3.setTextColor(Color.parseColor("#FFFFFF"));
                     Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg2);
                 }
 
-                if(isSelected1_1 || isSelected1_2 || isSelected1_3){
-                    isSelected1 = true;
-                    if (!TagsList.contains("车锁")){
-                        TagsList.add("车锁");
-                    }
-                    Tag1.setImageResource(R.drawable.lock_icon2);
-                }else{
-                    isSelected1 = false;
-                    if (TagsList.contains("车锁")){
-                        TagsList.remove("车锁");
-                    }
-                    Tag1.setImageResource(R.drawable.lock_icon);
-                }
+                px1();
 
                 pd();
                 break;
@@ -1006,6 +970,24 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                 break;
             default:
                 break;
+        }
+    }
+
+
+
+    private void px1(){
+        if(isSelected1_1 || isSelected1_2 || isSelected1_3){
+            isSelected1 = true;
+            if (!TagsList.contains("车锁")){
+                TagsList.add("车锁");
+            }
+            Tag1.setImageResource(R.drawable.lock_icon2);
+        }else{
+            isSelected1 = false;
+            if (TagsList.contains("车锁")){
+                TagsList.remove("车锁");
+            }
+            Tag1.setImageResource(R.drawable.lock_icon);
         }
     }
 

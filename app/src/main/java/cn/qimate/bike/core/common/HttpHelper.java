@@ -100,6 +100,8 @@ public class HttpHelper {
 
 		addHeader(context);
 
+		Log.e("params===", url+"?"+params);
+
 		client.get(context, url, params, responseHandler);
 	}
 

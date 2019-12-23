@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -101,6 +102,9 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
     private View footerViewType04;
     private View footerViewType05;
 
+    private ImageView iv_type05;
+    private TextView tv_type05;
+
     private View footerLayout;
 
     String badtime="2115-02-08 20:20";
@@ -125,23 +129,23 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
 
         initHttp();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            while (true){
-
-                try {
-                    Thread.sleep(30*1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                m_myHandler.sendEmptyMessage(1);
-            }
-
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            while (true){
+//
+//                try {
+//                    Thread.sleep(30*1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                m_myHandler.sendEmptyMessage(1);
+//            }
+//
+//            }
+//        }).start();
 
     }
 
@@ -206,6 +210,10 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
         footerViewType04 = footerView.findViewById(R.id.footer_Layout_type04);// 刷新失败，请重试
         footerViewType05 = footerView.findViewById(R.id.footer_Layout_type05);// 暂无数据
         footerLayout = footerView.findViewById(R.id.footer_Layout);
+        iv_type05 = footerView.findViewById(R.id.footer_Layout_iv_type05);
+        tv_type05 = footerView.findViewById(R.id.footer_Layout_tv_type05);
+        iv_type05.setImageResource(R.drawable.no_card_icon);
+        tv_type05.setText("赶紧购买套餐卡吧…");
 
 
         swipeRefreshLayout = (SwipeRefreshLayout)getActivity().findViewById(R.id.Layout_swipeParentLayout2);
@@ -309,7 +317,7 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
         RequestParams params = new RequestParams();
         params.put("tab", 2);
         params.put("page", showPage);
-        params.put("pagesize", GlobalConfig.PAGE_SIZE);
+        params.put("per_page", GlobalConfig.PAGE_SIZE);
 
         HttpHelper.get(context, Urls.my_cycling_cards, params, new TextHttpResponseHandler() {
             @Override

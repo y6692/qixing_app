@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ import com.amap.api.maps.model.Marker;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,7 @@ import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.PayMontCartActivity;
+import cn.qimate.bike.activity.SettlementPlatformActivity;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.base.BaseViewAdapter;
 import cn.qimate.bike.base.BaseViewHolder;
@@ -259,7 +262,9 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        Intent intent = new Intent(context, SettlementPlatformActivity.class);
+        intent.putExtra("order_type", 2);
+        context.startActivity(intent);
     }
 
     @SuppressLint("NewApi")
@@ -273,7 +278,7 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             if (null == convertView) {
                 convertView = inflater.inflate(R.layout.item_bike_pay_cart, null);
             }
@@ -281,25 +286,98 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
             TextView tv_price = BaseViewHolder.get(convertView,R.id.tv_price);
             TextView tv_original_price = BaseViewHolder.get(convertView,R.id.tv_original_price);
             TextView tv_desc = BaseViewHolder.get(convertView,R.id.tv_desc);
+            LinearLayout ll_payBtn = BaseViewHolder.get(convertView,R.id.ll_payBtn);
             final PayCartBean bean = getDatas().get(position);
 
             name.setText(bean.getName());
-            tv_price.setText(bean.getPrice());
+            final String card_code = bean.getCode();
+            String price = bean.getPrice();
+            tv_price.setText(price);
             tv_original_price.setText("¥"+bean.getOriginal_price());
             tv_desc.setText(bean.getDesc());
 
             tv_original_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
-//            if("即将超时".equals(bean.getStatus_name())){
-//                num.setTextColor(getResources().getColor(R.color.red));
-//                status.setTextColor(getResources().getColor(R.color.red));
-//            }else{
-//                num.setTextColor(getResources().getColor(R.color.tx_black));
-//                status.setTextColor(getResources().getColor(R.color.tx_black));
-//            }
+            ll_payBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+//                    PayCartBean bean = myAdapter.getDatas().get(position);
+
+                    Log.e("bcf===onClick", "==="+position+"==="+card_code);
+
+//                    int order_id = bean.getOrder_id();
+
+//                    order(bean.getCode());
+
+                    order(card_code);
+
+                }
+            });
 
             return convertView;
         }
+    }
+
+    private void order(String card_code) {
+        Log.e("order===", "==="+codenum);
+
+        RequestParams params = new RequestParams();
+        params.put("order_type", 2);        //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单
+//        params.put("car_number", URLEncoder.encode(codenum));
+        params.put("card_code", card_code);        //套餐卡券码（order_type为2时必传）
+//        params.put("price", "");        //传价格数值 例如：20.00(order_type为3、4时必传)
+
+        HttpHelper.post(context, Urls.order, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("order===1", responseString + "===" + result.data);
+
+                            JSONObject jsonObject = new JSONObject(result.getData());
+
+                            order_id = jsonObject.getInt("order_id");
+                            String order_amount = jsonObject.getString("order_amount");
+
+                            Log.e("order===1", order_id + "===" + order_amount );
+
+                            Intent intent = new Intent(context, SettlementPlatformActivity.class);
+                            intent.putExtra("order_type", 2);
+                            intent.putExtra("order_amount", order_amount);
+                            intent.putExtra("order_id", order_id);
+                            context.startActivity(intent);
+
+
+
+                        } catch (Exception e) {
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                        }
+
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+
+                    }
+                });
+
+
+            }
+        });
     }
 
     private void initHttp(){

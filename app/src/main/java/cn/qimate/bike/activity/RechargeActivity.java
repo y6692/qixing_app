@@ -82,6 +82,7 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
     private String paytype = "1";//1支付宝2微信
     private String osn = "";
     private LinearLayout dealLayout;
+    private String price = ""; //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +131,7 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         moneyListView.setOnItemClickListener(this);
 //
 //        backImg.setOnClickListener(this);
-//        rightBtn.setOnClickListener(this);
+        rightBtn.setOnClickListener(this);
 //        alipayTypeLayout.setOnClickListener(this);
 //        WeChatTypeLayout.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
@@ -152,7 +153,12 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
                     Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                UIHelper.goToAct(context,RechargeRecordActivity.class);
+//                UIHelper.goToAct(context, BillActivity.class);
+
+                Intent intent = new Intent(context, BillActivity.class);
+                intent.putExtra("order_type",3);
+                startActivity(intent);
+
                 break;
 //            case R.id.rechargeUI_alipayTypeLayout:
 //                alipayTypeImage.setImageResource(R.drawable.pay_type_selected);
@@ -172,6 +178,8 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
 
                 Log.e("rid===", "==="+rid);
 
+                order();
+
 //                userRecharge(uid, access_token);
                 break;
 //            case R.id.rechargeUI_dealLayout:
@@ -181,6 +189,65 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
 //                startActivity(intent);
 //                break;
         }
+    }
+
+    private void order() {
+        Log.e("order===", "==="+price);
+
+        RequestParams params = new RequestParams();
+        params.put("order_type", 3);        //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单
+//        params.put("car_number", URLEncoder.encode(codenum));
+//        params.put("card_code", card_code);        //套餐卡券码（order_type为2时必传）
+        params.put("price", price);        //传价格数值 例如：20.00(order_type为3、4时必传)
+
+        HttpHelper.post(context, Urls.order, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("order===1", responseString + "===" + result.data);
+
+                            JSONObject jsonObject = new JSONObject(result.getData());
+
+                            int order_id = jsonObject.getInt("order_id");
+                            String order_amount = jsonObject.getString("order_amount");
+
+                            Log.e("order===1", order_id + "===" + order_amount );
+
+                            Intent intent = new Intent(context, SettlementPlatformActivity.class);
+                            intent.putExtra("order_type", 3);
+                            intent.putExtra("order_amount", order_amount);
+                            intent.putExtra("order_id", order_id);
+                            context.startActivity(intent);
+
+                        } catch (Exception e) {
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                        }
+
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+
+                    }
+                });
+
+
+            }
+        });
     }
 
     private void userRecharge(final String uid, final String access_token){
@@ -368,7 +435,12 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
 
     @Override
     public void onItemClick(PLA_AdapterView<?> parent, View view, int position, long id) {
-        rid = myAdapter.getDatas().get(position).getId();
+        RechargeBean bean = myAdapter.getDatas().get(position);
+        rid = bean.getId();
+        price = bean.getPrice();
+
+
+
         if (position != selectPosition){
             myAdapter.getDatas().get(position).setSelected(true);
             myAdapter.getDatas().get(selectPosition).setSelected(false);
@@ -407,6 +479,19 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
             layout.setSelected(bean.isSelected());
             moneyText.setSelected(bean.isSelected());
             moneyText.setText(bean.getPrice_s());
+
+//            ll_payBtn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//
+//
+//                    Log.e("bcf===onClick", "==="+position+"==="+card_code);
+//
+//
+//                    order(card_code);
+//
+//                }
+//            });
 
             return convertView;
         }

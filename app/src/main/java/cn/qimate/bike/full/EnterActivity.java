@@ -1,7 +1,11 @@
 package cn.qimate.bike.full;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -9,16 +13,25 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import cn.jpush.android.api.JPushInterface;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.Main2Activity;
 import cn.qimate.bike.activity.Main4Activity;
 import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.base.BaseActivity;
+import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
+import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.MyScrollLayout;
+import cn.qimate.bike.fragment.BikeFragment;
 import cn.qimate.bike.listener.OnViewChangeListener;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 public class EnterActivity extends BaseActivity implements OnViewChangeListener, OnClickListener {
 	/** Called when the activity is first created. */
@@ -30,6 +43,9 @@ public class EnterActivity extends BaseActivity implements OnViewChangeListener,
 	private Button enter_btn;
 	private Button enter_btn_1;
 	private Context context;
+
+	GifImageView scrollLayout1;
+	GifDrawable gifDrawable;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +72,18 @@ public class EnterActivity extends BaseActivity implements OnViewChangeListener,
 	protected void onResume() {
 		super.onResume();
 		JPushInterface.onResume(this);
+
+//		m_myHandler.postDelayed().sendEmptyMessage(1);
+
+//		m_myHandler.postDelayed(new Runnable() {
+//			@Override
+//			public void run() {
+//				Log.e("gifDrawable===", "==="+gifDrawable);
+//
+////				gifDrawable.start();
+//
+//			}
+//		}, 2 * 1000);
 	}
 
 	@Override	
@@ -67,7 +95,16 @@ public class EnterActivity extends BaseActivity implements OnViewChangeListener,
 	private void init() {
 		mScrollLayout = (MyScrollLayout) findViewById(R.id.ScrollLayout);
 		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.llayout);
-		mViewCount = mScrollLayout.getChildCount();
+//		ImageView scrollLayout1 = (ImageView) findViewById(R.id.ScrollLayout1);
+		scrollLayout1 = (GifImageView) findViewById(R.id.ScrollLayout1);
+//		gifDrawable = (GifDrawable) scrollLayout1.getDrawable();
+
+//		Glide.with(context).load("").into(scrollLayout1);
+
+//		Glide.with(context).load("").asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(scrollLayout1);
+
+//		mViewCount = mScrollLayout.getChildCount();
+		mViewCount = 1;
 		mImageViews = new ImageView[mViewCount];
 		for (int i = 0; i < mViewCount; i++) {
 			mImageViews[i] = (ImageView) linearLayout.getChildAt(i);
@@ -77,7 +114,10 @@ public class EnterActivity extends BaseActivity implements OnViewChangeListener,
 		}
 		mCurSel = 0;
 		mImageViews[mCurSel].setEnabled(false);
-		mScrollLayout.SetOnViewChangeListener(this);
+		scrollLayout1.setOnClickListener(this);
+//		mScrollLayout.SetOnViewChangeListener(this);
+
+
 
 	}
 
@@ -92,12 +132,13 @@ public class EnterActivity extends BaseActivity implements OnViewChangeListener,
 
 	public void OnViewChange(int view) {
 		// TODO Auto-generated method stub
-		if (view < 0 || mCurSel == view) {
-			return;
-		} else if (view > mViewCount - 1){
-			tz();
-		}
-		setCurPoint(view);
+//		if (view < 0 || mCurSel == view) {
+//			return;
+//		} else if (view > mViewCount - 1){
+//			tz();
+//		}
+		tz();
+//		setCurPoint(view);
 	}
 
 	private void tz(){
@@ -105,11 +146,29 @@ public class EnterActivity extends BaseActivity implements OnViewChangeListener,
 		finishMine();
 	}
 
+	protected Handler m_myHandler = new Handler(new Handler.Callback() {
+		@Override
+		public boolean handleMessage(Message mes) {
+			switch (mes.what) {
+				case 1:
+
+					gifDrawable.start();
+//					scrollLayout1.setBackground(gifDrawable);
+					break;
+
+				default:
+					break;
+			}
+			return false;
+		}
+	});
+
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		int pos = (Integer) (v.getTag());
-		setCurPoint(pos);
-		mScrollLayout.snapToScreen(pos);
+//		int pos = (Integer) (v.getTag());
+//		setCurPoint(pos);
+//		mScrollLayout.snapToScreen(pos);
+
+		tz();
 	}
 
 	@Override

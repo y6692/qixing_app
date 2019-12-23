@@ -105,6 +105,16 @@
 
         </activity>
 
+        <activity
+            android:name=".full.EnterActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <!--android:screenOrientation="portrait"-->
 
         <activity
@@ -112,10 +122,7 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <activity
@@ -394,9 +401,7 @@
         <activity
             android:name=".activity.InstructionsActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
-            android:name=".full.EnterActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
         <activity
             android:name=".activity.ActionCenterActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />

@@ -152,7 +152,9 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 
 
     private List<String> TagsList;
+    private List<String> TagsList1;
     private List<Bitmap> imageUrlList;
+    private List<String> imageList = new ArrayList<>();
     final static int MAX = 4;
 
     /**
@@ -206,6 +208,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 //        datas = new ArrayList<>();
 
         TagsList = new ArrayList<>();
+        TagsList1 = new ArrayList<>();
         imageUrlList = new ArrayList<>();
 
         type = SharedPreferencesUrls.getInstance().getString("type", "");
@@ -545,11 +548,10 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
             case R.id.ebikeFaultUI_type_Tag1:
                 if (isSelected1){
                     isSelected1 = false;
-//                    if (TagsList.contains(Tag1.getText().toString())){
-//                        TagsList.remove(Tag1.getText().toString());
-//                    }
+                    if (TagsList.contains("车锁")){
+                        TagsList.remove("车锁");
+                    }
 //                    Tag1.setTextColor(Color.parseColor("#666666"));
-//                    Tag1.setBackgroundResource(R.drawable.shape_feedback);
 
                     isSelected1_1 = false;
                     isSelected1_2 = false;
@@ -558,12 +560,12 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
                     Tag1_2.setTextColor(Color.parseColor("#FD555B"));
                     Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
 
-                    Tag1.setImageResource(R.drawable.lock_icon3);
+                    Tag1.setImageResource(R.drawable.lock_icon);    //未选中
                 }else {
                     isSelected1 = true;
-//                    if (!TagsList.contains(Tag1.getText().toString())){
-//                        TagsList.add(Tag1.getText().toString());
-//                    }
+                    if (!TagsList.contains("车锁")){
+                        TagsList.add("车锁");
+                    }
 //                    Tag1.setTextColor(Color.parseColor("#f57752"));
 
                     isSelected1_1 = true;
@@ -573,7 +575,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
                     Tag1_2.setTextColor(Color.parseColor("#FFFFFF"));
                     Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
 
-                    Tag1.setImageResource(R.drawable.lock_icon4);
+                    Tag1.setImageResource(R.drawable.lock_icon2);   //选中
                 }
                 pd();
                 break;
@@ -581,54 +583,45 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
             case R.id.ebikeFaultUI_type_Tag1_1:
                 if (isSelected1_1){
                     isSelected1_1 = false;
-//                    if (TagsList.contains(Tag1.getText().toString())){
-//                        TagsList.remove(Tag1.getText().toString());
-//                    }
+                    if (TagsList1.contains("开锁失败")){
+                        TagsList1.remove("开锁失败");
+                    }
                     Tag1_1.setTextColor(Color.parseColor("#FD555B"));
                     Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
 
 
                 }else {
                     isSelected1_1 = true;
-//                    if (!TagsList.contains(Tag1.getText().toString())){
-//                        TagsList.add(Tag1.getText().toString());
-//                    }
+                    if (!TagsList1.contains("开锁失败")){
+                        TagsList1.add("开锁失败");
+                    }
                     Tag1_1.setTextColor(Color.parseColor("#FFFFFF"));
                     Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg2);
 
                 }
 
-                if(isSelected1_1 || isSelected1_2){
-                    Tag1.setImageResource(R.drawable.lock_icon4);
-                }else{
-                    Tag1.setImageResource(R.drawable.lock_icon3);
-                }
+                px2();
 
                 pd();
                 break;
             case R.id.ebikeFaultUI_type_Tag1_2:
                 if (isSelected1_2){
                     isSelected1_2 = false;
-//                    if (TagsList.contains(Tag1.getText().toString())){
-//                        TagsList.remove(Tag1.getText().toString());
-//                    }
+                    if (TagsList1.contains("关锁失败")){
+                        TagsList1.remove("关锁失败");
+                    }
                     Tag1_2.setTextColor(Color.parseColor("#FD555B"));
                     Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
                 }else {
                     isSelected1_2 = true;
-//                    if (!TagsList.contains(Tag1.getText().toString())){
-//                        TagsList.add(Tag1.getText().toString());
-//                    }
+                    if (!TagsList1.contains("关锁失败")){
+                        TagsList1.add("关锁失败");
+                    }
                     Tag1_2.setTextColor(Color.parseColor("#FFFFFF"));
                     Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
                 }
 
-                if(isSelected1_1 || isSelected1_2){
-                    Tag1.setImageResource(R.drawable.lock_icon2);
-                }else{
-                    Tag1.setImageResource(R.drawable.lock_icon);
-                }
-
+                px2();
                 pd();
                 break;
 
@@ -636,94 +629,94 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
             case R.id.ebikeFaultUI_type_Tag2:
                 if (isSelected2){
                     isSelected2 = false;
-//                    if (TagsList.contains(Tag2.getText().toString())){
-//                        TagsList.remove(Tag2.getText().toString());
-//                    }
+                    if (TagsList.contains("刹车")){
+                        TagsList.remove("刹车");
+                    }
 //                    Tag2.setTextColor(Color.parseColor("#666666"));
                     Tag2.setImageResource(R.drawable.brake_icon);
                 }else {
                     isSelected2 = true;
-//                    if (!TagsList.contains(Tag2.getText().toString())){
-//                        TagsList.add(Tag2.getText().toString());
-//                    }
+                    if (!TagsList.contains("刹车")){
+                        TagsList.add("刹车");
+                    }
 //                    Tag2.setTextColor(Color.parseColor("#f57752"));
                     Tag2.setImageResource(R.drawable.brake_icon2);
                 }
                 pd();
                 break;
-//
-//            case R.id.ebikeFaultUI_type_Tag3:
-//                if (isSelected3){
-//                    isSelected3 = false;
-//                    if (TagsList.contains(Tag3.getText().toString())){
-//                        TagsList.remove(Tag3.getText().toString());
-//                    }
+
+            case R.id.ebikeFaultUI_type_Tag3:
+                if (isSelected3){
+                    isSelected3 = false;
+                    if (TagsList.contains("链条")){
+                        TagsList.remove("链条");
+                    }
 //                    Tag3.setTextColor(Color.parseColor("#666666"));
-//                    Tag3.setBackgroundResource(R.drawable.shape_feedback);
-//                }else {
-//                    isSelected3 = true;
-//                    if (!TagsList.contains(Tag3.getText().toString())){
-//                        TagsList.add(Tag3.getText().toString());
-//                    }
+                    Tag3.setImageResource(R.drawable.chain_icon);
+                }else {
+                    isSelected3 = true;
+                    if (!TagsList.contains("链条")){
+                        TagsList.add("链条");
+                    }
 //                    Tag3.setTextColor(Color.parseColor("#f57752"));
-//                    Tag3.setBackgroundResource(R.drawable.shape_feedback_selectd);
-//                }
-//                pd();
-//                break;
-//
-//            case R.id.ebikeFaultUI_type_Tag4:
-//                if (isSelected4){
-//                    isSelected4 = false;
-//                    if (TagsList.contains(Tag4.getText().toString())){
-//                        TagsList.remove(Tag4.getText().toString());
-//                    }
+                    Tag3.setImageResource(R.drawable.chain_icon2);
+                }
+                pd();
+                break;
+
+            case R.id.ebikeFaultUI_type_Tag4:
+                if (isSelected4){
+                    isSelected4 = false;
+                    if (TagsList.contains("无助力")){
+                        TagsList.remove("无助力");
+                    }
 //                    Tag4.setTextColor(Color.parseColor("#666666"));
-//                    Tag4.setBackgroundResource(R.drawable.shape_feedback);
-//                }else {
-//                    isSelected4 = true;
-//                    if (!TagsList.contains(Tag4.getText().toString())){
-//                        TagsList.add(Tag4.getText().toString());
-//                    }
+                    Tag4.setImageResource(R.drawable.no_assistance_icon);
+                }else {
+                    isSelected4 = true;
+                    if (!TagsList.contains("无助力")){
+                        TagsList.add("无助力");
+                    }
 //                    Tag4.setTextColor(Color.parseColor("#f57752"));
-//                    Tag4.setBackgroundResource(R.drawable.shape_feedback_selectd);
-//                }
-//                pd();
-//                break;
-//
-//            case R.id.ebikeFaultUI_type_Tag5:
-//                if (isSelected5){
-//                    isSelected5 = false;
-//                    if (TagsList.contains(Tag5.getText().toString())){
-//                        TagsList.remove(Tag5.getText().toString());
-//                    }
+                    Tag4.setImageResource(R.drawable.no_assistance_icon2);
+                }
+                pd();
+                break;
+
+            case R.id.ebikeFaultUI_type_Tag5:
+                if (isSelected5){
+                    isSelected5 = false;
+                    if (TagsList.contains("脚踏")){
+                        TagsList.remove("脚踏");
+                    }
 //                    Tag5.setTextColor(Color.parseColor("#666666"));
-//                    Tag5.setBackgroundResource(R.drawable.shape_feedback);
-//                }else {
-//                    isSelected5 = true;
-//                    if (!TagsList.contains(Tag5.getText().toString())){
-//                        TagsList.add(Tag5.getText().toString());
-//                    }
+                    Tag5.setImageResource(R.drawable.pedal_icon);
+                }else {
+                    isSelected5 = true;
+                    if (!TagsList.contains("脚踏")){
+                        TagsList.add("脚踏");
+                    }
 //                    Tag5.setTextColor(Color.parseColor("#f57752"));
-//                    Tag5.setBackgroundResource(R.drawable.shape_feedback_selectd);
-//                }
-//                pd();
-//                break;
-//
+                    Tag5.setImageResource(R.drawable.pedal_icon2);
+                }
+                pd();
+                break;
+
             case R.id.ebikeFaultUI_type_Tag6:
                 if (isSelected6){
                     isSelected6 = false;
-//                    if (TagsList.contains(Tag6.getText().toString())){
-//                        TagsList.remove(Tag6.getText().toString());
-//                    }
+                    if (TagsList.contains("其他")){
+                        TagsList.remove("其他");
+                    }
 //                    Tag6.setTextColor(Color.parseColor("#666666"));
 
                     ll_restCauseEdit.setVisibility(View.GONE);
                     Tag6.setImageResource(R.drawable.other_icon);
                 }else {
                     isSelected6 = true;
-//                    if (!TagsList.contains(Tag6.getText().toString())){
-//                        TagsList.add(Tag6.getText().toString());
-//                    }
+                    if (!TagsList.contains("其他")){
+                        TagsList.add("其他");
+                    }
 //                    Tag6.setTextColor(Color.parseColor("#f57752"));
 
                     ll_restCauseEdit.setVisibility(View.VISIBLE);
@@ -738,6 +731,23 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
             default:
                 break;
         }
+    }
+
+    private void px2(){
+        if(isSelected1_1 || isSelected1_2){
+            isSelected1 = true;
+            if (!TagsList.contains("车锁")){
+                TagsList.add("车锁");
+            }
+            Tag1.setImageResource(R.drawable.lock_icon4);
+        }else{
+            isSelected1 = false;
+            if (TagsList.contains("车锁")){
+                TagsList.remove("车锁");
+            }
+            Tag1.setImageResource(R.drawable.lock_icon3);
+        }
+
     }
 
     private void pd(){
@@ -786,28 +796,18 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
         isSubmit = true;
 
         String address = addressEdit.getText().toString().trim();
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         String other = restCauseEdit.getText().toString().trim();
         String bikeCode = bikeCodeEdit.getText().toString();
+
         RequestParams params = new RequestParams();
-        if (uid != null && !"".equals(uid)){
-            params.put("uid",uid);
-        }
-        if (access_token != null && !"".equals(access_token)){
-            params.put("access_token",access_token);
-        }
-        if (bikeCode != null && !"".equals(bikeCode)){
-            params.put("bike_code",bikeCode);
-        }
-        if (address != null && !"".equals(address)){
-            params.put("address",address);
-        }
+
+        Log.e("submit===0", TagsList+"==="+TagsList1);
+
         String content = "";
         if (TagsList.size() != 0 && !TagsList.isEmpty()){
-            if (other != null && !"".equals(other)){
+            if ((isSelected6) && other != null && !"".equals(other)){
                 for (int i = 0; i < TagsList.size(); i++){
-                     content = content + TagsList.get(i)+",";
+                    content = content + TagsList.get(i)+",";
                 }
                 content = content + other+ "。";
             }else {
@@ -822,18 +822,34 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
         }else {
             content = other + "。";
         }
+
+        Log.e("submit===00", "==="+content);
+
+
+        String content1 = "";
+        if (isSelected1){
+            for (int i = 0;i<TagsList1.size();i++){
+                if (i != TagsList1.size() - 1){
+                    content1 = content1 + TagsList1.get(i)+",";
+                }else {
+                    content1 = content1 + TagsList1.get(i)+ "。";
+                }
+            }
+        }
+
+        Log.e("submit===000", "==="+content1);
+
         if (content == null || "".equals(content)){
             m_myHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    ToastUtil.showMessageApp(context,"请选择问题类型或者描述问题");
+                    ToastUtil.showMessageApp(context,"请选择问题类型");
                 }
             });
 
             return;
         }
-        params.put("content",content);
-        if (imageUrlList.size() == 0 || imageUrlList.isEmpty()){
+        if (imageList.size() == 0 || imageList.isEmpty()){
             m_myHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -844,12 +860,17 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
             return;
         }
 
-        Log.e("feedback===", "==="+imageUrlList.get(0));
+        Log.e("submit===eb", bikeCode+"==="+TagsList+"==="+TagsList1+"==="+latitude+"==="+longitude+"==="+content+"==="+content1+"==="+address+"==="+imageList);
 
-        params.put("desc_img",imageUrlList);
-        params.put("latitude", latitude);
-        params.put("longitude",longitude);
-        params.put("type", ("4".equals(type) || "7".equals(type))?2:1);
+        params.put("type", 2);      //类型(必传) 1无法还车 2车辆故障
+        params.put("car_number", bikeCode);     //车辆编号(必传)
+        params.put("damaged_part", content);     //损坏部件(提交车辆故障时必传)
+        params.put("damaged_part_desc", content1);     //损坏部件(提交车辆故障时必传)
+        params.put("position", address);     //位置信息(选传)
+        params.put("images", imageList);     //图片key数组，json字符串
+        params.put("latitude", ""+latitude);
+        params.put("longitude", ""+longitude);
+
         HttpHelper.post(context, Urls.feedback, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -859,7 +880,6 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 onFailureCommon(throwable.toString());
             }
-
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, final String responseString) {
@@ -873,18 +893,6 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 
                             Log.e("feedback===", result.getData()+"==="+responseString);
 
-                            fid = result.getData();
-                            memberEvent();
-
-                            if (result.getFlag().equals("Success")) {
-                                ToastUtil.showMessageApp(context,"谢谢您的反馈,工作人员将很快处理");
-//                              closeBle();
-
-                                scrollToFinishActivity();
-
-                            } else {
-                                ToastUtil.showMessageApp(context, result.getMsg());
-                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -1060,7 +1068,10 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 //                        imageurl2 = jsonObject.getString("key");
 //                    }
 
-                    Log.e("UpCompletion===eb", jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
+                    imageList.add(jsonObject.getString("key"));
+
+                    pd();
+                    Log.e("UpCompletion===", imageList+"==="+jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

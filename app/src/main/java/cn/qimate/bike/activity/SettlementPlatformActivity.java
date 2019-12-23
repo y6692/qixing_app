@@ -312,11 +312,12 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         scrollToFinishActivity();
     }
 
+
     private void pay(){
         RequestParams params = new RequestParams();
         params.put("payment_id",payment_id);     //支付方式ID 支付方式 1：余额支付 2：微信app支付 3：支付宝app支付 4：微信小程序支付 5：支付宝小程序支付 6：微信h5支付 7：支付宝h5支付
         params.put("order_id", order_id);      //订单ID
-        params.put("order_type",order_type);     //订单类型 1骑行订单 2购买骑行卡订单 3调度费订单 4赔偿费订单 5充值订单(普通充值、认证充值)
+        params.put("order_type",order_type);     //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单
 
         Log.e("spa===pay", order_amount+"==="+payment_id+"==="+order_id+"==="+order_type);
 
@@ -460,16 +461,18 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                     String resultStatus = payResult.getResultStatus();
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
 
+                    query_order();
 
-                    if (TextUtils.equals(resultStatus, "9000")) {
-                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-//                        showAlert(PayDemoActivity.this, "pay_success" + payResult);
-                        Toast.makeText(context, "pay_success" + payResult, Toast.LENGTH_SHORT).show();
-                    } else {
-                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-//                        showAlert(PayDemoActivity.this, "pay_failed" + payResult);
-                        Toast.makeText(context, "pay_failed" + payResult, Toast.LENGTH_SHORT).show();
-                    }
+
+//                    if (TextUtils.equals(resultStatus, "9000")) {
+//                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+////                        showAlert(PayDemoActivity.this, "pay_success" + payResult);
+//                        Toast.makeText(context, "pay_success" + payResult, Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+////                        showAlert(PayDemoActivity.this, "pay_failed" + payResult);
+//                        Toast.makeText(context, "pay_failed" + payResult, Toast.LENGTH_SHORT).show();
+//                    }
 
 //                    if (TextUtils.equals(resultStatus, "9000")) {
 //                        Toast.makeText(context, "恭喜您,支付成功", Toast.LENGTH_SHORT).show();
@@ -499,6 +502,83 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
             }
         };
     };
+
+    private void query_order() {
+        Log.e("spa===query_order", order_id+"==="+order_type);
+
+        RequestParams params = new RequestParams();
+        params.put("order_id", order_id);       //订单ID
+        params.put("order_type", order_type); //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单
+        HttpHelper.get(context, Urls.query_order, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("spa===query_order1", responseString + "===" + result.data);
+
+
+                            if(result.getStatus_code()==200){
+                                if(order_type==1){
+                                    end();
+                                }else{
+                                    scrollToFinishActivity();
+                                }
+                            }
+
+
+
+//
+//
+//                            for (int i = 0; i < array.length(); i++) {
+//
+//                                Log.e("ura===payments2", "==="+array.getJSONObject(i).toString());
+//
+//                                PaymentBean bean = JSON.parseObject(array.getJSONObject(i).toString(), PaymentBean.class);
+//
+//                                Log.e("ura===payments3", "==="+bean.getId());
+//
+//                                if(bean.getId()==1){
+//                                    ll_pay1.setVisibility(View.VISIBLE);
+//                                }else if(bean.getId()==2){      //wechat
+//                                    ll_pay2.setVisibility(View.VISIBLE);
+//                                }else if(bean.getId()==3){      //alipay
+//                                    ll_pay3.setVisibility(View.VISIBLE);
+//                                }
+//
+////                                datas.add(bean);
+//                            }
+
+
+
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+
+
+                        } catch (Exception e) {
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                        }
+
+                    }
+                });
+            }
+        });
+
+    }
+
 
     @Override
     public void onClick(View v) {

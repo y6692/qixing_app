@@ -53,6 +53,8 @@ public class Urls {
 	public static String car_notification = host2 + "/order/car_notification";
 	//当前骑行订单接口
 	public static String cycling = host2 + "/order/cycling";
+	//当前其他订单（调度单、赔偿单）接口
+	public static String other = host2 + "/order/other";
 	//上锁接口
 	public static String lock = host2 + "/car/lock";
 	//开锁接口
@@ -79,6 +81,8 @@ public class Urls {
 	public static String services = host2 + "/services";
 	//人工客服接口
 	public static String phones = host2 + "/service/phones";
+	//查询支付状态接口
+	public static String query_order = host2 + "/payment/query_order";
 	//获取支付方式接口
 	public static String payments = host2 + "/payments";
 	//骑行订单详情接口
@@ -86,6 +90,8 @@ public class Urls {
 	//兑换套餐卡接口
 	public static String exchange = host2 + "/cycling_card/exchange";
 
+//	http://testnewmapi.7mate.cn/api/order/other
+//	http://testnewmapi.7mate.cn/api/payment/query_order
 //	http://testnewmapi.7mate.cn/api/cycling_card/exchange
 //	http://testnewmapi.7mate.cn/api/appeal
 //	http://testnewmapi.7mate.cn/api/authorizations

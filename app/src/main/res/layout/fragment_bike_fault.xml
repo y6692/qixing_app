@@ -118,7 +118,7 @@
                                     android:layout_marginTop="4dp"
                                     android:textColor="@color/tx_black"
                                     android:textSize="@dimen/sp10"
-                                    android:text="无法还车"/>
+                                    android:text="车锁"/>
 
                                 <TextView
                                     android:id="@+id/bikeFaultUI_type_Tag1_1"

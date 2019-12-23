@@ -1,6 +1,7 @@
 package cn.qimate.bike.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -12,7 +13,9 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 
 import org.apache.http.Header;
+import org.json.JSONObject;
 
+import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.core.common.HttpHelper;
@@ -20,6 +23,7 @@ import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.OrderBean;
+import cn.qimate.bike.model.OtherBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
@@ -36,10 +40,16 @@ public class UnpayOtherActivity extends SwipeBackActivity implements View.OnClic
 
     private TextView tv_title;
     private TextView tv_title2;
+    private TextView tv_unpay_other_order_amount;
     private TextView tv_unpay_other_car_number;
     private TextView tv_unpay_other_car_start_time;
     private TextView tv_unpay_other_car_end_time;
-    private TextView tv_unpay_other_order_amount;
+    private TextView tv_unpay_other_parking_location;
+    private TextView tv_unpay_other_remark;
+
+    private int order_id;
+    private String order_amount;
+    private int order_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,33 +69,26 @@ public class UnpayOtherActivity extends SwipeBackActivity implements View.OnClic
         backImg = (LinearLayout) findViewById(R.id.ll_backBtn);
         tv_title = (TextView)findViewById(R.id.tv_title);
         tv_title2 = (TextView)findViewById(R.id.tv_title2);
+        tv_unpay_other_order_amount = (TextView)findViewById(R.id.tv_unpay_other_order_amount);
         tv_unpay_other_car_number = (TextView)findViewById(R.id.tv_unpay_other_car_number);
         tv_unpay_other_car_start_time = (TextView)findViewById(R.id.tv_unpay_other_car_start_time);
         tv_unpay_other_car_end_time = (TextView)findViewById(R.id.tv_unpay_other_car_end_time);
-        tv_unpay_other_order_amount = (TextView)findViewById(R.id.tv_unpay_other_order_amount);
+        tv_unpay_other_parking_location = (TextView)findViewById(R.id.tv_unpay_other_parking_location);
+        tv_unpay_other_remark = (TextView)findViewById(R.id.tv_unpay_other_remark);
         submitBtn = (LinearLayout)findViewById(R.id.unpay_other_submitBtn);
-
-        if(1==1){       //TODO
-            tv_title.setText("待支付赔偿费");
-            tv_title2.setText("您需要支付车辆赔偿费");
-        }else{
-            tv_title.setText("待支付调度费");
-            tv_title2.setText("您需要支付车辆调度费");
-        }
-
 
 
 
         backImg.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
-        cycling();
+        other();
     }
 
-    private void cycling() {
-        Log.e("ura===cycling", "===");
+    private void other() {
+        Log.e("uoa===other", "===");
 
-        HttpHelper.get(context, Urls.cycling, new TextHttpResponseHandler() {
+        HttpHelper.get(context, Urls.other, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 onStartCommon("正在加载");
@@ -105,37 +108,37 @@ public class UnpayOtherActivity extends SwipeBackActivity implements View.OnClic
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            Log.e("ura===cycling1", responseString + "===" + result.data);
+                            Log.e("uoa===other1", responseString + "===" + result.data);
 
-                            OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
+                            OtherBean bean = JSON.parseObject(result.getData(), OtherBean.class);
 
                             if (loadingDialog != null && loadingDialog.isShowing()) {
                                 loadingDialog.dismiss();
                             }
 
+
                             if(null != bean.getOrder_sn()){
-                                Log.e("ura===cycling2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+                                Log.e("uoa===cycling2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===");
 
-//                                oid = bean.getOrder_sn();
-//                                codenum = bean.getCar_number();
-//                                type = ""+bean.getLock_id();
-//                                m_nowMac = bean.getCar_lock_mac();
-//                                force_backcar = bean.getForce_backcar();  //TODO
-//
-//                                SharedPreferencesUrls.getInstance().getString("type", type);
+                                order_id = bean.getOrder_id();
+                                order_amount = bean.getOrder_amount();
+                                order_type = bean.getType() + 4;
 
-//                                tv_biking_codenum.setText(codenum);     //TODO
-//                                tv_estimated_cost.setText(bean.getEstimated_cost());
-//                                tv_estimated_cost2.setText(bean.getEstimated_cost());
-//                                tv_car_start_time.setText(bean.getCar_start_time());
-//                                tv_car_start_time2.setText(bean.getCar_start_time());
-//                                tv_car_mileage.setText(mileage);
-//                                tv_car_electricity.setText(electricity);
-
+                                tv_unpay_other_order_amount.setText(bean.getOrder_amount());
                                 tv_unpay_other_car_number.setText(bean.getCar_number());
                                 tv_unpay_other_car_start_time.setText(bean.getCar_start_time());
                                 tv_unpay_other_car_end_time.setText(bean.getCar_end_time());
-                                tv_unpay_other_order_amount.setText(bean.getOrder_amount());
+                                tv_unpay_other_parking_location.setText(bean.getParking_location());
+                                tv_unpay_other_remark.setText(bean.getRemark());
+
+
+                                if(bean.getType()==1){       //TODO
+                                    tv_title.setText("待支付调度费");
+                                    tv_title2.setText("您需要支付车辆调度费");
+                                }else{
+                                    tv_title.setText("待支付赔偿费");
+                                    tv_title2.setText("您需要支付车辆赔偿费");
+                                }
 
                             }
 
@@ -168,56 +171,74 @@ public class UnpayOtherActivity extends SwipeBackActivity implements View.OnClic
 
                 Log.e("rid===", "===");
 
-//                userRecharge(uid, access_token);
+                Intent intent = new Intent(context, SettlementPlatformActivity.class);
+                intent.putExtra("order_type", order_type);
+                intent.putExtra("order_amount", order_amount);
+                intent.putExtra("order_id", order_id);
+                context.startActivity(intent);      //TODO
+
+//                order();
                 break;
         }
     }
 
-//    private void userRecharge(final String uid, final String access_token){
+
+
+//    private void order() {
+//        Log.e("order===", "==="+price);
+//
 //        RequestParams params = new RequestParams();
-//        params.put("uid",uid);
-//        params.put("access_token",access_token);
-//        params.put("rid",rid);
-//        params.put("paytype",paytype);
+//        params.put("order_type", 3);        //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单
+////        params.put("car_number", URLEncoder.encode(codenum));
+////        params.put("card_code", card_code);        //套餐卡券码（order_type为2时必传）
+//        params.put("price", price);        //传价格数值 例如：20.00(order_type为3、4时必传)
 //
-//        Log.e("userRecharge===", rid+"==="+paytype);
-//
-//        HttpHelper.post(context, Urls.userRecharge, params, new TextHttpResponseHandler() {
+//        HttpHelper.post(context, Urls.order, params, new TextHttpResponseHandler() {
 //            @Override
 //            public void onStart() {
-//                if (loadingDialog != null && !loadingDialog.isShowing()) {
-//                    loadingDialog.setTitle("正在提交");
-//                    loadingDialog.show();
-//                }
+//                onStartCommon("正在加载");
 //            }
 //            @Override
 //            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
-//                UIHelper.ToastError(context, throwable.toString());
+//                onFailureCommon(throwable.toString());
 //            }
 //
 //            @Override
-//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                try {
-//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-//                    if (result.getFlag().equals("Success")) {
-//                        osn = result.getData();
-//                        if ("1".equals(paytype)){
-//                            show_alipay(osn,uid,access_token);
-//                        }else {
-//                            show_wxpay(osn,uid,access_token);
+//            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+//
+//                m_myHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//
+//                            Log.e("order===1", responseString + "===" + result.data);
+//
+//                            JSONObject jsonObject = new JSONObject(result.getData());
+//
+//                            int order_id = jsonObject.getInt("order_id");
+//                            String order_amount = jsonObject.getString("order_amount");
+//
+//                            Log.e("order===1", order_id + "===" + order_amount );
+//
+//                            Intent intent = new Intent(context, SettlementPlatformActivity.class);
+//                            intent.putExtra("order_type", 3);
+//                            intent.putExtra("order_amount", order_amount);
+//                            intent.putExtra("order_id", order_id);
+//                            context.startActivity(intent);
+//
+//                        } catch (Exception e) {
+////                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
 //                        }
-//                    } else {
-//                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+//
+//                        if (loadingDialog != null && loadingDialog.isShowing()) {
+//                            loadingDialog.dismiss();
+//                        }
+//
 //                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
+//                });
+//
+//
 //            }
 //        });
 //    }

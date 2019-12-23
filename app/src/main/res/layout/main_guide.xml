@@ -9,18 +9,38 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-       <LinearLayout
+       <!--<LinearLayout-->
+           <!--android:id="@+id/ScrollLayout1"-->
+           <!--android:layout_width="fill_parent"-->
+           <!--android:layout_height="fill_parent"-->
+           <!--android:background="@drawable/guide01"-->
+           <!--android:fitsSystemWindows="true"-->
+           <!--android:orientation="vertical">-->
+       <!--</LinearLayout>-->
+
+       <pl.droidsonroids.gif.GifImageView
+           android:id="@+id/ScrollLayout1"
            android:layout_width="fill_parent"
            android:layout_height="fill_parent"
-           android:background="@drawable/guide01"
-           android:fitsSystemWindows="true">
-       </LinearLayout>
+           android:background="@drawable/guide"
+           android:layout_centerHorizontal="true"
+           />
+
+       <!--<ImageView-->
+           <!--android:id="@+id/ScrollLayout1"-->
+           <!--android:layout_width="fill_parent"-->
+           <!--android:layout_height="fill_parent"-->
+           <!--android:background="@drawable/guide"-->
+           <!--android:layout_centerHorizontal="true"-->
+           <!--/>-->
+
        <LinearLayout
            android:layout_width="fill_parent"
            android:layout_height="fill_parent"
            android:background="@drawable/guide02"
            android:fitsSystemWindows="true">
        </LinearLayout>
+
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -50,6 +70,7 @@
     </cn.qimate.bike.core.widget.MyScrollLayout>
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/llayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

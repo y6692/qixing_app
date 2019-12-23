@@ -580,7 +580,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                 Log.e("ebf===operating_areas", "==="+responseString);
 
-                responseString = "{\"data\":[[{\"longitude\":\"119.920544\",\"latitude\":\"31.764389\"},{\"longitude\":\"119.921544\",\"latitude\":\"31.765389\"},{\"longitude\":\"119.922544\",\"latitude\":\"31.764389\"}]]}";
+//                responseString = "{\"data\":[[{\"longitude\":\"119.920544\",\"latitude\":\"31.764389\"},{\"longitude\":\"119.921544\",\"latitude\":\"31.765389\"},{\"longitude\":\"119.922544\",\"latitude\":\"31.764389\"}]]}";
 
                 final ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 

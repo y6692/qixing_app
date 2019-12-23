@@ -56,8 +56,8 @@ public class MyCartActivity extends SwipeBackActivity implements View.OnClickLis
     ll_back = (LinearLayout) findViewById(R.id.ll_backBtn);
 //    title = (TextView) findViewById(R.id.mainUI_title_titleText);
 //    title.setText("购买骑行套餐");
-    rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
-    rightBtn.setText("我的套餐卡");
+//    rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
+//    rightBtn.setText("我的套餐卡");
 
     tab = (TabLayout) findViewById(R.id.tab);
     vp = (ViewPager)findViewById(R.id.vp);
@@ -84,7 +84,7 @@ public class MyCartActivity extends SwipeBackActivity implements View.OnClickLis
     });
 
     ll_back.setOnClickListener(this);
-    rightBtn.setOnClickListener(this);
+//    rightBtn.setOnClickListener(this);
 
   }
 

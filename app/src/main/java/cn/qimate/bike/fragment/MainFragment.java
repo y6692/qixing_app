@@ -487,7 +487,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             }
                         }
 
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -498,7 +497,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 }
 
             });
-
 
         }
     }
@@ -864,9 +862,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             //pause
         }else{
             //resume
-
-
-
         }
     }
 
@@ -1108,8 +1103,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         tv_pay_car_end_time = activity.findViewById(R.id.tv_pay_car_end_time);
         ll_payBtn = activity.findViewById(R.id.ll_payBtn);
         tv_payBtn = activity.findViewById(R.id.tv_payBtn);
-
-
 
 
         rl_authBtn.setOnClickListener(this);
@@ -1845,7 +1838,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
             case R.id.ll_biking_errorEnd:
                 Log.e("ll_errorEnd===onClick", access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
-
+                Intent intent = new Intent(context, EndBikeFeedBackActivity.class);
+                intent.putExtra("bikeCode", codenum);
+                context.startActivity(intent);
                 break;
 
             case R.id.mainUI_scanCode_lock:
@@ -1913,7 +1908,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                                      closeBroadcast();
 //                                      deactivate();
 
-                                    Intent intent = new Intent();
+                                    intent = new Intent();
                                     intent.setClass(context, ActivityScanerCode.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
@@ -6166,6 +6161,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             price = "<p><font color=\"#000000\" size=\"20px\">" + "要显示的数据" + "</font></p>";
 
+                            if("4".equals(type) || "7".equals(type)){
+                                changeTab(1);
+                            }else{
+                                changeTab(0);
+                            }
 
                             initmPopupRentWindowView();
 //                          initmPopupRentWindowView("<html>"+price+"<\\/html>");
@@ -6250,17 +6250,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 }else if ("7".equals(type)) {
                                 }
 
+                                SharedPreferencesUrls.getInstance().putString("tempStat", "0");
                                 if ("4".equals(type) || "7".equals(type)) {
-
-
-                                    SharedPreferencesUrls.getInstance().putString("tempStat", "0");
                                     tv_againBtn.setText("临时上锁");
 
-//                                    if ("0".equals(SharedPreferencesUrls.getInstance().getString("tempStat", "0"))) {
-//                                        tv_againBtn.setText("临时上锁");
-//                                    } else {
-//                                        tv_againBtn.setText("再次开锁");
-//                                    }
+                                }else{
+                                    tv_againBtn.setText("再次开锁");
                                 }
 
                             }
