@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
@@ -44,6 +45,9 @@ public class LoadingDialog extends Dialog {
 				for (int i = 0; i < num; i++) {
 					builder.append(SUFFIX);
 				}
+
+				Log.e("LoadingDialog===handler", builder.toString());
+
 				tv_point.setText(builder.toString());
 				if (isShowing()) {
 					handler.sendEmptyMessageDelayed(CHANGE_TITLE_WHAT, CHNAGE_TITLE_DELAYMILLIS);

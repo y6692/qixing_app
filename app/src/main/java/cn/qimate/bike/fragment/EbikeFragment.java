@@ -373,7 +373,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
 
-        Log.e("onHiddenChanged===ebike", hidden+"==="+pOptions.size()+"==="+referLatitude+"==="+mlocationClient);
+        Log.e("onHiddenChanged===ebike", type+"==="+hidden+"==="+firstH+"==="+referLatitude+"==="+mlocationClient);
 
 
 
@@ -383,6 +383,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         if (loadingDialog != null && loadingDialog.isShowing()){
             loadingDialog.dismiss();
         }
+
+
 
         if(hidden){
             //pause
@@ -403,14 +405,14 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         }else{
             //resume
 
-            if(firstH){
-                firstH = false;
-
-                if(!"4".equals(type) && !"7".equals(type)){
-                    MainFragment.getInstance().changeTab(0);
-                    return;
-                }
-            }
+//            if(firstH){
+//                firstH = false;
+//
+//                if(!"4".equals(type) && !"7".equals(type)){
+//                    MainFragment.getInstance().changeTab(0);
+//                    return;
+//                }
+//            }
 
 //            mapView.onResume();
 
@@ -689,7 +691,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     private void schoolRange(){
         if(isHidden) return;
 
-        Log.e("main_eb===schoolRange", isHidden+"===");
+        Log.e("main_eb===schoolRange", isHidden+"==="+jsonArray2);
 
         if(jsonArray2 != null){
 

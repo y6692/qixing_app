@@ -147,7 +147,6 @@
                             android:layout_marginRight="@dimen/dp10"
                             android:layout_marginTop="@dimen/dp10"
                             android:layout_marginBottom="@dimen/dp10"
-                            android:src="@drawable/add_certificate"
                             android:background="@null"
                             android:scaleType="centerCrop"/>
 

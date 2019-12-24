@@ -146,7 +146,7 @@
                 android:layout_alignParentRight="true"/>
 
             <TextView
-                android:id="@+id/noteLoginUI_serviceProtocol"
+                android:id="@+id/rechargeUI_serviceProtocol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#FF0000"

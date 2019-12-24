@@ -157,11 +157,11 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
 
         iv_cart = (ImageView)findViewById(R.id.iv_cart);
 
-        if(carType == 1){
-            iv_cart.setImageResource(R.drawable.bike_month_cart_icon);
-        }else{
-            iv_cart.setImageResource(R.drawable.ebike_month_cart_icon);
-        }
+//        if(carType == 1){
+//            iv_cart.setImageResource(R.drawable.bike_month_cart_icon);
+//        }else{
+//            iv_cart.setImageResource(R.drawable.ebike_month_cart_icon);
+//        }
 
         alipayTypeLayout = (RelativeLayout)findViewById(R.id.ui_payMonth_cart_alipayTypeLayout);
         WeChatTypeLayout = (RelativeLayout)findViewById(R.id.ui_payMonth_cart_WeChatTypeLayout);

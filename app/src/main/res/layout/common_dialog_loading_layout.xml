@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="105dp"
+    android:layout_width="wrap_content"
     android:layout_height="@dimen/dp90"
     android:layout_gravity="center"
     android:background="@drawable/loading_bg"
@@ -38,8 +38,10 @@
 
     <RelativeLayout
         android:layout_below="@id/iv_route"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp10"
+        android:layout_marginRight="@dimen/dp10"
         android:layout_marginBottom="@dimen/dp10"
         android:layout_marginTop="@dimen/dp15"
         android:gravity="center">
@@ -57,7 +59,7 @@
 
         <TextView
             android:id="@+id/tv_point"
-            android:layout_width="wrap_content"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:text="..."
             android:textColor="@color/white"

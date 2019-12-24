@@ -340,7 +340,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
 
-        Log.e("onHiddenChanged===bike", hidden+"==="+type+"==="+referLatitude);
+        Log.e("onHiddenChanged===bike", firstH+"==="+hidden+"==="+type+"==="+referLatitude);
 
 
 
@@ -350,6 +350,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         if (loadingDialog != null && loadingDialog.isShowing()){
             loadingDialog.dismiss();
         }
+
+
 
         if(hidden){
             //pause

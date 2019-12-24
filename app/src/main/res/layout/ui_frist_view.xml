@@ -83,8 +83,7 @@
         android:layout_below="@id/ui_fristView_mainLayout"
         android:id="@+id/ui_fristView_exImage_1"
         android:layout_width="323dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/frist_view" />
+        android:layout_height="wrap_content" />
 
     <!--<View-->
         <!--android:id="@+id/ui_fristView_view"-->

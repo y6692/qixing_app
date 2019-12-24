@@ -102,20 +102,48 @@
             android:name=".full.SplashActivity"
             >
 
-
-        </activity>
-
-        <activity
-            android:name=".full.EnterActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!--android:screenOrientation="portrait"-->
+        <activity
+            android:name=".full.EnterActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
+
+        <activity
+            android:name=".activity.LoginActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
+
+        <activity
+            android:name=".activity.RechargeActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
+
+        <activity
+            android:name=".activity.RealNameAuthActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
+
+        <activity
+            android:name=".activity.DepositFreeAuthActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
+
 
         <activity
             android:name=".activity.MainActivity"
@@ -140,19 +168,9 @@
 
         </activity>
 
-        <activity
-            android:name=".activity.RealNameAuthActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
-        </activity>
 
-        <activity
-            android:name=".activity.DepositFreeAuthActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
-
-
-        </activity>
 
         <activity
             android:name=".activity.SettlementPlatformActivity"
@@ -191,13 +209,7 @@
 
 
 
-        <activity
-            android:name=".activity.LoginActivity"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
-
-        </activity>
 
         <activity
             android:name=".activity.CarFaultActivity"
@@ -238,11 +250,6 @@
 
         </activity>
 
-        <activity
-            android:name=".activity.RechargeActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
-
-        </activity>
 
         <activity
             android:name=".activity.ExchangeActivity"

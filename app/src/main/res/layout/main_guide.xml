@@ -37,14 +37,12 @@
        <LinearLayout
            android:layout_width="fill_parent"
            android:layout_height="fill_parent"
-           android:background="@drawable/guide02"
            android:fitsSystemWindows="true">
        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@drawable/guide03"
             android:fitsSystemWindows="true">
             <Button
 				android:id="@+id/enter_btn"

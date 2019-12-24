@@ -30,7 +30,6 @@
                 android:layout_width="76dp"
                 android:layout_height="76dp"
                 android:layout_marginLeft="12dp"
-                android:src="@drawable/merchant_coupon"
                 android:scaleType="centerInside"/>
 
             <LinearLayout

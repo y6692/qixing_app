@@ -83,6 +83,7 @@ import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.img.NetUtil;
 import cn.qimate.bike.model.AuthStateBean;
 import cn.qimate.bike.model.GradeListBean;
+import cn.qimate.bike.model.H5Bean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.SchoolListBean;
 import cn.qimate.bike.model.UpTokenBean;
@@ -114,6 +115,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
     private TextView schoolText;
     private EditText realNameEdit, identityNumberEdit;
     private Button submitBtn;
+    private TextView serviceProtocol;
+    private TextView serviceProtocol2;
 
 //    private RelativeLayout uploadImageLayout;
     private ImageView uploadImage, uploadImage2;
@@ -230,6 +233,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         realNameEdit = (EditText)findViewById(R.id.ui_realNameAuth_realName);
         identityNumberEdit = (EditText)findViewById(R.id.ui_realNameAuth_identity_number);
         submitBtn = (Button) findViewById(R.id.ui_realNameAuth_submitBtn);
+        serviceProtocol = (TextView)findViewById(R.id.ui_realNameAuth_serviceProtocol);
+        serviceProtocol2 = (TextView)findViewById(R.id.ui_realNameAuth_serviceProtocol2);
 
         ll_1 = (LinearLayout)findViewById(R.id.ll_1);
         ll_2 = (LinearLayout)findViewById(R.id.ll_2);
@@ -252,6 +257,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         uploadImage.setOnClickListener(this);
         uploadImage2.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
+        serviceProtocol.setOnClickListener(this);
+        serviceProtocol2.setOnClickListener(this);
 
 
 //        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
@@ -332,12 +339,6 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
             case R.id.ui_realNameAuth_schoolLayout:
                 pvOptions.show();
                 break;
-//            case R.id.ui_realNameAuth_sexLayout:
-//                pvOptions1.show();
-//                break;
-//            case R.id.ui_realNameAuth_classLayout:
-//                pvOptions2.show();
-//                break;
             case R.id.ui_realNameAuth_uploadImage:
                 photo = 1;
                 clickPopupWindow();
@@ -389,7 +390,74 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                     SubmitBtn();
                 }
                 break;
+            case R.id.ui_realNameAuth_serviceProtocol:
+                agreement("insurance");     //TODO
+                break;
+            case R.id.ui_realNameAuth_serviceProtocol2:
+                agreement("recharge");
+                break;
         }
+    }
+
+    private void agreement(String name) {
+
+        Log.e("agreement===0", "===");
+
+        try{
+//            协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议
+            HttpHelper.get(context, Urls.agreement+name, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+                    Log.e("agreement===fail", throwable.toString()+"==="+responseString);
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+                        Log.e("agreement===", "==="+responseString);
+
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        H5Bean bean = JSON.parseObject(result.getData(), H5Bean.class);
+
+                        UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
+//                        UIHelper.goWebViewAct(context, bean.getH5_title(), Urls.agreement+"register");
+
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                }
+
+
+            });
+        }catch (Exception e){
+            Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void getUpToken() {

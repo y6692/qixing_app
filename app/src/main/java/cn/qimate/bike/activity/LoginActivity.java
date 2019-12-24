@@ -47,6 +47,7 @@ import cn.qimate.bike.core.common.StringUtil;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.model.H5Bean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
@@ -192,7 +193,8 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                 UIHelper.goToAct(context, ChangePhoneActivity.class);
                 break;
             case R.id.loginUI_serviceProtocol:
-                UIHelper.goToAct(context, FindPsdActivity.class);
+                agreement();
+
                 break;
         }
     }
@@ -263,6 +265,69 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
         }
 
     }
+
+    private void agreement() {
+
+        Log.e("agreement===0", "===");
+
+        try{
+//            协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议
+            HttpHelper.get(context, Urls.agreement+"register", new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+                }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+                        Log.e("agreement===fail", throwable.toString()+"==="+responseString);
+
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                        UIHelper.ToastError(context, throwable.toString());
+                    }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+                        Log.e("agreement===", "==="+responseString);
+
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        H5Bean bean = JSON.parseObject(result.getData(), H5Bean.class);
+
+                        UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
+//                        UIHelper.goWebViewAct(context, bean.getH5_title(), Urls.agreement+"register");
+
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                }
+
+
+            });
+        }catch (Exception e){
+            Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
 
     private void LoginHttp(String telphone, String password) {
 

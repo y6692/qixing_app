@@ -114,7 +114,6 @@
                 android:layout_width="@dimen/dp45"
                 android:layout_height="@dimen/dp45"
                 android:layout_marginTop="@dimen/dp10"
-                android:src="@drawable/vip_center_icon"
                 android:scaleType="centerInside"
                 android:padding="@dimen/dp10"/>
 
@@ -211,7 +210,6 @@
                 <ImageView
                     android:layout_width="@dimen/dp30"
                     android:layout_height="@dimen/dp30"
-                    android:src="@drawable/billing_rule_icon"
                     android:padding="@dimen/dp5"
                     android:scaleType="centerInside"/>
 
@@ -261,7 +259,6 @@
                 <ImageView
                     android:layout_width="@dimen/dp30"
                     android:layout_height="@dimen/dp30"
-                    android:src="@drawable/help_center_icon"
                     android:padding="@dimen/dp5"
                     android:scaleType="centerInside"/>
 
@@ -409,7 +406,6 @@
                 <ImageView
                     android:layout_width="@dimen/dp30"
                     android:layout_height="@dimen/dp30"
-                    android:src="@drawable/chang_pass_icon"
                     android:padding="@dimen/dp5"
                     android:scaleType="centerInside"/>
 

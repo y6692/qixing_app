@@ -15,7 +15,6 @@
             android:id="@+id/ui_discount_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/discount_bg"
             android:layout_gravity="center_horizontal"/>
 
         <TextView

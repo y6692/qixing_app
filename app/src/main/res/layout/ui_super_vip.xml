@@ -124,7 +124,6 @@
             <ImageView
                 android:layout_width="@dimen/dp30"
                 android:layout_height="@dimen/dp30"
-                android:src="@drawable/super_vip_hint_icon"
                 android:scaleType="centerInside"/>
 
             <TextView

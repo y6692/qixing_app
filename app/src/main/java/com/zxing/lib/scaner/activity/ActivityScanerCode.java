@@ -863,6 +863,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 if (customDialog != null && customDialog.isShowing()) {
                     customDialog.dismiss();
                 }
+
+                mCropLayout2.setVisibility(View.VISIBLE);
+                ll_input.setVisibility(View.GONE);
+
                 break;
             case R.id.ll_scan_positiveButton:
                 Log.e("onClick=ll_positiveB", customDialog+"==="+customDialog.isShowing());
@@ -870,6 +874,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 if (customDialog != null && customDialog.isShowing()) {
                     customDialog.dismiss();
                 }
+
+                mCropLayout2.setVisibility(View.VISIBLE);
+                ll_input.setVisibility(View.GONE);
+
                 break;
             case R.id.scan_cancelBtn2:
                 Log.e("onClick===customDialog", customDialog+"==="+customDialog.isShowing());
@@ -877,6 +885,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 if (customDialog2 != null && customDialog2.isShowing()) {
                     customDialog2.dismiss();
                 }
+
+                mCropLayout2.setVisibility(View.VISIBLE);
+                ll_input.setVisibility(View.GONE);
+
                 break;
             case R.id.ll_scan_positiveButton2:
                 Log.e("onClick=ll_positiveB", customDialog+"==="+customDialog.isShowing());
@@ -884,6 +896,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 if (customDialog2 != null && customDialog2.isShowing()) {
                     customDialog2.dismiss();
                 }
+
+                mCropLayout2.setVisibility(View.VISIBLE);
+                ll_input.setVisibility(View.GONE);
+
                 break;
             case R.id.pop_circlesMenu_positiveButton:
 //                try {
@@ -900,7 +916,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         return;
                     }
 
-                    mCropLayout.setVisibility(View.VISIBLE);
+                    mCropLayout2.setVisibility(View.VISIBLE);
                     ll_input.setVisibility(View.GONE);
 
                     InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -925,7 +941,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                 Log.e("bikeNum===2", "==="+type);
 
-                mCropLayout.setVisibility(View.VISIBLE);
+                mCropLayout2.setVisibility(View.VISIBLE);
                 ll_input.setVisibility(View.GONE);
 
                 InputMethodManager manager1 = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -1100,7 +1116,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     }
 
     private void order_authority(final String tokencode) {
-        Log.e("order_authority===", "===");
+        Log.e("order_authority===", "==="+tokencode);
 
         RequestParams params = new RequestParams();
         params.put("car_number", URLEncoder.encode(tokencode));
@@ -1131,10 +1147,17 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                             JSONObject jsonObject = new JSONObject(result.getData());
 
-                            Log.e("order_authority===2",  "====" + jsonObject.getString("code"));
+                            Log.e("order_authority===2",  "====" + jsonObject.getInt("code"));
 
-                            if("0".equals(jsonObject.getString("code"))){
+
+                            int code = jsonObject.getInt("code");
+
+                            if(code==0){
                                 car(tokencode);
+                            }else if(code==1){
+                                customDialog2.show();
+                            }else if(code==2){
+                                customDialog.show();
                             }
 
 //                            CarBean bean = JSON.parseObject(result.getData(), CarBean.class);
