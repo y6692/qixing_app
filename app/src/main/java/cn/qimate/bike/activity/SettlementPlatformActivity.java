@@ -1,11 +1,16 @@
 package cn.qimate.bike.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -17,9 +22,15 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alipay.sdk.app.PayTask;
+import com.sofi.blelocker.library.search.SearchRequest;
+import com.sunshine.blelibrary.config.Config;
+import com.sunshine.blelibrary.config.LockType;
+import com.sunshine.blelibrary.utils.GlobalParameterUtils;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.xiaoantech.sdk.XiaoanBleApiClient;
+import com.zxing.lib.scaner.activity.MainFragmentPermissionsDispatcher;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -32,11 +43,13 @@ import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.alipay.PayResult;
+import cn.qimate.bike.ble.BLEService;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.fragment.MainFragment;
 import cn.qimate.bike.model.BillBean;
 import cn.qimate.bike.model.GlobalConfig;
 import cn.qimate.bike.model.OrderBean;
@@ -44,6 +57,7 @@ import cn.qimate.bike.model.PaymentBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.ToastUtil;
 
 /**
  * Created by yuanyi on 2019/12/9.
@@ -78,7 +92,10 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
     private int payment_id = 1;
     private int order_id;
     private int order_type = 1;
+    private static int order_id2;
+    private static int order_type2 = 1;
     private double balance;
+    private boolean isRemain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,20 +132,37 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         tv_recharge.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
+
+
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+// must store the new intent unless getIntent() will return the old one
+        setIntent(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
         order_id = getIntent().getIntExtra("order_id", 0);
         order_type = getIntent().getIntExtra("order_type", 1);
         order_amount = getIntent().getStringExtra("order_amount");
+        isRemain = getIntent().getBooleanExtra("isRemain", false);
 
 
         tv_order_amount.setText(order_amount);
 
+        Log.e("spa===onResume", order_id+"==="+order_type);
+
         user();
     }
 
-
-
     private void user() {
-        Log.e("spfa===user", "===");
+        Log.e("spfa===user", order_id+"==="+order_type);
 
         HttpHelper.get(context, Urls.user, new TextHttpResponseHandler() {
             @Override
@@ -205,6 +239,11 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                             Log.e("ura===payments1", responseString + "===" + result.data);
 
                             JSONArray array = new JSONArray(result.getData());
+
+
+                            ll_pay1.setVisibility(View.GONE);
+                            ll_pay2.setVisibility(View.GONE);
+                            ll_pay3.setVisibility(View.GONE);
 
                             for (int i = 0; i < array.length(); i++) {
 
@@ -342,65 +381,68 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 try {
-                    Log.e("spa===pay1", responseString+"===");
+
 
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                    if(payment_id==1){
-                        Toast.makeText(context,"支付成功",Toast.LENGTH_SHORT).show();
-                        end();
-                    }else if(payment_id==2){
+                    Log.e("spa===pay1", responseString+"==="+result.getStatus_code());
+
+                    if(result.getStatus_code()==0){
+                        if(payment_id==1){
+                            Toast.makeText(context,"支付成功",Toast.LENGTH_SHORT).show();
+                            end();
+                        }else if(payment_id==2){
 //                          OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
-                        api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
-                        api.registerApp("wx86d98ec252f67d07");
-                        JSONObject jsonObject2 = new JSONObject(result.getData());
+                            api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
+                            api.registerApp("wx86d98ec252f67d07");
+                            JSONObject jsonObject2 = new JSONObject(result.getData());
 
-                        String payinfo = jsonObject2.getString("payinfo");
+                            String payinfo = jsonObject2.getString("payinfo");
 
-                        Log.e("pay===2", payinfo +"===");
+                            Log.e("pay===2", payinfo +"===");
 
-//                    String payinfo = "{\"appid\":\"wx86d98ec252f67d07\",\"noncestr\":\"p8tSBfNaKTrDxuA37JKUBpDm1qe4maqb\",\"package\":\"Sign=WXPay\",\"partnerid\":\"1489420872\",\"prepayid\":\"wx11200539512208dad2422cb81357385600\",\"sign\":\"7D866235FE557709FC14D3FE60543257\",\"timestamp\":1576065939}";
+//                          String payinfo = "{\"appid\":\"wx86d98ec252f67d07\",\"noncestr\":\"p8tSBfNaKTrDxuA37JKUBpDm1qe4maqb\",\"package\":\"Sign=WXPay\",\"partnerid\":\"1489420872\",\"prepayid\":\"wx11200539512208dad2422cb81357385600\",\"sign\":\"7D866235FE557709FC14D3FE60543257\",\"timestamp\":1576065939}";
 
-                        JSONObject jsonObject = new JSONObject(payinfo);
+                            JSONObject jsonObject = new JSONObject(payinfo);
 
 
-                        PayReq req = new PayReq();
-                        req.appId = jsonObject.getString("appid");// wpay.getAppid();//
-                        // 微信appId
-                        req.packageValue = jsonObject.getString("package");// wpay.getPackageValue();//
-                        // 包
-                        req.extData = "app data"; // optional
-                        req.timeStamp = jsonObject.getString("timestamp");// wpay.getTimeStamp();//
-                        // 时间戳
-                        req.partnerId = jsonObject.getString("partnerid");// wpay.getPartnerId();//
-                        // 商户号"
-                        req.prepayId = jsonObject.getString("prepayid");// wpay.getPrepayId();//
-                        // 预支付订单号
-                        req.nonceStr = jsonObject.getString("noncestr");// wpay.getNonceStr();//
-                        // 随机字符串
-                        req.sign = jsonObject.getString("sign");// wpay.getSign();//
-                        // 后台返回的签名
-                        // 调微信支付
-                        if (api.isWXAppInstalled() && api.isWXAppSupportAPI()) {
-                            api.sendReq(req);
-                        } else {
-                            Toast.makeText(context, "请下载最新版微信App", Toast.LENGTH_LONG).show();
-                        }
-                    }else if(payment_id==3){
-                        final  JSONObject jsonObject = new JSONObject(result.getData());
-                        Runnable payRunnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                // 构造PayTask 对象
-                                PayTask alipay = new PayTask(SettlementPlatformActivity.this);
-                                // 调用支付接口，获取支付结果
+                            PayReq req = new PayReq();
+                            req.appId = jsonObject.getString("appid");// wpay.getAppid();//
+                            // 微信appId
+                            req.packageValue = jsonObject.getString("package");// wpay.getPackageValue();//
+                            // 包
+                            req.extData = "app data"; // optional
+                            req.timeStamp = jsonObject.getString("timestamp");// wpay.getTimeStamp();//
+                            // 时间戳
+                            req.partnerId = jsonObject.getString("partnerid");// wpay.getPartnerId();//
+                            // 商户号"
+                            req.prepayId = jsonObject.getString("prepayid");// wpay.getPrepayId();//
+                            // 预支付订单号
+                            req.nonceStr = jsonObject.getString("noncestr");// wpay.getNonceStr();//
+                            // 随机字符串
+                            req.sign = jsonObject.getString("sign");// wpay.getSign();//
+                            // 后台返回的签名
+                            // 调微信支付
+                            if (api.isWXAppInstalled() && api.isWXAppSupportAPI()) {
+                                api.sendReq(req);
+                            } else {
+                                Toast.makeText(context, "请下载最新版微信App", Toast.LENGTH_LONG).show();
+                            }
+                        }else if(payment_id==3){
+                            final  JSONObject jsonObject = new JSONObject(result.getData());
+                            Runnable payRunnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    // 构造PayTask 对象
+                                    PayTask alipay = new PayTask(SettlementPlatformActivity.this);
+                                    // 调用支付接口，获取支付结果
 //                            String result = null;
-                                Map<String, String> result = null;
+                                    Map<String, String> result = null;
 
-                                try {
-                                    Log.e("pay===2", jsonObject.getString("payinfo")+"===");
+                                    try {
+                                        Log.e("pay===2", jsonObject.getString("payinfo")+"===");
 
-                                    String payinfo = jsonObject.getString("payinfo");
+                                        String payinfo = jsonObject.getString("payinfo");
 
 //                                payinfo = "partner=\"2088621211667181\"&seller_id=\"publicbicycles@163.com\"&out_trade_no=\"M201912111949196915\"&subject=\"\u652f\u4ed8M201912111949196915\"&body=\"\u652f\u4ed8\u67d2\u739b\u6708\u5361\u8ba2\u5355\"&total_fee=\"45.90\"&notify_url=\"http://app.7mate.cn/App/AlipayMonth/callback.html\"&service=\"mobile.securitypay.pay\"&payment_type=\"1\"&_input_charset=\"utf-8\"&it_b_pay=\"30m\"&return_url=\"m.alipay.com\"&sign=\"dbnW7cObywGWjTz09urH8TEHedJ73vNCnDinmnV24lSap302ePopAD3DG28LZMCSwjjRJq5ANTfsE8CwbLmsFcYQoj9MXFjLL3buM16eppmCQr1SP3xEY9r2eLbTnN%2FQypapYP890qW9l3weqoaJWyaVbI%2BvEJSvvbjyJt8ZLsI%3D\"&sign_type=\"RSA\"";
 
@@ -411,26 +453,28 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
 
 //                                result = alipay.pay(payinfo, true);
-                                    result = alipay.payV2(payinfo, true);
-                                    Log.e("msp", result.toString());
+                                        result = alipay.payV2(payinfo, true);
+                                        Log.e("msp", result.toString());
 
 //
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Message msg = new Message();
+                                    msg.what = SDK_PAY_FLAG;
+                                    msg.obj = result;
+                                    mHandler.sendMessage(msg);
                                 }
-                                Message msg = new Message();
-                                msg.what = SDK_PAY_FLAG;
-                                msg.obj = result;
-                                mHandler.sendMessage(msg);
-                            }
-                        };
-                        Thread payThread = new Thread(payRunnable);
-                        payThread.start();
+                            };
+                            Thread payThread = new Thread(payRunnable);
+                            payThread.start();
+                        }
+                    }else{
+                        ToastUtil.showMessageApp(context, result.getMessage());
+
+//                        mCropLayout2.setVisibility(View.VISIBLE);
+//                        ll_input.setVisibility(View.GONE);
                     }
-
-
-
-
 
 
                 } catch (Exception e) {
@@ -527,14 +571,24 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            Log.e("spa===query_order1", responseString + "===" + result.data);
+                            Log.e("spa===query_order1", order_type+ "===" +isRemain+ "===" +responseString);
 
 
                             if(result.getStatus_code()==200){
                                 if(order_type==1){
                                     end();
                                 }else{
-                                    scrollToFinishActivity();
+                                    if(isRemain){
+                                        order_type = order_type2;
+                                        order_id = order_id2;
+
+                                        Log.e("spa===query_order2", order_type+ "===" +order_id);
+
+                                        user();
+                                    }else {
+                                        scrollToFinishActivity();
+                                    }
+
                                 }
                             }
 
@@ -589,9 +643,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                 scrollToFinishActivity();
                 break;
 
-            case R.id.tv_recharge:
-                UIHelper.goToAct(context, RechargeActivity.class);
-                break;
+
 
             case R.id.ll_pay1:  //balance
                 iv_balance.setImageResource(R.drawable.pay_type_selected);
@@ -629,10 +681,48 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                 pay();
 
                 break;
+
+            case R.id.tv_recharge:
+//                UIHelper.goToAct(context, RechargeActivity.class);
+
+//                intent.putExtra("order_type", order_type);
+//                intent.putExtra("order_id", order_id);
+
+                order_type2 = order_type;
+                order_id2 = order_id;
+
+                Intent intent = new Intent();
+                intent.setClass(context, RechargeActivity.class);
+                startActivityForResult(intent, 1);
+                break;
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        switch (requestCode) {
+
+            case 1:
+                if (resultCode == RESULT_OK) {
+//                    codenum = data.getStringExtra("codenum");
+//                    m_nowMac = data.getStringExtra("m_nowMac");
+
+                    Log.e("spf===onActivityResult", requestCode+"==="+resultCode);
+
+                } else {
+//                    Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();
+                }
+
+
+                break;
+
+
+            default:
+                break;
+
+        }
+    }
 
 
 //    private void userRecharge(final String uid, final String access_token){

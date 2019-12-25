@@ -210,7 +210,7 @@ public class UpdateManager {
 
 							ToastUtil.showMessage(context, curVersionName+"==="+mUpdate.getAppVersion());
 
-							Log.e("checkAppUpdate==", curVersionName+"==="+mUpdate.getAppVersion());
+							Log.e("checkAppUpdate==", bikeCode+"==="+curVersionName+"==="+mUpdate.getAppVersion());
 
 							if (!curVersionName.equals(mUpdate.getAppVersion())) {
 							    if(iv!=null) iv.setVisibility(View.VISIBLE);
@@ -237,7 +237,7 @@ public class UpdateManager {
 									context.startActivity(intent);
 								}else if(type==2){
 									Intent intent = new Intent(context, EndBikeFeedBackActivity.class);
-									intent.putExtra("bikeCode",bikeCode);
+									intent.putExtra("bikeCode", bikeCode);
 									context.startActivity(intent);
 								}
 //								else if(type==3){

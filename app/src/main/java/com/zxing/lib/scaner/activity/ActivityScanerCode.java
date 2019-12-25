@@ -1145,22 +1145,26 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                             Log.e("order_authority===1", responseString + "====" + result.data);
 
-                            JSONObject jsonObject = new JSONObject(result.getData());
+                            if(result.getStatus_code()==200){
+                                JSONObject jsonObject = new JSONObject(result.getData());
 
-                            Log.e("order_authority===2",  "====" + jsonObject.getInt("code"));
+                                Log.e("order_authority===2",  "====" + jsonObject.getInt("code"));
 
+                                int code = jsonObject.getInt("code");
 
-                            int code = jsonObject.getInt("code");
+                                if(code==0){
+                                    car(tokencode);
+                                }else if(code==1){
+                                    customDialog2.show();
+                                }else if(code==2){
+                                    customDialog.show();
+                                }
+                            }else{
+                                ToastUtil.showMessageApp(context, result.getMessage());
 
-                            if(code==0){
-                                car(tokencode);
-                            }else if(code==1){
-                                customDialog2.show();
-                            }else if(code==2){
-                                customDialog.show();
+                                mCropLayout2.setVisibility(View.VISIBLE);
+                                ll_input.setVisibility(View.GONE);
                             }
-
-//                            CarBean bean = JSON.parseObject(result.getData(), CarBean.class);
 
 
                         } catch (Exception e) {

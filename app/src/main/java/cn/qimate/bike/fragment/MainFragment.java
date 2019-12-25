@@ -197,7 +197,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     BluetoothAdapter mBluetoothAdapter;
     private XiaoanBleApiClient apiClient;
 
-    private String codenum = "";
+    public static String codenum = "";
     private String m_nowMac = "";
     private String type = "";
     private String lock_no = "";
@@ -850,6 +850,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             if(null != bean.getOrder_sn()){
                                 Log.e("mf===cycling2_2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
+                                order_id = bean.getOrder_id();
                                 oid = bean.getOrder_sn();
                                 codenum = bean.getCar_number();
                                 type = ""+bean.getLock_id();
@@ -3241,6 +3242,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             ebikeInfoThread.interrupt();
             ebikeInfoThread = null;
         }
+
+        Log.e("mf==end", order_id+"==="+order_type);
 
         ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
         Intent intent = new Intent(context, SettlementPlatformActivity.class);

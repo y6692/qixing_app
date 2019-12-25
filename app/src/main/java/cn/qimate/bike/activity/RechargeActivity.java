@@ -157,6 +157,8 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
                 intent.putExtra("order_type",3);
                 startActivity(intent);
 
+
+
                 break;
 //            case R.id.rechargeUI_alipayTypeLayout:
 //                alipayTypeImage.setImageResource(R.drawable.pay_type_selected);
@@ -288,7 +290,14 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
                             intent.putExtra("order_type", 3);
                             intent.putExtra("order_amount", order_amount);
                             intent.putExtra("order_id", order_id);
+                            intent.putExtra("isRemain", true);
                             context.startActivity(intent);
+
+//                            Intent rIntent = new Intent();
+//                          rIntent.putExtra("codenum", codenum);
+
+//                            setResult(RESULT_OK, intent);
+//                            scrollToFinishActivity();
 
                         } catch (Exception e) {
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());

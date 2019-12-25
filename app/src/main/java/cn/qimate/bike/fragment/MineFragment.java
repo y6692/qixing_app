@@ -247,11 +247,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //        myPurseLayout = getActivity().findViewById(R.id.personUI_bottom_myPurseLayout);
 //        myRouteLayout = getActivity().findViewById(R.id.personUI_bottom_myRouteLayout);
 //        actionCenterLayout = getActivity().findViewById(R.id.personUI_bottom_actionCenterLayout);
-//        serviceCenterLayout = getActivity().findViewById(R.id.personUI_bottom_serviceCenterLayout);
+
 //        settingLayout = getActivity().findViewById(R.id.personUI_bottom_settingLayout);
 //
         myOrderLayout = getActivity().findViewById(R.id.personUI_myOrderLayout);
         myMsgLayout = getActivity().findViewById(R.id.personUI_myMeaaageLayout);
+        serviceCenterLayout = getActivity().findViewById(R.id.personUI_serviceCenterLayout);
 //        changePsdLayout = getActivity().findViewById(R.id.personUI_bottom_changePsdLayout);
 //        helpCenterLayout = getActivity().findViewById(R.id.personUI_bottom_helpCenterLayout);
 //        aboutUsLayout = getActivity().findViewById(R.id.personUI_bottom_aboutUsLayout);
@@ -275,13 +276,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //        myPurseLayout.setOnClickListener(this);
 //        myRouteLayout.setOnClickListener(this);
 //        actionCenterLayout.setOnClickListener(this);
-//        serviceCenterLayout.setOnClickListener(this);
 //        settingLayout.setOnClickListener(this);
 //        closeBtn.setOnClickListener(myOnClickLister);
 
         rightBtn.setOnClickListener(this);
         myOrderLayout.setOnClickListener(this);
         myMsgLayout.setOnClickListener(this);
+        serviceCenterLayout.setOnClickListener(this);
 
 
 //        billRule();
@@ -776,11 +777,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             case R.id.personUI_bottom_myPurseLayout:
                 ((MainActivity)getActivity()).changeTab(2);
                 break;
-            case R.id.personUI_bottom_actionCenterLayout:
-                UIHelper.goToAct(context, ActionCenterActivity.class);
-                break;
-            case R.id.personUI_bottom_serviceCenterLayout:
-                UIHelper.goToAct(context, ServiceCenterActivity.class);
+            case R.id.personUI_serviceCenterLayout:
+
+                Log.e("personUI_serviceCenterL", "==="+MainFragment.codenum);
+
+                Intent intent = new Intent(context, ServiceCenterActivity.class);
+                intent.putExtra("bikeCode", MainFragment.codenum);
+                startActivity(intent);
                 break;
             case R.id.personUI_bottom_settingLayout:
                 UIHelper.goToAct(context, SettingActivity.class);

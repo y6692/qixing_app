@@ -216,7 +216,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         bikeCode = getIntent().getStringExtra("bikeCode");
 
         type = "4";
-        bikeCode = "40001";
+//        bikeCode = "40001";
 
         initView();
     }
