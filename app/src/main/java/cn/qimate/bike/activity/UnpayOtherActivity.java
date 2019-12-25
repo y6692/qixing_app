@@ -169,12 +169,13 @@ public class UnpayOtherActivity extends SwipeBackActivity implements View.OnClic
                     return;
                 }
 
-                Log.e("rid===", "===");
+                Log.e("rid===", order_id+"==="+order_type+"==="+order_amount);
 
                 Intent intent = new Intent(context, SettlementPlatformActivity.class);
+                intent.putExtra("order_id", order_id);
                 intent.putExtra("order_type", order_type);
                 intent.putExtra("order_amount", order_amount);
-                intent.putExtra("order_id", order_id);
+
                 context.startActivity(intent);      //TODO
 
 //                order();

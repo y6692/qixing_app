@@ -217,7 +217,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         Log.e("ura===payments", order_type+"===");
 
         RequestParams params = new RequestParams();
-        params.put("order_type", order_type); //支付场景 1骑行订单支付 2购买套餐卡订单 3充值订单(包括认证充值)支付 4调度、赔偿单支付
+        params.put("order_type", order_type); //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单
         HttpHelper.get(context, Urls.payments, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -239,7 +239,6 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                             Log.e("ura===payments1", responseString + "===" + result.data);
 
                             JSONArray array = new JSONArray(result.getData());
-
 
                             ll_pay1.setVisibility(View.GONE);
                             ll_pay2.setVisibility(View.GONE);
@@ -345,18 +344,23 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
 
     private void end(){
-        Intent intent = new Intent(context, MyOrderDetailActivity.class);
-        intent.putExtra("order_id", order_id);
-        startActivity(intent);
+        if(order_type>=5){
+            UIHelper.goToAct(context, MainActivity.class);
+        }else{
+            Intent intent = new Intent(context, MyOrderDetailActivity.class);
+            intent.putExtra("order_id", order_id);
+            startActivity(intent);
+        }
+
         scrollToFinishActivity();
     }
 
 
     private void pay(){
         RequestParams params = new RequestParams();
-        params.put("payment_id",payment_id);     //支付方式ID 支付方式 1：余额支付 2：微信app支付 3：支付宝app支付 4：微信小程序支付 5：支付宝小程序支付 6：微信h5支付 7：支付宝h5支付
+        params.put("payment_id", payment_id);     //支付方式ID 支付方式 1：余额支付 2：微信app支付 3：支付宝app支付 4：微信小程序支付 5：支付宝小程序支付 6：微信h5支付 7：支付宝h5支付
         params.put("order_id", order_id);      //订单ID
-        params.put("order_type",order_type);     //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单
+        params.put("order_type", order_type);     //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单
 
         Log.e("spa===pay", order_amount+"==="+payment_id+"==="+order_id+"==="+order_type);
 
@@ -573,7 +577,6 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
                             Log.e("spa===query_order1", order_type+ "===" +isRemain+ "===" +responseString);
 
-
                             if(result.getStatus_code()==200){
                                 if(order_type==1){
                                     end();
@@ -592,10 +595,6 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                                 }
                             }
 
-
-
-//
-//
 //                            for (int i = 0; i < array.length(); i++) {
 //
 //                                Log.e("ura===payments2", "==="+array.getJSONObject(i).toString());

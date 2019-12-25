@@ -144,6 +144,7 @@ import cn.qimate.bike.activity.RealNameAuthActivity;
 import cn.qimate.bike.activity.ServiceCenter0Activity;
 import cn.qimate.bike.activity.ServiceCenterActivity;
 import cn.qimate.bike.activity.SettlementPlatformActivity;
+import cn.qimate.bike.activity.UnpayOtherActivity;
 import cn.qimate.bike.activity.UnpayRouteActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;
@@ -482,15 +483,25 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             if(unauthorized_code==7){
                                 order_type = 1;
                                 tv_payBtn.setText("骑行支付");
-                            }else if(unauthorized_code==8){
-                                order_type = 3;
-                                tv_payBtn.setText("调度费支付");
-                            }else if(unauthorized_code==9){
-                                order_type = 3;
-                                tv_payBtn.setText("赔偿费支付");
-                            }
 
-                            cycling2();
+                                cycling2();
+                            }else if(unauthorized_code==8 || unauthorized_code==9){
+                                order_type = 3;
+
+                                JSONObject jsonObject = new JSONObject(bean.getOrder());
+
+                                tv_pay_codenum.setText(jsonObject.getString("car_number"));
+                                tv_pay_car_start_time.setText(jsonObject.getString("car_start_time"));
+                                tv_pay_car_end_time.setText(jsonObject.getString("car_end_time"));
+                                tv_order_amount.setText(jsonObject.getString("order_amount"));
+
+                                if(unauthorized_code==8){
+                                    tv_payBtn.setText("调度费支付");
+                                }else{
+                                    tv_payBtn.setText("赔偿费支付");
+                                }
+
+                            }
                         }
 
                     } catch (Exception e) {
@@ -877,11 +888,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     ll_ebike.setVisibility(View.GONE);
                                 }
 
-
-//                                ll_top_navi.setVisibility(View.GONE);
-//                                ll_top.setVisibility(View.VISIBLE);
-//                                rl_ad.setVisibility(View.GONE);
-//                                ll_top_biking.setVisibility(View.VISIBLE);
 
                                 tv_biking_codenum.setText(codenum);     //TODO
                                 tv_estimated_cost.setText("¥"+bean.getEstimated_cost());
@@ -3245,12 +3251,20 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         Log.e("mf==end", order_id+"==="+order_type);
 
-        ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
-        Intent intent = new Intent(context, SettlementPlatformActivity.class);
-        intent.putExtra("order_type", order_type);
-        intent.putExtra("order_id", order_id);
-        startActivity(intent);
-//        UIHelper.goToAct(context, UnpayRouteActivity.class);
+        if(order_type==1 && isEndBtn){
+            ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
+        }
+
+        if(order_type==3){
+            UIHelper.goToAct(context, UnpayOtherActivity.class);
+        }else{
+            Intent intent = new Intent(context, SettlementPlatformActivity.class);
+            intent.putExtra("order_type", order_type);
+            intent.putExtra("order_id", order_id);
+            startActivity(intent);
+        }
+
+
     }
 
     //助力车关锁_轮询2
