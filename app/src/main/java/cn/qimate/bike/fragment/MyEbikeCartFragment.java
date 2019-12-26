@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -243,8 +245,8 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
 //                dialog.getWindow().setAttributes(params1);
 //                dialog.show();
 
-                Intent intent = new Intent(context, PayMontCartActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(context, PayMontCartActivity.class);
+//                startActivity(intent);
             }
         });
     }
@@ -284,16 +286,47 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
             if (null == convertView) {
                 convertView = inflater.inflate(R.layout.item_my_ebike_cart, null);
             }
+            LinearLayout ll_bg = BaseViewHolder.get(convertView,R.id.item_bg);
             TextView name = BaseViewHolder.get(convertView,R.id.item_name);
             TextView remaining = BaseViewHolder.get(convertView,R.id.item_remaining);
             TextView valid = BaseViewHolder.get(convertView,R.id.item_valid);
-            TextView desc = BaseViewHolder.get(convertView,R.id.item_desc);
+            final TextView desc = BaseViewHolder.get(convertView,R.id.item_desc);
+            final ImageView iv_down = BaseViewHolder.get(convertView,R.id.item_down);
+
             final MyCartBean bean = getDatas().get(position);
+
+            GradientDrawable drawable = (GradientDrawable)ll_bg.getBackground();
+            drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[1]), Color.parseColor(bean.getLinear_gradient()[0])});
+
+            int is_valid = bean.getIs_valid();
 
             name.setText(bean.getName());
             remaining.setText(bean.getRemaining());
-            valid.setText(bean.getIs_valid()==1?"使用中":"已过期");
+            valid.setText(is_valid==1?"使用中":is_valid==2?"已过期":is_valid==3?"已用完":"待生效");
             desc.setText(bean.getDesc());
+
+            iv_down.setOnClickListener(new View.OnClickListener() {
+                boolean flag = false;
+                @Override
+                public void onClick(View view) {
+
+                    Log.e("mcf===onClick", "===");
+
+                    if(flag){
+                        flag = false;
+                        iv_down.setImageResource(R.drawable.down_icon);
+
+                        desc.setMaxLines(1);
+                    }else{
+                        flag = true;
+                        iv_down.setImageResource(R.drawable.up_icon);
+
+                        desc.setMaxLines(20);
+                    }
+
+
+                }
+            });
 
 //            if("即将超时".equals(bean.getStatus_name())){
 //                num.setTextColor(getResources().getColor(R.color.red));
@@ -315,7 +348,7 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
             return;
         }
         RequestParams params = new RequestParams();
-        params.put("tab", 2);
+        params.put("type", 2);
         params.put("page", showPage);
         params.put("per_page", GlobalConfig.PAGE_SIZE);
 
@@ -337,7 +370,7 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 try {
-                    Log.e("my_cycling_cards===1","==="+responseString);
+                    Log.e("my_cycling_cards===eb_1","==="+responseString);
 
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
@@ -360,11 +393,6 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
                     for (int i = 0; i < array.length();i++){
                         MyCartBean bean = JSON.parseObject(array.getJSONObject(i).toString(), MyCartBean.class);
 
-//                        if(i==0 && bean.getBadtime().compareTo(badtime)<0){
-//                            badtime = bean.getBadtime();
-//                            codenum = bean.getCodenum();
-//                            totalnum = bean.getTotalnum();
-//                        }
 
                         datas.add(bean);
                     }

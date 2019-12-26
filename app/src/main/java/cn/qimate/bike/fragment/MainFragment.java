@@ -999,7 +999,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         } else {
 
             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-            customBuilder.setTitle("温馨提示").setMessage("请在手机设置打开应用的位置权限并选择最精准的定位模式")
+            customBuilder.setType(3).setTitle("温馨提示").setMessage("请在手机设置打开应用的位置权限并选择最精准的定位模式")
                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
@@ -1358,7 +1358,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             for (int i = 0; i < ja_banners.length(); i++) {
                                 BannerBean bean = JSON.parseObject(ja_banners.get(i).toString(), BannerBean.class);
 
-                                Log.e("mf===banner2", bean.getImage_url()+"===");
+//                                Log.e("mf===banner2", bean.getImage_url()+"===");
 
                                 imagePath.add(bean.getImage_url());
 
@@ -4836,7 +4836,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             }
                         }else {
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开电话权限！")
+                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开电话权限！")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();
@@ -4863,7 +4863,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             initView();
                         } else {
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里允许获取定位权限！")
+                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里允许获取定位权限！")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();

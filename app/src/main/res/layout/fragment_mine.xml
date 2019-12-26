@@ -210,7 +210,7 @@
 
 
         <RelativeLayout
-            android:id="@+id/personUI_actionCenterLayout"
+            android:id="@+id/personUI_creditLayout"
             android:layout_width="match_parent"
             android:layout_height="24dp"
             android:layout_marginTop="25dp"
@@ -301,7 +301,7 @@
 
 
         <RelativeLayout
-            android:id="@+id/personUI_bottom_settingLayout"
+            android:id="@+id/personUI_changePhoneLayout"
             android:layout_width="match_parent"
             android:layout_height="24dp"
             android:layout_marginTop="25dp"
@@ -346,7 +346,7 @@
 
 
         <RelativeLayout
-            android:id="@+id/personUI_bottom_authLayout"
+            android:id="@+id/personUI_authLayout"
             android:layout_width="match_parent"
             android:layout_height="24dp"
             android:layout_marginTop="25dp"
@@ -390,7 +390,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/personUI_bottom_inviteLayout"
+            android:id="@+id/personUI_inviteLayout"
             android:layout_width="match_parent"
             android:layout_height="24dp"
             android:layout_marginTop="25dp"

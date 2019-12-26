@@ -6,17 +6,29 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
+
+import org.apache.http.Header;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.UIHelper;
+import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.fragment.BikeCartFragment;
 import cn.qimate.bike.fragment.EbikeCartFragment;
+import cn.qimate.bike.model.H5Bean;
+import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 /**
@@ -40,6 +52,7 @@ public class PayCartActivity extends SwipeBackActivity implements View.OnClickLi
   private LinearLayout ll_back;
   private TextView title;
   private TextView rightBtn;
+  private ImageView iv_question;
 
 
   @Override
@@ -57,6 +70,8 @@ public class PayCartActivity extends SwipeBackActivity implements View.OnClickLi
 //    title.setText("购买骑行套餐");
     rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
     rightBtn.setText("我的套餐卡");
+
+    iv_question = (ImageView)findViewById(R.id.iv_question);
 
     tab = (TabLayout) findViewById(R.id.tab);
     vp = (ViewPager)findViewById(R.id.vp);
@@ -84,6 +99,7 @@ public class PayCartActivity extends SwipeBackActivity implements View.OnClickLi
 
     ll_back.setOnClickListener(this);
     rightBtn.setOnClickListener(this);
+    iv_question.setOnClickListener(this);
 
   }
 
@@ -94,14 +110,80 @@ public class PayCartActivity extends SwipeBackActivity implements View.OnClickLi
       case R.id.ll_backBtn:
         scrollToFinishActivity();
         break;
+
+      case R.id.iv_question:
+        agreement();
+        break;
+
       case R.id.mainUI_title_rightBtn:
         UIHelper.goToAct(context, MyCartActivity.class);
         break;
     }
   }
 
+  private void agreement() {
+
+    Log.e("agreement===0", "===");
+
+    try{
+//            协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议
+      HttpHelper.get(context, Urls.agreement+"cycling_card", new TextHttpResponseHandler() {
+        @Override
+        public void onStart() {
+          if (loadingDialog != null && !loadingDialog.isShowing()) {
+            loadingDialog.setTitle("请稍等");
+            loadingDialog.show();
+          }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+          Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+          Log.e("agreement===fail", throwable.toString()+"==="+responseString);
+
+          if (loadingDialog != null && loadingDialog.isShowing()){
+            loadingDialog.dismiss();
+          }
+          UIHelper.ToastError(context, throwable.toString());
+        }
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, String responseString) {
+          try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+            Log.e("agreement===", "==="+responseString);
+
+            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+            H5Bean bean = JSON.parseObject(result.getData(), H5Bean.class);
+
+            UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
+//                        UIHelper.goWebViewAct(context, bean.getH5_title(), Urls.agreement+"register");
+
+
+
+          } catch (Exception e) {
+            e.printStackTrace();
+          } finally {
+            if (loadingDialog != null && loadingDialog.isShowing()) {
+              loadingDialog.dismiss();
+            }
+          }
+        }
+
+
+      });
+    }catch (Exception e){
+      Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+    }
+
+  }
+
   class MyPagerAdapter extends FragmentPagerAdapter {
-    private String[] titles = new String[]{"单车套餐卡", "电单车套餐卡"};
+    private String[] titles = new String[]{"单车套餐卡", "助力车套餐卡"};
     private List<Fragment> fragmentList;
 
     public MyPagerAdapter(FragmentManager fm) {

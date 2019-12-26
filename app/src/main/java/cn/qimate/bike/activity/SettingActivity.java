@@ -2,6 +2,7 @@ package cn.qimate.bike.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
@@ -88,7 +89,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
         loadingDialog.setCanceledOnTouchOutside(false);
 
         customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setType(3).setTitle("温馨提示").setMessage("您将退出7MA出行。")
+        customBuilder.setType(3).setTitle("温馨提示").setMessage("您将退出登录")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         logout();
@@ -232,8 +233,15 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
                     if(responseString==null){
                         SharedPreferencesUrls.getInstance().putString("access_token", "");
                         SharedPreferencesUrls.getInstance().putString("iscert", "");
-                        UIHelper.goToAct(context, LoginActivity.class);
+//                        UIHelper.goToAct(context, LoginActivity.class);
+                        Intent intent = new Intent(context, LoginActivity.class);
+                        context.startActivity(intent);
+
+                        setResult(RESULT_OK, intent);
+
                         scrollToFinishActivity();
+
+
                     }else{
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 

@@ -287,7 +287,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         Log.e("ma===onResume", SharedPreferencesUrls.getInstance().getString("iscert", "") + "===" + type);
 
-        tab.setCurrentTab(0);
+//        mainFragment.show
+//        tab.setCurrentTab(0);
     }
 
     private void initView() {
@@ -296,7 +297,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         tab = findViewById(R.id.tab);
 
         tab.setTabData(mTabEntities, MainActivity.this, R.id.fl_change, mFragments);
-
+        tab.setCurrentTab(0);
 
         dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_frist_view, null);
@@ -885,7 +886,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             try{
                 CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-                customBuilder.setTitle("温馨提示").setMessage("确认退出吗?")
+                customBuilder.setType(3).setTitle("温馨提示").setMessage("您将退出7MA出行。")
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
@@ -897,6 +898,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                     }
                 });
                 customBuilder.create().show();
+
+
                 return true;
             }catch (Exception e){
 
@@ -926,7 +929,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                             }
                         }else {
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开电话权限！")
+                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开电话权限！")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();

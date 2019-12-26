@@ -10,6 +10,7 @@ public class MyCartBean {
     private String remaining;
     private String desc;
     private int is_valid;
+    private String[] linear_gradient;
 
     public String getName() {
         return name;
@@ -41,5 +42,13 @@ public class MyCartBean {
 
     public void setIs_valid(int is_valid) {
         this.is_valid = is_valid;
+    }
+
+    public String[] getLinear_gradient() {
+        return linear_gradient;
+    }
+
+    public void setLinear_gradient(String[] linear_gradient) {
+        this.linear_gradient = linear_gradient;
     }
 }

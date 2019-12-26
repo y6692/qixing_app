@@ -102,7 +102,7 @@ public class MyCartActivity extends SwipeBackActivity implements View.OnClickLis
   }
 
   class MyPagerAdapter extends FragmentPagerAdapter {
-    private String[] titles = new String[]{"单车套餐卡", "电单车套餐卡"};
+    private String[] titles = new String[]{"单车套餐卡", "助力车套餐卡"};
     private List<Fragment> fragmentList;
 
     public MyPagerAdapter(FragmentManager fm) {

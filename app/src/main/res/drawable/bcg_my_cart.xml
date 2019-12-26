@@ -4,8 +4,9 @@
 
     <gradient
         android:angle="0"
+        android:startColor="#ED404D"
         android:endColor="#FFA361"
-        android:startColor="#ED404D" />
+         />
 
     <!-- 填充的颜色 -->
     <!--<solid android:color="#ff0000" />-->

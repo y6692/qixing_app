@@ -104,9 +104,9 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 
 		Log.e("BF===onResume", "==="+LoginActivity.isForeground);
 
-		if(!LoginActivity.isForeground && !SplashActivity.isForeground){
-			RefreshLogin();
-		}
+//		if(!LoginActivity.isForeground && !SplashActivity.isForeground){
+//			RefreshLogin();
+//		}
 
 //		RefreshLogin();
 	}
@@ -246,7 +246,7 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 		String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 		String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
 
-		Log.e("BF===RefreshLogin", uid+"==="+access_token);
+		Log.e("bf===RefreshLogin", uid+"==="+access_token);
 
 		if (access_token == null || "".equals(access_token)) {
 			setAlias("");
@@ -260,7 +260,7 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 				@Override
 				public void onSuccess(int statusCode, Header[] headers, String responseString) {
 					try {
-						Log.e("car_authority===", "==="+responseString);
+						Log.e("bf===car_authority", "==="+responseString);
 
 						ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 

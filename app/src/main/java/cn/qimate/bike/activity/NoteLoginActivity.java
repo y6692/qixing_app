@@ -40,6 +40,8 @@ import cn.qimate.bike.core.common.StringUtil;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.lock.utils.ToastUtils;
+import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
@@ -291,6 +293,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
     }
 
     private void loginHttp(String telcode) {
+        Log.e("loginHttp===", telphone+"==="+telcode);
 
         RequestParams params = new RequestParams();
         params.put("phone", telphone);
@@ -299,57 +302,49 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         HttpHelper.post(context, Urls.authorizations, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在登录");
-                    loadingDialog.show();
-                }
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+                onFailureCommon("nla===authorizations", throwable.toString());
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    Log.e("authorizations===", "==="+responseString);
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Log.e("authorizations===", "==="+responseString);
 
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                    Log.e("authorizations===1", result.getData()+"==="+result.getStatus_code());
+                            Log.e("authorizations===1", result.getData()+"==="+result.getStatus_code());
 
-                    UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
+                            UserMsgBean bean = JSON.parseObject(result.getData(), UserMsgBean.class);
 
-                    Log.e("authorizations===2", bean+"==="+bean.getToken());
+                            Log.e("authorizations===2", bean+"==="+bean.getToken());
 
-                    if (null != bean.getToken()) {
+                            if (null != bean.getToken()) {
+                                SharedPreferencesUrls.getInstance().putString("access_token", "Bearer "+bean.getToken());
+                                Toast.makeText(context,"恭喜您,登录成功",Toast.LENGTH_SHORT).show();
 
+                                UIHelper.goToAct(context, MainActivity.class);
+                                scrollToFinishActivity();
 
-                        SharedPreferencesUrls.getInstance().putString("access_token", "Bearer "+bean.getToken());
-                        Toast.makeText(context,"恭喜您,登录成功",Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(context, result.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
 
-                        UIHelper.goToAct(context, MainActivity.class);
-                        scrollToFinishActivity();
-
-                    }else{
-                        Toast.makeText(context, result.getMessage(), Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
                     }
+                });
 
-//                    if (result.getFlag().equals("Success")) {
-
-//                    } else {
-//                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-//                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
-                }
             }
         });
     }
@@ -365,138 +360,59 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
             RequestParams params = new RequestParams();
             params.add("telphone", telphone);
 
-//        params.put("UUID", getMyUUID());
-//        params.put("UUID", getDeviceId());
-
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
 
             String uuid = UUID.randomUUID().toString();
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            UUID = tm.getImei();
-//        } else {
-//            UUID = tm.getDeviceId();
-//        }
-
             params.add("UUID", uuid);
-
-//            Toast.makeText(context, "UUID=="+uuid, Toast.LENGTH_LONG).show();
-
-//        if("".equals(UUID)){
-//            UUID = tm.getImei();
-//        }
-//
-//        if("".equals(UUID)){
-//            UUID = tm.getMeid();
-//        }
-
-
-//        if (tm.getDeviceId() != null) {
-//            params.add("UUID", tm.getDeviceId());
-//        } else {
-////            params.add("UUID", Settings.Secure.getString(context.getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID));
-//            params.add("UUID", tm.getImei());
-//        }
-//
-//        params.add("UUID", tm.getImei());
-
-
-//        try {
-////            final TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-//            if(tm.getDeviceId() == null || tm.getDeviceId().equals("")) {
-//                if (Build.VERSION.SDK_INT >= 23) {
-//                    params.add("UUID", tm.getDeviceId(0));
-//                }
-//            }else{
-//                params.add("UUID", tm.getDeviceId());
-//            }
-//        }catch (Exception e){
-//
-//        }
-
-//        Log.e("UUID", tm.getDeviceId(0) + "====" + tm.getDeviceId(1) + "====" + tm.getImei(0) + "====" + tm.getImei(1));
-
-//        params.add("UUID", tm.getImei(0));
-
-
-//        params.add("UUID", getDeviceId());
-
-//        final String tmDevice, tmSerial, tmPhone, androidId;
-//        tmDevice = "" + tm.getDeviceId();
-//        tmSerial = "" + tm.getSimSerialNumber();
-//        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-//
-//        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
-//        String uniqueId = deviceUuid.toString();
-
-//        String m_szDevIDShort = "86" + //we make this look like a valid IMEI
-//
-//                Build.BOARD.length()%10 +
-//                Build.BRAND.length()%10 +
-//                Build.CPU_ABI.length()%10 +
-//                Build.DEVICE.length()%10 +
-//                Build.DISPLAY.length()%10 +
-//                Build.HOST.length()%10 +
-//                Build.ID.length()%10 +
-//                Build.MANUFACTURER.length()%10 +
-//                Build.MODEL.length()%10 +
-//                Build.PRODUCT.length()%10 +
-//                Build.TAGS.length()%10 +
-//                Build.TYPE.length()%10 +
-//                Build.USER.length()%10 ;
-
-//        params.add("UUID", tm.getImei());
-//
-//        Log.e("UUID", tm.getDeviceId() + "====" + m_szDevIDShort + "====" + UUID.randomUUID().toString());
-
             params.add("type", "2");
+
             HttpHelper.post(context, Urls.sendcode, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("请稍等");
-                        loadingDialog.show();
-                    }
+                    onStartCommon("正在加载");
                 }
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    onFailureCommon("nla===sendcode", throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
 
 //                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
 
-                        Log.e("verificationcode===", "==="+responseString);
+                                Log.e("verificationcode===", "==="+responseString);
 
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                        if (result.getFlag().equals("Success")) {
+                                if (result.getFlag().equals("Success")) {
 
-                            handler.sendEmptyMessage(2);
+                                    handler.sendEmptyMessage(2);
 
-                            // 开始60秒倒计时
-                            handler.sendEmptyMessageDelayed(1, 1000);
-                        } else {
-                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                                    // 开始60秒倒计时
+                                    handler.sendEmptyMessageDelayed(1, 1000);
+                                } else {
+                                    Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
-                        }
-                    }
+                    });
+
                 }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
 
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
-                }
             });
         }catch (Exception e){
             Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();

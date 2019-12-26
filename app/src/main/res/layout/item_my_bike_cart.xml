@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/item_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -19,8 +20,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             >
-
-
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -91,24 +90,37 @@
         </LinearLayout>
 
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
             android:layout_marginBottom="7dp"
             android:layout_marginLeft="22dp"
-            android:orientation="horizontal"
             android:gravity="center"
             >
             <TextView
                 android:id="@+id/item_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="单次骑行前1小时免费单次骑行前1小时免费"
+                android:layout_marginRight="68dp"
+                android:text="单次骑行前1小时免费单次骑行前1小时免费1231231231231231313"
                 android:textSize="12sp"
                 android:textColor="#FFFFFF"
+                android:maxLines="1"
+                android:ellipsize="end"
                 />
-        </LinearLayout>
+
+            <ImageView
+                android:id="@+id/item_down"
+                android:layout_width="13dp"
+                android:layout_height="7dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="14dp"
+                android:src="@drawable/down_icon"
+                android:layout_centerVertical="true"
+                />
+
+        </RelativeLayout>
 
     </LinearLayout>
 

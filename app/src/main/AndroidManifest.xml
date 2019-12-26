@@ -106,6 +106,17 @@
         </activity>
 
         <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".full.EnterActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
@@ -142,22 +153,12 @@
         </activity>
 
 
-        <activity
-            android:name=".activity.MainActivity"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <activity
             android:name=".activity.ComplainActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
-
 
         </activity>
 

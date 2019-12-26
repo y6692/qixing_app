@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -244,8 +245,8 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
 //                dialog.getWindow().setAttributes(params1);
 //                dialog.show();
 
-                Intent intent = new Intent(context, PayMontCartActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(context, PayMontCartActivity.class);
+//                startActivity(intent);
             }
         });
     }
@@ -290,7 +291,8 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
             TextView name = BaseViewHolder.get(convertView,R.id.item_name);
             TextView tv_price = BaseViewHolder.get(convertView,R.id.tv_price);
             TextView tv_original_price = BaseViewHolder.get(convertView,R.id.tv_original_price);
-            TextView tv_desc = BaseViewHolder.get(convertView,R.id.tv_desc);
+            final TextView tv_desc = BaseViewHolder.get(convertView,R.id.tv_desc);
+            final ImageView iv_down = BaseViewHolder.get(convertView,R.id.item_down);
             LinearLayout ll_payBtn = BaseViewHolder.get(convertView,R.id.ll_payBtn);
             final PayCartBean bean = getDatas().get(position);
 
@@ -316,6 +318,29 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
 //                    order(bean.getCode());
 
                     order(card_code);
+
+                }
+            });
+
+            iv_down.setOnClickListener(new View.OnClickListener() {
+                boolean flag = false;
+                @Override
+                public void onClick(View view) {
+
+                    Log.e("mcf===onClick", "===");
+
+                    if(flag){
+                        flag = false;
+                        iv_down.setImageResource(R.drawable.down_icon2);
+
+                        tv_desc.setMaxLines(1);
+                    }else{
+                        flag = true;
+                        iv_down.setImageResource(R.drawable.up_icon2);
+
+                        tv_desc.setMaxLines(20);
+                    }
+
 
                 }
             });

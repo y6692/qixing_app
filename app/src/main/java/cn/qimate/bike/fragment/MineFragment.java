@@ -64,7 +64,9 @@ import cn.nostra13.universalimageloader.core.ImageLoader;
 import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.ActionCenterActivity;
+import cn.qimate.bike.activity.AuthCenterActivity;
 import cn.qimate.bike.activity.ChangePasswordPhoneActivity;
+import cn.qimate.bike.activity.ChangePhoneActivity;
 import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadBikingActivity;
 import cn.qimate.bike.activity.HistoryRoadActivity;
@@ -96,6 +98,7 @@ import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 @SuppressLint("NewApi")
@@ -118,13 +121,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private ImageView authState;
     private TextView userName;
     private LinearLayout curRouteLayout, hisRouteLayout;
-    private RelativeLayout myPurseLayout, myRouteLayout, actionCenterLayout, serviceCenterLayout, settingLayout, myOrderLayout, myMsgLayout, changePsdLayout,
-            helpCenterLayout, aboutUsLayout,billing_ruleLayout,questionLayout,insuranceLayout;
+    private RelativeLayout  myOrderLayout, myMsgLayout, creditLayout, serviceCenterLayout, changePhoneLayout, authLayout, inviteLayout;
 
-    private RelativeLayout checkUpdataLayout;
-    private TextView myPurse, myIntegral;
 
-    private Button takePhotoBtn, pickPhotoBtn, cancelBtn;
     private String imgUrl = Urls.uploadsheadImg;
     private String imageurl = "";
     private Uri imageUri;
@@ -134,30 +133,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private final int REQUESTCODE_PICK = 0; // 相册选图标记
     private final int REQUESTCODE_TAKE = 1; // 相机拍照标记
     private final int REQUESTCODE_CUTTING = 2; // 图片裁切标记
-
-    private LinearLayout logoutLayout;
-    /**
-     * 弹窗背景
-     */
-    private ImageView iv_popup_window_back;
-    /**
-     * 弹窗容器
-     */
-    private RelativeLayout rl_popup_window;
-
-    private Dialog dialog;
-    private ImageView titleImage;
-    private ImageView exImage_1;
-    private ImageView exImage_2;
-    private ImageView exImage_3;
-
-    private ImageView closeBtn;
-
-    private ImageView superVip;
-    private String rule = "";
-
-    private int imageWith = 0;
-
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_mine, null);
@@ -177,8 +152,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 getActivity().finish();
             }
             //蓝牙锁
-            BluetoothManager bluetoothManager =
-                    (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
+            BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
 
             BluetoothAdapter mBluetoothAdapter = bluetoothManager.getAdapter();
             if (mBluetoothAdapter == null) {
@@ -193,12 +167,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         }
         scrollView = (PullToZoomScrollViewEx) getActivity().findViewById(R.id.scroll_view);
 //        loadViewForCode();
-        imageWith = (int)(getActivity().getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+//        imageWith = (int)(getActivity().getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+
         initView();
 
     }
-
-
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -242,7 +215,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         headerImageView = getActivity().findViewById(R.id.personUI_bottom_header);
         userName = getActivity().findViewById(R.id.personUI_userName);
 
-//        curRouteLayout = getActivity().findViewById(R.id.personUI_bottom_curRouteLayout);
+
 //        hisRouteLayout = getActivity().findViewById(R.id.personUI_bottom_hisRouteLayout);
 //        myPurseLayout = getActivity().findViewById(R.id.personUI_bottom_myPurseLayout);
 //        myRouteLayout = getActivity().findViewById(R.id.personUI_bottom_myRouteLayout);
@@ -252,69 +225,25 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //
         myOrderLayout = getActivity().findViewById(R.id.personUI_myOrderLayout);
         myMsgLayout = getActivity().findViewById(R.id.personUI_myMeaaageLayout);
+        creditLayout = getActivity().findViewById(R.id.personUI_creditLayout);
         serviceCenterLayout = getActivity().findViewById(R.id.personUI_serviceCenterLayout);
-//        changePsdLayout = getActivity().findViewById(R.id.personUI_bottom_changePsdLayout);
-//        helpCenterLayout = getActivity().findViewById(R.id.personUI_bottom_helpCenterLayout);
-//        aboutUsLayout = getActivity().findViewById(R.id.personUI_bottom_aboutUsLayout);
-//        billing_ruleLayout = getActivity().findViewById(R.id.personUI_bottom_billing_ruleLayout);
-//        questionLayout = getActivity().findViewById(R.id.personUI_bottom_billing_questionLayout);
-//        insuranceLayout = getActivity().findViewById(R.id.personUI_bottom_billing_insuranceLayout);
-//        checkUpdataLayout = getActivity().findViewById(R.id.personUI_bottom_checkUpdataLayout);
-//        logoutLayout = getActivity().findViewById(R.id.personUI_logoutLayout);
-//
-//        dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
-//        View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_frist_view, null);
-//        dialog.setContentView(dialogView);
-//        dialog.setCanceledOnTouchOutside(false);
-//
-//        closeBtn = dialogView.findViewById(R.id.ui_fristView_closeBtn);
-//
-//
-
-//        headerImageView.setOnClickListener(this);
-//        myIntegralLayout.setOnClickListener(this);
-//        myPurseLayout.setOnClickListener(this);
-//        myRouteLayout.setOnClickListener(this);
-//        actionCenterLayout.setOnClickListener(this);
-//        settingLayout.setOnClickListener(this);
-//        closeBtn.setOnClickListener(myOnClickLister);
+        changePhoneLayout = getActivity().findViewById(R.id.personUI_changePhoneLayout);
+        authLayout = getActivity().findViewById(R.id.personUI_authLayout);
+        inviteLayout = getActivity().findViewById(R.id.personUI_inviteLayout);
 
         rightBtn.setOnClickListener(this);
         myOrderLayout.setOnClickListener(this);
         myMsgLayout.setOnClickListener(this);
+        creditLayout.setOnClickListener(this);
         serviceCenterLayout.setOnClickListener(this);
+        changePhoneLayout.setOnClickListener(this);
+        authLayout.setOnClickListener(this);
+        inviteLayout.setOnClickListener(this);
 
 
 //        billRule();
     }
 
-
-    private View.OnClickListener myOnClickLister = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.ui_fristView_exImage_1:
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    UIHelper.goWebViewAct(context,"使用说明", Urls.bluecarisee);
-                    break;
-//                case R.id.ui_fristView_exImage_2:
-//                    if (dialog != null && dialog.isShowing()) {
-//                        dialog.dismiss();
-//                    }
-//                    UIHelper.goWebViewAct(context,"使用说明", Urls.useHelp);
-//                    break;
-                case R.id.ui_fristView_closeBtn:
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     @Override
     public void onResume() {
@@ -336,10 +265,24 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         }
 
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch (requestCode) {
+            case 10:
+                if (resultCode == RESULT_OK) {
+//                    codenum = data.getStringExtra("codenum");
+//                    m_nowMac = data.getStringExtra("m_nowMac");
+
+                    Log.e("mf===onActivityResult", requestCode+"==="+resultCode);
+
+                    ((MainActivity)getActivity()).changeTab(0);
+
+                } else {
+//                    Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();
+                }
+                break;
             case REQUESTCODE_PICK:// 直接从相册获取
                 if (data != null) {
                     try {
@@ -563,93 +506,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         }
     });
 
-    // 为弹出窗口实现监听类
-    private View.OnClickListener itemsOnClick = new View.OnClickListener() {
-        @SuppressLint("NewApi")
-        @Override
-        public void onClick(View v) {
-            clickClosePopupWindow();
-            switch (v.getId()) {
-                // 拍照
-                case R.id.takePhotoBtn:
-                    if (Build.VERSION.SDK_INT >= 23) {
-                        int checkPermission = context.checkSelfPermission(Manifest.permission.CAMERA);
-                        if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-                            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                                requestPermissions(new String[]{Manifest.permission.CAMERA}, 101);
-                            } else {
-                                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
-                                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.cancel();
-                                            }
-                                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                        requestPermissions(new String[]{Manifest.permission.CAMERA},
-                                                101);
-
-                                    }
-                                });
-                                customBuilder.create().show();
-                            }
-                            return;
-                        }
-                    }
-//                    Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                    // 下面这句指定调用相机拍照后的照片存储的路径
-//                    takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-//                            Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
-//                    startActivityForResult(takeIntent, REQUESTCODE_TAKE);
-                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                        Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(PersonAlterActivity.this,
-//                                    BuildConfig.APPLICATION_ID + ".provider",
-//                                    new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
-                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, RxFileTool.getUriForFile(context,
-                                    new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
-                            takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        } else {
-                            // 下面这句指定调用相机拍照后的照片存储的路径
-                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                                    Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
-                        }
-                        startActivityForResult(takeIntent, REQUESTCODE_TAKE);
-                    } else {
-                        Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                // 相册选择图片
-                case R.id.pickPhotoBtn:
-//                    Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
-                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                            pickIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(PersonAlterActivity.this,
-//                                    BuildConfig.APPLICATION_ID + ".provider",
-//                                    new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
-//                            pickIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-//                            pickIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//                        } else {
-//                            // 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
-//                            pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-//                        }
-//                        startActivityForResult(pickIntent, REQUESTCODE_PICK);
-                        Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
-                        // 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
-                        pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                        startActivityForResult(pickIntent, REQUESTCODE_PICK);
-                    } else {
-                        Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     @SuppressLint("NewApi")
     @Override
@@ -706,34 +562,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     }
 
 
-    /**
-     * 显示弹窗
-     */
-    private void clickPopupWindow() {
-        // 获取截图的Bitmap
-        Bitmap bitmap = UtilScreenCapture.getDrawing(getActivity());
-
-        if (bitmap != null) {
-            // 将截屏Bitma放入ImageView
-            iv_popup_window_back.setImageBitmap(bitmap);
-            // 将ImageView进行高斯模糊【25是最高模糊等级】【0x77000000是蒙上一层颜色，此参数可不填】
-            UtilBitmap.blurImageView(context, iv_popup_window_back, 5, 0xAA000000);
-        } else {
-            // 获取的Bitmap为null时，用半透明代替
-            iv_popup_window_back.setBackgroundColor(0x77000000);
-        }
-
-        // 打开弹窗
-        UtilAnim.showToUp(rl_popup_window, iv_popup_window_back);
-
-    }
-
-    /**
-     * 关闭弹窗
-     */
-    private void clickClosePopupWindow() {
-        UtilAnim.hideToDown(rl_popup_window, iv_popup_window_back);
-    }
 
     @Override
     public void onClick(View v) {
@@ -750,7 +578,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.personUI_rightBtn:
-                UIHelper.goToAct(context, SettingActivity.class);
+//                UIHelper.goToAct(context, SettingActivity.class);
+
+                Intent intent = new Intent();
+                intent.setClass(context, SettingActivity.class);
+                startActivityForResult(intent, 10);
                 break;
 
             case R.id.personUI_bottom_header:
@@ -761,79 +593,41 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
             case R.id.personUI_myOrderLayout:
                 UIHelper.goToAct(context, MyOrderActivity.class);
-
                 break;
 
-            case R.id.personUI_bottom_curRouteLayout:
-                getCurrentorder(uid, access_token);
-                break;
-            case R.id.personUI_bottom_hisRouteLayout:
-                UIHelper.goToAct(context, HistoryRoadActivity.class);
-                break;
-            case R.id.personUI_bottom_vipCenterLayout:
-                UIHelper.goToAct(context, ActionCenterActivity.class);
-                break;
-
-            case R.id.personUI_bottom_myPurseLayout:
-                ((MainActivity)getActivity()).changeTab(2);
-                break;
-            case R.id.personUI_serviceCenterLayout:
-
-                Log.e("personUI_serviceCenterL", "==="+MainFragment.codenum);
-
-                Intent intent = new Intent(context, ServiceCenterActivity.class);
-                intent.putExtra("bikeCode", MainFragment.codenum);
-                startActivity(intent);
-                break;
-            case R.id.personUI_bottom_settingLayout:
-                UIHelper.goToAct(context, SettingActivity.class);
-                break;
-
-            case R.id.personUI_bottom_myIntegralLayout:
-//                UIHelper.goToAct(context, CreditScoreActivity.class);
-                break;
             case R.id.personUI_myMeaaageLayout:
                 UIHelper.goToAct(context, MyMessageActivity.class);
                 break;
-            case R.id.personUI_bottom_changePsdLayout:
-                UIHelper.goToAct(context, ChangePasswordPhoneActivity.class);
-                break;
-            case R.id.personUI_bottom_helpCenterLayout:
-                WindowManager windowManager = getActivity().getWindowManager();
-                Display display = windowManager.getDefaultDisplay();
-                WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-                lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-                dialog.getWindow().setAttributes(lp);
-                dialog.show();
-                break;
-            case R.id.personUI_bottom_aboutUsLayout:
-                UIHelper.goWebViewAct(context, "关于我们", Urls.aboutUs);
-                break;
-            case R.id.personUI_bottom_billing_ruleLayout:
-                CustomDialog.Builder builder = new CustomDialog.Builder(context);
-                builder.setTitle("计费规则").setMessage(rule)
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                builder.create().show();
+
+            case R.id.personUI_creditLayout:
+                UIHelper.goWebViewAct(context, "信用分", Urls.aboutUs);
                 break;
 
-            case R.id.personUI_superVip:
-                UIHelper.goToAct(context, SuperVipActivity.class);
+            case R.id.personUI_serviceCenterLayout:
+                Log.e("personUI_serviceCenterL", "==="+MainFragment.codenum);
+
+                intent = new Intent(context, ServiceCenterActivity.class);
+                intent.putExtra("bikeCode", MainFragment.codenum);
+                startActivity(intent);
                 break;
-            case R.id.personUI_bottom_billing_questionLayout:
-                UIHelper.goWebViewAct(context,"常见问题",
-                        "http://www.7mate.cn/App/Helper/index.html");
+
+
+            case R.id.personUI_changePhoneLayout:
+                UIHelper.goToAct(context, ChangePhoneActivity.class);
                 break;
-            case R.id.personUI_bottom_billing_insuranceLayout:
-                Intent intent1 = new Intent(context, InsureanceActivity.class);
-                intent1.putExtra("isBack",true);
-                context.startActivity(intent1);
+
+            case R.id.personUI_authLayout:
+                UIHelper.goToAct(context, AuthCenterActivity.class);
                 break;
+
+            case R.id.personUI_inviteLayout:
+                UIHelper.goWebViewAct(context, "邀请好友", Urls.aboutUs);
+                break;
+
+//            case R.id.personUI_bottom_billing_questionLayout:
+//                UIHelper.goWebViewAct(context,"常见问题","http://www.7mate.cn/App/Helper/index.html");
+//                break;
+
             default:
                 break;
         }
@@ -1022,50 +816,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         }
     }
 
-    private void billRule(){
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (access_token == null || "".equals(access_token)){
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
-            UIHelper.goToAct(context, LoginActivity.class);
-        }else {
-            RequestParams params = new RequestParams();
-            params.put("uid",uid);
-            params.put("access_token",access_token);
-            HttpHelper.get(context, Urls.account_rules, params, new TextHttpResponseHandler() {
-                @Override
-                public void onStart() {
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("正在加载");
-                        loadingDialog.show();
-                    }
-                }
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                        if (result.getFlag().equals("Success")) {
-                            rule = result.getData();
-                        }else {
-                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-                        }
-                    }catch (Exception e){
-                    }
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                }
-            });
-        }
-    }
 
     // 极光推送===================================================================
     private void setAlias(String uid) {
