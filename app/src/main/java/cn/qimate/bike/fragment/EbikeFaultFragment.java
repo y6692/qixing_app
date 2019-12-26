@@ -428,7 +428,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
                     clickPopupWindow();
                 }else {
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                    customBuilder.setTitle("温馨提示").setMessage("确认删除图片吗?")
+                    customBuilder.setType(3).setTitle("温馨提示").setMessage("确认删除图片吗?")
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
@@ -1508,7 +1508,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
                                 requestPermissions(new String[] { Manifest.permission.CAMERA }, 101);
                             } else {
                                 CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                                customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
                                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.cancel();
@@ -1614,7 +1614,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
                             initView();
                         }else {
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里定位权限！")
+                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里定位权限！")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();
@@ -1682,7 +1682,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
                             }
                         } else {
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();
@@ -1808,7 +1808,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
                     stopLocation();
                 }else {
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
+                    customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();

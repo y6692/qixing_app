@@ -1141,7 +1141,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                 } else {
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
+                    customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
@@ -2272,7 +2272,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 if (isContainsList.contains(true)){
                     if ("1".equals(type)){
                         CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                        customBuilder.setTitle("温馨提示").setMessage("还车必须到校内关锁并拨乱数字密码，距车一米内在APP点击结束!")
+                        customBuilder.setType(3).setTitle("温馨提示").setMessage("还车必须到校内关锁并拨乱数字密码，距车一米内在APP点击结束!")
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.cancel();
@@ -2965,7 +2965,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                     if (!"2".equals(bean.getCardcheck())){
 
                                         CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                        customBuilder.setTitle("温馨提示").setMessage("为了您的骑行安全，请上传身份证完善保险信息")
+                                        customBuilder.setType(3).setTitle("温馨提示").setMessage("为了您的骑行安全，请上传身份证完善保险信息")
                                                 .setNegativeButton("去上传", new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         Intent intent1 = new Intent(context, InsureanceActivity.class);
@@ -2984,7 +2984,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                                             requestPermissions(new String[] { Manifest.permission.CAMERA }, 100);
                                                         } else {
                                                             CustomDialog.Builder customBuilder1 = new CustomDialog.Builder(context);
-                                                            customBuilder1.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                                                            customBuilder1.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
                                                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                                                         public void onClick(DialogInterface dialog, int which) {
                                                                             dialog.cancel();
@@ -3034,7 +3034,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                                     requestPermissions(new String[] { Manifest.permission.CAMERA }, 100);
                                                 } else {
                                                     CustomDialog.Builder customBuilder1 = new CustomDialog.Builder(context);
-                                                    customBuilder1.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                                                    customBuilder1.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
                                                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                                                 public void onClick(DialogInterface dialog, int which) {
                                                                     dialog.cancel();
@@ -3162,7 +3162,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                             }
                         }else {
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开电话权限！")
+                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开电话权限！")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();
@@ -3207,7 +3207,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                             }
                         }else {
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里允许获取相机权限！")
+                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里允许获取相机权限！")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();
@@ -3246,7 +3246,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                             initView();
                         } else {
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里允许获取定位权限！")
+                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里允许获取定位权限！")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();

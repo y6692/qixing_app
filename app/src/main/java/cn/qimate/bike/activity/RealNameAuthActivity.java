@@ -300,7 +300,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
                         } else {
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开拨打电话权限！")
+                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开拨打电话权限！")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();
@@ -1417,7 +1417,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                 requestPermissions(new String[] { Manifest.permission.CAMERA }, 101);
                             } else {
                                 CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                                customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
                                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.cancel();
@@ -1507,7 +1507,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             }
                         }else {
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开电话权限！")
+                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开电话权限！")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();
@@ -1582,7 +1582,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             }
                         } else {
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();

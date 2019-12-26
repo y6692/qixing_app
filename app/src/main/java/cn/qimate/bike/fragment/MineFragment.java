@@ -2,6 +2,7 @@ package cn.qimate.bike.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -21,6 +22,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
@@ -94,6 +96,7 @@ import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserBean;
 import cn.qimate.bike.model.UserIndexBean;
+import cn.qimate.bike.util.FileUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
@@ -123,6 +126,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private LinearLayout curRouteLayout, hisRouteLayout;
     private RelativeLayout  myOrderLayout, myMsgLayout, creditLayout, serviceCenterLayout, changePhoneLayout, authLayout, inviteLayout;
 
+    private ImageView iv_popup_window_back;
+    private RelativeLayout rl_popup_window;
+
+    private Button takePhotoBtn, pickPhotoBtn, cancelBtn;
+    private Bitmap upBitmap;
 
     private String imgUrl = Urls.uploadsheadImg;
     private String imageurl = "";
@@ -146,25 +154,30 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         super.onActivityCreated(savedInstanceState);
         context = getActivity();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ){
-            if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                Toast.makeText(context, "您的设备不支持蓝牙4.0", Toast.LENGTH_SHORT).show();
-                getActivity().finish();
-            }
-            //蓝牙锁
-            BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ){
+//            if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//                Toast.makeText(context, "您的设备不支持蓝牙4.0", Toast.LENGTH_SHORT).show();
+//                getActivity().finish();
+//            }
+//            //蓝牙锁
+//            BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
+//
+//            BluetoothAdapter mBluetoothAdapter = bluetoothManager.getAdapter();
+//            if (mBluetoothAdapter == null) {
+//                Toast.makeText(context, "获取蓝牙失败", Toast.LENGTH_SHORT).show();
+//                scrollToFinishActivity();
+//                return;
+//            }
+//            if (!mBluetoothAdapter.isEnabled()) {
+//                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                startActivityForResult(enableBtIntent, 188);
+//            }
+//        }
 
-            BluetoothAdapter mBluetoothAdapter = bluetoothManager.getAdapter();
-            if (mBluetoothAdapter == null) {
-                Toast.makeText(context, "获取蓝牙失败", Toast.LENGTH_SHORT).show();
-                scrollToFinishActivity();
-                return;
-            }
-            if (!mBluetoothAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, 188);
-            }
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
+
         scrollView = (PullToZoomScrollViewEx) getActivity().findViewById(R.id.scroll_view);
 //        loadViewForCode();
 //        imageWith = (int)(getActivity().getWindowManager().getDefaultDisplay().getWidth() * 0.8);
@@ -199,20 +212,20 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-//        imageUri = Uri.parse("file:///sdcard/temp.jpg");
-//        iv_popup_window_back = (ImageView) getActivity().findViewById(R.id.popupWindow_back);
-//        rl_popup_window = (RelativeLayout) getActivity().findViewById(R.id.popupWindow);
-//
-//        takePhotoBtn = (Button) getActivity().findViewById(R.id.takePhotoBtn);
-//        pickPhotoBtn = (Button) getActivity().findViewById(R.id.pickPhotoBtn);
-//        cancelBtn = (Button) getActivity().findViewById(R.id.cancelBtn);
-//
-//        takePhotoBtn.setOnClickListener(itemsOnClick);
-//        pickPhotoBtn.setOnClickListener(itemsOnClick);
-//        cancelBtn.setOnClickListener(itemsOnClick);
+        imageUri = Uri.parse("file:///sdcard/temp.jpg");
+        iv_popup_window_back = (ImageView) getActivity().findViewById(R.id.popupWindow_back);
+        rl_popup_window = (RelativeLayout) getActivity().findViewById(R.id.popupWindow);
+
+        takePhotoBtn = (Button) getActivity().findViewById(R.id.takePhotoBtn);
+        pickPhotoBtn = (Button) getActivity().findViewById(R.id.pickPhotoBtn);
+        cancelBtn = (Button) getActivity().findViewById(R.id.cancelBtn);
+
+        takePhotoBtn.setOnClickListener(itemsOnClick);
+        pickPhotoBtn.setOnClickListener(itemsOnClick);
+        cancelBtn.setOnClickListener(itemsOnClick);
 
         rightBtn = (ImageView) getActivity().findViewById(R.id.personUI_rightBtn);
-        headerImageView = getActivity().findViewById(R.id.personUI_bottom_header);
+        headerImageView = getActivity().findViewById(R.id.personUI_header);
         userName = getActivity().findViewById(R.id.personUI_userName);
 
 
@@ -232,6 +245,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         inviteLayout = getActivity().findViewById(R.id.personUI_inviteLayout);
 
         rightBtn.setOnClickListener(this);
+        headerImageView.setOnClickListener(this);
         myOrderLayout.setOnClickListener(this);
         myMsgLayout.setOnClickListener(this);
         creditLayout.setOnClickListener(this);
@@ -284,41 +298,107 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 }
                 break;
             case REQUESTCODE_PICK:// 直接从相册获取
-                if (data != null) {
+//                if (data != null) {
+//                    try {
+//                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                                File imgUri = new File(GetImagePath.getPath(context, data.getData()));
+//                                Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", imgUri);
+//                                startPhotoZoom(dataUri);
+//                            } else {
+//                                startPhotoZoom(data.getData());
+//                            }
+//                        } else {
+//                            Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
+//                        }
+//                    } catch (NullPointerException e) {
+//                        e.printStackTrace();// 用户点击取消操作
+//                    }
+//                }
+
+                if (data != null){
                     try {
-                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                File imgUri = new File(GetImagePath.getPath(context, data.getData()));
-                                Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", imgUri);
-                                startPhotoZoom(dataUri);
-                            } else {
-                                startPhotoZoom(data.getData());
+                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                            if (imageUri != null) {
+                                urlpath = getRealFilePath(context, data.getData());
+//                                urlpath  = FileUtil.getFilePathByUri(context, data.getData());
+//                                urlpath = getRealFilePath(context, imageUri);
+                                Log.e("minef=REQUESTCODE_PICK", data.getData()+"==="+urlpath+"==="+imageUri);
+
+//                                File picture = new File(urlpath);
+//                                Uri filepath = Uri.fromFile(picture);
+//
+                                compress(); //压缩图片
+
+//                                Bitmap bitmap = BitmapFactory.decodeFile(filepath.getPath());
+//                                upBitmap = BitmapFactory.decodeFile(urlpath);
+
+                                headerImageView.setImageBitmap(upBitmap);
+
+                                Log.e("minef=REQUESTCODE_PICK3", data.getData()+"===");
+
+//                                uploadImage();
                             }
-                        } else {
-                            Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                         }
                     } catch (NullPointerException e) {
                         e.printStackTrace();// 用户点击取消操作
                     }
                 }
+
                 break;
             case REQUESTCODE_TAKE:// 调用相机拍照
-//                File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
-//                startPhotoZoom(Uri.fromFile(temp));
-                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        //通过FileProvider创建一个content类型的Uri
-                        Uri inputUri = FileProvider.getUriForFile(context,
-                                BuildConfig.APPLICATION_ID + ".provider",
-                                new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME));
-                        startPhotoZoom(inputUri);//设置输入类型
-                    } else {
-                        File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
-                        startPhotoZoom(Uri.fromFile(temp));
+//                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                        //通过FileProvider创建一个content类型的Uri
+//                        Uri inputUri = FileProvider.getUriForFile(context,
+//                                BuildConfig.APPLICATION_ID + ".provider",
+//                                new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME));
+//                        startPhotoZoom(inputUri);//设置输入类型
+//                    } else {
+//                        File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
+//                        startPhotoZoom(Uri.fromFile(temp));
+//                    }
+//                } else {
+//                    Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
+//                }
+
+                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+
+                    File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
+                    if (Uri.fromFile(temp) != null) {
+                        urlpath = getRealFilePath(context, Uri.fromFile(temp));
+                        Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
+
+                        Uri filepath = Uri.fromFile(temp);
+
+                        compress(); //压缩图片
+
+                        headerImageView.setImageBitmap(upBitmap);
+
+                        Log.e("REQUESTCODE_TAKE===3", upBitmap+"==="+filepath.getPath());
+
+//                        uploadImage();
                     }
-                } else {
-                    Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
+
+//                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
+//                            if (Uri.fromFile(temp) != null) {
+//                                urlpath = getRealFilePath(context, Uri.fromFile(temp));
+//
+//                                Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
+//
+//                                if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                                    loadingDialog.setTitle("请稍等");
+//                                    loadingDialog.show();
+//                                }
+//
+//                                new Thread(uploadImageRunnable).start();
+//                            }
+                }else {
+                    Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                 }
+
                 break;
             case REQUESTCODE_CUTTING:// 取得裁剪后的图片
                 if (data != null) {
@@ -388,20 +468,88 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     /**
      * 保存裁剪之后的图片数据
      *
-     * @param picdata
+     * @param data
      */
-    private void setPicToView(Intent picdata) {
-        Bundle extras = picdata.getExtras();
+    private void setPicToView(Intent data) {
+        Bundle extras = data.getExtras();
         if (imageUri != null) {
             urlpath = getRealFilePath(context, imageUri);
-            if (loadingDialog != null && !loadingDialog.isShowing()) {
-                loadingDialog.setTitle("请稍等");
-                loadingDialog.show();
-            }
-            new Thread(uploadImageRunnable).start();
+//            if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                loadingDialog.setTitle("请稍等");
+//                loadingDialog.show();
+//            }
+//            new Thread(uploadImageRunnable).start();
+
+//            urlpath  = FileUtil.getFilePathByUri(context, data.getData());
+//            urlpath  = FileUtil.getFilePathByUri(context, extras);
+
+            Log.e("REQUESTCODE_PICK===", data.getData()+"==="+urlpath);
+
+            File picture = new File(urlpath);
+            Uri filepath = Uri.fromFile(picture);
+
+            compress(); //压缩图片
+
+            headerImageView.setImageBitmap(upBitmap);
+
         }
 
     }
+
+    void compress(){
+        // 设置参数
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true; // 只获取图片的大小信息，而不是将整张图片载入在内存中，避免内存溢出
+        BitmapFactory.decodeFile(urlpath, options);
+        int height = options.outHeight;
+        int width= options.outWidth;
+        int inSampleSize = 2; // 默认像素压缩比例，压缩为原图的1/2
+        int minLen = Math.min(height, width); // 原图的最小边长
+        if(minLen > 100) { // 如果原始图像的最小边长大于100dp（此处单位我认为是dp，而非px）
+            float ratio = (float)minLen / 100.0f; // 计算像素压缩比例
+            inSampleSize = (int)ratio;
+        }
+        options.inJustDecodeBounds = false; // 计算好压缩比例后，这次可以去加载原图了
+        options.inSampleSize = inSampleSize; // 设置为刚才计算的压缩比例
+        upBitmap = BitmapFactory.decodeFile(urlpath, options); // 解码文件
+    }
+
+    Handler mHandler = new Handler(new Handler.Callback() {
+
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                    try {
+                        // 返回数据示例，根据需求和后台数据灵活处理
+                        JSONObject jsonObject = new JSONObject(resultStr);
+                        // 服务端以字符串“1”作为操作成功标记
+                        if (jsonObject.optString("flag").equals("Success")) {
+                            BitmapFactory.Options option = new BitmapFactory.Options();
+                            // 压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图，3为三分之一
+                            option.inSampleSize = 1;
+                            imageurl = jsonObject.optString("data");
+//                            Glide.with(context).load(Urls.host + imageurl).asBitmap().into(headerImageView);
+                            ImageLoader.getInstance().displayImage(Urls.host + imageurl, headerImageView);
+                            Toast.makeText(context, "照片上传成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (JSONException e) {
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+            return false;
+        }
+    });
 
     /**
      * 使用HttpUrlConnection模拟post表单进行文件 上传平时很少使用，比较麻烦 原理是：
@@ -469,42 +617,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         }
     };
 
-    Handler mHandler = new Handler(new Handler.Callback() {
 
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
-                    try {
-                        // 返回数据示例，根据需求和后台数据灵活处理
-                        JSONObject jsonObject = new JSONObject(resultStr);
-                        // 服务端以字符串“1”作为操作成功标记
-                        if (jsonObject.optString("flag").equals("Success")) {
-                            BitmapFactory.Options option = new BitmapFactory.Options();
-                            // 压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图，3为三分之一
-                            option.inSampleSize = 1;
-                            imageurl = jsonObject.optString("data");
-//                            Glide.with(context).load(Urls.host + imageurl).asBitmap().into(headerImageView);
-                            ImageLoader.getInstance().displayImage(Urls.host + imageurl, headerImageView);
-                            Toast.makeText(context, "照片上传成功", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(context, jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
-                        }
-
-                    } catch (JSONException e) {
-                    }
-
-                    break;
-
-                default:
-                    break;
-            }
-            return false;
-        }
-    });
 
 
     @SuppressLint("NewApi")
@@ -536,7 +649,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                     }
                 } else {
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                    customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
@@ -566,7 +679,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
 
-        final String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
         if (access_token == null || "".equals(access_token)) {
             Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
@@ -585,8 +697,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 startActivityForResult(intent, 10);
                 break;
 
-            case R.id.personUI_bottom_header:
-//                clickPopupWindow();
+            case R.id.personUI_header:
+                clickPopupWindow();
 //                UIHelper.goToAct(context, PersonInfoActivity.class);
 
                 break;
@@ -633,58 +745,115 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         }
     }
 
-    private void logout(String uid, String access_token) {
+    private void clickPopupWindow() {
+        // 获取截图的Bitmap
+        Bitmap bitmap = UtilScreenCapture.getDrawing(getActivity());
 
-        RequestParams params = new RequestParams();
-        params.put("uid", uid);
-        params.put("access_token", access_token);
-        HttpHelper.post(context, Urls.logout, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在提交");
-                    loadingDialog.show();
-                }
-            }
+        if (bitmap != null) {
+            // 将截屏Bitma放入ImageView
+            iv_popup_window_back.setImageBitmap(bitmap);
+            // 将ImageView进行高斯模糊【25是最高模糊等级】【0x77000000是蒙上一层颜色，此参数可不填】
+            UtilBitmap.blurImageView(context, iv_popup_window_back, 5, 0xAA000000);
+        } else {
+            // 获取的Bitmap为null时，用半透明代替
+            iv_popup_window_back.setBackgroundColor(0x77000000);
+        }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
-            }
+        // 打开弹窗
+        UtilAnim.showToUp(rl_popup_window, iv_popup_window_back);
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        SharedPreferencesUrls.getInstance().putString("uid", "");
-                        SharedPreferencesUrls.getInstance().putString("access_token", "");
-                        SharedPreferencesUrls.getInstance().putString("nickname", "");
-                        SharedPreferencesUrls.getInstance().putString("realname", "");
-                        SharedPreferencesUrls.getInstance().putString("sex", "");
-                        SharedPreferencesUrls.getInstance().putString("headimg", "");
-                        SharedPreferencesUrls.getInstance().putString("points", "");
-                        SharedPreferencesUrls.getInstance().putString("money", "");
-                        SharedPreferencesUrls.getInstance().putString("bikenum", "");
-                        SharedPreferencesUrls.getInstance().putString("iscert", "");
-                        setAlias("");
-                        Toast.makeText(context, "恭喜您,您已安全退出!", Toast.LENGTH_SHORT).show();
-                        scrollToFinishActivity();
-                    } else {
-                        Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-            }
-        });
     }
+
+    private void clickClosePopupWindow() {
+        UtilAnim.hideToDown(rl_popup_window, iv_popup_window_back);
+    }
+
+    private View.OnClickListener itemsOnClick = new View.OnClickListener() {
+        @SuppressLint("NewApi")
+        @Override
+        public void onClick(View v) {
+            clickClosePopupWindow();
+            switch (v.getId()) {
+                // 拍照
+                case R.id.takePhotoBtn:
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        int checkPermission = context.checkSelfPermission(Manifest.permission.CAMERA);
+                        if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+                            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                                requestPermissions(new String[]{Manifest.permission.CAMERA}, 101);
+                            } else {
+                                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                            }
+                                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                        requestPermissions(new String[]{Manifest.permission.CAMERA},
+                                                101);
+
+                                    }
+                                });
+                                customBuilder.create().show();
+                            }
+                            return;
+                        }
+                    }
+//                    Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                    // 下面这句指定调用相机拍照后的照片存储的路径
+//                    takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+//                            Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+//                    startActivityForResult(takeIntent, REQUESTCODE_TAKE);
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                        Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(PersonAlterActivity.this,
+//                                    BuildConfig.APPLICATION_ID + ".provider",
+//                                    new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, RxFileTool.getUriForFile(context,
+                                    new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+                            takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                        } else {
+                            // 下面这句指定调用相机拍照后的照片存储的路径
+                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+                        }
+                        startActivityForResult(takeIntent, REQUESTCODE_TAKE);
+                    } else {
+                        Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                // 相册选择图片
+                case R.id.pickPhotoBtn:
+//                    Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                            pickIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(PersonAlterActivity.this,
+//                                    BuildConfig.APPLICATION_ID + ".provider",
+//                                    new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+//                            pickIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//                            pickIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                        } else {
+//                            // 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
+//                            pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+//                        }
+//                        startActivityForResult(pickIntent, REQUESTCODE_PICK);
+                        Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
+                        // 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
+                        pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                        startActivityForResult(pickIntent, REQUESTCODE_PICK);
+                    } else {
+                        Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
 
     private void getCurrentorder(String uid, String access_token) {
         RequestParams params = new RequestParams();
@@ -746,12 +915,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
     private void initHttp() {
 
-        String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
         if (access_token != null && !"".equals(access_token)) {
-//            RequestParams params = new RequestParams();
-//            params.put("uid", uid);
-//            params.put("access_token", access_token);
             HttpHelper.get(context, Urls.user, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
@@ -781,13 +946,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //                            myIntegral.setText(bean.getPoints());
                         userName.setText(bean.getPhone());
 //                            if (bean.getHeadimg() != null && !"".equals(bean.getHeadimg())) {
-//                                if ("gif".equalsIgnoreCase(bean.getHeadimg().substring(bean.getHeadimg().lastIndexOf(".") + 1,
-//                                        bean.getHeadimg().length()))) {
-//                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg())
-//                                            .asGif().centerCrop().into(headerImageView);
+//                                if ("gif".equalsIgnoreCase(bean.getHeadimg().substring(bean.getHeadimg().lastIndexOf(".") + 1, bean.getHeadimg().length()))) {
+//                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg()).asGif().centerCrop().into(headerImageView);
 //                                } else {
-//                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg())
-//                                            .asBitmap().centerCrop().into(headerImageView);
+//                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg()).asBitmap().centerCrop().into(headerImageView);
 //                                }
 //                            }
 //                            if ("2".equals(bean.getIscert())) {
@@ -797,8 +959,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //                            }
 
 //                        if (result.getFlag().equals("Success")) {
-//
-//
 //                        } else {
 //                            Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
 //                        }

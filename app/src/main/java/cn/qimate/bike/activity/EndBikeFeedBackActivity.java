@@ -21,6 +21,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -219,6 +220,10 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 //        bikeCode = "40001";
 
         initView();
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
     }
 
 
@@ -406,7 +411,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                     clickPopupWindow();
                 }else {
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                    customBuilder.setTitle("温馨提示").setMessage("确认删除图片吗?")       //TODO
+                    customBuilder.setType(3).setTitle("温馨提示").setMessage("确认删除图片吗?")       //TODO
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
@@ -1818,7 +1823,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                                 requestPermissions(new String[] { Manifest.permission.CAMERA }, 101);
                             } else {
                                 CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                                customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
                                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.cancel();
@@ -1883,7 +1888,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                             initView();
                         }else {
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里定位权限！")
+                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里定位权限！")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();
@@ -1951,7 +1956,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                             }
                         } else {
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();
@@ -2077,7 +2082,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                     stopLocation();
                 }else {
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
+                    customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();

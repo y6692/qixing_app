@@ -398,7 +398,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                     clickPopupWindow();
                 }else {
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                    customBuilder.setTitle("温馨提示").setMessage("确认删除图片吗?")
+                    customBuilder.setType(3).setTitle("温馨提示").setMessage("确认删除图片吗?")
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
@@ -985,7 +985,6 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                                         }
                                         new Thread(uploadImageRunnable).start();
                                     }
-//                            }
                                 }else {
                                     ToastUtil.showMessageApp(context,"未找到存储卡，无法存储照片！");
                                 }
@@ -1553,7 +1552,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                                 requestPermissions(new String[] { Manifest.permission.CAMERA }, 101);
                             } else {
                                 CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                                customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
                                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.cancel();
@@ -1618,7 +1617,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                             initView();
                         }else {
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里定位权限！")
+                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里定位权限！")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();
@@ -1686,7 +1685,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                             }
                         } else {
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();
@@ -1812,7 +1811,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                     stopLocation();
                 }else {
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
+                    customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();

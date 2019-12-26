@@ -357,7 +357,7 @@ public class UpdateManager {
 		if (NetworkUtils.isNetWorkAvalible(mContext)) {
 			if (NetworkUtils.getNetWorkType(mContext) != NetworkUtils.WIFI) {
 				CustomDialog.Builder customBuilder = new CustomDialog.Builder(mContext);
-				customBuilder.setTitle("温馨提示").setMessage("你当前是在非WIFI下，是否确定更新?")
+				customBuilder.setType(3).setTitle("温馨提示").setMessage("你当前是在非WIFI下，是否确定更新?")
 						.setNegativeButton("取消", new OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
 								dialog.cancel();
