@@ -330,9 +330,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         context = getActivity();
         activity = getActivity();
 
-//        activity.registerReceiver(broadcastReceiver, Config.initFilter());
-//        GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
-
         mapView = activity.findViewById(R.id.mainUI_map);
         mapView.onCreate(savedInstanceState);
 
@@ -4768,6 +4765,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             BaseApplication.getInstance().getIBLE().refreshCache();
             BaseApplication.getInstance().getIBLE().close();
             BaseApplication.getInstance().getIBLE().disconnect();
+
+            if (broadcastReceiver != null) {
+                activity.unregisterReceiver(broadcastReceiver);
+                broadcastReceiver = null;
+            }
         }
 
         super.onDestroy();
@@ -4778,10 +4780,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             mapView.onDestroy();
         }
 
-        if (broadcastReceiver != null) {
-            activity.unregisterReceiver(broadcastReceiver);
-            broadcastReceiver = null;
-        }
+
 
         if (broadcastReceiver2 != null) {
             activity.unregisterReceiver(broadcastReceiver2);

@@ -1204,10 +1204,14 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
                 // 相册选择图片
                 case R.id.pickPhotoBtn:
                     if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-                        Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
-                        // 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
-                        pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                        startActivityForResult(pickIntent, REQUESTCODE_PICK);
+                        Intent intent;
+                        if (Build.VERSION.SDK_INT < 19) {
+                            intent = new Intent(Intent.ACTION_GET_CONTENT);
+                            intent.setType("image/*");
+                        } else {
+                            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        }
+                        startActivityForResult(intent, REQUESTCODE_PICK);
                     }else {
                         Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                     }

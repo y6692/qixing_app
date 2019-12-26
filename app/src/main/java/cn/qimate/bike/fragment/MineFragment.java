@@ -103,6 +103,7 @@ import cn.qimate.bike.util.UtilScreenCapture;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static android.provider.DocumentsContract.getDocumentId;
 
 @SuppressLint("NewApi")
 public class MineFragment extends BaseFragment implements View.OnClickListener{
@@ -283,13 +284,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        Log.e("minef=onActivityResult", requestCode+"==="+resultCode);
+
         switch (requestCode) {
             case 10:
                 if (resultCode == RESULT_OK) {
 //                    codenum = data.getStringExtra("codenum");
 //                    m_nowMac = data.getStringExtra("m_nowMac");
 
-                    Log.e("mf===onActivityResult", requestCode+"==="+resultCode);
+
 
                     ((MainActivity)getActivity()).changeTab(0);
 
@@ -298,54 +301,105 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 }
                 break;
             case REQUESTCODE_PICK:// 直接从相册获取
-//                if (data != null) {
-//                    try {
-//                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                                File imgUri = new File(GetImagePath.getPath(context, data.getData()));
-//                                Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", imgUri);
-//                                startPhotoZoom(dataUri);
-//                            } else {
-//                                startPhotoZoom(data.getData());
-//                            }
-//                        } else {
-//                            Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
-//                        }
-//                    } catch (NullPointerException e) {
-//                        e.printStackTrace();// 用户点击取消操作
-//                    }
-//                }
 
-                if (data != null){
-                    try {
-                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-                            if (imageUri != null) {
-                                urlpath = getRealFilePath(context, data.getData());
-//                                urlpath  = FileUtil.getFilePathByUri(context, data.getData());
-//                                urlpath = getRealFilePath(context, imageUri);
-                                Log.e("minef=REQUESTCODE_PICK", data.getData()+"==="+urlpath+"==="+imageUri);
 
-//                                File picture = new File(urlpath);
-//                                Uri filepath = Uri.fromFile(picture);
-//
-                                compress(); //压缩图片
+                if (resultCode == RESULT_OK) {
 
-//                                Bitmap bitmap = BitmapFactory.decodeFile(filepath.getPath());
-//                                upBitmap = BitmapFactory.decodeFile(urlpath);
+                    if (data != null) {
+                        try {
+                            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 
-                                headerImageView.setImageBitmap(upBitmap);
+                                Log.e("minef=REQUESTCODE_PICK", Build.VERSION.SDK_INT+"==="+data.getData());
 
-                                Log.e("minef=REQUESTCODE_PICK3", data.getData()+"===");
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    File imgUri = new File(GetImagePath.getPath(context, data.getData()));
 
-//                                uploadImage();
+                                    Log.e("minef=REQUESTCODE_PICK2", imgUri+"==="+BuildConfig.APPLICATION_ID);
+
+                                    Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", imgUri);
+
+                                    Log.e("minef=REQUESTCODE_PICK3", imgUri+"==="+dataUri);
+
+                                    startPhotoZoom(dataUri);
+                                } else {
+                                    startPhotoZoom(data.getData());
+                                }
+                            } else {
+                                Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
                             }
-                        }else {
-                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();// 用户点击取消操作
                         }
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();// 用户点击取消操作
                     }
+
+//                    if (data != null){
+//                        try {
+//                            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+//                                if (imageUri != null) {
+//                                urlpath = getRealFilePath(data.getData());
+////                                urlpath  = FileUtil.getFilePathByUri(context, data.getData());
+////                                urlpath = getRealFilePath(context, imageUri);
+//
+////                                urlpath  = "/zhuanke/firstBottomMenu/4321681icon_w_1_ORIGIN_0kjM.png";
+//
+////                                    Cursor cursor = null;
+////
+//////                                String[] proj = { MediaStore.Images.Media.DATA};
+//////                                cursor = getActivity().getContentResolver().query(data.getData(), proj, null, null, null);
+////                                    cursor = getActivity().getContentResolver().query(data.getData(), null, null, null, null);
+////
+////                                    if (cursor.moveToFirst()) {
+//////                                      urlpath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+////                                        urlpath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+////
+////                                        Log.e("minef=REQUESTCODE_PICK0", cursor+"==="+urlpath);
+////
+////                                        //api>=19时，photo_path的值为null，此时再做处理
+////                                        if(urlpath == null) {
+////                                            String wholeID = getDocumentId(data.getData());
+////                                            String id = wholeID.split(":")[1];
+////                                            String[] column = { MediaStore.Images.Media.DATA };
+////                                            String sel = MediaStore.Images.Media._ID +"=?";
+////                                            cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, column, sel, new String[] { id }, null);
+////                                            int columnIndex = cursor.getColumnIndex(column[0]);
+////                                            if (cursor.moveToFirst()){
+////                                                urlpath = cursor.getString(columnIndex);//此时的路径为照片路径
+////                                            }
+////                                        }
+////                                    }
+////                                    cursor.close();
+//
+////                                    mHandler.sendEmptyMessage(1);
+//
+//                                    compress(); //压缩图片
+//
+//                                    //                                Bitmap bitmap = BitmapFactory.decodeFile(filepath.getPath());
+//                                    //                                upBitmap = BitmapFactory.decodeFile(urlpath);
+//
+//                                    Log.e("minef=REQUESTCODE_PICK", urlpath+"==="+imageUri+"==="+upBitmap);
+//
+//                                    //                                upBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(uriImageview));
+//
+//                                    headerImageView.setImageBitmap(upBitmap);
+//
+//                                    Log.e("minef=REQUESTCODE_PICK3", "===");
+//
+//
+////                                uploadImage();
+//                                }
+//                            }else {
+//                                Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+//                            }
+//                        } catch (NullPointerException e) {
+//                            e.printStackTrace();// 用户点击取消操作
+//                        }
+//                    }
+
+                } else {
+//                    Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();
                 }
+
+
 
                 break;
             case REQUESTCODE_TAKE:// 调用相机拍照
@@ -368,16 +422,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
                     File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
                     if (Uri.fromFile(temp) != null) {
-                        urlpath = getRealFilePath(context, Uri.fromFile(temp));
+                        urlpath = getRealFilePath(Uri.fromFile(temp));
                         Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
 
-                        Uri filepath = Uri.fromFile(temp);
+//                        Uri filepath = Uri.fromFile(temp);
 
                         compress(); //压缩图片
 
                         headerImageView.setImageBitmap(upBitmap);
 
-                        Log.e("REQUESTCODE_TAKE===3", upBitmap+"==="+filepath.getPath());
+                        Log.e("REQUESTCODE_TAKE===3", upBitmap+"===");
 
 //                        uploadImage();
                     }
@@ -406,6 +460,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 }
                 break;
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -424,6 +479,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         }
+
+        Log.e("minef=startPhotoZoom", imageUri+"==="+uri);
+
         intent.setDataAndType(uri, "image/*");
         // crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
         intent.putExtra("crop", "true");
@@ -440,7 +498,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         startActivityForResult(intent, REQUESTCODE_CUTTING);
     }
 
-    public static String getRealFilePath(final Context context, final Uri uri) {
+    public String getRealFilePath(final Uri uri) {
         if (null == uri)
             return null;
         final String scheme = uri.getScheme();
@@ -450,13 +508,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
             data = uri.getPath();
         } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
-            Cursor cursor = context.getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null,
-                    null);
+//            Cursor cursor = context.getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
+            Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
+
             if (null != cursor) {
                 if (cursor.moveToFirst()) {
                     int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
                     if (index > -1) {
                         data = cursor.getString(index);
+
+                        Log.e("getRealFilePath===", cursor+"==="+data);
                     }
                 }
                 cursor.close();
@@ -473,24 +534,23 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private void setPicToView(Intent data) {
         Bundle extras = data.getExtras();
         if (imageUri != null) {
-            urlpath = getRealFilePath(context, imageUri);
+            urlpath = getRealFilePath(imageUri);
 //            if (loadingDialog != null && !loadingDialog.isShowing()) {
 //                loadingDialog.setTitle("请稍等");
 //                loadingDialog.show();
 //            }
 //            new Thread(uploadImageRunnable).start();
 
+            Bitmap bitmap = BitmapFactory.decodeFile(urlpath);
+            headerImageView.setImageBitmap(bitmap);
+
 //            urlpath  = FileUtil.getFilePathByUri(context, data.getData());
 //            urlpath  = FileUtil.getFilePathByUri(context, extras);
 
-            Log.e("REQUESTCODE_PICK===", data.getData()+"==="+urlpath);
+            Log.e("minef===setPicToView", data.getData()+"==="+urlpath);
 
-            File picture = new File(urlpath);
-            Uri filepath = Uri.fromFile(picture);
-
-            compress(); //压缩图片
-
-            headerImageView.setImageBitmap(upBitmap);
+//            compress(); //压缩图片
+//            headerImageView.setImageBitmap(upBitmap);
 
         }
 
@@ -541,6 +601,25 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
                     } catch (JSONException e) {
                     }
+
+                    break;
+
+                case 1:
+                    Bitmap bitmap = BitmapFactory.decodeFile(urlpath);
+                    headerImageView.setImageBitmap(bitmap);
+
+//                    compress(); //压缩图片
+//
+//                    //                                Bitmap bitmap = BitmapFactory.decodeFile(filepath.getPath());
+//                    //                                upBitmap = BitmapFactory.decodeFile(urlpath);
+//
+//                    Log.e("minef=REQUESTCODE_PICK", urlpath+"==="+imageUri+"==="+upBitmap);
+//
+//                    //                                upBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(uriImageview));
+//
+//                    headerImageView.setImageBitmap(upBitmap);
+//
+//                    Log.e("minef=REQUESTCODE_PICK3", "===");
 
                     break;
 
@@ -806,25 +885,45 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //                    takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
 //                            Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
 //                    startActivityForResult(takeIntent, REQUESTCODE_TAKE);
-                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                        Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(PersonAlterActivity.this,
-//                                    BuildConfig.APPLICATION_ID + ".provider",
+//                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+//                        Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, RxFileTool.getUriForFile(context,
 //                                    new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
-                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, RxFileTool.getUriForFile(context,
-                                    new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
-                            takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        } else {
-                            // 下面这句指定调用相机拍照后的照片存储的路径
-                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+//                            takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                            takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//                        } else {
+//                            // 下面这句指定调用相机拍照后的照片存储的路径
+//                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+//                        }
+//                        startActivityForResult(takeIntent, REQUESTCODE_TAKE);
+//                    } else {
+//                        Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
+//                    }
+
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                        Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                        File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);
+                        if(!file.getParentFile().exists()){
+                            file.getParentFile().mkdirs();
                         }
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file));
+
+                        }else {
+                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                        }
+
+
                         startActivityForResult(takeIntent, REQUESTCODE_TAKE);
-                    } else {
-                        Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                     }
+
                     break;
+
                 // 相册选择图片
                 case R.id.pickPhotoBtn:
 //                    Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
@@ -841,12 +940,23 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //                        }
 //                        startActivityForResult(pickIntent, REQUESTCODE_PICK);
                         Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
+//                        Intent pickIntent = new Intent(Intent.ACTION_GET_CONTENT, null);
                         // 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
                         pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                        startActivityForResult(pickIntent, REQUESTCODE_PICK);
+                        getActivity().startActivityForResult(pickIntent, REQUESTCODE_PICK);
+
+//                        Intent intent;
+//                        if (Build.VERSION.SDK_INT < 19) {
+//                            intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                            intent.setType("image/*");
+//                        } else {
+//                            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                        }
+//                        startActivityForResult(intent, REQUESTCODE_PICK);
                     } else {
                         Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
                     }
+
                     break;
                 default:
                     break;
