@@ -246,8 +246,9 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         takePhotoBtn = (Button)findViewById(R.id.takePhotoBtn);
         pickPhotoBtn = (Button)findViewById(R.id.pickPhotoBtn);
         cancelBtn = (Button)findViewById(R.id.cancelBtn);
+        LinearLayout ll_pickPhotoBtn = (LinearLayout) findViewById(R.id.ll_pickPhotoBtn);
 
-        pickPhotoBtn.setVisibility(View.GONE);
+        ll_pickPhotoBtn.setVisibility(View.GONE);
         takePhotoBtn.setOnClickListener(itemsOnClick);
         pickPhotoBtn.setOnClickListener(itemsOnClick);
         cancelBtn.setOnClickListener(itemsOnClick);

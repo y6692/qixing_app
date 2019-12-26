@@ -316,7 +316,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
                                     Log.e("minef=REQUESTCODE_PICK2", imgUri+"==="+BuildConfig.APPLICATION_ID);
 
-                                    Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", imgUri);
+                                    Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", imgUri);
 
                                     Log.e("minef=REQUESTCODE_PICK3", imgUri+"==="+dataUri);
 
@@ -712,7 +712,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                             Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context,
-                                        BuildConfig.APPLICATION_ID + ".provider",
+                                        BuildConfig.APPLICATION_ID + ".fileprovider",
                                         new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
                                 takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -939,20 +939,22 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //                            pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
 //                        }
 //                        startActivityForResult(pickIntent, REQUESTCODE_PICK);
-                        Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
-//                        Intent pickIntent = new Intent(Intent.ACTION_GET_CONTENT, null);
-                        // 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
-                        pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                        getActivity().startActivityForResult(pickIntent, REQUESTCODE_PICK);
+//                        Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
+////                        Intent pickIntent = new Intent(Intent.ACTION_GET_CONTENT, null);
+//                        // 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
+//                        pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+//                        startActivityForResult(pickIntent, REQUESTCODE_PICK);
+//
+//                        Log.e("minef===pickPhotoBtn", "==="+Intent.ACTION_PICK);
 
-//                        Intent intent;
-//                        if (Build.VERSION.SDK_INT < 19) {
-//                            intent = new Intent(Intent.ACTION_GET_CONTENT);
-//                            intent.setType("image/*");
-//                        } else {
-//                            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                        }
-//                        startActivityForResult(intent, REQUESTCODE_PICK);
+                        Intent intent;
+                        if (Build.VERSION.SDK_INT < 19) {
+                            intent = new Intent(Intent.ACTION_GET_CONTENT);
+                            intent.setType("image/*");
+                        } else {
+                            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        }
+                        startActivityForResult(intent, REQUESTCODE_PICK);
                     } else {
                         Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
                     }
@@ -1055,6 +1057,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //                            myPurse.setText(bean.getMoney());
 //                            myIntegral.setText(bean.getPoints());
                         userName.setText(bean.getPhone());
+
+                        //TODO
 //                            if (bean.getHeadimg() != null && !"".equals(bean.getHeadimg())) {
 //                                if ("gif".equalsIgnoreCase(bean.getHeadimg().substring(bean.getHeadimg().lastIndexOf(".") + 1, bean.getHeadimg().length()))) {
 //                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg()).asGif().centerCrop().into(headerImageView);
@@ -1062,16 +1066,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg()).asBitmap().centerCrop().into(headerImageView);
 //                                }
 //                            }
-//                            if ("2".equals(bean.getIscert())) {
-//                                authState.setVisibility(View.VISIBLE);
-//                            } else {
-//                                authState.setVisibility(View.GONE);
-//                            }
 
-//                        if (result.getFlag().equals("Success")) {
-//                        } else {
-//                            Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
-//                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

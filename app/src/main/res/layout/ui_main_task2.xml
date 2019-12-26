@@ -59,22 +59,32 @@
                     android:textColor="#0777FF"
                     android:textSize="16sp"
                     android:gravity="center"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#efefef"/>
-                <Button
-                    android:id="@+id/pickPhotoBtn2"
-                    android:layout_width="match_parent"
+
+                <LinearLayout
+                    android:id="@+id/ll_pickPhotoBtn2"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
-                    android:background="@null"
-                    android:padding="10dp"
-                    android:text="从相册选择"
-                    android:textColor="#0777FF"
-                    android:textSize="16sp"
-                    android:gravity="center"/>
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#efefef"/>
+                    <Button
+                        android:id="@+id/pickPhotoBtn2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:layout_marginRight="10dip"
+                        android:background="@null"
+                        android:padding="10dp"
+                        android:text="从相册选择"
+                        android:textColor="#0777FF"
+                        android:textSize="16sp"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <Button

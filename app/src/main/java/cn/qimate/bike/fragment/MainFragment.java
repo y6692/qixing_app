@@ -449,6 +449,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         rl_ad.setVisibility(View.VISIBLE);
                         ll_top_biking.setVisibility(View.GONE);
                         ll_top_pay.setVisibility(View.GONE);
+                        tv_authBtn.setText("");
 
                         if(unauthorized_code==1) {
                             tv_authBtn.setText("您还未登录，点我快速登录");

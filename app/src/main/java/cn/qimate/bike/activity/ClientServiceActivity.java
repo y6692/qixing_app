@@ -259,7 +259,9 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
             tv.setText("还车提示：校内地图红色区域关锁，并点击结束");
         }
 
-        pickPhotoBtn.setVisibility(View.GONE);
+        LinearLayout ll_pickPhotoBtn = (LinearLayout) findViewById(R.id.ll_pickPhotoBtn);
+
+        ll_pickPhotoBtn.setVisibility(View.GONE);
         takePhotoBtn.setOnClickListener(itemsOnClick);
 //        pickPhotoBtn.setOnClickListener(itemsOnClick);
         cancelBtn.setOnClickListener(itemsOnClick);

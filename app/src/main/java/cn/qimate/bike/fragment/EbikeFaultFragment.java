@@ -291,8 +291,9 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
         takePhotoBtn = activity.findViewById(R.id.takePhotoBtn2);
         pickPhotoBtn = activity.findViewById(R.id.pickPhotoBtn2);
         cancelBtn = activity.findViewById(R.id.cancelBtn2);
+        LinearLayout ll_pickPhotoBtn = activity.findViewById(R.id.ll_pickPhotoBtn2);
 
-        pickPhotoBtn.setVisibility(View.GONE);
+        ll_pickPhotoBtn.setVisibility(View.GONE);
         takePhotoBtn.setOnClickListener(itemsOnClick);
         pickPhotoBtn.setOnClickListener(itemsOnClick);
         cancelBtn.setOnClickListener(itemsOnClick);

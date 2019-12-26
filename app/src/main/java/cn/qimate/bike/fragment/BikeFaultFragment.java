@@ -258,8 +258,9 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
         takePhotoBtn = activity.findViewById(R.id.takePhotoBtn);
         pickPhotoBtn = activity.findViewById(R.id.pickPhotoBtn);
         cancelBtn = activity.findViewById(R.id.cancelBtn);
+        LinearLayout ll_pickPhotoBtn = activity.findViewById(R.id.ll_pickPhotoBtn);
 
-        pickPhotoBtn.setVisibility(View.GONE);
+        ll_pickPhotoBtn.setVisibility(View.GONE);
         takePhotoBtn.setOnClickListener(itemsOnClick);
         pickPhotoBtn.setOnClickListener(itemsOnClick);
         cancelBtn.setOnClickListener(itemsOnClick);
@@ -973,7 +974,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                         Log.e("requestCode===1", "==="+resultCode);
                         break;
 
-                    case REQUESTCODE_PICK:// 直接从相册获取
+                    case REQUESTCODE_PICK:// 相册
                         if (data != null){
                             try {
                                 if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
@@ -993,7 +994,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                             }
                         }
                         break;
-                    case REQUESTCODE_TAKE:// 调用相机拍照
+                    case REQUESTCODE_TAKE:// 相机
 
 //                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
 //                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
