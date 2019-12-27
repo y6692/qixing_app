@@ -1058,7 +1058,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //                            myIntegral.setText(bean.getPoints());
                         userName.setText(bean.getPhone());
 
-                        //TODO
+                        //TODO  3
 //                            if (bean.getHeadimg() != null && !"".equals(bean.getHeadimg())) {
 //                                if ("gif".equalsIgnoreCase(bean.getHeadimg().substring(bean.getHeadimg().lastIndexOf(".") + 1, bean.getHeadimg().length()))) {
 //                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg()).asGif().centerCrop().into(headerImageView);

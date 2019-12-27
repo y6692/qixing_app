@@ -16,11 +16,14 @@ public class AuthStateBean {
 
     private String user_name;   //姓名
     private String student_id;  //学号
-    private String school_id;   //学校ID
+    private int school_id;   //学校ID
+    private String school_name;
     private String admission_time;  //入学时间
     private String identity_number; //身份证号
     private String cert_photo;  //证件照
+    private String cert_photo_url;  //证件照地址
     private String holding_cert_photo;  //手持证件照
+    private String holding_cert_photo_url;  //手持证件照地址
     private int status; //认证状态 0待认证 1认证中 2已驳回 3认证成功
 
 
@@ -97,12 +100,20 @@ public class AuthStateBean {
         this.student_id = student_id;
     }
 
-    public String getSchool_id() {
+    public int getSchool_id() {
         return school_id;
     }
 
-    public void setSchool_id(String school_id) {
+    public void setSchool_id(int school_id) {
         this.school_id = school_id;
+    }
+
+    public String getSchool_name() {
+        return school_name;
+    }
+
+    public void setSchool_name(String school_name) {
+        this.school_name = school_name;
     }
 
     public String getAdmission_time() {
@@ -143,5 +154,21 @@ public class AuthStateBean {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getCert_photo_url() {
+        return cert_photo_url;
+    }
+
+    public void setCert_photo_url(String cert_photo_url) {
+        this.cert_photo_url = cert_photo_url;
+    }
+
+    public String getHolding_cert_photo_url() {
+        return holding_cert_photo_url;
+    }
+
+    public void setHolding_cert_photo_url(String holding_cert_photo_url) {
+        this.holding_cert_photo_url = holding_cert_photo_url;
     }
 }

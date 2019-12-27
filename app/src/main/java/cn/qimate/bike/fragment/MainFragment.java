@@ -135,6 +135,7 @@ import cn.qimate.bike.activity.CarFaultActivity;
 import cn.qimate.bike.activity.ClientManager;
 import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadStartActivity;
+import cn.qimate.bike.activity.DepositFreeAuthActivity;
 import cn.qimate.bike.activity.EndBikeFeedBackActivity;
 import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.activity.LoginActivity;
@@ -462,7 +463,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         }else if(unauthorized_code==4) {
                             tv_authBtn.setText("认证被驳回，请重新认证");
                         }else if(unauthorized_code==5) {
-                            tv_authBtn.setText("需要充值余额或购买骑行卡");   //TODO
+                            tv_authBtn.setText("需要充值余额或购买骑行卡");   //TODO    2
                         }else if(unauthorized_code==6) {
                             ll_top_navi.setVisibility(View.GONE);
                             ll_top.setVisibility(View.VISIBLE);
@@ -669,7 +670,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                                 isOpenLock = false;
                                                 connect();
 
-                                                closeBroadcast();     //TODO
+                                                closeBroadcast();     //TODO    3
                                                 activity.registerReceiver(broadcastReceiver, Config.initFilter());
                                                 GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
                                             }else if("4".equals(type)){
@@ -799,7 +800,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             lock_no = bean.getLock_no();
                             bleid = bean.getLock_secretkey();
                             deviceuuid = bean.getVendor_lock_id();
-//                            force_backcar = bean.getForce_backcar();  //TODO
+//                            force_backcar = bean.getForce_backcar();  //TODO  3
 //                            String price = bean.getPrice();
 //                            String electricity = bean.getElectricity();
 //                            String mileage = bean.getMileage();
@@ -1070,7 +1071,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         advAgainBtn = (TextView)advDialogView.findViewById(R.id.ui_adv_againBtn);
         advCloseBtn = (TextView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
 
-//        customBuilder = new CustomDialog.Builder(context);    //TODO
+//        customBuilder = new CustomDialog.Builder(context);    //TODO  1
 //        customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
 //        customDialog = customBuilder.create();
 
@@ -1469,16 +1470,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             UIHelper.goToAct(context, LoginActivity.class);
                             break;
 
-                        case "2":   //TODO
-                            UIHelper.goToAct(context, RealNameAuthActivity.class);
+                        case "2":   //TODO  1   2未认证
+                            UIHelper.goToAct(context, DepositFreeAuthActivity.class);
                             break;
 
-                        case "3":   //TODO
-                            UIHelper.goToAct(context, RealNameAuthActivity.class);
+                        case "3":   //TODO  1   3认证中
+                            UIHelper.goToAct(context, DepositFreeAuthActivity.class);
                             break;
 
-                        case "4":   //TODO
-                            UIHelper.goToAct(context, RealNameAuthActivity.class);
+                        case "4":   //TODO  1   4认证被驳回
+                            UIHelper.goToAct(context, DepositFreeAuthActivity.class);
                             break;
 
                         default:
@@ -1492,6 +1493,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 Log.e("refreshLayout===0", parking()+"==="+isConnect+"==="+isLookPsdBtn+"==="+isContainsList+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
 
                 RefreshLogin();
+                car_authority();
 
 
                 break;
@@ -1515,7 +1517,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 Log.e("fragment===", bikeFragment.isHidden()+"==="+ebikeFragment.isHidden());
 
                 if(!bikeFragment.isHidden()){
-                    UIHelper.goWebViewAct(context,"停车须知",Urls.phtml5 + uid);    //TODO
+                    UIHelper.goWebViewAct(context,"停车须知",Urls.phtml5 + uid);    //TODO  1
                 }else{
                     UIHelper.goWebViewAct(context,"停车须知",Urls.ebike_phtml5 + uid);
                 }
@@ -1537,7 +1539,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             case R.id.ll_rent:
                 Log.e("ll_rent===onClick", "==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
-                //TODO 单车月卡能用电单车吗
+                //TODO  2 单车月卡能用电单车吗
                 order();
 
                 break;
@@ -1895,7 +1897,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                 clickCount++;
 
-//                test_xinbiao += major+"==="+minor+"\n";   //TODO
+//                test_xinbiao += major+"==="+minor+"\n";   //TODO  3
 //                tv_test_xinbiao.setText(test_xinbiao);
 
                 Log.e("biking_endBtn===", type+"==="+major+"==="+isContainsList.contains(true)+"==="+referLatitude+"==="+referLongitude);
@@ -1909,7 +1911,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if(major !=0){
                     queryState();
                 }else if("7".equals(type)){
-                    car();       //TODO
+                    car();       //TODO 1
                 }else{
                     startXB();
 
@@ -2162,7 +2164,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                     Log.e("broadcastReceiver===mf", "==="+intent);
 
-                    //TODO
+                    //TODO  1   推送
 //                    getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
 //                    getFeedbackStatus();
                 }
@@ -2530,7 +2532,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                                loadingDialog.dismiss();
 //                            }
 
-                            bean.setLatitude("31.764387");      //TODO
+                            bean.setLatitude("31.764387");      //TODO  1
                             bean.setLongitude("119.92056");
 
                             Log.e("mf===car2", isContainsList + "===" + isContainsList.contains(true) + "===" + pOptions + "===" + bean.getLatitude() + "===" + bean.getLongitude() + "===" +bean.getNumber() + "===" + bean.getLock_mac());
@@ -2735,7 +2737,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                 unlock();
 
-                                //TODO
+                                //TODO  2
 //                                if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
 //                                    ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
 //                                    popupwindow.dismiss();
@@ -3491,7 +3493,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                     if("5".equals(type)  || "6".equals(type)){
                                         if(!SharedPreferencesUrls.getInstance().getBoolean("isKnow", false)){
-                                            WindowManager windowManager = activity.getWindowManager();     //TODO
+                                            WindowManager windowManager = activity.getWindowManager();
                                             Display display = windowManager.getDefaultDisplay();
                                             WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
                                             lp.width = (int) (display.getWidth() * 1);
@@ -4652,7 +4654,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             lock();
 
-//                            if("108".equals(info)){       //TODO
+//                            if("108".equals(info)){       //TODO  2
 //                                Log.e("biking_defend===1", "====");
 //
 //                            }else{
@@ -5164,7 +5166,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                        loadingDialog.show();
 //                    }
 
-//                    rl_msg.setVisibility(View.GONE);  //TODO
+//                    rl_msg.setVisibility(View.GONE);
 //                    if (polyline != null) {
 //                        polyline.remove();
 //                    }
@@ -5547,7 +5549,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                         clickCountDeal();
                                     }else{
 //                                        carClose();
-//                                        lock(); //TODO
+//                                        lock(); //TODO  2
                                         car_notification(3, 2, 1);
                                     }
                                 }
@@ -5588,7 +5590,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     clickCountDeal();
                                 }else{
 //                                    carClose();
-//                                    lock();     //TODO
+//                                    lock();     //TODO    2
                                     car_notification(3, 2, 1);
 
                                 }
@@ -5636,7 +5638,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                         clickCountDeal();
                                     }else{
-//                                        lock();     //TODO
+//                                        lock();     //TODO    2
                                         car_notification(3, 2, 1);
                                     }
                                 }
@@ -5678,7 +5680,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                     clickCountDeal();
                                 }else{
-//                                    lock();     //TODO
+//                                    lock();     //TODO    2
                                     car_notification(3, 2, 1);
                                 }
                             }
@@ -6344,7 +6346,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             } else {
                                 if ("2".equals(type) || "3".equals(type)){
 
-                                    closeBroadcast();     //TODO
+                                    closeBroadcast();     //TODO    3
                                     activity.registerReceiver(broadcastReceiver, Config.initFilter());
                                     GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
                                 }else if("4".equals(type)){

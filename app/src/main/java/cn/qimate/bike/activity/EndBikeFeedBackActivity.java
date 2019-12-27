@@ -422,7 +422,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                     clickPopupWindow();
                 }else {
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                    customBuilder.setType(3).setTitle("温馨提示").setMessage("确认删除图片吗?")       //TODO
+                    customBuilder.setType(3).setTitle("温馨提示").setMessage("确认删除图片吗?")
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();

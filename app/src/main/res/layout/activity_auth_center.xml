@@ -79,8 +79,22 @@
 
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/tv_auth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="24dp"
+                    android:textSize="12sp"
+                    android:textColor="#ffffff"
+                    android:text=""
+                    />
+
 
                 <ImageView
+                    android:visibility="gone"
                     android:id="@+id/iv_select"
                     android:layout_width="14dp"
                     android:layout_height="10dp"
@@ -127,8 +141,22 @@
 
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/tv_auth2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="24dp"
+                    android:textSize="12sp"
+                    android:textColor="#ffffff"
+                    android:text=""
+                    />
+
 
                 <ImageView
+                    android:visibility="gone"
                     android:id="@+id/iv_select2"
                     android:layout_width="14dp"
                     android:layout_height="10dp"
@@ -157,6 +185,7 @@
 
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/auth_center_submitBtn"
             android:layout_width="match_parent"
             android:layout_height="40dp"

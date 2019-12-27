@@ -189,7 +189,7 @@ public class UpdateManager {
 
 		Log.e("checkAppUpdate==1", "===");
 
-		HttpHelper.get(context, Urls.updateApp, new TextHttpResponseHandler() {		//TODO
+		HttpHelper.get(context, Urls.updateApp, new TextHttpResponseHandler() {		//TODO	1
 
 			@Override
 			public void onStart() {

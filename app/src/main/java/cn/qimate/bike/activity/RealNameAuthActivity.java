@@ -110,7 +110,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
     private TextView title, rightBtn;
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
-    private LinearLayout ll_1, ll_2, ll_3;
+    private LinearLayout ll_1, ll_2, ll_3, ll_submit;
     private RelativeLayout schoolLayout;
     private TextView schoolText;
     private EditText realNameEdit, identityNumberEdit;
@@ -243,6 +243,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         uploadImage = (ImageView)findViewById(R.id.ui_realNameAuth_uploadImage);
         uploadImage2 = (ImageView)findViewById(R.id.ui_realNameAuth_uploadImage2);
 //        addImageLayout = (RelativeLayout)findViewById(R.id.ui_realNameAuth_addImageLayout);
+        ll_submit = (LinearLayout)findViewById(R.id.ll_submit);
 
 //        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) uploadImage.getLayoutParams();
 //        params.height = (DisplayUtil.getWindowWidth(this) - DisplayUtil.dip2px(context, 20)) * 540 / 856;
@@ -279,6 +280,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //            initHttp(uid, access_token);
 
             getUpToken();
+            initHttp();
         }
 //        getGradeList();
 
@@ -354,30 +356,22 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                 if (access_token == null || "".equals(access_token)){
                     Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
                 }else {
-//                    if (school == null || "".equals(school)){
-//                        Toast.makeText(context,"请选择学校",Toast.LENGTH_SHORT).show();
+//                    if (realname == null || "".equals(realname)){
+//                        Toast.makeText(context,"请填写您的真实姓名",Toast.LENGTH_SHORT).show();
 //                        return;
 //                    }
-                    if (realname == null || "".equals(realname)){
-                        Toast.makeText(context,"请填写您的真实姓名",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (identityNumber == null || "".equals(identityNumber)){
-                        Toast.makeText(context,"请填写您的身份证号码",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-//                    if (isVisible){
+//                    if (identityNumber == null || "".equals(identityNumber)){
+//                        Toast.makeText(context,"请填写您的身份证号码",Toast.LENGTH_SHORT).show();
+//                        return;
 //                    }
-                    if (imageurl == null || "".equals(imageurl)){
-                        Toast.makeText(context,"请上传您的证件照片",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-//                    if(!"0".equals(cert_method)){
+//                    if (imageurl == null || "".equals(imageurl)){
+//                        Toast.makeText(context,"请上传您的证件照片",Toast.LENGTH_SHORT).show();
+//                        return;
 //                    }
-                    if (imageurl2 == null || "".equals(imageurl2)){
-                        Toast.makeText(context,"请上传您的手持证件照片",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+//                    if (imageurl2 == null || "".equals(imageurl2)){
+//                        Toast.makeText(context,"请上传您的手持证件照片",Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
 
                     Log.e("onClick===", imageurl+"==="+imageurl2);
 
@@ -387,11 +381,12 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //                        SubmitBtn();
 //                    }
 
-                    SubmitBtn();
+                    order();
+//                    SubmitBtn();
                 }
                 break;
             case R.id.ui_realNameAuth_serviceProtocol:
-                agreement("insurance");     //TODO
+                agreement("insurance");     //TODO  2
                 break;
             case R.id.ui_realNameAuth_serviceProtocol2:
                 agreement("recharge");
@@ -630,11 +625,10 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         return baos.toByteArray();
     }
 
-    private void initHttp(String uid, String access_token){
+    private void initHttp(){
         RequestParams params = new RequestParams();
-        params.put("uid",uid);
-        params.put("access_token",access_token);
-        HttpHelper.get(context, Urls.getCertification, params, new TextHttpResponseHandler() {
+        params.put("type", 2);
+        HttpHelper.get(context, Urls.cert, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 onStartCommon("正在加载");
@@ -654,68 +648,41 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
                             Log.e("getCertification===", "==="+responseString);
 
-                            if (result.getFlag().equals("Success")) {
-                                AuthStateBean bean = JSON.parseObject(result.getData(),AuthStateBean.class);
-                                school = bean.getSchool();
-                                imageurl = bean.getStunumfile();
-                                imageurl2 = bean.getStunumfile2();
-                                schoolText.setText(school);
-                                realNameEdit.setText(bean.getRealname());
-                                identityNumberEdit.setText(bean.getStunum());
+                            AuthStateBean bean = JSON.parseObject(result.getData(),  AuthStateBean.class);
 
-                                cert_method = bean.getCert_method();
+//                            if (result.getFlag().equals("Success")) {
+                            if (result.getStatus_code()==0) {
 
-                                if("1".equals(bean.getIscert())){
-                                    schoolText.setText("");
-                                    realNameEdit.setText("");
-                                    identityNumberEdit.setText("");
-//                                    imageurl = "";
-//                                    imageurl2 = "";
-                                    isVisible = false;
-                                    ll_1.setVisibility(View.GONE);
-                                }else{
-                                    isVisible = true;
-                                    ll_1.setVisibility(View.VISIBLE);
+//                                school_id = bean.getSchool_id();
+
+                                realNameEdit.setText(bean.getUser_name());
+                                identityNumberEdit.setText(bean.getIdentity_number());
+
+                                imageurl = bean.getCert_photo();
+                                imageurl2 = bean.getHolding_cert_photo();
+
+                                Glide.with(context).load(bean.getCert_photo_url()).crossFade().into(uploadImage);
+                                Glide.with(context).load(bean.getHolding_cert_photo_url()).crossFade().into(uploadImage2);
+
+//                                status; //认证状态 0待认证 1认证中 2已驳回 3认证成功
+                                int state = bean.getStatus();
+                                if(state==0){
+                                    ll_submit.setVisibility(View.VISIBLE);
+                                    submitBtn.setText("提交");
+                                }else if(state==1 || state==3){
+                                    ll_submit.setVisibility(View.GONE);
+                                    realNameEdit.setEnabled(false);
+                                    identityNumberEdit.setEnabled(false);
+
+                                    uploadImage.setEnabled(false);
+                                    uploadImage2.setEnabled(false);
+                                }else if(state==2){
+                                    ll_submit.setVisibility(View.VISIBLE);
+                                    submitBtn.setText("重新提交");
                                 }
 
-                                if("0".equals(cert_method)){
-                                    isVisible = true;
-                                    ll_1.setVisibility(View.VISIBLE);
-                                    ll_2.setVisibility(View.GONE);
-                                    ll_3.setVisibility(View.GONE);
-                                }else if("1".equals(cert_method) || "2".equals(cert_method)){
-                                    isVisible = false;
-                                    ll_1.setVisibility(View.GONE);
-                                }else{
-                                    isVisible = true;
-                                    ll_1.setVisibility(View.VISIBLE);
-                                    ll_2.setVisibility(View.VISIBLE);
-                                    ll_3.setVisibility(View.VISIBLE);
-                                }
-
-//                                getSchoolList();
-
-                                Log.e("getCertification===1", "==="+Urls.host+imageurl);
-
-                                if (bean.getStunumfile() == null || "".equals(bean.getStunumfile()) || "/Public/stunumfile.png".equals(bean.getStunumfile())){
-//                                    addImageLayout.setVisibility(View.VISIBLE);
-//                                    uploadImage.setVisibility(View.GONE);
-                                }else {
-//                                    uploadImage.setVisibility(View.VISIBLE);
-//                                    addImageLayout.setVisibility(View.GONE);
-                                    Glide.with(context).load(Urls.host+imageurl).crossFade().into(uploadImage);
-                                }
-
-                                if (bean.getStunumfile2() == null || "".equals(bean.getStunumfile2()) || "/Public/stunumfile2.png".equals(bean.getStunumfile2())){
-//                                    addImageLayout.setVisibility(View.VISIBLE);
-//                                    uploadImage.setVisibility(View.GONE);
-                                }else {
-//                                    uploadImage.setVisibility(View.VISIBLE);
-//                                    addImageLayout.setVisibility(View.GONE);
-                                    Glide.with(context).load(Urls.host+imageurl2).crossFade().into(uploadImage2);
-                                }
                             } else {
-                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, result.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -730,83 +697,19 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         });
     }
 
-    /**
-     * 自动认证
-     * */
-    private void AutoSubmitBtn(final String uid, final String access_token, final String realname, final String stunum) {
-        RequestParams params = new RequestParams();
-        params.put("xm", realname);
-        params.put("xh", stunum);
-
-        HttpHelper.postWithHead(context, Urls.autoauthentication, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                onStartCommon("正在提交");
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        //UIHelper.ToastError(context, throwable.toString());
-//                      Toast.makeText(context, "===zzz", Toast.LENGTH_SHORT).show();
-
-                        Log.e("AutoSubmitBtn===", "fail===");
-
-                        SubmitBtn();
-                    }
-                });
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-
-                            Log.e("AutoSubmitBtn===", "==="+responseString);
-
-//                            Toast.makeText(context,"==="+result.status,Toast.LENGTH_SHORT).show();
-
-                            if("0".equals(result.status)){
-                                SubmitBtn();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                    }
-                });
-            }
-        });
-
-    }
-
-    /**
-     * 手动认证
-     * */
-    private void SubmitBtn2(String uid, String access_token, String realname, String stunum){
+    private void order() {
+        Log.e("order===", "===");
 
         RequestParams params = new RequestParams();
-        params.put("uid",uid);
-        params.put("access_token",access_token);
-        params.put("realname",realname);
-//        params.put("sex",sex);
-        params.put("school",school);
-//        params.put("grade",grade);
-        params.put("stunum",stunum);
-        params.put("stunumfile",imageurl);
-        HttpHelper.post(context, Urls.authentication, params, new TextHttpResponseHandler() {
+        params.put("order_type", 4);        //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单
+//        params.put("car_number", URLEncoder.encode(codenum));
+//        params.put("card_code", card_code);        //套餐卡券码（order_type为2时必传）
+        params.put("price", "0.01");        //传价格数值 例如：20.00(order_type为3、4时必传)
+
+        HttpHelper.post(context, Urls.order, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                onStartCommon("正在提交");
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -815,111 +718,64 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                            if (result.getFlag().equals("Success")) {
-                                Toast.makeText(context,"恭喜您,信息提交成功",Toast.LENGTH_SHORT).show();
-                                SharedPreferencesUrls.getInstance().putString("iscert","4");
-                                scrollToFinishActivity();
-                            } else {
-                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                    }
-                });
 
-            }
-        });
-    }
-
-    /**
-     * 认证
-     * */
-    private void SubmitBtn3(String uid, String access_token, String realname, String stunum){
-
-        Log.e("SubmitBtn===0", flag+"==="+uid+"==="+access_token+"==="+stunum+"==="+realname+"==="+school+"==="+cert_method);
-
-        RequestParams params = new RequestParams();
-        params.put("uid",uid);
-        params.put("access_token",access_token);
-        params.put("realname",realname);
-        params.put("school",school);
-        params.put("stunum",stunum);
-
-        if("3".equals(cert_method) || "4".equals(cert_method) || flag){
-            params.put("stunumfile", imageurl);
-            params.put("stunumfile2", imageurl2);
-        }
-
-        HttpHelper.post(context, Urls.certification, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                onStartCommon("正在提交");
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
                 m_myHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            Log.e("SubmitBtn===", "==="+responseString);
+                            Log.e("order===1", responseString + "===" + result.data);
 
-                            if (result.getFlag().equals("Success")) {
-//                                Toast.makeText(context,"恭喜您,信息提交成功",Toast.LENGTH_SHORT).show();
-                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-                                SharedPreferencesUrls.getInstance().putString("iscert","4");
-                                scrollToFinishActivity();
-                            } else {
+                            JSONObject jsonObject = new JSONObject(result.getData());
 
-                                if (result.getErrcode()==401) {
-                                    flag = true;
-                                    isVisible = true;
-                                    ll_1.setVisibility(View.VISIBLE);
-                                }
+                            int order_id = jsonObject.getInt("order_id");
+                            String order_amount = jsonObject.getString("order_amount");
 
-                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-                            }
+                            Log.e("order===1", order_id + "===" + order_amount );
+
+                            Intent intent = new Intent(context, SettlementPlatformActivity.class);
+                            intent.putExtra("order_type", 4);
+                            intent.putExtra("order_amount", order_amount);
+                            intent.putExtra("order_id", order_id);
+                            startActivityForResult(intent, 10);
+
+//                            Intent intent = new Intent();
+//                            intent.setClass(context, RechargeActivity.class);
+//                            startActivityForResult(intent, 1);
+
+
                         } catch (Exception e) {
-                            e.printStackTrace();
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
                         }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
+
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
                             loadingDialog.dismiss();
                         }
+
                     }
                 });
+
 
             }
         });
     }
+
+
 
     private void SubmitBtn(){
 
-        Log.e("SubmitBtn===0", realname+"==="+identityNumber+"==="+imageurl+"==="+imageurl2);
+        Log.e("rnaa===SubmitBtn", realname+"==="+identityNumber+"==="+imageurl+"==="+imageurl2);
 
         RequestParams params = new RequestParams();
-        params.put("type", 1);
+        params.put("type", 2);
         params.put("user_name", realname);
         params.put("identity_number", identityNumber);
         params.put("cert_photo", imageurl);
         params.put("holding_cert_photo", imageurl2);
 
 
-        HttpHelper.post(context, Urls.cert, params, new TextHttpResponseHandler() {     //TODO
+        HttpHelper.post(context, Urls.cert, params, new TextHttpResponseHandler() {     //TODO  1
             @Override
             public void onStart() {
                 onStartCommon("正在提交");
@@ -937,12 +793,14 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            Log.e("SubmitBtn===", "==="+responseString);
+                            Log.e("rnaa===SubmitBtn1", "==="+responseString);
 
-                            if(result.getStatus_code()!=200){
-                                ToastUtil.showMessageApp(context, result.getMessage());
+                            ToastUtil.showMessageApp(context, result.getMessage());
+
+                            if(result.getStatus_code()==200){
+                                UIHelper.goToAct(context, MainActivity.class);
+                                scrollToFinishActivity();
                             }
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -1020,12 +878,28 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         });
     }
 
+
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         m_myHandler.post(new Runnable() {
             @Override
             public void run() {
                 switch (requestCode) {
+                    case 10:
+                        if (resultCode == RESULT_OK) {
+//                    codenum = data.getStringExtra("codenum");
+//                    m_nowMac = data.getStringExtra("m_nowMac");
+
+                            Log.e("rnaa===onActivityResult", requestCode+"==="+resultCode);
+
+                            SubmitBtn();
+
+                        } else {
+//                    Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();
+                        }
+
+
+                        break;
                     case REQUESTCODE_PICK:// 直接从相册获取
                         if (data != null){
                             try {

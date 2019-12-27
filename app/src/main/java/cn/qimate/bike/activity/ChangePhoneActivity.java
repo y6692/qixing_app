@@ -127,7 +127,7 @@ public class ChangePhoneActivity extends SwipeBackActivity implements View.OnCli
                         intent.putExtra("telphone" ,telphone);
                         startActivity(intent);
 
-                        scrollToFinishActivity();   //TODO
+                        scrollToFinishActivity();   //TODO  3
 
 
 //                        if (result.getFlag().equals("Success")) {

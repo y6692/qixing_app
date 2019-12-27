@@ -50,7 +50,9 @@ import cn.qimate.bike.model.CertBean;
 import cn.qimate.bike.model.RechargeBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UpTokenBean;
+import cn.qimate.bike.model.UserBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.ToastUtil;
 
 /**
  * Created by Administrator1 on 2017/2/15.
@@ -68,8 +70,8 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
 
     private RelativeLayout rl_selectLayout;
     private RelativeLayout rl_selectLayout2;
-    private ImageView iv_select;
-    private ImageView iv_select2;
+    private ImageView iv_select, iv_select2;
+    private TextView tv_auth, tv_auth2;
     private LinearLayout submitBtn;
 
 
@@ -97,6 +99,8 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
         rl_selectLayout2 = (RelativeLayout)findViewById(R.id.rl_selectLayout2);
         iv_select = (ImageView)findViewById(R.id.iv_select);
         iv_select2 = (ImageView)findViewById(R.id.iv_select2);
+        tv_auth = (TextView)findViewById(R.id.tv_auth);
+        tv_auth2 = (TextView)findViewById(R.id.tv_auth2);
         submitBtn = (LinearLayout)findViewById(R.id.auth_center_submitBtn);
 
         ll_backBtn.setOnClickListener(this);
@@ -117,13 +121,19 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
                 break;
 
             case R.id.rl_selectLayout:
-                iv_select.setVisibility(View.VISIBLE);
-                iv_select2.setVisibility(View.GONE);
+//                iv_select.setVisibility(View.VISIBLE);
+//                iv_select2.setVisibility(View.GONE);
+
+                UIHelper.goToAct(context, DepositFreeAuthActivity.class);
+
                 break;
 
             case R.id.rl_selectLayout2:
-                iv_select.setVisibility(View.GONE);
-                iv_select2.setVisibility(View.VISIBLE);
+//                iv_select.setVisibility(View.GONE);
+//                iv_select2.setVisibility(View.VISIBLE);
+
+                UIHelper.goToAct(context, RealNameAuthActivity.class);
+
                 break;
 
             case R.id.mainUI_title_rightBtn:
@@ -162,9 +172,7 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
 
 
     private void initHttp(){
-        RequestParams params = new RequestParams();
-        params.put("type", 2);
-        HttpHelper.get(context, Urls.cert, params, new TextHttpResponseHandler() {
+        HttpHelper.get(context, Urls.user, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 onStartCommon("正在加载");
@@ -180,13 +188,32 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
                     @Override
                     public void run() {
                         try {
-                            Log.e("cert===", "==="+responseString);
+                            Log.e("user===", "==="+responseString);
 
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            CertBean bean = JSON.parseObject(result.getData(), CertBean.class);
+//                            cert1_status	Int
+//                            免押金认证状态 0待认证 1认证中 2已驳回 3认证成功      点击认证 认证中 已驳回 认证成功
+//
+//                            cert2_status	Int
+//                            充值认证状态 0待认证 1认证中 2已驳回 3认证成功
 
-                            Log.e("cert===2", bean+"==="+bean.getStatus());
+                            if(result.getStatus_code()==0){
+                                UserBean bean = JSON.parseObject(result.getData(), UserBean.class);
+
+                                int  status1 = bean.getCert1_status();
+                                int  status2 = bean.getCert2_status();
+                                tv_auth.setText(status1==0?"点击认证":status1==1?"认证中":status1==2?"已驳回":"认证成功");
+                                tv_auth2.setText(status2==0?"点击认证":status2==1?"认证中":status2==2?"已驳回":"认证成功");
+
+                                Log.e("cert===2", bean+"==="+bean.getStatus());
+                            }else{
+                                ToastUtil.showMessageApp(context, result.getMessage());
+                            }
+
+
+
+
 
                         } catch (Exception e) {
                             e.printStackTrace();

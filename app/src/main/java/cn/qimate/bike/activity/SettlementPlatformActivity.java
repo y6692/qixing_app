@@ -592,6 +592,21 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                             if(result.getStatus_code()==200){
                                 if(order_type==1){
                                     end();
+                                }else if(order_type==4){
+//                                    Intent rIntent = new Intent();
+//                                    rIntent.putExtra("codenum", codenum);
+//                                    rIntent.putExtra("m_nowMac", m_nowMac);
+//                                    rIntent.putExtra("type", type);
+//                                    rIntent.putExtra("lock_no", bean.getLock_no());
+//                                    rIntent.putExtra("bleid", bleid);
+//                                    rIntent.putExtra("deviceuuid", deviceuuid);
+//                                    rIntent.putExtra("price", price);
+//                                    rIntent.putExtra("electricity", electricity);
+//                                    rIntent.putExtra("mileage", mileage);
+//                                    setResult(RESULT_OK, rIntent);
+
+                                    setResult(RESULT_OK);
+                                    scrollToFinishActivity();
                                 }else{
                                     if(isRemain){
                                         order_type = order_type2;

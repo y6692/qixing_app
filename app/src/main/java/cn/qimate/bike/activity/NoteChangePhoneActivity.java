@@ -294,7 +294,7 @@ public class NoteChangePhoneActivity extends SwipeBackActivity implements View.O
         params.put("new_phone", telphone);
         params.put("verification_code", Integer.parseInt(telcode));
 
-        HttpHelper.post(context, Urls.change_phone, params, new TextHttpResponseHandler() { //TODO 验证码错误
+        HttpHelper.post(context, Urls.change_phone, params, new TextHttpResponseHandler() { //TODO  1 验证码错误
             @Override
             public void onStart() {
                 onStartCommon("正在加载");
