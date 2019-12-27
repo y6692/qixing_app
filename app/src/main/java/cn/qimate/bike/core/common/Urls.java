@@ -28,6 +28,12 @@ public class Urls {
 	public static String cert = host2 + "/cert";
 	//申诉接口
 	public static String appeal = host2 + "/appeal";
+	//学校列表接口
+	public static String schools = host2 + "/schools";
+
+	//换绑手机接口
+	public static String change_phone = host2 + "/user/change_phone";
+
 
     //广告接口
     public static String agreement = host2 + "/agreement/";
@@ -91,7 +97,9 @@ public class Urls {
 	//兑换套餐卡接口
 	public static String exchange = host2 + "/cycling_card/exchange";
 
-//    http://testnewmapi.7mate.cn/api/agreement/{name}
+//	http://testnewmapi.7mate.cn/api/user/change_phone
+//	http://testnewmapi.7mate.cn/api/schools
+//  http://testnewmapi.7mate.cn/api/agreement/{name}
 //	http://testnewmapi.7mate.cn/api/order/other
 //	http://testnewmapi.7mate.cn/api/payment/query_order
 //	http://testnewmapi.7mate.cn/api/cycling_card/exchange

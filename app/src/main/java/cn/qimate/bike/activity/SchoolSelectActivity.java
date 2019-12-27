@@ -154,11 +154,15 @@ public class SchoolSelectActivity extends SwipeBackActivity implements View.OnCl
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         SchoolListBean bean = myAdapter.getDatas().get(position);
 
+        Log.e("ssa===onItemClick", bean.getId()+"==="+bean.getName());
+
         Intent rIntent = new Intent();
         rIntent.putExtra("school_id", bean.getId());
-        rIntent.putExtra("school_name", bean.getSchool());
+        rIntent.putExtra("school_name", bean.getName());
         setResult(RESULT_OK, rIntent);
         scrollToFinishActivity();
+
+        Log.e("ssa===onItemClick2", bean.getId()+"==="+bean.getName());
     }
 
     @Override
@@ -216,7 +220,7 @@ public class SchoolSelectActivity extends SwipeBackActivity implements View.OnCl
         for (int i = 0; i < schoolList.size(); i++){
 //                    SchoolListBean bean = JSON.parseObject(JSONArray.getJSONObject(i).toString(),SchoolListBean.class);
 //                    schoolList.add(bean);
-            if(schoolList.get(i).getSchool().contains(et_school.getText().toString())){
+            if(schoolList.get(i).getName().contains(et_school.getText().toString())){
                 datas.add(schoolList.get(i));
             }
 
@@ -231,10 +235,9 @@ public class SchoolSelectActivity extends SwipeBackActivity implements View.OnCl
 
     private void getSchoolList(){
         RequestParams params = new RequestParams();
-        params.put("uid",uid);
-        params.put("access_token",access_token);
+        params.put("name","");
 
-        HttpHelper.get(context, Urls.schoolList, params, new TextHttpResponseHandler() {
+        HttpHelper.get(context, Urls.schools, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 onStartCommon("正在加载");
@@ -254,37 +257,40 @@ public class SchoolSelectActivity extends SwipeBackActivity implements View.OnCl
 
                             Log.e("getSchoolList===", "==="+responseString);
 
-                            if (result.getFlag().equals("Success")) {
-                                JSONArray JSONArray = new JSONArray(result.getData());
-                                if (schoolList.size() != 0 || !schoolList.isEmpty()){
-                                    schoolList.clear();
-                                }
-                                if (item.size() != 0 || !item.isEmpty()){
-                                    item.clear();
-                                }
-                                if (item1.size() != 0 || !item1.isEmpty()){
-                                    item1.clear();
-                                }
-                                for (int i = 0; i < JSONArray.length();i++){
-                                    SchoolListBean bean = JSON.parseObject(JSONArray.getJSONObject(i).toString(),SchoolListBean.class);
-                                    schoolList.add(bean);
-                                    datas.add(bean);
+                            JSONArray JSONArray = new JSONArray(result.getData());
+                            if (schoolList.size() != 0 || !schoolList.isEmpty()){
+                                schoolList.clear();
+                            }
+                            if (item.size() != 0 || !item.isEmpty()){
+                                item.clear();
+                            }
+                            if (item1.size() != 0 || !item1.isEmpty()){
+                                item1.clear();
+                            }
+                            for (int i = 0; i < JSONArray.length();i++){
+                                SchoolListBean bean = JSON.parseObject(JSONArray.getJSONObject(i).toString(),SchoolListBean.class);
+                                schoolList.add(bean);
+                                datas.add(bean);
 //                                    item.add(bean.getSchool()+"_"+bean.getCert_method());
-                                    item.add(bean.getSchool());
-                                    item1.add(new String[]{bean.getSchool(), bean.getCert_method()});
+                                item.add(bean.getName());
+//                                    item1.add(new String[]{bean.getName(), bean.getCert_method()});
 
-                                }
+                            }
 
-                                setFooterType(2);
+                            setFooterType(2);
 
-                                Log.e("getSchoolList===2", datas.size()+"==="+schoolList.size());
+                            Log.e("getSchoolList===2", datas.size()+"==="+schoolList.size());
 
-                                myAdapter.notifyDataSetChanged();
+                            myAdapter.notifyDataSetChanged();
 
 //                                handler.sendEmptyMessage(0x123);
-                            }else {
-                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-                            }
+
+
+//                            if (result.getFlag().equals("Success")) {
+//
+//                            }else {
+//                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+//                            }
                         }catch (Exception e) {
                             e.printStackTrace();
                         }finally {

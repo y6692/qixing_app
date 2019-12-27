@@ -110,10 +110,7 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <activity
@@ -242,8 +239,19 @@
             android:name=".activity.ChangePhoneActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.NoteChangePhoneActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
 
         </activity>
+
 
         <activity
             android:name=".activity.NoteLoginActivity"
@@ -276,7 +284,6 @@
 
         <activity
             android:name=".activity.SchoolSelectActivity"
-            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 

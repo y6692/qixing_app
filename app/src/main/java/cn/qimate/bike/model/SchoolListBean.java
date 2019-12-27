@@ -6,24 +6,24 @@ package cn.qimate.bike.model;
 
 public class SchoolListBean {
 
-    private String id;
-    private String school;
+    private int id;
+    private String name;
     private String cert_method;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getSchool() {
-        return school;
+    public String getName() {
+        return name;
     }
 
-    public void setSchool(String school) {
-        this.school = school;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCert_method() {

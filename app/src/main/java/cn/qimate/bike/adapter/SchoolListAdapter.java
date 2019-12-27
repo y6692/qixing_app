@@ -34,9 +34,9 @@ public class SchoolListAdapter extends BaseViewAdapter<SchoolListBean> {
         TextView name = BaseViewHolder.get(convertView, R.id.item_school_name);
         SchoolListBean bean = getDatas().get(position);
 
-        Log.e("SchoolListAdapter===", "==="+bean.getSchool());
+        Log.e("SchoolListAdapter===", "==="+bean.getName());
 
-        name.setText(bean.getSchool());
+        name.setText(bean.getName());
         return convertView;
     }
 }

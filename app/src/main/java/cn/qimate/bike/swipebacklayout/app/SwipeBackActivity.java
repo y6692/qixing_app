@@ -173,4 +173,19 @@ public class SwipeBackActivity extends BaseFragmentActivity implements SwipeBack
 //		UIHelper.goToAct(context, LoginActivity.class);
 	}
 
+	public void onFailureCommon(final String title, final String s) {
+		m_myHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (loadingDialog != null && loadingDialog.isShowing()){
+					loadingDialog.dismiss();
+				}
+
+				Log.e("onFailureCommon===2", title+"==="+s);
+
+				UIHelper.ToastError(context, s);
+			}
+		});
+	}
+
 }

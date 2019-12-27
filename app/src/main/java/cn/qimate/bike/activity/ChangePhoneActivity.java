@@ -1,6 +1,7 @@
 package cn.qimate.bike.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -10,11 +11,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+
+import org.apache.http.Header;
+
+import cn.loopj.android.http.RequestParams;
+import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.StringUtil;
 import cn.qimate.bike.core.common.UIHelper;
+import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 /**
@@ -31,6 +41,7 @@ public class ChangePhoneActivity extends SwipeBackActivity implements View.OnCli
     private EditText phoneEdit;
     private LinearLayout submitBtn;
 
+    String telphone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +79,7 @@ public class ChangePhoneActivity extends SwipeBackActivity implements View.OnCli
                 break;
 
             case R.id.changePhoneUI_submitBtn:
-                String telphone = phoneEdit.getText().toString();
+                telphone = phoneEdit.getText().toString();
                 if (telphone == null || "".equals(telphone)) {
                     Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
                     return;
@@ -78,11 +89,78 @@ public class ChangePhoneActivity extends SwipeBackActivity implements View.OnCli
                     return;
                 }
 
-                UIHelper.goToAct(context, NoteLoginActivity.class);
-                scrollToFinishActivity();
+                sendCode();
 
                 break;
         }
+    }
+
+    private void sendCode() {
+
+        Log.e("verificationcode===0", "==="+telphone);
+
+        try{
+            RequestParams params = new RequestParams();
+            params.add("phone", telphone);
+            params.add("scene", "1");
+
+            HttpHelper.post(context, Urls.verificationcode, params, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+                }
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+                        Log.e("verificationcode===", "==="+responseString);
+
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        Intent intent = new Intent();
+                        intent.setClass(context, NoteChangePhoneActivity.class);
+                        intent.putExtra("telphone" ,telphone);
+                        startActivity(intent);
+
+                        scrollToFinishActivity();   //TODO
+
+
+//                        if (result.getFlag().equals("Success")) {
+//
+//
+//                        } else {
+//                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+//                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+                    Log.e("verificationcode===fail", throwable.toString()+"==="+responseString);
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
+            });
+        }catch (Exception e){
+            Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 //    private void userRecharge(final String uid, final String access_token){

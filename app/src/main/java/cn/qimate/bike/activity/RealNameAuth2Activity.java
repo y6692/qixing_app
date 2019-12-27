@@ -545,7 +545,7 @@ public class RealNameAuth2Activity extends SwipeBackActivity implements View.OnC
                                 for (int i = 0; i < JSONArray.length();i++){
                                     SchoolListBean bean = JSON.parseObject(JSONArray.getJSONObject(i).toString(),SchoolListBean.class);
                                     schoolList.add(bean);
-                                    item1.add(bean.getSchool());
+                                    item1.add(bean.getName());
                                 }
                                 handler.sendEmptyMessage(0x123);
                             }else {

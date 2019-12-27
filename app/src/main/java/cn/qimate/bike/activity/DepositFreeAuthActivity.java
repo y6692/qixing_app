@@ -66,6 +66,7 @@ import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.nostra13.universalimageloader.core.ImageLoader;
 import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
+import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.core.common.BitmapUtils1;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
@@ -73,6 +74,7 @@ import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.fragment.MainFragment;
 import cn.qimate.bike.img.NetUtil;
 import cn.qimate.bike.model.AuthStateBean;
 import cn.qimate.bike.model.H5Bean;
@@ -161,7 +163,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
     private String realname;
     private String school = "";
     private String student_id = "";
-    private String school_id = "";
+    private int school_id;
     private String time = "";
 
     private Handler handler = new Handler() {
@@ -235,9 +237,9 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 //        addImageLayout = (RelativeLayout)findViewById(R.id.ui_realNameAuth_addImageLayout);
 
 
-        if (schoolList.isEmpty() || item1.isEmpty()){
-            getSchoolList();
-        }
+//        if (schoolList.isEmpty() || item1.isEmpty()){
+//            getSchoolList();
+//        }
         backImg.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
         schoolText.setOnClickListener(this);
@@ -295,6 +297,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
             UIHelper.goToAct(context,LoginActivity.class);
         }else {
             getUpToken();
+            initHttp();
         }
 //        getGradeList();
 
@@ -311,8 +314,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                 break;
 
             case R.id.ui_deposit_free_auth_school:
-                Intent intent = new Intent();
-                intent.setClass(context, SchoolSelectActivity.class);
+                Intent intent = new Intent(context, SchoolSelectActivity.class);
                 startActivityForResult(intent, 10);
                 break;
 
@@ -332,6 +334,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                 String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
                 realname = realNameEdit.getText().toString();
                 student_id = studentEdit.getText().toString();
+//                student_id = schoolText.getText().toString();
                 time = timeText.getText().toString();
                 if (access_token == null || "".equals(access_token)){
                     Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
@@ -345,7 +348,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                         Toast.makeText(context,"请填写您的学号",Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if (school_id == null || "".equals(school_id)){
+                    if (school_id == 0){
                         Toast.makeText(context,"请选择学校",Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -578,7 +581,6 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 //        bm.compress(Bitmap.CompressFormat.PNG, 80, baos);
         Log.e("getByte===1", upBitmap+"===");
         upBitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
-//        upBitmap.compress(Bitmap.CompressFormat.PNG, 10, baos);
         Log.e("getByte===2", upBitmap+"==="+baos.toByteArray().length);
 
 //        QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
@@ -586,11 +588,10 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
         return baos.toByteArray();
     }
 
-    private void initHttp(String uid, String access_token){
+    private void initHttp(){
         RequestParams params = new RequestParams();
-        params.put("uid",uid);
-        params.put("access_token",access_token);
-        HttpHelper.get(context, Urls.getCertification, params, new TextHttpResponseHandler() {
+        params.put("type", 1);
+        HttpHelper.get(context, Urls.cert, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 onStartCommon("正在加载");
@@ -610,68 +611,81 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
                             Log.e("getCertification===", "==="+responseString);
 
-                            if (result.getFlag().equals("Success")) {
-                                AuthStateBean bean = JSON.parseObject(result.getData(),AuthStateBean.class);
-                                school = bean.getSchool();
-                                imageurl = bean.getStunumfile();
-                                imageurl2 = bean.getStunumfile2();
-                                schoolText.setText(school);
+                            AuthStateBean bean = JSON.parseObject(result.getData(),  AuthStateBean.class);
+
+
+
+//                            if (result.getFlag().equals("Success")) {
+                            if (result.getStatus_code()==0) {
+
                                 realNameEdit.setText(bean.getRealname());
-                                studentEdit.setText(bean.getStunum());
+                                studentEdit.setText(bean.getStudent_id());
+                                schoolText.setText(bean.getSchool_id());
+                                timeText.setText(bean.getAdmission_time());
 
-                                cert_method = bean.getCert_method();
+                                Glide.with(context).load(bean.getCert_photo()).crossFade().into(uploadImage);
+                                Glide.with(context).load(bean.getHolding_cert_photo()).crossFade().into(uploadImage2);
 
-                                if("1".equals(bean.getIscert())){
-                                    schoolText.setText("");
-                                    realNameEdit.setText("");
-                                    studentEdit.setText("");
-//                                    imageurl = "";
-//                                    imageurl2 = "";
-                                    isVisible = false;
-                                    ll_1.setVisibility(View.GONE);
-                                }else{
-                                    isVisible = true;
-                                    ll_1.setVisibility(View.VISIBLE);
-                                }
-
-                                if("0".equals(cert_method)){
-                                    isVisible = true;
-                                    ll_1.setVisibility(View.VISIBLE);
-                                    ll_2.setVisibility(View.GONE);
-                                    ll_3.setVisibility(View.GONE);
-                                }else if("1".equals(cert_method) || "2".equals(cert_method)){
-                                    isVisible = false;
-                                    ll_1.setVisibility(View.GONE);
-                                }else{
-                                    isVisible = true;
-                                    ll_1.setVisibility(View.VISIBLE);
-                                    ll_2.setVisibility(View.VISIBLE);
-                                    ll_3.setVisibility(View.VISIBLE);
-                                }
-
-//                                getSchoolList();
-
-                                Log.e("getCertification===1", "==="+Urls.host+imageurl);
-
-                                if (bean.getStunumfile() == null || "".equals(bean.getStunumfile()) || "/Public/stunumfile.png".equals(bean.getStunumfile())){
-//                                    addImageLayout.setVisibility(View.VISIBLE);
-//                                    uploadImage.setVisibility(View.GONE);
-                                }else {
-//                                    uploadImage.setVisibility(View.VISIBLE);
-//                                    addImageLayout.setVisibility(View.GONE);
-                                    Glide.with(context).load(Urls.host+imageurl).crossFade().into(uploadImage);
-                                }
-
-                                if (bean.getStunumfile2() == null || "".equals(bean.getStunumfile2()) || "/Public/stunumfile2.png".equals(bean.getStunumfile2())){
-//                                    addImageLayout.setVisibility(View.VISIBLE);
-//                                    uploadImage.setVisibility(View.GONE);
-                                }else {
-//                                    uploadImage.setVisibility(View.VISIBLE);
-//                                    addImageLayout.setVisibility(View.GONE);
-                                    Glide.with(context).load(Urls.host+imageurl2).crossFade().into(uploadImage2);
-                                }
+//                                school = bean.getSchool();
+//                                imageurl = bean.getStunumfile();
+//                                imageurl2 = bean.getStunumfile2();
+//                                schoolText.setText(school);
+//                                realNameEdit.setText(bean.getRealname());
+//                                studentEdit.setText(bean.getStunum());
+//
+//                                cert_method = bean.getCert_method();
+//
+//                                if("1".equals(bean.getIscert())){
+//                                    schoolText.setText("");
+//                                    realNameEdit.setText("");
+//                                    studentEdit.setText("");
+////                                    imageurl = "";
+////                                    imageurl2 = "";
+//                                    isVisible = false;
+//                                    ll_1.setVisibility(View.GONE);
+//                                }else{
+//                                    isVisible = true;
+//                                    ll_1.setVisibility(View.VISIBLE);
+//                                }
+//
+//                                if("0".equals(cert_method)){
+//                                    isVisible = true;
+//                                    ll_1.setVisibility(View.VISIBLE);
+//                                    ll_2.setVisibility(View.GONE);
+//                                    ll_3.setVisibility(View.GONE);
+//                                }else if("1".equals(cert_method) || "2".equals(cert_method)){
+//                                    isVisible = false;
+//                                    ll_1.setVisibility(View.GONE);
+//                                }else{
+//                                    isVisible = true;
+//                                    ll_1.setVisibility(View.VISIBLE);
+//                                    ll_2.setVisibility(View.VISIBLE);
+//                                    ll_3.setVisibility(View.VISIBLE);
+//                                }
+//
+////                                getSchoolList();
+//
+//                                Log.e("getCertification===1", "==="+Urls.host+imageurl);
+//
+//                                if (bean.getStunumfile() == null || "".equals(bean.getStunumfile()) || "/Public/stunumfile.png".equals(bean.getStunumfile())){
+////                                    addImageLayout.setVisibility(View.VISIBLE);
+////                                    uploadImage.setVisibility(View.GONE);
+//                                }else {
+////                                    uploadImage.setVisibility(View.VISIBLE);
+////                                    addImageLayout.setVisibility(View.GONE);
+//                                    Glide.with(context).load(Urls.host+imageurl).crossFade().into(uploadImage);
+//                                }
+//
+//                                if (bean.getStunumfile2() == null || "".equals(bean.getStunumfile2()) || "/Public/stunumfile2.png".equals(bean.getStunumfile2())){
+////                                    addImageLayout.setVisibility(View.VISIBLE);
+////                                    uploadImage.setVisibility(View.GONE);
+//                                }else {
+////                                    uploadImage.setVisibility(View.VISIBLE);
+////                                    addImageLayout.setVisibility(View.GONE);
+//                                    Glide.with(context).load(Urls.host+imageurl2).crossFade().into(uploadImage2);
+//                                }
                             } else {
-                                Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, result.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -871,7 +885,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
         params.put("type", 1);
         params.put("user_name", realname);
         params.put("student_id", student_id);
-        params.put("school_id", Integer.parseInt(school_id));
+        params.put("school_id", school_id);
         params.put("admission_time", time);
         params.put("cert_photo", imageurl);
         params.put("holding_cert_photo", imageurl2);
@@ -884,7 +898,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
+                onFailureCommon("dfaa==SubmitBtn", throwable.toString());   //org.apache.http.client.HttpResponseException: Internal Server Error
             }
 
             @Override
@@ -978,37 +992,60 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
         });
     }
 
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        switch (requestCode) {
+//            case 0:
+//                if (data != null) {
+//                    starttime = data.getExtras().getString("starttime");
+//                    endtime = data.getExtras().getString("endtime");
+//                    onRefresh();
+//                }
+//                break;
+//
+//            default:
+//                break;
+//        }
+//    }
+
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        m_myHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                switch (requestCode) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+//        m_myHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//
+//            }
+//        });
 
-                    case 10:
-                        if (resultCode == RESULT_OK) {
+        Log.e("dfaa===onActivityResult", requestCode+"==="+resultCode);
 
-                            school_id = data.getStringExtra("school_id");
-                            String school_name = data.getStringExtra("school_name");
+        switch (requestCode) {
 
-                            Log.e("requestCode===10", school_id+"==="+school_name);
+            case 10:
+                if (resultCode == RESULT_OK) {
 
-                            schoolText.setText(school_name);
+                    school_id = data.getIntExtra("school_id",0);
+                    String school_name = data.getStringExtra("school_name");
 
-                        } else {
+                    Log.e("requestCode===10", school_id+"==="+school_name);
+
+                    schoolText.setText(school_name);
+
+                } else {
 //                            Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();
-                        }
+                }
 
 
-                        break;
+                break;
 
-                    case REQUESTCODE_PICK:// 直接从相册获取
-                        if (data != null){
-                            try {
-                                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-                                    if (imageUri != null) {
+            case REQUESTCODE_PICK:// 直接从相册获取
+                if (data != null){
+                    try {
+                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                            if (imageUri != null) {
 //                                        urlpath = getRealFilePath(context, data.getData());
-                                        urlpath  = FileUtil.getFilePathByUri(context, data.getData());
+                                urlpath  = FileUtil.getFilePathByUri(context, data.getData());
 //                                        if (loadingDialog != null && !loadingDialog.isShowing()) {
 //                                            loadingDialog.setTitle("请稍等");
 //                                            loadingDialog.show();
@@ -1016,7 +1053,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
 //                                        RequestOptions requestOptions1 = new RequestOptions().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE);
 
-                                        Log.e("REQUESTCODE_PICK===", data.getData()+"==="+urlpath);
+                                Log.e("REQUESTCODE_PICK===", data.getData()+"==="+urlpath);
 
 //                                        Glide.with(context)
 //                                        .load(urlpath)
@@ -1028,48 +1065,11 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 //
 
 //                                        File picture = new File(Environment.getExternalStorageDirectory(), "com.gamefox.samecity.fish/activity/bill1.png");
-                                        picture = new File(urlpath);
+                                picture = new File(urlpath);
 //                                        Uri filepath;
-                                        Uri filepath = Uri.fromFile(picture);
+                                Uri filepath = Uri.fromFile(picture);
 //                                        Bitmap bitmap = BitmapFactory.decodeFile(filepath.getPath());
 //                                        upBitmap = BitmapFactory.decodeFile(urlpath);
-
-                                        compress(); //压缩图片
-
-                                        if(photo == 1){
-                                            uploadImage.setImageBitmap(upBitmap);
-                                        }else{
-                                            uploadImage2.setImageBitmap(upBitmap);
-                                        }
-
-                                        Log.e("REQUESTCODE_PICK===3", data.getData()+"==="+filepath.getPath());
-
-                                        uploadImage();
-                                    }
-                                }else {
-                                    Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
-                                }
-                            } catch (NullPointerException e) {
-                                e.printStackTrace();// 用户点击取消操作
-                            }
-                        }
-                        break;
-                    case REQUESTCODE_TAKE:// 调用相机拍照
-                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-
-//                            if (imageUri != null) {
-//                                Log.e("REQUESTCODE_TAKE===", data+"===");
-//                                urlpath  = FileUtil.getFilePathByUri(context, data.getData());
-
-                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
-                            if (Uri.fromFile(temp) != null) {
-                                urlpath = getRealFilePath(context, Uri.fromFile(temp));
-                                Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
-
-//                                File picture = new File(urlpath);
-                                Uri filepath = Uri.fromFile(temp);
-//                                upBitmap = BitmapFactory.decodeFile(urlpath);
-
 
                                 compress(); //压缩图片
 
@@ -1079,10 +1079,47 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                                     uploadImage2.setImageBitmap(upBitmap);
                                 }
 
-                                Log.e("REQUESTCODE_TAKE===3", photo+"==="+upBitmap+"==="+filepath.getPath());
+                                Log.e("REQUESTCODE_PICK===3", data.getData()+"==="+filepath.getPath());
 
                                 uploadImage();
                             }
+                        }else {
+                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();// 用户点击取消操作
+                    }
+                }
+                break;
+            case REQUESTCODE_TAKE:// 调用相机拍照
+                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+
+//                            if (imageUri != null) {
+//                                Log.e("REQUESTCODE_TAKE===", data+"===");
+//                                urlpath  = FileUtil.getFilePathByUri(context, data.getData());
+
+                    File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
+                    if (Uri.fromFile(temp) != null) {
+                        urlpath = getRealFilePath(context, Uri.fromFile(temp));
+                        Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
+
+//                                File picture = new File(urlpath);
+                        Uri filepath = Uri.fromFile(temp);
+//                                upBitmap = BitmapFactory.decodeFile(urlpath);
+
+
+                        compress(); //压缩图片
+
+                        if(photo == 1){
+                            uploadImage.setImageBitmap(upBitmap);
+                        }else{
+                            uploadImage2.setImageBitmap(upBitmap);
+                        }
+
+                        Log.e("REQUESTCODE_TAKE===3", photo+"==="+upBitmap+"==="+filepath.getPath());
+
+                        uploadImage();
+                    }
 
 //                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
 //                            if (Uri.fromFile(temp) != null) {
@@ -1097,21 +1134,32 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 //
 //                                new Thread(uploadImageRunnable).start();
 //                            }
-                        }else {
-                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case REQUESTCODE_CUTTING:// 取得裁剪后的图片
-                        if (data != null) {
-                            setPicToView(data);
-                        }
-                        break;
+                }else {
+                    Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
+                break;
+            case REQUESTCODE_CUTTING:// 取得裁剪后的图片
+                if (data != null) {
+                    setPicToView(data);
+                }
+                break;
+        }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    protected Handler m_myHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message mes) {
+            switch (mes.what) {
+
+
+                default:
+                    break;
+            }
+            return false;
+        }
+    });
 
     void compress(){
         // 设置参数
