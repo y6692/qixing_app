@@ -145,8 +145,6 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
         footerLayout.setOnClickListener(this);
 
         //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单 7充值+认证充值订单 8调度费+赔偿费订单
-
-
         pvOptions.setPicker(item);
         pvOptions.setCyclic(false, false, false);
         pvOptions.setSelectOptions(0, 0, 0);

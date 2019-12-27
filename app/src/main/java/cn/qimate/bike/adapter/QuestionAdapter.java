@@ -50,7 +50,7 @@ public class QuestionAdapter extends BaseViewAdapter<QuestionBean> {
 //        Log.e("QuestionAdapter===", "==="+bean.getHot_problem().getTitle());
 
 //        header.setImageResource(R.drawable.his_road_icon);
-//        money.setText("￥"+bean.getPrices());
+//        money.setText("¥"+bean.getPrices());
 //        bikeCode.setText(bean.getCodenum());
 //        time.setText(bean.getSt_time());
 

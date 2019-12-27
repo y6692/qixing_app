@@ -320,7 +320,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         unbinder = ButterKnife.bind(this, v);
 
         mainFragment = this;
-
         return v;
     }
 
@@ -1365,7 +1364,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             }
 
                             mBanner.setBannerTitles(imageTitle);
-//                            mBanner.setBannerTitles(null);
                             mBanner.setImages(imagePath).setOnBannerListener(MainFragment.this).start();
 
                         } catch (Exception e) {

@@ -42,7 +42,7 @@ public class HistoryRoadAdapter extends BaseViewAdapter<HistoryRoadBean> {
             line.setVisibility(View.VISIBLE);
         }
 //        header.setImageResource(R.drawable.his_road_icon);
-        money.setText("￥"+bean.getPrices());
+        money.setText("¥"+bean.getPrices());
         bikeCode.setText(bean.getCodenum());
         time.setText(bean.getSt_time());
         return convertView;

@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -289,6 +290,7 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
             final TextView tv_desc = BaseViewHolder.get(convertView,R.id.tv_desc);
             final ImageView iv_down = BaseViewHolder.get(convertView,R.id.item_down);
             LinearLayout ll_payBtn = BaseViewHolder.get(convertView,R.id.ll_payBtn);
+            RelativeLayout rl_desc = BaseViewHolder.get(convertView,R.id.item_rl_desc);
             final PayCartBean bean = getDatas().get(position);
 
             name.setText(bean.getName());
@@ -317,7 +319,7 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
                 }
             });
 
-            iv_down.setOnClickListener(new View.OnClickListener() {
+            rl_desc.setOnClickListener(new View.OnClickListener() {
                 boolean flag = false;
                 @Override
                 public void onClick(View view) {

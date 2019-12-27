@@ -12,7 +12,13 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -75,6 +81,9 @@ import butterknife.Unbinder;
 import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
+import cn.nostra13.universalimageloader.core.DisplayImageOptions;
+import cn.nostra13.universalimageloader.core.ImageLoader;
+import cn.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.base.BaseApplication;
@@ -98,6 +107,7 @@ import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
+import cn.qimate.bike.view.RoundImageView;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -1293,11 +1303,6 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 
                                 compress(); //压缩图片
 
-//                                if(photo == 1){
-//                                    uploadImage.setImageBitmap(upBitmap);
-//                                }else{
-//                                    uploadImage2.setImageBitmap(upBitmap);
-//                                }
 
                                 Log.e("REQUESTCODE_TAKE===3", "==="+filepath.getPath());
 
@@ -1768,7 +1773,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                 Log.e("ImageLoader===3", "==="+position+"==="+imageUrlList.size()+"==="+isComplete+"==="+convertView+"===");
             }
 
-            ImageView imageView = BaseViewHolder.get(convertView, R.id.item_photo_gridView_image);
+            RoundImageView imageView = BaseViewHolder.get(convertView, R.id.item_photo_gridView_image);
             if (position == imageUrlList.size()) {
                 imageView.setImageResource(R.drawable.icon_addpic_focused);
                 if (MAX == position) {
@@ -1777,6 +1782,19 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
             } else {
 
                 imageView.setImageBitmap(imageUrlList.get(position));
+//                imageView.setImageBitmap(bimapRound(imageUrlList.get(position),5));
+
+//                RoundImageView img = new RoundImageView(context);
+//                DisplayImageOptions options = new DisplayImageOptions.Builder()
+////                        .showImageOnLoading(R.drawable.ic_stub)
+////                        .showImageForEmptyUri(R.drawable.ic_empty)
+////                        .showImageOnFail(R.drawable.ic_error)
+////                        .cacheInMemory(true)
+////                        .cacheOnDisk(true)
+////                        .considerExifParams(true)
+//                        .displayer(new RoundedBitmapDisplayer(20))
+//                        .build();
+//                ImageLoader.getInstance().displayImage(imageUrlList.get(position), imageView, options);
 
 //                if(!isComplete){
 //                    ImageLoader.getInstance().displayImage(Urls.host + imageUrlList.get(position), imageView, new SimpleImageLoadingListener(){
@@ -1805,6 +1823,33 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 
             return convertView;
         }
+
+    }
+
+    private Bitmap bimapRound(Bitmap mBitmap,float index){
+        Log.e("bimapRound===", mBitmap.getWidth()+"==="+mBitmap.getHeight());
+//        Bitmap bitmap = Bitmap.createBitmap(mBitmap.getWidth(), mBitmap.getHeight(), Bitmap.Config.ARGB_4444);
+        Bitmap bitmap = Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_4444);
+
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+
+        //设置矩形大小
+//        Rect rect = new Rect(0,0, mBitmap.getWidth(),mBitmap.getHeight());
+        Rect rect = new Rect(0,0, 50, 50);
+        RectF rectf = new RectF(rect);
+
+        // 相当于清屏
+        canvas.drawARGB(0, 0, 0, 0);
+        //画圆角
+        canvas.drawRoundRect(rectf, index, index, paint);
+        // 取两层绘制，显示上层
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+
+        // 把原生的图片放到这个画布上，使之带有画布的效果
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+        return bitmap;
 
     }
 

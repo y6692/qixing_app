@@ -102,6 +102,7 @@ import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
+import cn.qimate.bike.view.RoundImageView;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -1497,7 +1498,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                 Log.e("ImageLoader===3", "==="+position+"==="+imageUrlList.size()+"==="+isComplete+"==="+convertView+"===");
             }
 
-            ImageView imageView = BaseViewHolder.get(convertView, R.id.item_photo_gridView_image);
+            RoundImageView imageView = BaseViewHolder.get(convertView, R.id.item_photo_gridView_image);
             if (position == imageUrlList.size()) {
                 imageView.setImageResource(R.drawable.icon_addpic_focused);
                 if (MAX == position) {

@@ -55,7 +55,7 @@ public class RechargeRecordAdapter  extends BaseViewAdapter<RechargeRecordBean>{
         TextView payBtn = BaseViewHolder.get(convertView,R.id.item_rechargeRecord_payBtn);
         final RechargeRecordBean bean = getDatas().get(position);
         dates.setText(bean.getAddtime());
-        info.setText("￥"+bean.getPayprice());
+        info.setText("¥"+bean.getPayprice());
         if ("2".equals(bean.getStatus())){
             payBtn.setVisibility(View.GONE);
         }else {

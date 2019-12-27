@@ -155,6 +155,15 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
         rl_ad = activity.findViewById(R.id.rl_purse_ad);
         rl_ad.setOnClickListener(this);
 
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.e("pf===onResume", "===");
+
         user();
         banner();
     }
@@ -365,10 +374,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+
 
 
 

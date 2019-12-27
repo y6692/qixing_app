@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -296,6 +297,7 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
             TextView valid = BaseViewHolder.get(convertView,R.id.item_valid);
             final TextView desc = BaseViewHolder.get(convertView,R.id.item_desc);
             final ImageView iv_down = BaseViewHolder.get(convertView,R.id.item_down);
+            RelativeLayout rl_desc = BaseViewHolder.get(convertView,R.id.item_rl_desc);
 
             final MyCartBean bean = getDatas().get(position);
 
@@ -309,26 +311,21 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
             valid.setText(is_valid==1?"使用中":is_valid==2?"已过期":is_valid==3?"已用完":"待生效");
             desc.setText(bean.getDesc());
 
-            iv_down.setOnClickListener(new View.OnClickListener() {
+            rl_desc.setOnClickListener(new View.OnClickListener() {
                 boolean flag = false;
                 @Override
                 public void onClick(View view) {
-
                     Log.e("mcf===onClick", "===");
 
                     if(flag){
                         flag = false;
                         iv_down.setImageResource(R.drawable.down_icon);
-
                         desc.setMaxLines(1);
                     }else{
                         flag = true;
                         iv_down.setImageResource(R.drawable.up_icon);
-
                         desc.setMaxLines(20);
                     }
-
-
                 }
             });
 

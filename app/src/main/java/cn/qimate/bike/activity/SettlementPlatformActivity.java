@@ -41,6 +41,7 @@ import java.util.Map;
 
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
+import cn.nostra13.universalimageloader.core.ImageLoader;
 import cn.qimate.bike.R;
 import cn.qimate.bike.alipay.PayResult;
 import cn.qimate.bike.ble.BLEService;
@@ -84,6 +85,9 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
     private LinearLayout ll_pay1;
     private LinearLayout ll_pay2;
     private LinearLayout ll_pay3;
+    private ImageView iv_balance_icon;
+    private ImageView iv_alipay_icon;
+    private ImageView iv_wechat_icon;
     private ImageView iv_balance;
     private ImageView iv_alipay;
     private ImageView iv_wechat;
@@ -119,6 +123,9 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         ll_pay1 = (LinearLayout) findViewById(R.id.ll_pay1);
         ll_pay2 = (LinearLayout) findViewById(R.id.ll_pay2);
         ll_pay3 = (LinearLayout) findViewById(R.id.ll_pay3);
+        iv_balance_icon = (ImageView) findViewById(R.id.iv_balance_icon);
+        iv_alipay_icon = (ImageView) findViewById(R.id.iv_alipay_icon);
+        iv_wechat_icon = (ImageView) findViewById(R.id.iv_wechat_icon);
         iv_balance = (ImageView) findViewById(R.id.iv_balance);
         iv_alipay = (ImageView) findViewById(R.id.iv_alipay);
         iv_wechat = (ImageView) findViewById(R.id.iv_wechat);
@@ -140,7 +147,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-// must store the new intent unless getIntent() will return the old one
+//      must store the new intent unless getIntent() will return the old one
         setIntent(intent);
     }
 
@@ -153,8 +160,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         order_amount = getIntent().getStringExtra("order_amount");
         isRemain = getIntent().getBooleanExtra("isRemain", false);
 
-
-        tv_order_amount.setText(order_amount);
+        tv_order_amount.setText("¥"+order_amount);
 
         Log.e("spa===onResume", order_id+"==="+order_type);
 
@@ -193,7 +199,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                             }
 
                             balance = Double.parseDouble(bean.getBalance());
-                            tv_balance.setText("当前余额￥"+balance);
+                            tv_balance.setText("当前余额¥"+balance);
 
                             if(order_type==1){
                                 cycling();
@@ -254,10 +260,16 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
                                 if(bean.getId()==1){
                                     ll_pay1.setVisibility(View.VISIBLE);
+                                    ImageLoader.getInstance().displayImage(bean.getIcon(), iv_balance_icon);
+
                                 }else if(bean.getId()==2){      //wechat
                                     ll_pay2.setVisibility(View.VISIBLE);
+                                    ImageLoader.getInstance().displayImage(bean.getIcon(), iv_wechat_icon);
+
                                 }else if(bean.getId()==3){      //alipay
                                     ll_pay3.setVisibility(View.VISIBLE);
+                                    ImageLoader.getInstance().displayImage(bean.getIcon(), iv_alipay_icon);
+
                                 }
 
 //                                datas.add(bean);
@@ -317,7 +329,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
                                 order_id = bean.getOrder_id();
 
-                                tv_order_amount.setText(bean.getOrder_amount());
+                                tv_order_amount.setText("¥"+bean.getOrder_amount());
 
                                 if("0.00".equals(bean.getOrder_amount()) || "0".equals(bean.getOrder_amount())){
                                     Toast.makeText(context,"已为您取消本次订单，谢谢使用",Toast.LENGTH_SHORT).show();

@@ -46,7 +46,7 @@ public class CommonQuestionAdapter extends BaseViewAdapter<CommonQuestionBean> {
         Log.e("QuestionAdapter===", "==="+bean.getTitle());
 
 //        header.setImageResource(R.drawable.his_road_icon);
-//        money.setText("￥"+bean.getPrices());
+//        money.setText("¥"+bean.getPrices());
 //        bikeCode.setText(bean.getCodenum());
         title.setText(bean.getTitle());
 

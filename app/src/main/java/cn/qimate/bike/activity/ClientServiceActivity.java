@@ -84,6 +84,7 @@ import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
+import cn.qimate.bike.view.RoundImageView;
 
 /**
  * Created by Administrator1 on 2017/7/20.
@@ -852,7 +853,7 @@ public class ClientServiceActivity extends SwipeBackActivity implements View.OnC
 
             if(!((MyGridView) parent).isOnMeasure()) return convertView;
 
-            ImageView imageView = BaseViewHolder.get(convertView, R.id.item_photo_gridView_image);
+            RoundImageView imageView = BaseViewHolder.get(convertView, R.id.item_photo_gridView_image);
             if (position == imageUrlList.size()) {
                 imageView.setImageResource(R.drawable.icon_addpic_focused);
                 if (MAX == position) {
