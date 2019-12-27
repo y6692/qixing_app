@@ -1063,12 +1063,6 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
                 try {
                     JSONObject jsonObject = new JSONObject(response.getString("image"));
 
-                    //TODO
-//                    if(photo == 1){
-//                        imageurl = jsonObject.getString("key");
-//                    }else{
-//                        imageurl2 = jsonObject.getString("key");
-//                    }
 
                     imageList.add(jsonObject.getString("key"));
 

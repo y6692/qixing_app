@@ -1340,13 +1340,6 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                 try {
                     JSONObject jsonObject = new JSONObject(response.getString("image"));
 
-                    //TODO
-//                    if(photo == 1){
-//                        imageurl = jsonObject.getString("key");
-//                    }else{
-//                        imageurl2 = jsonObject.getString("key");
-//                    }
-
 //                    images += jsonObject.getString("key");
 //                    images += jsonObject.getString("key")+",";
                     imageList.add(jsonObject.getString("key"));

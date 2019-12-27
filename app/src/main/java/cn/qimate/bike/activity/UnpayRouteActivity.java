@@ -131,21 +131,6 @@ public class UnpayRouteActivity extends SwipeBackActivity implements View.OnClic
 
                                 order_id = bean.getOrder_id();
 
-//                                oid = bean.getOrder_sn();
-//                                codenum = bean.getCar_number();
-//                                type = ""+bean.getLock_id();
-//                                m_nowMac = bean.getCar_lock_mac();
-//                                force_backcar = bean.getForce_backcar();  //TODO
-//
-//                                SharedPreferencesUrls.getInstance().getString("type", type);
-
-//                                tv_biking_codenum.setText(codenum);     //TODO
-//                                tv_estimated_cost.setText(bean.getEstimated_cost());
-//                                tv_estimated_cost2.setText(bean.getEstimated_cost());
-//                                tv_car_start_time.setText(bean.getCar_start_time());
-//                                tv_car_start_time2.setText(bean.getCar_start_time());
-//                                tv_car_mileage.setText(mileage);
-//                                tv_car_electricity.setText(electricity);
 
                                 tv_unpay_route_car_number.setText(bean.getCar_number());
                                 tv_unpay_route_car_start_time.setText(bean.getCar_start_time());

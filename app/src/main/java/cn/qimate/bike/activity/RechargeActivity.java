@@ -92,17 +92,17 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         setContentView(R.layout.activity_recharge);
         context = this;
         datas = new ArrayList<>();
-        IntentFilter filter = new IntentFilter("data.broadcast.rechargeAction");
-        registerReceiver(broadcastReceiver, filter);
+//        IntentFilter filter = new IntentFilter("data.broadcast.rechargeAction");
+//        registerReceiver(broadcastReceiver, filter);
         initView();
     }
 
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            scrollToFinishActivity();
-        }
-    };
+//    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            scrollToFinishActivity();
+//        }
+//    };
 
     private void initView(){
 

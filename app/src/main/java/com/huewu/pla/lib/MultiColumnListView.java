@@ -111,7 +111,6 @@ public class MultiColumnListView extends PLA_ListView {
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
 		super.onLayout(changed, l, t, r, b);
-		//TODO the adapter status may be changed. what should i do here...
 	}
 
 	@Override
@@ -342,7 +341,6 @@ public class MultiColumnListView extends PLA_ListView {
 		private int mSynchedTop = 0;
 		private int mSynchedBottom = 0;
 
-		//TODO is it ok to use item position info to identify item??
 
 		public Column(int index) {
 			mIndex = index;

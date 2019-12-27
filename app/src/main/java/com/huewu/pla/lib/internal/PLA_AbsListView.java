@@ -2721,7 +2721,7 @@ ViewTreeObserver.OnGlobalLayoutListener, ViewTreeObserver.OnTouchModeChangeListe
         removeAllViewsInLayout();
     }
 
-    //TODO I'm not sure the purpose of onConsistencyCheck mehtod. it looks like debug related.. so just comment out.
+    //I'm not sure the purpose of onConsistencyCheck mehtod. it looks like debug related.. so just comment out.
     //    /**
     //     * @hide
     //     */

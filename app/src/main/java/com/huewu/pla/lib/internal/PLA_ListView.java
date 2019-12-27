@@ -65,7 +65,7 @@ import cn.qimate.bike.R;
  */
 public class PLA_ListView extends PLA_AbsListView {
 
-    //TODO Not Supproted Features
+    //Not Supproted Features
     //Entry from XML.
     //Choice Mode & Item Selection.
     //Filter

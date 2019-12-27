@@ -120,7 +120,7 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
 
 	@Override
 	public View getSelectedView() {
-		//TODO: implement
+
 		return null;
 	}
 
@@ -142,7 +142,7 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
 
 	@Override
 	public void setSelection(int position) {
-		//TODO: implement
+
 	}
 	
 	private void addAndMeasureChild(final View child, int viewPos) {

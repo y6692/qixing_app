@@ -132,7 +132,7 @@ public class UnpayOtherActivity extends SwipeBackActivity implements View.OnClic
                                 tv_unpay_other_remark.setText(bean.getRemark());
 
 
-                                if(bean.getType()==1){       //TODO
+                                if(bean.getType()==1){
                                     tv_title.setText("待支付调度费");
                                     tv_title2.setText("您需要支付车辆调度费");
                                 }else{
