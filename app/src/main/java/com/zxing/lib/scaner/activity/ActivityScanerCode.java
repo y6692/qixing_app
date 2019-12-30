@@ -3248,7 +3248,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //                    mBluetoothAdapter..disable();
 
 
-//                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
+                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
 //                    resetLock();
                     m_myHandler.postDelayed(new Runnable() {
                         @Override

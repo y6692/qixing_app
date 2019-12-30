@@ -1483,6 +1483,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                        SharedPreferencesUrls.getInstance().putString("tempStat","1");
 //                    }
 
+                    major = 0;
                     getBleRecord();
 
 //                    ClientManager.getClient().disconnect(m_nowMac);
@@ -1680,12 +1681,46 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             ToastUtil.showMessageApp(context,"锁已关闭");
                             Log.e("biking===", "biking===锁已关闭==="+isEndBtn);
 
+
                             m_myHandler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     BaseApplication.getInstance().getIBLE().xinbiao();
+
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                int n=0;
+                                                major=0;
+                                                Log.e("LOCK_STATUS_ACTION===n0",major+"=="+n);
+                                                while(major==0){
+
+                                                    Thread.sleep(500);
+                                                    n++;
+
+                                                    BaseApplication.getInstance().getIBLE().xinbiao();
+
+                                                    Log.e("LOCK_STATUS_ACTION===n","=="+n);
+
+                                                    if(n>=11) break;
+
+                                                }
+
+                                                Log.e("LOCK_STATUS_ACTION===n2",major+"=="+n);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+
+
+
+//                                            m_myHandler.sendEmptyMessage(3);
+                                        }
+                                    }).start();
                                 }
-                            }, 1000);
+                            }, 2000);
+
+
 
                             if(isEndBtn){
                                 Log.e("biking===", "biking===锁已关闭===2"+isEndBtn);
