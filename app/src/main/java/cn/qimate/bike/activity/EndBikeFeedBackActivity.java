@@ -456,11 +456,11 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         });
 
 
-        item.add("不在车旁");
+//        item.add("不在车旁");
+//        item.add("蓝牙连接失败");
+//        item.add("校外不想骑回");
+//        item.add("定位错误");
         item.add("车辆故障");
-        item.add("蓝牙连接失败");
-        item.add("校外不想骑回");
-        item.add("定位错误");
         item.add("其他");
 
         pvOptions.setPicker(item);

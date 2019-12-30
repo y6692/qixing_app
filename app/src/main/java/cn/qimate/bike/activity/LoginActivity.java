@@ -231,10 +231,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                         intent.putExtra("telphone",telphone);
                         startActivity(intent);
 
-
-
 //                        if (result.getFlag().equals("Success")) {
-//
 //
 //                        } else {
 //                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
@@ -271,8 +268,8 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
         Log.e("agreement===0", "===");
 
         try{
-//            协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议
-            HttpHelper.get(context, Urls.agreement+"register", new TextHttpResponseHandler() {
+//          协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议 use_car用车服务协议
+            HttpHelper.get(context, Urls.agreement+"use_car", new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
                     if (loadingDialog != null && !loadingDialog.isShowing()) {
@@ -281,22 +278,21 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                     }
                 }
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                        Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
 
-                        Log.e("agreement===fail", throwable.toString()+"==="+responseString);
+                    Log.e("agreement===fail", throwable.toString()+"==="+responseString);
 
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        UIHelper.ToastError(context, throwable.toString());
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
                     }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
                     try {
-
 //                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
 
                         Log.e("agreement===", "==="+responseString);
@@ -307,8 +303,6 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
                         UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
 //                        UIHelper.goWebViewAct(context, bean.getH5_title(), Urls.agreement+"register");
-
-
 
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -30,6 +30,8 @@ public class Urls {
 	public static String appeal = host2 + "/appeal";
 	//学校列表接口
 	public static String schools = host2 + "/schools";
+	//入学时间选项接口
+	public static String admission_time = host2 + "/admission_time";
 
 	//换绑手机接口
 	public static String change_phone = host2 + "/user/change_phone";

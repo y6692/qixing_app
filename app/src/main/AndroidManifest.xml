@@ -149,7 +149,15 @@
 
         </activity>
 
+        <activity
+            android:name=".activity.RealNameAuth2Activity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
 
         <activity
@@ -163,10 +171,7 @@
             android:name=".activity.AuthCenterActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
 
@@ -249,7 +254,6 @@
             android:name=".activity.NoteChangePhoneActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
-
         </activity>
 
 
@@ -286,12 +290,7 @@
             android:name=".activity.SchoolSelectActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
-
         </activity>
-
-
-
-
 
         <activity
             android:name="com.zxing.lib.scaner.activity.ActivityScanerCode"
@@ -309,11 +308,7 @@
             android:windowSoftInputMode="adjustResize"
             >
 
-
         </activity>
-
-
-
 
         <activity
             android:name=".activity.NoteTestActivity">

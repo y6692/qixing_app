@@ -386,7 +386,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                 }
                 break;
             case R.id.ui_realNameAuth_serviceProtocol:
-                agreement("insurance");     //TODO  2
+                agreement("use_car");
                 break;
             case R.id.ui_realNameAuth_serviceProtocol2:
                 agreement("recharge");

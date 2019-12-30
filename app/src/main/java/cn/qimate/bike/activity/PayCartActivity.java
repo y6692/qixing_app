@@ -126,7 +126,7 @@ public class PayCartActivity extends SwipeBackActivity implements View.OnClickLi
     Log.e("agreement===0", "===");
 
     try{
-//            协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议
+//    协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议
       HttpHelper.get(context, Urls.agreement+"cycling_card", new TextHttpResponseHandler() {
         @Override
         public void onStart() {

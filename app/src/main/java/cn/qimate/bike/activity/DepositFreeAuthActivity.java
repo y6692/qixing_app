@@ -55,6 +55,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +77,7 @@ import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.fragment.MainFragment;
 import cn.qimate.bike.img.NetUtil;
+import cn.qimate.bike.model.AdmissionTimeBean;
 import cn.qimate.bike.model.AuthStateBean;
 import cn.qimate.bike.model.H5Bean;
 import cn.qimate.bike.model.ResultConsel;
@@ -139,7 +141,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
     private RelativeLayout rl_popup_window;
 
     private OptionsPickerView pvOptions;
-//    private OptionsPickerView pvOptions1;
+    private OptionsPickerView pvOptions1;
 //    private OptionsPickerView pvOptions2;
 //    private String sex = "";
 
@@ -147,7 +149,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
     // 输入法
     private List<SchoolListBean> schoolList;
     static ArrayList<String> item = new ArrayList<>();
-    static ArrayList<String[]> item1 = new ArrayList<>();
+    static ArrayList<String> item1 = new ArrayList<>();
     static ArrayList<String> item2 = new ArrayList<>();
     static ArrayList<String> item3 = new ArrayList<>();
 
@@ -203,8 +205,18 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
         // 选项选择器
         pvOptions = new OptionsPickerView(context,false);
+        pvOptions1 = new OptionsPickerView(context,false);
+
+//        pvOptions.setSelectOptions(0, 1)//默认选中项
+//                .setLabels("省", "市")
+//                .setBackgroundId(0x66000000) //设置外部遮罩颜色
+//                .build();
+
 
         pvOptions.setTitle("选择入学时间");
+        pvOptions1.setTitle("选择月");
+
+//        pvOptions.setT
 
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
@@ -249,14 +261,12 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
         submitBtn.setOnClickListener(this);
         serviceProtocol.setOnClickListener(this);
 
-        item.add("2019年 12月");
-        item.add("2019年 11月");
-        item.add("2019年 10月");
-        item.add("2019年 9月");
+//        item.add("2019年 12月");
+//        item.add("2019年 11月");
+//        item.add("2019年 10月");
+//        item.add("2019年 9月");
 
-        pvOptions.setPicker(item);
-        pvOptions.setCyclic(false, false, false);
-        pvOptions.setSelectOptions(0, 0, 0);
+
 
         pvOptions.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
 
@@ -296,6 +306,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
             Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
             UIHelper.goToAct(context,LoginActivity.class);
         }else {
+            admission_time();
             getUpToken();
             initHttp();
         }
@@ -326,10 +337,12 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                 photo = 1;
                 clickPopupWindow();
                 break;
+
             case R.id.ui_deposit_free_auth_uploadImage2:
                 photo = 2;
                 clickPopupWindow();
                 break;
+
             case R.id.ui_deposit_free_auth_submitBtn:
                 String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
                 realname = realNameEdit.getText().toString();
@@ -375,10 +388,102 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                     SubmitBtn();
                 }
                 break;
+
             case R.id.ui_deposit_free_auth_serviceProtocol:
-                agreement("insurance");     //TODO
+                agreement("use_car");     //TODO
                 break;
         }
+    }
+
+    private void admission_time() {
+
+        Log.e("admission_time===0", "===");
+
+        try{
+//          协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议
+            HttpHelper.get(context, Urls.admission_time, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+                    Log.e("admission_time===fail", throwable.toString()+"==="+responseString);
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+                        Log.e("admission_time===1", "==="+responseString);
+
+//                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        AdmissionTimeBean bean = JSON.parseObject(responseString, AdmissionTimeBean.class);
+
+                        long time = (long)bean.getUnix() * 1000l;
+                        String s = new SimpleDateFormat("yyyy-MM").format(time);
+                        int year = Integer.parseInt(s.split("-")[0]);
+                        int month = Integer.parseInt(s.split("-")[1]);
+                        Log.e("admission_time===2", year+"==="+month);
+
+                        if(item.size()>0){
+                            item.clear();
+                        }
+
+                        if(item1.size()>0){
+                            item1.clear();
+                        }
+
+                        for (int i=0; i<bean.getCount()*12; i++){
+                            if(month!=0){
+                            }else{
+                                month = 12;
+                                year--;
+                            }
+
+                            item.add(year + "年");
+                            item1.add(month + "月");
+                            month--;
+                        }
+
+                        pvOptions.setPicker(item, item1, true);
+                        pvOptions.setCyclic(false, false, false);
+                        pvOptions.setSelectOptions(0, 0, 0);
+                        pvOptions.setLabels("省", "市");
+
+//                        pvOptions1.setPicker(item1);
+//                        pvOptions1.setCyclic(false, false, false);
+//                        pvOptions1.setSelectOptions(0, 0, 0);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                }
+
+
+            });
+        }catch (Exception e){
+            Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void agreement(String name) {
