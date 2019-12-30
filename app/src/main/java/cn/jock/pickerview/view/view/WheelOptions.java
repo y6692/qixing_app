@@ -1,5 +1,6 @@
 package cn.jock.pickerview.view.view;
 
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -63,11 +64,19 @@ public class WheelOptions<T> {
 		wv_option1 = (WheelView) view.findViewById(R.id.options1);
 		wv_option1.setAdapter(new ArrayWheelAdapter(mOptions1Items, len));// 设置显示数据
 		wv_option1.setCurrentItem(0);// 初始化时显示的数据
+
+		Log.e("setPicker===", wv_option1+"==="+mOptions1Items);
+
 		// 选项2
 		wv_option2 = (WheelView) view.findViewById(R.id.options2);
 		if (mOptions2Items != null)
 			wv_option2.setAdapter(new ArrayWheelAdapter(mOptions2Items.get(0)));// 设置显示数据
+
+//		wv_option2.setAdapter(new ArrayWheelAdapter(mOptions2Items, len));
 		wv_option2.setCurrentItem(wv_option1.getCurrentItem());// 初始化时显示的数据
+
+		Log.e("setPicker===2", wv_option2+"==="+mOptions2Items);
+
 		// 选项3
 		wv_option3 = (WheelView) view.findViewById(R.id.options3);
 		if (mOptions3Items != null)

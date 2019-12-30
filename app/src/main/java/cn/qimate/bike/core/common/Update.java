@@ -7,6 +7,10 @@ public class Update {
 	private String link;
 	private String updateDesc;
 
+	private String version;	//最新版本号
+	private String desc;	//版本描述
+
+
 	public String getAppName() {
 		return appName;
 	}
@@ -45,5 +49,25 @@ public class Update {
 
 	public void setUpdateDesc(String updateDesc) {
 		this.updateDesc = updateDesc;
+	}
+
+	public String getForce() {
+		return force;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 }

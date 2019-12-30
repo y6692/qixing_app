@@ -183,13 +183,10 @@ public class UpdateManager {
 
 		getCurrentVersion(context);
 
-		Log.e("checkAppUpdate==0", "===");
+		Log.e("checkAppUpdate===0", "===");
 
 
-
-		Log.e("checkAppUpdate==1", "===");
-
-		HttpHelper.get(context, Urls.updateApp, new TextHttpResponseHandler() {		//TODO	1
+		HttpHelper.get(context, Urls.version, new TextHttpResponseHandler() {		//TODO	1
 
 			@Override
 			public void onStart() {
@@ -204,50 +201,62 @@ public class UpdateManager {
 				mUpdate = new Update();
 				try {
 					ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-					if (0 == result.getErrcode()) {
-						mUpdate = JSON.parseObject(result.getData(), Update.class);
-						if (mUpdate != null) {
 
-							ToastUtil.showMessage(context, curVersionName+"==="+mUpdate.getAppVersion());
+					Log.e("checkAppUpdate===1", "==="+responseString);
 
-							Log.e("checkAppUpdate==", bikeCode+"==="+curVersionName+"==="+mUpdate.getAppVersion());
+					mUpdate = JSON.parseObject(result.getData(), Update.class);
 
-							if (!curVersionName.equals(mUpdate.getAppVersion())) {
-							    if(iv!=null) iv.setVisibility(View.VISIBLE);
+					Log.e("checkAppUpdate===1_2", "==="+mUpdate.getVersion());
 
-								if ("2".equals(mUpdate.isForce())) {
-									showDownloadDialog();
-								} else {
-									showNoticeDialog();
-								}
-							} else {
-                                if(iv!=null) iv.setVisibility(View.GONE);
+					if (mUpdate.getVersion() != null) {
 
-								if(type==0){
+						ToastUtil.showMessage(context, curVersionName+"==="+mUpdate.getVersion());
 
-									if(isShowMsg==1){
-										customDialog.show();
-									}else if(isShowMsg==2){
-										Toast.makeText(context,"当前已是最新版本",Toast.LENGTH_SHORT).show();
-									}
+						Log.e("checkAppUpdate===2", bikeCode+"==="+curVersionName+"==="+mUpdate.getVersion());
 
-								}else if(type==1){
-									Intent intent = new Intent(context, ClientServiceActivity.class);
-									intent.putExtra("bikeCode", bikeCode);
-									context.startActivity(intent);
-								}else if(type==2){
-									Intent intent = new Intent(context, EndBikeFeedBackActivity.class);
-									intent.putExtra("bikeCode", bikeCode);
-									context.startActivity(intent);
-								}
+						if(iv!=null) iv.setVisibility(View.VISIBLE);
+
+//						if ("2".equals(mUpdate.isForce())) {
+//							showDownloadDialog();
+//						} else {
+//							showNoticeDialog();
+//						}
+
+						showNoticeDialog();
+
+//						if (!curVersionName.equals(mUpdate.getAppVersion())) {
+//						} else {
+//						}
+					} else {
+//						UIHelper.ToastError(context, result.getMsg());
+
+						if(iv!=null) iv.setVisibility(View.GONE);
+
+						if(type==0){
+
+							if(isShowMsg==1){
+								customDialog.show();
+							}else if(isShowMsg==2){
+								Toast.makeText(context,"当前已是最新版本",Toast.LENGTH_SHORT).show();
+							}
+
+						}else if(type==1){
+							Intent intent = new Intent(context, ClientServiceActivity.class);
+							intent.putExtra("bikeCode", bikeCode);
+							context.startActivity(intent);
+						}else if(type==2){
+							Intent intent = new Intent(context, EndBikeFeedBackActivity.class);
+							intent.putExtra("bikeCode", bikeCode);
+							context.startActivity(intent);
+						}
 //								else if(type==3){
 //									UIHelper.goToAct(context, EndBikeFeedbackActivity.class);
 //								}
+					}
 
-							}
-						} else {
-							UIHelper.ToastError(context, result.getMsg());
-						}
+
+					if ("{}" == result.getData()) {
+
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -311,8 +320,8 @@ public class UpdateManager {
 		TextView text = (TextView)noticeDialogView.findViewById(R.id.ui_update_text);
 
 		if(type==0){
-			version.setText("V"+mUpdate.getAppVersion());
-			text.setText(mUpdate.getUpdateDesc());
+			version.setText("V"+mUpdate.getVersion());
+			text.setText(mUpdate.getDesc());
 		}else{
 			title.setText("温馨提示");
 			version.setText("");
@@ -320,29 +329,31 @@ public class UpdateManager {
 		}
 
 
-		Log.e("showNoticeDialog===", mUpdate.getLink()+"==="+mUpdate.getUpdateDesc());
+		Log.e("showNoticeDialog===", mUpdate.getVersion()+"==="+mUpdate.getDesc());
 
-		if ("2".equals(mUpdate.isForce())) {
-			showDownloadDialog();
-		} else {
-			confirmLayout.setOnClickListener(new View.OnClickListener(){
+//		if ("2".equals(mUpdate.isForce())) {
+//			showDownloadDialog();
+//		} else {
+//
+//		}
 
-				@Override
-				public void onClick(View v) {
-					noticeDialog.dismiss();
-					showDialog();
-				}
-			});
+		confirmLayout.setOnClickListener(new View.OnClickListener(){
 
-			closeLayout.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				noticeDialog.dismiss();
+				showDialog();
+			}
+		});
 
-				@Override
-				public void onClick(View v) {
-					noticeDialog.dismiss();
-				}
-			});
+		closeLayout.setOnClickListener(new View.OnClickListener(){
 
-		}
+			@Override
+			public void onClick(View v) {
+				noticeDialog.dismiss();
+			}
+		});
+
 
 		WindowManager windowManager =mActivity.getWindowManager();
 		Display display = windowManager.getDefaultDisplay();
@@ -450,7 +461,7 @@ public class UpdateManager {
 				File tmpFile = new File(tmpFilePath);
 				FileOutputStream fos = new FileOutputStream(tmpFile);
 
-				URL url = new URL(mUpdate.getLink());
+				URL url = new URL(mUpdate.getLink());			//TODO
 				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 				conn.connect();
 				int length = conn.getContentLength();

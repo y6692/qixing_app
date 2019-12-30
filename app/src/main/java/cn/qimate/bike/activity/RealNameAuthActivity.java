@@ -381,8 +381,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //                        SubmitBtn();
 //                    }
 
-                    order();
-//                    SubmitBtn();
+//                    order();
+                    SubmitBtn();
                 }
                 break;
             case R.id.ui_realNameAuth_serviceProtocol:
@@ -738,7 +738,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             intent.putExtra("order_type", 4);
                             intent.putExtra("order_amount", order_amount);
                             intent.putExtra("order_id", order_id);
-                            startActivityForResult(intent, 10);
+                            startActivity(intent);
+//                            startActivityForResult(intent, 10);
 
 //                            Intent intent = new Intent();
 //                            intent.setClass(context, RechargeActivity.class);
@@ -798,8 +799,10 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             ToastUtil.showMessageApp(context, result.getMessage());
 
                             if(result.getStatus_code()==200){
-                                UIHelper.goToAct(context, MainActivity.class);
-                                scrollToFinishActivity();
+                                order();
+
+//                                UIHelper.goToAct(context, MainActivity.class);
+//                                scrollToFinishActivity();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

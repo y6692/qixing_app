@@ -139,9 +139,6 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         tv_recharge.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
-
-
-
     }
 
     @Override
@@ -605,7 +602,10 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 //                                    rIntent.putExtra("mileage", mileage);
 //                                    setResult(RESULT_OK, rIntent);
 
-                                    setResult(RESULT_OK);
+//                                    setResult(RESULT_OK);
+//                                    scrollToFinishActivity();
+
+                                    UIHelper.goToAct(context, MainActivity.class);
                                     scrollToFinishActivity();
                                 }else{
                                     if(isRemain){
@@ -618,7 +618,6 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                                     }else {
                                         scrollToFinishActivity();
                                     }
-
                                 }
                             }
 

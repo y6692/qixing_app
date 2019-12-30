@@ -37,6 +37,7 @@ public class Urls {
 	public static String change_phone = host2 + "/user/change_phone";
 
 
+
     //广告接口
     public static String agreement = host2 + "/agreement/";
 	//广告接口
@@ -56,6 +57,8 @@ public class Urls {
 	public static String car_authority = host2 + "/user/car_authority";
 	//车辆信息接口
 	public static String car = host2 + "/car/";
+	//车辆位置接口
+	public static String location = host2 + "/car/";
 	//下单权限接口
 	public static String order_authority = host2 + "/order/authority";
 	//下单接口
@@ -98,7 +101,10 @@ public class Urls {
 	public static String order_detail = host2 + "/order/cycling/";
 	//兑换套餐卡接口
 	public static String exchange = host2 + "/cycling_card/exchange";
+	//检测新版本接口
+	public static String version = host2 + "/version";
 
+//	http://testnewmapi.7mate.cn/api/version
 //	http://testnewmapi.7mate.cn/api/user/change_phone
 //	http://testnewmapi.7mate.cn/api/schools
 //  http://testnewmapi.7mate.cn/api/agreement/{name}
@@ -313,7 +319,7 @@ public class Urls {
 	/**常见热门问题接口*/
 	public static String question = host + "/index.php?g=App&m=Question&a=index";
 	/**电单车位置信息接口*/
-	public static String location = host + "/index.php?g=App&m=Ebike&a=location";
+//	public static String location = host + "/index.php?g=App&m=Ebike&a=location";
 
     /**电单车位置信息接口*/
 //    http://app.7mate.cn/index.php?g=App&m=Login&a=verifyDevice_info&act=1&platform=Android&version=1.7.7

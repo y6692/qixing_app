@@ -165,6 +165,7 @@ import cn.qimate.bike.model.CarAuthorityBean;
 import cn.qimate.bike.model.CarBean;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.KeyBean;
+import cn.qimate.bike.model.LocationBean;
 import cn.qimate.bike.model.OrderBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.TabTopEntity;
@@ -1910,7 +1911,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                 if(major !=0){
                     queryState();
-                }else if("7".equals(type)){
+                }else if("4".equals(type) || "7".equals(type)){
                     car();       //TODO 1
                 }else{
                     startXB();
@@ -2505,7 +2506,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private void car() {
         Log.e("mf===car0", "===" + codenum);
 
-        HttpHelper.get(context, Urls.car + URLEncoder.encode(codenum), new TextHttpResponseHandler() {
+        HttpHelper.get(context, Urls.car + URLEncoder.encode(codenum)+"/location", new TextHttpResponseHandler() {
             @Override
             public void onStart() {
 //                onStartCommon("正在加载");
@@ -2526,16 +2527,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             Log.e("mf===car1", responseString + "===" + result.data);
 
-                            CarBean bean = JSON.parseObject(result.getData(), CarBean.class);
+                            LocationBean bean = JSON.parseObject(result.getData(), LocationBean.class);
 
 //                            if (loadingDialog != null && loadingDialog.isShowing()) {
 //                                loadingDialog.dismiss();
 //                            }
 
-                            bean.setLatitude("31.764387");      //TODO  1
-                            bean.setLongitude("119.92056");
+//                            bean.setLatitude("31.764387");
+//                            bean.setLongitude("119.92056");
 
-                            Log.e("mf===car2", isContainsList + "===" + isContainsList.contains(true) + "===" + pOptions + "===" + bean.getLatitude() + "===" + bean.getLongitude() + "===" +bean.getNumber() + "===" + bean.getLock_mac());
+                            Log.e("mf===car2", isContainsList + "===" + isContainsList.contains(true) + "===" + pOptions + "===" + bean.getLatitude() + "===" + bean.getLongitude());
 
 //                            type = ""+bean.getLock_id();
 //                            bleid = bean.getLock_secretkey();
@@ -2547,23 +2548,23 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 isContainsList.clear();
                             }
 
-                            Log.e("mf===car2_1", isContainsList + "===" + isContainsList.contains(true) + "===" + pOptions + "===" + bean.getLatitude() + "===" + bean.getLongitude() + "===" +bean.getNumber() + "===" + bean.getLock_mac());
+                            Log.e("mf===car2_1", isContainsList + "===" + isContainsList.contains(true) + "===" + pOptions + "===" + bean.getLatitude() + "===" + bean.getLongitude());
 
 
                             for ( int i = 0; i < pOptions.size(); i++){
 
-                                Log.e("mf===car2_2", isContainsList + "===" + isContainsList.contains(true) + "===" + pOptions + "===" + bean.getLatitude() + "===" + bean.getLongitude() + "===" +bean.getNumber() + "===" + bean.getLock_mac());
+                                Log.e("mf===car2_2", isContainsList + "===" + isContainsList.contains(true) + "===" + pOptions + "===" + bean.getLatitude() + "===" + bean.getLongitude());
 
                                 isContainsList.add(pOptions.get(i).contains(new LatLng(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()))));
                             }
 
-                            Log.e("mf===car3", isContainsList + "===" + isContainsList.contains(true)  + "===" + bean.getLatitude()+"===="+bean.getLongitude());
+                            Log.e("mf===car3", isContainsList + "===" + isContainsList.contains(true)  + "===" + bean.getLatitude()+"==="+bean.getLongitude());
 
                             if(!isContainsList.contains(true)){
                                 minPoint(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()));
                             }
 
-                            Log.e("mf===car4", isContainsList + "===" + isContainsList.contains(true)  + "===" + bean.getLatitude()+"===="+bean.getLongitude());
+                            Log.e("mf===car4", isContainsList + "===" + isContainsList.contains(true)  + "===" + bean.getLatitude()+"==="+bean.getLongitude());
 
                             if(isContainsList.contains(true)){
                                 isGPS_Lo = true;

@@ -150,7 +150,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
     private List<SchoolListBean> schoolList;
     static ArrayList<String> item = new ArrayList<>();
     static ArrayList<String> item1 = new ArrayList<>();
-    static ArrayList<String> item2 = new ArrayList<>();
+    static ArrayList<ArrayList<String>> item2 = new ArrayList<>();
     static ArrayList<String> item3 = new ArrayList<>();
 
     private String cert_method = "";
@@ -272,7 +272,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
             @Override
             public void onOptionsSelect(int options1, int option2, int options3) {
-                timeText.setText(item.get(options1));
+                timeText.setText(item.get(options1)+" "+item2.get(options1).get(option2));
 
 //                school = item1.get(options1)[0];
 //                schoolText.setText(school);
@@ -451,19 +451,28 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                         for (int i=0; i<bean.getCount()*12; i++){
                             if(month!=0){
                             }else{
+                                item.add(year + "年");
+
+                                item2.add(item1);
+
+                                item1.clear();
+
                                 month = 12;
                                 year--;
+
                             }
 
-                            item.add(year + "年");
+
                             item1.add(month + "月");
+
+
                             month--;
                         }
 
-                        pvOptions.setPicker(item, item1, true);
+                        pvOptions.setPicker(item, item2, true);
                         pvOptions.setCyclic(false, false, false);
                         pvOptions.setSelectOptions(0, 0, 0);
-                        pvOptions.setLabels("省", "市");
+//                        pvOptions.setLabels("省", "市");
 
 //                        pvOptions1.setPicker(item1);
 //                        pvOptions1.setCyclic(false, false, false);
