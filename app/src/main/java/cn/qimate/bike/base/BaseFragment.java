@@ -73,7 +73,7 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 	public static List<Polygon> pOptions;
 	public static List<Boolean> isContainsList;
 	public static List<LatLng> listPoint = new ArrayList<>();
-
+	public static List<LatLng> centerList = new ArrayList<LatLng>();
 
 	public static double referLatitude = 0.0;
 	public static double referLongitude = 0.0;
@@ -93,7 +93,10 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 //		osn = SharedPreferencesUrls.getInstance().getString("osn", "");
 		type = SharedPreferencesUrls.getInstance().getString("type", "");
 
+
 		context = getActivity();
+
+		BaseApplication.context = context;
 
 //		RefreshLogin();
 	}

@@ -190,7 +190,9 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                 sendCode();
                 break;
             case R.id.loginUI_change_phone:
-                UIHelper.goToAct(context, ChangePhoneActivity.class);
+//                UIHelper.goToAct(context, ChangePhoneActivity.class);
+                UIHelper.goToAct(context, ComplainActivity.class);
+
                 break;
             case R.id.loginUI_serviceProtocol:
                 agreement();

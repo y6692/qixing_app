@@ -220,7 +220,7 @@
                                         android:layout_marginTop="4dp"
                                         android:textColor="@color/tx_black"
                                         android:textSize="@dimen/sp10"
-                                        android:text="无法还车"/>
+                                        android:text="车锁"/>
 
                                     <TextView
                                         android:id="@+id/endBikeFeedBackUI_type_Tag1_1"
@@ -679,6 +679,7 @@
                         android:layout_marginRight="48dp"
                         android:layout_marginTop="44dp"
                         android:background="@drawable/btn_bcg"
+                        android:stateListAnimator="@null"
                         android:maxHeight="0dp"
                         android:text="提交"
                         android:textColor="@color/white"

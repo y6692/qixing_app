@@ -40,6 +40,7 @@ public class BaseActivity extends BaseFragmentActivity {
 		super.onCreate(bundle);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		context = this;
+		BaseApplication.context = context;
 
 		AppManager.getAppManager().addActivity(this);
 		// 修改状态栏颜色，4.4+生效

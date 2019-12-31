@@ -22,7 +22,17 @@ import java.io.UnsupportedEncodingException;
 
 import org.apache.http.Header;
 
+import android.app.Application;
+import android.content.Intent;
 import android.util.Log;
+
+import com.alibaba.fastjson.JSON;
+
+import cn.qimate.bike.activity.LoginActivity;
+import cn.qimate.bike.base.BaseApplication;
+import cn.qimate.bike.core.common.SharedPreferencesUrls;
+import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.util.ToastUtil;
 
 /**
  * Used to intercept and handle the responses from requests made using {@link AsyncHttpClient}. The
@@ -96,8 +106,26 @@ public abstract class TextHttpResponseHandler extends AsyncHttpResponseHandler {
 
     @Override
     public void onSuccess(int statusCode, Header[] headers, byte[] responseBytes) {
-        onSuccess(statusCode, headers, getResponseString(responseBytes, getCharset()));
-    	
+
+        String responseString = getResponseString(responseBytes, getCharset());
+        onSuccess(statusCode, headers, responseString);
+
+//        Log.e("onSuccess===", statusCode+"==="+responseString);
+
+        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+        Log.e("onSuccess===1", responseString+"==="+result.getStatus_code());
+
+        if(result.getStatus_code()==401){
+            SharedPreferencesUrls.getInstance().putString("access_token", "");
+            SharedPreferencesUrls.getInstance().putString("iscert", "");
+
+            ToastUtil.showMessageApp(BaseApplication.context, result.getMessage());
+
+            Intent intent = new Intent(BaseApplication.context, LoginActivity.class);
+            BaseApplication.context.startActivity(intent);
+        }
+
 //        try {
 //        	String returnStr = new String(responseBytes, "utf-8");
 //        	Log.e("MyTest", "onSuccess:" + returnStr);

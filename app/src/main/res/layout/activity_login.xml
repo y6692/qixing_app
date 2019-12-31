@@ -124,6 +124,7 @@
                         android:maxHeight="0dp"
                         android:text="开始使用"
                         android:textColor="@color/white"
+                        android:stateListAnimator="@null"
                         android:textSize="@dimen/sp18" />
 
                 </LinearLayout>

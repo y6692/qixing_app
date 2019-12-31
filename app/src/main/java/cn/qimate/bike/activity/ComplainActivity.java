@@ -680,8 +680,10 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
 
                             Log.e("SubmitBtn===", "==="+responseString);
 
-                            if(result.getStatus_code()!=200){
-                                ToastUtil.showMessageApp(context, result.getMessage());
+                            ToastUtil.showMessageApp(context, result.getMessage());
+
+                            if(result.getStatus_code()==200){
+                                scrollToFinishActivity();
                             }
 
                         } catch (Exception e) {

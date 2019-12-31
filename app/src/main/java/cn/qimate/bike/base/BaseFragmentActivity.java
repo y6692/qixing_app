@@ -144,6 +144,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		context = this;
+		BaseApplication.context = context;
 
 //		registerReceiver(Config.initFilter());
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);

@@ -167,6 +167,9 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
     private List<String> imageList = new ArrayList<>();
     final static int MAX = 4;
 
+    private String subTag1="";
+    private String subTag21="";
+
 //    private List<Bitmap> bitmapList;
 
     /**
@@ -226,7 +229,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
         bikeCode = getIntent().getStringExtra("bikeCode");
 
-        type = "4";
+//        type = "1";     //TODO
 //        bikeCode = "40001";
 
         initView();
@@ -469,6 +472,16 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         question_type = "车辆故障";
         tv_question.setText("车辆故障");
 
+        if("4".equals(type) || "7".equals(type)){
+            ll_bike_fault.setVisibility(View.GONE);
+            ll_ebike_fault.setVisibility(View.VISIBLE);
+        }else{
+            ll_bike_fault.setVisibility(View.VISIBLE);
+            ll_ebike_fault.setVisibility(View.GONE);
+        }
+
+        ll_restCauseEdit.setVisibility(View.GONE);
+
         pvOptions.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
 
             @Override
@@ -486,7 +499,12 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                         ll_ebike_fault.setVisibility(View.GONE);
                     }
 
-                    ll_restCauseEdit.setVisibility(View.GONE);
+                    if(isSelected6 || isSelected26){
+                        ll_restCauseEdit.setVisibility(View.VISIBLE);
+                    }else{
+                        ll_restCauseEdit.setVisibility(View.GONE);
+                    }
+
                 }else{
                     ll_bike_fault.setVisibility(View.GONE);
                     ll_ebike_fault.setVisibility(View.GONE);
@@ -599,15 +617,15 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                     }
 //                    Tag1.setTextColor(Color.parseColor("#666666"));
 
-                    isSelected1_1 = false;
-                    isSelected1_2 = false;
-                    isSelected1_3 = false;
-                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
-                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
-                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
+//                    isSelected1_1 = false;
+//                    isSelected1_2 = false;
+//                    isSelected1_3 = false;
+//                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
+//                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
+//                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
+//                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
+//                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
+//                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
 
                     Tag1.setImageResource(R.drawable.lock_icon);    //未选中
                 }else {
@@ -617,15 +635,15 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                     }
 //                    Tag1.setTextColor(Color.parseColor("#f57752"));
 
-                    isSelected1_1 = true;
-                    isSelected1_2 = true;
-                    isSelected1_3 = true;
-                    Tag1_1.setTextColor(Color.parseColor("#FFFFFF"));
-                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg2);
-                    Tag1_2.setTextColor(Color.parseColor("#FFFFFF"));
-                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
-                    Tag1_3.setTextColor(Color.parseColor("#FFFFFF"));
-                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg2);
+//                    isSelected1_1 = true;
+//                    isSelected1_2 = true;
+//                    isSelected1_3 = true;
+//                    Tag1_1.setTextColor(Color.parseColor("#FFFFFF"));
+//                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg2);
+//                    Tag1_2.setTextColor(Color.parseColor("#FFFFFF"));
+//                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
+//                    Tag1_3.setTextColor(Color.parseColor("#FFFFFF"));
+//                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg2);
 
                     Tag1.setImageResource(R.drawable.lock_icon2);   //选中
                 }
@@ -635,21 +653,29 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
             case R.id.endBikeFeedBackUI_type_Tag1_1:
                 if (isSelected1_1){
                     isSelected1_1 = false;
-                    if (TagsList1.contains("锁未弹开")){
-                        TagsList1.remove("锁未弹开");
-                    }
+//                    if (TagsList1.contains("锁未弹开")){
+//                        TagsList1.remove("锁未弹开");
+//                    }
+                    subTag1="";
                     Tag1_1.setTextColor(Color.parseColor("#FD555B"));
                     Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
 
-
                 }else {
                     isSelected1_1 = true;
-                    if (!TagsList1.contains("锁未弹开")){
-                        TagsList1.add("锁未弹开");
-                    }
+//                    if (!TagsList1.contains("锁未弹开")){
+//                        TagsList1.add("锁未弹开");
+//                    }
+                    subTag1="锁未弹开";
                     Tag1_1.setTextColor(Color.parseColor("#FFFFFF"));
                     Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg2);
 
+                    isSelected1_2 = false;
+                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
+
+                    isSelected1_3 = false;
+                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
                 }
 
                 px1();
@@ -660,18 +686,28 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
             case R.id.endBikeFeedBackUI_type_Tag1_2:
                 if (isSelected1_2){
                     isSelected1_2 = false;
-                    if (TagsList1.contains("无法关锁")){
-                        TagsList1.remove("无法关锁");
-                    }
+//                    if (TagsList1.contains("无法关锁")){
+//                        TagsList1.remove("无法关锁");
+//                    }
+                    subTag1="";
                     Tag1_2.setTextColor(Color.parseColor("#FD555B"));
                     Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
                 }else {
                     isSelected1_2 = true;
-                    if (!TagsList1.contains("无法关锁")){
-                        TagsList1.add("无法关锁");
-                    }
+//                    if (!TagsList1.contains("无法关锁")){
+//                        TagsList1.add("无法关锁");
+//                    }
+                    subTag1="无法关锁";
                     Tag1_2.setTextColor(Color.parseColor("#FFFFFF"));
                     Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
+
+                    isSelected1_1 = false;
+                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
+
+                    isSelected1_3 = false;
+                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
                 }
 
                 px1();
@@ -679,21 +715,31 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                 pd();
                 break;
 
-            case R.id.bikeFaultUI_type_Tag1_3:
+            case R.id.endBikeFeedBackUI_type_Tag1_3:
                 if (isSelected1_3){
                     isSelected1_3 = false;
-                    if (TagsList1.contains("外形破损")){
-                        TagsList1.remove("外形破损");
-                    }
+//                    if (TagsList1.contains("外形破损")){
+//                        TagsList1.remove("外形破损");
+//                    }
+                    subTag1="";
                     Tag1_3.setTextColor(Color.parseColor("#FD555B"));
                     Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
                 }else {
                     isSelected1_3 = true;
-                    if (!TagsList1.contains("外形破损")){
-                        TagsList1.add("外形破损");
-                    }
+//                    if (!TagsList1.contains("外形破损")){
+//                        TagsList1.add("外形破损");
+//                    }
+                    subTag1="外形破损";
                     Tag1_3.setTextColor(Color.parseColor("#FFFFFF"));
                     Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg2);
+
+                    isSelected1_2 = false;
+                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
+
+                    isSelected1_1 = false;
+                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
                 }
 
                 px1();
@@ -809,12 +855,12 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                     }
 //                  Tag1.setTextColor(Color.parseColor("#666666"));
 
-                    isSelected21_1 = false;
-                    isSelected21_2 = false;
-                    Tag21_1.setTextColor(Color.parseColor("#FD555B"));
-                    Tag21_1.setBackgroundResource(R.drawable.block_fault_bcg);
-                    Tag21_2.setTextColor(Color.parseColor("#FD555B"));
-                    Tag21_2.setBackgroundResource(R.drawable.block_fault_bcg);
+//                    isSelected21_1 = false;
+//                    isSelected21_2 = false;
+//                    Tag21_1.setTextColor(Color.parseColor("#FD555B"));
+//                    Tag21_1.setBackgroundResource(R.drawable.block_fault_bcg);
+//                    Tag21_2.setTextColor(Color.parseColor("#FD555B"));
+//                    Tag21_2.setBackgroundResource(R.drawable.block_fault_bcg);
 
                     Tag21.setImageResource(R.drawable.lock_icon3);    //未选中
                 }else {
@@ -824,12 +870,12 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                     }
 //                    Tag1.setTextColor(Color.parseColor("#f57752"));
 
-                    isSelected21_1 = true;
-                    isSelected21_2 = true;
-                    Tag21_1.setTextColor(Color.parseColor("#FFFFFF"));
-                    Tag21_1.setBackgroundResource(R.drawable.block_fault_bcg2);
-                    Tag21_2.setTextColor(Color.parseColor("#FFFFFF"));
-                    Tag21_2.setBackgroundResource(R.drawable.block_fault_bcg2);
+//                    isSelected21_1 = true;
+//                    isSelected21_2 = true;
+//                    Tag21_1.setTextColor(Color.parseColor("#FFFFFF"));
+//                    Tag21_1.setBackgroundResource(R.drawable.block_fault_bcg2);
+//                    Tag21_2.setTextColor(Color.parseColor("#FFFFFF"));
+//                    Tag21_2.setBackgroundResource(R.drawable.block_fault_bcg2);
 
                     Tag21.setImageResource(R.drawable.lock_icon4);   //选中
                 }
@@ -839,21 +885,28 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
             case R.id.endBikeFeedBackUI_type2_Tag1_1:
                 if (isSelected21_1){
                     isSelected21_1 = false;
-                    if (TagsList1.contains("开锁失败")){
-                        TagsList1.remove("开锁失败");
-                    }
+//                    if (TagsList1.contains("开锁失败")){
+//                        TagsList1.remove("开锁失败");
+//                    }
+                    subTag21="";
                     Tag21_1.setTextColor(Color.parseColor("#FD555B"));
                     Tag21_1.setBackgroundResource(R.drawable.block_fault_bcg);
 
-
+//                    isSelected21_2 = true;
+//                    Tag21_2.setTextColor(Color.parseColor("#FFFFFF"));
+//                    Tag21_2.setBackgroundResource(R.drawable.block_fault_bcg2);
                 }else {
                     isSelected21_1 = true;
-                    if (!TagsList1.contains("开锁失败")){
-                        TagsList1.add("开锁失败");
-                    }
+//                    if (!TagsList1.contains("开锁失败")){
+//                        TagsList1.add("开锁失败");
+//                    }
+                    subTag21="开锁失败";
                     Tag21_1.setTextColor(Color.parseColor("#FFFFFF"));
                     Tag21_1.setBackgroundResource(R.drawable.block_fault_bcg2);
 
+                    isSelected21_2 = false;
+                    Tag21_2.setTextColor(Color.parseColor("#FD555B"));
+                    Tag21_2.setBackgroundResource(R.drawable.block_fault_bcg);
                 }
 
                 px2();
@@ -864,18 +917,28 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
             case R.id.endBikeFeedBackUI_type2_Tag1_2:
                 if (isSelected21_2){
                     isSelected21_2 = false;
-                    if (TagsList1.contains("关锁失败")){
-                        TagsList1.remove("关锁失败");
-                    }
+//                    if (TagsList1.contains("关锁失败")){
+//                        TagsList1.remove("关锁失败");
+//                    }
+                    subTag21="";
                     Tag21_2.setTextColor(Color.parseColor("#FD555B"));
                     Tag21_2.setBackgroundResource(R.drawable.block_fault_bcg);
+
+//                    isSelected21_1 = true;
+//                    Tag21_1.setTextColor(Color.parseColor("#FFFFFF"));
+//                    Tag21_1.setBackgroundResource(R.drawable.block_fault_bcg2);
                 }else {
                     isSelected21_2 = true;
-                    if (!TagsList1.contains("关锁失败")){
-                        TagsList1.add("关锁失败");
-                    }
+//                    if (!TagsList1.contains("关锁失败")){
+//                        TagsList1.add("关锁失败");
+//                    }
+                    subTag21="关锁失败";
                     Tag21_2.setTextColor(Color.parseColor("#FFFFFF"));
                     Tag21_2.setBackgroundResource(R.drawable.block_fault_bcg2);
+
+                    isSelected21_1 = false;
+                    Tag21_1.setTextColor(Color.parseColor("#FD555B"));
+                    Tag21_1.setBackgroundResource(R.drawable.block_fault_bcg);
                 }
 
                 px2();
@@ -1093,66 +1156,84 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         RequestParams params = new RequestParams();
 
         String content = "";
-        if (TagsList.size() != 0 && !TagsList.isEmpty()){
-            if ((isSelected6 || isSelected26) && other != null && !"".equals(other)){
-                for (int i = 0; i < TagsList.size(); i++){
-                     content = content + TagsList.get(i)+",";
-                }
-                content = content + other+ "。";
-            }else {
-                for (int i = 0;i<TagsList.size();i++){
-                    if (i != TagsList.size() - 1){
-                        content = content + TagsList.get(i)+",";
-                    }else {
-                        content = content + TagsList.get(i)+ "。";
+        if ("车辆故障".equals(question_type) && TagsList.size() != 0 && !TagsList.isEmpty()){
+
+            for (int i = 0;i<TagsList.size();i++){
+//                    if (i != TagsList.size() - 1){
+//                        content = content + TagsList.get(i)+",";
+//                    }else {
+//                        content = content + TagsList.get(i)+ "。";
+//                    }
+
+                Log.e("submit===0", TagsList.get(i)+"==="+isSelected1);
+
+                if("车锁".equals(TagsList.get(i))){
+                    if(isSelected1){
+                        content += TagsList.get(i)+":"+subTag1+";";
+                    }else{
+                        content += TagsList.get(i)+":"+subTag21+";";
                     }
+                }else{
+                    content += TagsList.get(i)+";";
                 }
+
             }
-        }else {
-            content = other + "。";
+
+//            if ((isSelected6 || isSelected26) && other != null && !"".equals(other)){
+//                for (int i = 0; i < TagsList.size(); i++){
+////                     content = content + TagsList.get(i)+",";
+//                    content += TagsList.get(i)+";";
+//                }
+////                content = content + other+ "。";
+//            }else {
+//
+//            }
         }
+//        else {
+//            content = other + "。";
+//        }
 
-        String content1 = "";
-        if (isSelected1 || isSelected21){
-            for (int i = 0; i<TagsList1.size(); i++){
-                if (i != TagsList1.size() - 1){
-                    content1 = content1 + TagsList1.get(i)+",";
-                }else {
-                    content1 = content1 + TagsList1.get(i)+ "。";
-                }
-            }
-        }
+//        String content1 = "";
+//        if (isSelected1 || isSelected21){
+//            for (int i = 0; i<TagsList1.size(); i++){
+//                if (i != TagsList1.size() - 1){
+//                    content1 = content1 + TagsList1.get(i)+",";
+//                }else {
+//                    content1 = content1 + TagsList1.get(i)+ "。";
+//                }
+//            }
+//        }
 
-        if (content == null || "".equals(content)){
-            m_myHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    ToastUtil.showMessageApp(context,"请选择问题类型");
-                }
-            });
+//        if (content == null || "".equals(content)){
+//            m_myHandler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    ToastUtil.showMessageApp(context,"请选择问题类型");
+//                }
+//            });
+//
+//            return;
+//        }
+//        if (imageList.size() == 0 || imageList.isEmpty()){
+//            m_myHandler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    ToastUtil.showMessageApp(context,"请上传照片");
+//                }
+//            });
+//
+//            return;
+//        }
 
-            return;
-        }
-        if (imageList.size() == 0 || imageList.isEmpty()){
-            m_myHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    ToastUtil.showMessageApp(context,"请上传照片");
-                }
-            });
-
-            return;
-        }
-
-        Log.e("submit===", bikeCode+"==="+TagsList+"==="+TagsList1+"==="+question_type+"==="+latitude+"==="+longitude+"==="+content+"==="+content1+"==="+address+"==="+imageList);
+        Log.e("submit===", bikeCode+"==="+TagsList+"==="+TagsList1+"==="+question_type+"==="+latitude+"==="+longitude+"==="+content+"==="+other+"==="+address+"==="+imageList);
 
         params.put("type", 1);      //类型(必传) 1无法还车 2车辆故障
         params.put("car_number", bikeCode);     //车辆编号(必传)
         params.put("question_type", question_type);     //问题类型(提交无法还车反馈时必传)
-        params.put("damaged_part", content);     //损坏部件(提交车辆故障时必传)
-        params.put("damaged_part_desc", content1);     //损坏部件(提交车辆故障时必传)
+        params.put("damaged_part_desc", content);     //损坏部件(提交车辆故障时必传)
+        params.put("remark", other);     //损坏部件(提交车辆故障时必传)
         params.put("position", address);     //位置信息(选传)
-        params.put("images", imageList);     //图片key数组，json字符串
+        params.put("images", ""+imageList);     //图片key数组，json字符串
         params.put("latitude", ""+latitude);
         params.put("longitude", ""+longitude);
 
@@ -1178,6 +1259,12 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
                             Log.e("feedback===", result.getData()+"==="+responseString);
+
+                            ToastUtil.showMessageApp(context, result.getMessage());
+
+                            if(result.getStatus_code()==200){
+                                scrollToFinishActivity();
+                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -1345,7 +1432,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 
 //                    images += jsonObject.getString("key");
 //                    images += jsonObject.getString("key")+",";
-                    imageList.add(jsonObject.getString("key"));
+                    imageList.add("\""+jsonObject.getString("key")+"\"");
 
                     pd();
                     Log.e("UpCompletion===", imageList+"==="+jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);

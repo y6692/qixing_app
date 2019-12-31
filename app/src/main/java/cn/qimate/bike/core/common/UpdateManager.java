@@ -112,8 +112,8 @@ public class UpdateManager {
 	// 更新提示对话框
 	private Dialog updateDialog;
 
-	private RelativeLayout confirmLayout;
-	private RelativeLayout closeLayout;
+	private Button confirmBtn;
+	private Button closeBtn;
 
 	private int type = 0;
 	private  String bikeCode = "";
@@ -312,8 +312,8 @@ public class UpdateManager {
 		noticeDialog.setContentView(noticeDialogView);
 		noticeDialog.setCanceledOnTouchOutside(false);
 
-		confirmLayout = (RelativeLayout)noticeDialogView.findViewById(R.id.ui_update_confirmLayout);
-		closeLayout = (RelativeLayout)noticeDialogView.findViewById(R.id.ui_update_closeLayout);
+		confirmBtn = (Button)noticeDialogView.findViewById(R.id.ui_update_confirmBtn);
+		closeBtn = (Button)noticeDialogView.findViewById(R.id.ui_update_closeBtn);
 
 		TextView title = (TextView)noticeDialogView.findViewById(R.id.ui_title);
 		TextView version = (TextView)noticeDialogView.findViewById(R.id.ui_update_version);
@@ -337,7 +337,7 @@ public class UpdateManager {
 //
 //		}
 
-		confirmLayout.setOnClickListener(new View.OnClickListener(){
+		confirmBtn.setOnClickListener(new View.OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -346,7 +346,7 @@ public class UpdateManager {
 			}
 		});
 
-		closeLayout.setOnClickListener(new View.OnClickListener(){
+		closeBtn.setOnClickListener(new View.OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -355,9 +355,9 @@ public class UpdateManager {
 		});
 
 
-		WindowManager windowManager =mActivity.getWindowManager();
-		Display display = windowManager.getDefaultDisplay();
-		WindowManager.LayoutParams lp = noticeDialog.getWindow().getAttributes();
+//		WindowManager windowManager =mActivity.getWindowManager();
+//		Display display = windowManager.getDefaultDisplay();
+//		WindowManager.LayoutParams lp = noticeDialog.getWindow().getAttributes();
 		noticeDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
 		noticeDialog.show();
 

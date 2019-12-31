@@ -640,6 +640,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                             listPoint.clear();
                         }
 
+                        if (!centerList.isEmpty() || 0 != centerList.size()){
+                            centerList.clear();
+                        }
+
                         for (int i = 0; i < jsonArray.length(); i++) {
                             List<LatLng> list = new ArrayList<>();
                             List<LatLng> list2 = new ArrayList<>();
@@ -672,8 +676,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                             Log.e("main_b===schoolRange24", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
 
-                            marker_park_Option.title(jsonObject.getString("name")).position(new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude"))));
+                            LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
+                            marker_park_Option.title(jsonObject.getString("name")).position(latLng);
                             aMap.addMarker(marker_park_Option);
+
+                            centerList.add(latLng);
 
 
                             if(!isHidden){
@@ -741,6 +748,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                         listPoint.clear();
                                     }
 
+                                    if (!centerList.isEmpty() || 0 != centerList.size()){
+                                        centerList.clear();
+                                    }
+
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         List<LatLng> list = new ArrayList<>();
                                         List<LatLng> list2 = new ArrayList<>();
@@ -773,13 +784,14 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                         Log.e("main_b===schoolRange4", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
 
-                                        marker_park_Option.title(jsonObject.getString("name")).position(new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude"))));
+                                        LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
+                                        marker_park_Option.title(jsonObject.getString("name")).position(latLng);
                                         aMap.addMarker(marker_park_Option);
 
+                                        centerList.add(latLng);
 
                                         if(!isHidden){
                                             pOptions.add(polygon);
-
                                             isContainsList.add(polygon.contains(myLocation));
                                         }else{
                                         }

@@ -153,6 +153,8 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
     private List<String> imageList = new ArrayList<>();
     final static int MAX = 4;
 
+    private String subTag1="";
+
 //    private List<Bitmap> bitmapList;
 
     /**
@@ -534,15 +536,15 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                     }
 //                    Tag1.setTextColor(Color.parseColor("#666666"));
 
-                    isSelected1_1 = false;
-                    isSelected1_2 = false;
-                    isSelected1_3 = false;
-                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
-                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
-                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
+//                    isSelected1_1 = false;
+//                    isSelected1_2 = false;
+//                    isSelected1_3 = false;
+//                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
+//                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
+//                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
+//                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
+//                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
+//                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
 
                     Tag1.setImageResource(R.drawable.lock_icon);    //未选中
                 }else {
@@ -552,15 +554,15 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                     }
 //                    Tag1.setTextColor(Color.parseColor("#f57752"));
 
-                    isSelected1_1 = true;
-                    isSelected1_2 = true;
-                    isSelected1_3 = true;
-                    Tag1_1.setTextColor(Color.parseColor("#FFFFFF"));
-                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg2);
-                    Tag1_2.setTextColor(Color.parseColor("#FFFFFF"));
-                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
-                    Tag1_3.setTextColor(Color.parseColor("#FFFFFF"));
-                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg2);
+//                    isSelected1_1 = true;
+//                    isSelected1_2 = true;
+//                    isSelected1_3 = true;
+//                    Tag1_1.setTextColor(Color.parseColor("#FFFFFF"));
+//                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg2);
+//                    Tag1_2.setTextColor(Color.parseColor("#FFFFFF"));
+//                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
+//                    Tag1_3.setTextColor(Color.parseColor("#FFFFFF"));
+//                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg2);
 
                     Tag1.setImageResource(R.drawable.lock_icon2);   //选中
                 }
@@ -570,21 +572,29 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
             case R.id.bikeFaultUI_type_Tag1_1:
                 if (isSelected1_1){
                     isSelected1_1 = false;
-                    if (TagsList1.contains("锁未弹开")){
-                        TagsList1.remove("锁未弹开");
-                    }
+//                    if (TagsList1.contains("锁未弹开")){
+//                        TagsList1.remove("锁未弹开");
+//                    }
+                    subTag1="";
                     Tag1_1.setTextColor(Color.parseColor("#FD555B"));
                     Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
 
-
                 }else {
                     isSelected1_1 = true;
-                    if (!TagsList1.contains("锁未弹开")){
-                        TagsList1.add("锁未弹开");
-                    }
+//                    if (!TagsList1.contains("锁未弹开")){
+//                        TagsList1.add("锁未弹开");
+//                    }
+                    subTag1="锁未弹开";
                     Tag1_1.setTextColor(Color.parseColor("#FFFFFF"));
                     Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg2);
 
+                    isSelected1_2 = false;
+                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
+
+                    isSelected1_3 = false;
+                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
                 }
 
                 px1();
@@ -595,18 +605,28 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
             case R.id.bikeFaultUI_type_Tag1_2:
                 if (isSelected1_2){
                     isSelected1_2 = false;
-                    if (TagsList1.contains("无法关锁")){
-                        TagsList1.remove("无法关锁");
-                    }
+//                    if (TagsList1.contains("无法关锁")){
+//                        TagsList1.remove("无法关锁");
+//                    }
+                    subTag1="";
                     Tag1_2.setTextColor(Color.parseColor("#FD555B"));
                     Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
                 }else {
                     isSelected1_2 = true;
-                    if (!TagsList1.contains("无法关锁")){
-                        TagsList1.add("无法关锁");
-                    }
+//                    if (!TagsList1.contains("无法关锁")){
+//                        TagsList1.add("无法关锁");
+//                    }
+                    subTag1="无法关锁";
                     Tag1_2.setTextColor(Color.parseColor("#FFFFFF"));
                     Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
+
+                    isSelected1_1 = false;
+                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
+
+                    isSelected1_3 = false;
+                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
                 }
 
                 px1();
@@ -617,18 +637,28 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
             case R.id.bikeFaultUI_type_Tag1_3:
                 if (isSelected1_3){
                     isSelected1_3 = false;
-                    if (TagsList.contains("外形破损")){
-                        TagsList.remove("外形破损");
-                    }
+//                    if (TagsList1.contains("外形破损")){
+//                        TagsList1.remove("外形破损");
+//                    }
+                    subTag1="";
                     Tag1_3.setTextColor(Color.parseColor("#FD555B"));
                     Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
                 }else {
                     isSelected1_3 = true;
-                    if (!TagsList.contains("外形破损")){
-                        TagsList.add("外形破损");
-                    }
+//                    if (!TagsList1.contains("外形破损")){
+//                        TagsList1.add("外形破损");
+//                    }
+                    subTag1="外形破损";
                     Tag1_3.setTextColor(Color.parseColor("#FFFFFF"));
                     Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg2);
+
+                    isSelected1_2 = false;
+                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
+
+                    isSelected1_1 = false;
+                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
+                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
                 }
 
                 px1();
@@ -811,69 +841,80 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
 
         String content = "";
         if (TagsList.size() != 0 && !TagsList.isEmpty()){
-            if ((isSelected6) && other != null && !"".equals(other)){
-                for (int i = 0; i < TagsList.size(); i++){
-                    content = content + TagsList.get(i)+",";
-                }
-                content = content + other+ "。";
-            }else {
-                for (int i = 0;i<TagsList.size();i++){
-                    if (i != TagsList.size() - 1){
-                        content = content + TagsList.get(i)+",";
-                    }else {
-                        content = content + TagsList.get(i)+ "。";
-                    }
+//            if ((isSelected6) && other != null && !"".equals(other)){
+//                for (int i = 0; i < TagsList.size(); i++){
+//                    content = content + TagsList.get(i)+",";
+//                }
+//                content = content + other+ "。";
+//            }else {
+//                for (int i = 0;i<TagsList.size();i++){
+//                    if (i != TagsList.size() - 1){
+//                        content = content + TagsList.get(i)+",";
+//                    }else {
+//                        content = content + TagsList.get(i)+ "。";
+//                    }
+//                }
+//            }
+
+            for (int i = 0;i<TagsList.size();i++){
+                if("车锁".equals(TagsList.get(i))){
+                    content += TagsList.get(i)+":"+subTag1+";";
+                }else{
+                    content += TagsList.get(i)+";";
                 }
             }
-        }else {
-            content = other + "。";
+
+
         }
+//        else {
+//            content = other + "。";
+//        }
 
         Log.e("submit===00", "==="+content);
 
 
-        String content1 = "";
-        if (isSelected1){
-            for (int i = 0;i<TagsList1.size();i++){
-                if (i != TagsList1.size() - 1){
-                    content1 = content1 + TagsList1.get(i)+",";
-                }else {
-                    content1 = content1 + TagsList1.get(i)+ "。";
-                }
-            }
-        }
+//        String content1 = "";
+//        if (isSelected1){
+//            for (int i = 0;i<TagsList1.size();i++){
+//                if (i != TagsList1.size() - 1){
+//                    content1 = content1 + TagsList1.get(i)+",";
+//                }else {
+//                    content1 = content1 + TagsList1.get(i)+ "。";
+//                }
+//            }
+//        }
+//
+//        Log.e("submit===000", "==="+content1);
+//
+//        if (content == null || "".equals(content)){
+//            m_myHandler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    ToastUtil.showMessageApp(context,"请选择问题类型");
+//                }
+//            });
+//
+//            return;
+//        }
+//        if (imageList.size() == 0 || imageList.isEmpty()){
+//            m_myHandler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    ToastUtil.showMessageApp(context,"请上传照片");
+//                }
+//            });
+//
+//            return;
+//        }
 
-        Log.e("submit===000", "==="+content1);
-
-        if (content == null || "".equals(content)){
-            m_myHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    ToastUtil.showMessageApp(context,"请选择问题类型");
-                }
-            });
-
-            return;
-        }
-        if (imageList.size() == 0 || imageList.isEmpty()){
-            m_myHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    ToastUtil.showMessageApp(context,"请上传照片");
-                }
-            });
-
-            return;
-        }
-
-        Log.e("submit===", bikeCode+"==="+TagsList+"==="+TagsList1+"==="+latitude+"==="+longitude+"==="+content+"==="+content1+"==="+address+"==="+imageList);
+        Log.e("submit===", bikeCode+"==="+TagsList+"==="+TagsList1+"==="+latitude+"==="+longitude+"==="+content+"==="+other+"==="+address+"==="+imageList);
 
         params.put("type", 2);      //类型(必传) 1无法还车 2车辆故障
         params.put("car_number", bikeCode);     //车辆编号(必传)
-        params.put("damaged_part", content);     //损坏部件(提交车辆故障时必传)
-        params.put("damaged_part_desc", content1);     //损坏部件(提交车辆故障时必传)
+        params.put("damaged_part_desc", content);     //损坏部件(提交车辆故障时必传)
+        params.put("remark", other);     //损坏部件(提交车辆故障时必传)
         params.put("position", address);     //位置信息(选传)
-        params.put("images", imageList);     //图片key数组，json字符串
+        params.put("images", ""+imageList);     //图片key数组，json字符串
         params.put("latitude", ""+latitude);
         params.put("longitude", ""+longitude);
 
@@ -894,8 +935,16 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                     public void run() {
                         isSubmit = false;
 
+
+
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            ToastUtil.showMessageApp(context, result.getMessage());
+
+                            if(result.getStatus_code()==200){
+                                scrollToFinishActivity();
+                            }
 
                             Log.e("feedback===", result.getData()+"==="+responseString);
 
@@ -1068,7 +1117,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
                     JSONObject jsonObject = new JSONObject(response.getString("image"));
 
 
-                    imageList.add(jsonObject.getString("key"));
+                    imageList.add("\""+jsonObject.getString("key")+"\"");
 
                     pd();
                     Log.e("UpCompletion===", imageList+"==="+jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);

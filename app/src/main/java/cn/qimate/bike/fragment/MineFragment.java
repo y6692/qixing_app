@@ -797,7 +797,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.personUI_creditLayout:
-                UIHelper.goWebViewAct(context, credit_scores_h5_title, credit_scores_h5_url);
+                UIHelper.goWebViewAct(context, credit_scores_h5_title, credit_scores_h5_url+"?token="+access_token);
                 break;
 
             case R.id.personUI_serviceCenterLayout:
