@@ -852,9 +852,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                             isContainsList.add(polygon.contains(myLocation));
                                         }else{
                                         }
-
-
-
                                     }
 
                                     Log.e("main_eb===schoolRange5", pOptions.size()+"==="+pOptions+"==="+isContainsList.size()+"==="+isContainsList);

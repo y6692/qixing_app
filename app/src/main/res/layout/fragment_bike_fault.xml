@@ -295,7 +295,6 @@
                                 android:layout_height="19dp"
                                 android:background="@null"
                                 android:hint="请填写其他原因"
-                                android:inputType="numberDecimal"
                                 android:maxLength="11"
                                 android:paddingBottom="0dp"
                                 android:paddingRight="0dp"

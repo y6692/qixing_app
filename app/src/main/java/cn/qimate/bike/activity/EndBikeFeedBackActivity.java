@@ -466,8 +466,8 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         pvOptions.setPicker(item);
         pvOptions.setCyclic(false, false, false);
         pvOptions.setSelectOptions(0, 0, 0);
-        question_type = "不在车旁";
-        tv_question.setText("不在车旁");
+        question_type = "车辆故障";
+        tv_question.setText("车辆故障");
 
         pvOptions.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
 
@@ -485,9 +485,13 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                         ll_bike_fault.setVisibility(View.VISIBLE);
                         ll_ebike_fault.setVisibility(View.GONE);
                     }
+
+                    ll_restCauseEdit.setVisibility(View.GONE);
                 }else{
                     ll_bike_fault.setVisibility(View.GONE);
                     ll_ebike_fault.setVisibility(View.GONE);
+
+                    ll_restCauseEdit.setVisibility(View.VISIBLE);
                 }
 
                 pd();
@@ -1088,7 +1092,6 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 
         RequestParams params = new RequestParams();
 
-
         String content = "";
         if (TagsList.size() != 0 && !TagsList.isEmpty()){
             if ((isSelected6 || isSelected26) && other != null && !"".equals(other)){
@@ -1111,7 +1114,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 
         String content1 = "";
         if (isSelected1 || isSelected21){
-            for (int i = 0;i<TagsList1.size();i++){
+            for (int i = 0; i<TagsList1.size(); i++){
                 if (i != TagsList1.size() - 1){
                     content1 = content1 + TagsList1.get(i)+",";
                 }else {

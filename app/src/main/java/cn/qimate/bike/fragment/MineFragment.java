@@ -118,7 +118,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
     private LoadingDialog loadingDialog;
     private PullToZoomScrollViewEx scrollView;
-    private ImageView rightBtn;
+    private ImageView rightBtn, iv_isRead;
     private ImageView backImage;
     private ImageView settingImage;
     private ImageView headerImageView;
@@ -142,6 +142,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private final int REQUESTCODE_PICK = 0; // 相册选图标记
     private final int REQUESTCODE_TAKE = 1; // 相机拍照标记
     private final int REQUESTCODE_CUTTING = 2; // 图片裁切标记
+
+    private String credit_scores_h5_title;
+    private String credit_scores_h5_url;
+    private String invite_h5_title;
+    private String invite_h5_url;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_mine, null);
@@ -214,21 +219,22 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         loadingDialog.setCanceledOnTouchOutside(false);
 
         imageUri = Uri.parse("file:///sdcard/temp.jpg");
-        iv_popup_window_back = (ImageView) getActivity().findViewById(R.id.popupWindow_back);
-        rl_popup_window = (RelativeLayout) getActivity().findViewById(R.id.popupWindow);
+        iv_popup_window_back = getActivity().findViewById(R.id.popupWindow_back);
+        rl_popup_window = getActivity().findViewById(R.id.popupWindow);
 
-        takePhotoBtn = (Button) getActivity().findViewById(R.id.takePhotoBtn);
-        pickPhotoBtn = (Button) getActivity().findViewById(R.id.pickPhotoBtn);
-        cancelBtn = (Button) getActivity().findViewById(R.id.cancelBtn);
+        takePhotoBtn = getActivity().findViewById(R.id.takePhotoBtn);
+        pickPhotoBtn = getActivity().findViewById(R.id.pickPhotoBtn);
+        cancelBtn = getActivity().findViewById(R.id.cancelBtn);
 
         takePhotoBtn.setOnClickListener(itemsOnClick);
         pickPhotoBtn.setOnClickListener(itemsOnClick);
         cancelBtn.setOnClickListener(itemsOnClick);
 
-        rightBtn = (ImageView) getActivity().findViewById(R.id.personUI_rightBtn);
+        rightBtn = getActivity().findViewById(R.id.personUI_rightBtn);
         headerImageView = getActivity().findViewById(R.id.personUI_header);
         userName = getActivity().findViewById(R.id.personUI_userName);
 
+        iv_isRead = getActivity().findViewById(R.id.iv_isRead);
 
 //        hisRouteLayout = getActivity().findViewById(R.id.personUI_bottom_hisRouteLayout);
 //        myPurseLayout = getActivity().findViewById(R.id.personUI_bottom_myPurseLayout);
@@ -791,7 +797,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.personUI_creditLayout:
-                UIHelper.goWebViewAct(context, "信用分", Urls.aboutUs);
+                UIHelper.goWebViewAct(context, credit_scores_h5_title, credit_scores_h5_url);
                 break;
 
             case R.id.personUI_serviceCenterLayout:
@@ -812,12 +818,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.personUI_inviteLayout:
-                UIHelper.goWebViewAct(context, "邀请好友", Urls.aboutUs);
+                UIHelper.goWebViewAct(context, invite_h5_title, invite_h5_url);
                 break;
 
-//            case R.id.personUI_bottom_billing_questionLayout:
-//                UIHelper.goWebViewAct(context,"常见问题","http://www.7mate.cn/App/Helper/index.html");
-//                break;
 
             default:
                 break;
@@ -1057,6 +1060,17 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //                            myPurse.setText(bean.getMoney());
 //                            myIntegral.setText(bean.getPoints());
                         userName.setText(bean.getPhone());
+
+                        if(bean.getUnread_count()==0){
+                            iv_isRead.setVisibility(View.GONE);
+                        }else{
+                            iv_isRead.setVisibility(View.VISIBLE);
+                        }
+
+                        credit_scores_h5_title = bean.getCredit_scores_h5_title();
+                        credit_scores_h5_url = bean.getCredit_scores_h5_url();
+                        invite_h5_title = bean.getInvite_h5_title();
+                        invite_h5_url = bean.getInvite_h5_url();
 
                         //TODO  3
 //                            if (bean.getHeadimg() != null && !"".equals(bean.getHeadimg())) {

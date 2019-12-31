@@ -1,6 +1,7 @@
 package cn.qimate.bike.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,8 @@ public class MyMessageAdapter extends BaseViewAdapter<MyMessageBean>{
         MyMessageBean bean = getDatas().get(position);
         title.setText(bean.getTitle());
         content.setText(bean.getContent());
+
+        Log.e("MyMessageAdapter===", "==="+bean.getIs_read());
 
         if(bean.getIs_read()==0){
             isRead.setVisibility(View.VISIBLE);

@@ -6,12 +6,22 @@ package cn.qimate.bike.model;
 
 public class MyMessageBean {
 
+    private int id;     //消息ID
     private String title;       //标题
     private String content;     //内容
     private int is_read;     //1已读 0未读
     private String action_type;     //跳转类型 h5 跳转h5 app 跳转原生app页面
     private String action_content;     //跳转内容
     private String created_at;     //发送时间
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;

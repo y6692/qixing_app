@@ -103,7 +103,10 @@ public class Urls {
 	public static String exchange = host2 + "/cycling_card/exchange";
 	//检测新版本接口
 	public static String version = host2 + "/version";
+	//已读消息上报接口
+	public static String notification = host2 + "/notice/notification";
 
+//	http://testnewmapi.7mate.cn/api/notice/notification
 //	http://testnewmapi.7mate.cn/api/version
 //	http://testnewmapi.7mate.cn/api/user/change_phone
 //	http://testnewmapi.7mate.cn/api/schools

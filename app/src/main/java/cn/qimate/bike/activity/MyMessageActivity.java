@@ -102,9 +102,7 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
                 getResources().getColor(android.R.color.holo_orange_light), getResources().getColor(android.R.color.holo_red_light));
 
         myList.setOnItemClickListener(this);
-        if(datas.isEmpty()){
-            initHttp();
-        }
+
 
         myAdapter = new MyMessageAdapter(context);
         myAdapter.setDatas(datas);
@@ -115,17 +113,19 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View view, int position, long rid) {
         MyMessageBean bean = myAdapter.getDatas().get(position);
 
         Log.e("mma===onItemClick", bean+"==="+ bean.getAction_type());
 
+        int id = bean.getId();
         String title = bean.getTitle();
         String created_at = bean.getCreated_at();
         String action_content = bean.getAction_content();
 
 
         Intent intent = new Intent(context, MyMessageDatailActivity.class);
+        intent.putExtra("id", id);
         intent.putExtra("title", title);
         intent.putExtra("created_at", created_at);
         intent.putExtra("action_content", action_content);
@@ -144,9 +144,21 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
     public void onResume() {
         super.onResume();
         isRefresh = true;
+
+        Log.e("mma==onResume", "==="+datas);
+        initHttp();
         if(datas.size()!=0){
-            myAdapter.notifyDataSetChanged();
+
+
+//            myAdapter.notifyDataSetChanged();
         }
+
+
+
+//        if(datas.isEmpty()){
+//
+//        }
+
     }
     @Override
     public void onRefresh() {
@@ -227,15 +239,18 @@ public class MyMessageActivity extends SwipeBackActivity implements View.OnClick
                         footerLayout.setVisibility(View.VISIBLE);
                         setFooterType(0);
                     }
+
+                    if(datas.size()>0){
+                        datas.clear();
+                    }
+
                     for (int i = 0; i < array.length(); i++) {
                         MyMessageBean bean = JSON.parseObject(array.getJSONObject(i).toString(), MyMessageBean.class);
                         datas.add(bean);
                     }
 
-
+                    myAdapter.notifyDataSetChanged();
 //                    if ("Success".equals(result.getFlag())) {
-//
-//
 //                    } else {
 //                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
 //                    }

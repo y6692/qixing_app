@@ -18,6 +18,12 @@ public class UserBean {
     private int status; //用户状态 0锁定 1正常 2已注销
     private String created_at;  //注册时间
     private String is_new;  //是否新用户 1是 0不是
+    private String invite_h5_title;  //邀请有礼H5标题
+    private String invite_h5_url;  //邀请有礼H5地址
+    private String credit_scores_h5_title;  //信用分H5标题
+    private String credit_scores_h5_url;  //信用分H5地址 需要拼接上 ?token=xxx
+    private int unread_count; //未读消息数 为0时不显示红点 否则显示红点
+
 
     public int getId() {
         return id;
@@ -121,5 +127,45 @@ public class UserBean {
 
     public void setIs_new(String is_new) {
         this.is_new = is_new;
+    }
+
+    public String getInvite_h5_title() {
+        return invite_h5_title;
+    }
+
+    public void setInvite_h5_title(String invite_h5_title) {
+        this.invite_h5_title = invite_h5_title;
+    }
+
+    public String getInvite_h5_url() {
+        return invite_h5_url;
+    }
+
+    public void setInvite_h5_url(String invite_h5_url) {
+        this.invite_h5_url = invite_h5_url;
+    }
+
+    public String getCredit_scores_h5_title() {
+        return credit_scores_h5_title;
+    }
+
+    public void setCredit_scores_h5_title(String credit_scores_h5_title) {
+        this.credit_scores_h5_title = credit_scores_h5_title;
+    }
+
+    public String getCredit_scores_h5_url() {
+        return credit_scores_h5_url;
+    }
+
+    public void setCredit_scores_h5_url(String credit_scores_h5_url) {
+        this.credit_scores_h5_url = credit_scores_h5_url;
+    }
+
+    public int getUnread_count() {
+        return unread_count;
+    }
+
+    public void setUnread_count(int unread_count) {
+        this.unread_count = unread_count;
     }
 }

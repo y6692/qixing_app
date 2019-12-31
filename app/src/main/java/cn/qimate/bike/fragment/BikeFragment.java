@@ -733,7 +733,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                     }
 
 
-
                                     if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
                                         isContainsList.clear();
                                     }

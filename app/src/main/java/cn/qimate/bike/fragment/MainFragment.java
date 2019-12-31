@@ -456,15 +456,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         tv_authBtn.setText("");
 
                         if(unauthorized_code==1) {
-                            tv_authBtn.setText("您还未登录，点我快速登录");
+                            tv_authBtn.setText("您还未登录，请点击进行登录！");
                         }else if(unauthorized_code==2) {
-                            tv_authBtn.setText("您还未认证，点我快速认证");
+                            tv_authBtn.setText("您还未认证，请点击进行认证！");
                         }else if(unauthorized_code==3) {
-                            tv_authBtn.setText("认证审核中");
+                            tv_authBtn.setText("您处于认证中，请点击进行刷新！");
                         }else if(unauthorized_code==4) {
-                            tv_authBtn.setText("认证被驳回，请重新认证");
+                            tv_authBtn.setText("您认证未通过，请点击重新认证！");
                         }else if(unauthorized_code==5) {
-                            tv_authBtn.setText("需要充值余额或购买骑行卡");   //TODO    2
+                            tv_authBtn.setText("您还未充值或购买套餐卡，请点击进行操作");   //TODO    2
                         }else if(unauthorized_code==6) {
                             ll_top_navi.setVisibility(View.GONE);
                             ll_top.setVisibility(View.VISIBLE);
@@ -1086,7 +1086,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         customDialog2 = customBuilder.create();
 
         customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("请前往最近的还车点还车")
+        customBuilder.setTitle("温馨提示").setMessage("请前往最近的还车点还车")        //TODO
                 .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();

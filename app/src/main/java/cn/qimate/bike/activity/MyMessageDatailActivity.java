@@ -9,9 +9,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+
+import org.apache.http.Header;
+
+import cn.loopj.android.http.RequestParams;
+import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
+import cn.qimate.bike.core.common.UIHelper;
+import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 /**
@@ -28,6 +38,7 @@ public class MyMessageDatailActivity extends SwipeBackActivity implements View.O
     private TextView tv_created_at;
     private TextView tv_action_content;
 
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +60,14 @@ public class MyMessageDatailActivity extends SwipeBackActivity implements View.O
         tv_created_at = (TextView)findViewById(R.id.myMessageDetail_created_at);
         tv_action_content = (TextView)findViewById(R.id.myMessageDetail_action_content);
 
-
+        id = getIntent().getIntExtra("id", 0);
         tv_title.setText(getIntent().getStringExtra("title"));
         tv_created_at.setText(getIntent().getStringExtra("created_at"));
         tv_action_content.setText(getIntent().getStringExtra("action_content"));
 
         backImg.setOnClickListener(this);
+
+        notification();
     }
 
     @Override
@@ -69,54 +82,49 @@ public class MyMessageDatailActivity extends SwipeBackActivity implements View.O
         }
     }
 
-//    private void userRecharge(final String uid, final String access_token){
-//        RequestParams params = new RequestParams();
-//        params.put("uid",uid);
-//        params.put("access_token",access_token);
-//        params.put("rid",rid);
-//        params.put("paytype",paytype);
-//
-//        Log.e("userRecharge===", rid+"==="+paytype);
-//
-//        HttpHelper.post(context, Urls.userRecharge, params, new TextHttpResponseHandler() {
-//            @Override
-//            public void onStart() {
-//                if (loadingDialog != null && !loadingDialog.isShowing()) {
-//                    loadingDialog.setTitle("正在提交");
-//                    loadingDialog.show();
-//                }
-//            }
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
-//                UIHelper.ToastError(context, throwable.toString());
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                try {
-//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+    private void notification(){
+        RequestParams params = new RequestParams();
+        params.put("id", id);
+
+        Log.e("notification===", id+"===");
+
+        HttpHelper.post(context, Urls.notification, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在提交");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    Log.e("notification===", "==="+responseString);
+
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
 //                    if (result.getFlag().equals("Success")) {
 //                        osn = result.getData();
-//                        if ("1".equals(paytype)){
-//                            show_alipay(osn,uid,access_token);
-//                        }else {
-//                            show_wxpay(osn,uid,access_token);
-//                        }
 //                    } else {
 //                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
 //                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
-//            }
-//        });
-//    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
