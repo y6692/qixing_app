@@ -1711,8 +1711,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                                 e.printStackTrace();
                                             }
 
-
-
 //                                            m_myHandler.sendEmptyMessage(3);
                                         }
                                     }).start();
