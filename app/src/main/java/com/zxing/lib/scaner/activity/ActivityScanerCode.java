@@ -2386,7 +2386,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     protected void connect() {
 //        BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
 
-        Log.e("connect===", m_nowMac+"==="+Build.VERSION.SDK_INT);
+        Log.e("connect===0", m_nowMac+"==="+Build.VERSION.SDK_INT);
 
 //        if (Build.VERSION.SDK_INT >= 23) {
 //            m_myHandler.sendEmptyMessage(0x99);
@@ -2396,22 +2396,22 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         BaseApplication.getInstance().getIBLE().stopScan();
         m_myHandler.sendEmptyMessage(0x99);
-        BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
-            @Override
-            public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
-
-                Log.e("connect===", m_nowMac+"==="+device.getName()+"==="+device.getAddress());
-
-                if (device==null||TextUtils.isEmpty(device.getAddress()))return;
-                if (m_nowMac.equalsIgnoreCase(device.getAddress())){
-                    Log.e("connect===2", m_nowMac+"==="+device.getName()+"==="+device.getAddress());
-
-                    m_myHandler.removeMessages(0x99);
-                    BaseApplication.getInstance().getIBLE().stopScan();
-                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
-                }
-            }
-        });
+//        BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
+//            @Override
+//            public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
+//
+//                Log.e("connect===", m_nowMac+"==="+device.getName()+"==="+device.getAddress());
+//
+//                if (device==null||TextUtils.isEmpty(device.getAddress()))return;
+//                if (m_nowMac.equalsIgnoreCase(device.getAddress())){
+//                    Log.e("connect===2", m_nowMac+"==="+device.getName()+"==="+device.getAddress());
+//
+//                    m_myHandler.removeMessages(0x99);
+//                    BaseApplication.getInstance().getIBLE().stopScan();
+//                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
+//                }
+//            }
+//        });
 
 
     }
@@ -3254,21 +3254,49 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         @Override
                         public void run() {
                             if (!isStop){
-                                if (loadingDialog != null && loadingDialog.isShowing()) {
-                                    loadingDialog.dismiss();
-                                }
+//                                if (loadingDialog != null && loadingDialog.isShowing()) {
+//                                    loadingDialog.dismiss();
+//                                }
 
-                                memberEvent2();
+                                BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
+                                    @Override
+                                    public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
 
-//                                Toast.makeText(context,"请重启软件，开启定位服务,输编号用车",5 * 1000).show();
-                                Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
-                                BaseApplication.getInstance().getIBLE().refreshCache();
-                                BaseApplication.getInstance().getIBLE().close();
-                                BaseApplication.getInstance().getIBLE().disconnect();
-                                scrollToFinishActivity();
+                                        Log.e("connect===", m_nowMac+"==="+device.getName()+"==="+device.getAddress());
+
+                                        if (device==null||TextUtils.isEmpty(device.getAddress()))return;
+                                        if (m_nowMac.equalsIgnoreCase(device.getAddress())){
+                                            Log.e("connect===2", m_nowMac+"==="+device.getName()+"==="+device.getAddress());
+
+                                            m_myHandler.removeMessages(0x99);
+                                            BaseApplication.getInstance().getIBLE().stopScan();
+                                            BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
+                                        }
+                                    }
+                                });
+
+                                m_myHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (!isStop){
+                                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                                loadingDialog.dismiss();
+                                            }
+
+                                            memberEvent2();
+
+                                            Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
+                                            BaseApplication.getInstance().getIBLE().refreshCache();
+                                            BaseApplication.getInstance().getIBLE().close();
+                                            BaseApplication.getInstance().getIBLE().disconnect();
+                                            scrollToFinishActivity();
+                                        }
+                                    }
+                                }, 10 * 1000);
+
                             }
                         }
-                    }, 15 * 1000);
+                    }, 10 * 1000);
                     break;
                 default:
                     break;
