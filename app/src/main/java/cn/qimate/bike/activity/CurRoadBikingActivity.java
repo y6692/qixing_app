@@ -1685,7 +1685,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 @Override
                                 public void run() {
                                     BaseApplication.getInstance().getIBLE().xinbiao();
-
                                     new Thread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -1716,7 +1715,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                     }).start();
                                 }
                             }, 2000);
-
 
 
                             if(isEndBtn){
