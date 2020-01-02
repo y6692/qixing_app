@@ -1598,7 +1598,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         }, 500);
                         if (null != lockLoading && lockLoading.isShowing()) {
                             lockLoading.dismiss();
-//                    lockLoading = null;
+//                          lockLoading = null;
                         }
 
 
@@ -1724,8 +1724,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                 Log.e("biking===", "biking2===锁已关闭" + macList2.size());
                             }
-
-
 
                         } else {
                             //锁已开启
