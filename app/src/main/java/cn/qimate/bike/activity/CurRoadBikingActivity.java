@@ -1681,7 +1681,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             ToastUtil.showMessageApp(context,"锁已关闭");
                             Log.e("biking===", "biking===锁已关闭==="+isEndBtn);
 
-
                             m_myHandler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
