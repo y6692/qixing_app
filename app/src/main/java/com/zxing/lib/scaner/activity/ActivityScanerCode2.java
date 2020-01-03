@@ -1154,13 +1154,13 @@ public class ActivityScanerCode2 extends SwipeBackActivity implements View.OnCli
                             Log.e("scan===car2", bean.getNumber()+"===" + bean.getLock_mac());
 
                             type = ""+bean.getLock_id();
-                            bleid = bean.getLock_secretkey();
-                            deviceuuid = bean.getVendor_lock_id();
+//                            bleid = bean.getLock_secretkey();
+//                            deviceuuid = bean.getVendor_lock_id();
                             codenum = bean.getNumber();
-                            m_nowMac = bean.getLock_mac();
-                            String price = bean.getPrice();
-                            String electricity = bean.getElectricity();
-                            String mileage = bean.getMileage();
+//                            m_nowMac = bean.getLock_mac();
+//                            String price = bean.getPrice();
+//                            String electricity = bean.getElectricity();
+//                            String mileage = bean.getMileage();
 
                             Intent rIntent = new Intent();
                             rIntent.putExtra("codenum", codenum);

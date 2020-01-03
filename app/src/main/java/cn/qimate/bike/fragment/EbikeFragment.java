@@ -201,6 +201,10 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     //	private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
+    private MarkerOptions centerMarkerOption;
+
+    private TextView tv_car_count;
+    int car_count;
 
     private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
     private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
@@ -569,7 +573,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         HttpHelper.get(context, Urls.operating_areas, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                onStartCommon("正在加载");
+                if(!isHidden){
+                    onStartCommon("正在加载");
+                }
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -1248,7 +1254,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             public void onAnimationEnd(Animator animation) {
                 Log.e("onAnimationEnd===", centerMarker+"==="+isMovingMarker);
 
-                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
+//                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
             }
         });
         animator.start();
@@ -1262,7 +1268,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         isMovingMarker = true;
         centerMarker.setPositionByPixels(mapView.getWidth() / 2, mapView.getHeight() / 2);
-        centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
+//        centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
     }
 
     public void onCameraChange(CameraPosition cameraPosition) {
@@ -1273,37 +1279,74 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
-    private void initNearby(double latitude, double longitude){
-//        if(isHidden) return;
+    private void initNearby(final double latitude, final double longitude){
+
+        if(isHidden) return;
+
+        Log.e("ebf===initNearby0", latitude+"==="+longitude);
+
+        RequestParams params = new RequestParams();
+        params.put("latitude", latitude);
+        params.put("longitude", longitude);
+//        params.put("type", 1);
+        HttpHelper.get(context, Urls.car_nearby+"2/nearby", params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+//                onStartCommon("正在加载");
+
+//                ArrayList<BitmapDescriptor> iconList = new ArrayList<>();
+//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout1, null)));
+//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout2, null)));
+//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout3, null)));
 //
-//        Log.e("initNearby===Ebike000", latitude+"==="+longitude);
-//
-//        RequestParams params = new RequestParams();
-//        params.put("latitude",latitude);
-//        params.put("longitude",longitude);
-//        params.put("type", 2);
-//        HttpHelper.get(context, Urls.nearby, params, new TextHttpResponseHandler() {
-//            @Override
-//            public void onStart() {
-////                onStartCommon("正在加载");
-//
-//                centerMarker.setMarkerOptions(centerMarkerOptionLoading);
-//            }
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                onFailureCommon(throwable.toString());
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                if(isHidden) return;
-//
-//                try {
-//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//                MarkerOptions centerMarkerOption = new MarkerOptions();
+//                centerMarkerOption.position(myLocation).icons(iconList).period(2);
+
+                centerMarker.setMarkerOptions(centerMarkerOptionLoading);
+//                centerMarker.setIcon(iconList);
+//                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+                if(isHidden) return;
+
+                try {
+                    Log.e("initNearby===EBike", "==="+responseString);
+
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                    car_count = new JSONObject(result.getData()).getInt("count");
+
+
+                    Log.e("initNearby===EBike1", "==="+car_count);
+
+//                    tv_car_count.setText(count+"辆");
+
+//                    centerMarker.setMarkerOptions(centerMarkerOption);
+
+                    View view = View.inflate(context, R.layout.marker_info_layout, null);
+                    tv_car_count = view.findViewById(R.id.tv_car_count);
+                    tv_car_count.setText(car_count+"辆");
+                    centerMarkerOption = new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.fromView(view));
+
+                    if(centerMarker!=null){
+                        centerMarker.remove();
+                    }
+
+                    centerMarker = aMap.addMarker(centerMarkerOption);
+
+
 //                    if (result.getFlag().equals("Success")) {
 //                        JSONArray array = new JSONArray(result.getData());
 //
-//                        Log.e("initNearby===Ebike", "==="+array.length());
+//                        Log.e("initNearby===Bike", "==="+array.length());
 //
 //                        for (Marker marker : bikeMarkerList){
 //                            if (marker != null){
@@ -1314,34 +1357,31 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //                            bikeMarkerList.clear();
 //                        }
 //                        if (0 == array.length()){
-//                            ToastUtils.show("附近没有电单车");
+//                            ToastUtils.show("附近没有单车");
 //                        }else {
 //                            for (int i = 0; i < array.length(); i++){
 //                                NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
 //                                // 加入自定义标签
-////                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(
-////                                        Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
 //
-//                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(
-//                                        Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude())))
-//                                        .icon("1".equals(bean.getQuantity_level())?bikeDescripter_green:"2".equals(bean.getQuantity_level())?bikeDescripter_yellow:bikeDescripter_red);
+////                                Log.e("initNearby===Bike", bean.getLatitude()+"==="+bean.getLongitude());
 //
-//
+//                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
 //                                Marker bikeMarker = aMap.addMarker(bikeMarkerOption);
 //                                bikeMarkerList.add(bikeMarker);
 //                            }
+//
 //                        }
 //                    } else {
 //                        ToastUtils.show(result.getMsg());
 //                    }
-//                } catch (Exception e) {
-//
-//                }
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
-//            }
-//        });
+                } catch (Exception e) {
+
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
     }
 
     private void initView() {
@@ -2565,7 +2605,15 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         if(centerMarker == null){
             // 加入自定义标签
-            MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
+//            centerMarkerOption = new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
+
+            View view = View.inflate(context, R.layout.marker_info_layout, null);
+            tv_car_count = view.findViewById(R.id.tv_car_count);
+            tv_car_count.setText(car_count+"辆");
+//            ImageView iv_marker = view.findViewById(R.id.iv_marker);
+//            Glide.with(context).load(R.drawable.loading_large).crossFade().into(iv_marker);
+            centerMarkerOption = new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromView(view));
+
             centerMarker = aMap.addMarker(centerMarkerOption);
 
             handler.postDelayed(new Runnable() {

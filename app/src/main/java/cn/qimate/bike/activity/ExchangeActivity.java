@@ -154,9 +154,9 @@ public class ExchangeActivity extends SwipeBackActivity implements View.OnClickL
 
                     ToastUtil.showMessageApp(context, result.getMessage());
 
-//                    if(result.getStatus_code()!=200){
-//
-//                    }
+                    if(result.getStatus_code()==200){
+                        scrollToFinishActivity();
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();

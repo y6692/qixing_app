@@ -225,9 +225,12 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         TagsList1 = new ArrayList<>();
         imageUrlList = new ArrayList<>();
 
-        type = SharedPreferencesUrls.getInstance().getString("type", "");
+//        type = SharedPreferencesUrls.getInstance().getString("type", "");
         m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+        type = getIntent().getStringExtra("type");
         bikeCode = getIntent().getStringExtra("bikeCode");
+
+        Log.e("ebfba===onCreate", type+"==="+bikeCode);
 
 //        type = "1";     //TODO
 //        bikeCode = "40001";

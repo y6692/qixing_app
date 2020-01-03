@@ -99,11 +99,18 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
     private ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
     private String[] mTitles = { "单车", "助力车"};
 
+    public String type = "";
+    public String bikeCode = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car_fault);
         context = this;
+
+        type = getIntent().getStringExtra("type");
+        bikeCode = getIntent().getStringExtra("bikeCode");
+
         init();
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -135,6 +142,12 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
 
         ll_back.setOnClickListener(this);
 //        rightBtn.setOnClickListener(this);
+
+        if("4".equals(type) || "7".equals(type)){
+            tab.setCurrentTab(1);
+        }else{
+            tab.setCurrentTab(0);
+        }
 
     }
 

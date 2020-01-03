@@ -100,7 +100,7 @@ public class HttpHelper {
 
 		addHeader(context);
 
-		Log.e("params===", url+"?"+params);
+		Log.e("params===get", url+"?"+params);
 
 		client.get(context, url, params, responseHandler);
 	}
@@ -108,6 +108,8 @@ public class HttpHelper {
 	public static void post(Context context, String url, AsyncHttpResponseHandler responseHandler) {
 
 		addHeader(context);
+
+
 
 		client.post(context, url, responseHandler);
 	}
@@ -135,10 +137,21 @@ public class HttpHelper {
 
 		addHeader(context);
 
+		Log.e("params===post", url+"?"+params);
+
 		client.post(context, url, params, responseHandler);
 	}
 
+	public static void post2(Context context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+		Log.e("post===0", SharedPreferencesUrls.getInstance().getString("access_token","")+"===");
 
+
+		addHeader2(context);
+
+		Log.e("params===post", url+"?"+params);
+
+		client.post(context, url, params, responseHandler);
+	}
 
 	/**
 	 * post请求带head
@@ -186,6 +199,34 @@ public class HttpHelper {
 			Log.e("header===0", "===" + SharedPreferencesUrls.getInstance().getString("access_token",""));
 
 			client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
+			client.addHeader("Accept", "application/vnd.ws.v1+json");
+			client.addHeader("Phone-Brand", new Build().MANUFACTURER.toUpperCase());
+			client.addHeader("Phone-Model", new Build().MODEL);
+			client.addHeader("Phone-System", "Android");
+			client.addHeader("Phone-System-Version", SystemUtil.getSystemVersion());
+			client.addHeader("App-Version", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
+			client.addHeader("Device_UUID", "" + tm.getDeviceId());
+			client.addHeader("Client", "Android_APP");
+
+			Log.e("post===", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+SystemUtil.getSystemVersion()+"==="+context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName+"==="+tm.getDeviceId());
+
+
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+		}
+
+	}
+
+	public static void addHeader2(Context context) {
+		try {
+
+			TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+			if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+				return;
+			}
+
+			Log.e("header===0", "===" + SharedPreferencesUrls.getInstance().getString("access_token",""));
+
 			client.addHeader("Accept", "application/vnd.ws.v1+json");
 			client.addHeader("Phone-Brand", new Build().MANUFACTURER.toUpperCase());
 			client.addHeader("Phone-Model", new Build().MODEL);

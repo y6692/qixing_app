@@ -66,6 +66,7 @@ import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.core.common.BitmapUtils1;
 import cn.qimate.bike.core.common.HttpHelper;
+import cn.qimate.bike.core.common.Md5Helper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.StringUtil;
 import cn.qimate.bike.core.common.UIHelper;
@@ -236,12 +237,13 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
 
         Log.e("RNA===initView", uid+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
-        if (access_token == null || "".equals(access_token)){
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
-            UIHelper.goToAct(context,LoginActivity.class);
-        }else {
-            getUpToken();
-        }
+//        if (access_token == null || "".equals(access_token)){
+//            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+//            UIHelper.goToAct(context,LoginActivity.class);
+//        }else {
+//            getUpToken();
+//        }
+        getUpToken();
 //        getGradeList();
 
     }
@@ -285,40 +287,43 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
                 pwd = pwdEdit.getText().toString();
                 newPhone = newPhoneEdit.getText().toString();
                 code = codeEdit.getText().toString();
-                if (access_token == null || "".equals(access_token)){
-                    Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
-                }else {
+//                if (access_token == null || "".equals(access_token)){
+//                    Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+//                }else {
+//
+//
+//                }
 
-                    if (oldPhone == null || "".equals(oldPhone)){
-                        Toast.makeText(context,"请填写您的原手机号",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                if (oldPhone == null || "".equals(oldPhone)){
+                    Toast.makeText(context,"请填写您的原手机号",Toast.LENGTH_SHORT).show();
+                    return;
+                }
 //                    if (pwd == null || "".equals(pwd)){
 //                        Toast.makeText(context,"请填写您的原密码",Toast.LENGTH_SHORT).show();
 //                        return;
 //                    }
-                    if (newPhone == null || "".equals(newPhone)){
-                        Toast.makeText(context,"请填写您的新手机号",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (code == null || "".equals(code)){
-                        Toast.makeText(context,"请输入验证码",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                if (newPhone == null || "".equals(newPhone)){
+                    Toast.makeText(context,"请填写您的新手机号",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (code == null || "".equals(code)){
+                    Toast.makeText(context,"请输入验证码",Toast.LENGTH_SHORT).show();
+                    return;
+                }
 //                    if (isVisible){
 //                    }
-                    if (imageurl == null || "".equals(imageurl)){
-                        Toast.makeText(context,"请上传您的证件照片",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                if (imageurl == null || "".equals(imageurl)){
+                    Toast.makeText(context,"请上传您的证件照片",Toast.LENGTH_SHORT).show();
+                    return;
+                }
 //                    if(!"0".equals(cert_method)){
 //                    }
-                    if (imageurl2 == null || "".equals(imageurl2)){
-                        Toast.makeText(context,"请上传您的手持证件照片",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                if (imageurl2 == null || "".equals(imageurl2)){
+                    Toast.makeText(context,"请上传您的手持证件照片",Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                    Log.e("onClick===", imageurl+"==="+imageurl2);
+                Log.e("onClick===", imageurl+"==="+imageurl2);
 
 //                    if("0".equals(cert_method)){
 //                        SubmitBtn2(uid, access_token, realname, identityNumber);
@@ -326,8 +331,9 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
 //                        SubmitBtn();
 //                    }
 
-                    SubmitBtn();
-                }
+                SubmitBtn();
+
+
                 break;
         }
     }
@@ -654,13 +660,13 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
 
         RequestParams params = new RequestParams();
         params.put("old_phone", oldPhone);
-        params.put("old_password", pwd);
+        params.put("old_password", Md5Helper.encode(pwd));
         params.put("new_phone", newPhone);
         params.put("verification_code", code);
         params.put("cert_photo", imageurl);
         params.put("holding_cert_photo", imageurl2);
 
-        HttpHelper.post(context, Urls.appeal, params, new TextHttpResponseHandler() {     //TODO
+        HttpHelper.post2(context, Urls.appeal, params, new TextHttpResponseHandler() {     //TODO
             @Override
             public void onStart() {
                 onStartCommon("正在提交");

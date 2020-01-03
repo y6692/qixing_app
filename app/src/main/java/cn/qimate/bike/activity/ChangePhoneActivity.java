@@ -102,7 +102,7 @@ public class ChangePhoneActivity extends SwipeBackActivity implements View.OnCli
         try{
             RequestParams params = new RequestParams();
             params.add("phone", telphone);
-            params.add("scene", "1");
+            params.add("scene", "2");
 
             HttpHelper.post(context, Urls.verificationcode, params, new TextHttpResponseHandler() {
                 @Override

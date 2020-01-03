@@ -286,22 +286,25 @@ public class SplashActivity extends BaseActivity {
 			Log.e("splash===init", getVersion()+"==="+SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)+"==="+SharedPreferencesUrls.getInstance().getInt("version", 0));
 
 			synchronized(ss){
-				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-					UIHelper.goToAct(context, MainActivity.class);
 
-					ToastUtil.showMessage(this,  "===111" );
+				UIHelper.goToAct(context, MainActivity.class);
 
-				} else {
-					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-					UIHelper.goToAct(context, EnterActivity.class);
+				ToastUtil.showMessage(this,  "===111" );
 
-					ToastUtil.showMessage(this,  "===222" );
-				}
+//				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+//					UIHelper.goToAct(context, MainActivity.class);
+//
+//					ToastUtil.showMessage(this,  "===111" );
+//				} else {
+//					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+//					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+//					UIHelper.goToAct(context, EnterActivity.class);
+//
+//					ToastUtil.showMessage(this,  "===222" );
+//				}
 			}
 
-
-//				UIHelper.goToAct(context, InterstitialActivity.class);
+//			UIHelper.goToAct(context, InterstitialActivity.class);
 			finishMine();
 		}
 

@@ -107,8 +107,10 @@ public class Urls {
 	public static String notification = host2 + "/notice/notification";
 	//是否可再次开锁接口
 	public static String car_can_unlock = host2 + "/car_can_unlock";
+	//附近的车辆接口
+	public static String car_nearby = host2 + "/car/";
 
-
+//	http://testnewmapi.7mate.cn/api/car/{carmodel_id}/nearby
 //	http://testnewmapi.7mate.cn/api/car_can_unlock
 //	http://testnewmapi.7mate.cn/api/notice/notification
 //	http://testnewmapi.7mate.cn/api/version

@@ -287,6 +287,10 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //    private AMapNavi mAMapNavi;
 //    private RouteOverLay routeOverLay;
     private MarkerOptions centerMarkerOptionLoading;
+    private MarkerOptions centerMarkerOption;
+
+    private TextView tv_car_count;
+    int car_count;
 
     private MarkerOptions marker_park_Option;
     private MarkerOptions marker_tip_Option;
@@ -341,9 +345,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         super.onHiddenChanged(hidden);
 
         Log.e("onHiddenChanged===bike", firstH+"==="+hidden+"==="+type+"==="+referLatitude);
-
-
-
 
         isHidden = hidden;
 
@@ -400,53 +401,12 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //            aMap = mapView.getMap();
             setUpMap();
 
-//            m_myHandler.sendEmptyMessage(4);
-
-//            mAMapNavi = AMapNavi.getInstance(context);
-//            mAMapNavi.addAMapNaviListener(this);
-
-
-//            aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
-//                @Override
-//                public boolean onMarkerClick(Marker marker) {
-//
-////                    curMarker = marker;
-////
-////                    marker.setTitle(marker.getTitle());
-//
-//                    ll_top.setVisibility(View.GONE);
-//                    ll_top_navi.setVisibility(View.VISIBLE);
-//
-//
-////                    Log.e("onMarkerClick===", marker.getTitle()+"==="+marker.getTitle().split("-")[0]);
-//                    Log.e("onMarkerClick===", mAMapNavi+"==="+referLatitude+"==="+referLongitude+"==="+marker.getPosition().latitude+"==="+marker.getPosition().longitude);
-//
-////                    31.764391===119.920551===31.765937===119.921452
-//                    mAMapNavi.calculateRideRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
-//
-//
-////                    codenum = marker.getTitle().split("-")[0];
-////                    quantity = marker.getTitle().split("-")[1];
-////
-////                    initmPopupWindowView();
-//                    return true;
-//                }
-//            });
 
             aMap.setOnMapTouchListener(this);
 //            aMap.setOnMapClickListener(this);
             aMap.setOnCameraChangeListener(this);
 //            setUpLocationStyle();
 
-//            if (mlocationClient != null) {
-//                mlocationClient.setLocationListener(this);
-//                mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-//                mLocationOption.setInterval(2 * 1000);
-//                mLocationOption.setLocationCacheEnable(false);
-////              mLocationOption.setOnceLocationLatest(true);
-//                mlocationClient.setLocationOption(mLocationOption);
-//                mlocationClient.startLocation();
-//            }
 
             if(centerMarker!=null){
                 centerMarker.remove();
@@ -618,9 +578,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         Log.e("main_b===schoolRange", isHidden+"==="+jsonArray);
 
         if(jsonArray != null){
-
             Log.e("main_b===schoolRange20", loadingDialog+"==="+loadingDialog.isShowing());
-
             onStartCommon("正在加载");
 
             m_myHandler.post(new Runnable() {
@@ -712,7 +670,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     if(!isHidden){
                         onStartCommon("正在加载");
                     }
-
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -1176,7 +1133,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void onAnimationEnd(Animator animation) {
 //                centerMarker.setIcon(successDescripter);
-                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
+//                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
 
 //                View view = View.inflate(context, R.layout.marker_info_layout, null);
 //                MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromView(view));
@@ -1192,7 +1149,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         isMovingMarker = true;
         centerMarker.setPositionByPixels(mapView.getWidth() / 2, mapView.getHeight() / 2);
 //        centerMarker.setIcon(successDescripter);
-        centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
+//        centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
 
 //        View view = View.inflate(context, R.layout.marker_info_layout, null);
 //        MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation) .icon(BitmapDescriptorFactory.fromView(view));
@@ -1204,46 +1161,70 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    private void initNearby(double latitude, double longitude){
+    private void initNearby(final double latitude, final double longitude){
 
-//        if(isHidden) return;
-//
-//        Log.e("main===initNearby0", latitude+"==="+longitude);
-//
-//        RequestParams params = new RequestParams();
-//        params.put("latitude", latitude);
-//        params.put("longitude", longitude);
+        if(isHidden) return;
+
+        Log.e("bf===initNearby0", latitude+"==="+longitude);
+
+        RequestParams params = new RequestParams();
+        params.put("latitude", latitude);
+        params.put("longitude", longitude);
 //        params.put("type", 1);
-//        HttpHelper.get(context, Urls.nearby, params, new TextHttpResponseHandler() {
-//            @Override
-//            public void onStart() {
-////                onStartCommon("正在加载");
+        HttpHelper.get(context, Urls.car_nearby+"1/nearby", params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+//                onStartCommon("正在加载");
+
+//                ArrayList<BitmapDescriptor> iconList = new ArrayList<>();
+//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout1, null)));
+//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout2, null)));
+//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout3, null)));
 //
-////                ArrayList<BitmapDescriptor> iconList = new ArrayList<>();
-////                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout1, null)));
-////                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout2, null)));
-////                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout3, null)));
-////
-////                MarkerOptions centerMarkerOption = new MarkerOptions();
-////                centerMarkerOption.position(myLocation).icons(iconList).period(2);
-//
-//                centerMarker.setMarkerOptions(centerMarkerOptionLoading);
-////                centerMarker.setIcon(iconList);
-////                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
-//
-//            }
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                onFailureCommon(throwable.toString());
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//
-//                if(isHidden) return;
-//
-//                try {
-//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//                MarkerOptions centerMarkerOption = new MarkerOptions();
+//                centerMarkerOption.position(myLocation).icons(iconList).period(2);
+
+                centerMarker.setMarkerOptions(centerMarkerOptionLoading);
+//                centerMarker.setIcon(iconList);
+//                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+                if(isHidden) return;
+
+                try {
+                    Log.e("initNearby===Bike", "==="+responseString);
+
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                    car_count = new JSONObject(result.getData()).getInt("count");
+
+
+                    Log.e("initNearby===Bike1", "==="+car_count);
+
+//                    tv_car_count.setText(count+"辆");
+
+//                    centerMarker.setMarkerOptions(centerMarkerOption);
+
+                    View view = View.inflate(context, R.layout.marker_info_layout, null);
+                    tv_car_count = view.findViewById(R.id.tv_car_count);
+                    tv_car_count.setText((car_count>99?99:car_count)+"辆");
+                    centerMarkerOption = new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.fromView(view));
+
+                    if(centerMarker!=null){
+                        centerMarker.remove();
+                    }
+
+                    centerMarker = aMap.addMarker(centerMarkerOption);
+
+
 //                    if (result.getFlag().equals("Success")) {
 //                        JSONArray array = new JSONArray(result.getData());
 //
@@ -1275,14 +1256,14 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //                    } else {
 //                        ToastUtils.show(result.getMsg());
 //                    }
-//                } catch (Exception e) {
-//
-//                }
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
-//            }
-//        });
+                } catch (Exception e) {
+
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
     }
 
     private void initView() {
@@ -2821,11 +2802,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         if(centerMarker == null){
 
             View view = View.inflate(context, R.layout.marker_info_layout, null);
+            tv_car_count = view.findViewById(R.id.tv_car_count);
+            tv_car_count.setText((car_count>99?99:car_count)+"辆");
 //            ImageView iv_marker = view.findViewById(R.id.iv_marker);
 //            Glide.with(context).load(R.drawable.loading_large).crossFade().into(iv_marker);
-            MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation)
-//                    .icon(successDescripter);
-            .icon(BitmapDescriptorFactory.fromView(view));
+            centerMarkerOption = new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromView(view));
 
 //            ImageView iv_myLocation =  activity.findViewById(R.id.mainUI_myLocation7);
 //            Glide.with(context).load(R.drawable.loading_large).crossFade().into(iv_myLocation);
@@ -2839,6 +2820,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //            MarkerOptions centerMarkerOption = new MarkerOptions();
 //            centerMarkerOption.position(myLocation).icons(iconList).period(2);
 
+            Log.e("addChooseMarker===", "==="+myLocation);
 
             centerMarker = aMap.addMarker(centerMarkerOption);
             handler.postDelayed(new Runnable() {

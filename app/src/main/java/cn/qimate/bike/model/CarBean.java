@@ -25,12 +25,14 @@ public class CarBean {
     private String lock_code;   //车锁操作状态码 701离线 702超时 703骑行中 704第三方服务器内部错误 705设备内存错误
     private String lock_status_updated_at;  //锁状态更新时间
     private String electricity;    //电量
-    private String electricity_updated_at;  //电量更新时间
     private String mileage;   //续航里程
-    private String price;    //价格描述
-    private String longitude;   //经度
-    private String latitude;    //纬度
-    private String location_updated_at; //位置更新时间
+
+    private String each_free_time;    //每次免费时长 单位：分钟 为0不免费
+    private String first_time;   //起步时间 单位：分钟
+    private String first_price;    //起步价格
+    private String continued_time; //后续时间 单位：分钟
+    private String continued_price; //后续价格
+
 
     public int getId() {
         return id;
@@ -184,13 +186,6 @@ public class CarBean {
         this.electricity = electricity;
     }
 
-    public String getElectricity_updated_at() {
-        return electricity_updated_at;
-    }
-
-    public void setElectricity_updated_at(String electricity_updated_at) {
-        this.electricity_updated_at = electricity_updated_at;
-    }
 
     public String getMileage() {
         return mileage;
@@ -200,35 +195,43 @@ public class CarBean {
         this.mileage = mileage;
     }
 
-    public String getPrice() {
-        return price;
+    public String getEach_free_time() {
+        return each_free_time;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public void setEach_free_time(String each_free_time) {
+        this.each_free_time = each_free_time;
     }
 
-    public String getLongitude() {
-        return longitude;
+    public String getFirst_time() {
+        return first_time;
     }
 
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public void setFirst_time(String first_time) {
+        this.first_time = first_time;
     }
 
-    public String getLatitude() {
-        return latitude;
+    public String getFirst_price() {
+        return first_price;
     }
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
+    public void setFirst_price(String first_price) {
+        this.first_price = first_price;
     }
 
-    public String getLocation_updated_at() {
-        return location_updated_at;
+    public String getContinued_time() {
+        return continued_time;
     }
 
-    public void setLocation_updated_at(String location_updated_at) {
-        this.location_updated_at = location_updated_at;
+    public void setContinued_time(String continued_time) {
+        this.continued_time = continued_time;
+    }
+
+    public String getContinued_price() {
+        return continued_price;
+    }
+
+    public void setContinued_price(String continued_price) {
+        this.continued_price = continued_price;
     }
 }

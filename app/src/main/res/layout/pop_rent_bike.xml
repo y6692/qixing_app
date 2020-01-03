@@ -49,107 +49,187 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="19dp"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:gravity="center_vertical"
             >
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp16"
-                android:textColor="#666666"
-                android:text="单车编号："/>
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#333333"
+                    android:text="车辆编号："/>
 
-            <TextView
-                android:id="@+id/tv_codenum"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/tv_codenum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#666666"
+                    android:text="123456"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp16"
-                android:textColor="#9c9c9c"
-                android:text="123456"/>
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/tv_carmodel_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#333333"
+                    android:text="单车"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
-            android:id="@+id/ll_electricity"
+            android:id="@+id/ll_ebike"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
+            android:layout_height="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:gravity="center_vertical"
             >
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp16"
-                android:textColor="#666666"
-                android:text="当前电量："/>
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#333333"
+                    android:text="电量："/>
 
-            <TextView
-                android:id="@+id/tv_electricity"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/tv_electricity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#666666"
+                    android:text="80%"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp16"
-                android:textColor="#9c9c9c"
-                android:text="123456"/>
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#333333"
+                    android:text="续航："/>
+
+                <TextView
+                    android:id="@+id/tv_mileage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#666666"
+                    android:text="40KM"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
-            android:id="@+id/ll_mileage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
+            android:layout_height="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:gravity="center_vertical"
             >
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp16"
-                android:textColor="#666666"
-                android:text="续航里程："/>
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#333333"
+                    android:text="起步价："/>
 
-            <TextView
-                android:id="@+id/tv_mileage"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/tv_first_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#666666"
+                    android:text="0.35元"/>
+
+                <TextView
+                    android:id="@+id/tv_first_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#666666"
+                    android:text="/15分钟"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp16"
-                android:textColor="#9c9c9c"
-                android:text="123456"/>
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#333333"
+                    android:text="续租价："/>
+
+                <TextView
+                    android:id="@+id/tv_continued_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#666666"
+                    android:text="0.35元"/>
+
+                <TextView
+                    android:id="@+id/tv_continued_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#666666"
+                    android:text="15分钟"/>
+
+            </LinearLayout>
 
         </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tv_each_free_time"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/btn_bcg_free"
+            android:text="1小时免费"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:gravity="center"/>
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            >
-
-            <!--android:textSize="@dimen/sp16"-->
-            <!--android:textColor="#666666"-->
-
-            <TextView
-                android:id="@+id/tv_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1小时内免费，超过1小时"/>
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
             >
@@ -157,19 +237,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp16"
+                android:textSize="@dimen/sp14"
                 android:textColor="#424242"
-                android:text="请在"/>
+                android:text="请在运营区"/>
 
             <ImageView
-                android:layout_width="26dp"
-                android:layout_height="26dp"
+                android:layout_width="16dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
                 android:src="@drawable/park_icon"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp16"
+                android:textSize="@dimen/sp14"
                 android:textColor="#424242"
                 android:text="点还车"/>
 
@@ -178,7 +260,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="1dp"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
             >
@@ -189,7 +271,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp12"
                 android:textColor="#B2B2B2"
-                android:text="违规还车将收取调度费 ，请查看目的地能否还车"/>
+                android:text="违规还车将收取调度费 ，点击P点可进入导航"/>
 
         </LinearLayout>
 
@@ -197,7 +279,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="11dp"
             android:layout_marginBottom="34dp"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
@@ -219,7 +301,7 @@
                     android:id="@+id/tv_nextBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="换辆车试试"
+                    android:text="换辆车"
                     android:textSize="@dimen/sp16"
                     android:textColor="#FD555B"
                     />

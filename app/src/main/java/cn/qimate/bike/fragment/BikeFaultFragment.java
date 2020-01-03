@@ -79,8 +79,10 @@ import cn.nostra13.universalimageloader.core.listener.ImageLoadingProgressListen
 import cn.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.CarFaultActivity;
 import cn.qimate.bike.activity.CrashHandler;
 import cn.qimate.bike.activity.LoginActivity;
+import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.base.BaseViewHolder;
@@ -270,6 +272,8 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
 
         bikeCodeEdit = activity.findViewById(R.id.bikeFaultUI_codenum);
         iv_scan = activity.findViewById(R.id.bikeFaultUI_scan);
+
+        bikeCodeEdit.setText(((CarFaultActivity)activity).bikeCode);
 
         Tag1 = activity.findViewById(R.id.bikeFaultUI_type_Tag1);
         Tag1_1 = activity.findViewById(R.id.bikeFaultUI_type_Tag1_1);

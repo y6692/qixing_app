@@ -78,6 +78,7 @@ import cn.nostra13.universalimageloader.core.listener.ImageLoadingProgressListen
 import cn.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.CarFaultActivity;
 import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;
@@ -303,6 +304,8 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 
         bikeCodeEdit = activity.findViewById(R.id.ebikeFaultUI_codenum);
         iv_scan = activity.findViewById(R.id.ebikeFaultUI_scan);
+
+        bikeCodeEdit.setText(((CarFaultActivity)activity).bikeCode);
 
         Tag1 = activity.findViewById(R.id.ebikeFaultUI_type_Tag1);
         Tag1_1 = activity.findViewById(R.id.ebikeFaultUI_type_Tag1_1);

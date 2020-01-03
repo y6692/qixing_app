@@ -1217,10 +1217,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             deviceuuid = bean.getVendor_lock_id();
                             codenum = bean.getNumber();
                             m_nowMac = bean.getLock_mac();
-                            String price = bean.getPrice();
                             String electricity = bean.getElectricity();
                             String mileage = bean.getMileage();
-
+                            String carmodel_name = bean.getCarmodel_name();
+                            String each_free_time = bean.getEach_free_time();
+                            String first_price = bean.getFirst_price();
+                            String first_time = bean.getFirst_time();
+                            String continued_price = bean.getContinued_price();
+                            String continued_time = bean.getContinued_time();
 
                             Intent rIntent = new Intent();
                             rIntent.putExtra("codenum", codenum);
@@ -1229,9 +1233,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             rIntent.putExtra("lock_no", bean.getLock_no());
                             rIntent.putExtra("bleid", bleid);
                             rIntent.putExtra("deviceuuid", deviceuuid);
-                            rIntent.putExtra("price", price);
                             rIntent.putExtra("electricity", electricity);
                             rIntent.putExtra("mileage", mileage);
+                            rIntent.putExtra("carmodel_name", carmodel_name);
+                            rIntent.putExtra("each_free_time", each_free_time);
+                            rIntent.putExtra("first_price", first_price);
+                            rIntent.putExtra("first_time", first_time);
+                            rIntent.putExtra("continued_price", continued_price);
+                            rIntent.putExtra("continued_time", continued_time);
 
                             setResult(RESULT_OK, rIntent);
                             scrollToFinishActivity();
