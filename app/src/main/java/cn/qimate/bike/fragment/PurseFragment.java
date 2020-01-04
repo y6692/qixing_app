@@ -169,7 +169,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
 
         Log.e("pf===onResume", "===");
 
-        user();
+//        user();
     }
 
     private void user() {

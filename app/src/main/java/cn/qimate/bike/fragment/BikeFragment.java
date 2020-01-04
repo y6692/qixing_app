@@ -172,6 +172,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.Context.KEYGUARD_SERVICE;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static cn.qimate.bike.activity.CurRoadBikingActivity.bytes2hex03;
+import static cn.qimate.bike.base.BaseFragmentActivity.carmodel_id;
 
 @SuppressLint("NewApi")
 public class BikeFragment extends BaseFragment implements View.OnClickListener, LocationSource,
@@ -1417,11 +1418,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         super.onResume();
 
 
-        Log.e("b===onResume", MainFragment.getInstance().tab+"==="+type+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
+        Log.e("b===onResume", carmodel_id+"==="+type+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
 
 
 
-        if("4".equals(type) || "7".equals(type)){
+        if(carmodel_id==2){
             MainFragment.getInstance().changeTab(1);
         }
 
@@ -1461,7 +1462,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         ToastUtil.showMessage(context, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getString("iscert", "") + ">>>" + m_nowMac);
 
 
-        closeBroadcast();
+//        closeBroadcast();
 //        try {
 //            registerReceiver(Config.initFilter());
 //            GlobalParameterUtils.getInstance().setLockType(LockType.MTS);

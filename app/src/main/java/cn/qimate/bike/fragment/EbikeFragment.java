@@ -163,6 +163,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.Context.KEYGUARD_SERVICE;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static cn.qimate.bike.activity.CurRoadBikingActivity.bytes2hex03;
+import static cn.qimate.bike.base.BaseFragmentActivity.carmodel_id;
 import static cn.qimate.bike.core.common.Urls.schoolrangeList;
 
 @SuppressLint("NewApi")
@@ -1562,9 +1563,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         super.onResume();
 
 
-        Log.e("ebf===onResume", "==="+type+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
+        Log.e("ebf===onResume", carmodel_id+"==="+type+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
 
-        if(!"4".equals(type) && !"7".equals(type)){
+        if(carmodel_id==1){
             MainFragment.getInstance().changeTab(0);
         }
 
@@ -1585,7 +1586,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             return;
         }
 
-        uid = SharedPreferencesUrls.getInstance().getString("uid", "");
+//        uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 
 //        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
@@ -1596,7 +1597,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         ToastUtil.showMessage(context, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + ">>>" + m_nowMac);
 
 
-        closeBroadcast();
+//        closeBroadcast();
 //        try {
 //            registerReceiver(Config.initFilter());
 //            GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
