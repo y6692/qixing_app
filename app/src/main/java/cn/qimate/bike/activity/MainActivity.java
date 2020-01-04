@@ -37,6 +37,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -282,6 +283,9 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     @Override
     public void onResume() {
         super.onResume();
+
+//        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+//        inputMethodManager.hideSoftInputFromWindow(context.getWindowToken(), 0); // 隐藏
 
         JPushInterface.onResume(context);
 

@@ -45,6 +45,7 @@ import cn.qimate.bike.core.common.UpdateManager;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.model.H5Bean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.SchoolListBean;
 import cn.qimate.bike.model.UserIndexBean;
@@ -137,7 +138,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
             e.printStackTrace(System.err);
         }
 
-        UpdateManager.getUpdateManager().checkAppUpdate(this, context, 3, iv_isUpdate);
+        UpdateManager.getUpdateManager().setType(0).checkAppUpdate(this, context, 3, iv_isUpdate);
 
 //        initHttp();
 
@@ -191,17 +192,72 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
                 break;
 
             case R.id.settingUI_checkUpdateLayout:
-                UpdateManager.getUpdateManager().checkAppUpdate(this, context, 1, iv_isUpdate);
+                UpdateManager.getUpdateManager().setType(0).checkAppUpdate(this, context, 1, iv_isUpdate);
                 break;
 
             case R.id.settingUI_aboutUsLayout:
-                UIHelper.goWebViewAct(context, "关于我们", Urls.aboutUs);
+//                UIHelper.goWebViewAct(context, "关于我们", Urls.aboutUs);
+                aboutus();
                 break;
 
             case R.id.settingUI_logoutLayout:
                 customDialog.show();
                 break;
 
+        }
+    }
+
+    private void aboutus(){
+
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (access_token != null && !"".equals(access_token)){
+            HttpHelper.get(context, Urls.aboutus+"?token="+access_token, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    onStartCommon("正在加载");
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    onFailureCommon(throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                                Log.e("aboutus===", "==="+responseString);
+
+                                H5Bean bean = JSON.parseObject(result.getData(), H5Bean.class);
+
+                                UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
+
+//                                if (result.getFlag().equals("Success")) {
+//                                    UserIndexBean bean = JSON.parseObject(result.getData(), UserIndexBean.class);
+//                                    nameEdit.setText(bean.getRealname());
+//
+//                                    sex = bean.getSex();
+//                                    school = bean.getSchool();
+//                                } else {
+//                                    Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+//                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+                        }
+                    });
+
+                }
+            });
+        }else {
+            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context,LoginActivity.class);
         }
     }
 

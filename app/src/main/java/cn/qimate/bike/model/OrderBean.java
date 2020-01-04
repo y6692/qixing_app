@@ -5,6 +5,7 @@ public class OrderBean {
 	private int order_id;	//订单ID
 	private String order_sn;	//订单编号
 	private String car_number;	//车辆编号
+	private int carmodel_id;	//车型 1单车 2助力车
 	private int lock_id;	//锁ID(原锁类型)
 	private String car_lock_mac;
 	private String estimated_cost;	//预估费用
@@ -14,6 +15,7 @@ public class OrderBean {
 	private int order_state;	//订单状态 订单状态 0已取消 10已下单 20进行中 30待支付 40已完成
 	private String electricity;	//订单金额
 	private String mileage;	//订单金额
+
 
 
 
@@ -39,6 +41,14 @@ public class OrderBean {
 
 	public void setCar_number(String car_number) {
 		this.car_number = car_number;
+	}
+
+	public int getCarmodel_id() {
+		return carmodel_id;
+	}
+
+	public void setCarmodel_id(int carmodel_id) {
+		this.carmodel_id = carmodel_id;
 	}
 
 	public int getLock_id() {

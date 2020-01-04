@@ -24,6 +24,8 @@ import org.apache.http.Header;
 
 import android.app.Application;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
@@ -104,27 +106,44 @@ public abstract class TextHttpResponseHandler extends AsyncHttpResponseHandler {
      */
     public abstract void onSuccess(int statusCode, Header[] headers, String responseString);
 
-    @Override
-    public void onSuccess(int statusCode, Header[] headers, byte[] responseBytes) {
+    protected Handler m_myHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message mes) {
+            switch (mes.what) {
 
-        String responseString = getResponseString(responseBytes, getCharset());
-        onSuccess(statusCode, headers, responseString);
-
-//        Log.e("onSuccess===", statusCode+"==="+responseString);
-
-        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-
-        Log.e("onSuccess===1", responseString+"==="+result.getStatus_code());
-
-        if(result.getStatus_code()==401){
-            SharedPreferencesUrls.getInstance().putString("access_token", "");
-            SharedPreferencesUrls.getInstance().putString("iscert", "");
-
-            ToastUtil.showMessageApp(BaseApplication.context, result.getMessage());
-
-            Intent intent = new Intent(BaseApplication.context, LoginActivity.class);
-            BaseApplication.context.startActivity(intent);
+                default:
+                    break;
+            }
+            return false;
         }
+    });
+
+    @Override
+    public void onSuccess(final int statusCode, final Header[] headers, final byte[] responseBytes) {
+
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                String responseString = getResponseString(responseBytes, getCharset());
+                onSuccess(statusCode, headers, responseString);
+
+                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                Log.e("onSuccess===1", responseString+"==="+result.getStatus_code());
+
+                if(result.getStatus_code()==401){
+                    SharedPreferencesUrls.getInstance().putString("access_token", "");
+                    SharedPreferencesUrls.getInstance().putString("iscert", "");
+
+                    ToastUtil.showMessageApp(BaseApplication.context, result.getMessage());
+
+                    Intent intent = new Intent(BaseApplication.context, LoginActivity.class);
+                    BaseApplication.context.startActivity(intent);
+                }
+            }
+        });
+
+
 
 //        try {
 //        	String returnStr = new String(responseBytes, "utf-8");

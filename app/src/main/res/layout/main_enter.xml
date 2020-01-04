@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="@drawable/start">
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/plash_loading_main"
@@ -28,8 +27,10 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/sp8"
             android:textColor="@color/white"
-            android:text="跳过"/>
+            android:text="跳过"
+            android:background="@null"/>
         <TextView
+            android:background="@null"
             android:id="@+id/plash_loading_skipTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

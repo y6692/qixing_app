@@ -136,6 +136,7 @@ import cn.qimate.bike.R;
 import cn.qimate.bike.activity.ActionCenterActivity;
 import cn.qimate.bike.activity.AuthCenterActivity;
 import cn.qimate.bike.activity.CarFaultActivity;
+import cn.qimate.bike.activity.CarFaultProActivity;
 import cn.qimate.bike.activity.ClientManager;
 import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadStartActivity;
@@ -207,6 +208,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     public static String codenum = "";
     private String m_nowMac = "";
+    private int carmodel_id;
     private String type = "";
     private String lock_no = "";
     private String bleid = "";
@@ -327,7 +329,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private boolean isAgain = false;
     private String backType = "";
     private boolean isOpenLock = false;
-    private int order_type = 1;
+    private int order_type = 0;
     private boolean isWaitEbikeInfo = true;
     private Thread ebikeInfoThread;
 
@@ -443,11 +445,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     onStartCommon("正在加载");
                 }
                 @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                public void onFailure(int statusCode, Header[] headers, final String responseString, Throwable throwable) {
                     onFailureCommon("mf===car_authority", throwable.toString());
                 }
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
                     try {
                         Log.e("mf===car_authority1", "==="+responseString);
 
@@ -460,65 +463,74 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder());
 //                        Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder()+"==="+new JSONObject(bean.getOrder()).getInt("order_id"));
 
-                        int unauthorized_code = bean.getUnauthorized_code();
-
 //                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 5需要充值余额或购买骑行卡 6有进行中行程 7有待支付行程 8有待支付调度费 9有待支付赔偿费
-                        unauthorized_code = bean.getUnauthorized_code();
+                        int unauthorized_code = bean.getUnauthorized_code();
 
                         rl_ad.setVisibility(View.VISIBLE);
                         ll_top_biking.setVisibility(View.GONE);
                         ll_top_pay.setVisibility(View.GONE);
+                        rl_authBtn.setVisibility(View.GONE);
                         tv_authBtn.setText("");
 
-                        if(unauthorized_code==1) {
-                            tv_authBtn.setText("您还未登录，请点击进行登录！");
-                        }else if(unauthorized_code==2) {
-                            tv_authBtn.setText("您还未认证，请点击进行认证！");
-                        }else if(unauthorized_code==3) {
-                            tv_authBtn.setText("您处于认证中，请点击进行刷新！");
-                        }else if(unauthorized_code==4) {
-                            tv_authBtn.setText("您认证未通过，请点击重新认证！");
-                        }else if(unauthorized_code==5) {
-                            tv_authBtn.setText("您还未充值或购买套餐卡，请点击进行操作");   //TODO    2
-                        }else if(unauthorized_code==6) {
-                            ll_top_navi.setVisibility(View.GONE);
-                            ll_top.setVisibility(View.VISIBLE);
-                            rl_ad.setVisibility(View.GONE);
-                            ll_top_biking.setVisibility(View.VISIBLE);
+                        if(unauthorized_code==0) {
 
-                            order_id = new JSONObject(bean.getOrder()).getInt("order_id");
+                        }else{
+                            if(unauthorized_code<6) {
+                                rl_authBtn.setVisibility(View.VISIBLE);
+                            }
 
-                            cycling();
-                            cyclingThread();
-                        }else if(unauthorized_code>=7){
-                            ll_top_biking.setVisibility(View.GONE);
-                            ll_top_navi.setVisibility(View.GONE);
-                            ll_top.setVisibility(View.VISIBLE);
-                            rl_ad.setVisibility(View.GONE);
-                            ll_top_pay.setVisibility(View.VISIBLE);
+                            if(unauthorized_code==1) {
+                                tv_authBtn.setText("您还未登录，请点击进行登录！");
+                            }else if(unauthorized_code==2) {
+                                tv_authBtn.setText("您还未认证，请点击进行认证！");
+                            }else if(unauthorized_code==3) {
+                                tv_authBtn.setText("您处于认证中，请点击进行刷新！");
+                            }else if(unauthorized_code==4) {
+                                tv_authBtn.setText("您认证未通过，请点击重新认证！");
+                            }else if(unauthorized_code==5) {
+                                tv_authBtn.setText("您还未充值或购买套餐卡，请点击进行操作");   //TODO    2
+                            }else if(unauthorized_code==6) {
+                                ll_top_navi.setVisibility(View.GONE);
+                                ll_top.setVisibility(View.VISIBLE);
+                                rl_ad.setVisibility(View.GONE);
+                                ll_top_biking.setVisibility(View.VISIBLE);
 
-                            if(unauthorized_code==7){
-                                order_type = 1;
-                                tv_payBtn.setText("骑行支付");
+                                order_id = new JSONObject(bean.getOrder()).getInt("order_id");
 
-                                cycling2();
-                            }else if(unauthorized_code==8 || unauthorized_code==9){
-                                order_type = 3;
+                                cycling();
+                                cyclingThread();
+                            }else if(unauthorized_code>=7){
+                                ll_top_biking.setVisibility(View.GONE);
+                                ll_top_navi.setVisibility(View.GONE);
+                                ll_top.setVisibility(View.VISIBLE);
+                                rl_ad.setVisibility(View.GONE);
+                                ll_top_pay.setVisibility(View.VISIBLE);
 
-                                JSONObject jsonObject = new JSONObject(bean.getOrder());
+                                if(unauthorized_code==7){
+                                    order_type = 1;
+                                    tv_payBtn.setText("骑行支付");
 
-                                tv_pay_codenum.setText(jsonObject.getString("car_number"));
-                                tv_pay_car_start_time.setText(jsonObject.getString("car_start_time"));
-                                tv_pay_car_end_time.setText(jsonObject.getString("car_end_time"));
-                                tv_order_amount.setText(jsonObject.getString("order_amount"));
+                                    cycling2();
+                                }else if(unauthorized_code==8 || unauthorized_code==9){
+                                    order_type = 3;
 
-                                if(unauthorized_code==8){
-                                    tv_payBtn.setText("调度费支付");
-                                }else{
-                                    tv_payBtn.setText("赔偿费支付");
+                                    JSONObject jsonObject = new JSONObject(bean.getOrder());
+
+                                    tv_pay_codenum.setText(jsonObject.getString("car_number"));
+                                    tv_pay_car_start_time.setText(jsonObject.getString("car_start_time"));
+                                    tv_pay_car_end_time.setText(jsonObject.getString("car_end_time"));
+                                    tv_order_amount.setText(jsonObject.getString("order_amount"));
+
+                                    if(unauthorized_code==8){
+                                        tv_payBtn.setText("调度费支付");
+                                    }else{
+                                        tv_payBtn.setText("赔偿费支付");
+                                    }
                                 }
                             }
                         }
+
+                        Log.e("mf===car_authority3", unauthorized_code+"===");
 
                     } catch (Exception e) {
 
@@ -527,6 +539,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                     closeLoadingDialog();
 
+//                    m_myHandler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//
+//
+//                        }
+//                    });
                 }
 
             });
@@ -743,6 +762,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                 oid = bean.getOrder_sn();
                                 codenum = bean.getCar_number();
+                                carmodel_id = bean.getCarmodel_id();
                                 type = ""+bean.getLock_id();
                                 m_nowMac = bean.getCar_lock_mac();
 
@@ -763,9 +783,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                                tv_pay_car_end_time.setText(bean.getCar_end_time());
 //                                tv_order_amount.setText(bean.getOrder_amount());
 
-                                Log.e("mf===cycling_22", type+"===" + bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+                                Log.e("mf===cycling_22", carmodel_id+"===" + type+"===" + bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
-                                if ("4".equals(type) || "7".equals(type)) {
+                                if (carmodel_id==2) {
                                     Log.e("mf===cycling_3", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
                                     changeTab(1);
@@ -1018,6 +1038,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 order_id = bean.getOrder_id();
                                 oid = bean.getOrder_sn();
                                 codenum = bean.getCar_number();
+                                carmodel_id = bean.getCarmodel_id();
                                 type = ""+bean.getLock_id();
                                 m_nowMac = bean.getCar_lock_mac();
                                 mileage = bean.getMileage();
@@ -1025,7 +1046,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                 SharedPreferencesUrls.getInstance().putString("type", type);
 
-                                if ("4".equals(type) || "7".equals(type)) {
+                                if (carmodel_id==2) {
                                     changeTab(1);
 
                                     ll_estimated_cost.setVisibility(View.GONE);
@@ -1443,6 +1464,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         advCloseBtn.setOnClickListener(this);
         advCloseBtn2.setOnClickListener(this);
 
+        banner();
 
     }
 
@@ -1455,7 +1477,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         mapView.onResume();
 
         car_authority();
-        banner();
+
 
 //        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 //
@@ -1719,33 +1741,35 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 }
             }
         }else if("4".equals(type)){
-            if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-                popupwindow.dismiss();
-            }
-            BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
-            mBluetoothAdapter = bluetoothManager.getAdapter();
+            unlock();
 
-            BLEService.bluetoothAdapter = mBluetoothAdapter;
-
-            bleService.view = context;
-            bleService.showValue = true;
-
-            if (mBluetoothAdapter == null) {
-                ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                popupwindow.dismiss();
-                return;
-            }
-            if (!mBluetoothAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, 188);
-            } else {
-                Log.e("openAgain===onClick_4", "再次开锁==="+bleid + "==="+m_nowMac);
-
-                bleService.connect(m_nowMac);
-
-                checkConnect();
-            }
+//            if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+//                popupwindow.dismiss();
+//            }
+//            BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
+//            mBluetoothAdapter = bluetoothManager.getAdapter();
+//
+//            BLEService.bluetoothAdapter = mBluetoothAdapter;
+//
+//            bleService.view = context;
+//            bleService.showValue = true;
+//
+//            if (mBluetoothAdapter == null) {
+//                ToastUtil.showMessageApp(context, "获取蓝牙失败");
+//                popupwindow.dismiss();
+//                return;
+//            }
+//            if (!mBluetoothAdapter.isEnabled()) {
+//                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                startActivityForResult(enableBtIntent, 188);
+//            } else {
+//                Log.e("openAgain===onClick_4", "再次开锁==="+bleid + "==="+m_nowMac);
+//
+//                bleService.connect(m_nowMac);
+//
+//                checkConnect();
+//            }
         }else if("5".equals(type) || "6".equals(type)){
             if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                 ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
@@ -2028,6 +2052,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 break;
 
             case R.id.ll_change_car:
+                Intent intent = new Intent();
+                intent.setClass(context, ActivityScanerCode.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+                break;
+
             case R.id.iv_rent_cancelBtn:
                 Log.e("ll_rent_cancelB=onClick", "==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
@@ -2037,12 +2067,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
             case R.id.ll_rent:
                 Log.e("ll_rent===onClick", "==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
-
-//                if("4".equals(type) || "7".equals(type)){
-//                    changeTab(1);
-//                }else{
-//                    changeTab(0);
-//                }
 
                 isStop = false;
                 isOpen = false;
@@ -2069,7 +2093,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 isConnect = false;
                 isLookPsdBtn = false;
                 isAgain = false;
-                order_type = 1;
+                order_type = 0;
                 isWaitEbikeInfo = true;
                 ebikeInfoThread = null;
 
@@ -2115,7 +2139,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     }
 
                     SharedPreferencesUrls.getInstance().putString("tempStat", "0");
-                    if ("4".equals(type) || "7".equals(type)) {
+                    if (carmodel_id==2) {
                         tv_againBtn.setText("临时上锁");
 
                     }else{
@@ -2150,33 +2174,35 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if ("临时上锁".equals(tvAgain)){
 
                     if("4".equals(type)){
-                        if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                            ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-                            popupwindow.dismiss();
-                        }
-                        BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
-                        mBluetoothAdapter = bluetoothManager.getAdapter();
+                        lock();
 
-                        BLEService.bluetoothAdapter = mBluetoothAdapter;
-
-                        bleService.view = context;
-                        bleService.showValue = true;
-
-                        if (mBluetoothAdapter == null) {
-                            ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                            popupwindow.dismiss();
-                            return;
-                        }
-                        if (!mBluetoothAdapter.isEnabled()) {
-                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                            startActivityForResult(enableBtIntent, 188);
-                        } else {
-                            Log.e("openAgain===onClick_4", "临时上锁==="+bleid + "==="+m_nowMac);
-
-                            bleService.connect(m_nowMac);
-
-                            checkConnect2();
-                        }
+//                        if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//                            ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+//                            popupwindow.dismiss();
+//                        }
+//                        BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
+//                        mBluetoothAdapter = bluetoothManager.getAdapter();
+//
+//                        BLEService.bluetoothAdapter = mBluetoothAdapter;
+//
+//                        bleService.view = context;
+//                        bleService.showValue = true;
+//
+//                        if (mBluetoothAdapter == null) {
+//                            ToastUtil.showMessageApp(context, "获取蓝牙失败");
+//                            popupwindow.dismiss();
+//                            return;
+//                        }
+//                        if (!mBluetoothAdapter.isEnabled()) {
+//                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                            startActivityForResult(enableBtIntent, 188);
+//                        } else {
+//                            Log.e("openAgain===onClick_4", "临时上锁==="+bleid + "==="+m_nowMac);
+//
+//                            bleService.connect(m_nowMac);
+//
+//                            checkConnect2();
+//                        }
                     }else if("7".equals(type)){
                         if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                             ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
@@ -2278,7 +2304,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                 if(major !=0){
                     queryState();
-                }else if("4".equals(type) || "7".equals(type)){
+                }else if(carmodel_id==2){
                     car();       //TODO 1
                 }else{
                     startXB();
@@ -2315,7 +2341,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
             case R.id.ll_biking_errorEnd:
                 Log.e("ll_errorEnd===onClick", access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
-                Intent intent = new Intent(context, EndBikeFeedBackActivity.class);
+                intent = new Intent(context, EndBikeFeedBackActivity.class);
                 intent.putExtra("bikeCode", codenum);
                 context.startActivity(intent);
                 break;
@@ -2634,7 +2660,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         LinearLayout ll_change_car = (LinearLayout) customView.findViewById(R.id.ll_change_car);
         LinearLayout ll_rent = (LinearLayout) customView.findViewById(R.id.ll_rent);
 
-        if("4".equals(type) || "7".equals(type)){
+        if(carmodel_id==2){
             ll_ebike.setVisibility(View.VISIBLE);
 
             tv_electricity.setText(electricity);
@@ -2765,8 +2791,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         break;
                     case R.id.pop_menu_helpLayout:
 //                        UIHelper.goToAct(context, CarFaultActivity.class);
-                        intent = new Intent(context, CarFaultActivity.class);
-                        intent.putExtra("type", type);
+                        intent = new Intent(context, CarFaultProActivity.class);
+                        intent.putExtra("type", carmodel_id);
                         intent.putExtra("bikeCode", codenum);
                         startActivity(intent);
 
@@ -2856,7 +2882,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             if(isContainsList.contains(true)){
                                 isGPS_Lo = true;
 
-                                endBtn7();
+                                if("4".equals(type)){
+                                    endBtn4();
+                                }else{
+                                    endBtn7();
+                                }
+
                             }else{
                                 isGPS_Lo = false;
 
@@ -3302,7 +3333,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 tv_againBtn.setText("临时上锁");
                                 SharedPreferencesUrls.getInstance().putString("tempStat","0");
 
-                                ToastUtil.showMessageApp(context,"恭喜您,关锁成功!");
+                                ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
 
                                 closeLoadingDialog();
                             }else{
@@ -3372,8 +3403,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 ll_top_biking.setVisibility(View.VISIBLE);
 
                                 cyclingThread();
-
-//                                car_authority();
                             }
 
                         } catch (Exception e) {
@@ -3499,10 +3528,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             BaseApplication.getInstance().getIBLE().close();
             BaseApplication.getInstance().getIBLE().disconnect();
 
-            if (broadcastReceiver != null) {
-                activity.unregisterReceiver(broadcastReceiver);
+            if(order_type==0){
+                if (broadcastReceiver != null) {
+                    activity.unregisterReceiver(broadcastReceiver);
 //                broadcastReceiver = null;
+                }
             }
+
         }
 
         isWaitEbikeInfo = false;
@@ -4541,7 +4573,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
                         }else{
-                            unlock();
+                            lock();
                         }
 
                     }
@@ -5015,6 +5047,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
             ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener2);
 
+        }else if("4".equals(type)){
         }else if("7".equals(type)){
             if (apiClient != null) {
                 apiClient.onDestroy();
@@ -6534,7 +6567,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                 Log.e("mf===requestCode", requestCode+"==="+resultCode);
 
-                closeLoadingDialog2();
+//                closeLoadingDialog2();
 
                 switch (requestCode) {
 
@@ -6542,6 +6575,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         if (resultCode == RESULT_OK) {
                             codenum = data.getStringExtra("codenum");
                             m_nowMac = data.getStringExtra("m_nowMac");
+                            carmodel_id = data.getIntExtra("carmodel_id", 1);
                             type = data.getStringExtra("type");
                             lock_no = data.getStringExtra("lock_no");
                             bleid = data.getStringExtra("bleid");
@@ -6557,23 +6591,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             continued_time = data.getStringExtra("continued_time");
 
 
-                            Log.e("mf===requestCode1", codenum+"==="+type+"==="+bleid +"==="+deviceuuid+"==="+carmodel_name+"==="+each_free_time);
-
-//                            price = "<b><font color=\"#000000\">my html text</font></b>";
-//                            price = "<p style=\"color: #000000; font-size: 26px;\">my html text</p>";
-//                            price = "<p style=\"color: #00ff00\">my html text</p>";
-//                            price = "<p style=\"font-size:26px\">my html text</p>";
-//                            price = "<p style=\"color:#00ff00\"><font size=\"20\">my html text</font></p>";
-//                            price = "<font size=\"5\">my html text</font>";
-//
-//                            price = "<p><font color=\"#000000\" size=\"20px\">" + "要显示的数据" + "</font></p>";
-
+                            Log.e("mf===requestCode1", codenum+"==="+carmodel_id+"==="+type+"==="+bleid +"==="+deviceuuid+"==="+carmodel_name+"==="+each_free_time);
 
 
                             initmPopupRentWindowView();
-//                          initmPopupRentWindowView("<html>"+price+"<\\/html>");
-
-
 
                         } else {
                             Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();

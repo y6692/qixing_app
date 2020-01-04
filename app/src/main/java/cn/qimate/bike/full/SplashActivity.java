@@ -62,6 +62,7 @@ import cn.qimate.bike.activity.Main2Activity;
 import cn.qimate.bike.activity.Main3Activity;
 import cn.qimate.bike.activity.Main4Activity;
 import cn.qimate.bike.activity.MainActivity;
+import cn.qimate.bike.activity.MyMessageActivity;
 import cn.qimate.bike.activity.WebActivity;
 import cn.qimate.bike.base.BaseActivity;
 import cn.qimate.bike.base.BaseApplication;
@@ -112,6 +113,7 @@ public class SplashActivity extends BaseActivity {
 	private Handler handler = new MainHandler(this);
 
 	private boolean flag = true;
+	private boolean isTz = false;
 
 	@Override
 	protected void onCreate(Bundle bundle) {
@@ -236,12 +238,19 @@ public class SplashActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 
-				try{
-					tz();
+				Log.e("skipLayout===", "==="+isTz);
 
-				}catch (Exception e){
+				if(!isTz){
+					isTz = true;
 
+					try{
+						tz();
+
+					}catch (Exception e){
+
+					}
 				}
+
 
 			}
 		});
@@ -268,11 +277,12 @@ public class SplashActivity extends BaseActivity {
 
 			}
 		});
-//		mThread.start();
 		handler.sendEmptyMessageDelayed(0, 900);
 
+
+
+
 //		Countdown();
-		Log.e("splash===init", "===");
 	}
 
 	private void tz(){
@@ -285,11 +295,16 @@ public class SplashActivity extends BaseActivity {
 
 			Log.e("splash===init", getVersion()+"==="+SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)+"==="+SharedPreferencesUrls.getInstance().getInt("version", 0));
 
+
+
 			synchronized(ss){
 
+				skipLayout.setEnabled(false);
 				UIHelper.goToAct(context, MainActivity.class);
 
 				ToastUtil.showMessage(this,  "===111" );
+
+				finishMine();
 
 //				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
 //					UIHelper.goToAct(context, MainActivity.class);
@@ -305,7 +320,7 @@ public class SplashActivity extends BaseActivity {
 			}
 
 //			UIHelper.goToAct(context, InterstitialActivity.class);
-			finishMine();
+
 		}
 
 
@@ -363,9 +378,7 @@ public class SplashActivity extends BaseActivity {
 
 		unregisterReceiver(mMessageReceiver);
 
-//		destroyLocation();
 		stopLocation();
-//		deactivate();
 
 		isStop = true;
 		isEnd = true;
@@ -435,10 +448,16 @@ public class SplashActivity extends BaseActivity {
 		if (num != 0) {
 			skipLayout.setVisibility(View.VISIBLE);
 			skipTime.setText("" + (--num) + "s");
-		} else {
-			skipLayout.setVisibility(View.GONE);
 
-			tz();
+			if(num==1){
+//				skipLayout.setVisibility(View.GONE);
+				tz();
+			}
+
+		} else {
+//			skipLayout.setVisibility(View.GONE);
+//
+//			tz();
 
 //			if (!isStop) {
 //

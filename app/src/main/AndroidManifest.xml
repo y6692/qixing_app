@@ -94,12 +94,14 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@drawable/round_app_icon"
         android:theme="@style/AppTheme"
+
         >
 
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
 
         <activity
             android:name=".full.SplashActivity"
+            android:theme="@style/SplashTheme"
             >
 
             <intent-filter>
@@ -111,7 +113,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+            android:windowSoftInputMode="stateHidden|adjustResize" >
 
 
         </activity>
@@ -210,6 +212,12 @@
 
         </activity>
 
+        <activity
+            android:name=".activity.CarFaultProActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
 
         <activity
             android:name=".activity.CarFaultActivity"

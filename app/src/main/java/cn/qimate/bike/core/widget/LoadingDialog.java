@@ -46,7 +46,7 @@ public class LoadingDialog extends Dialog {
 					builder.append(SUFFIX);
 				}
 
-				Log.e("LoadingDialog===handler", builder.toString());
+				Log.e("LoadingDialog===handler", detail_tv.getText()+"==="+builder.toString());
 
 				tv_point.setText(builder.toString());
 				if (isShowing()) {

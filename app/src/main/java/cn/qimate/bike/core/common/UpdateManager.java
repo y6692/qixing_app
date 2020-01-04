@@ -222,7 +222,10 @@ public class UpdateManager {
 //							showNoticeDialog();
 //						}
 
-						showNoticeDialog();
+						if(isShowMsg<3){
+							showNoticeDialog();
+						}
+						;
 
 //						if (!curVersionName.equals(mUpdate.getAppVersion())) {
 //						} else {

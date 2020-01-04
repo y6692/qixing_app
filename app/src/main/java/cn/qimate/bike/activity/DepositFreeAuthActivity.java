@@ -149,7 +149,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
     // 输入法
     private List<SchoolListBean> schoolList;
     static ArrayList<String> item = new ArrayList<>();
-    static ArrayList<String> item1 = new ArrayList<>();
+    private ArrayList<String> item1 = new ArrayList<>();
     static ArrayList<ArrayList<String>> item2 = new ArrayList<>();
     static ArrayList<String> item3 = new ArrayList<>();
 
@@ -430,15 +430,16 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
                         Log.e("admission_time===1", "==="+responseString);
 
-//                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                        AdmissionTimeBean bean = JSON.parseObject(responseString, AdmissionTimeBean.class);
+                        AdmissionTimeBean bean = JSON.parseObject(result.getData(), AdmissionTimeBean.class);
 
-                        long time = (long)bean.getUnix() * 1000l;
+                        long time = (long)bean.getUnix()*1000l;
+//                        long time = bean.getUnix();
                         String s = new SimpleDateFormat("yyyy-MM").format(time);
                         int year = Integer.parseInt(s.split("-")[0]);
                         int month = Integer.parseInt(s.split("-")[1]);
-                        Log.e("admission_time===2", year+"==="+month);
+                        Log.e("admission_time===2", time+"==="+year+"==="+month);
 
                         if(item.size()>0){
                             item.clear();
@@ -449,22 +450,22 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                         }
 
                         for (int i=0; i<bean.getCount()*12; i++){
+
+//                            Log.e("admission_time===2", year+"==="+month+"==="+item+"==="+item1+"==="+item2);
+
                             if(month!=0){
                             }else{
                                 item.add(year + "年");
 
                                 item2.add(item1);
 
-                                item1.clear();
+                                item1 = new ArrayList<>();
 
                                 month = 12;
                                 year--;
-
                             }
 
-
                             item1.add(month + "月");
-
 
                             month--;
                         }

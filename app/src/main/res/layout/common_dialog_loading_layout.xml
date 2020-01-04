@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/dp90"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/loading_bg"
+    android:background="@drawable/back_bd3"
     android:orientation="vertical" >
 
 
@@ -28,9 +28,9 @@
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/iv_route"
-        android:layout_width="@dimen/dp25"
-        android:layout_height="@dimen/dp25"
-        android:layout_marginTop="@dimen/dp15"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="38dp"
         android:background="@null"
         android:layout_centerHorizontal="true"
         android:src="@drawable/loading_large"
@@ -42,8 +42,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp10"
         android:layout_marginRight="@dimen/dp10"
-        android:layout_marginBottom="@dimen/dp10"
-        android:layout_marginTop="@dimen/dp15"
+        android:layout_marginBottom="18dp"
+        android:layout_marginTop="24dp"
         android:gravity="center">
 
         <TextView
@@ -53,8 +53,8 @@
             android:ellipsize="marquee"
             android:singleLine="true"
             android:text="正在加载"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp12" 
+            android:textColor="#424242"
+            android:textSize="@dimen/sp14"
             android:layout_centerHorizontal="true"/>
 
         <TextView
@@ -62,8 +62,8 @@
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:text="..."
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp12"
+            android:textColor="#424242"
+            android:textSize="@dimen/sp14"
             android:layout_toRightOf="@id/detail_tv"/>
     </RelativeLayout>
 

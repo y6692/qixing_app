@@ -98,10 +98,15 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+
+        Log.e("pf===onHiddenChanged", "==="+hidden);
+
         if(hidden){
             //pause
         }else{
             //resume
+
+            user();
         }
     }
 
@@ -168,7 +173,9 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void user() {
-        Log.e("pf===user", "===");
+        Log.e("pf===user", "==="+isHidden());
+
+        if(isHidden()) return;
 
         HttpHelper.get(context, Urls.user, new TextHttpResponseHandler() {
             @Override
@@ -198,9 +205,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
                                 loadingDialog.dismiss();
                             }
 
-
                             tv_balance.setText(""+bean.getBalance());
-
 
                         } catch (Exception e) {
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());

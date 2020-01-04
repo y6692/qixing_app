@@ -109,6 +109,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 	public static String oid = "";
 	public static String osn = "";
 	public static String type = "";
+	public static int carmodel_id=1;
 
 
 
@@ -244,9 +245,8 @@ public class BaseFragmentActivity extends AppCompatActivity
 	// 用户已经登录过没有退出刷新登录
 	public void RefreshLogin() {
 		String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-		String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
 
-		Log.e("BFA===RefreshLogin", uid+"==="+access_token);
+		Log.e("BFA===RefreshLogin", "==="+access_token);
 
 		if (access_token == null || "".equals(access_token)) {
 			setAlias("");

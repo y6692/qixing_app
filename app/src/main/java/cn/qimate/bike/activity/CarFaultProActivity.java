@@ -55,6 +55,7 @@ import com.qiniu.android.storage.UpCancellationSignal;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadOptions;
+import com.zxing.lib.scaner.activity.ActivityScanerCode2;
 
 import org.apache.http.Header;
 import org.json.JSONException;
@@ -67,6 +68,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,6 +93,7 @@ import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.core.widget.MyGridView;
 import cn.qimate.bike.img.NetUtil;
+import cn.qimate.bike.model.CarBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UpTokenBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
@@ -105,7 +108,7 @@ import cn.qimate.bike.view.RoundImageView;
  * Created by Administrator on 2017/2/14 0014.
  */
 @SuppressLint("NewApi")
-public class CarFaultActivity extends SwipeBackActivity implements View.OnClickListener{
+public class CarFaultProActivity extends SwipeBackActivity implements View.OnClickListener{
 
     private View v;
     Unbinder unbinder;
@@ -204,23 +207,17 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_car_fault);
+        setContentView(R.layout.activity_car_fault_pro);
         context = this;
 
         CrashHandler.getInstance().setmContext(this);
 
-        TagsList = new ArrayList<>();
-        TagsList1 = new ArrayList<>();
-        imageUrlList = new ArrayList<>();
-
-//        type = SharedPreferencesUrls.getInstance().getString("type", "");
-        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-        type = getIntent().getIntExtra("type", 0);
+        type = getIntent().getIntExtra("type", 1);
         bikeCode = getIntent().getStringExtra("bikeCode");
 
-        Log.e("ebfba===onCreate", type+"==="+bikeCode);
+        Log.e("cfpa===onCreate", type+"==="+bikeCode);
 
-//        type = "7";     //TODO
+//        type = 2;     //TODO
 //        bikeCode = "40001";
 
         initView();
@@ -239,310 +236,18 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
         loadingDialog.setCanceledOnTouchOutside(false);
 
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
-
-        pvOptions = new OptionsPickerView(context,false);
-        pvOptions.setTitle("问题类型");
-
-        imageUri = Uri.parse("file:///sdcard/temp.jpg");
-        iv_popup_window_back = (ImageView)findViewById(R.id.popupWindow_back);
-        rl_popup_window = (RelativeLayout) findViewById(R.id.popupWindow);
-
-        takePhotoBtn = (Button)findViewById(R.id.takePhotoBtn);
-        pickPhotoBtn = (Button)findViewById(R.id.pickPhotoBtn);
-        cancelBtn = (Button)findViewById(R.id.cancelBtn);
-        LinearLayout ll_pickPhotoBtn = (LinearLayout) findViewById(R.id.ll_pickPhotoBtn);
-
-        ll_pickPhotoBtn.setVisibility(View.GONE);
-        takePhotoBtn.setOnClickListener(itemsOnClick);
-        pickPhotoBtn.setOnClickListener(itemsOnClick);
-        cancelBtn.setOnClickListener(itemsOnClick);
-
-        bikeCodeEdit = (TextView) findViewById(R.id.carFaultUI_codenum);
+        bikeCodeEdit = (TextView) findViewById(R.id.carFaultProUI_codenum);
         bikeCodeEdit.setText(bikeCode);
 
+        iv_scan = (ImageView) findViewById(R.id.carFaultProUI_scan);
+        submitBtn = (Button)findViewById(R.id.carFaultProUI_submitBtn);
 
-        ll_bike_fault = (LinearLayout)findViewById(R.id.ll_bike_fault);
-        ll_ebike_fault = (LinearLayout)findViewById(R.id.ll_ebike_fault);
-
-        Tag1 = (ImageView)findViewById(R.id.carFaultUI_type_Tag1);
-        Tag1_1 = (TextView)findViewById(R.id.carFaultUI_type_Tag1_1);
-        Tag1_2 = (TextView)findViewById(R.id.carFaultUI_type_Tag1_2);
-        Tag1_3 = (TextView)findViewById(R.id.carFaultUI_type_Tag1_3);
-        Tag2 = (ImageView)findViewById(R.id.carFaultUI_type_Tag2);
-        Tag3 = (ImageView)findViewById(R.id.carFaultUI_type_Tag3);
-        Tag4 = (ImageView)findViewById(R.id.carFaultUI_type_Tag4);
-        Tag5 = (ImageView)findViewById(R.id.carFaultUI_type_Tag5);
-        Tag6 = (ImageView)findViewById(R.id.carFaultUI_type_Tag6);
-
-        Tag21 = (ImageView)findViewById(R.id.carFaultUI_type2_Tag1);
-        Tag21_1 = (TextView)findViewById(R.id.carFaultUI_type2_Tag1_1);
-        Tag21_2 = (TextView)findViewById(R.id.carFaultUI_type2_Tag1_2);
-        Tag22 = (ImageView)findViewById(R.id.carFaultUI_type2_Tag2);
-        Tag23 = (ImageView)findViewById(R.id.carFaultUI_type2_Tag3);
-        Tag24 = (ImageView)findViewById(R.id.carFaultUI_type2_Tag4);
-        Tag25 = (ImageView)findViewById(R.id.carFaultUI_type2_Tag5);
-        Tag26 = (ImageView)findViewById(R.id.carFaultUI_type2_Tag6);
-
-        ll_restCauseEdit = (LinearLayout) findViewById(R.id.carFaultUI_ll_restCause);
-        restCauseEdit = (EditText) findViewById(R.id.carFaultUI_restCause);
-        addressEdit = (EditText)findViewById(R.id.carFaultUI_address);
-        photoMyGridview = (MyGridView) findViewById(R.id.carFaultUI_photoGridView);
-        submitBtn = (Button)findViewById(R.id.carFaultUI_submitBtn);
-
-        myAdapter = new PhotoGridviewAdapter(context);
-        photoMyGridview.setAdapter(myAdapter);
 
         backImg.setOnClickListener(this);
-        Tag1.setOnClickListener(this);
-        Tag1_1.setOnClickListener(this);
-        Tag1_2.setOnClickListener(this);
-        Tag1_3.setOnClickListener(this);
-        Tag2.setOnClickListener(this);
-        Tag3.setOnClickListener(this);
-        Tag4.setOnClickListener(this);
-        Tag5.setOnClickListener(this);
-        Tag6.setOnClickListener(this);
-        Tag21.setOnClickListener(this);
-        Tag21_1.setOnClickListener(this);
-        Tag21_2.setOnClickListener(this);
-        Tag22.setOnClickListener(this);
-        Tag23.setOnClickListener(this);
-        Tag24.setOnClickListener(this);
-        Tag25.setOnClickListener(this);
-        Tag26.setOnClickListener(this);
+        iv_scan.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
-        bikeCodeEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
-            }
-        });
-
-        restCauseEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                        || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
-            }
-        });
-
-        photoMyGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {// 查看某个照片
-
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(photoMyGridview.getWindowToken(), 0);
-
-                Log.e("photoMyGridview===b", position+"==="+imageUrlList.size());
-
-                if (position == imageUrlList.size()) {
-                    clickPopupWindow();
-                }else {
-                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                    customBuilder.setType(3).setTitle("温馨提示").setMessage("确认删除图片吗?")
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            imageUrlList.remove(position);
-
-                            if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                                    restCauseEdit.getText().toString().trim() == null
-                                            || "".equals(restCauseEdit.getText().toString().trim()))){
-                                submitBtn.setEnabled(false);
-                            }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                                submitBtn.setEnabled(false);
-                            }else{
-                                if (bikeCodeEdit.getText().toString().trim() != null &&
-                                        !"".equals(bikeCodeEdit.getText().toString().trim())){
-                                    submitBtn.setEnabled(true);
-                                }else {
-                                    submitBtn.setEnabled(false);
-                                }
-                            }
-
-                            myAdapter.notifyDataSetChanged();
-                        }
-                    });
-                    customBuilder.create().show();
-                }
-            }
-        });
-
-
-//        item.add("不在车旁");
-//        item.add("蓝牙连接失败");
-//        item.add("校外不想骑回");
-//        item.add("定位错误");
-        item.add("车辆故障");
-        item.add("其他");
-
-//        pvOptions.setPicker(item);
-//        pvOptions.setCyclic(false, false, false);
-//        pvOptions.setSelectOptions(0, 0, 0);
-//        question_type = "车辆故障";
-//        tv_question.setText("车辆故障");
-
-        if(type==2){
-            ll_bike_fault.setVisibility(View.GONE);
-            ll_ebike_fault.setVisibility(View.VISIBLE);
-        }else{
-            ll_bike_fault.setVisibility(View.VISIBLE);
-            ll_ebike_fault.setVisibility(View.GONE);
-        }
-
-        ll_restCauseEdit.setVisibility(View.GONE);
-
-
-        initLocation();
-
-        if (access_token == null || "".equals(access_token)){
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
-            UIHelper.goToAct(context, LoginActivity.class);
-        }else {
-//            if (!"1".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))
-//                    && SharedPreferencesUrls.getInstance().getString("iscert","") != null &&
-//                    !"".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
-//                initHttp(uid,access_token);
-//            }
-
-//            initHttp(uid, access_token);
-
-            getUpToken();
-        }
     }
-    public void getUpToken() {
-        RequestParams params = new RequestParams();
-//        params.put("uid",uid);
-//        params.put("access_token",access_token);
-        HttpHelper.get(context, Urls.uploadtoken, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                onStartCommon("正在加载");
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Log.e("uploadtoken===", "==="+responseString);
-
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-
-//                            Log.e("uploadtoken===1", result.getData()+"==="+result.getStatus_code());
-
-                            UpTokenBean bean = JSON.parseObject(result.getData(), UpTokenBean.class);
-
-                            Log.e("uploadtoken===2", bean+"==="+bean.getToken());
-
-                            if (null != bean.getToken()) {
-
-                                upToken = bean.getToken();
-
-//                                SharedPreferencesUrls.getInstance().putString("access_token", "Bearer "+bean.getToken());
-//                                Toast.makeText(context,"恭喜您,获取成功",Toast.LENGTH_SHORT).show();
-//                                scrollToFinishActivity();
-
-//                                uploadImage();
-                            }else{
-                                Toast.makeText(context, result.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                    }
-                });
-
-            }
-        });
-
-    }
-
 
     @Override
     public void onClick(View v) {
@@ -553,517 +258,22 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
                 scrollToFinishActivity();
                 break;
 
+            case R.id.carFaultProUI_scan:
+                Intent intent = new Intent();
+                intent.setClass(context, ActivityScanerCode2.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.putExtra("isChangeKey",false);
+                startActivityForResult(intent, 101);
 
-            case R.id.carFaultUI_type_Tag1:
-                if (isSelected1){
-                    isSelected1 = false;
-                    if (TagsList.contains("车锁")){
-                        TagsList.remove("车锁");
-                    }
-//                    Tag1.setTextColor(Color.parseColor("#666666"));
-
-//                    isSelected1_1 = false;
-//                    isSelected1_2 = false;
-//                    isSelected1_3 = false;
-//                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
-//                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
-//                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
-//                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
-//                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
-//                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
-
-                    Tag1.setImageResource(R.drawable.lock_icon);    //未选中
-                }else {
-                    isSelected1 = true;
-                    if (!TagsList.contains("车锁")){
-                        TagsList.add("车锁");
-                    }
-//                    Tag1.setTextColor(Color.parseColor("#f57752"));
-
-//                    isSelected1_1 = true;
-//                    isSelected1_2 = true;
-//                    isSelected1_3 = true;
-//                    Tag1_1.setTextColor(Color.parseColor("#FFFFFF"));
-//                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg2);
-//                    Tag1_2.setTextColor(Color.parseColor("#FFFFFF"));
-//                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
-//                    Tag1_3.setTextColor(Color.parseColor("#FFFFFF"));
-//                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg2);
-
-                    Tag1.setImageResource(R.drawable.lock_icon2);   //选中
-                }
-                pd();
-                break;
-
-            case R.id.carFaultUI_type_Tag1_1:
-                if (isSelected1_1){
-                    isSelected1_1 = false;
-//                    if (TagsList1.contains("锁未弹开")){
-//                        TagsList1.remove("锁未弹开");
-//                    }
-                    subTag1="";
-                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
-
-                }else {
-                    isSelected1_1 = true;
-//                    if (!TagsList1.contains("锁未弹开")){
-//                        TagsList1.add("锁未弹开");
-//                    }
-                    subTag1="锁未弹开";
-                    Tag1_1.setTextColor(Color.parseColor("#FFFFFF"));
-                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg2);
-
-                    isSelected1_2 = false;
-                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
-
-                    isSelected1_3 = false;
-                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
-                }
-
-                px1();
-
-                pd();
-                break;
-
-            case R.id.carFaultUI_type_Tag1_2:
-                if (isSelected1_2){
-                    isSelected1_2 = false;
-//                    if (TagsList1.contains("无法关锁")){
-//                        TagsList1.remove("无法关锁");
-//                    }
-                    subTag1="";
-                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
-                }else {
-                    isSelected1_2 = true;
-//                    if (!TagsList1.contains("无法关锁")){
-//                        TagsList1.add("无法关锁");
-//                    }
-                    subTag1="无法关锁";
-                    Tag1_2.setTextColor(Color.parseColor("#FFFFFF"));
-                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg2);
-
-                    isSelected1_1 = false;
-                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
-
-                    isSelected1_3 = false;
-                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
-                }
-
-                px1();
-
-                pd();
-                break;
-
-            case R.id.carFaultUI_type_Tag1_3:
-                if (isSelected1_3){
-                    isSelected1_3 = false;
-//                    if (TagsList1.contains("外形破损")){
-//                        TagsList1.remove("外形破损");
-//                    }
-                    subTag1="";
-                    Tag1_3.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg);
-                }else {
-                    isSelected1_3 = true;
-//                    if (!TagsList1.contains("外形破损")){
-//                        TagsList1.add("外形破损");
-//                    }
-                    subTag1="外形破损";
-                    Tag1_3.setTextColor(Color.parseColor("#FFFFFF"));
-                    Tag1_3.setBackgroundResource(R.drawable.block_fault_bcg2);
-
-                    isSelected1_2 = false;
-                    Tag1_2.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_2.setBackgroundResource(R.drawable.block_fault_bcg);
-
-                    isSelected1_1 = false;
-                    Tag1_1.setTextColor(Color.parseColor("#FD555B"));
-                    Tag1_1.setBackgroundResource(R.drawable.block_fault_bcg);
-                }
-
-                px1();
-
-                pd();
-                break;
-
-            case R.id.carFaultUI_type_Tag2:
-                if (isSelected2){
-                    isSelected2 = false;
-                    if (TagsList.contains("刹车")){
-                        TagsList.remove("刹车");
-                    }
-//                    Tag2.setTextColor(Color.parseColor("#666666"));
-                    Tag2.setImageResource(R.drawable.brake_icon);
-                }else {
-                    isSelected2 = true;
-                    if (!TagsList.contains("刹车")){
-                        TagsList.add("刹车");
-                    }
-//                    Tag2.setTextColor(Color.parseColor("#f57752"));
-                    Tag2.setImageResource(R.drawable.brake_icon2);
-                }
-                pd();
-                break;
-
-            case R.id.carFaultUI_type_Tag3:
-                if (isSelected3){
-                    isSelected3 = false;
-                    if (TagsList.contains("链条")){
-                        TagsList.remove("链条");
-                    }
-//                    Tag3.setTextColor(Color.parseColor("#666666"));
-                    Tag3.setImageResource(R.drawable.chain_icon);
-                }else {
-                    isSelected3 = true;
-                    if (!TagsList.contains("链条")){
-                        TagsList.add("链条");
-                    }
-//                    Tag3.setTextColor(Color.parseColor("#f57752"));
-                    Tag3.setImageResource(R.drawable.chain_icon2);
-                }
-                pd();
-                break;
-
-            case R.id.carFaultUI_type_Tag4:
-                if (isSelected4){
-                    isSelected4 = false;
-                    if (TagsList.contains("车座")){
-                        TagsList.remove("车座");
-                    }
-//                    Tag4.setTextColor(Color.parseColor("#666666"));
-                    Tag4.setImageResource(R.drawable.saddle_icon);
-                }else {
-                    isSelected4 = true;
-                    if (!TagsList.contains("车座")){
-                        TagsList.add("车座");
-                    }
-//                    Tag4.setTextColor(Color.parseColor("#f57752"));
-                    Tag4.setImageResource(R.drawable.saddle_icon2);
-                }
-                pd();
-                break;
-
-            case R.id.carFaultUI_type_Tag5:
-                if (isSelected5){
-                    isSelected5 = false;
-                    if (TagsList.contains("脚踏")){
-                        TagsList.remove("脚踏");
-                    }
-//                    Tag5.setTextColor(Color.parseColor("#666666"));
-                    Tag5.setImageResource(R.drawable.pedal_icon);
-                }else {
-                    isSelected5 = true;
-                    if (!TagsList.contains("脚踏")){
-                        TagsList.add("脚踏");
-                    }
-//                    Tag5.setTextColor(Color.parseColor("#f57752"));
-                    Tag5.setImageResource(R.drawable.pedal_icon2);
-                }
-                pd();
-                break;
-
-            case R.id.carFaultUI_type_Tag6:
-                if (isSelected6){
-                    isSelected6 = false;
-                    if (TagsList.contains("其他")){
-                        TagsList.remove("其他");
-                    }
-//                    Tag6.setTextColor(Color.parseColor("#666666"));
-
-                    ll_restCauseEdit.setVisibility(View.GONE);
-                    Tag6.setImageResource(R.drawable.other_icon);
-                }else {
-                    isSelected6 = true;
-                    if (!TagsList.contains("其他")){
-                        TagsList.add("其他");
-                    }
-//                    Tag6.setTextColor(Color.parseColor("#f57752"));
-
-                    ll_restCauseEdit.setVisibility(View.VISIBLE);
-                    Tag6.setImageResource(R.drawable.other_icon2);
-                }
-                pd();
                 break;
 
 
-            case R.id.carFaultUI_type2_Tag1:
-                if (isSelected21){
-                    isSelected21 = false;
-                    if (TagsList.contains("车锁")){
-                        TagsList.remove("车锁");
-                    }
-//                  Tag1.setTextColor(Color.parseColor("#666666"));
-
-//                    isSelected21_1 = false;
-//                    isSelected21_2 = false;
-//                    Tag21_1.setTextColor(Color.parseColor("#FD555B"));
-//                    Tag21_1.setBackgroundResource(R.drawable.block_fault_bcg);
-//                    Tag21_2.setTextColor(Color.parseColor("#FD555B"));
-//                    Tag21_2.setBackgroundResource(R.drawable.block_fault_bcg);
-
-                    Tag21.setImageResource(R.drawable.lock_icon3);    //未选中
-                }else {
-                    isSelected21 = true;
-                    if (!TagsList.contains("车锁")){
-                        TagsList.add("车锁");
-                    }
-//                    Tag1.setTextColor(Color.parseColor("#f57752"));
-
-//                    isSelected21_1 = true;
-//                    isSelected21_2 = true;
-//                    Tag21_1.setTextColor(Color.parseColor("#FFFFFF"));
-//                    Tag21_1.setBackgroundResource(R.drawable.block_fault_bcg2);
-//                    Tag21_2.setTextColor(Color.parseColor("#FFFFFF"));
-//                    Tag21_2.setBackgroundResource(R.drawable.block_fault_bcg2);
-
-                    Tag21.setImageResource(R.drawable.lock_icon4);   //选中
-                }
-                pd();
-                break;
-
-            case R.id.carFaultUI_type2_Tag1_1:
-                if (isSelected21_1){
-                    isSelected21_1 = false;
-//                    if (TagsList1.contains("开锁失败")){
-//                        TagsList1.remove("开锁失败");
-//                    }
-                    subTag21="";
-                    Tag21_1.setTextColor(Color.parseColor("#FD555B"));
-                    Tag21_1.setBackgroundResource(R.drawable.block_fault_bcg);
-
-//                    isSelected21_2 = true;
-//                    Tag21_2.setTextColor(Color.parseColor("#FFFFFF"));
-//                    Tag21_2.setBackgroundResource(R.drawable.block_fault_bcg2);
-                }else {
-                    isSelected21_1 = true;
-//                    if (!TagsList1.contains("开锁失败")){
-//                        TagsList1.add("开锁失败");
-//                    }
-                    subTag21="开锁失败";
-                    Tag21_1.setTextColor(Color.parseColor("#FFFFFF"));
-                    Tag21_1.setBackgroundResource(R.drawable.block_fault_bcg2);
-
-                    isSelected21_2 = false;
-                    Tag21_2.setTextColor(Color.parseColor("#FD555B"));
-                    Tag21_2.setBackgroundResource(R.drawable.block_fault_bcg);
-                }
-
-                px2();
-
-                pd();
-                break;
-
-            case R.id.carFaultUI_type2_Tag1_2:
-                if (isSelected21_2){
-                    isSelected21_2 = false;
-//                    if (TagsList1.contains("关锁失败")){
-//                        TagsList1.remove("关锁失败");
-//                    }
-                    subTag21="";
-                    Tag21_2.setTextColor(Color.parseColor("#FD555B"));
-                    Tag21_2.setBackgroundResource(R.drawable.block_fault_bcg);
-
-//                    isSelected21_1 = true;
-//                    Tag21_1.setTextColor(Color.parseColor("#FFFFFF"));
-//                    Tag21_1.setBackgroundResource(R.drawable.block_fault_bcg2);
-                }else {
-                    isSelected21_2 = true;
-//                    if (!TagsList1.contains("关锁失败")){
-//                        TagsList1.add("关锁失败");
-//                    }
-                    subTag21="关锁失败";
-                    Tag21_2.setTextColor(Color.parseColor("#FFFFFF"));
-                    Tag21_2.setBackgroundResource(R.drawable.block_fault_bcg2);
-
-                    isSelected21_1 = false;
-                    Tag21_1.setTextColor(Color.parseColor("#FD555B"));
-                    Tag21_1.setBackgroundResource(R.drawable.block_fault_bcg);
-                }
-
-                px2();
-
-                pd();
-                break;
-
-
-            case R.id.carFaultUI_type2_Tag2:
-                if (isSelected22){
-                    isSelected22 = false;
-                    if (TagsList.contains("刹车")){
-                        TagsList.remove("刹车");
-                    }
-//                    Tag2.setTextColor(Color.parseColor("#666666"));
-                    Tag22.setImageResource(R.drawable.brake_icon);
-                }else {
-                    isSelected22 = true;
-                    if (!TagsList.contains("刹车")){
-                        TagsList.add("刹车");
-                    }
-//                    Tag2.setTextColor(Color.parseColor("#f57752"));
-                    Tag22.setImageResource(R.drawable.brake_icon2);
-                }
-
-
-                pd();
-                break;
-
-            case R.id.carFaultUI_type2_Tag3:
-                if (isSelected23){
-                    isSelected23 = false;
-                    if (TagsList.contains("链条")){
-                        TagsList.remove("链条");
-                    }
-//                    Tag3.setTextColor(Color.parseColor("#666666"));
-                    Tag23.setImageResource(R.drawable.chain_icon);
-                }else {
-                    isSelected23 = true;
-                    if (!TagsList.contains("链条")){
-                        TagsList.add("链条");
-                    }
-//                    Tag3.setTextColor(Color.parseColor("#f57752"));
-                    Tag23.setImageResource(R.drawable.chain_icon2);
-                }
-                pd();
-                break;
-
-            case R.id.carFaultUI_type2_Tag4:
-                if (isSelected24){
-                    isSelected24 = false;
-                    if (TagsList.contains("无助力")){
-                        TagsList.remove("无助力");
-                    }
-//                    Tag4.setTextColor(Color.parseColor("#666666"));
-                    Tag24.setImageResource(R.drawable.no_assistance_icon);
-                }else {
-                    isSelected24 = true;
-                    if (!TagsList.contains("无助力")){
-                        TagsList.add("无助力");
-                    }
-//                    Tag4.setTextColor(Color.parseColor("#f57752"));
-                    Tag24.setImageResource(R.drawable.no_assistance_icon2);
-                }
-                pd();
-                break;
-
-            case R.id.carFaultUI_type2_Tag5:
-                if (isSelected25){
-                    isSelected25 = false;
-                    if (TagsList.contains("脚踏")){
-                        TagsList.remove("脚踏");
-                    }
-//                    Tag5.setTextColor(Color.parseColor("#666666"));
-                    Tag25.setImageResource(R.drawable.pedal_icon);
-                }else {
-                    isSelected25 = true;
-                    if (!TagsList.contains("脚踏")){
-                        TagsList.add("脚踏");
-                    }
-//                    Tag5.setTextColor(Color.parseColor("#f57752"));
-                    Tag25.setImageResource(R.drawable.pedal_icon2);
-                }
-                pd();
-                break;
-
-            case R.id.carFaultUI_type2_Tag6:
-                if (isSelected26){
-                    isSelected26 = false;
-                    if (TagsList.contains("其他")){
-                        TagsList.remove("其他");
-                    }
-//                    Tag6.setTextColor(Color.parseColor("#666666"));
-
-                    ll_restCauseEdit.setVisibility(View.GONE);
-                    Tag26.setImageResource(R.drawable.other_icon);
-                }else {
-                    isSelected26 = true;
-                    if (!TagsList.contains("其他")){
-                        TagsList.add("其他");
-                    }
-//                    Tag6.setTextColor(Color.parseColor("#f57752"));
-
-                    ll_restCauseEdit.setVisibility(View.VISIBLE);
-                    Tag26.setImageResource(R.drawable.other_icon2);
-                }
-                pd();
-                break;
-
-            case R.id.carFaultUI_submitBtn:
+            case R.id.carFaultProUI_submitBtn:
                 submit();
                 break;
             default:
                 break;
         }
-    }
-
-
-
-    private void px1(){
-        if(isSelected1_1 || isSelected1_2 || isSelected1_3){
-            isSelected1 = true;
-            if (!TagsList.contains("车锁")){
-                TagsList.add("车锁");
-            }
-            Tag1.setImageResource(R.drawable.lock_icon2);
-        }else{
-            isSelected1 = false;
-            if (TagsList.contains("车锁")){
-                TagsList.remove("车锁");
-            }
-            Tag1.setImageResource(R.drawable.lock_icon);
-        }
-    }
-
-    private void px2(){
-        if(isSelected21_1 || isSelected21_2){
-            isSelected21 = true;
-            if (!TagsList.contains("车锁")){
-                TagsList.add("车锁");
-            }
-            Tag21.setImageResource(R.drawable.lock_icon4);
-        }else{
-            isSelected21 = false;
-            if (TagsList.contains("车锁")){
-                TagsList.remove("车锁");
-            }
-            Tag21.setImageResource(R.drawable.lock_icon3);
-        }
-
-    }
-
-
-    private void pd(){
-        Log.e("pd===", TagsList+"==="+latitude+"==="+longitude+"==="+imageList);
-
-        if("车辆故障".equals(question_type)){
-            if (TagsList.size() == 0 || TagsList.isEmpty()){
-                submitBtn.setEnabled(false);
-            }else if(imageList.size() == 0 || imageList.isEmpty()) {
-                submitBtn.setEnabled(false);
-            }else{
-                if (bikeCodeEdit.getText().toString().trim() != null && !"".equals(bikeCodeEdit.getText().toString().trim())){
-                    submitBtn.setEnabled(true);
-                }else {
-                    submitBtn.setEnabled(false);
-                }
-            }
-        }else{
-            if(imageList.size() == 0 || imageList.isEmpty()) {
-                submitBtn.setEnabled(false);
-            }else{
-                if (bikeCodeEdit.getText().toString().trim() != null && !"".equals(bikeCodeEdit.getText().toString().trim())){
-                    submitBtn.setEnabled(true);
-                }else {
-                    submitBtn.setEnabled(false);
-                }
-            }
-        }
-
     }
 
     Handler m_myHandler = new Handler(new Handler.Callback() {
@@ -1090,110 +300,25 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
     });
 
     private void submit(){
-        if(isSubmit) return;
+        String bikeCode = bikeCodeEdit.getText().toString().trim();
 
-        isSubmit = true;
-
-        String address = addressEdit.getText().toString().trim();
-        String other = restCauseEdit.getText().toString().trim();
-        String bikeCode = bikeCodeEdit.getText().toString();
-
-        RequestParams params = new RequestParams();
-
-        Log.e("submit===0", TagsList+"==="+TagsList1);
-
-        String content = "";
-        if (TagsList.size() != 0 && !TagsList.isEmpty()){
-//            if ((isSelected6) && other != null && !"".equals(other)){
-//                for (int i = 0; i < TagsList.size(); i++){
-//                    content = content + TagsList.get(i)+",";
-//                }
-//                content = content + other+ "。";
-//            }else {
-//                for (int i = 0;i<TagsList.size();i++){
-//                    if (i != TagsList.size() - 1){
-//                        content = content + TagsList.get(i)+",";
-//                    }else {
-//                        content = content + TagsList.get(i)+ "。";
-//                    }
-//                }
-//            }
-
-
-
-            for (int i = 0;i<TagsList.size();i++){
-
-                Log.e("submit===0", TagsList.get(i)+"==="+isSelected1);
-
-                if("车锁".equals(TagsList.get(i))){
-                    if(isSelected1){
-                        content += TagsList.get(i)+":"+subTag1+";";
-                    }else{
-                        content += TagsList.get(i)+":"+subTag21+";";
-                    }
-                }else{
-                    content += TagsList.get(i)+";";
+        if (bikeCode == null || "".equals(bikeCode)){
+            m_myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    ToastUtil.showMessageApp(context,"请扫描二维码或手动输入编码");
                 }
-            }
+            });
 
-
+            return;
         }
-//        else {
-//            content = other + "。";
-//        }
 
-        Log.e("submit===00", "==="+content);
+        Log.e("submit===000", "car===" + bikeCode);
 
-
-//        String content1 = "";
-//        if (isSelected1){
-//            for (int i = 0;i<TagsList1.size();i++){
-//                if (i != TagsList1.size() - 1){
-//                    content1 = content1 + TagsList1.get(i)+",";
-//                }else {
-//                    content1 = content1 + TagsList1.get(i)+ "。";
-//                }
-//            }
-//        }
-//
-//        Log.e("submit===000", "==="+content1);
-//
-//        if (content == null || "".equals(content)){
-//            m_myHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    ToastUtil.showMessageApp(context,"请选择问题类型");
-//                }
-//            });
-//
-//            return;
-//        }
-//        if (imageList.size() == 0 || imageList.isEmpty()){
-//            m_myHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    ToastUtil.showMessageApp(context,"请上传照片");
-//                }
-//            });
-//
-//            return;
-//        }
-
-        Log.e("submit===", bikeCode+"==="+TagsList+"==="+TagsList1+"==="+latitude+"==="+longitude+"==="+content+"==="+other+"==="+address+"==="+imageList);
-
-        params.put("type", 2);      //类型(必传) 1无法还车 2车辆故障
-        params.put("car_number", bikeCode);     //车辆编号(必传)
-        params.put("damaged_part_desc", content);     //损坏部件(提交车辆故障时必传)
-        params.put("remark", other);     //损坏部件(提交车辆故障时必传)
-        params.put("position", address);     //位置信息(选传)
-        params.put("images", ""+imageList);     //图片key数组，json字符串
-        params.put("latitude", ""+latitude);
-        params.put("longitude", ""+longitude);
-
-        HttpHelper.post(context, Urls.feedback, params, new TextHttpResponseHandler() {
+        HttpHelper.get(this, Urls.car + URLEncoder.encode(bikeCode), new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                onStartCommon("正在提交");
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -1202,32 +327,45 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
                 m_myHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        isSubmit = false;
 
-
+//                        "<p style=\"color: #666666; font-size: 16px;\">1\u5c0f\u65f6\u5185\u514d\u8d39\uff0c\u8d85\u8fc71\u5c0f\u65f6<span style=\"color: #FF0000;\">\uffe5<span style=\"font-size: 24px;\">1.00<\/span><\/span>\/30\u5206\u949f<\/p>"
 
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            ToastUtil.showMessageApp(context, result.getMessage());
+                            Log.e("submit===car", responseString + "===" + result.data);
 
-                            if(result.getStatus_code()==200){
+                            if(result.getStatus_code()==0){
+                                CarBean bean = JSON.parseObject(result.getData(), CarBean.class);
+
+                                Log.e("submit===car2", bean.getNumber()+"===" + bean.getCarmodel_id());
+
+                                String codenum = bean.getNumber();
+                                type = bean.getCarmodel_id();
+
+                                Intent intent = new Intent(context, CarFaultActivity.class);
+                                intent.putExtra("bikeCode", codenum);
+                                intent.putExtra("type", type);
+                                startActivity(intent);
+
                                 scrollToFinishActivity();
+                            }else{
+                                ToastUtil.showMessageApp(context, result.getMessage());
                             }
 
-                            Log.e("feedback===", result.getData()+"==="+responseString);
-
                         } catch (Exception e) {
-                            e.printStackTrace();
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
                         }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
                             loadingDialog.dismiss();
                         }
                     }
                 });
+
 
             }
         });
@@ -1296,174 +434,13 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
                         Log.e("requestCode===1", "==="+resultCode);
                         break;
 
-                    case REQUESTCODE_PICK:// 直接从相册获取
-                        if (data != null){
-                            try {
-                                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-                                    if (imageUri != null) {
-                                        urlpath = getRealFilePath(context, data.getData());
-                                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                                            loadingDialog.setTitle("请稍等");
-                                            loadingDialog.show();
-                                        }
-                                        new Thread(uploadImageRunnable).start();
-                                    }
-//                            }
-                                }else {
-                                    ToastUtil.showMessageApp(context,"未找到存储卡，无法存储照片！");
-                                }
-                            } catch (NullPointerException e) {
-                                e.printStackTrace();// 用户点击取消操作
-                            }
-                        }
-                        break;
-                    case REQUESTCODE_TAKE:// 调用相机拍照
 
-//                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-//                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
-//                            if (Uri.fromFile(temp) != null) {
-//                                urlpath = getRealFilePath(context, Uri.fromFile(temp));
-//                                if (loadingDialog != null && !loadingDialog.isShowing()) {
-//                                    loadingDialog.setTitle("请稍等");
-//                                    loadingDialog.show();
-//                                }
-//                                new Thread(uploadImageRunnable).start();
-//                            }
-//                        }else {
-//                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
-//                        }
-
-                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-
-                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
-                            if (Uri.fromFile(temp) != null) {
-                                urlpath = getRealFilePath(context, Uri.fromFile(temp));
-                                Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
-
-//                                File picture = new File(urlpath);
-                                Uri filepath = Uri.fromFile(temp);
-//                                upBitmap = BitmapFactory.decodeFile(urlpath);
-
-
-                                compress(); //压缩图片
-
-
-                                Log.e("REQUESTCODE_TAKE===3", "==="+filepath.getPath());
-
-                                uploadImage();
-                            }
-
-                        }else {
-                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
-                        }
-
-                        break;
-                    case REQUESTCODE_CUTTING:// 取得裁剪后的图片
-                        if (data != null) {
-                            setPicToView(data);
-                        }
-                        break;
                 }
 
             }
         });
 
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public void uploadImage() {
-        //定义数据上传结束后的处理动作
-        final UpCompletionHandler upCompletionHandler = new UpCompletionHandler() {
-            @Override
-            public void complete(String key, ResponseInfo info, JSONObject response) {
-
-//                JSONObject jsonObject = new JSONObject(info.timeStamp);
-
-                Log.e("uploadImage===0", "==="+response);
-
-                try {
-                    JSONObject jsonObject = new JSONObject(response.getString("image"));
-
-//                    images += jsonObject.getString("key");
-//                    images += jsonObject.getString("key")+",";
-                    imageList.add("\""+jsonObject.getString("key")+"\"");
-
-                    pd();
-                    Log.e("UpCompletion===", imageList+"==="+jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-
-
-
-
-//                {ver:7.3.3,ResponseInfo:1574237736489492,status:200, reqId:HpgAAAAlr6vh0NgV, xlog:X-Log, xvia:, host:upload.qiniu.com, path:/, ip:/180.101.136.11:80, port:80, duration:183.000000 s, time:1574237736, sent:25256,error:null}==={"image":null,"ret":"success"}
-
-//                http://q0xo2if8t.bkt.clouddn.com/y2.png?e=1574241198&token=FXDJS_lmH1Gfs-Ni9I9kpPf6MZFTGz5U5BP1CgNu:q2uGajiCFq6t7E-9CxrYXWF0bIQ=&attname=
-
-//                Glide.with(context)
-//                        .load("http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken)
-//                        .crossFade()
-//                        .into(uploadImage);
-
-//                Glide.with(context)
-//                        .load("/storage/emulated/0/com.gamefox.samecity.fish/activity/bill1.png")
-//                        .crossFade()
-//                        .into(uploadImage);
-
-//                ImageLoader.getInstance().displayImage("/storage/emulated/0/com.gamefox.samecity.fish/activity/bill1.png", uploadImage);
-
-//                Glide.with(context)
-//                        .load("http://q0xo2if8t.bkt.clouddn.com/y3.png?e=1574242008&token=FXDJS_lmH1Gfs-Ni9I9kpPf6MZFTGz5U5BP1CgNu:cbzS4BHzqrRF8-iENlvHv7v8i94=&attname=")
-////                        .fitCenter()
-////                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                        .crossFade()
-//                        .into(uploadImage);
-
-//                Glide.with(context).load(Urls.host+"/Public/uploads/201911/201911201609453660.jpg").crossFade().into(uploadImage);
-            }
-        };
-        final UploadOptions uploadOptions = new UploadOptions(null, null, false, new UpProgressHandler() {
-            @Override
-            public void progress(String key, final double percent) {
-                //百分数格式化
-                NumberFormat fmt = NumberFormat.getPercentInstance();
-                fmt.setMaximumFractionDigits(2);//最多两位百分小数，如25.23%
-
-                Log.e("progress===", "==="+fmt.format(percent));
-
-//                tv.setText("图片已经上传:" + fmt.format(percent));
-            }
-        }, new UpCancellationSignal() {
-            @Override
-            public boolean isCancelled() {
-                return false;
-            }
-        });
-        try {
-            //上传图片jjj
-            Log.e("uploadImage===", "==="+upToken);
-
-//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//            Log.e("uploadImage===1", upBitmap+"===");
-//            upBitmap.compress(Bitmap.CompressFormat.PNG, 10, baos);
-//
-//            Log.e("uploadImage===2", upBitmap+"==="+baos.toByteArray().length);
-
-
-
-//            int bytes = upBitmap.getByteCount();
-//            ByteBuffer buf = ByteBuffer.allocate(bytes);
-//            upBitmap.copyPixelsToBuffer(buf);
-//            byte[] byteArray = buf.array();
-
-//            QiNiuInitialize.getSingleton().put(buf.array(), null, upToken, upCompletionHandler, uploadOptions);
-//            QiNiuInitialize.getSingleton().put(baos.toByteArray(), null, upToken, upCompletionHandler, uploadOptions);
-            QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     //获取资源文件中的图片
@@ -1915,7 +892,7 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.cancel();
 
-                                        CarFaultActivity.this.requestPermissions(new String[] { Manifest.permission.CAMERA },
+                                        CarFaultProActivity.this.requestPermissions(new String[] { Manifest.permission.CAMERA },
                                                 101);
 
                                     }

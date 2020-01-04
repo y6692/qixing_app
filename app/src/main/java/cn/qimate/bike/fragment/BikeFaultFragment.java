@@ -273,7 +273,7 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
         bikeCodeEdit = activity.findViewById(R.id.bikeFaultUI_codenum);
         iv_scan = activity.findViewById(R.id.bikeFaultUI_scan);
 
-        bikeCodeEdit.setText(((CarFaultActivity)activity).bikeCode);
+//        bikeCodeEdit.setText(((CarFaultActivity)activity).bikeCode);
 
         Tag1 = activity.findViewById(R.id.bikeFaultUI_type_Tag1);
         Tag1_1 = activity.findViewById(R.id.bikeFaultUI_type_Tag1_1);

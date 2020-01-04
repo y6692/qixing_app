@@ -127,11 +127,9 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         moneyListView.setAdapter(myAdapter);
 
         moneyListView.setOnItemClickListener(this);
-//
-//        backImg.setOnClickListener(this);
+
+        backImg.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
-//        alipayTypeLayout.setOnClickListener(this);
-//        WeChatTypeLayout.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
         serviceProtocol.setOnClickListener(this);
 
@@ -140,7 +138,6 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         switch (v.getId()){
             case R.id.mainUI_title_backBtn:
@@ -156,8 +153,6 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
                 Intent intent = new Intent(context, BillActivity.class);
                 intent.putExtra("order_type",3);
                 startActivity(intent);
-
-
 
                 break;
 //            case R.id.rechargeUI_alipayTypeLayout:

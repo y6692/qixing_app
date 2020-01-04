@@ -127,6 +127,7 @@
         android:contentDescription="@string/app_name"/>
 
     <ImageView
+        android:id="@+id/left_mask"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_mask"
@@ -137,6 +138,7 @@
         android:contentDescription="@string/app_name"/>
 
     <ImageView
+        android:id="@+id/right_mask"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_mask"
@@ -321,35 +323,55 @@
                 android:focusableInTouchMode="false"
                 >
 
-                <cn.qimate.bike.core.widget.ClearEditText
-                    android:id="@+id/pop_circlesMenu_bikeNumEdit"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="53dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="55dp"
-                    android:layout_marginLeft="@dimen/dp30"
-                    android:layout_marginRight="@dimen/dp60"
-                    android:background="@drawable/shape_et_codenum"
-                    android:drawableRight="@drawable/delete_selector"
-                    android:gravity="center"
-                    android:inputType="numberDecimal"
-                    android:hint="请输入车辆编号"
-                    android:lineSpacingExtra="@dimen/dp5"
-                    android:paddingBottom="0dp"
-                    android:paddingLeft="@dimen/dp10"
-                    android:paddingRight="0dp"
-                    android:textColor="@color/tx_black"
-                    android:textColorHint="#8F8F8F"
-                    android:textSize="@dimen/sp20" />
 
-                <ImageView
-                    android:id="@+id/et_confirm"
-                    android:layout_width="23dp"
-                    android:layout_height="17dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginTop="73dp"
-                    android:layout_marginLeft="-49dp"
-                    android:onClick="btn"
-                    android:src="@drawable/arrows_right2"/>
+                    android:orientation="horizontal"
+                    >
+
+                    <cn.qimate.bike.core.widget.ClearEditText
+                        android:id="@+id/pop_circlesMenu_bikeNumEdit"
+                        android:layout_width="match_parent"
+                        android:layout_height="53dp"
+                        android:layout_marginLeft="@dimen/dp30"
+                        android:layout_marginRight="@dimen/dp60"
+                        android:background="@drawable/shape_et_codenum"
+                        android:drawableRight="@drawable/delete_selector"
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        android:hint="请输入车辆编号"
+                        android:lineSpacingExtra="@dimen/dp5"
+                        android:paddingBottom="0dp"
+                        android:paddingLeft="@dimen/dp10"
+                        android:paddingRight="0dp"
+                        android:textColor="@color/tx_black"
+                        android:textColorHint="#8F8F8F"
+                        android:textSize="@dimen/sp20" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_confirm"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="-60dp"
+                        android:gravity="center"
+                        android:onClick="btn"
+                        >
+
+                        <ImageView
+                            android:id="@+id/et_confirm"
+                            android:layout_width="23dp"
+                            android:layout_height="17dp"
+                            android:src="@drawable/arrows_right2"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
 
             </LinearLayout>
 

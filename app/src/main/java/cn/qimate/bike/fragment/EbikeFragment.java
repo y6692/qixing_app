@@ -1333,7 +1333,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                     View view = View.inflate(context, R.layout.marker_info_layout, null);
                     tv_car_count = view.findViewById(R.id.tv_car_count);
-                    tv_car_count.setText(car_count+"辆");
+                    tv_car_count.setText((car_count>99?99:car_count)+"辆");
                     centerMarkerOption = new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.fromView(view));
 
                     if(centerMarker!=null){
@@ -2609,7 +2609,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
             View view = View.inflate(context, R.layout.marker_info_layout, null);
             tv_car_count = view.findViewById(R.id.tv_car_count);
-            tv_car_count.setText(car_count+"辆");
+            tv_car_count.setText((car_count>99?99:car_count)+"辆");
 //            ImageView iv_marker = view.findViewById(R.id.iv_marker);
 //            Glide.with(context).load(R.drawable.loading_large).crossFade().into(iv_marker);
             centerMarkerOption = new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromView(view));

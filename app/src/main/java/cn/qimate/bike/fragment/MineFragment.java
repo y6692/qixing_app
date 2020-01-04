@@ -195,10 +195,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+
+        Log.e("minef===onHiddenChanged", "==="+hidden);
+
         if(hidden){
             //pause
         }else{
             //resume
+
+            initHttp();
         }
     }
 
@@ -252,7 +257,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         inviteLayout = getActivity().findViewById(R.id.personUI_inviteLayout);
 
         rightBtn.setOnClickListener(this);
-        headerImageView.setOnClickListener(this);
+//        headerImageView.setOnClickListener(this);
         myOrderLayout.setOnClickListener(this);
         myMsgLayout.setOnClickListener(this);
         creditLayout.setOnClickListener(this);
@@ -1029,6 +1034,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     }
 
     private void initHttp() {
+        Log.e("minef===initHttp", "==="+isHidden());
+
+        if(isHidden()) return;
 
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
         if (access_token != null && !"".equals(access_token)) {
@@ -1052,7 +1060,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
                     try {
-                        Log.e("mf===initHttp", "==="+responseString);
+                        Log.e("minef===initHttp", "==="+responseString);
 
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
