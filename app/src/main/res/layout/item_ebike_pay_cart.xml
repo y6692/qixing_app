@@ -21,12 +21,12 @@
             android:orientation="horizontal"
             >
 
-            <ImageView
+            <cn.qimate.bike.view.RoundImageView
+                android:id="@+id/item_iv_img"
                 android:layout_width="85dp"
                 android:layout_height="50dp"
                 android:textSize="@dimen/sp15"
                 android:textColor="@color/white"
-                android:background="@drawable/bike_pay_cart"
                 android:text="九折\n优惠券"
                 android:gravity="center"
                 />

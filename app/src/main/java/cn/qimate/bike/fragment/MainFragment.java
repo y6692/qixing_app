@@ -1090,6 +1090,61 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
+    private void cycling3() {
+        Log.e("mf===cycling3", "===");
+
+        HttpHelper.get(context, Urls.cycling, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon("mf===cycling3", throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("mf===cycling3_1", responseString + "===" + result.data);
+
+                            OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
+
+
+
+                            if(null != bean.getOrder_sn()){
+                                Log.e("mf===cycling3_2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+
+                                Intent intent = new Intent(context, EndBikeFeedBackActivity.class);
+                                intent.putExtra("type", type);
+                                intent.putExtra("bikeCode", codenum);
+                                startActivity(intent);
+                            }else{
+                                ToastUtil.showMessageApp(context, "当前无行程");
+                            }
+
+                        } catch (Exception e) {
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                        }
+
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+
+                    }
+                });
+            }
+        });
+
+    }
+
     private void closeBroadcast() {
         try {
             stopXB();
@@ -2076,7 +2131,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 force_backcar = 0;
                 isTwo = false;
                 first3 = true;
-                isEndBtn = false;
                 flagm = 0;
                 isFrist1 = true;
                 stopScan = false;
@@ -2092,10 +2146,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 isOpenLock = false;
                 isConnect = false;
                 isLookPsdBtn = false;
+                isEndBtn = false;
                 isAgain = false;
                 order_type = 0;
                 isWaitEbikeInfo = true;
                 ebikeInfoThread = null;
+
 
                 if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
@@ -2784,14 +2840,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 switch (v.getId()){
                     case R.id.pop_menu_feedbackLayout:
 //                        UIHelper.goToAct(context, EndBikeFeedBackActivity.class);
-                        Intent intent = new Intent(context, EndBikeFeedBackActivity.class);
-                        intent.putExtra("type", type);
-                        intent.putExtra("bikeCode", codenum);
-                        startActivity(intent);
+
+                        cycling3();
+
+
                         break;
                     case R.id.pop_menu_helpLayout:
 //                        UIHelper.goToAct(context, CarFaultActivity.class);
-                        intent = new Intent(context, CarFaultProActivity.class);
+                        Intent intent = new Intent(context, CarFaultProActivity.class);
                         intent.putExtra("type", carmodel_id);
                         intent.putExtra("bikeCode", codenum);
                         startActivity(intent);
@@ -2977,6 +3033,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             oid = jsonObject.getString("order_sn");
 
                             isLookPsdBtn = false;
+                            isOpenLock = true;
 
                             closeLoadingDialog();
 
@@ -3252,10 +3309,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         HttpHelper.post(context, Urls.lock, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-//                if(isAgain){
-//                    onStartCommon("正在加载");
-//                }
-
+                if(isAgain){
+                    onStartCommon("正在加载");
+                }
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -3309,7 +3365,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         HttpHelper.post(context, Urls.unlock, null, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-//                onStartCommon("正在加载");
+                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -3499,6 +3555,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     private void end() {
         closeDialog();
+
+        m_myHandler.removeCallbacksAndMessages(null);
 
         rl_ad.setVisibility(View.VISIBLE);
         ll_top_biking.setVisibility(View.GONE);
@@ -3709,6 +3767,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void car_notification(final int action_type, int lock_status, int back_type) {
+
+        Log.e("mf===car_notification0", isOpenLock + "===" + isAgain +"==="+ isEndBtn);
+
 
         if(!isOpenLock && !isAgain && !isEndBtn) return;
 
@@ -5403,7 +5464,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }
     };
 
-    protected Handler m_myHandler = new Handler(new Handler.Callback() {
+    private Handler m_myHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message mes) {
             switch (mes.what) {
@@ -6630,16 +6691,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 connect();
                             }else if("4".equals(type)){
 
-                                BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
-                                mBluetoothAdapter = bluetoothManager.getAdapter();
-
-                                BLEService.bluetoothAdapter = mBluetoothAdapter;
-
-                                bleService.view = context;
-                                bleService.showValue = true;
-
-                                bleService.connect(m_nowMac);
-                                checkConnect();
+//                                BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
+//                                mBluetoothAdapter = bluetoothManager.getAdapter();
+//
+//                                BLEService.bluetoothAdapter = mBluetoothAdapter;
+//
+//                                bleService.view = context;
+//                                bleService.showValue = true;
+//
+//                                bleService.connect(m_nowMac);
+//                                checkConnect();
 
                             }else if("5".equals(type) || "6".equals(type)){
 //                                iv_help.setVisibility(View.VISIBLE);

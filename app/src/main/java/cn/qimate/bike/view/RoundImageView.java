@@ -13,6 +13,7 @@ public class RoundImageView extends ImageView {
 
 
     float width,height;
+    float round=24;
 
     public RoundImageView(Context context) {
         this(context, null);
@@ -39,17 +40,31 @@ public class RoundImageView extends ImageView {
     @Override
     protected void onDraw(Canvas canvas) {
 
-        if (width > 12 && height > 12) {
+//        if (width > 12 && height > 12) {
+//            Path path = new Path();
+//            path.moveTo(12, 0);
+//            path.lineTo(width - 12, 0);
+//            path.quadTo(width, 0, width, 12);
+//            path.lineTo(width, height - 12);
+//            path.quadTo(width, height, width - 12, height);
+//            path.lineTo(12, height);
+//            path.quadTo(0, height, 0, height - 12);
+//            path.lineTo(0, 12);
+//            path.quadTo(0, 0, 12, 0);
+//            canvas.clipPath(path);
+//        }
+
+        if (width > round && height > round) {
             Path path = new Path();
-            path.moveTo(12, 0);
-            path.lineTo(width - 12, 0);
-            path.quadTo(width, 0, width, 12);
-            path.lineTo(width, height - 12);
-            path.quadTo(width, height, width - 12, height);
-            path.lineTo(12, height);
-            path.quadTo(0, height, 0, height - 12);
-            path.lineTo(0, 12);
-            path.quadTo(0, 0, 12, 0);
+            path.moveTo(round, 0);
+            path.lineTo(width - round, 0);
+            path.quadTo(width, 0, width, round);
+            path.lineTo(width, height - round);
+            path.quadTo(width, height, width - round, height);
+            path.lineTo(round, height);
+            path.quadTo(0, height, 0, height - round);
+            path.lineTo(0, round);
+            path.quadTo(0, 0, round, 0);
             canvas.clipPath(path);
         }
 

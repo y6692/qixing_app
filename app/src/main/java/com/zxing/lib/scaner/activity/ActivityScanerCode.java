@@ -345,7 +345,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         surfaceView = (SurfaceView) findViewById(R.id.capture_preview);
 
 //        initHttp();
-        cycling();
+//        cycling();
     }
 
     @SuppressWarnings("deprecation")

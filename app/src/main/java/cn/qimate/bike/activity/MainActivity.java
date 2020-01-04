@@ -296,8 +296,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     }
 
     private void initView() {
-
-
         tab = findViewById(R.id.tab);
 
         tab.setTabData(mTabEntities, MainActivity.this, R.id.fl_change, mFragments);

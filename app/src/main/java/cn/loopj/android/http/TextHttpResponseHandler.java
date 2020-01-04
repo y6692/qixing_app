@@ -106,7 +106,7 @@ public abstract class TextHttpResponseHandler extends AsyncHttpResponseHandler {
      */
     public abstract void onSuccess(int statusCode, Header[] headers, String responseString);
 
-    protected Handler m_myHandler = new Handler(new Handler.Callback() {
+    private Handler m_myHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message mes) {
             switch (mes.what) {

@@ -40,6 +40,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
+import cn.nostra13.universalimageloader.core.ImageLoader;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.activity.SettlementPlatformActivity;
@@ -54,6 +55,7 @@ import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.GlobalConfig;
 import cn.qimate.bike.model.PayCartBean;
 import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.view.RoundImageView;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -299,6 +301,9 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
             tv_price.setText(price);
             tv_original_price.setText("¥"+bean.getOriginal_price());
             tv_desc.setText(bean.getDesc());
+
+            RoundImageView iv_img = BaseViewHolder.get(convertView, R.id.item_iv_img);
+            ImageLoader.getInstance().displayImage(bean.getImage(), iv_img);
 
             tv_original_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
