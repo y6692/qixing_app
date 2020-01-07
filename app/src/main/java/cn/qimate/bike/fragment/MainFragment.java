@@ -448,6 +448,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 public void onFailure(int statusCode, Header[] headers, final String responseString, Throwable throwable) {
                     onFailureCommon("mf===car_authority", throwable.toString());
                 }
+
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, final String responseString) {
 
@@ -488,7 +489,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             }else if(unauthorized_code==4) {
                                 tv_authBtn.setText("您认证未通过，请点击重新认证！");
                             }else if(unauthorized_code==5) {
-                                tv_authBtn.setText("您还未充值或购买套餐卡，请点击进行操作");   //TODO    2
+                                tv_authBtn.setText("您还未充值或购买套餐卡，请点击进行操作");
                             }else if(unauthorized_code==6) {
                                 ll_top_navi.setVisibility(View.GONE);
                                 ll_top.setVisibility(View.VISIBLE);
@@ -556,7 +557,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     public void car_authority2() {
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 
-        Log.e("mf===car_authority", "==="+access_token);
+        Log.e("mf===car_authority2", "==="+access_token);
 
         if (access_token == null || "".equals(access_token)) {
             ToastUtil.showMessageApp(context, "请先登录账号");
@@ -569,20 +570,22 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    onFailureCommon("mf===car_authority", throwable.toString());
+                    onFailureCommon("mf===car_authority2", throwable.toString());
                 }
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
                     try {
-                        Log.e("mf===car_authority1", "==="+responseString);
+                        Log.e("mf===car_authority21", "==="+responseString);
 
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
                         CarAuthorityBean bean = JSON.parseObject(result.getData(), CarAuthorityBean.class);
 
+                        closeLoadingDialog();
+
                         SharedPreferencesUrls.getInstance().putString("iscert", ""+bean.getUnauthorized_code());
 
-                        Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder());
+                        Log.e("mf===car_authority22", bean.getUnauthorized_code()+"==="+bean.getOrder());
 //                        Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder()+"==="+new JSONObject(bean.getOrder()).getInt("order_id"));
 
 //                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 5需要充值余额或购买骑行卡 6有进行中行程 7有待支付行程 8有待支付调度费 9有待支付赔偿费
@@ -656,35 +659,36 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 
                                 break;
-                            case 1:     //TODO
-                                ToastUtil.showMessageApp(context,"需要登录");
-                                UIHelper.goToAct(context, RealNameAuthActivity.class);
+
+                            case 1:
+                                ToastUtil.showMessageApp(context,"您还未登录");
+//                                UIHelper.goToAct(context, RealNameAuthActivity.class);
                                 break;
                             case 2:
-                                ToastUtil.showMessageApp(context,"您还未认证,请先认证");
-                                UIHelper.goToAct(context, RealNameAuthActivity.class);
+                                ToastUtil.showMessageApp(context,"您还未认证");
+//                                UIHelper.goToAct(context, RealNameAuthActivity.class);
                                 break;
                             case 3:
-                                ToastUtil.showMessageApp(context,"认证审核中，请点击刷新");
+                                ToastUtil.showMessageApp(context,"您处于认证中");
                                 break;
                             case 4:
-                                ToastUtil.showMessageApp(context,"认证被驳回，请重新认证");
-                                UIHelper.goToAct(context,RealNameAuthActivity.class);
+                                ToastUtil.showMessageApp(context,"您认证未通过");
+//                                UIHelper.goToAct(context,RealNameAuthActivity.class);
                                 break;
                             case 5:
-                                ToastUtil.showMessageApp(context,"需要充值余额或购买骑行卡");
+                                ToastUtil.showMessageApp(context,"您还未充值或购买套餐卡");
                                 break;
                             case 6:
-                                ToastUtil.showMessageApp(context,"有进行中行程");
+                                ToastUtil.showMessageApp(context,"您有进行中的行程");
                                 break;
                             case 7:
-                                ToastUtil.showMessageApp(context,"有待支付行程");
+                                ToastUtil.showMessageApp(context,"您有待支付的行程");
                                 break;
                             case 8:
-                                ToastUtil.showMessageApp(context,"有待支付调度费");
+                                ToastUtil.showMessageApp(context,"您有待支付的调度费");
                                 break;
                             case 9:
-                                ToastUtil.showMessageApp(context,"有待支付赔偿费");
+                                ToastUtil.showMessageApp(context,"您有待支付的赔偿费");
                                 break;
                         }
 
@@ -1182,7 +1186,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             //pause
         }else{
             //resume
-
+            banner();
             car_authority();
         }
     }
@@ -1477,17 +1481,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //        changeTab(1);
 //        tab.setCurrentTab(1);
 
-//        FragmentManager fragmentManager = getChildFragmentManager();
-//        FragmentTransaction ft= fragmentManager.beginTransaction();
-////        ft.replace(R.id.fl_change2, bikeFragment,"bikeFragment");
-//        ft.add(R.id.fl_change2, bikeFragment,"bikeFragment");
-//        ft.add(R.id.fl_change2, ebikeFragment,"ebikeFragment");
-//        ft.commit();
-
-//        fragmentManager = getChildFragmentManager();
-//        ft= fragmentManager.beginTransaction();
-//        ft.replace(R.id.fl_change2, ebikeFragment,"ebikeFragment");
-//        ft.commit();
 
         leftBtn = activity.findViewById(R.id.mainUI_leftBtn);
         rightBtn = activity.findViewById(R.id.mainUI_rightBtn);
@@ -1520,19 +1513,26 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         advAgainBtn.setOnClickListener(this);
         advCloseBtn.setOnClickListener(this);
         advCloseBtn2.setOnClickListener(this);
-
-        banner();
-
     }
+
+
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Log.e("mf===onResume", SharedPreferencesUrls.getInstance().getString("iscert", "")+"==="+type);
+        boolean flag = activity.getIntent().getBooleanExtra("flag", false);
+
+        Log.e("mf===onResume", flag+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+type);
 
         mapView.onResume();
 
+
+
+        if(flag){
+            banner();
+            car_authority();
+        }
 
 
 
@@ -2109,6 +2109,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 break;
 
             case R.id.ll_change_car:
+                popupwindow.dismiss();
+
                 Intent intent = new Intent();
                 intent.setClass(context, ActivityScanerCode.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

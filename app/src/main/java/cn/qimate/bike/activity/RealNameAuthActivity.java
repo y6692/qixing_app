@@ -107,7 +107,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
     private Context context;
 //    private LoadingDialog loadingDialog;
     private ImageView backImg;
-    private TextView title, rightBtn;
+    private TextView title, rightBtn, tv_depositprice;
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
     private LinearLayout ll_1, ll_2, ll_3, ll_submit;
@@ -215,6 +215,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
         rightBtn.setText("联系客服");
 
+        tv_depositprice = (TextView)findViewById(R.id.tv_depositprice);
         takePhotoBtn = (Button)findViewById(R.id.takePhotoBtn);
         pickPhotoBtn = (Button)findViewById(R.id.pickPhotoBtn);
         cancelBtn = (Button)findViewById(R.id.cancelBtn);
@@ -280,10 +281,49 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //            initHttp(uid, access_token);
 
             getUpToken();
+            depositprice();
             initHttp();
         }
 //        getGradeList();
 
+    }
+
+    private void depositprice(){
+        HttpHelper.get(context, Urls.depositprice, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Log.e("depositprice===", "==="+responseString);
+
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            JSONObject json = new JSONObject(result.getData());
+
+                            tv_depositprice.setText(""+json.getInt("price_s"));
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+
+            }
+        });
     }
 
     @Override

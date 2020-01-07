@@ -15,7 +15,7 @@ public class BillBean {
 	private String car_end_time;	//结束时间
 	private String price;	//骑行单价
 	private String cycling_time;	//骑行时间
-	private int order_type;	//订单类型 1骑行订单 2购买骑行卡订单 3调度费订单 4赔偿费订单 5充值订单
+	private int order_type;	//订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单
 
 	public int getOrder_id() {
 		return order_id;

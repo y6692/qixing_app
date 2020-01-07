@@ -71,7 +71,7 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
     private RelativeLayout rl_selectLayout;
     private RelativeLayout rl_selectLayout2;
     private ImageView iv_select, iv_select2;
-    private TextView tv_auth, tv_auth2;
+    private TextView tv_auth, tv_auth2, tv_depositprice;
     private LinearLayout submitBtn;
 
 
@@ -101,6 +101,7 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
         iv_select2 = (ImageView)findViewById(R.id.iv_select2);
         tv_auth = (TextView)findViewById(R.id.tv_auth);
         tv_auth2 = (TextView)findViewById(R.id.tv_auth2);
+        tv_depositprice = (TextView)findViewById(R.id.tv_depositprice);
         submitBtn = (LinearLayout)findViewById(R.id.auth_center_submitBtn);
 
         ll_backBtn.setOnClickListener(this);
@@ -110,6 +111,7 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
         submitBtn.setOnClickListener(this);
 
         initHttp();
+        depositprice();
     }
 
     @Override
@@ -211,10 +213,45 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
                                 ToastUtil.showMessageApp(context, result.getMessage());
                             }
 
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
 
+            }
+        });
+    }
 
+    private void depositprice(){
+        HttpHelper.get(context, Urls.depositprice, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
 
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Log.e("depositprice===", "==="+responseString);
 
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            JSONObject json = new JSONObject(result.getData());
+
+                            tv_depositprice.setText("充值"+json.getInt("price_s")+"元立即用车");
+
+//                            充值200元立即用车
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

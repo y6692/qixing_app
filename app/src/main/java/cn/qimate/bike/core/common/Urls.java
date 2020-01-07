@@ -111,7 +111,10 @@ public class Urls {
 	public static String car_nearby = host2 + "/car/";
 	//关于我们接口
 	public static String aboutus = host2 + "/aboutus";
+	//押金价格接口
+	public static String depositprice = host2 + "/depositprice";
 
+//	http://testnewmapi.7mate.cn/api/depositprice
 //	http://testnewmapi.7mate.cn/api/aboutus
 //	http://testnewmapi.7mate.cn/api/car/{carmodel_id}/nearby
 //	http://testnewmapi.7mate.cn/api/car_can_unlock

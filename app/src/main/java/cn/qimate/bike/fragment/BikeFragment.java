@@ -378,10 +378,15 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }else{
             //resume
 
+            Log.e("onHiddenChanged===bike2", carmodel_id+"==="+firstH+"==="+hidden+"==="+type+"==="+referLatitude);
+
             if(firstH){
                 firstH = false;
 
-                if("4".equals(type) || "7".equals(type)){
+                if(carmodel_id==2){
+                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
                     MainFragment.getInstance().changeTab(1);
                     return;
                 }
@@ -503,19 +508,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                         flag=0;
                                         list.add(latLng);
 
-
-//                                        if(jsonObject.getInt("is_yhq")==0){
-//                                            flag=0;
-//                                            list.add(latLng);
-//
-//                                        }else{
-//                                            flag=1;
-//                                            list2.add(latLng);
-//
-////                                    MarkerOptions centerMarkerOption = new MarkerOptions().position(latLng).icon(freeDescripter);
-////                                    aMap.addMarker(centerMarkerOption);
-//
-//                                        }
                                     }
 
                                     Log.e("bf===operating_areas3", "==="+list.size());
@@ -527,35 +519,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                     polygon = aMap.addPolygon(pOption.strokeWidth(2)
                                             .strokeColor(Color.argb(255, 0, 135, 255))
                                             .fillColor(Color.argb(76, 0, 173, 255)));
-//#0087FF
-//                                    #00ADFF
 
                                     Log.e("bf===operating_areas4", "==="+polygon);
 
                                     getMaxPoint(list);
 
-//                                    if(flag==0){
-//                                        pOption.addAll(list);
-//                                        polygon = aMap.addPolygon(pOption.strokeWidth(2)
-//                                                .strokeColor(Color.argb(255, 228, 59, 74))
-//                                                .fillColor(Color.argb(75, 230, 0, 18)));
-//                                    }else{
-//                                        pOption.addAll(list2);
-//                                        polygon = aMap.addPolygon(pOption.strokeWidth(2)
-//                                                .strokeColor(Color.argb(255, 255, 80, 23))
-//                                                .fillColor(Color.argb(75, 255, 80, 23)));
-//
-//                                        getCenterPoint(list2);
-//                                    }
-
-
-
-//                                    if(!isHidden){
-//                                        pOptions.add(polygon);
-//
-//                                        isContainsList.add(polygon.contains(myLocation));
-//                                    }else{
-//                                    }
 
                                 }
                             }else {

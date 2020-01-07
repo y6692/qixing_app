@@ -287,23 +287,18 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
                     Log.e("logout===", "==="+responseString);
 
                     if(responseString==null){
+                        Intent intent0 = new Intent();
+                        setResult(RESULT_OK, intent0);
+
                         SharedPreferencesUrls.getInstance().putString("access_token", "");
                         SharedPreferencesUrls.getInstance().putString("iscert", "");
-//                        UIHelper.goToAct(context, LoginActivity.class);
                         Intent intent = new Intent(context, LoginActivity.class);
                         context.startActivity(intent);
-
-                        setResult(RESULT_OK, intent);
-
                         scrollToFinishActivity();
-
-
                     }else{
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-
                         ToastUtil.showMessageApp(context, result.getMessage());
                     }
-
 
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -297,8 +297,8 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
                         Log.e("orders===2", "==="+array.getJSONObject(i).toString());
 
                         BillBean bean = JSON.parseObject(array.getJSONObject(i).toString(), BillBean.class);
-                        bean.setOrder_type(order_type);
-                        Log.e("orders===3", "==="+bean.getOrder_type());
+//                        bean.setOrder_type(order_type);
+//                        Log.e("orders===3", "==="+bean.getOrder_type());
 
                         datas.add(bean);
                     }

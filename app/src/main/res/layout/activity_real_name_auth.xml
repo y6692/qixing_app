@@ -229,7 +229,7 @@
                                 android:textSize="12sp"/>
 
                             <TextView
-                                android:id="@+id/tv_balance"
+                                android:id="@+id/tv_depositprice"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="200"

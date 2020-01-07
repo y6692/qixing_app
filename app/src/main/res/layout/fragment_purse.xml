@@ -14,17 +14,14 @@
     <RelativeLayout
         android:id="@+id/mainUI_titleLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/purse_bg"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_height="196dp"
+        android:background="@drawable/purse_bg">
 
         <TextView
             android:id="@+id/mainUI_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp100"
+            android:layout_marginTop="55dp"
             android:layout_marginLeft="@dimen/dp30"
             android:text="账户余额"
             android:textColor="@color/white"
@@ -35,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="109dp"
+            android:layout_marginTop="64dp"
             android:layout_marginRight="@dimen/dp30"
             android:text="充值"
             android:textColor="@color/white"
@@ -44,7 +41,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="142dp"
+            android:layout_marginTop="97dp"
             android:layout_marginLeft="32dp">
 
             <TextView

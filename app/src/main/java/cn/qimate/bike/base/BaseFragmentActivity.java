@@ -103,7 +103,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 
 //	private TelephonyManager tm;
 	protected Context context;
-	protected LoadingDialog loadingDialog;
+	public LoadingDialog loadingDialog;
 
 	public static String m_nowMac = "";  //"A8:1B:6A:B4:E7:C9"
 	public static String oid = "";

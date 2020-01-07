@@ -8,12 +8,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
+import cn.qimate.bike.base.BaseApplication;
+
 
 public class RoundImageView extends ImageView {
 
 
     float width,height;
-    float round=24;
+    float round = 5 * BaseApplication.density;
 
     public RoundImageView(Context context) {
         this(context, null);

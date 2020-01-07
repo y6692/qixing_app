@@ -272,12 +272,21 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         mFragments.add(purseFragment);
         mFragments.add(mineFragment);
 
-
         Log.e("ma===initData", "===");
 
         for (int i = 0; i < mTitles.length; i++) {
             mTabEntities.add(new TabEntity(mTitles[i], mIconSelectIds[i], mIconUnselectIds[i]));
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+//      must store the new intent unless getIntent() will return the old one
+        setIntent(intent);
+
+        Log.e("ma===onNewIntent", SharedPreferencesUrls.getInstance().getString("access_token", "") + "===" + type);
+
     }
 
     @Override
@@ -289,7 +298,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         JPushInterface.onResume(context);
 
-        Log.e("ma===onResume", SharedPreferencesUrls.getInstance().getString("iscert", "") + "===" + type);
+        Log.e("ma===onResume", SharedPreferencesUrls.getInstance().getString("access_token", "") + "===" + type);
 
 //        mainFragment.show
 //        tab.setCurrentTab(0);
@@ -300,6 +309,10 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         tab.setTabData(mTabEntities, MainActivity.this, R.id.fl_change, mFragments);
         tab.setCurrentTab(0);
+
+        loadingDialog = new LoadingDialog(this);
+        loadingDialog.setCancelable(false);
+        loadingDialog.setCanceledOnTouchOutside(false);
 
         dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_frist_view, null);
@@ -548,9 +561,11 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                         } catch (Exception e) {
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
 
-                            if (loadingDialog != null && loadingDialog.isShowing()) {
-                                loadingDialog.dismiss();
-                            }
+
+                        }
+
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
                         }
 
                     }

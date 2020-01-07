@@ -40,10 +40,10 @@ public class BillAdapter extends BaseViewAdapter<BillBean>{
 
         Log.e("BillAdapter===", bean.getOrder_type()+"==="+bean.getCar_type()+"==="+bean.getOrder_amount());
 
-//        1骑行订单 2购买骑行卡订单 3调度费订单 4赔偿费订单 5充值订单
+//        订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单
         int orderType = bean.getOrder_type();
 //        1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单 7充值+认证充值订单 8调度费+赔偿费订单
-        order_type.setText(orderType==1?"骑行":orderType==2?"套餐卡":orderType==3?"充值":orderType==4?"认证充值":orderType==5?"调度费":orderType==6?"赔偿费":orderType==7?"充值+认证充值订单":"调度费+赔偿费订单");
+        order_type.setText(orderType==1?"骑行订单":orderType==2?"套餐卡订单":orderType==3?"充值订单":orderType==4?"认证充值订单":orderType==5?"调度费订单":orderType==6?"赔偿费订单":orderType==7?"充值+认证充值订单":"调度费+赔偿费订单");
         order_sn.setText(bean.getOrder_sn());
         payment_time.setText(bean.getPayment_time());
         payment_name.setText(bean.getPayment_name());

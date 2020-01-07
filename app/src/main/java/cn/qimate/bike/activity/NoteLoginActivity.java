@@ -2,6 +2,7 @@ package cn.qimate.bike.activity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -329,7 +330,12 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                                 SharedPreferencesUrls.getInstance().putString("access_token", "Bearer "+bean.getToken());
                                 Toast.makeText(context,"恭喜您,登录成功",Toast.LENGTH_SHORT).show();
 
-                                UIHelper.goToAct(context, MainActivity.class);
+//                                UIHelper.goToAct(context, MainActivity.class);
+
+                                Intent intent = new Intent(context, MainActivity.class);
+                                intent.putExtra("flag", true);
+                                startActivity(intent);
+
                                 scrollToFinishActivity();
 
                             }else{

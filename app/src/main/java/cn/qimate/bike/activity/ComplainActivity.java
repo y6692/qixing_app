@@ -223,9 +223,9 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
 //        addImageLayout = (RelativeLayout)findViewById(R.id.ui_realNameAuth_addImageLayout);
 
 
-        if (schoolList.isEmpty() || item1.isEmpty()){
-            getSchoolList();
-        }
+//        if (schoolList.isEmpty() || item1.isEmpty()){
+//            getSchoolList();
+//        }
         backImg.setOnClickListener(this);
         getCodeText.setOnClickListener(this);
         uploadImage.setOnClickListener(this);

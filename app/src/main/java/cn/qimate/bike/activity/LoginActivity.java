@@ -89,6 +89,16 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+//      must store the new intent unless getIntent() will return the old one
+        setIntent(intent);
+
+        Log.e("la===onNewIntent", SharedPreferencesUrls.getInstance().getString("access_token", "") + "===" + type);
+
+    }
+
+    @Override
     public void onResume() {
         isForeground = true;
 //        isRefresh = true;
