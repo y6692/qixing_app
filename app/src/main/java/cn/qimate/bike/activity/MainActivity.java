@@ -221,6 +221,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     private ImageView exImage_3;
 
     private String imageUrl;
+    private String h5_title;
     private String ad_link;
     private String app_type;
     private String app_id;
@@ -234,8 +235,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     private Banner mBanner;
     private MyImageLoader mMyImageLoader;
-    private ArrayList<String> imagePath;
-    private ArrayList<String> imageTitle;
 
 
     @Override
@@ -390,7 +389,11 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     @Override
     public void OnBannerClick(int position) {
-        Toast.makeText(context, "你点了第" + (position + 1) + "张轮播图", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "你点了第" + (position + 1) + "张轮播图", Toast.LENGTH_SHORT).show();
+
+        Log.e("OnBannerClick===", h5_title+"==="+imageUrl);
+
+        UIHelper.goWebViewAct(context, h5_title, imageUrl);
 
 //        initmPopupWindowView();
     }
@@ -531,6 +534,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                                 Log.e("ma===banner2", bean.getImage_url()+"===");
 
                                 imageUrl = bean.getImage_url();
+                                h5_title = bean.getH5_title();
 
 //                                imagePath.add(imageUrl);
 
@@ -856,9 +860,12 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 break;
             case R.id.ui_adv_image:
 
-                Log.e("main===", "ui_adv==="+app_type+"==="+app_id+"==="+ad_link);
+                Log.e("ma===", "ui_adv==="+app_type+"==="+h5_title+"==="+imageUrl);
 
-                UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
+//                UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
+
+                UIHelper.goWebViewAct(context, h5_title, imageUrl);
+
                 break;
 
 

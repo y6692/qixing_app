@@ -287,7 +287,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private boolean isTz = false;
 
     private Dialog advDialog;
-    private ImageView advCloseBtn;
+    private TextView advCloseBtn;
     private ImageView cancelBtn;
     private LinearLayout ll_positiveButton;
     private ImageView cancelBtn2;
@@ -844,7 +844,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         ll_positiveButton2.setOnClickListener(this);
 
 
-        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+        advCloseBtn = (TextView)advDialogView.findViewById(R.id.ui_adv_closeBtn0);
         advCloseBtn.setOnClickListener(this);
 
         bikeNumEdit = (EditText) findViewById(R.id.pop_circlesMenu_bikeNumEdit);

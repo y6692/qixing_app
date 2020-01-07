@@ -17,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -129,6 +130,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         iv_balance = (ImageView) findViewById(R.id.iv_balance);
         iv_alipay = (ImageView) findViewById(R.id.iv_alipay);
         iv_wechat = (ImageView) findViewById(R.id.iv_wechat);
+
 
         submitBtn = (LinearLayout)findViewById(R.id.settlement_platform_submitBtn);
 

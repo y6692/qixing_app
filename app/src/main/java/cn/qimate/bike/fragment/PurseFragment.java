@@ -201,14 +201,16 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
 
                             UserBean bean = JSON.parseObject(result.getData(), UserBean.class);
 
-                            if (loadingDialog != null && loadingDialog.isShowing()) {
-                                loadingDialog.dismiss();
-                            }
+
 
                             tv_balance.setText(""+bean.getBalance());
 
                         } catch (Exception e) {
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                        }
+
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
                         }
 
                     }
@@ -287,8 +289,11 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public void OnBannerClick(int position) {
-        Toast.makeText(context, "你点了第" + (position + 1) + "张轮播图", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "你点了第" + (position + 1) + "张轮播图", Toast.LENGTH_SHORT).show();
 
+        Log.e("pf===OnBannerClick", imageTitle.get(position)+"==="+imagePath.get(position));
+
+        UIHelper.goWebViewAct(context, imageTitle.get(position), imagePath.get(position));
 //        initmPopupWindowView();
     }
 

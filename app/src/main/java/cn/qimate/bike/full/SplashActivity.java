@@ -83,7 +83,7 @@ import okhttp3.Response;
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 
 @SuppressLint("NewApi")
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity implements View.OnClickListener{
 
 	public static boolean isForeground = false;
 
@@ -93,6 +93,7 @@ public class SplashActivity extends BaseActivity {
 	private LinearLayout skipLayout;
 	private TextView skipTime;
 	private String imageUrl;
+	private String h5_title;
 	private String ad_link;
 	private String app_type;
 	private String app_id;
@@ -140,6 +141,9 @@ public class SplashActivity extends BaseActivity {
 		loadingImage = findViewById(R.id.plash_loading_main);
 		skipLayout = findViewById(R.id.plash_loading_skipLayout);
 		skipTime = findViewById(R.id.plash_loading_skipTime);
+
+//		loadingImage.setOnClickListener(this);
+
 		initHttp();
 
 		init();
@@ -263,16 +267,20 @@ public class SplashActivity extends BaseActivity {
 //					ad_link = "http://www.7mate.cn/App/Helper/event.html";
 //					app_type = "4";
 
-					Log.e("splash===", "loadingImage==="+app_type+"==="+app_id+"==="+ad_link);
+					Log.e("sa===loadingImage", "==="+app_type+"==="+h5_title+"==="+imageUrl);
 
-					UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
-					if (app_type != null && !"".equals(app_type)){
-						if (!"#".equals(ad_link) && ad_link != null && !"".equals(ad_link)) {
-							isStop = true;
-							isEnd = true;
-//							finishMine();
-						}
-					}
+					UIHelper.goWebViewAct(context, h5_title, imageUrl);
+
+//					Log.e("splash===", "loadingImage==="+app_type+"==="+app_id+"==="+ad_link);
+//
+//					UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
+//					if (app_type != null && !"".equals(app_type)){
+//						if (!"#".equals(ad_link) && ad_link != null && !"".equals(ad_link)) {
+//							isStop = true;
+//							isEnd = true;
+////							finishMine();
+//						}
+//					}
 				}
 
 			}
@@ -492,7 +500,27 @@ public class SplashActivity extends BaseActivity {
 	}
 
 
+	@Override
+	public void onClick(View view) {
+//		String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+//		String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+		switch (view.getId()){
+			case R.id.plash_loading_main:
 
+				Log.e("sa===onClick", "ui_adv==="+app_type+"==="+h5_title+"==="+imageUrl);
+
+//                UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
+
+				UIHelper.goWebViewAct(context, h5_title, imageUrl);
+
+				break;
+
+
+
+			default:
+				break;
+		}
+	}
 
 
 
@@ -566,6 +594,7 @@ public class SplashActivity extends BaseActivity {
 								Log.e("sa===banner2", bean.getImage_url()+"===");
 
 								imageUrl = bean.getImage_url();
+								h5_title = bean.getH5_title();
 
 //                                imagePath.add(imageUrl);
 

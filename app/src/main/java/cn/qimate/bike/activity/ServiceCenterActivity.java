@@ -296,7 +296,7 @@ public class ServiceCenterActivity extends SwipeBackActivity implements View.OnC
                         break;
 
                     case R.id.pop_tv_feedback:
-                        UpdateManager.getUpdateManager().setType(2).setBikeCode(bikeCode).checkAppUpdate(ServiceCenterActivity.this, context, 3, null);
+                        UpdateManager.getUpdateManager().setType(2).setBikeCode(bikeCode).checkAppUpdate(ServiceCenterActivity.this, context, 1, null);
 //                        UIHelper.goToAct(context, EndBikeFeedBackActivity.class);
 
                         break;

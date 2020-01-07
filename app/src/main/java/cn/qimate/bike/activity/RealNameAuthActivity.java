@@ -111,7 +111,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
     private LinearLayout ll_1, ll_2, ll_3, ll_submit;
-    private RelativeLayout schoolLayout;
+    private RelativeLayout rl_recharge;
     private TextView schoolText;
     private EditText realNameEdit, identityNumberEdit;
     private Button submitBtn;
@@ -240,6 +240,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         ll_1 = (LinearLayout)findViewById(R.id.ll_1);
         ll_2 = (LinearLayout)findViewById(R.id.ll_2);
         ll_3 = (LinearLayout)findViewById(R.id.ll_3);
+        rl_recharge = (RelativeLayout)findViewById(R.id.rl_recharge);
 //        uploadImageLayout = (RelativeLayout)findViewById(R.id.ui_realNameAuth_uploadImageLayout);
         uploadImage = (ImageView)findViewById(R.id.ui_realNameAuth_uploadImage);
         uploadImage2 = (ImageView)findViewById(R.id.ui_realNameAuth_uploadImage2);
@@ -335,48 +336,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                 scrollToFinishActivity();
                 break;
             case R.id.mainUI_title_rightBtn:
-                if (Build.VERSION.SDK_INT >= 23) {
-                    int checkPermission = checkSelfPermission(Manifest.permission.CALL_PHONE);
-                    if (checkPermission != PERMISSION_GRANTED) {
-                        if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
-                            requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
-                        } else {
-                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                            customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开拨打电话权限！")
-                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                        }
-                                    }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                    requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
-                                }
-                            });
-                            customBuilder.create().show();
-                        }
-                        return;
-                    }
-                }
-                CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-//                customBuilder.setTitle("温馨提示").setMessage("确认拨打" + "0519-86999222" + "吗?")
-                customBuilder.setTitle("点击号码一键拨打").setType(7)
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        })
-//                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.cancel();
-//                        Intent intent=new Intent();
-//                        intent.setAction(Intent.ACTION_CALL);
-//                        intent.setData(Uri.parse("tel:" + "0519-86999222"));
-//                        startActivity(intent);
-//                    }
-//                })
-                ;
-                customBuilder.create().show();
+                UIHelper.goToAct(context, ServiceCenterActivity.class);
                 break;
             case R.id.ui_realNameAuth_schoolLayout:
                 pvOptions.show();
@@ -706,11 +666,14 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
 //                                status; //认证状态 0待认证 1认证中 2已驳回 3认证成功
                                 int state = bean.getStatus();
+
                                 if(state==0){
                                     ll_submit.setVisibility(View.VISIBLE);
+                                    rl_recharge.setVisibility(View.VISIBLE);
                                     submitBtn.setText("提交");
                                 }else if(state==1 || state==3){
                                     ll_submit.setVisibility(View.GONE);
+                                    rl_recharge.setVisibility(View.GONE);
                                     realNameEdit.setEnabled(false);
                                     identityNumberEdit.setEnabled(false);
 

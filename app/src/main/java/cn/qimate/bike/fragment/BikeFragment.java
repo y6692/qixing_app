@@ -318,8 +318,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         mapView = activity.findViewById(R.id.mainUI_map);
 
-        WindowManager.LayoutParams winParams = activity.getWindow().getAttributes();
-        winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+//        WindowManager.LayoutParams winParams = activity.getWindow().getAttributes();
+//        winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
         savedIS = savedInstanceState;
 
@@ -378,13 +378,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }else{
             //resume
 
-            Log.e("onHiddenChanged===bike2", carmodel_id+"==="+firstH+"==="+hidden+"==="+type+"==="+referLatitude);
-
             if(firstH){
                 firstH = false;
 
                 if(carmodel_id==2){
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                    if (loadingDialog != null && loadingDialog.isShowing()){
                         loadingDialog.dismiss();
                     }
                     MainFragment.getInstance().changeTab(1);
@@ -508,6 +506,19 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                         flag=0;
                                         list.add(latLng);
 
+
+//                                        if(jsonObject.getInt("is_yhq")==0){
+//                                            flag=0;
+//                                            list.add(latLng);
+//
+//                                        }else{
+//                                            flag=1;
+//                                            list2.add(latLng);
+//
+////                                    MarkerOptions centerMarkerOption = new MarkerOptions().position(latLng).icon(freeDescripter);
+////                                    aMap.addMarker(centerMarkerOption);
+//
+//                                        }
                                     }
 
                                     Log.e("bf===operating_areas3", "==="+list.size());
@@ -519,11 +530,35 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                     polygon = aMap.addPolygon(pOption.strokeWidth(2)
                                             .strokeColor(Color.argb(255, 0, 135, 255))
                                             .fillColor(Color.argb(76, 0, 173, 255)));
+//#0087FF
+//                                    #00ADFF
 
                                     Log.e("bf===operating_areas4", "==="+polygon);
 
                                     getMaxPoint(list);
 
+//                                    if(flag==0){
+//                                        pOption.addAll(list);
+//                                        polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                                .strokeColor(Color.argb(255, 228, 59, 74))
+//                                                .fillColor(Color.argb(75, 230, 0, 18)));
+//                                    }else{
+//                                        pOption.addAll(list2);
+//                                        polygon = aMap.addPolygon(pOption.strokeWidth(2)
+//                                                .strokeColor(Color.argb(255, 255, 80, 23))
+//                                                .fillColor(Color.argb(75, 255, 80, 23)));
+//
+//                                        getCenterPoint(list2);
+//                                    }
+
+
+
+//                                    if(!isHidden){
+//                                        pOptions.add(polygon);
+//
+//                                        isContainsList.add(polygon.contains(myLocation));
+//                                    }else{
+//                                    }
 
                                 }
                             }else {

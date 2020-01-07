@@ -164,6 +164,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:orientation="horizontal"
@@ -191,10 +192,10 @@
             </RelativeLayout>
 
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_alignParentLeft="true"
                 android:gravity="center_vertical">
 
@@ -211,12 +212,12 @@
                     android:id="@+id/tv_unpay_other_remark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:text="123"
+                    android:text="123qwsqwdqwdwqdwqdwqdqdxcqwdqwdqweqwewqewasdasdcasdasdasdasdadadasdasdadada"
                     android:textColor="#333333"
                     android:textSize="@dimen/sp16"
+                    android:singleLine="false"
                     />
-            </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
 

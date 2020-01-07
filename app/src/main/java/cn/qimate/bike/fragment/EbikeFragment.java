@@ -318,8 +318,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         mapView = activity.findViewById(R.id.mainUI_map);
 
-        WindowManager.LayoutParams winParams = activity.getWindow().getAttributes();
-        winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+//        WindowManager.LayoutParams winParams = activity.getWindow().getAttributes();
+//        winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
         savedIS = savedInstanceState;
 

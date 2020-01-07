@@ -216,20 +216,15 @@ public class UpdateManager {
 
 						if(iv!=null) iv.setVisibility(View.VISIBLE);
 
-//						if ("2".equals(mUpdate.isForce())) {
-//							showDownloadDialog();
-//						} else {
-//							showNoticeDialog();
-//						}
-
 						if(isShowMsg<3){
 							showNoticeDialog();
 						}
-						;
 
-//						if (!curVersionName.equals(mUpdate.getAppVersion())) {
-//						} else {
-//						}
+						if (!curVersionName.equals(mUpdate.getVersion())) {
+
+						} else {
+
+						}
 					} else {
 //						UIHelper.ToastError(context, result.getMsg());
 
@@ -252,11 +247,17 @@ public class UpdateManager {
 							intent.putExtra("bikeCode", bikeCode);
 							context.startActivity(intent);
 						}
+
 //								else if(type==3){
 //									UIHelper.goToAct(context, EndBikeFeedbackActivity.class);
 //								}
 					}
 
+					//						if ("2".equals(mUpdate.isForce())) {
+//							showDownloadDialog();
+//						} else {
+//							showNoticeDialog();
+//						}
 
 					if ("{}" == result.getData()) {
 
