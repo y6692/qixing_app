@@ -406,6 +406,7 @@ public class UIHelper {
 		Intent intent = new Intent(context, WebviewActivity.class);
 		intent.putExtra("title",title);
 		intent.putExtra("link",link);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		context.startActivity(intent);
 	}
 }

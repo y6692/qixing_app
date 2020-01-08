@@ -32,6 +32,8 @@
             android:textColor="@color/white"
             android:textSize="@dimen/sp16"/>
 
+        <!--android:src="@drawable/main_right_icon"-->
+
         <ImageView
             android:id="@+id/mainUI_rightBtn"
             android:layout_width="@dimen/dp45"

@@ -304,11 +304,9 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
             GradientDrawable drawable = (GradientDrawable)ll_bg.getBackground();
             drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[1]), Color.parseColor(bean.getLinear_gradient()[0])});
 
-            int is_valid = bean.getIs_valid();
-
             name.setText(bean.getName());
             remaining.setText(bean.getRemaining());
-            valid.setText(is_valid==1?"使用中":is_valid==2?"已过期":is_valid==3?"已用完":"待生效");
+            valid.setText(bean.getStatus());
             desc.setText(bean.getDesc());
 
             rl_desc.setOnClickListener(new View.OnClickListener() {

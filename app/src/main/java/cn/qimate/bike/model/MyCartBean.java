@@ -9,7 +9,7 @@ public class MyCartBean {
     private String name;
     private String remaining;
     private String desc;
-    private int is_valid;
+    private String status;
     private String[] linear_gradient;
 
     public String getName() {
@@ -36,12 +36,12 @@ public class MyCartBean {
         this.desc = desc;
     }
 
-    public int getIs_valid() {
-        return is_valid;
+    public String getStatus() {
+        return status;
     }
 
-    public void setIs_valid(int is_valid) {
-        this.is_valid = is_valid;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String[] getLinear_gradient() {

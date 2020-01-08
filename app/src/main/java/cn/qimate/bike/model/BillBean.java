@@ -13,8 +13,10 @@ public class BillBean {
 	private String car_number;	//车辆编号
 	private String car_start_time;	//开始时间
 	private String car_end_time;	//结束时间
-	private String price;	//骑行单价
+	private String price;	//骑行起步价
+	private String continued_price;	//骑行后续价
 	private String cycling_time;	//骑行时间
+	private String each_free_time;	//每次免费时长
 	private int order_type;	//订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单
 
 	public int getOrder_id() {
@@ -121,12 +123,28 @@ public class BillBean {
 		this.price = price;
 	}
 
+	public String getContinued_price() {
+		return continued_price;
+	}
+
+	public void setContinued_price(String continued_price) {
+		this.continued_price = continued_price;
+	}
+
 	public String getCycling_time() {
 		return cycling_time;
 	}
 
 	public void setCycling_time(String cycling_time) {
 		this.cycling_time = cycling_time;
+	}
+
+	public String getEach_free_time() {
+		return each_free_time;
+	}
+
+	public void setEach_free_time(String each_free_time) {
+		this.each_free_time = each_free_time;
 	}
 
 	public int getOrder_type() {

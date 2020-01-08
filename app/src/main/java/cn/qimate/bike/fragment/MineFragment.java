@@ -112,6 +112,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     Unbinder unbinder;
 
     private Context context;
+    private Activity activity;
 
     private static final int MSG_SET_ALIAS = 1001;
     private static final int MSG_SET_TAGS = 1002;
@@ -159,6 +160,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         context = getActivity();
+        activity = getActivity();
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ){
 //            if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -281,7 +283,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         if (access_token == null || "".equals(access_token)) {
 //            superVip.setVisibility(View.GONE);
         } else {
-            initHttp();
+
+            boolean flag = activity.getIntent().getBooleanExtra("flag", false);
+
+            Log.e("minef===onResume", flag+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+type);
+
+            if(flag){
+                initHttp();
+            }
+
+
 //            if (("0".equals(bikenum) || bikenum == null || "".equals(bikenum))
 //                    && ("0".equals(specialdays) || specialdays == null || "".equals(specialdays))){
 //                superVip.setVisibility(View.GONE);
@@ -784,6 +795,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
                 Intent intent = new Intent();
                 intent.setClass(context, SettingActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(intent, 10);
                 break;
 

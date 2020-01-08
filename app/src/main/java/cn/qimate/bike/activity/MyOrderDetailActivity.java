@@ -31,7 +31,6 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
  */
 public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnClickListener{
 
-
     private Context context;
     private LoadingDialog loadingDialog;
     private LinearLayout backImg;
@@ -47,9 +46,12 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
     private TextView tv_car_end_time;
     private TextView tv_payment_time;
     private TextView tv_price;
+    private TextView tv_continued_price;
+    private TextView tv_each_free_time;
     private TextView tv_cycling_time;
 
     private RelativeLayout rl_payment_name;
+    private RelativeLayout rl_each_free_time;
     private RelativeLayout rl_payment_time;
 
     private int order_id;
@@ -80,7 +82,11 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
         tv_car_start_time = (TextView)findViewById(R.id.my_order_detail_tv_car_start_time);
         tv_car_end_time = (TextView)findViewById(R.id.my_order_detail_tv_car_end_time);
         tv_price = (TextView)findViewById(R.id.my_order_detail_tv_price);
+        tv_continued_price= (TextView)findViewById(R.id.my_order_detail_tv_continued_price);
+        tv_each_free_time= (TextView)findViewById(R.id.my_order_detail_tv_each_free_time);
         tv_cycling_time = (TextView)findViewById(R.id.my_order_detail_tv_cycling_time);
+
+        rl_each_free_time= (RelativeLayout) findViewById(R.id.my_order_detail_rl_each_free_time);
 
         rl_payment_name = (RelativeLayout)findViewById(R.id.my_order_detail_rl_payment_name);
         rl_payment_time = (RelativeLayout)findViewById(R.id.my_order_detail_rl_payment_time);
@@ -127,7 +133,6 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
                             if(null != bean.getOrder_sn()){
                                 Log.e("oda===order_detail2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getCar_type());
 
-
                                 tv_car_type.setText(bean.getCar_type()==1?"单车":"助力车");
                                 tv_car_number.setText(""+bean.getCar_number());
                                 tv_order_amount.setText(""+bean.getOrder_amount());
@@ -137,6 +142,15 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
                                 tv_car_end_time.setText(""+bean.getCar_end_time());
                                 tv_payment_time.setText(""+bean.getPayment_time());
                                 tv_price.setText(""+bean.getPrice());
+                                tv_continued_price.setText(""+bean.getContinued_price());
+
+                                if(!"0".equals(bean.getEach_free_time())){
+                                    rl_each_free_time.setVisibility(View.VISIBLE);
+                                    tv_each_free_time.setText(bean.getEach_free_time()+"分钟");
+                                }else{
+                                    rl_each_free_time.setVisibility(View.GONE);
+                                }
+
                                 tv_cycling_time.setText(""+bean.getCycling_time());
 
                                 if(bean.getCar_type()==1){

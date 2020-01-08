@@ -8,10 +8,10 @@ package cn.qimate.bike.core.common;
  * @version v1.0 2016-4-7
  */
 public class Urls {
-
-	public static String HTTP = "http://";
+//	https://newmapi.7mate.cn/
+	public static String HTTP = "https://";
 	public static String host = HTTP + "app.7mate.cn";
-	public static String host2 = HTTP + "testnewmapi.7mate.cn/api";
+	public static String host2 = HTTP + "newmapi.7mate.cn/api";
 //	public static String host = HTTP + "web1.7mate.cn";
 //	public static String host = HTTP + "test.7mate.cn";
 //	public static String host = HTTP + "uat.7mate.cn";

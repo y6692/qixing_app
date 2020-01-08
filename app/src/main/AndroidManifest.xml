@@ -135,6 +135,7 @@
 
         <activity
             android:name=".activity.RechargeActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -142,6 +143,7 @@
 
         <activity
             android:name=".activity.RealNameAuthActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -149,6 +151,7 @@
 
         <activity
             android:name=".activity.DepositFreeAuthActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -171,6 +174,7 @@
 
         <activity
             android:name=".activity.AuthCenterActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -195,6 +199,7 @@
 
         <activity
             android:name=".activity.UnpayRouteActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -202,18 +207,21 @@
 
         <activity
             android:name=".activity.MyOrderActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
         </activity>
 
         <activity
             android:name=".activity.MyOrderDetailActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
         </activity>
 
         <activity
             android:name=".activity.CarFaultProActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -221,6 +229,7 @@
 
         <activity
             android:name=".activity.CarFaultActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -235,6 +244,7 @@
 
         <activity
             android:name=".activity.UnpayOtherActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -242,6 +252,7 @@
 
         <activity
             android:name=".activity.ChangePhoneActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -249,6 +260,7 @@
 
         <activity
             android:name=".activity.NoteChangePhoneActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
         </activity>
@@ -256,6 +268,7 @@
 
         <activity
             android:name=".activity.NoteLoginActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -264,14 +277,17 @@
 
         <activity
             android:name=".activity.ExchangeActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <activity
             android:name=".activity.BillActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <activity
             android:name=".activity.PayCartActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -279,6 +295,7 @@
 
         <activity
             android:name=".activity.MyCartActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
         </activity>
@@ -291,6 +308,7 @@
 
         <activity
             android:name="com.zxing.lib.scaner.activity.ActivityScanerCode"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize"
             >
 
@@ -299,6 +317,19 @@
         <!--android:windowSoftInputMode="stateVisible|adjustResize"-->
         <!--android:windowSoftInputMode="adjustUnspecified|stateHidden"-->
 
+        <activity
+            android:name=".activity.SettingActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
+        <activity
+            android:name=".activity.MyMessageActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+        <activity
+            android:name=".activity.MyMessageDatailActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <activity
             android:name="com.zxing.lib.scaner.activity.ActivityScanerCode2"
@@ -423,9 +454,7 @@
         <activity
             android:name=".activity.CurRoadBikedActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
-            android:name=".activity.SettingActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
         <activity
             android:name=".activity.ChangePhoneNumActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
@@ -447,12 +476,7 @@
         <activity
             android:name=".activity.MyIntegralActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
-            android:name=".activity.MyMessageActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
-            android:name=".activity.MyMessageDatailActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
         <activity
             android:name=".activity.FeedbackActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />

@@ -51,6 +51,7 @@ import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.model.BannerBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserBean;
+import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.view.RoundImageView;
 
 @SuppressLint("NewApi")
@@ -75,7 +76,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
     private ArrayList<String> imagePath;
     private ArrayList<String> imageTitle;
 
-
+    private int cert1_status;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_purse, null);
@@ -163,13 +164,20 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
         banner();
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
 
-        Log.e("pf===onResume", "===");
+        boolean flag = activity.getIntent().getBooleanExtra("flag", false);
 
-//        user();
+        Log.e("pf===onResume", flag+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+type);
+
+        if(flag){
+            user();
+        }
+
     }
 
     private void user() {
@@ -201,7 +209,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
 
                             UserBean bean = JSON.parseObject(result.getData(), UserBean.class);
 
-
+                            cert1_status = bean.getCert1_status();
 
                             tv_balance.setText(""+bean.getBalance());
 
@@ -320,11 +328,21 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
                 break;
 
             case R.id.rl_payCart:
-                UIHelper.goToAct(context, PayCartActivity.class);
+                if(cert1_status!=3){
+                    ToastUtil.showMessageApp(context, "请先进行免押金认证");
+                }else{
+                    UIHelper.goToAct(context, PayCartActivity.class);
+                }
+
                 break;
 
             case R.id.rl_exchange:
-                UIHelper.goToAct(context, ExchangeActivity.class);
+                if(cert1_status!=3){
+                    ToastUtil.showMessageApp(context, "请先进行免押金认证");
+                }else{
+                    UIHelper.goToAct(context, ExchangeActivity.class);
+                }
+
                 break;
 
             case R.id.rl_bill:
