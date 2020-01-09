@@ -71,6 +71,7 @@ import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.impl.auth.BasicScheme;
@@ -201,6 +202,8 @@ public class AsyncHttpClient {
             Log.d(LOG_TAG, "Invalid HTTPS port number specified, defaulting to 443");
         }
 
+
+
         // Fix to SSL flaw in API < ICS
         // See https://code.google.com/p/android/issues/detail?id=13117
         SSLSocketFactory sslSocketFactory;
@@ -208,6 +211,11 @@ public class AsyncHttpClient {
             sslSocketFactory = MySSLSocketFactory.getFixedSocketFactory();
         else
             sslSocketFactory = SSLSocketFactory.getSocketFactory();
+
+        Log.e("sslSocketFactory===", "==="+sslSocketFactory);
+
+
+        sslSocketFactory.setHostnameVerifier(new AllowAllHostnameVerifier());   //TODO
 
         SchemeRegistry schemeRegistry = new SchemeRegistry();
         schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), httpPort));

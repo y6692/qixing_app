@@ -306,9 +306,11 @@
 
         </activity>
 
+        <!--android:launchMode="singleTask"-->
+
         <activity
             android:name="com.zxing.lib.scaner.activity.ActivityScanerCode"
-            android:launchMode="singleTask"
+
             android:windowSoftInputMode="adjustResize"
             >
 

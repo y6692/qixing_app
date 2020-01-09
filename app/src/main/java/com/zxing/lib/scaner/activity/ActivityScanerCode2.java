@@ -731,8 +731,8 @@ public class ActivityScanerCode2 extends SwipeBackActivity implements View.OnCli
         ll_positiveButton2.setOnClickListener(this);
 
 
-        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
-        advCloseBtn.setOnClickListener(this);
+//        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+//        advCloseBtn.setOnClickListener(this);
 
         bikeNumEdit = (EditText) findViewById(R.id.pop_circlesMenu_bikeNumEdit);
         positiveButton = (Button) dialogView.findViewById(R.id.pop_circlesMenu_positiveButton);

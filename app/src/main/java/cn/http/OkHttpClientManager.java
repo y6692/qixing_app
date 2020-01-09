@@ -52,6 +52,8 @@ public class OkHttpClientManager {
     private Gson mGson;
 
     private OkHttpClientManager() {
+        Log.e("OkHttpClientManager===", "===");
+
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY); //包含header、body数据
 
@@ -64,6 +66,8 @@ public class OkHttpClientManager {
         builder.addInterceptor(new RetryInterceptor());
         builder.addInterceptor(loggingInterceptor);
 
+
+
         X509TrustManager trustManager = new XTrustManager();
         SSLSocketFactory sslSocketFactory = provideSSLFactory(trustManager);
         if(sslSocketFactory != null) {
@@ -71,6 +75,9 @@ public class OkHttpClientManager {
             builder.hostnameVerifier(new HostnameVerifier() {
                 @Override
                 public boolean verify(String s, SSLSession sslSession) {
+
+                    Log.e("verify===", s+"==="+sslSession);
+
                     return true;
                 }
             });

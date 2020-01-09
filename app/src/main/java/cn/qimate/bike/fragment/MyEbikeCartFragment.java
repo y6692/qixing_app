@@ -191,7 +191,7 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
             //pause
         }else{
             //resume
-            resetList();
+//            resetList();
         }
     }
 
@@ -341,7 +341,6 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void initHttp(){
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (access_token == null || "".equals(access_token)){
             Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
@@ -423,7 +422,6 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
 
     private void initHttp2(){
 
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (access_token == null || "".equals(access_token)){
             Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
@@ -580,8 +578,6 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         switch (v.getId()){
 
             case R.id.footer_Layout:

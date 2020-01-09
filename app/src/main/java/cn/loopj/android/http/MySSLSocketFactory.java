@@ -23,6 +23,7 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
@@ -83,6 +84,14 @@ public class MySSLSocketFactory extends SSLSocketFactory {
         };
 
         sslContext.init(null, new TrustManager[]{tm}, null);
+
+//        SSLSocketFactory.getSocketFactory().setHostnameVerifier(new AllowAllHostnameVerifier());
+
+//        sslcontext.init(null, null, null);
+//        SSLSocketFactory sf = new SSLSocketFactory(sslcontext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+//        Scheme sch = new Scheme("https", 443, sf);
+//        getHttpClient().getConnectionManager().getSchemeRegistry().register(sch);
+//        HttpGet httpGet = new HttpGet(url);
     }
 
     @Override

@@ -194,7 +194,7 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
             //pause
         }else{
             //resume
-            resetList();
+//            resetList();
         }
     }
 
