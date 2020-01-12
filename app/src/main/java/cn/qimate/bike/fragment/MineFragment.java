@@ -289,9 +289,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             Log.e("minef===onResume", flag+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+type);
 
             if(flag){
-                initHttp();
+
             }
 
+            initHttp();
 
 //            if (("0".equals(bikenum) || bikenum == null || "".equals(bikenum))
 //                    && ("0".equals(specialdays) || specialdays == null || "".equals(specialdays))){
@@ -1052,7 +1053,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
         if (access_token != null && !"".equals(access_token)) {
-            HttpHelper.get(context, Urls.user, new TextHttpResponseHandler() {
+            HttpHelper.get2(context, Urls.user, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
                     if (loadingDialog != null && !loadingDialog.isShowing()) {

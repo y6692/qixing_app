@@ -942,7 +942,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             case R.id.right_mask:
             case R.id.bottom_mask:
                 Log.e("onClick===1", "==="+advDialog.isShowing());
-
                 isHand = false;
                 btnBikeNum.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.top_hand), null, null);
 
@@ -966,6 +965,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             case R.id.scan_cancelBtn:
                 Log.e("onClick===customDialog", customDialog+"==="+customDialog.isShowing());
 
+                isHand = false;
+                btnBikeNum.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.top_hand), null, null);
+
                 if (customDialog != null && customDialog.isShowing()) {
                     customDialog.dismiss();
                 }
@@ -976,6 +978,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 break;
             case R.id.ll_scan_positiveButton:
                 Log.e("onClick=ll_positiveB", customDialog+"==="+customDialog.isShowing());
+
+                isHand = false;
+                btnBikeNum.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.top_hand), null, null);
 
                 if (customDialog != null && customDialog.isShowing()) {
                     customDialog.dismiss();
@@ -988,6 +993,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             case R.id.scan_cancelBtn2:
                 Log.e("onClick===customDialog", customDialog+"==="+customDialog.isShowing());
 
+                isHand = false;
+                btnBikeNum.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.top_hand), null, null);
+
                 if (customDialog2 != null && customDialog2.isShowing()) {
                     customDialog2.dismiss();
                 }
@@ -998,6 +1006,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 break;
             case R.id.ll_scan_positiveButton2:
                 Log.e("onClick=ll_positiveB", customDialog+"==="+customDialog.isShowing());
+
+                isHand = false;
+                btnBikeNum.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.top_hand), null, null);
 
                 if (customDialog2 != null && customDialog2.isShowing()) {
                     customDialog2.dismiss();

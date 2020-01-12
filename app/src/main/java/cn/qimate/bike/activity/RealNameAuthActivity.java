@@ -532,13 +532,17 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                         imageurl2 = jsonObject.getString("key");
                     }
 
+
+
                     Log.e("UpCompletion===", jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
 
-
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
 
 
 //                {ver:7.3.3,ResponseInfo:1574237736489492,status:200, reqId:HpgAAAAlr6vh0NgV, xlog:X-Log, xvia:, host:upload.qiniu.com, path:/, ip:/180.101.136.11:80, port:80, duration:183.000000 s, time:1574237736, sent:25256,error:null}==={"image":null,"ret":"success"}
@@ -908,6 +912,11 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                         break;
                     case REQUESTCODE_PICK:// 直接从相册获取
                         if (data != null){
+                            if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                loadingDialog.setTitle("请稍等");
+                                loadingDialog.show();
+                            }
+
                             try {
                                 if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
                                     if (imageUri != null) {
@@ -921,15 +930,6 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //                                        RequestOptions requestOptions1 = new RequestOptions().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE);
 
                                         Log.e("REQUESTCODE_PICK===", data.getData()+"==="+urlpath);
-
-//                                        Glide.with(context)
-//                                        .load(urlpath)
-//                                                .skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE)
-//                                        .crossFade()
-//                                        .into(uploadImage);
-
-//                                        Bitmap bitmap = BitmapFactory.decodeFile(urlpath);
-//
 
 //                                        File picture = new File(Environment.getExternalStorageDirectory(), "com.gamefox.samecity.fish/activity/bill1.png");
                                         picture = new File(urlpath);
@@ -1000,16 +1000,33 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //                                        }
 
 //                                        new Thread(uploadImageRunnable).start();
+                                    }else{
+                                        if (loadingDialog != null && loadingDialog.isShowing()){
+                                            loadingDialog.dismiss();
+                                        }
                                     }
                                 }else {
+                                    if (loadingDialog != null && loadingDialog.isShowing()){
+                                        loadingDialog.dismiss();
+                                    }
+
                                     Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                                 }
                             } catch (NullPointerException e) {
                                 e.printStackTrace();// 用户点击取消操作
+
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
                             }
                         }
                         break;
                     case REQUESTCODE_TAKE:// 调用相机拍照
+                        if (loadingDialog != null && !loadingDialog.isShowing()) {
+                            loadingDialog.setTitle("请稍等");
+                            loadingDialog.show();
+                        }
+
                         if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
 
 //                            if (imageUri != null) {
@@ -1037,6 +1054,10 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                 Log.e("REQUESTCODE_TAKE===3", photo+"==="+upBitmap+"==="+filepath.getPath());
 
                                 uploadImage();
+                            }else{
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
                             }
 
 //                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
@@ -1053,6 +1074,10 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //                                new Thread(uploadImageRunnable).start();
 //                            }
                         }else {
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+
                             Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                         }
                         break;

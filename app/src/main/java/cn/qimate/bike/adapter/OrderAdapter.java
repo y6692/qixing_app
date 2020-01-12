@@ -47,6 +47,8 @@ public class OrderAdapter extends BaseViewAdapter<BillBean>{
         TextView payBtn = BaseViewHolder.get(convertView,R.id.item_payBtn);
         BillBean bean = getDatas().get(position);
 
+        final int order_id = bean.getOrder_id();
+
         Log.e("BillAdapter===", bean.getOrder_sn()+"==="+bean.getOrder_type()+"==="+bean.getCar_type()+"==="+bean.getOrder_amount());
 
 //        1骑行订单 2购买骑行卡订单 3调度费订单 4赔偿费订单 5充值订单
@@ -74,6 +76,7 @@ public class OrderAdapter extends BaseViewAdapter<BillBean>{
                 public void onClick(View v) {
                     Intent intent = new Intent(context, SettlementPlatformActivity.class);
                     intent.putExtra("order_type", 1);
+                    intent.putExtra("order_id", order_id);
                     context.startActivity(intent);
                 }
             });

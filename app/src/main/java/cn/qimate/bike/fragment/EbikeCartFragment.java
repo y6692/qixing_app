@@ -266,9 +266,6 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(context, SettlementPlatformActivity.class);
-        intent.putExtra("order_type", 2);
-        context.startActivity(intent);
     }
 
     @SuppressLint("NewApi")

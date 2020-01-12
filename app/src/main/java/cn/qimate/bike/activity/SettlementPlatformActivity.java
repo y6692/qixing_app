@@ -293,7 +293,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
     }
 
     private void cycling() {
-        Log.e("ura===cycling", "==="+order_id);
+        Log.e("ura===order_detail", "==="+order_id);
 
         HttpHelper.get(context, Urls.order_detail+order_id, new TextHttpResponseHandler() {
             @Override
@@ -315,7 +315,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            Log.e("ura===cycling1", responseString + "===" + result.data);
+                            Log.e("ura===order_detail1", responseString + "===" + result.data);
 
                             OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
 
@@ -324,7 +324,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                             }
 
                             if(null != bean.getOrder_sn()){
-                                Log.e("ura===cycling2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+                                Log.e("ura===order_detail2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
                                 order_id = bean.getOrder_id();
 
@@ -667,6 +667,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         switch (v.getId()){
             case R.id.ll_backBtn:
+                setResult(RESULT_OK);
                 scrollToFinishActivity();
                 break;
 
@@ -804,6 +805,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            setResult(RESULT_OK);
             scrollToFinishActivity();
             return true;
         }

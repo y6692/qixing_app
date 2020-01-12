@@ -69,6 +69,7 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 	public static String oid = "";
 	public static String osn = "";
 	public static String type = "";
+	public static int unauthorized_code;
 
 	public static List<Polygon> pOptions;
 	public static List<Boolean> isContainsList;

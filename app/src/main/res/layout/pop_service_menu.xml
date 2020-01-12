@@ -22,11 +22,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="199dp"
+            android:layout_height="132dp"
             android:orientation="vertical"
             android:background="@drawable/back_bd3">
 
             <RelativeLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="29dp">
@@ -67,20 +68,13 @@
 
             </RelativeLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/line_height"
-                android:layout_marginTop="21dp"
-                android:layout_marginLeft="29dp"
-                android:layout_marginRight="28dp"
-                android:background="#E5E5E5"/>
 
 
             <RelativeLayout
                 android:id="@+id/ui_curRoadBiked_alipayTypeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="29dp">
                 <LinearLayout
@@ -110,12 +104,20 @@
                     android:text="0519"/>
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/line_height"
+                android:layout_marginTop="14dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginRight="30dp"
+                android:background="#E5E5E5"/>
+
 
             <RelativeLayout
                 android:id="@+id/ui_curRoadBiked_alipayTypeLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="27dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="29dp">
                 <LinearLayout

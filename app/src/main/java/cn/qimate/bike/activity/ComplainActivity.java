@@ -294,34 +294,30 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
 //
 //                }
 
-                if (oldPhone == null || "".equals(oldPhone)){
-                    Toast.makeText(context,"请填写您的原手机号",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-//                    if (pwd == null || "".equals(pwd)){
-//                        Toast.makeText(context,"请填写您的原密码",Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-                if (newPhone == null || "".equals(newPhone)){
-                    Toast.makeText(context,"请填写您的新手机号",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (code == null || "".equals(code)){
-                    Toast.makeText(context,"请输入验证码",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-//                    if (isVisible){
-//                    }
-                if (imageurl == null || "".equals(imageurl)){
-                    Toast.makeText(context,"请上传您的证件照片",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-//                    if(!"0".equals(cert_method)){
-//                    }
-                if (imageurl2 == null || "".equals(imageurl2)){
-                    Toast.makeText(context,"请上传您的手持证件照片",Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                if (oldPhone == null || "".equals(oldPhone)){
+//                    Toast.makeText(context,"请填写您的原手机号",Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+////                    if (pwd == null || "".equals(pwd)){
+////                        Toast.makeText(context,"请填写您的原密码",Toast.LENGTH_SHORT).show();
+////                        return;
+////                    }
+//                if (newPhone == null || "".equals(newPhone)){
+//                    Toast.makeText(context,"请填写您的新手机号",Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                if (code == null || "".equals(code)){
+//                    Toast.makeText(context,"请输入验证码",Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                if (imageurl == null || "".equals(imageurl)){
+//                    Toast.makeText(context,"请上传您的证件照片",Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                if (imageurl2 == null || "".equals(imageurl2)){
+//                    Toast.makeText(context,"请上传您的手持证件照片",Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
 
                 Log.e("onClick===", imageurl+"==="+imageurl2);
 
@@ -491,6 +487,10 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
                     Log.e("UpCompletion===", jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
                 }
 
             }
@@ -795,6 +795,11 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
 
                     case REQUESTCODE_PICK:// 直接从相册获取
                         if (data != null){
+                            if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                loadingDialog.setTitle("请稍等");
+                                loadingDialog.show();
+                            }
+
                             try {
                                 if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                                     if (imageUri != null) {
@@ -836,16 +841,33 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
                                         Log.e("REQUESTCODE_PICK===3", data.getData()+"==="+filepath.getPath());
 
                                         uploadImage();
+                                    }else{
+                                        if (loadingDialog != null && loadingDialog.isShowing()){
+                                            loadingDialog.dismiss();
+                                        }
                                     }
                                 }else {
+                                    if (loadingDialog != null && loadingDialog.isShowing()){
+                                        loadingDialog.dismiss();
+                                    }
+
                                     Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                                 }
                             } catch (NullPointerException e) {
                                 e.printStackTrace();// 用户点击取消操作
+
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
                             }
                         }
                         break;
                     case REQUESTCODE_TAKE:// 调用相机拍照
+                        if (loadingDialog != null && !loadingDialog.isShowing()) {
+                            loadingDialog.setTitle("请稍等");
+                            loadingDialog.show();
+                        }
+
                         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
 
 //                            if (imageUri != null) {
@@ -873,6 +895,10 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
                                 Log.e("REQUESTCODE_TAKE===3", photo+"==="+upBitmap+"==="+filepath.getPath());
 
                                 uploadImage();
+                            }else{
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
                             }
 
 //                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
@@ -889,6 +915,10 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
 //                                new Thread(uploadImageRunnable).start();
 //                            }
                         }else {
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+
                             Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                         }
                         break;

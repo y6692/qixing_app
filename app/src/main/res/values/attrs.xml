@@ -85,26 +85,7 @@
     </declare-styleable>
 
 
-    <declare-styleable name="VerificationCodeView">
-        <!--输入框的数量-->
-        <attr name="icv_et_number" format="integer" />
-        <!--输入框的宽度-->
-        <attr name="icv_et_width" format="dimension|reference" />
-        <!--输入框之间的分割线-->
-        <attr name="icv_et_divider_drawable" format="reference" />
-        <!--输入框文字颜色-->
-        <attr name="icv_et_text_color" format="color|reference" />
-        <!--输入框文字大小-->
-        <attr name="icv_et_text_size" format="dimension|reference" />
-        <!--输入框获取焦点时边框-->
-        <attr name="icv_et_bg_focus" format="reference" />
-        <!--输入框没有焦点时边框-->
-        <attr name="icv_et_bg_normal" format="reference" />
-        <!--是否是密码模式-->
-        <attr name="icv_et_pwd" format="boolean" />
-        <!--密码模式时,圆的半径-->
-        <attr name="icv_et_pwd_radius" format="dimension|reference" />
-    </declare-styleable>
+
 
 
     <attr name="absListViewStyle" format="reference" />
@@ -931,5 +912,43 @@
 
         <attr name="plaContentBackground" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="VerificationCodeView">
+        <!--输入框的数量-->
+        <attr name="vcv_code_number" format="integer" />
+        <!--单个验证码的宽度-->
+        <attr name="vcv_code_width" format="dimension|reference" />
+        <!--输入框文字颜色-->
+        <attr name="vcv_code_color" format="color|reference" />
+        <!--输入框文字大小-->
+        <attr name="vcv_code_size" format="dimension|reference" />
+        <!--输入框获取焦点时边框-->
+        <attr name="vcv_code_bg_focus" format="reference" />
+        <!--输入框没有焦点时边框-->
+        <attr name="vcv_code_bg_normal" format="reference" />
+        <!--是否展示密码样式-->
+        <attr name="vcv_code_input_style" format="boolean" />
+    </declare-styleable>
+
+    <!--<declare-styleable name="VerificationCodeView">-->
+        <!--&lt;!&ndash;输入框的数量&ndash;&gt;-->
+        <!--<attr name="icv_et_number" format="integer" />-->
+        <!--&lt;!&ndash;输入框的宽度&ndash;&gt;-->
+        <!--<attr name="icv_et_width" format="dimension|reference" />-->
+        <!--&lt;!&ndash;输入框之间的分割线&ndash;&gt;-->
+        <!--<attr name="icv_et_divider_drawable" format="reference" />-->
+        <!--&lt;!&ndash;输入框文字颜色&ndash;&gt;-->
+        <!--<attr name="icv_et_text_color" format="color|reference" />-->
+        <!--&lt;!&ndash;输入框文字大小&ndash;&gt;-->
+        <!--<attr name="icv_et_text_size" format="dimension|reference" />-->
+        <!--&lt;!&ndash;输入框获取焦点时边框&ndash;&gt;-->
+        <!--<attr name="icv_et_bg_focus" format="reference" />-->
+        <!--&lt;!&ndash;输入框没有焦点时边框&ndash;&gt;-->
+        <!--<attr name="icv_et_bg_normal" format="reference" />-->
+        <!--&lt;!&ndash;是否是密码模式&ndash;&gt;-->
+        <!--<attr name="icv_et_pwd" format="boolean" />-->
+        <!--&lt;!&ndash;密码模式时,圆的半径&ndash;&gt;-->
+        <!--<attr name="icv_et_pwd_radius" format="dimension|reference" />-->
+    <!--</declare-styleable>-->
 
 </resources>

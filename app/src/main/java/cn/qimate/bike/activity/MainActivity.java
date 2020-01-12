@@ -102,7 +102,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.http.OkHttpClientManager;
 import cn.http.ResultCallback;
@@ -147,8 +146,6 @@ import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
 import cn.qimate.bike.view.RoundImageView;
-import okhttp3.Request;
-import permissions.dispatcher.NeedsPermission;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.sofi.blelocker.library.Constants.STATUS_CONNECTED;
@@ -225,6 +222,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     private String ad_link;
     private String app_type;
     private String app_id;
+    private String action_content;
 
     private ImageView closeBtn;
     private Dialog advDialog;
@@ -276,31 +274,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         for (int i = 0; i < mTitles.length; i++) {
             mTabEntities.add(new TabEntity(mTitles[i], mIconSelectIds[i], mIconUnselectIds[i]));
         }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-//      must store the new intent unless getIntent() will return the old one
-        setIntent(intent);
-
-        Log.e("ma===onNewIntent", SharedPreferencesUrls.getInstance().getString("access_token", "") + "===" + type);
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-//        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-//        inputMethodManager.hideSoftInputFromWindow(context.getWindowToken(), 0); // 隐藏
-
-        JPushInterface.onResume(context);
-
-        Log.e("ma===onResume", SharedPreferencesUrls.getInstance().getString("access_token", "") + "===" + type);
-
-//        mainFragment.show
-//        tab.setCurrentTab(0);
     }
 
     private void initView() {
@@ -388,12 +361,45 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+//      must store the new intent unless getIntent() will return the old one
+        setIntent(intent);
+
+        Log.e("ma===onNewIntent", SharedPreferencesUrls.getInstance().getString("access_token", "") + "===" + type);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+//        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+//        inputMethodManager.hideSoftInputFromWindow(context.getWindowToken(), 0); // 隐藏
+
+        JPushInterface.onResume(context);
+
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+
+        Log.e("ma===onResume",  access_token + "===" + type);
+
+        if("".equals(access_token)){
+            tab.setCurrentTab(0);
+        }
+
+//        mainFragment.show
+//        tab.setCurrentTab(0);
+    }
+
+
+
+    @Override
     public void OnBannerClick(int position) {
 //        Toast.makeText(context, "你点了第" + (position + 1) + "张轮播图", Toast.LENGTH_SHORT).show();
 
-        Log.e("OnBannerClick===", h5_title+"==="+imageUrl);
+        Log.e("OnBannerClick===", h5_title+"==="+action_content);
 
-        UIHelper.goWebViewAct(context, h5_title, imageUrl);
+        UIHelper.goWebViewAct(context, h5_title, action_content);
 
 //        initmPopupWindowView();
     }
@@ -503,7 +509,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     private void initHttp() {
         Log.e("ma===banner", "===");
 
-        HttpHelper.get(context, Urls.banner + 2, new TextHttpResponseHandler() {
+        HttpHelper.get2(context, Urls.banner + 2, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 onStartCommon("正在加载");
@@ -536,6 +542,13 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                                 imageUrl = bean.getImage_url();
                                 h5_title = bean.getH5_title();
 
+                                action_content = bean.getAction_content();
+                                if(action_content.contains("?")){
+                                    action_content += "&token="+access_token;
+                                }else{
+                                    action_content += "?token="+access_token;
+                                }
+
 //                                imagePath.add(imageUrl);
 
                                 if (imageUrl != null && !"".equals(imageUrl)){
@@ -564,7 +577,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
                         } catch (Exception e) {
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
-
 
                         }
 
@@ -860,11 +872,9 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 break;
             case R.id.ui_adv_image:
 
-                Log.e("ma===", "ui_adv==="+app_type+"==="+h5_title+"==="+imageUrl);
+                Log.e("OnClick===", h5_title+"==="+action_content);
 
-//                UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
-
-                UIHelper.goWebViewAct(context, h5_title, imageUrl);
+                UIHelper.goWebViewAct(context, h5_title, action_content);
 
                 break;
 

@@ -147,21 +147,37 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <com.tuo.customview.VerificationCodeView
+                    <!--<com.tuo.customview.VerificationCodeView-->
+                        <!--android:id="@+id/icv"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="50dp"-->
+                        <!--android:gravity="center"-->
+                        <!--android:layout_centerHorizontal="true"-->
+                        <!--android:layout_marginLeft="30dp"-->
+                        <!--android:layout_marginRight="30dp"-->
+                        <!--android:layout_marginTop="26dp"-->
+                        <!--app:icv_et_bg_focus="@drawable/shape_icv_et_bg_normal"-->
+                        <!--app:icv_et_bg_normal="@drawable/shape_icv_et_bg_normal"-->
+                        <!--app:icv_et_number="6"-->
+                        <!--app:icv_et_text_size="@dimen/sp18"-->
+                        <!--app:icv_et_text_color="#000000"-->
+                        <!--app:icv_et_width="40dp" />-->
+
+                    <com.xylitolz.androidverificationcode.view.VerificationCodeView
                         android:id="@+id/icv"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:gravity="center"
-                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="20dp"
                         android:layout_marginLeft="30dp"
                         android:layout_marginRight="30dp"
-                        android:layout_marginTop="26dp"
-                        app:icv_et_bg_focus="@drawable/shape_icv_et_bg_normal"
-                        app:icv_et_bg_normal="@drawable/shape_icv_et_bg_normal"
-                        app:icv_et_number="6"
-                        app:icv_et_text_size="@dimen/sp18"
-                        app:icv_et_text_color="#000000"
-                        app:icv_et_width="40dp" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        app:vcv_code_size="12sp"
+                        app:vcv_code_bg_focus="@drawable/shape_icv_et_bg_normal"
+                        app:vcv_code_bg_normal="@drawable/shape_icv_et_bg_normal"
+                        app:vcv_code_color="#FDB890"
+                        app:vcv_code_number="6"
+                        app:vcv_code_width="40dp"
+                        app:vcv_code_input_style="false"
+                        />
 
                 </LinearLayout>
 

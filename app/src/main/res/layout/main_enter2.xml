@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    >
+
+    <ImageView
+        android:id="@+id/plash_loading_main"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="fitXY"
+        android:background="@null"
+        android:src="@null"/>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/plash_loading_skipLayout"
+        android:layout_width="@dimen/dp35"
+        android:layout_height="@dimen/dp35"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/circle_black"
+        android:layout_marginRight="@dimen/dp15"
+        android:layout_marginTop="@dimen/dp30"
+        android:orientation="vertical"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp8"
+            android:textColor="@color/white"
+            android:text="跳过"
+            android:background="@null"/>
+        <TextView
+            android:background="@null"
+            android:id="@+id/plash_loading_skipTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5s"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp10"
+            android:layout_marginTop="2dp"/>
+    </LinearLayout>
+
+    <WebView
+        android:visibility="gone"
+        android:id="@+id/myWebView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+</RelativeLayout>

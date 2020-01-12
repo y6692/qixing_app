@@ -75,6 +75,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
     private MyImageLoader mMyImageLoader;
     private ArrayList<String> imagePath;
     private ArrayList<String> imageTitle;
+    private ArrayList<String> urlPath;
 
     private int cert1_status;
 
@@ -140,6 +141,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
 
         imagePath = new ArrayList<>();
         imageTitle = new ArrayList<>();
+        urlPath = new ArrayList<>();
 
         mMyImageLoader = new MyImageLoader();
         mBanner = activity.findViewById(R.id.purse_banner);
@@ -185,7 +187,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
 
         if(isHidden()) return;
 
-        HttpHelper.get(context, Urls.user, new TextHttpResponseHandler() {
+        HttpHelper.get2(context, Urls.user, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 onStartCommon("正在加载");
@@ -231,7 +233,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
     private void banner() {
         Log.e("pf===banner", "===");
 
-        HttpHelper.get(context, Urls.banner + 4, new TextHttpResponseHandler() {
+        HttpHelper.get2(context, Urls.banner + 4, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 onStartCommon("正在加载");
@@ -262,8 +264,15 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
                                 Log.e("pf===banner2", bean.getImage_url()+"===");
 
                                 imagePath.add(bean.getImage_url());
-
                                 imageTitle.add(bean.getH5_title());
+
+                                String action_content = bean.getAction_content();
+                                if(action_content.contains("?")){
+                                    action_content += "&token="+access_token;
+                                }else{
+                                    action_content += "?token="+access_token;
+                                }
+                                urlPath.add(action_content);
                             }
 
                             mBanner.setBannerTitles(imageTitle);
@@ -299,9 +308,9 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
     public void OnBannerClick(int position) {
 //        Toast.makeText(context, "你点了第" + (position + 1) + "张轮播图", Toast.LENGTH_SHORT).show();
 
-        Log.e("pf===OnBannerClick", imageTitle.get(position)+"==="+imagePath.get(position));
+        Log.e("pf===OnBannerClick", imageTitle.get(position)+"==="+urlPath.get(position));
 
-        UIHelper.goWebViewAct(context, imageTitle.get(position), imagePath.get(position));
+        UIHelper.goWebViewAct(context, imageTitle.get(position), urlPath.get(position));
 //        initmPopupWindowView();
     }
 

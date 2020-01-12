@@ -120,13 +120,13 @@ public class ServiceCenterActivity extends SwipeBackActivity implements View.OnC
     }
 
     private void initHttp(){
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (access_token == null || "".equals(access_token)){
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+//        if (access_token == null || "".equals(access_token)){
+//            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
-        HttpHelper.get(context, Urls.phones, null, new TextHttpResponseHandler() {
+        HttpHelper.get2(context, Urls.phones, null, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 onStartCommon("正在加载");

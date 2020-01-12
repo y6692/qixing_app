@@ -165,6 +165,7 @@
 
             <RelativeLayout
                 android:visibility="gone"
+                android:id="@+id/unpay_other_rl_parking_location"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:orientation="horizontal"

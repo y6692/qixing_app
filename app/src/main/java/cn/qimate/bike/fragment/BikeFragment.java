@@ -450,7 +450,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         RequestParams params = new RequestParams();
 
-        HttpHelper.get(context, Urls.operating_areas, params, new TextHttpResponseHandler() {
+        HttpHelper.get2(context, Urls.operating_areas, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 if(!isHidden){
@@ -668,7 +668,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }else{
             RequestParams params = new RequestParams();
 
-            HttpHelper.get(context, Urls.parking_ranges, params, new TextHttpResponseHandler() {
+            HttpHelper.get2(context, Urls.parking_ranges, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
                     if(!isHidden){
@@ -1165,17 +1165,17 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    private void initNearby(final double latitude, final double longitude){
+    public void initNearby(final double latitude, final double longitude){
 
         if(isHidden) return;
 
-        Log.e("bf===initNearby0", latitude+"==="+longitude);
+        Log.e("bf===initNearby0", unauthorized_code+"==="+latitude+"==="+longitude);
 
         RequestParams params = new RequestParams();
         params.put("latitude", latitude);
         params.put("longitude", longitude);
 //        params.put("type", 1);
-        HttpHelper.get(context, Urls.car_nearby+"1/nearby", params, new TextHttpResponseHandler() {
+        HttpHelper.get2(context, Urls.car_nearby+"1/nearby", params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
 //                onStartCommon("正在加载");
@@ -1188,7 +1188,18 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //                MarkerOptions centerMarkerOption = new MarkerOptions();
 //                centerMarkerOption.position(myLocation).icons(iconList).period(2);
 
-                centerMarker.setMarkerOptions(centerMarkerOptionLoading);
+
+                if(centerMarker!=null){
+                    centerMarker.setMarkerOptions(centerMarkerOptionLoading);
+
+                    if(unauthorized_code==6){
+                        centerMarker.setAlpha(0);
+                    }else{
+                        centerMarker.setAlpha(255);
+                    }
+                }
+
+
 //                centerMarker.setIcon(iconList);
 //                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
 
@@ -1228,6 +1239,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                     centerMarker = aMap.addMarker(centerMarkerOption);
 
+                    if(unauthorized_code==6){
+                        centerMarker.setAlpha(0);
+                    }else{
+                        centerMarker.setAlpha(255);
+                    }
 
 //                    if (result.getFlag().equals("Success")) {
 //                        JSONArray array = new JSONArray(result.getData());
@@ -2803,6 +2819,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private void addChooseMarker() {
         // 加入自定义标签
 
+        Log.e("addChooseMarker===0", "==="+centerMarker);
+
         if(centerMarker == null){
 
             View view = View.inflate(context, R.layout.marker_info_layout, null);
@@ -2827,6 +2845,13 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             Log.e("addChooseMarker===", "==="+myLocation);
 
             centerMarker = aMap.addMarker(centerMarkerOption);
+
+            if(unauthorized_code==6){
+                centerMarker.setAlpha(0);
+            }else{
+                centerMarker.setAlpha(255);
+            }
+
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {

@@ -4,6 +4,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
 
+    <color name="text_border_focused">#FDB890</color>
 
     <color name="ui_backgroud">#f7f7f7</color>
     <color name="blue">#00c1f8</color>

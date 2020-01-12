@@ -271,6 +271,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private MyImageLoader mMyImageLoader;
     private ArrayList<String> imagePath;
     private ArrayList<String> imageTitle;
+    private ArrayList<String> urlPath;
 
     protected LoadingDialog loadingDialog2;
 
@@ -435,6 +436,17 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         macList2 = new ArrayList<>();
         initView();
 
+        String h5_title = activity.getIntent().getStringExtra("h5_title");
+        String action_content = activity.getIntent().getStringExtra("action_content");
+
+        Log.e("mf===onResume", h5_title+"==="+action_content+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+type);
+
+
+
+        if(h5_title!=null && !"".equals(h5_title)){
+            UIHelper.goWebViewAct(context, h5_title, action_content);
+        }
+
     }
 
     @Override
@@ -442,6 +454,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         super.onResume();
 
         boolean flag = activity.getIntent().getBooleanExtra("flag", false);
+
 
         Log.e("mf===onResume", flag+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+type);
 
@@ -453,6 +466,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
             activity.getIntent().putExtra("flag", false);
         }
+
+
+
     }
 
     public void car_authority() {
@@ -460,124 +476,130 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         Log.e("mf===car_authority", "==="+access_token);
 
-        if (access_token == null || "".equals(access_token)) {
-            ToastUtil.showMessageApp(context, "请先登录账号");
-            UIHelper.goToAct(context, LoginActivity.class);
-        } else {
-            HttpHelper.get(context, Urls.car_authority, new TextHttpResponseHandler() {
-                @Override
-                public void onStart() {
+        HttpHelper.get(context, Urls.car_authority, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
 //                    onStartCommon("正在加载");
-                }
-                @Override
-                public void onFailure(int statusCode, Header[] headers, final String responseString, Throwable throwable) {
-                    onFailureCommon("mf===car_authority", throwable.toString());
-                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, final String responseString, Throwable throwable) {
+                onFailureCommon("mf===car_authority", throwable.toString());
+            }
 
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
 
-                    try {
-                        Log.e("mf===car_authority1", "==="+responseString);
+                try {
+                    Log.e("mf===car_authority1", "==="+responseString);
 
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                        CarAuthorityBean bean = JSON.parseObject(result.getData(), CarAuthorityBean.class);
+                    CarAuthorityBean bean = JSON.parseObject(result.getData(), CarAuthorityBean.class);
 
-                        SharedPreferencesUrls.getInstance().putString("iscert", ""+bean.getUnauthorized_code());
+                    SharedPreferencesUrls.getInstance().putString("iscert", ""+bean.getUnauthorized_code());
 
-                        Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder());
+                    Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder());
 //                        Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder()+"==="+new JSONObject(bean.getOrder()).getInt("order_id"));
 
 //                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 5需要充值余额或购买骑行卡 6有进行中行程 7有待支付行程 8有待支付调度费 9有待支付赔偿费
-                        int unauthorized_code = bean.getUnauthorized_code();
+                    unauthorized_code = bean.getUnauthorized_code();
 
-                        rl_ad.setVisibility(View.VISIBLE);
-                        ll_top_biking.setVisibility(View.GONE);
-                        ll_top_pay.setVisibility(View.GONE);
-                        rl_authBtn.setVisibility(View.GONE);
-                        tv_authBtn.setText("");
+                    rl_ad.setVisibility(View.VISIBLE);
+                    ll_top_biking.setVisibility(View.GONE);
+                    ll_top_pay.setVisibility(View.GONE);
+                    rl_authBtn.setVisibility(View.GONE);
+                    tv_authBtn.setText("");
 
-                        if(unauthorized_code==0) {
-
-                        }else{
-                            if(unauthorized_code<6) {
-                                rl_authBtn.setVisibility(View.VISIBLE);
-                            }
-
-                            if(unauthorized_code==1) {
-                                tv_authBtn.setText("您还未登录，请点击进行登录！");
-                            }else if(unauthorized_code==2) {
-                                tv_authBtn.setText("您还未认证，请点击进行认证！");
-                            }else if(unauthorized_code==3) {
-                                tv_authBtn.setText("您处于认证中，请点击进行刷新！");
-                            }else if(unauthorized_code==4) {
-                                tv_authBtn.setText("您认证未通过，请点击重新认证！");
-                            }else if(unauthorized_code==5) {
-                                tv_authBtn.setText("您还未充值或购买套餐卡，请点击进行操作");
-                            }else if(unauthorized_code==6) {
-                                ll_top_navi.setVisibility(View.GONE);
-                                ll_top.setVisibility(View.VISIBLE);
-                                rl_ad.setVisibility(View.GONE);
-                                ll_top_biking.setVisibility(View.VISIBLE);
-
-                                order_id = new JSONObject(bean.getOrder()).getInt("order_id");
-
-                                Log.e("mf===car_authority3", ebikeInfoThread+"==="+order_id);
-
-                                if (ebikeInfoThread == null) {
-                                    cycling();
-                                    cyclingThread();
-                                }else{
-                                    cycling2();
-                                }
-
-                            }else if(unauthorized_code>=7){
-                                isWaitEbikeInfo = false;
-                                if (ebikeInfoThread != null) {
-                                    ebikeInfoThread.interrupt();
-                                    ebikeInfoThread = null;
-                                }
-
-                                ll_top_biking.setVisibility(View.GONE);
-                                ll_top_navi.setVisibility(View.GONE);
-                                ll_top.setVisibility(View.VISIBLE);
-                                rl_ad.setVisibility(View.GONE);
-                                ll_top_pay.setVisibility(View.VISIBLE);
-
-                                if(unauthorized_code==7){
-                                    order_type = 1;
-                                    tv_payBtn.setText("骑行支付");
-
-                                    cycling2();
-                                }else if(unauthorized_code==8 || unauthorized_code==9){
-                                    order_type = 3;
-
-                                    JSONObject jsonObject = new JSONObject(bean.getOrder());
-
-                                    tv_pay_codenum.setText(jsonObject.getString("car_number"));
-                                    tv_pay_car_start_time.setText(jsonObject.getString("car_start_time"));
-                                    tv_pay_car_end_time.setText(jsonObject.getString("car_end_time"));
-                                    tv_order_amount.setText(jsonObject.getString("order_amount"));
-
-                                    if(unauthorized_code==8){
-                                        tv_payBtn.setText("调度费支付");
-                                    }else{
-                                        tv_payBtn.setText("赔偿费支付");
-                                    }
-                                }
-
-                            }
-                        }
-
-                        Log.e("mf===car_authority3", unauthorized_code+"===");
-
-                    } catch (Exception e) {
-
-                        e.printStackTrace();
+                    if(!bikeFragment.isHidden()){
+                        bikeFragment.initNearby(referLatitude, referLongitude);
+                    }else{
+                        ebikeFragment.initNearby(referLatitude, referLongitude);
                     }
 
-                    closeLoadingDialog();
+
+                    if(unauthorized_code==0) {
+
+                    }else{
+                        if(unauthorized_code<6) {
+                            rl_authBtn.setVisibility(View.VISIBLE);
+                        }
+
+                        if(unauthorized_code==1) {
+                            tv_authBtn.setText("您还未登录，请点击进行登录！");
+                        }else if(unauthorized_code==2) {
+                            tv_authBtn.setText("您还未认证，请点击进行认证！");
+                        }else if(unauthorized_code==3) {
+                            tv_authBtn.setText("您处于认证中，请点击进行刷新！");
+                        }else if(unauthorized_code==4) {
+                            tv_authBtn.setText("您认证未通过，请点击重新认证！");
+                        }else if(unauthorized_code==5) {
+                            tv_authBtn.setText("您还未充值或购买套餐卡，请点击进行操作");
+                        }else if(unauthorized_code==6) {
+                            ll_top_navi.setVisibility(View.GONE);
+                            ll_top.setVisibility(View.VISIBLE);
+                            rl_ad.setVisibility(View.GONE);
+                            ll_top_biking.setVisibility(View.VISIBLE);
+
+
+//                                centerMarker
+
+                            order_id = new JSONObject(bean.getOrder()).getInt("order_id");
+
+                            Log.e("mf===car_authority3", ebikeInfoThread+"==="+order_id);
+
+                            if (ebikeInfoThread == null) {
+                                cycling();
+                                cyclingThread();
+                            }else{
+                                cycling2();
+                            }
+
+                        }else if(unauthorized_code>=7){
+                            isWaitEbikeInfo = false;
+                            if (ebikeInfoThread != null) {
+                                ebikeInfoThread.interrupt();
+                                ebikeInfoThread = null;
+                            }
+
+                            ll_top_biking.setVisibility(View.GONE);
+                            ll_top_navi.setVisibility(View.GONE);
+                            ll_top.setVisibility(View.VISIBLE);
+                            rl_ad.setVisibility(View.GONE);
+                            ll_top_pay.setVisibility(View.VISIBLE);
+
+                            if(unauthorized_code==7){
+                                order_type = 1;
+                                tv_payBtn.setText("骑行支付");
+
+                                cycling2();
+                            }else if(unauthorized_code==8 || unauthorized_code==9){
+                                order_type = 3;
+
+                                JSONObject jsonObject = new JSONObject(bean.getOrder());
+
+                                tv_pay_codenum.setText(jsonObject.getString("car_number"));
+                                tv_pay_car_start_time.setText(jsonObject.getString("car_start_time"));
+                                tv_pay_car_end_time.setText(jsonObject.getString("car_end_time"));
+                                tv_order_amount.setText(jsonObject.getString("order_amount"));
+
+                                if(unauthorized_code==8){
+                                    tv_payBtn.setText("调度费支付");
+                                }else{
+                                    tv_payBtn.setText("赔偿费支付");
+                                }
+                            }
+
+                        }
+                    }
+
+                    Log.e("mf===car_authority4", unauthorized_code+"===");
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+
+                closeLoadingDialog();
 
 //                    m_myHandler.post(new Runnable() {
 //                        @Override
@@ -586,11 +608,19 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //
 //                        }
 //                    });
-                }
+            }
 
-            });
+        });
 
-        }
+
+
+//        if (access_token == null || "".equals(access_token)) {
+//            ToastUtil.showMessageApp(context, "请先登录账号");
+//            UIHelper.goToAct(context, LoginActivity.class);
+//        } else {
+//
+//
+//        }
     }
 
     public void car_authority2() {
@@ -598,152 +628,155 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         Log.e("mf===car_authority2", "==="+access_token);
 
-        if (access_token == null || "".equals(access_token)) {
-            ToastUtil.showMessageApp(context, "请先登录账号");
-            UIHelper.goToAct(context, LoginActivity.class);
-        } else {
-            HttpHelper.get(context, Urls.car_authority, new TextHttpResponseHandler() {
-                @Override
-                public void onStart() {
-                    onStartCommon("正在加载");
-                }
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    onFailureCommon("mf===car_authority2", throwable.toString());
-                }
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-                        Log.e("mf===car_authority21", "==="+responseString);
+        HttpHelper.get(context, Urls.car_authority, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon("mf===car_authority2", throwable.toString());
+            }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    Log.e("mf===car_authority21", "==="+responseString);
 
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                        CarAuthorityBean bean = JSON.parseObject(result.getData(), CarAuthorityBean.class);
-
-                        closeLoadingDialog();
-
-                        SharedPreferencesUrls.getInstance().putString("iscert", ""+bean.getUnauthorized_code());
-
-                        Log.e("mf===car_authority22", bean.getUnauthorized_code()+"==="+bean.getOrder());
-//                        Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder()+"==="+new JSONObject(bean.getOrder()).getInt("order_id"));
-
-//                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 5需要充值余额或购买骑行卡 6有进行中行程 7有待支付行程 8有待支付调度费 9有待支付赔偿费
-                        int unauthorized_code = bean.getUnauthorized_code();
-
-                        switch (unauthorized_code){
-
-                            case 0:
-                                if (Build.VERSION.SDK_INT >= 23) {
-                                    int checkPermission = activity.checkSelfPermission(Manifest.permission.CAMERA);
-                                    if (checkPermission != PERMISSION_GRANTED) {
-//                                    flag = 1;
-
-                                        if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                                            requestPermissions(new String[] { Manifest.permission.CAMERA }, 100);
-                                        } else {
-                                            CustomDialog.Builder customBuilder1 = new CustomDialog.Builder(context);
-                                            customBuilder1.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
-                                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                            dialog.cancel();
-                                                        }
-                                                    }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
-                                                    requestPermissions(
-                                                            new String[] { Manifest.permission.CAMERA },
-                                                            100);
-                                                }
-                                            });
-                                            customBuilder1.create().show();
-                                        }
-//                                    if (loadingDialog1 != null && loadingDialog1.isShowing()){
-//                                        loadingDialog1.dismiss();
-//                                    }
-                                        return;
-                                    }
-                                }
-
-
-                                if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                                    ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-                                    popupwindow.dismiss();
-                                }
-
-                                BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
-                                mBluetoothAdapter = bluetoothManager.getAdapter();
-
-                                if (mBluetoothAdapter == null) {
-                                    ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                                    popupwindow.dismiss();
-                                    return;
-                                }
-                                if (!mBluetoothAdapter.isEnabled()) {
-                                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                                    startActivityForResult(enableBtIntent, 188);
-                                } else {
-                                    try {
-//                                      closeBroadcast();
-//                                      deactivate();
-
-                                        Intent intent = new Intent();
-                                        intent.setClass(context, ActivityScanerCode.class);
-//                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
-
-                                    } catch (Exception e) {
-                                        UIHelper.showToastMsg(context, "相机打开失败,请检查相机是否可正常使用", R.drawable.ic_error);
-                                    }
-                                }
-
-
-                                break;
-
-                            case 1:
-                                ToastUtil.showMessageApp(context,"您还未登录");
-//                                UIHelper.goToAct(context, RealNameAuthActivity.class);
-                                break;
-                            case 2:
-                                ToastUtil.showMessageApp(context,"您还未认证");
-//                                UIHelper.goToAct(context, RealNameAuthActivity.class);
-                                break;
-                            case 3:
-                                ToastUtil.showMessageApp(context,"您处于认证中");
-                                break;
-                            case 4:
-                                ToastUtil.showMessageApp(context,"您认证未通过");
-//                                UIHelper.goToAct(context,RealNameAuthActivity.class);
-                                break;
-                            case 5:
-                                ToastUtil.showMessageApp(context,"您还未充值或购买套餐卡");
-                                break;
-                            case 6:
-                                ToastUtil.showMessageApp(context,"您有进行中的行程");
-                                break;
-                            case 7:
-                                ToastUtil.showMessageApp(context,"您有待支付的行程");
-                                break;
-                            case 8:
-                                ToastUtil.showMessageApp(context,"您有待支付的调度费");
-                                break;
-                            case 9:
-                                ToastUtil.showMessageApp(context,"您有待支付的赔偿费");
-                                break;
-                        }
-
-
-                    } catch (Exception e) {
-
-                        e.printStackTrace();
-                    }
+                    CarAuthorityBean bean = JSON.parseObject(result.getData(), CarAuthorityBean.class);
 
                     closeLoadingDialog();
 
+                    SharedPreferencesUrls.getInstance().putString("iscert", ""+bean.getUnauthorized_code());
+
+                    Log.e("mf===car_authority22", bean.getUnauthorized_code()+"==="+bean.getOrder());
+//                        Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder()+"==="+new JSONObject(bean.getOrder()).getInt("order_id"));
+
+//                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 5需要充值余额或购买骑行卡 6有进行中行程 7有待支付行程 8有待支付调度费 9有待支付赔偿费
+                    unauthorized_code = bean.getUnauthorized_code();
+
+                    switch (unauthorized_code){
+
+                        case 0:
+                            if (Build.VERSION.SDK_INT >= 23) {
+                                int checkPermission = activity.checkSelfPermission(Manifest.permission.CAMERA);
+                                if (checkPermission != PERMISSION_GRANTED) {
+//                                    flag = 1;
+
+                                    if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                                        requestPermissions(new String[] { Manifest.permission.CAMERA }, 100);
+                                    } else {
+                                        CustomDialog.Builder customBuilder1 = new CustomDialog.Builder(context);
+                                        customBuilder1.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.cancel();
+                                                    }
+                                                }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                                requestPermissions(
+                                                        new String[] { Manifest.permission.CAMERA },
+                                                        100);
+                                            }
+                                        });
+                                        customBuilder1.create().show();
+                                    }
+//                                    if (loadingDialog1 != null && loadingDialog1.isShowing()){
+//                                        loadingDialog1.dismiss();
+//                                    }
+                                    return;
+                                }
+                            }
+
+
+                            if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+                                popupwindow.dismiss();
+                            }
+
+                            BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
+                            mBluetoothAdapter = bluetoothManager.getAdapter();
+
+                            if (mBluetoothAdapter == null) {
+                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                                popupwindow.dismiss();
+                                return;
+                            }
+                            if (!mBluetoothAdapter.isEnabled()) {
+                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                                startActivityForResult(enableBtIntent, 188);
+                            } else {
+                                try {
+//                                      closeBroadcast();
+//                                      deactivate();
+
+                                    Intent intent = new Intent();
+                                    intent.setClass(context, ActivityScanerCode.class);
+//                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+
+                                } catch (Exception e) {
+                                    UIHelper.showToastMsg(context, "相机打开失败,请检查相机是否可正常使用", R.drawable.ic_error);
+                                }
+                            }
+
+
+                            break;
+
+                        case 1:
+                            ToastUtil.showMessageApp(context,"您还未登录");
+//                                UIHelper.goToAct(context, RealNameAuthActivity.class);
+                            break;
+                        case 2:
+                            ToastUtil.showMessageApp(context,"您还未认证");
+//                                UIHelper.goToAct(context, RealNameAuthActivity.class);
+                            break;
+                        case 3:
+                            ToastUtil.showMessageApp(context,"您处于认证中");
+                            break;
+                        case 4:
+                            ToastUtil.showMessageApp(context,"您认证未通过");
+//                                UIHelper.goToAct(context,RealNameAuthActivity.class);
+                            break;
+                        case 5:
+                            ToastUtil.showMessageApp(context,"您还未充值或购买套餐卡");
+                            break;
+                        case 6:
+                            ToastUtil.showMessageApp(context,"您有进行中的行程");
+                            break;
+                        case 7:
+                            ToastUtil.showMessageApp(context,"您有待支付的行程");
+                            break;
+                        case 8:
+                            ToastUtil.showMessageApp(context,"您有待支付的调度费");
+                            break;
+                        case 9:
+                            ToastUtil.showMessageApp(context,"您有待支付的赔偿费");
+                            break;
+                    }
+
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
                 }
 
-            });
+                closeLoadingDialog();
 
-        }
+            }
+
+        });
+
+
+//        if (access_token == null || "".equals(access_token)) {
+//            ToastUtil.showMessageApp(context, "请先登录账号");
+//            UIHelper.goToAct(context, LoginActivity.class);
+//        } else {
+//
+//
+//        }
     }
 
     private void cyclingThread() {
@@ -1250,6 +1283,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private void cycling3() {
         Log.e("mf===cycling3", "===");
 
+        if (access_token == null || "".equals(access_token)){
+            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context, LoginActivity.class);
+            return;
+        }
+
         HttpHelper.get(context, Urls.cycling, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -1341,12 +1380,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             }
 
                         } catch (Exception e) {
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
                         }
 
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
-                        }
+
 
                     }
                 });
@@ -1639,6 +1680,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         imagePath = new ArrayList<>();
         imageTitle = new ArrayList<>();
+        urlPath = new ArrayList<>();
 
         mMyImageLoader = new MyImageLoader();
         mBanner = activity.findViewById(R.id.banner);
@@ -1673,9 +1715,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     public void OnBannerClick(int position) {
 //        Toast.makeText(context, "你点了第" + (position + 1) + "张轮播图", Toast.LENGTH_SHORT).show();
 
-        Log.e("OnBannerClick===", imageTitle.get(position)+"==="+imagePath.get(position));
+        Log.e("OnBannerClick===", imageTitle.get(position)+"==="+urlPath.get(position));
 
-        UIHelper.goWebViewAct(context, imageTitle.get(position), imagePath.get(position));
+        UIHelper.goWebViewAct(context, imageTitle.get(position), urlPath.get(position));
 
 //        initmPopupWindowView();
     }
@@ -1683,7 +1725,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private void banner() {
         Log.e("mf===banner", "===" + codenum);
 
-        HttpHelper.get(context, Urls.banner + 3, new TextHttpResponseHandler() {
+        HttpHelper.get2(context, Urls.banner + 3, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 onStartCommon("正在加载");
@@ -1714,8 +1756,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                                Log.e("mf===banner2", bean.getImage_url()+"===");
 
                                 imagePath.add(bean.getImage_url());
-
                                 imageTitle.add(bean.getH5_title());
+
+                                String action_content = bean.getAction_content();
+                                if(action_content.contains("?")){
+                                    action_content+="&token="+access_token;
+                                }else{
+                                    action_content+="?token="+access_token;
+                                }
+                                urlPath.add(action_content);
+//                                urlPath.add(URLEncoder.encode(action_content));
 //                                imageTitle.add("");
                             }
 
@@ -2481,7 +2531,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     carInfo_close();
                 }else if ("再次开锁".equals(tvAgain)){
 //                    car_can_unlock();
-                    carInfo_open();
+
+                    if(carmodel_id==2){
+                        carInfo_open();
+                    }else{
+                        car_can_unlock();
+                    }
 
                 }
 
@@ -2506,11 +2561,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             case R.id.mainUI_scanCode_lock:
                 Log.e("scanCode_lock===mf", SharedPreferencesUrls.getInstance().getString("iscert","")+"==="+access_token);
 
-                if (access_token == null || "".equals(access_token)){
-                    ToastUtil.showMessageApp(context,"请先登录账号");
-                    UIHelper.goToAct(context,LoginActivity.class);
-                    return;
-                }
+//                if (access_token == null || "".equals(access_token)){
+//                    ToastUtil.showMessageApp(context,"请先登录账号");
+//                    UIHelper.goToAct(context,LoginActivity.class);
+//                    return;
+//                }
 
                 car_authority2();
 
@@ -2556,11 +2611,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         Log.e("biking_endBtn===", type+"==="+major+"==="+isContainsList.contains(true)+"==="+referLatitude+"==="+referLongitude);
 
-        if (loadingDialog != null && !loadingDialog.isShowing()){
-//                        loadingDialog.setTitle("还车点确认中");
-            loadingDialog.setTitle("正在还车中，请勿离开");
-            loadingDialog.show();
-        }
+//        if (loadingDialog != null && !loadingDialog.isShowing()){
+//            loadingDialog.setTitle("正在还车中，请勿离开");
+//            loadingDialog.show();
+//        }
+
+        loadingDialog.setTitle("正在还车中，请勿离开");
+        loadingDialog.show();
 
         if(major !=0){
             queryState();
@@ -2570,7 +2627,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             startXB();
 
             if(!isContainsList.contains(true)){
-                minPoint(referLatitude, referLongitude);
+                minPoint(referLatitude, referLongitude);    //30米补偿
             }
 
             new Thread(new Runnable() {
@@ -2628,10 +2685,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             JSONObject jsonObject = new JSONObject(result.getData());
 
-
                             SharedPreferencesUrls.getInstance().putString("type", type);
-
-
 
                             order_id2 = jsonObject.getInt("order_id");
                             oid = jsonObject.getString("order_sn");
@@ -2949,7 +3003,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         Log.e("minPoint===2", s+"==="+dis);
 
-        if(!isContainsList.contains(true) && dis < 30){
+        if(!isContainsList.contains(true) && dis < 30){     //30米
             isContainsList.add(true);
         }
 
@@ -3830,7 +3884,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             Intent intent = new Intent(context, SettlementPlatformActivity.class);
             intent.putExtra("order_type", order_type);
             intent.putExtra("order_id", order_id);
-            startActivity(intent);
+            startActivityForResult(intent, 11);
         }
 
 
@@ -5311,7 +5365,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             if (apiClient != null) {
                 apiClient.onDestroy();
             }
-        }else{
+        }else if("2".equals(type) || "3".equals(type)){
             BaseApplication.getInstance().getIBLE().stopScan();
             BaseApplication.getInstance().getIBLE().refreshCache();
             BaseApplication.getInstance().getIBLE().close();
@@ -5330,8 +5384,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         if (mapView != null) {
             mapView.onDestroy();
         }
-
-
 
         if (broadcastReceiver2 != null) {
             activity.unregisterReceiver(broadcastReceiver2);
@@ -6926,6 +6978,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         }
 
                         Log.e("requestCode===1", "==="+resultCode);
+                        break;
+
+                    case 11:
+                        car_authority();
                         break;
 
                     case PRIVATE_CODE:

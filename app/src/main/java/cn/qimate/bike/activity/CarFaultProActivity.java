@@ -300,6 +300,13 @@ public class CarFaultProActivity extends SwipeBackActivity implements View.OnCli
     });
 
     private void submit(){
+
+        if (access_token == null || "".equals(access_token)){
+            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context, LoginActivity.class);
+            scrollToFinishActivity();
+        }
+
         String bikeCode = bikeCodeEdit.getText().toString().trim();
 
         if (bikeCode == null || "".equals(bikeCode)){

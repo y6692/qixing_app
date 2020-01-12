@@ -57,41 +57,41 @@ public class SwipeBackActivity extends BaseFragmentActivity implements SwipeBack
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 //		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
-		mHelper = new SwipeBackActivityHelper(this);
-		mHelper.onActivityCreate();
-		// 修改状态栏颜色，4.4+生效
-//		if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
-//			// 透明状态栏
-//			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//			// 透明导航栏
-////			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//		}
-
-		mSwipeBackLayout = getSwipeBackLayout();
-		mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-
-		getSwipeBackLayout().addSwipeListener(new SwipeBackLayout.SwipeListener() {
-			@Override
-			public void onScrollStateChange(int state, float scrollPercent) {
-
-			}
-
-			@Override
-			public void onEdgeTouch(int edgeFlag) {
-				vibrate(VIBRATE_DURATION);
-			}
-
-			@Override
-			public void onScrollOverThreshold() {
-				vibrate(VIBRATE_DURATION);
-			}
-		});
+//		mHelper = new SwipeBackActivityHelper(this);
+//		mHelper.onActivityCreate();
+//		// 修改状态栏颜色，4.4+生效
+////		if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
+////			// 透明状态栏
+////			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+////			// 透明导航栏
+//////			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+////		}
+//
+//		mSwipeBackLayout = getSwipeBackLayout();
+//		mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
+//
+//		getSwipeBackLayout().addSwipeListener(new SwipeBackLayout.SwipeListener() {
+//			@Override
+//			public void onScrollStateChange(int state, float scrollPercent) {
+//
+//			}
+//
+//			@Override
+//			public void onEdgeTouch(int edgeFlag) {
+//				vibrate(VIBRATE_DURATION);
+//			}
+//
+//			@Override
+//			public void onScrollOverThreshold() {
+//				vibrate(VIBRATE_DURATION);
+//			}
+//		});
 	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		mHelper.onPostCreate();
+//		mHelper.onPostCreate();
 	}
 
 	@Override

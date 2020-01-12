@@ -22,7 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.tuo.customview.VerificationCodeView;
+import com.xylitolz.androidverificationcode.view.VerificationCodeView;
 
 import org.apache.http.Header;
 
@@ -129,17 +129,17 @@ public class NoteChangePhoneActivity extends SwipeBackActivity implements View.O
         icv.setInputCompleteListener(new VerificationCodeView.InputCompleteListener() {
             @Override
             public void inputComplete() {
-                Log.e("icv_input", icv.getInputContent()+"===");
+                Log.e("icv_input===", icv.getContent()+"===");
 
-                if(icv.getInputContent().length()==6){
-                    change_phone(icv.getInputContent());
+                if(icv.getContent().length()==6){
+                    change_phone(icv.getContent());
                 }
 
             }
 
             @Override
             public void deleteContent() {
-                Log.e("icv_delete", icv.getInputContent());
+                Log.e("icv_delete===", icv.getContent());
             }
         });
 

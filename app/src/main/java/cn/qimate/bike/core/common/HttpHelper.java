@@ -79,7 +79,21 @@ public class HttpHelper {
 		client.get(context, url, responseHandler);
 	}
 
+	public static void get2(Context context, String url, AsyncHttpResponseHandler responseHandler) {
 
+
+//		try {
+//			url = url + "&act=1&platform=Android&version="
+//					+ context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+//		} catch (NameNotFoundException e) {
+//			e.printStackTrace();
+//		}
+
+
+		addHeader2(context);
+
+		client.get(context, url, responseHandler);
+	}
 
 	/**
 	 * get请求
@@ -105,9 +119,34 @@ public class HttpHelper {
 		client.get(context, url, params, responseHandler);
 	}
 
+	public static void get2(Context context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+//		try {
+//			url = url + "&act=1&platform=Android&version="
+//					+ context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+//		} catch (NameNotFoundException e) {
+//			e.printStackTrace();
+//		}
+
+
+		addHeader2(context);
+
+		Log.e("params===get", url+"?"+params);
+
+		client.get(context, url, params, responseHandler);
+	}
+
 	public static void post(Context context, String url, AsyncHttpResponseHandler responseHandler) {
 
 		addHeader(context);
+
+
+
+		client.post(context, url, responseHandler);
+	}
+
+	public static void post2(Context context, String url, AsyncHttpResponseHandler responseHandler) {
+
+		addHeader2(context);
 
 
 

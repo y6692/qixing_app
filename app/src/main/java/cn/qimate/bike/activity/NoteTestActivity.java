@@ -7,8 +7,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 
+import com.xylitolz.androidverificationcode.view.VerificationCodeView;
+
 import cn.qimate.bike.R;
-import com.tuo.customview.VerificationCodeView;
 
 
 public class NoteTestActivity extends AppCompatActivity {
@@ -27,46 +28,46 @@ public class NoteTestActivity extends AppCompatActivity {
         final VerificationCodeView codeView = new VerificationCodeView(this);
 
 
-        content.addView(codeView);
+//        content.addView(codeView);
 
-        icv.setInputCompleteListener(new VerificationCodeView.InputCompleteListener() {
-            @Override
-            public void inputComplete() {
-                Log.i("icv_input", icv.getInputContent());
-            }
-
-            @Override
-            public void deleteContent() {
-                Log.i("icv_delete", icv.getInputContent());
-            }
-        });
-
-
-        codeView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                codeView.setEtNumber(5);
-            }
-        }, 5000);
-
-
-
-        codeView.setInputCompleteListener(new VerificationCodeView.InputCompleteListener() {
-            @Override
-            public void inputComplete() {
-                Log.i("icv_input", codeView.getInputContent());
-            }
-
-            @Override
-            public void deleteContent() {
-                Log.i("icv_delete", codeView.getInputContent());
-            }
-        });
+//        icv.setInputCompleteListener(new VerificationCodeView.InputCompleteListener() {
+//            @Override
+//            public void inputComplete() {
+//                Log.i("icv_input", icv.getInputContent());
+//            }
+//
+//            @Override
+//            public void deleteContent() {
+//                Log.i("icv_delete", icv.getInputContent());
+//            }
+//        });
+//
+//
+//        codeView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                codeView.setEtNumber(5);
+//            }
+//        }, 5000);
+//
+//
+//
+//        codeView.setInputCompleteListener(new VerificationCodeView.InputCompleteListener() {
+//            @Override
+//            public void inputComplete() {
+//                Log.i("icv_input", codeView.getInputContent());
+//            }
+//
+//            @Override
+//            public void deleteContent() {
+//                Log.i("icv_delete", codeView.getInputContent());
+//            }
+//        });
 
 
     }
 
     public void onClick(View view) {
-        icv.clearInputContent();
+//        icv.clearInputContent();
     }
 }

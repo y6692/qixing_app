@@ -2,8 +2,6 @@ package cn.qimate.bike.full;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,16 +16,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,50 +31,33 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.sunshine.blelibrary.config.Config;
-import com.sunshine.blelibrary.config.LockType;
-import com.sunshine.blelibrary.utils.GlobalParameterUtils;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.CrashHandler;
-import cn.qimate.bike.activity.Main2Activity;
-import cn.qimate.bike.activity.Main3Activity;
-import cn.qimate.bike.activity.Main4Activity;
 import cn.qimate.bike.activity.MainActivity;
-import cn.qimate.bike.activity.MyMessageActivity;
-import cn.qimate.bike.activity.WebActivity;
 import cn.qimate.bike.base.BaseActivity;
-import cn.qimate.bike.base.BaseApplication;
-import cn.qimate.bike.base.BaseFragmentActivity;
 import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.Md5Helper;
 import cn.qimate.bike.core.common.NetworkUtils;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
-import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.model.BannerBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.util.ToastUtil;
 
-import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
-
 @SuppressLint("NewApi")
-public class SplashActivity extends BaseActivity implements View.OnClickListener{
+public class Splash2Activity extends BaseActivity implements View.OnClickListener{
 
 	public static boolean isForeground = false;
 
@@ -120,7 +95,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
-		setContentView(R.layout.main_enter);
+		setContentView(R.layout.main_enter2);
 		context = this;
 
 		isForeground = true;
@@ -129,26 +104,24 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 
 		CrashHandler.getInstance().init(this);
 
-//		if (SharedPreferencesUrls.getInstance().getBoolean("isStop", true)) {
-//			SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
-//		}
-//		if ("".equals(SharedPreferencesUrls.getInstance().getString("m_nowMac", ""))) {
-//			SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
-//			SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
-//		}
+		if (SharedPreferencesUrls.getInstance().getBoolean("isStop", true)) {
+			SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
+		}
+		if ("".equals(SharedPreferencesUrls.getInstance().getString("m_nowMac", ""))) {
+			SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
+			SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
+		}
 
-		handler.sendEmptyMessageDelayed(0, 2000);
+		ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + "===" + SharedPreferencesUrls.getInstance().getString("m_nowMac", ""));
 
-//		ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + "===" + SharedPreferencesUrls.getInstance().getString("m_nowMac", ""));
-//
-//		loadingImage = findViewById(R.id.plash_loading_main);
-//		skipLayout = findViewById(R.id.plash_loading_skipLayout);
-//		skipTime = findViewById(R.id.plash_loading_skipTime);
-//
-//		loadingImage.setOnClickListener(this);
-//
-//		initHttp();
-//		init();
+		loadingImage = findViewById(R.id.plash_loading_main);
+		skipLayout = findViewById(R.id.plash_loading_skipLayout);
+		skipTime = findViewById(R.id.plash_loading_skipTime);
+
+		loadingImage.setOnClickListener(this);
+
+		initHttp();
+		init();
 
 	}
 
@@ -156,16 +129,19 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 	protected void onResume() {
 		isForeground = true;
 		super.onResume();
-//		JPushInterface.onResume(this);
-//
-//		Log.e("splash===onResume", "===");
-//
-//		if(isStop == true && isEnd == true){
-//			isStop = false;
-//			isEnd = false;
-//
-//			handler.sendEmptyMessageDelayed(0, 900);
-//		}
+		JPushInterface.onResume(this);
+
+		Log.e("splash===onResume", "===");
+
+//		m_myHandler = new Handler();
+//		myhandler = new Myhandler();
+
+		if(isStop == true && isEnd == true){
+			isStop = false;
+			isEnd = false;
+
+			handler.sendEmptyMessageDelayed(0, 900);
+		}
 
 //		m_myHandler.sendEmptyMessage(0);
 //		m_myHandler.sendEmptyMessageDelayed(0, 900);
@@ -257,7 +233,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 
 			}
 		});
-		handler.sendEmptyMessageDelayed(0, 900);
+
 
 
 
@@ -267,51 +243,49 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 
 	private void tz(){
 
-		UIHelper.goToAct(context, Splash2Activity.class);
-		finishMine();
 
-//		if(!isStop && !isEnd){
+		if(!isStop && !isEnd){
+
+			isStop = true;
+			isEnd = true;
+
+			Log.e("splash===init", isAdv+"==="+getVersion()+"==="+SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)+"==="+SharedPreferencesUrls.getInstance().getInt("version", 0));
+
+
+
+			synchronized(ss){
+
+				skipLayout.setEnabled(false);
+//				UIHelper.goToAct(context, MainActivity.class);
+
+				Intent intent = new Intent(context, MainActivity.class);
+				if(isAdv){
+					intent.putExtra("h5_title", h5_title);
+					intent.putExtra("action_content", action_content);
+				}
+
+				startActivity(intent);
+
+				ToastUtil.showMessage(this,  "===111" );
+
+				finishMine();
+
+//				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+//					UIHelper.goToAct(context, MainActivity.class);
 //
-//			isStop = true;
-//			isEnd = true;
+//					ToastUtil.showMessage(this,  "===111" );
+//				} else {
+//					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+//					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+//					UIHelper.goToAct(context, EnterActivity.class);
 //
-//			Log.e("splash===init", isAdv+"==="+getVersion()+"==="+SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)+"==="+SharedPreferencesUrls.getInstance().getInt("version", 0));
-//
-//
-//
-//			synchronized(ss){
-//
-//				skipLayout.setEnabled(false);
-////				UIHelper.goToAct(context, MainActivity.class);
-//
-//				Intent intent = new Intent(context, MainActivity.class);
-//				if(isAdv){
-//					intent.putExtra("h5_title", h5_title);
-//					intent.putExtra("action_content", action_content);
+//					ToastUtil.showMessage(this,  "===222" );
 //				}
-//
-//				startActivity(intent);
-//
-//				ToastUtil.showMessage(this,  "===111" );
-//
-//				finishMine();
-//
-////				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-////					UIHelper.goToAct(context, MainActivity.class);
-////
-////					ToastUtil.showMessage(this,  "===111" );
-////				} else {
-////					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-////					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-////					UIHelper.goToAct(context, EnterActivity.class);
-////
-////					ToastUtil.showMessage(this,  "===222" );
-////				}
-//			}
-//
-////			UIHelper.goToAct(context, InterstitialActivity.class);
-//
-//		}
+			}
+
+//			UIHelper.goToAct(context, InterstitialActivity.class);
+
+		}
 
 
 	}
@@ -364,14 +338,14 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 
 //		handler.removeCallbacksAndMessages(null);
 
-//		unregisterReceiver(mMessageReceiver);
-//
-//		stopLocation();
-//
-//		isStop = true;
-//		isEnd = true;
-//
-//		handler.removeMessages(0);
+		unregisterReceiver(mMessageReceiver);
+
+		stopLocation();
+
+		isStop = true;
+		isEnd = true;
+
+		handler.removeMessages(0);
 
 //		if (runnable != null) {
 //			handler.removeCallbacks(runnable);
@@ -395,20 +369,20 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 
 	private static class MainHandler extends Handler {
 //		class MainHandler extends Handler {
-		WeakReference<SplashActivity> softReference;
+		WeakReference<Splash2Activity> softReference;
 
-		public MainHandler(SplashActivity activity) {
-			softReference = new WeakReference<SplashActivity>(activity);
+		public MainHandler(Splash2Activity activity) {
+			softReference = new WeakReference<Splash2Activity>(activity);
 		}
 
 		@Override
 		public void handleMessage(Message mes) {
-			SplashActivity splashActivity = softReference.get();
+			Splash2Activity splashActivity = softReference.get();
 
 			switch (mes.what) {
 				case 0:
 //					time();
-					splashActivity.tz();
+					splashActivity.time();
 					break;
 				default:
 					break;
@@ -547,7 +521,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 	private void initHttp() {
 		Log.e("sa===banner", "===");
 
-		HttpHelper.get(context, Urls.banner + 1, new TextHttpResponseHandler() {
+		HttpHelper.get2(context, Urls.banner + 1, new TextHttpResponseHandler() {
 			@Override
 			public void onStart() {
 				onStartCommon("正在加载");
@@ -595,6 +569,10 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 									// 加载图片
 									Glide.with(context).load(imageUrl).into(loadingImage);
 								}
+
+								skipLayout.setVisibility(View.VISIBLE);
+								handler.sendEmptyMessageDelayed(0, 900);
+
 							}
 
 //                            mBanner.setBannerTitles(imageTitle);
@@ -680,7 +658,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 					}
 
 				} else {
-					CustomDialog.Builder customBuilder = new CustomDialog.Builder(SplashActivity.this);
+					CustomDialog.Builder customBuilder = new CustomDialog.Builder(Splash2Activity.this);
 					customBuilder.setType(3).setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
 							.setNegativeButton("取消", new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {

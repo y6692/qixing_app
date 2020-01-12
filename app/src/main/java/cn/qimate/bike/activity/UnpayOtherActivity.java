@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +48,8 @@ public class UnpayOtherActivity extends SwipeBackActivity implements View.OnClic
     private TextView tv_unpay_other_parking_location;
     private TextView tv_unpay_other_remark;
 
+    private RelativeLayout rl_parking_location;
+
     private int order_id;
     private String order_amount;
     private int order_type;
@@ -75,9 +78,8 @@ public class UnpayOtherActivity extends SwipeBackActivity implements View.OnClic
         tv_unpay_other_car_end_time = (TextView)findViewById(R.id.tv_unpay_other_car_end_time);
         tv_unpay_other_parking_location = (TextView)findViewById(R.id.tv_unpay_other_parking_location);
         tv_unpay_other_remark = (TextView)findViewById(R.id.tv_unpay_other_remark);
+        rl_parking_location = (RelativeLayout)findViewById(R.id.unpay_other_rl_parking_location);
         submitBtn = (LinearLayout)findViewById(R.id.unpay_other_submitBtn);
-
-
 
         backImg.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
@@ -135,9 +137,11 @@ public class UnpayOtherActivity extends SwipeBackActivity implements View.OnClic
                                 if(bean.getType()==1){
                                     tv_title.setText("待支付调度费");
                                     tv_title2.setText("您需要支付车辆调度费");
+                                    rl_parking_location.setVisibility(View.VISIBLE);
                                 }else{
                                     tv_title.setText("待支付赔偿费");
                                     tv_title2.setText("您需要支付车辆赔偿费");
+                                    rl_parking_location.setVisibility(View.GONE);
                                 }
 
                             }

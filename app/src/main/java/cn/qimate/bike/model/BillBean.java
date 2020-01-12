@@ -2,21 +2,21 @@ package cn.qimate.bike.model;
 
 public class BillBean {
 	private int order_id;	//订单id
-	private String order_sn;	//订单编号
-	private String created_at;	//订单创建时间
+	private String order_sn = "";	//订单编号
+	private String created_at = "";	//订单创建时间
 	private int car_type;	//订单车辆类型 1单车 2助力车
-	private String order_amount;	//订单金额
+	private String order_amount = "";	//订单金额
 	private int order_state;	//订单状态 0已取消 10已下单 20进行中 30待支付 40已完成
 	private int payment_id;	//支付方式ID
-	private String payment_name;	//支付方式名称
-	private String payment_time;	//支付时间
-	private String car_number;	//车辆编号
-	private String car_start_time;	//开始时间
-	private String car_end_time;	//结束时间
-	private String price;	//骑行起步价
-	private String continued_price;	//骑行后续价
-	private String cycling_time;	//骑行时间
-	private String each_free_time;	//每次免费时长
+	private String payment_name = "";	//支付方式名称
+	private String payment_time = "";	//支付时间
+	private String car_number = "";	//车辆编号
+	private String car_start_time = "";	//开始时间
+	private String car_end_time = "";	//结束时间
+	private String price = "";	//骑行起步价
+	private String continued_price = "";	//骑行后续价
+	private String cycling_time = "";	//骑行时间
+	private String each_free_time = "";	//每次免费时长
 	private int order_type;	//订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单
 
 	public int getOrder_id() {

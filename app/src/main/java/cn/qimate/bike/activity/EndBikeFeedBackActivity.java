@@ -276,9 +276,6 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         ll_bike_fault = (LinearLayout)findViewById(R.id.ll_bike_fault);
         ll_ebike_fault = (LinearLayout)findViewById(R.id.ll_ebike_fault);
 
-
-
-
         Tag1 = (ImageView)findViewById(R.id.endBikeFeedBackUI_type_Tag1);
         Tag1_1 = (TextView)findViewById(R.id.endBikeFeedBackUI_type_Tag1_1);
         Tag1_2 = (TextView)findViewById(R.id.endBikeFeedBackUI_type_Tag1_2);
@@ -527,6 +524,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         if (access_token == null || "".equals(access_token)){
             Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
             UIHelper.goToAct(context, LoginActivity.class);
+            scrollToFinishActivity();
         }else {
 //            if (!"1".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))
 //                    && SharedPreferencesUrls.getInstance().getString("iscert","") != null &&
@@ -539,6 +537,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
             getUpToken();
         }
     }
+
     public void getUpToken() {
         RequestParams params = new RequestParams();
 //        params.put("uid",uid);

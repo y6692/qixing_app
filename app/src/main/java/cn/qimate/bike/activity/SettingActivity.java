@@ -36,6 +36,7 @@ import java.util.Properties;
 import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
+import cn.loopj.android.http.TextHttpResponseHandler2;
 import cn.qimate.bike.R;
 import cn.qimate.bike.core.common.DataCleanManager;
 import cn.qimate.bike.core.common.HttpHelper;
@@ -263,7 +264,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
 
     private void logout() {
 
-        HttpHelper.delete(context, Urls.authorizations, new TextHttpResponseHandler() {
+        HttpHelper.delete(context, Urls.authorizations, new TextHttpResponseHandler2() {
             @Override
             public void onStart() {
                 if (loadingDialog != null && !loadingDialog.isShowing()) {

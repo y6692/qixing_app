@@ -634,9 +634,15 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                         imageurl2 = jsonObject.getString("key");
                     }
 
+
+
                     Log.e("UpCompletion===", jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
                 }
 
             }
@@ -781,6 +787,16 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
     private void SubmitBtn(){
 
         Log.e("SubmitBtn===0", realname+"==="+student_id+"==="+school_id+"==="+time+"==="+imageurl+"==="+imageurl2);
+
+//        if (imageurl == null || "".equals(imageurl)){
+//            Toast.makeText(context,"证件照片上传失败，请重新上传",Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        if (imageurl2 == null || "".equals(imageurl2)){
+//            Toast.makeText(context,"手持证件照片上传失败，请重新上传",Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
         RequestParams params = new RequestParams();
         params.put("type", 1);
@@ -947,6 +963,12 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
             case REQUESTCODE_PICK:// 直接从相册获取
                 if (data != null){
+
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+
                     try {
                         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                             if (imageUri != null) {
@@ -988,16 +1010,34 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                                 Log.e("REQUESTCODE_PICK===3", data.getData()+"==="+filepath.getPath());
 
                                 uploadImage();
+                            }else{
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
                             }
                         }else {
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+
+
                             Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                         }
                     } catch (NullPointerException e) {
                         e.printStackTrace();// 用户点击取消操作
+
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
                     }
                 }
                 break;
             case REQUESTCODE_TAKE:// 调用相机拍照
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("请稍等");
+                    loadingDialog.show();
+                }
+
                 if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
 
 //                            if (imageUri != null) {
@@ -1025,6 +1065,10 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                         Log.e("REQUESTCODE_TAKE===3", photo+"==="+upBitmap+"==="+filepath.getPath());
 
                         uploadImage();
+                    }else{
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
                     }
 
 //                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
@@ -1041,6 +1085,10 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 //                                new Thread(uploadImageRunnable).start();
 //                            }
                 }else {
+                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+
                     Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                 }
                 break;

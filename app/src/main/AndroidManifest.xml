@@ -104,6 +104,14 @@
             android:theme="@style/SplashTheme"
             >
 
+
+        </activity>
+
+        <activity
+            android:name=".full.Splash2Activity"
+            android:theme="@style/SplashTheme"
+            >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -129,6 +137,20 @@
             android:name=".activity.LoginActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+
+        </activity>
+
+        <activity
+            android:name=".activity.NoteLoginActivity"
+            android:launchMode="singleTask" >
+
+
+        </activity>
+
+        <activity
+            android:name=".activity.NoteTestActivity"
+            android:launchMode="singleTask" >
 
 
         </activity>
@@ -266,13 +288,7 @@
         </activity>
 
 
-        <activity
-            android:name=".activity.NoteLoginActivity"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
-
-        </activity>
 
 
         <activity
@@ -340,11 +356,7 @@
 
         </activity>
 
-        <activity
-            android:name=".activity.NoteTestActivity">
 
-
-        </activity>
 
         <activity
             android:name=".activity.RegisterActivity"

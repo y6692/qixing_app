@@ -111,10 +111,10 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         loadingDialog.setCanceledOnTouchOutside(false);
 
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
-        title = (TextView) findViewById(R.id.mainUI_title_titleText);
-        title.setText("充值");
-        rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
-        rightBtn.setText("充值记录");
+//        title = (TextView) findViewById(R.id.mainUI_title_titleText);
+//        title.setText("充值");
+//        rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
+//        rightBtn.setText("充值记录");
 
         moneyListView = (MultiColumnListView)findViewById(R.id.rechargeUI_moneyList);
         submitBtn = (LinearLayout)findViewById(R.id.rechargeUI_submitBtn);
@@ -129,11 +129,9 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         moneyListView.setOnItemClickListener(this);
 
         backImg.setOnClickListener(this);
-        rightBtn.setOnClickListener(this);
+//        rightBtn.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
         serviceProtocol.setOnClickListener(this);
-
-
     }
 
     @Override
@@ -155,16 +153,7 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
                 startActivity(intent);
 
                 break;
-//            case R.id.rechargeUI_alipayTypeLayout:
-//                alipayTypeImage.setImageResource(R.drawable.pay_type_selected);
-//                WeChatTypeImage.setImageResource(R.drawable.pay_type_normal);
-//                paytype = "1";
-//                break;
-//            case R.id.rechargeUI_WeChatTypeLayout:
-//                alipayTypeImage.setImageResource(R.drawable.pay_type_normal);
-//                WeChatTypeImage.setImageResource(R.drawable.pay_type_selected);
-//                paytype = "2";
-//                break;
+
             case R.id.rechargeUI_submitBtn:
                 if (access_token == null || "".equals(access_token)){
                     Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
@@ -177,6 +166,7 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
 
 //                userRecharge(uid, access_token);
                 break;
+
             case R.id.rechargeUI_serviceProtocol:
                 agreement();
                 break;
@@ -612,6 +602,7 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
                         datas.add(bean);
                         if ( 0 == i){
                             rid = bean.getId();
+                            price = bean.getPrice();
                             bean.setSelected(true);
                         }else {
                             bean.setSelected(false);

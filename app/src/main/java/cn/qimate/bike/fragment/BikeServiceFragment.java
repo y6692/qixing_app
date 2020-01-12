@@ -279,18 +279,18 @@ public class BikeServiceFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void initHttp(){
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (access_token == null || "".equals(access_token)){
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+//        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+//        if (access_token == null || "".equals(access_token)){
+//            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+//            return;
+//        }
         RequestParams params = new RequestParams();
         params.put("tab", 1);
         params.put("page", showPage);
         params.put("pagesize", GlobalConfig.PAGE_SIZE);
 
-        HttpHelper.get(context, Urls.services, params, new TextHttpResponseHandler() {
+        HttpHelper.get2(context, Urls.services, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 setFooterType(1);

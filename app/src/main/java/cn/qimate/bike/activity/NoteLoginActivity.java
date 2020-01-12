@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.xylitolz.androidverificationcode.view.VerificationCodeView;
 
 import org.apache.http.Header;
 
@@ -46,7 +47,6 @@ import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
-import com.tuo.customview.VerificationCodeView;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -75,7 +75,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
     private int num;
     private TelephonyManager tm;
 
-    private LinearLayout content;
+//    private LinearLayout content;
     private VerificationCodeView icv;
 
     private TextView tv_telphone;
@@ -124,7 +124,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         tv_telphone.setText(telphone);
 
 
-        content = (LinearLayout) findViewById(R.id.note_content);
+//        content = (LinearLayout) findViewById(R.id.note_content);
         icv = (VerificationCodeView) findViewById(R.id.icv);
 
 
@@ -135,17 +135,17 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         icv.setInputCompleteListener(new VerificationCodeView.InputCompleteListener() {
             @Override
             public void inputComplete() {
-                Log.e("icv_input", icv.getInputContent()+"===");
+                Log.e("icv_input===", icv.getContent()+"===");
 
-                if(icv.getInputContent().length()==6){
-                    loginHttp(icv.getInputContent());
+                if(icv.getContent().length()==6){
+                    loginHttp(icv.getContent());
                 }
 
             }
 
             @Override
             public void deleteContent() {
-                Log.e("icv_delete", icv.getInputContent());
+                Log.e("icv_delete===", icv.getContent());
             }
         });
 

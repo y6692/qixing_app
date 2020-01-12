@@ -11,7 +11,7 @@ public class OrderBean {
 	private String estimated_cost;	//预估费用
 	private String car_start_time;	//借车时间
 	private String car_end_time;	//结束时间
-	private String order_amount;	//订单金额
+	private String order_amount = "";	//订单金额
 	private int order_state;	//订单状态 订单状态 0已取消 10已下单 20进行中 30待支付 40已完成
 	private String electricity;	//订单金额
 	private String mileage;	//订单金额
