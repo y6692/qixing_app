@@ -5803,13 +5803,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             }
 
                         }else if(s1.startsWith("058502")){
-                            Log.e("closeLock===2", "==="+s1);        //050F0101017A0020782400200F690300
 
-                            if("01".equals(s1.substring(6, 8))){
-                                Toast.makeText(context, "锁已关闭", Toast.LENGTH_LONG).show();
+                            Log.e("xinbiao===", "当前操作：搜索信标成功"+s1.substring(2*10, 2*10+2)+"==="+s1.substring(2*11, 2*11+2)+"==="+s1);
+
+                            if("000000000000".equals(s1.substring(2*4, 2*10))){
+                                major = 0;
                             }else{
-                                Toast.makeText(context, "锁已打开", Toast.LENGTH_LONG).show();
+                                major = 1;
                             }
+
                         }
 
 
