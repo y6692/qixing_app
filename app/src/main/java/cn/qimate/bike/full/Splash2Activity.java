@@ -546,34 +546,41 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 
 							Log.e("sa===banner1", ja_banners.length() + "===" + result.data);
 
-							for (int i = 0; i < 1; i++) {
-								BannerBean bean = JSON.parseObject(ja_banners.get(i).toString(), BannerBean.class);
+							if(ja_banners.length()==0){
+								tz();
+							}else{
+								for (int i = 0; i < ja_banners.length(); i++) {
+									BannerBean bean = JSON.parseObject(ja_banners.get(i).toString(), BannerBean.class);
 
-								Log.e("sa===banner2", bean.getImage_url()+"===");
+									Log.e("sa===banner2", bean.getImage_url()+"===");
 
-								imageUrl = bean.getImage_url();
-								h5_title = bean.getH5_title();
+									imageUrl = bean.getImage_url();
+									h5_title = bean.getH5_title();
 
-								action_content = bean.getAction_content();
-								if(action_content.contains("?")){
-									action_content += "&token="+access_token;
-								}else{
-									action_content += "?token="+access_token;
-								}
+									action_content = bean.getAction_content();
+									if(action_content.contains("?")){
+										action_content += "&token="+access_token;
+									}else{
+										action_content += "?token="+access_token;
+									}
 
 //                                imagePath.add(imageUrl);
 
-								if (imageUrl == null || "".equals(imageUrl)) {
+									if (imageUrl == null || "".equals(imageUrl)) {
 //								loadingImage.setBackgroundResource(R.drawable.enter_bg);
-								} else {
-									// 加载图片
-									Glide.with(context).load(imageUrl).into(loadingImage);
+									} else {
+										// 加载图片
+										Glide.with(context).load(imageUrl).into(loadingImage);
+									}
+
+									skipLayout.setVisibility(View.VISIBLE);
+									handler.sendEmptyMessageDelayed(0, 900);
+
 								}
-
-								skipLayout.setVisibility(View.VISIBLE);
-								handler.sendEmptyMessageDelayed(0, 900);
-
 							}
+
+
+
 
 //                            mBanner.setBannerTitles(imageTitle);
 //                            mBanner.setImages(imagePath).setOnBannerListener(MainActivity.this).start();

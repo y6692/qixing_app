@@ -42,6 +42,10 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.clj.fastble.BleManager;
+import com.clj.fastble.callback.BleScanCallback;
+import com.clj.fastble.data.BleDevice;
+import com.clj.fastble.scan.BleScanRuleConfig;
 import com.google.zxing.Result;
 import com.sofi.blelocker.library.Code;
 import com.sofi.blelocker.library.connect.listener.BleConnectStatusListener;
@@ -344,8 +348,134 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         surfaceView = (SurfaceView) findViewById(R.id.capture_preview);
 
+
+        BleManager.getInstance().init(getApplication());
+        BleManager.getInstance()
+                .enableLog(true)
+                .setReConnectCount(10, 5000)
+                .setConnectOverTime(20000)
+                .setOperateTimeout(10000);
+
+        setScanRule();
+        scan();
+
 //        initHttp();
 //        cycling();
+    }
+
+    private void setScanRule() {
+//        String[] uuids;
+//        String str_uuid = et_uuid.getText().toString();
+//        if (TextUtils.isEmpty(str_uuid)) {
+//            uuids = null;
+//        } else {
+//            uuids = str_uuid.split(",");
+//        }
+//        UUID[] serviceUuids = null;
+//        if (uuids != null && uuids.length > 0) {
+//            serviceUuids = new UUID[uuids.length];
+//            for (int i = 0; i < uuids.length; i++) {
+//                String name = uuids[i];
+//                String[] components = name.split("-");
+//                if (components.length != 5) {
+//                    serviceUuids[i] = null;
+//                } else {
+//                    serviceUuids[i] = UUID.fromString(uuids[i]);
+//                }
+//            }
+//        }
+
+//        String[] names;
+//        String str_name = et_name.getText().toString();
+//        if (TextUtils.isEmpty(str_name)) {
+//            names = null;
+//        } else {
+//            names = str_name.split(",");
+//        }
+//
+//        String mac = et_mac.getText().toString();
+//
+//        boolean isAutoConnect = sw_auto.isChecked();
+
+        BleScanRuleConfig scanRuleConfig = new BleScanRuleConfig.Builder()
+//                .setServiceUuids(serviceUuids)      // 只扫描指定的服务的设备，可选
+//                .setDeviceName(true, names)   // 只扫描指定广播名的设备，可选
+//				.setDeviceMac(address)                  // 只扫描指定mac的设备，可选
+//                .setAutoConnect(true)                 // 连接时的autoConnect参数，可选，默认false
+//                .setScanTimeOut(10000)              // 扫描超时时间，可选，默认10秒
+                .build();
+        BleManager.getInstance().initScanRule(scanRuleConfig);
+    }
+
+    void scan(){
+//        loadingDialog = DialogUtils.getLoadingDialog(context, "正在搜索...");
+//		loadingDialog.setTitle("正在搜索");
+//		loadingDialog.show();
+
+        BleManager.getInstance().scan(new BleScanCallback() {
+            @Override
+            public void onScanStarted(boolean success) {
+//                mDeviceAdapter.clearScanDevice();
+//                mDeviceAdapter.notifyDataSetChanged();
+//                img_loading.startAnimation(operatingAnim);
+//                img_loading.setVisibility(View.VISIBLE);
+//                btn_scan.setText(getString(R.string.stop_scan));
+                Log.e("asc===onScanStarted", "==="+success);
+
+            }
+
+            @Override
+            public void onLeScan(BleDevice bleDevice) {
+                super.onLeScan(bleDevice);
+
+                Log.e("asc===onLeScan", bleDevice+"==="+bleDevice.getMac());
+            }
+
+            @Override
+            public void onScanning(final BleDevice bleDevice) {
+//                mDeviceAdapter.addDevice(bleDevice);
+//                mDeviceAdapter.notifyDataSetChanged();
+
+                Log.e("asc===onScanning", bleDevice+"==="+bleDevice.getMac());
+
+//				m_myHandler.post(new Runnable() {
+//					@Override
+//					public void run() {
+//						if(address.equals(bleDevice.getMac())){
+//							//                            if (loadingDialog != null && loadingDialog.isShowing()) {
+////                                loadingDialog.dismiss();
+////                            }
+//
+//							BleManager.getInstance().cancelScan();
+//
+//							Log.e("onScanning===2", isConnect+"==="+bleDevice+"==="+bleDevice.getMac());
+//
+//							Toast.makeText(context, "搜索成功", Toast.LENGTH_LONG).show();
+//
+//							connect();
+//
+////                            m_myHandler.postDelayed(new Runnable() {
+////                                @Override
+////                                public void run() {
+////                                    if(!isConnect)
+////                                        connect();
+////                                }
+////                            }, 5 * 1000);
+//						}
+//					}
+//				});
+
+            }
+
+            @Override
+            public void onScanFinished(List<BleDevice> scanResultList) {
+//                img_loading.clearAnimation();
+//                img_loading.setVisibility(View.INVISIBLE);
+//                btn_scan.setText(getString(R.string.start_scan));
+
+                Log.e("asc===onScanFinished", scanResultList+"==="+scanResultList.size());
+            }
+        });
     }
 
     @SuppressWarnings("deprecation")
@@ -1385,6 +1515,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             if (loadingDialog != null && loadingDialog.isShowing()){
                                 loadingDialog.dismiss();
                             }
+
+                            BleManager.getInstance().cancelScan();
 
                             setResult(RESULT_OK, rIntent);
                             scrollToFinishActivity();

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -83,6 +84,14 @@ import com.aprbrother.aprilbeaconscansdk.ScanManager;
 import com.autonavi.ae.pos.Feedback;
 import com.autonavi.tbt.TrafficFacilityInfo;
 import com.bumptech.glide.Glide;
+import com.clj.fastble.BleManager;
+import com.clj.fastble.callback.BleGattCallback;
+import com.clj.fastble.callback.BleNotifyCallback;
+import com.clj.fastble.callback.BleScanCallback;
+import com.clj.fastble.callback.BleWriteCallback;
+import com.clj.fastble.data.BleDevice;
+import com.clj.fastble.exception.BleException;
+import com.clj.fastble.scan.BleScanRuleConfig;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.sofi.blelocker.library.Code;
@@ -103,6 +112,11 @@ import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
 import com.sunshine.blelibrary.inter.OnDeviceSearchListener;
+import com.sunshine.blelibrary.mode.GetLockStatusTxOrder;
+import com.sunshine.blelibrary.mode.GetTokenTxOrder;
+import com.sunshine.blelibrary.mode.OpenLockTxOrder;
+import com.sunshine.blelibrary.utils.ConvertUtils;
+import com.sunshine.blelibrary.utils.EncryptUtils;
 import com.sunshine.blelibrary.utils.GlobalParameterUtils;
 import com.xiaoantech.sdk.XiaoanBleApiClient;
 import com.xiaoantech.sdk.ble.model.Response;
@@ -119,6 +133,7 @@ import com.zxing.lib.scaner.activity.ActivityScanerCode;
 import com.zxing.lib.scaner.activity.MainFragmentPermissionsDispatcher;
 
 import org.apache.http.Header;
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -188,6 +203,7 @@ import permissions.dispatcher.NeedsPermission;
 import static android.app.Activity.RESULT_OK;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.sofi.blelocker.library.Constants.STATUS_CONNECTED;
+import static com.sunshine.blelibrary.utils.EncryptUtils.Encrypt;
 
 @SuppressLint("NewApi")
 public class MainFragment extends BaseFragment implements View.OnClickListener, OnBannerListener, OnConnectionListener, BleStateChangeListener, ScanResultCallback, AMap.OnMapClickListener, AMapNaviListener {
@@ -346,6 +362,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private Polyline polyline;
 
     private String tipRange = "您还未到还车点，请按照导航到还车点还车";
+
+//    private boolean isConnect = false;
+    BleDevice bleDevice;
+    String token;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_main, null);
@@ -902,9 +922,20 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                             Log.e("mf===requestCode2", codenum+"==="+type);
 
 
-                                            closeBroadcast();     //TODO    3
-                                            activity.registerReceiver(broadcastReceiver, Config.initFilter());
-                                            GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+//                                            closeBroadcast();     //TODO    3
+//                                            activity.registerReceiver(broadcastReceiver, Config.initFilter());
+//                                            GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+
+                                            BleManager.getInstance().init(activity.getApplication());
+                                            BleManager.getInstance()
+                                                    .enableLog(true)
+                                                    .setReConnectCount(10, 5000)
+                                                    .setConnectOverTime(20000)
+                                                    .setOperateTimeout(10000);
+
+                                            setScanRule();
+                                            scan();
+
                                         }else if("4".equals(type)){
                                         }else if ("5".equals(type)  || "6".equals(type)) {
                                         }else if ("7".equals(type)) {
@@ -1033,6 +1064,121 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             }
         });
 
+    }
+
+    private void setScanRule() {
+//        String[] uuids;
+//        String str_uuid = et_uuid.getText().toString();
+//        if (TextUtils.isEmpty(str_uuid)) {
+//            uuids = null;
+//        } else {
+//            uuids = str_uuid.split(",");
+//        }
+//        UUID[] serviceUuids = null;
+//        if (uuids != null && uuids.length > 0) {
+//            serviceUuids = new UUID[uuids.length];
+//            for (int i = 0; i < uuids.length; i++) {
+//                String name = uuids[i];
+//                String[] components = name.split("-");
+//                if (components.length != 5) {
+//                    serviceUuids[i] = null;
+//                } else {
+//                    serviceUuids[i] = UUID.fromString(uuids[i]);
+//                }
+//            }
+//        }
+
+//        String[] names;
+//        String str_name = et_name.getText().toString();
+//        if (TextUtils.isEmpty(str_name)) {
+//            names = null;
+//        } else {
+//            names = str_name.split(",");
+//        }
+//
+//        String mac = et_mac.getText().toString();
+//
+//        boolean isAutoConnect = sw_auto.isChecked();
+
+        BleScanRuleConfig scanRuleConfig = new BleScanRuleConfig.Builder()
+//                .setServiceUuids(serviceUuids)      // 只扫描指定的服务的设备，可选
+//                .setDeviceName(true, names)   // 只扫描指定广播名的设备，可选
+//				.setDeviceMac(address)                  // 只扫描指定mac的设备，可选
+//                .setAutoConnect(true)                 // 连接时的autoConnect参数，可选，默认false
+//                .setScanTimeOut(10000)              // 扫描超时时间，可选，默认10秒
+                .build();
+        BleManager.getInstance().initScanRule(scanRuleConfig);
+    }
+
+    void scan(){
+//        loadingDialog = DialogUtils.getLoadingDialog(context, "正在搜索...");
+//		loadingDialog.setTitle("正在搜索");
+//		loadingDialog.show();
+
+        BleManager.getInstance().scan(new BleScanCallback() {
+            @Override
+            public void onScanStarted(boolean success) {
+//                mDeviceAdapter.clearScanDevice();
+//                mDeviceAdapter.notifyDataSetChanged();
+//                img_loading.startAnimation(operatingAnim);
+//                img_loading.setVisibility(View.VISIBLE);
+//                btn_scan.setText(getString(R.string.stop_scan));
+                Log.e("mf===onScanStarted", "==="+success);
+
+            }
+
+            @Override
+            public void onLeScan(BleDevice bleDevice) {
+                super.onLeScan(bleDevice);
+
+                Log.e("mf===onLeScan", bleDevice+"==="+bleDevice.getMac());
+            }
+
+            @Override
+            public void onScanning(final BleDevice bleDevice) {
+//                mDeviceAdapter.addDevice(bleDevice);
+//                mDeviceAdapter.notifyDataSetChanged();
+
+                Log.e("mf===onScanning", bleDevice+"==="+bleDevice.getMac());
+
+//				m_myHandler.post(new Runnable() {
+//					@Override
+//					public void run() {
+//						if(address.equals(bleDevice.getMac())){
+//							//                            if (loadingDialog != null && loadingDialog.isShowing()) {
+////                                loadingDialog.dismiss();
+////                            }
+//
+//							BleManager.getInstance().cancelScan();
+//
+//							Log.e("onScanning===2", isConnect+"==="+bleDevice+"==="+bleDevice.getMac());
+//
+//							Toast.makeText(context, "搜索成功", Toast.LENGTH_LONG).show();
+//
+//							connect();
+//
+////                            m_myHandler.postDelayed(new Runnable() {
+////                                @Override
+////                                public void run() {
+////                                    if(!isConnect)
+////                                        connect();
+////                                }
+////                            }, 5 * 1000);
+//						}
+//					}
+//				});
+
+            }
+
+            @Override
+            public void onScanFinished(List<BleDevice> scanResultList) {
+//                img_loading.clearAnimation();
+//                img_loading.setVisibility(View.INVISIBLE);
+//                btn_scan.setText(getString(R.string.start_scan));
+
+                Log.e("mf===onScanFinished", scanResultList+"==="+scanResultList.size());
+            }
+        });
     }
 
     private void carInfo() {
@@ -2013,7 +2159,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     private void openAgain(){
 
-        if("2".equals(type)){
+        if("2".equals(type) || "3".equals(type) ){
 
             Log.e("again===", "==="+isLookPsdBtn);
 
@@ -2040,41 +2186,49 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     isOpenLock = true;
                     connect();
                 }else{
-                    BaseApplication.getInstance().getIBLE().openLock();
-                }
-            }
-        }else if("3".equals(type)){
-//                      unlock();
-            if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-                popupwindow.dismiss();
-            }
-            BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
-            mBluetoothAdapter = bluetoothManager.getAdapter();
+//                    BaseApplication.getInstance().getIBLE().openLock();
 
-            if (mBluetoothAdapter == null) {
-                ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                popupwindow.dismiss();
-                return;
-            }
-            if (!mBluetoothAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, 188);
-            } else {
-                if (!TextUtils.isEmpty(m_nowMac)) {
-                    Log.e("scan===3_1", isLookPsdBtn+"==="+m_nowMac);
-
-                    if(!isLookPsdBtn){   //没连上
-                        isTemp = true;
-                        isOpenLock = true;
-                        connect();
+                    if(token==null || "".equals(token)){
+                        getBleToken();
                     }else{
-                        BaseApplication.getInstance().getIBLE().openLock();
+                        openLock();
                     }
-
                 }
             }
-        }else if("4".equals(type)){
+        }
+//        else if("3".equals(type)){
+////                      unlock();
+//            if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+//                popupwindow.dismiss();
+//            }
+//            BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
+//            mBluetoothAdapter = bluetoothManager.getAdapter();
+//
+//            if (mBluetoothAdapter == null) {
+//                ToastUtil.showMessageApp(context, "获取蓝牙失败");
+//                popupwindow.dismiss();
+//                return;
+//            }
+//            if (!mBluetoothAdapter.isEnabled()) {
+//                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                startActivityForResult(enableBtIntent, 188);
+//            } else {
+//                if (!TextUtils.isEmpty(m_nowMac)) {
+//                    Log.e("scan===3_1", isLookPsdBtn+"==="+m_nowMac);
+//
+//                    if(!isLookPsdBtn){   //没连上
+//                        isTemp = true;
+//                        isOpenLock = true;
+//                        connect();
+//                    }else{
+//                        BaseApplication.getInstance().getIBLE().openLock();
+//                    }
+//
+//                }
+//            }
+//        }
+        else if("4".equals(type)){
             unlock();
 
 //            if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -2479,9 +2633,17 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     Log.e("mf===requestCode2", codenum+"==="+type);
 
 
-                    closeBroadcast();     //TODO    3
-                    activity.registerReceiver(broadcastReceiver, Config.initFilter());
-                    GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+//                    closeBroadcast();     //TODO    3
+//                    activity.registerReceiver(broadcastReceiver, Config.initFilter());
+//                    GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+
+                    BleManager.getInstance().init(activity.getApplication());
+                    BleManager.getInstance()
+                            .enableLog(true)
+                            .setReConnectCount(10, 5000)
+                            .setConnectOverTime(20000)
+                            .setOperateTimeout(10000);
+
                 }else if("4".equals(type)){
 
 //                        BLEService.bluetoothAdapter = mBluetoothAdapter;
@@ -3852,17 +4014,35 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 apiClient.onDestroy();
             }
         }else{
-            BaseApplication.getInstance().getIBLE().stopScan();
-            BaseApplication.getInstance().getIBLE().refreshCache();
-            BaseApplication.getInstance().getIBLE().close();
-            BaseApplication.getInstance().getIBLE().disconnect();
+//            BaseApplication.getInstance().getIBLE().stopScan();
+//            BaseApplication.getInstance().getIBLE().refreshCache();
+//            BaseApplication.getInstance().getIBLE().close();
+//            BaseApplication.getInstance().getIBLE().disconnect();
 
-            if(order_type==0){
-                if (broadcastReceiver != null) {
-                    activity.unregisterReceiver(broadcastReceiver);
-//                broadcastReceiver = null;
-                }
-            }
+//            if(order_type==0){
+//                if (broadcastReceiver != null) {
+//                    activity.unregisterReceiver(broadcastReceiver);
+////                broadcastReceiver = null;
+//                }
+//            }
+
+            byte[] bb=new byte[3];
+
+            BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb",
+                    bb, true, new BleWriteCallback() {
+                        @Override
+                        public void onWriteSuccess(int current, int total, byte[] justWrite) {
+                            Log.e("onWriteSuccess===", current+"==="+total+"==="+justWrite);
+                        }
+
+                        @Override
+                        public void onWriteFailure(BleException exception) {
+                            Log.e("onWriteFailure===", "==="+exception);
+                        }
+                    });
+
+            BleManager.getInstance().disconnectAllDevice();
+            BleManager.getInstance().destroy();
 
         }
 
@@ -5366,15 +5546,33 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 apiClient.onDestroy();
             }
         }else if("2".equals(type) || "3".equals(type)){
-            BaseApplication.getInstance().getIBLE().stopScan();
-            BaseApplication.getInstance().getIBLE().refreshCache();
-            BaseApplication.getInstance().getIBLE().close();
-            BaseApplication.getInstance().getIBLE().disconnect();
+//            BaseApplication.getInstance().getIBLE().stopScan();
+//            BaseApplication.getInstance().getIBLE().refreshCache();
+//            BaseApplication.getInstance().getIBLE().close();
+//            BaseApplication.getInstance().getIBLE().disconnect();
 
-            if (broadcastReceiver != null) {
-                activity.unregisterReceiver(broadcastReceiver);
-                broadcastReceiver = null;
-            }
+            byte[] bb=new byte[3];
+
+            BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb",
+                    bb, true, new BleWriteCallback() {
+                        @Override
+                        public void onWriteSuccess(int current, int total, byte[] justWrite) {
+                            Log.e("onWriteSuccess===", current+"==="+total+"==="+justWrite);
+                        }
+
+                        @Override
+                        public void onWriteFailure(BleException exception) {
+                            Log.e("onWriteFailure===", "==="+exception);
+                        }
+                    });
+
+            BleManager.getInstance().disconnectAllDevice();
+            BleManager.getInstance().destroy();
+
+//            if (broadcastReceiver != null) {
+//                activity.unregisterReceiver(broadcastReceiver);
+//                broadcastReceiver = null;
+//            }
         }
 
         super.onDestroy();
@@ -5489,7 +5687,248 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
-    protected void connect() {
+    void connect(){
+//        loadingDialog = DialogUtils.getLoadingDialog(this, "正在连接...");
+//        loadingDialog.setTitle("正在连接");
+//        loadingDialog.show();
+
+        BleManager.getInstance().cancelScan();
+
+        BleManager.getInstance().connect(m_nowMac, new BleGattCallback() {
+            @Override
+            public void onStartConnect() {
+                Log.e("onStartConnect===", "===");
+            }
+
+            @Override
+            public void onConnectFail(BleDevice bleDevice, BleException exception) {
+                Log.e("onConnectFail===", bleDevice.getMac()+"==="+exception);
+
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onConnectSuccess(BleDevice device, BluetoothGatt gatt, int status) {
+//                if (loadingDialog != null && loadingDialog.isShowing()) {
+//                    loadingDialog.dismiss();
+//                }
+
+                isLookPsdBtn = true;
+                bleDevice = device;
+
+//                BleManager.getInstance().cancelScan();
+
+                Log.e("onConnectSuccess===", bleDevice.getMac()+"===");
+//                Toast.makeText(context, "连接成功", Toast.LENGTH_LONG).show();
+
+
+                m_myHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        getBleToken();
+
+                    }
+                }, 500);
+
+                BleManager.getInstance().notify(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f6-0000-1000-8000-00805f9b34fb", new BleNotifyCallback() {
+                    @Override
+                    public void onNotifySuccess() {
+                        Log.e("onNotifySuccess===", "===");
+
+
+                    }
+
+                    @Override
+                    public void onNotifyFailure(BleException exception) {
+                        Log.e("onNotifyFailure===", "===");
+                    }
+
+                    @Override
+                    public void onCharacteristicChanged(byte[] data) {
+//                            byte[] values = characteristic.getValue();
+
+                        Log.e("onCharacteristicChanged", "===0");
+
+
+                        byte[] x = new byte[16];
+                        System.arraycopy(data, 0, x, 0, 16);
+
+                        byte[] mingwen = EncryptUtils.Decrypt(x, Config.key);    //060207FE02433001010606D41FC9553C  FE024330 01 01 06
+
+                        Log.e("onCharacteristicChanged", x.length+"==="+ ConvertUtils.bytes2HexString(data)+"==="+ConvertUtils.bytes2HexString(mingwen));
+
+                        String s1 = ConvertUtils.bytes2HexString(mingwen);
+
+                        if(s1.startsWith("0602")){      //获取token
+
+                            token = s1.substring(6, 14);    //0602070C0580E001010406C8D6DC1949
+                            GlobalParameterUtils.getInstance().setToken(ConvertUtils.hexString2Bytes(token));
+
+                            Log.e("token===", isEndBtn+"==="+isOpenLock+"==="+token+"==="+s1);
+
+                            if(isEndBtn){
+                                getLockStatus();
+                            }else if(isOpenLock){
+                                openLock();
+                            }
+
+                        }else if(s1.startsWith("0502")){    //开锁
+                            Log.e("openLock===", "==="+s1);
+
+                            Toast.makeText(context, "开锁成功", Toast.LENGTH_LONG).show();
+
+                            m_myHandler.sendEmptyMessage(7);
+                        }else if(s1.startsWith("0508") || s1.startsWith("050F")){   //锁状态
+                            Log.e("closeLock===1", "==="+s1);
+
+
+                            isStop = true;
+                            isLookPsdBtn = true;
+
+                            closeLoadingDialog2();
+
+                            if ("01".equals(s1.substring(6, 8))) {
+                                ToastUtil.showMessageApp(context,"锁已关闭");
+                                Log.e("biking===", "biking===锁已关闭==="+first3);
+
+                                if(!isEndBtn) return;
+
+                                m_myHandler.sendEmptyMessage(6);
+                            } else {
+                                //锁已开启
+                                ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+                            }
+
+                        }else if(s1.startsWith("058502")){
+                            Log.e("closeLock===2", "==="+s1);        //050F0101017A0020782400200F690300
+
+                            if("01".equals(s1.substring(6, 8))){
+                                Toast.makeText(context, "锁已关闭", Toast.LENGTH_LONG).show();
+                            }else{
+                                Toast.makeText(context, "锁已打开", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+
+//                        EventBus.getDefault().post(BleNotifyEvent(decode));
+
+//                        else if(s1.startsWith("050F")){
+//                            Log.e("closeLock===2", "==="+s1);        //050F0101017A0020782400200F690300
+//
+////                            if("01".equals(s1.substring(6, 8))){
+////                                Toast.makeText(context, "锁已关闭", Toast.LENGTH_LONG).show();
+////                            }else{
+////                                Toast.makeText(context, "锁已打开", Toast.LENGTH_LONG).show();
+////                            }
+//
+//                            isStop = true;
+//                            isLookPsdBtn = true;
+//
+//                            closeLoadingDialog2();
+//
+//                            if ("01".equals(s1.substring(6, 8))) {
+//                                ToastUtil.showMessageApp(context,"锁已关闭");
+//                                Log.e("biking===", "biking===锁已关闭==="+first3);
+//
+//                                if(!isEndBtn) return;
+//
+//                                m_myHandler.sendEmptyMessage(6);
+//                            } else {
+//                                //锁已开启
+//                                ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+//                            }
+//                        }
+
+                    }
+                });
+
+
+
+            }
+
+            @Override
+            public void onDisConnected(boolean isActiveDisConnected, BleDevice bleDevice, BluetoothGatt gatt, int status) {
+
+                isLookPsdBtn = false;
+                Log.e("connect=onDisConnected", "==="+isActiveDisConnected);
+
+//                    if (isActiveDisConnected) {
+//                        Toast.makeText(MainActivity.this, getString(R.string.active_disconnected), Toast.LENGTH_LONG).show();
+//                    } else {
+//                        Toast.makeText(MainActivity.this, getString(R.string.disconnected), Toast.LENGTH_LONG).show();
+//                        ObserverManager.getInstance().notifyObserver(bleDevice);
+//                    }
+
+            }
+        });
+    }
+
+    void getBleToken(){
+        String s = new GetTokenTxOrder().generateString();  //06010101490E602E46311640422E5238
+
+        Log.e("getBleToken===1", "==="+s);  //1648395B
+
+        byte[] bb = Encrypt(ConvertUtils.hexString2Bytes(s), Config.key);
+
+        BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb", bb, true, new BleWriteCallback() {
+            @Override
+            public void onWriteSuccess(int current, int total, byte[] justWrite) {
+                Log.e("getBleToken==onWriteSuc", current+"==="+total+"==="+ConvertUtils.bytes2HexString(justWrite));
+            }
+
+            @Override
+            public void onWriteFailure(BleException exception) {
+                Log.e("getBleToken=onWriteFail", "==="+exception);
+            }
+        });
+    }
+
+    void getLockStatus(){
+        String s = new GetLockStatusTxOrder().generateString();  //06010101490E602E46311640422E5238
+
+        Log.e("getLockStatus===1", "==="+isLookPsdBtn);  //1648395B
+
+        byte[] bb = Encrypt(ConvertUtils.hexString2Bytes(s), Config.key);
+
+        BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb", bb, true, new BleWriteCallback() {
+            @Override
+            public void onWriteSuccess(int current, int total, byte[] justWrite) {
+                Log.e("getLockStatus==onWriteS", current+"==="+total+"==="+ConvertUtils.bytes2HexString(justWrite));
+            }
+
+            @Override
+            public void onWriteFailure(BleException exception) {
+                Log.e("getLockStatus=onWriteFa", "==="+exception);
+            }
+        });
+    }
+
+    void openLock() {
+        String s = new OpenLockTxOrder().generateString();
+
+//        s= s.substring(0, 18) + token + s.substring(26, 32);
+
+        Log.e("onWriteSuccess===1", token+"==="+s);     //989C064A===050106323031373135989C064A750217
+
+        byte[] bb = Encrypt(ConvertUtils.hexString2Bytes(s), Config.key);
+
+        BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb", bb, true, new BleWriteCallback() {
+            @Override
+            public void onWriteSuccess(int current, int total, byte[] justWrite) {
+                Log.e("onWriteSuccess===a", current+"==="+total+"==="+justWrite);
+            }
+
+            @Override
+            public void onWriteFailure(BleException exception) {
+                Log.e("onWriteFailure===a", "==="+exception);
+            }
+        });
+    }
+
+    protected void connect2() {
         Log.e("connect===0", isLookPsdBtn+"==="+m_nowMac+"==="+Build.VERSION.SDK_INT);
 
         isLookPsdBtn = false;
@@ -6005,7 +6444,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     BaseApplication.getInstance().getIBLE().enableBluetooth();
                     return;
                 }
-                if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+//                if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                if (isLookPsdBtn){
                     if (loadingDialog != null && !loadingDialog.isShowing()){
                         loadingDialog.setTitle("请稍等");
                         loadingDialog.show();
@@ -6030,7 +6470,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     }, 10 * 1000);
 
                     macList2 = new ArrayList<> (macList);
-                    BaseApplication.getInstance().getIBLE().getLockStatus();
+//                    BaseApplication.getInstance().getIBLE().getLockStatus();
+                    getLockStatus();
                 } else {
                     Log.e("biking===endBtn_3",macList.size()+"==="+isLookPsdBtn+"==="+force_backcar);
 
@@ -6081,7 +6522,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     BaseApplication.getInstance().getIBLE().enableBluetooth();
                     return;
                 }
-                if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+//                if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                if (isLookPsdBtn){
                     Log.e("biking===endBtn_4",macList.size()+"==="+isLookPsdBtn+"==="+force_backcar);
 
                     if (loadingDialog != null && !loadingDialog.isShowing()){
@@ -6107,7 +6549,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     }, 10 * 1000);
 
                     macList2 = new ArrayList<> (macList);
-                    BaseApplication.getInstance().getIBLE().getLockStatus();
+//                    BaseAp plication.getInstance().getIBLE().getLockStatus();
+                    getLockStatus();
                 }else {
                     Log.e("biking===endBtn_5",macList.size()+"==="+isLookPsdBtn+"==="+force_backcar);
 
@@ -6168,9 +6611,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
             clearRoute();
 
-
-
-
             if (macList.size() > 0){
 //                flag = 2;
                 if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -6181,14 +6621,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     BaseApplication.getInstance().getIBLE().enableBluetooth();
                     return;
                 }
-                if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                if (isLookPsdBtn){
                     if (loadingDialog != null && !loadingDialog.isShowing()){
                         loadingDialog.setTitle("请稍等");
                         loadingDialog.show();
                     }
 
                     macList2 = new ArrayList<> (macList);
-                    BaseApplication.getInstance().getIBLE().getLockStatus();
+                    getLockStatus();
+//                    BaseApplication.getInstance().getIBLE().getLockStatus();
 
                     isLookPsdBtn = false;
                     m_myHandler.postDelayed(new Runnable() {
@@ -6271,14 +6712,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     BaseApplication.getInstance().getIBLE().enableBluetooth();
                     return;
                 }
-                if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                if (isLookPsdBtn){
                     if (loadingDialog != null && !loadingDialog.isShowing()){
                         loadingDialog.setTitle("请稍等");
                         loadingDialog.show();
                     }
 
                     macList2 = new ArrayList<> (macList);
-                    BaseApplication.getInstance().getIBLE().getLockStatus();
+                    getLockStatus();
+//                    BaseApplication.getInstance().getIBLE().getLockStatus();
 
                     isLookPsdBtn = false;
                     m_myHandler.postDelayed(new Runnable() {

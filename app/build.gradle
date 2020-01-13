@@ -183,6 +183,7 @@ dependencies {
     implementation(name: 'alipaySdk-15.6.8-20191021122514', ext: 'aar')
 //        implementation(name: 'alipaySdk-15.6.8-20191021122455-noUtdid', ext: 'aar')
 //    implementation files('libs/alipaySdk-20180601.jar')
+    implementation 'org.greenrobot:eventbus:3.0.0'
 }
 
 afterEvaluate {
