@@ -63,6 +63,12 @@ public class Order {
          * 固件升级
          */
         UPDATE_VERSION(0x0301),
+
+        /**
+         * 获取信标
+         */
+        XINBIAO(0x0585),
+
         /**
          * 获取工作模式
          */

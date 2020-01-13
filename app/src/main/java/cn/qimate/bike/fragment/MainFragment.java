@@ -115,6 +115,7 @@ import com.sunshine.blelibrary.inter.OnDeviceSearchListener;
 import com.sunshine.blelibrary.mode.GetLockStatusTxOrder;
 import com.sunshine.blelibrary.mode.GetTokenTxOrder;
 import com.sunshine.blelibrary.mode.OpenLockTxOrder;
+import com.sunshine.blelibrary.mode.XinbiaoTxOrder;
 import com.sunshine.blelibrary.utils.ConvertUtils;
 import com.sunshine.blelibrary.utils.EncryptUtils;
 import com.sunshine.blelibrary.utils.GlobalParameterUtils;
@@ -5782,7 +5783,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             m_myHandler.sendEmptyMessage(7);
                         }else if(s1.startsWith("0508") || s1.startsWith("050F")){   //锁状态
-                            Log.e("closeLock===1", "==="+s1);
+                            Log.e("closeLock===0", "==="+s1);
 
 
                             isStop = true;
@@ -5792,14 +5793,54 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             if ("01".equals(s1.substring(6, 8))) {
                                 ToastUtil.showMessageApp(context,"锁已关闭");
-                                Log.e("biking===", "biking===锁已关闭==="+first3);
+                                Log.e("closeLock===1", "锁已关闭==="+first3);
 
-                                if(!isEndBtn) return;
+                                m_myHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        getXinbiao();
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                try {
+                                                    int n=0;
+                                                    major=0;
+                                                    Log.e("closeLock===n0",major+"=="+n);
+                                                    while(major==0){
 
-                                m_myHandler.sendEmptyMessage(6);
+                                                        Thread.sleep(500);
+                                                        n++;
+
+                                                        getXinbiao();
+
+                                                        Log.e("closeLock===n","=="+n);
+
+                                                        if(n>=11) break;
+
+                                                    }
+
+                                                    Log.e("closeLock===n2",major+"=="+n);
+                                                } catch (InterruptedException e) {
+                                                    e.printStackTrace();
+                                                }
+//                                            m_myHandler.sendEmptyMessage(3);
+                                            }
+                                        }).start();
+                                    }
+                                }, 2000);
+
+                                if(isEndBtn){
+                                    Log.e("closeLock===2", "锁已关闭==="+isEndBtn);
+
+                                    m_myHandler.sendEmptyMessage(6);
+
+                                    Log.e("closeLock===3", "锁已关闭===" + macList2.size());
+                                }
                             } else {
                                 //锁已开启
                                 ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+
+                                isEndBtn = false;
                             }
 
                         }else if(s1.startsWith("058502")){
@@ -5907,6 +5948,27 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             }
         });
     }
+
+    void getXinbiao(){
+        String s = new XinbiaoTxOrder().generateString();  //06010101490E602E46311640422E5238
+
+        Log.e("getXinbiao===1", "==="+s);  //1648395B
+
+        byte[] bb = Encrypt(ConvertUtils.hexString2Bytes(s), Config.key);
+
+        BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb", bb, true, new BleWriteCallback() {
+            @Override
+            public void onWriteSuccess(int current, int total, byte[] justWrite) {
+                Log.e("getXinbiao==onWriteS", current+"==="+total+"==="+ConvertUtils.bytes2HexString(justWrite));
+            }
+
+            @Override
+            public void onWriteFailure(BleException exception) {
+                Log.e("getXinbiao=onWriteFa", "==="+exception);
+            }
+        });
+    }
+
 
     void openLock() {
         String s = new OpenLockTxOrder().generateString();

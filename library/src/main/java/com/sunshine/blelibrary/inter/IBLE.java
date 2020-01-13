@@ -84,6 +84,13 @@ public interface IBLE {
      * @return 是否成功
      */
     boolean resetLock();
+
+    /**
+     * 信标
+     * @return
+     */
+    boolean xinbiao();
+
     /**
      * 获取锁状态
      * @return 是否成功
