@@ -9,6 +9,7 @@ public class Update {
 
 	private String version;	//最新版本号
 	private String desc;	//版本描述
+	private String download_url;	//下载链接
 
 
 	public String getAppName() {
@@ -69,5 +70,13 @@ public class Update {
 
 	public void setDesc(String desc) {
 		this.desc = desc;
+	}
+
+	public String getDownload_url() {
+		return download_url;
+	}
+
+	public void setDownload_url(String download_url) {
+		this.download_url = download_url;
 	}
 }

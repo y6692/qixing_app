@@ -607,7 +607,8 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 //                                    setResult(RESULT_OK);
 //                                    scrollToFinishActivity();
 
-                                    UIHelper.goToAct(context, MainActivity.class);
+                                    setResult(RESULT_OK);
+//                                    UIHelper.goToAct(context, MainActivity.class);
                                     scrollToFinishActivity();
                                 }else{
                                     if(isRemain){

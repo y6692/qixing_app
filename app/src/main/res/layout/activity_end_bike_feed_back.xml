@@ -222,39 +222,48 @@
                                         android:textSize="@dimen/sp10"
                                         android:text="车锁"/>
 
-                                    <TextView
-                                        android:id="@+id/endBikeFeedBackUI_type_Tag1_1"
-                                        android:layout_width="60dp"
-                                        android:layout_height="20dp"
-                                        android:layout_marginTop="4dp"
-                                        android:gravity="center"
-                                        android:background="@drawable/block_fault_bcg"
-                                        android:textColor="#FD555B"
-                                        android:textSize="@dimen/sp8"
-                                        android:text="锁未弹开"/>
+                                    <LinearLayout
+                                        android:visibility="gone"
+                                        android:id="@+id/ll_lock"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:gravity="center_horizontal">
 
-                                    <TextView
-                                        android:id="@+id/endBikeFeedBackUI_type_Tag1_2"
-                                        android:layout_width="60dp"
-                                        android:layout_height="20dp"
-                                        android:layout_marginTop="4dp"
-                                        android:gravity="center"
-                                        android:background="@drawable/block_fault_bcg"
-                                        android:textColor="#FD555B"
-                                        android:textSize="@dimen/sp8"
-                                        android:text="无法关锁"/>
+                                        <TextView
+                                            android:id="@+id/endBikeFeedBackUI_type_Tag1_1"
+                                            android:layout_width="60dp"
+                                            android:layout_height="20dp"
+                                            android:layout_marginTop="4dp"
+                                            android:gravity="center"
+                                            android:background="@drawable/block_fault_bcg"
+                                            android:textColor="#FD555B"
+                                            android:textSize="@dimen/sp8"
+                                            android:text="锁未弹开"/>
 
-                                    <TextView
-                                        android:id="@+id/endBikeFeedBackUI_type_Tag1_3"
-                                        android:layout_width="60dp"
-                                        android:layout_height="20dp"
-                                        android:layout_marginTop="4dp"
-                                        android:gravity="center"
-                                        android:background="@drawable/block_fault_bcg"
-                                        android:textColor="#FD555B"
-                                        android:textSize="@dimen/sp8"
-                                        android:text="外形破损"/>
+                                        <TextView
+                                            android:id="@+id/endBikeFeedBackUI_type_Tag1_2"
+                                            android:layout_width="60dp"
+                                            android:layout_height="20dp"
+                                            android:layout_marginTop="4dp"
+                                            android:gravity="center"
+                                            android:background="@drawable/block_fault_bcg"
+                                            android:textColor="#FD555B"
+                                            android:textSize="@dimen/sp8"
+                                            android:text="无法关锁"/>
 
+                                        <TextView
+                                            android:id="@+id/endBikeFeedBackUI_type_Tag1_3"
+                                            android:layout_width="60dp"
+                                            android:layout_height="20dp"
+                                            android:layout_marginTop="4dp"
+                                            android:gravity="center"
+                                            android:background="@drawable/block_fault_bcg"
+                                            android:textColor="#FD555B"
+                                            android:textSize="@dimen/sp8"
+                                            android:text="外形破损"/>
+
+                                    </LinearLayout>
                                 </LinearLayout>
 
                                 <LinearLayout
@@ -413,27 +422,39 @@
                                         android:textSize="@dimen/sp10"
                                         android:text="车锁"/>
 
-                                    <TextView
-                                        android:id="@+id/endBikeFeedBackUI_type2_Tag1_1"
-                                        android:layout_width="60dp"
-                                        android:layout_height="20dp"
-                                        android:layout_marginTop="4dp"
-                                        android:gravity="center"
-                                        android:background="@drawable/block_fault_bcg"
-                                        android:textColor="#FD555B"
-                                        android:textSize="@dimen/sp8"
-                                        android:text="开锁失败"/>
+                                    <LinearLayout
+                                        android:visibility="gone"
+                                        android:id="@+id/ll_elock"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:gravity="center_horizontal">
 
-                                    <TextView
-                                        android:id="@+id/endBikeFeedBackUI_type2_Tag1_2"
-                                        android:layout_width="60dp"
-                                        android:layout_height="20dp"
-                                        android:layout_marginTop="4dp"
-                                        android:gravity="center"
-                                        android:background="@drawable/block_fault_bcg"
-                                        android:textColor="#FD555B"
-                                        android:textSize="@dimen/sp8"
-                                        android:text="关锁失败"/>
+                                        <TextView
+                                            android:id="@+id/endBikeFeedBackUI_type2_Tag1_1"
+                                            android:layout_width="60dp"
+                                            android:layout_height="20dp"
+                                            android:layout_marginTop="4dp"
+                                            android:gravity="center"
+                                            android:background="@drawable/block_fault_bcg"
+                                            android:textColor="#FD555B"
+                                            android:textSize="@dimen/sp8"
+                                            android:text="开锁失败"/>
+
+                                        <TextView
+                                            android:id="@+id/endBikeFeedBackUI_type2_Tag1_2"
+                                            android:layout_width="60dp"
+                                            android:layout_height="20dp"
+                                            android:layout_marginTop="4dp"
+                                            android:gravity="center"
+                                            android:background="@drawable/block_fault_bcg"
+                                            android:textColor="#FD555B"
+                                            android:textSize="@dimen/sp8"
+                                            android:text="关锁失败"/>
+
+                                    </LinearLayout>
+
+
 
 
                                 </LinearLayout>

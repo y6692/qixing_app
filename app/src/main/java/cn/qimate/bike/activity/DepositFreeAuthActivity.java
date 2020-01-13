@@ -831,11 +831,15 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                             ToastUtil.showMessageApp(context, result.getMessage());
 
                             if(result.getStatus_code()==200){
-                                UIHelper.goToAct(context, MainActivity.class);
+//                                UIHelper.goToAct(context, MainActivity.class);
+
+//                                Intent rIntent = new Intent();
+//                                setResult(RESULT_OK, rIntent);
+                                setResult(RESULT_OK);
                                 scrollToFinishActivity();
+
+//                                setResult(RESULT_OK);
                             }
-
-
 
                         } catch (Exception e) {
                             e.printStackTrace();

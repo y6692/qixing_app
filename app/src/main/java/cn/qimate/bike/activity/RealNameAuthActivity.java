@@ -170,6 +170,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
     private String realname;
     private String identityNumber;
+    private String price;
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -311,6 +312,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
                             JSONObject json = new JSONObject(result.getData());
+                            price = json.getString("price");
 
                             tv_depositprice.setText(""+json.getInt("price_s"));
 
@@ -705,13 +707,13 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
     }
 
     private void order() {
-        Log.e("order===", "===");
+        Log.e("order===", "==="+price);
 
         RequestParams params = new RequestParams();
         params.put("order_type", 4);        //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单
 //        params.put("car_number", URLEncoder.encode(codenum));
 //        params.put("card_code", card_code);        //套餐卡券码（order_type为2时必传）
-        params.put("price", "0.01");        //传价格数值 例如：20.00(order_type为3、4时必传)
+        params.put("price", price);        //传价格数值 例如：20.00(order_type为3、4时必传)
 
         HttpHelper.post(context, Urls.order, params, new TextHttpResponseHandler() {
             @Override
@@ -741,11 +743,16 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
                             Log.e("order===1", order_id + "===" + order_amount );
 
+
+                            setResult(RESULT_OK);
                             Intent intent = new Intent(context, SettlementPlatformActivity.class);
                             intent.putExtra("order_type", 4);
                             intent.putExtra("order_amount", order_amount);
                             intent.putExtra("order_id", order_id);
-                            startActivity(intent);
+                            startActivityForResult(intent, 10);
+
+
+
 //                            startActivityForResult(intent, 10);
 
 //                            Intent intent = new Intent();
@@ -900,9 +907,12 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //                    codenum = data.getStringExtra("codenum");
 //                    m_nowMac = data.getStringExtra("m_nowMac");
 
-                            Log.e("rnaa===onActivityResult", requestCode+"==="+resultCode);
+//                            Log.e("rnaa===onActivityResult", requestCode+"==="+resultCode);
+//
+//                            SubmitBtn();
 
-                            SubmitBtn();
+                            setResult(RESULT_OK);
+                            scrollToFinishActivity();
 
                         } else {
 //                    Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();

@@ -74,7 +74,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
     public static boolean isForeground = false;
 
-    private String telphone;
+    private String telphone = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +139,8 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
 
         if (SharedPreferencesUrls.getInstance().getString("userName", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("userName", ""))) {
-            phoneEdit.setText(SharedPreferencesUrls.getInstance().getString("userName", ""));
+            telphone = SharedPreferencesUrls.getInstance().getString("userName", "");
+            phoneEdit.setText(telphone);
         }
 
         if (StringUtil.isPhoner(phoneEdit.getText().toString().trim())) {
@@ -157,20 +158,75 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (count == 1) {
+                    if (s.length() == 4) {
+                        String text = s.subSequence(0, s.length() - 1) + " " + s.subSequence(s.length() - 1, s.length());
 
+                        phoneEdit.setText(text);
+                        phoneEdit.setSelection(5);
+
+                    }
+
+                    if (s.length() == 9) {
+                        String text = s.subSequence(0, s.length() - 1) + " " + s.subSequence(s.length() - 1, s.length());
+
+                        phoneEdit.setText(text);
+                        phoneEdit.setSelection(10);
+                    }
+                } else if (count == 0) {
+                    if (s.length() == 4) {
+                        phoneEdit.setText(s.subSequence(0, s.length() - 1));
+                        phoneEdit.setSelection(3);
+                    }
+                    if (s.length() == 9) {
+                        phoneEdit.setText(s.subSequence(0, s.length() - 1));
+                        phoneEdit.setSelection(8);
+                    }
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
 
-                if (StringUtil.isPhoner(phoneEdit.getText().toString().trim())) {
-                    SharedPreferencesUrls.getInstance().putString("userName", phoneEdit.getText().toString().trim());
+                String phone = phoneEdit.getText().toString().trim().replaceAll("\\s+", "");
+
+                if (StringUtil.isPhoner(phone)) {
+                    SharedPreferencesUrls.getInstance().putString("userName", phone);
                     loginBtn.setBackgroundResource(R.drawable.btn_bcg_normal);
                 }else{
                     loginBtn.setBackgroundResource(R.drawable.btn_bcg_press);
                 }
             }
         });
+
+        phoneEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                Log.e("onFocusChange===", "==="+hasFocus);
+
+                if (hasFocus) {
+                    if (telphone.length() == 11) {
+                        String formatPhoneNumber = telphone.substring(0, 3) + " " + telphone.substring(3, 7) + " " + telphone.substring(7);
+                        phoneEdit.setText(formatPhoneNumber);
+                    }
+
+                } else {
+                    int phoneLength = telphone.replaceAll("\\s+", "").length();
+                    // 判断一下手机号码是否合理，并将手机号码格式化成 xxx-xxxx-xxxx 的形式
+                    if (phoneLength == 11) {
+                        String formatPhoneNumber = telphone.substring(0, 3) + " " + telphone.substring(3, 7) + " " + telphone.substring(7);
+
+                        phoneEdit.setText(formatPhoneNumber);
+
+                    } else {
+                        Toast.makeText(context, "号码长度有误，请输入11位正确号码", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
+
+        phoneEdit.requestFocus();
 
         rightBtn.setOnClickListener(this);
         change_phone.setOnClickListener(this);
@@ -187,7 +243,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                 break;
             case R.id.loginUI_btn:
 
-                telphone = phoneEdit.getText().toString();
+                telphone = phoneEdit.getText().toString().trim().replaceAll("\\s+", "");
                 if (telphone == null || "".equals(telphone)) {
                     Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
                     return;

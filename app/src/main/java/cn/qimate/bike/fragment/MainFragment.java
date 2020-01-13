@@ -56,6 +56,7 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.Polygon;
 import com.amap.api.maps.model.PolygonOptions;
@@ -223,7 +224,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     BluetoothAdapter mBluetoothAdapter;
     private XiaoanBleApiClient apiClient;
 
-    public static String codenum = "";
+    public String codenum = "";
     private String m_nowMac = "";
     private int carmodel_id;
     private String type = "";
@@ -359,6 +360,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private Thread ebikeInfoThread;
 
     private boolean first = true;
+    private boolean isMin = false;
 
     private Polyline polyline;
 
@@ -482,13 +484,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         mapView.onResume();
 
         if(flag){
-            banner();
-            car_authority();
+
 
             activity.getIntent().putExtra("flag", false);
         }
 
-
+        banner();
+        car_authority();
 
     }
 
@@ -525,7 +527,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 5需要充值余额或购买骑行卡 6有进行中行程 7有待支付行程 8有待支付调度费 9有待支付赔偿费
                     unauthorized_code = bean.getUnauthorized_code();
 
-                    rl_ad.setVisibility(View.VISIBLE);
+                    ll_top.setVisibility(View.VISIBLE);
                     ll_top_biking.setVisibility(View.GONE);
                     ll_top_pay.setVisibility(View.GONE);
                     rl_authBtn.setVisibility(View.GONE);
@@ -558,11 +560,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         }else if(unauthorized_code==6) {
                             ll_top_navi.setVisibility(View.GONE);
                             ll_top.setVisibility(View.VISIBLE);
-                            rl_ad.setVisibility(View.GONE);
                             ll_top_biking.setVisibility(View.VISIBLE);
-
-
-//                                centerMarker
 
                             order_id = new JSONObject(bean.getOrder()).getInt("order_id");
 
@@ -585,7 +583,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             ll_top_biking.setVisibility(View.GONE);
                             ll_top_navi.setVisibility(View.GONE);
                             ll_top.setVisibility(View.VISIBLE);
-                            rl_ad.setVisibility(View.GONE);
                             ll_top_pay.setVisibility(View.VISIBLE);
 
                             if(unauthorized_code==7){
@@ -613,7 +610,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         }
                     }
 
-                    Log.e("mf===car_authority4", unauthorized_code+"===");
+                    if(isMin){
+                        rl_authBtn.setVisibility(View.VISIBLE);
+                        tv_authBtn.setText(tipRange);
+                    }
+
+                    Log.e("mf===car_authority4", unauthorized_code+"==="+isMin);
 
                 } catch (Exception e) {
 
@@ -1691,6 +1693,21 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 tv_navi_name.setText(marker.getTitle());
                 mAMapNavi.calculateWalkRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
 
+//                mAMapNavi.set
+
+
+
+                LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();//存放所有点的经纬度
+
+//                for(int i=0;i<markers.size();i++){
+//                    boundsBuilder.include(markers.get(i).getPosition());//把所有点都include进去（LatLng类型）
+//                }
+
+                boundsBuilder.include(new LatLng(referLatitude, referLongitude));
+                boundsBuilder.include(marker.getPosition());
+
+                aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 15));
+
                 return true;
             }
         });
@@ -1897,27 +1914,31 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             Log.e("mf===banner1", ja_banners.length() + "===" + result.data);
 
-                            for (int i = 0; i < ja_banners.length(); i++) {
-                                BannerBean bean = JSON.parseObject(ja_banners.get(i).toString(), BannerBean.class);
+                            if(ja_banners.length()==0){
+                                rl_ad.setVisibility(View.GONE);
+                            }else{
+                                rl_ad.setVisibility(View.VISIBLE);
+                                for (int i = 0; i < ja_banners.length(); i++) {
+                                    BannerBean bean = JSON.parseObject(ja_banners.get(i).toString(), BannerBean.class);
 
-//                                Log.e("mf===banner2", bean.getImage_url()+"===");
+                                    imagePath.add(bean.getImage_url());
+                                    imageTitle.add(bean.getH5_title());
 
-                                imagePath.add(bean.getImage_url());
-                                imageTitle.add(bean.getH5_title());
-
-                                String action_content = bean.getAction_content();
-                                if(action_content.contains("?")){
-                                    action_content+="&token="+access_token;
-                                }else{
-                                    action_content+="?token="+access_token;
-                                }
-                                urlPath.add(action_content);
+                                    String action_content = bean.getAction_content();
+                                    if(action_content.contains("?")){
+                                        action_content+="&token="+access_token;
+                                    }else{
+                                        action_content+="?token="+access_token;
+                                    }
+                                    urlPath.add(action_content);
 //                                urlPath.add(URLEncoder.encode(action_content));
 //                                imageTitle.add("");
+                                }
+
+                                mBanner.setBannerTitles(imageTitle);
+                                mBanner.setImages(imagePath).setOnBannerListener(MainFragment.this).start();
                             }
 
-                            mBanner.setBannerTitles(imageTitle);
-                            mBanner.setImages(imagePath).setOnBannerListener(MainFragment.this).start();
 
                         } catch (Exception e) {
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
@@ -2515,7 +2536,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 Log.e("refreshLayout===0", parking()+"==="+isConnect+"==="+isLookPsdBtn+"==="+isContainsList+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
 
                 first = false;
-                RefreshLogin();
                 car_authority();
 
 
@@ -2706,10 +2726,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 break;
 
             case R.id.ll_biking_endBtn:
-                //TODO
                 cycling4();
-
-
                 break;
 
             case R.id.ll_biking_errorEnd:
@@ -2717,6 +2734,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 //TODO
                 intent = new Intent(context, EndBikeFeedBackActivity.class);
                 intent.putExtra("bikeCode", codenum);
+                intent.putExtra("carmodel_id", carmodel_id);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 context.startActivity(intent);
                 break;
@@ -2783,7 +2801,82 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         loadingDialog.show();
 
         if(major !=0){
-            queryState();
+            if("5".equals(type) || "6".equals(type)){
+                queryState();
+            }else{
+//                flag = 2;
+                if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                    ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+//                    scrollToFinishActivity();
+                }
+
+                if (!BaseApplication.getInstance().getIBLE().isEnable()){
+                    BaseApplication.getInstance().getIBLE().enableBluetooth();
+                    return;
+                }
+//                if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                if (isLookPsdBtn){
+                    if (loadingDialog != null && !loadingDialog.isShowing()){
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+
+                    Log.e("biking===endBtn_2",macList.size()+"==="+isLookPsdBtn+"==="+force_backcar);
+
+//                    isLookPsdBtn = false;
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            closeLoadingDialog();
+//
+//                            if(!isLookPsdBtn){
+//                                if(force_backcar==0){
+//                                    customDialog2.show();
+//                                }else{
+//                                    clickCountDeal();
+//                                }
+//                            }
+//                        }
+//                    }, 10 * 1000);
+
+                    macList2 = new ArrayList<> (macList);
+//                    BaseApplication.getInstance().getIBLE().getLockStatus();
+                    getLockStatus();
+                } else {
+                    Log.e("biking===endBtn_3",macList.size()+"==="+isLookPsdBtn+"==="+force_backcar);
+
+                    if (loadingDialog != null && !loadingDialog.isShowing()){
+                        loadingDialog.setTitle("正在连接");
+                        loadingDialog.show();
+                    }
+
+                    isLookPsdBtn = false;
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            closeLoadingDialog();
+//
+//                            if(!isLookPsdBtn){
+//                                stopScan = true;
+////                                BaseApplication.getInstance().getIBLE().refreshCache();
+////                                BaseApplication.getInstance().getIBLE().close();
+////                                BaseApplication.getInstance().getIBLE().disconnect();
+//
+//                                if (!isLookPsdBtn){
+//                                    if(force_backcar==0){
+//                                        customDialog2.show();
+//                                    }else{
+//                                        clickCountDeal();
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }, 10 * 1000);
+
+                    isOpenLock = false;
+                    connect();
+                }
+            }
         }else if(carmodel_id==2){
             car();
         }else{
@@ -3866,7 +3959,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                 ll_top_navi.setVisibility(View.GONE);
                                 ll_top.setVisibility(View.VISIBLE);
-                                rl_ad.setVisibility(View.GONE);
                                 ll_top_biking.setVisibility(View.VISIBLE);
 
                                 cyclingThread();
@@ -3992,7 +4084,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         m_myHandler.removeCallbacksAndMessages(null);
 
-        rl_ad.setVisibility(View.VISIBLE);
+        ll_top.setVisibility(View.VISIBLE);
         ll_top_biking.setVisibility(View.GONE);
         ll_top_pay.setVisibility(View.GONE);
 
@@ -4027,20 +4119,20 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                }
 //            }
 
-            byte[] bb=new byte[3];
-
-            BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb",
-                    bb, true, new BleWriteCallback() {
-                        @Override
-                        public void onWriteSuccess(int current, int total, byte[] justWrite) {
-                            Log.e("onWriteSuccess===", current+"==="+total+"==="+justWrite);
-                        }
-
-                        @Override
-                        public void onWriteFailure(BleException exception) {
-                            Log.e("onWriteFailure===", "==="+exception);
-                        }
-                    });
+//            byte[] bb=new byte[3];
+//
+//            BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb",
+//                    bb, true, new BleWriteCallback() {
+//                        @Override
+//                        public void onWriteSuccess(int current, int total, byte[] justWrite) {
+//                            Log.e("onWriteSuccess===", current+"==="+total+"==="+justWrite);
+//                        }
+//
+//                        @Override
+//                        public void onWriteFailure(BleException exception) {
+//                            Log.e("onWriteFailure===", "==="+exception);
+//                        }
+//                    });
 
             BleManager.getInstance().disconnectAllDevice();
             BleManager.getInstance().destroy();
@@ -4056,6 +4148,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         Log.e("mf==end", order_id+"==="+order_type);
 
         if(order_type==1 && isEndBtn){
+            codenum = "";
             ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
         }
 
@@ -4273,7 +4366,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                     ll_top_navi.setVisibility(View.GONE);
                                     ll_top.setVisibility(View.VISIBLE);
-                                    rl_ad.setVisibility(View.GONE);
                                     ll_top_biking.setVisibility(View.VISIBLE);
 
                                     cyclingThread();
@@ -5552,20 +5644,20 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //            BaseApplication.getInstance().getIBLE().close();
 //            BaseApplication.getInstance().getIBLE().disconnect();
 
-            byte[] bb=new byte[3];
-
-            BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb",
-                    bb, true, new BleWriteCallback() {
-                        @Override
-                        public void onWriteSuccess(int current, int total, byte[] justWrite) {
-                            Log.e("onWriteSuccess===", current+"==="+total+"==="+justWrite);
-                        }
-
-                        @Override
-                        public void onWriteFailure(BleException exception) {
-                            Log.e("onWriteFailure===", "==="+exception);
-                        }
-                    });
+//            byte[] bb=new byte[3];
+//
+//            BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb",
+//                    bb, true, new BleWriteCallback() {
+//                        @Override
+//                        public void onWriteSuccess(int current, int total, byte[] justWrite) {
+//                            Log.e("onWriteSuccess===", current+"==="+total+"==="+justWrite);
+//                        }
+//
+//                        @Override
+//                        public void onWriteFailure(BleException exception) {
+//                            Log.e("onWriteFailure===", "==="+exception);
+//                        }
+//                    });
 
             BleManager.getInstance().disconnectAllDevice();
             BleManager.getInstance().destroy();
@@ -5688,7 +5780,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
-    void connect(){
+    private void connect(){
 //        loadingDialog = DialogUtils.getLoadingDialog(this, "正在连接...");
 //        loadingDialog.setTitle("正在连接");
 //        loadingDialog.show();
@@ -5705,9 +5797,35 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             public void onConnectFail(BleDevice bleDevice, BleException exception) {
                 Log.e("onConnectFail===", bleDevice.getMac()+"==="+exception);
 
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
+                isLookPsdBtn = false;
+
+                closeLoadingDialog2();
+
+                if (!isLookPsdBtn){
+
+                    if(!isOpenLock){
+
+                    }
+                    Toast.makeText(context,"唤醒失败，重启手机蓝牙试试吧！",Toast.LENGTH_LONG).show();
+
+//                    BaseApplication.getInstance().getIBLE().stopScan();
+//                    BaseApplication.getInstance().getIBLE().refreshCache();
+//                    BaseApplication.getInstance().getIBLE().close();
+//                    BaseApplication.getInstance().getIBLE().disconnect();
+
+                    Log.e("0x99===timeout", isLookPsdBtn+"==="+isStop+"==="+type);
+
+                    if("3".equals(type)){
+                        if(isOpenLock){
+                            unlock();
+                        }
+                    }else{
+                        car_notification(isOpenLock?1:isAgain?2:isEndBtn?3:0, 2, 0);
+                        popupwindow.dismiss();
+                    }
+
                 }
+
             }
 
             @Override
@@ -5909,7 +6027,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         });
     }
 
-    void getBleToken(){
+    private void getBleToken(){
         String s = new GetTokenTxOrder().generateString();  //06010101490E602E46311640422E5238
 
         Log.e("getBleToken===1", "==="+s);  //1648395B
@@ -5929,7 +6047,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         });
     }
 
-    void getLockStatus(){
+    private void getLockStatus(){
         String s = new GetLockStatusTxOrder().generateString();  //06010101490E602E46311640422E5238
 
         Log.e("getLockStatus===1", "==="+isLookPsdBtn);  //1648395B
@@ -5949,7 +6067,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         });
     }
 
-    void getXinbiao(){
+    private void getXinbiao(){
         String s = new XinbiaoTxOrder().generateString();  //06010101490E602E46311640422E5238
 
         Log.e("getXinbiao===1", "==="+s);  //1648395B
@@ -5969,8 +6087,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         });
     }
 
-
-    void openLock() {
+    private void openLock() {
         String s = new OpenLockTxOrder().generateString();
 
 //        s= s.substring(0, 18) + token + s.substring(26, 32);
@@ -6267,7 +6384,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                        customDialog3.show();
                     }
 
-
                     break;
                 case 4:
                     //蓝牙还车成功
@@ -6467,6 +6583,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 
     public void clearRoute(){
+        Log.e("clearRoute===", isLookPsdBtn+"===");
+
+
+        isMin = false;
         tv_authBtn.setText("");
         if(routeOverLay != null){
             routeOverLay.removeFromMap();
@@ -6517,21 +6637,21 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                     Log.e("biking===endBtn_2",macList.size()+"==="+isLookPsdBtn+"==="+force_backcar);
 
-                    isLookPsdBtn = false;
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            closeLoadingDialog();
-
-                            if(!isLookPsdBtn){
-                                if(force_backcar==0){
-                                    customDialog2.show();
-                                }else{
-                                    clickCountDeal();
-                                }
-                            }
-                        }
-                    }, 10 * 1000);
+//                    isLookPsdBtn = false;
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            closeLoadingDialog();
+//
+//                            if(!isLookPsdBtn){
+//                                if(force_backcar==0){
+//                                    customDialog2.show();
+//                                }else{
+//                                    clickCountDeal();
+//                                }
+//                            }
+//                        }
+//                    }, 10 * 1000);
 
                     macList2 = new ArrayList<> (macList);
 //                    BaseApplication.getInstance().getIBLE().getLockStatus();
@@ -6544,29 +6664,28 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         loadingDialog.show();
                     }
 
-                    isLookPsdBtn = false;
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            closeLoadingDialog();
-
-                            if(!isLookPsdBtn){
-                                stopScan = true;
-//                              BaseApplication.getInstance().getIBLE().stopScan();
-                                BaseApplication.getInstance().getIBLE().refreshCache();
-                                BaseApplication.getInstance().getIBLE().close();
-                                BaseApplication.getInstance().getIBLE().disconnect();
-
-                                if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
-                                    if(force_backcar==0){
-                                        customDialog2.show();
-                                    }else{
-                                        clickCountDeal();
-                                    }
-                                }
-                            }
-                        }
-                    }, 10 * 1000);
+//                    isLookPsdBtn = false;
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            closeLoadingDialog();
+//
+//                            if(!isLookPsdBtn){
+//                                stopScan = true;
+////                                BaseApplication.getInstance().getIBLE().refreshCache();
+////                                BaseApplication.getInstance().getIBLE().close();
+////                                BaseApplication.getInstance().getIBLE().disconnect();
+//
+//                                if (!isLookPsdBtn){
+//                                    if(force_backcar==0){
+//                                        customDialog2.show();
+//                                    }else{
+//                                        clickCountDeal();
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }, 10 * 1000);
 
                     isOpenLock = false;
                     connect();
@@ -6595,22 +6714,22 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         loadingDialog.show();
                     }
 
-                    isLookPsdBtn = false;
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            closeLoadingDialog();
-
-                            if(!isLookPsdBtn){
-                                if(force_backcar==0){
-                                    customDialog2.show();
-                                }else{
-                                    clickCountDeal();
-                                }
-                            }
-                        }
-                    }, 10 * 1000);
+//                    isLookPsdBtn = false;
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//
+//                            closeLoadingDialog();
+//
+//                            if(!isLookPsdBtn){
+//                                if(force_backcar==0){
+//                                    customDialog2.show();
+//                                }else{
+//                                    clickCountDeal();
+//                                }
+//                            }
+//                        }
+//                    }, 10 * 1000);
 
                     macList2 = new ArrayList<> (macList);
 //                    BaseAp plication.getInstance().getIBLE().getLockStatus();
@@ -6626,29 +6745,29 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     isOpenLock = false;
                     connect();
 
-                    isLookPsdBtn = false;
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            closeLoadingDialog();
-
-                            if(!isLookPsdBtn){
-                                stopScan = true;
-//                                BaseApplication.getInstance().getIBLE().stopScan();
-                                BaseApplication.getInstance().getIBLE().refreshCache();
-                                BaseApplication.getInstance().getIBLE().close();
-                                BaseApplication.getInstance().getIBLE().disconnect();
-
-                                if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
-                                    if(force_backcar==0){
-                                        customDialog2.show();
-                                    }else{
-                                        clickCountDeal();
-                                    }
-                                }
-                            }
-                        }
-                    }, 10 * 1000);
+//                    isLookPsdBtn = false;
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            closeLoadingDialog();
+//
+//                            if(!isLookPsdBtn){
+//                                stopScan = true;
+////                                BaseApplication.getInstance().getIBLE().stopScan();
+////                                BaseApplication.getInstance().getIBLE().refreshCache();
+////                                BaseApplication.getInstance().getIBLE().close();
+////                                BaseApplication.getInstance().getIBLE().disconnect();
+//
+//                                if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
+//                                    if(force_backcar==0){
+//                                        customDialog2.show();
+//                                    }else{
+//                                        clickCountDeal();
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }, 10 * 1000);
 
 
 
@@ -6695,31 +6814,31 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     getLockStatus();
 //                    BaseApplication.getInstance().getIBLE().getLockStatus();
 
-                    isLookPsdBtn = false;
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (loadingDialog != null && loadingDialog.isShowing()){
-                                loadingDialog.dismiss();
-
-                                Log.e("biking===endBtn3_1",isLookPsdBtn+"==="+type+"==="+first3);
-
-                                if(!isLookPsdBtn){
-                                    if(first3){
-                                        first3 = false;
-                                        customDialog2.show();
-
-                                        clickCountDeal();
-                                    }else{
-//                                        carClose();
-//                                        lock(); //TODO  2
-                                        ToastUtil.showMessageApp(context,"还车失败");
-                                        car_notification(3, 2, 1);
-                                    }
-                                }
-                            }
-                        }
-                    }, 10 * 1000);
+//                    isLookPsdBtn = false;
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (loadingDialog != null && loadingDialog.isShowing()){
+//                                loadingDialog.dismiss();
+//
+//                                Log.e("biking===endBtn3_1",isLookPsdBtn+"==="+type+"==="+first3);
+//
+//                                if(!isLookPsdBtn){
+//                                    if(first3){
+//                                        first3 = false;
+//                                        customDialog2.show();
+//
+//                                        clickCountDeal();
+//                                    }else{
+////                                        carClose();
+////                                        lock(); //TODO  2
+//                                        ToastUtil.showMessageApp(context,"还车失败");
+//                                        car_notification(3, 2, 1);
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }, 10 * 1000);
 
 
                 } else {
@@ -6731,35 +6850,35 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     isOpenLock = false;
                     connect();
 
-                    isLookPsdBtn = false;
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            closeLoadingDialog();
-
-                            Log.e("biking===endBtn3_2",isLookPsdBtn+"==="+type+"==="+first3);
-
-                            if(!isLookPsdBtn){
-                                stopScan = true;
-                                BaseApplication.getInstance().getIBLE().refreshCache();
-                                BaseApplication.getInstance().getIBLE().close();
-                                BaseApplication.getInstance().getIBLE().disconnect();
-
-                                if(first3){
-                                    first3 = false;
-                                    customDialog3.show();
-
-                                    clickCountDeal();
-                                }else{
-//                                    carClose();
-//                                    lock();     //TODO    2
-                                    ToastUtil.showMessageApp(context,"还车失败");
-                                    car_notification(3, 2, 1);
-
-                                }
-                            }
-                        }
-                    }, 10 * 1000);
+//                    isLookPsdBtn = false;
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            closeLoadingDialog();
+//
+//                            Log.e("biking===endBtn3_2",isLookPsdBtn+"==="+type+"==="+first3);
+//
+//                            if(!isLookPsdBtn){
+//                                stopScan = true;
+////                                BaseApplication.getInstance().getIBLE().refreshCache();
+////                                BaseApplication.getInstance().getIBLE().close();
+////                                BaseApplication.getInstance().getIBLE().disconnect();
+//
+//                                if(first3){
+//                                    first3 = false;
+//                                    customDialog3.show();
+//
+//                                    clickCountDeal();
+//                                }else{
+////                                    carClose();
+////                                    lock();     //TODO    2
+//                                    ToastUtil.showMessageApp(context,"还车失败");
+//                                    car_notification(3, 2, 1);
+//
+//                                }
+//                            }
+//                        }
+//                    }, 10 * 1000);
                 }
 
                 return;
@@ -6786,29 +6905,29 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     getLockStatus();
 //                    BaseApplication.getInstance().getIBLE().getLockStatus();
 
-                    isLookPsdBtn = false;
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (loadingDialog != null && loadingDialog.isShowing()){
-                                loadingDialog.dismiss();
-
-                                if(!isLookPsdBtn){
-                                    if(first3){
-                                        first3 = false;
-                                        customDialog2.show();
-
-                                        clickCountDeal();
-                                    }else{
-//                                        lock();     //TODO    2
-                                        ToastUtil.showMessageApp(context,"还车失败");
-                                        car_notification(3, 2, 1);
-                                    }
-                                }
-
-                            }
-                        }
-                    }, 10 * 1000);
+//                    isLookPsdBtn = false;
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (loadingDialog != null && loadingDialog.isShowing()){
+//                                loadingDialog.dismiss();
+//
+//                                if(!isLookPsdBtn){
+//                                    if(first3){
+//                                        first3 = false;
+//                                        customDialog2.show();
+//
+//                                        clickCountDeal();
+//                                    }else{
+////                                        lock();     //TODO    2
+//                                        ToastUtil.showMessageApp(context,"还车失败");
+//                                        car_notification(3, 2, 1);
+//                                    }
+//                                }
+//
+//                            }
+//                        }
+//                    }, 10 * 1000);
 
                 }else {
                     if (loadingDialog != null && !loadingDialog.isShowing()){
@@ -6819,35 +6938,35 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     isOpenLock = false;
                     connect();
 
-                    isLookPsdBtn = false;
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            closeLoadingDialog();
-
-                            Log.e("biking===endBtn3_2",isLookPsdBtn+"==="+type+"==="+first3);
-
-                            if(!isLookPsdBtn){
-                                stopScan = true;
-//                              BaseApplication.getInstance().getIBLE().stopScan();
-                                BaseApplication.getInstance().getIBLE().refreshCache();
-                                BaseApplication.getInstance().getIBLE().close();
-                                BaseApplication.getInstance().getIBLE().disconnect();
-
-                                if(first3){
-                                    first3 = false;
-
-                                    customDialog2.show();
-
-                                    clickCountDeal();
-                                }else{
-//                                    lock();     //TODO    2
-                                    ToastUtil.showMessageApp(context,"还车失败");
-                                    car_notification(3, 2, 1);
-                                }
-                            }
-                        }
-                    }, 10 * 1000);
+//                    isLookPsdBtn = false;
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            closeLoadingDialog();
+//
+//                            Log.e("biking===endBtn3_2",isLookPsdBtn+"==="+type+"==="+first3);
+//
+//                            if(!isLookPsdBtn){
+//                                stopScan = true;
+////                              BaseApplication.getInstance().getIBLE().stopScan();
+////                                BaseApplication.getInstance().getIBLE().refreshCache();
+////                                BaseApplication.getInstance().getIBLE().close();
+////                                BaseApplication.getInstance().getIBLE().disconnect();
+//
+//                                if(first3){
+//                                    first3 = false;
+//
+//                                    customDialog2.show();
+//
+//                                    clickCountDeal();
+//                                }else{
+////                                    lock();     //TODO    2
+//                                    ToastUtil.showMessageApp(context,"还车失败");
+//                                    car_notification(3, 2, 1);
+//                                }
+//                            }
+//                        }
+//                    }, 10 * 1000);
 
                 }
             }else {
@@ -7110,6 +7229,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     public LatLng minPolygon() {
+        isMin = true;
+        rl_authBtn.setVisibility(View.VISIBLE);
         tv_authBtn.setText(tipRange);
 
         double s=0;

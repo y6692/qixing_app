@@ -465,7 +465,7 @@ public class UpdateManager {
 				File tmpFile = new File(tmpFilePath);
 				FileOutputStream fos = new FileOutputStream(tmpFile);
 
-				URL url = new URL(mUpdate.getLink());			//TODO
+				URL url = new URL(mUpdate.getDownload_url());			//TODO
 				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 				conn.connect();
 				int length = conn.getContentLength();

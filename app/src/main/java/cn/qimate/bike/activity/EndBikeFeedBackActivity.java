@@ -141,6 +141,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
     private PhotoGridviewAdapter myAdapter;
     private MyGridView photoMyGridview;
     private Button submitBtn;
+    private LinearLayout ll_lock, ll_elock;
 
     private boolean isSelected1 = false;
     private boolean isSelected1_1 = false;
@@ -194,7 +195,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
     private double longitude = 0.0;
 
     public static boolean isForeground = false;
-    private String type = "";
+    private int carmodel_id;
 
     private boolean isComplete = false;
 
@@ -227,7 +228,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 
 //        type = SharedPreferencesUrls.getInstance().getString("type", "");
         m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-        type = getIntent().getStringExtra("type");
+        carmodel_id = getIntent().getIntExtra("carmodel_id", 1);
         bikeCode = getIntent().getStringExtra("bikeCode");
 
         Log.e("ebfba===onCreate", type+"==="+bikeCode);
@@ -302,6 +303,9 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         addressEdit = (EditText)findViewById(R.id.endBikeFeedBackUI_address);
         photoMyGridview = (MyGridView) findViewById(R.id.endBikeFeedBackUI_photoGridView);
         submitBtn = (Button)findViewById(R.id.endBikeFeedBackUI_submitBtn);
+
+        ll_lock = (LinearLayout) findViewById(R.id.ll_lock);
+        ll_elock = (LinearLayout) findViewById(R.id.ll_elock);
 
         myAdapter = new PhotoGridviewAdapter(context);
         photoMyGridview.setAdapter(myAdapter);
@@ -459,10 +463,10 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         });
 
 
-//        item.add("不在车旁");
-//        item.add("蓝牙连接失败");
-//        item.add("校外不想骑回");
-//        item.add("定位错误");
+        item.add("不在车旁");
+        item.add("蓝牙连接失败");
+        item.add("校外不想骑回");
+        item.add("定位错误");
         item.add("车辆故障");
         item.add("其他");
 
@@ -472,7 +476,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         question_type = "车辆故障";
         tv_question.setText("车辆故障");
 
-        if("4".equals(type) || "7".equals(type)){
+        if(carmodel_id==2){
             ll_bike_fault.setVisibility(View.GONE);
             ll_ebike_fault.setVisibility(View.VISIBLE);
         }else{
@@ -505,11 +509,16 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                         ll_restCauseEdit.setVisibility(View.GONE);
                     }
 
-                }else{
+                }else if("其他".equals(question_type)){
                     ll_bike_fault.setVisibility(View.GONE);
                     ll_ebike_fault.setVisibility(View.GONE);
 
                     ll_restCauseEdit.setVisibility(View.VISIBLE);
+                }else{
+                    ll_bike_fault.setVisibility(View.GONE);
+                    ll_ebike_fault.setVisibility(View.GONE);
+
+                    ll_restCauseEdit.setVisibility(View.GONE);
                 }
 
                 pd();
@@ -526,14 +535,6 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
             UIHelper.goToAct(context, LoginActivity.class);
             scrollToFinishActivity();
         }else {
-//            if (!"1".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))
-//                    && SharedPreferencesUrls.getInstance().getString("iscert","") != null &&
-//                    !"".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
-//                initHttp(uid,access_token);
-//            }
-
-//            initHttp(uid, access_token);
-
             getUpToken();
         }
     }
@@ -614,6 +615,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
             case R.id.endBikeFeedBackUI_type_Tag1:
                 if (isSelected1){
                     isSelected1 = false;
+                    ll_lock.setVisibility(View.GONE);
                     if (TagsList.contains("车锁")){
                         TagsList.remove("车锁");
                     }
@@ -632,6 +634,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                     Tag1.setImageResource(R.drawable.lock_icon);    //未选中
                 }else {
                     isSelected1 = true;
+                    ll_lock.setVisibility(View.VISIBLE);
                     if (!TagsList.contains("车锁")){
                         TagsList.add("车锁");
                     }
@@ -852,6 +855,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
             case R.id.endBikeFeedBackUI_type2_Tag1:
                 if (isSelected21){
                     isSelected21 = false;
+                    ll_elock.setVisibility(View.GONE);
                     if (TagsList.contains("车锁")){
                         TagsList.remove("车锁");
                     }
@@ -867,6 +871,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                     Tag21.setImageResource(R.drawable.lock_icon3);    //未选中
                 }else {
                     isSelected21 = true;
+                    ll_elock.setVisibility(View.VISIBLE);
                     if (!TagsList.contains("车锁")){
                         TagsList.add("车锁");
                     }

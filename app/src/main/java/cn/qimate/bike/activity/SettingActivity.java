@@ -293,6 +293,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
 
                         SharedPreferencesUrls.getInstance().putString("access_token", "");
                         SharedPreferencesUrls.getInstance().putString("iscert", "");
+                        SharedPreferencesUrls.getInstance().putString("userName", "");
                         Intent intent = new Intent(context, LoginActivity.class);
                         context.startActivity(intent);
                         scrollToFinishActivity();

@@ -126,7 +126,12 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
 //                iv_select.setVisibility(View.VISIBLE);
 //                iv_select2.setVisibility(View.GONE);
 
-                UIHelper.goToAct(context, DepositFreeAuthActivity.class);
+//                UIHelper.goToAct(context, DepositFreeAuthActivity.class);
+//                setResult(RESULT_OK);
+
+                Intent intent = new Intent(context, DepositFreeAuthActivity.class);
+                startActivityForResult(intent, 10);
+//                setResult(RESULT_OK, intent);
 
                 break;
 
@@ -134,7 +139,11 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
 //                iv_select.setVisibility(View.GONE);
 //                iv_select2.setVisibility(View.VISIBLE);
 
-                UIHelper.goToAct(context, RealNameAuthActivity.class);
+//                UIHelper.goToAct(context, RealNameAuthActivity.class);
+//                setResult(RESULT_OK);
+
+                intent = new Intent(context, RealNameAuthActivity.class);
+                startActivityForResult(intent, 10);
 
                 break;
 
@@ -272,5 +281,31 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.e("aca=onActivityResult", requestCode+"==="+resultCode);
+
+        switch (requestCode) {
+            case 10:
+                if (resultCode == RESULT_OK) {
+//                    codenum = data.getStringExtra("codenum");
+//                    m_nowMac = data.getStringExtra("m_nowMac");
+
+//                    Intent rIntent = new Intent();
+//                    setResult(RESULT_OK, rIntent);
+                    setResult(RESULT_OK);
+                    scrollToFinishActivity();
+
+
+                } else {
+//                    Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

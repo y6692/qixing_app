@@ -276,10 +276,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     @Override
     public void onResume() {
         super.onResume();
-        String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-        String bikenum = SharedPreferencesUrls.getInstance().getString("bikenum","");
-        String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays","");
         if (access_token == null || "".equals(access_token)) {
 //            superVip.setVisibility(View.GONE);
         } else {
@@ -819,10 +816,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.personUI_serviceCenterLayout:
-                Log.e("personUI_serviceCenterL", "==="+MainFragment.codenum);
+                Log.e("personUI_serviceCenterL", "===");
 
                 intent = new Intent(context, ServiceCenterActivity.class);
-                intent.putExtra("bikeCode", MainFragment.codenum);
+//                intent.putExtra("bikeCode", MainFragment.codenum);
                 startActivity(intent);
                 break;
 
@@ -832,7 +829,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.personUI_authLayout:
-                UIHelper.goToAct(context, AuthCenterActivity.class);
+//                UIHelper.goToAct(context, AuthCenterActivity.class);
+                intent = new Intent();
+                intent.setClass(context, AuthCenterActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(intent, 10);
                 break;
 
             case R.id.personUI_inviteLayout:

@@ -120,7 +120,7 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
     private Button takePhotoBtn,pickPhotoBtn,cancelBtn;
 
     private TextView bikeCodeEdit;
-    private LinearLayout ll_bike_fault, ll_ebike_fault;
+    private LinearLayout ll_bike_fault, ll_ebike_fault, ll_lock, ll_elock;
     private ImageView Tag1,Tag2,Tag3,Tag4,Tag5,Tag6,Tag21,Tag22,Tag23,Tag24,Tag25,Tag26;
     private TextView Tag1_1,Tag1_2,Tag1_3,Tag21_1,Tag21_2;
     private LinearLayout ll_restCauseEdit;
@@ -230,8 +230,6 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
         }
     }
 
-
-
     private void initView(){
 
         loadingDialog = new LoadingDialog(context);
@@ -263,6 +261,9 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
 
         ll_bike_fault = (LinearLayout)findViewById(R.id.ll_bike_fault);
         ll_ebike_fault = (LinearLayout)findViewById(R.id.ll_ebike_fault);
+
+        ll_lock = (LinearLayout)findViewById(R.id.ll_lock);
+        ll_elock = (LinearLayout)findViewById(R.id.ll_elock);
 
         Tag1 = (ImageView)findViewById(R.id.carFaultUI_type_Tag1);
         Tag1_1 = (TextView)findViewById(R.id.carFaultUI_type_Tag1_1);
@@ -557,6 +558,7 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
             case R.id.carFaultUI_type_Tag1:
                 if (isSelected1){
                     isSelected1 = false;
+                    ll_lock.setVisibility(View.GONE);
                     if (TagsList.contains("车锁")){
                         TagsList.remove("车锁");
                     }
@@ -575,6 +577,7 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
                     Tag1.setImageResource(R.drawable.lock_icon);    //未选中
                 }else {
                     isSelected1 = true;
+                    ll_lock.setVisibility(View.VISIBLE);
                     if (!TagsList.contains("车锁")){
                         TagsList.add("车锁");
                     }
@@ -795,6 +798,7 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
             case R.id.carFaultUI_type2_Tag1:
                 if (isSelected21){
                     isSelected21 = false;
+                    ll_elock.setVisibility(View.GONE);
                     if (TagsList.contains("车锁")){
                         TagsList.remove("车锁");
                     }
@@ -810,6 +814,7 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
                     Tag21.setImageResource(R.drawable.lock_icon3);    //未选中
                 }else {
                     isSelected21 = true;
+                    ll_elock.setVisibility(View.VISIBLE);
                     if (!TagsList.contains("车锁")){
                         TagsList.add("车锁");
                     }

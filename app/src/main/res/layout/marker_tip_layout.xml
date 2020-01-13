@@ -9,13 +9,15 @@
 
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="32dp"
+        android:layout_width="58dp"
         android:layout_height="18dp"
+
         >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="26dp"
             android:src="@drawable/tip"
             />
 
@@ -23,6 +25,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="26dp"
             android:gravity="center"
             android:text="运营区"
             android:textColor="#333333"

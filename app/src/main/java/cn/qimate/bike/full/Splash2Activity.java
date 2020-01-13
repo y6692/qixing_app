@@ -120,7 +120,7 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 
 		loadingImage.setOnClickListener(this);
 
-		initHttp();
+
 		init();
 
 	}
@@ -143,15 +143,6 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 			handler.sendEmptyMessageDelayed(0, 900);
 		}
 
-//		m_myHandler.sendEmptyMessage(0);
-//		m_myHandler.sendEmptyMessageDelayed(0, 900);
-//		m_myHandler.postDelayed(myhandler, 900);
-//		m_myHandler.postDelayed(new Runnable() {
-//			@Override
-//			public void run() {
-//				time();
-//			}
-//		}, 900);
 
 	}
 
@@ -236,7 +227,7 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 
 
 
-
+		initHttp();
 
 //		Countdown();
 	}

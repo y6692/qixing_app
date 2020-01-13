@@ -68,6 +68,7 @@ import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.TextureMapView;
+import com.amap.api.maps.model.AMapPara;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
@@ -478,7 +479,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                         try {
 
-
                             if (1==1 || result.getFlag().equals("Success")) {
                                 JSONArray jsonArray = new JSONArray(result.getData());
 
@@ -527,11 +527,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                     PolygonOptions pOption = new PolygonOptions();
 
                                     pOption.addAll(list);
-                                    polygon = aMap.addPolygon(pOption.strokeWidth(2)
+                                    polygon = aMap.addPolygon(pOption.strokeWidth(3)
+//                                            .strokeDashStyle()
                                             .strokeColor(Color.argb(255, 0, 135, 255))
-                                            .fillColor(Color.argb(76, 0, 173, 255)));
-//#0087FF
-//                                    #00ADFF
+                                            .fillColor(Color.argb(0, 0, 0, 0)));
+//                                            .fillColor(Color.argb(76, 0, 173, 255)));
 
                                     Log.e("bf===operating_areas4", "==="+polygon);
 

@@ -258,25 +258,31 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
 
                             Log.e("pf===banner1", ja_banners.length() + "===" + result.data);
 
-                            for (int i = 0; i < ja_banners.length(); i++) {
-                                BannerBean bean = JSON.parseObject(ja_banners.get(i).toString(), BannerBean.class);
+                            if(ja_banners.length()==0){
+                                rl_ad.setVisibility(View.GONE);
+                            }else{
+                                rl_ad.setVisibility(View.VISIBLE);
+                                for (int i = 0; i < ja_banners.length(); i++) {
+                                    BannerBean bean = JSON.parseObject(ja_banners.get(i).toString(), BannerBean.class);
 
-                                Log.e("pf===banner2", bean.getImage_url()+"===");
+                                    Log.e("pf===banner2", bean.getImage_url()+"===");
 
-                                imagePath.add(bean.getImage_url());
-                                imageTitle.add(bean.getH5_title());
+                                    imagePath.add(bean.getImage_url());
+                                    imageTitle.add(bean.getH5_title());
 
-                                String action_content = bean.getAction_content();
-                                if(action_content.contains("?")){
-                                    action_content += "&token="+access_token;
-                                }else{
-                                    action_content += "?token="+access_token;
+                                    String action_content = bean.getAction_content();
+                                    if(action_content.contains("?")){
+                                        action_content += "&token="+access_token;
+                                    }else{
+                                        action_content += "?token="+access_token;
+                                    }
+                                    urlPath.add(action_content);
                                 }
-                                urlPath.add(action_content);
+
+                                mBanner.setBannerTitles(imageTitle);
+                                mBanner.setImages(imagePath).setOnBannerListener(PurseFragment.this).start();
                             }
 
-                            mBanner.setBannerTitles(imageTitle);
-                            mBanner.setImages(imagePath).setOnBannerListener(PurseFragment.this).start();
 
                         } catch (Exception e) {
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
