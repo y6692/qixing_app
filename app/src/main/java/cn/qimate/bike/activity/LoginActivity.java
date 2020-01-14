@@ -276,40 +276,12 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
             params.add("phone", telphone);
             params.add("scene", "1");
 
-            HttpHelper.post(context, Urls.verificationcode, params, new TextHttpResponseHandler() {
+            HttpHelper.post2(context, Urls.verificationcode, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
                     if (loadingDialog != null && !loadingDialog.isShowing()) {
                         loadingDialog.setTitle("请稍等");
                         loadingDialog.show();
-                    }
-                }
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-
-//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
-
-                        Log.e("verificationcode===", "==="+responseString);
-
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-
-                        Intent intent = new Intent();
-                        intent.setClass(context, NoteLoginActivity.class);
-                        intent.putExtra("telphone",telphone);
-                        startActivity(intent);
-
-//                        if (result.getFlag().equals("Success")) {
-//
-//                        } else {
-//                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-//                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
-                        }
                     }
                 }
 
@@ -324,6 +296,40 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                     }
                     UIHelper.ToastError(context, throwable.toString());
                 }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+                        Log.e("verificationcode===", "==="+responseString);
+
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        if(result.getStatus_code()==200){
+                            Intent intent = new Intent();
+                            intent.setClass(context, NoteLoginActivity.class);
+                            intent.putExtra("telphone",telphone);
+                            startActivity(intent);
+                        }
+
+
+//                        if (result.getFlag().equals("Success")) {
+//
+//                        } else {
+//                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+//                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                }
+
+
             });
         }catch (Exception e){
             Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();

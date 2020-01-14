@@ -152,21 +152,30 @@ import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.ActionCenterActivity;
 import cn.qimate.bike.activity.AuthCenterActivity;
+import cn.qimate.bike.activity.BillActivity;
 import cn.qimate.bike.activity.CarFaultActivity;
 import cn.qimate.bike.activity.CarFaultProActivity;
+import cn.qimate.bike.activity.ChangePhoneActivity;
 import cn.qimate.bike.activity.ClientManager;
 import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadStartActivity;
 import cn.qimate.bike.activity.DepositFreeAuthActivity;
 import cn.qimate.bike.activity.EndBikeFeedBackActivity;
+import cn.qimate.bike.activity.ExchangeActivity;
 import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.activity.MainActivity;
+import cn.qimate.bike.activity.MyCartActivity;
+import cn.qimate.bike.activity.MyMessageActivity;
+import cn.qimate.bike.activity.MyOrderActivity;
 import cn.qimate.bike.activity.MyOrderDetailActivity;
+import cn.qimate.bike.activity.PayCartActivity;
 import cn.qimate.bike.activity.PersonAlterActivity;
 import cn.qimate.bike.activity.RealNameAuthActivity;
+import cn.qimate.bike.activity.RechargeActivity;
 import cn.qimate.bike.activity.ServiceCenter0Activity;
 import cn.qimate.bike.activity.ServiceCenterActivity;
+import cn.qimate.bike.activity.SettingActivity;
 import cn.qimate.bike.activity.SettlementPlatformActivity;
 import cn.qimate.bike.activity.UnpayOtherActivity;
 import cn.qimate.bike.activity.UnpayRouteActivity;
@@ -192,6 +201,7 @@ import cn.qimate.bike.model.LocationBean;
 import cn.qimate.bike.model.OrderBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.TabTopEntity;
+import cn.qimate.bike.model.UserBean;
 import cn.qimate.bike.util.ByteUtil;
 import cn.qimate.bike.util.HtmlTagHandler;
 import cn.qimate.bike.util.IoBuffer;
@@ -290,6 +300,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private ArrayList<String> imagePath;
     private ArrayList<String> imageTitle;
     private ArrayList<String> urlPath;
+    private ArrayList<String> typeList;
 
     protected LoadingDialog loadingDialog2;
 
@@ -367,8 +378,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private String tipRange = "您还未到还车点，请按照导航到还车点还车";
 
 //    private boolean isConnect = false;
-    BleDevice bleDevice;
-    String token;
+    private BleDevice bleDevice;
+    private String token;
+
+    private LatLng markerPosition;
+
+    private int timeout = 10000;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_main, null);
@@ -494,6 +509,259 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
+    private void initView(){
+        openGPSSettings();
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            int checkPermission = activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
+                } else {
+                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
+                }
+                return;
+            }
+        }
+
+        if(aMap==null){
+            aMap = mapView.getMap();
+        }
+
+        aMap.setOnMapClickListener(this);
+
+        mAMapNavi = AMapNavi.getInstance(context);
+        mAMapNavi.addAMapNaviListener(this);
+
+        aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                ll_top.setVisibility(View.GONE);
+                ll_top_navi.setVisibility(View.VISIBLE);
+
+
+//              Log.e("onMarkerClick===", marker.getTitle()+"==="+marker.getTitle().split("-")[0]);
+                Log.e("onMarkerClick===", mAMapNavi+"==="+referLatitude+"==="+referLongitude+"==="+marker.getPosition().latitude+"==="+marker.getPosition().longitude);
+
+                markerPosition = marker.getPosition();
+
+                tv_navi_name.setText(marker.getTitle());
+                mAMapNavi.calculateWalkRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
+
+
+                return true;
+            }
+        });
+
+        loadingDialog = new LoadingDialog(activity);
+        loadingDialog.setCancelable(false);
+        loadingDialog.setCanceledOnTouchOutside(false);
+
+        loadingDialog2 = new LoadingDialog(activity);
+        loadingDialog2.setCancelable(false);
+        loadingDialog2.setCanceledOnTouchOutside(false);
+
+        advDialog0 = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+        View advDialogView0 = LayoutInflater.from(context).inflate(R.layout.ui_adv_view2, null);
+        advDialog0.setContentView(advDialogView0);
+        advDialog0.setCanceledOnTouchOutside(false);
+
+        advDialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+        View advDialogView = LayoutInflater.from(context).inflate(R.layout.ui_adv_view3, null);
+        advDialog.setContentView(advDialogView);
+        advDialog.setCanceledOnTouchOutside(false);
+
+        advDialog2 = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+        View advDialogView2 = LayoutInflater.from(context).inflate(R.layout.ui_adv_view4, null);
+        advDialog2.setContentView(advDialogView2);
+        advDialog2.setCanceledOnTouchOutside(false);
+
+        advAgainBtn0 = (TextView)advDialogView0.findViewById(R.id.ui_adv_againBtn0);
+        advCloseBtn0 = (TextView)advDialogView0.findViewById(R.id.ui_adv_closeBtn0);
+
+        advAgainBtn = (TextView)advDialogView.findViewById(R.id.ui_adv_againBtn);
+        advCloseBtn = (TextView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+
+        advCloseBtn2 = (ImageView)advDialogView2.findViewById(R.id.ui_adv_closeBtn2);
+
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
+//        customDialog = customBuilder.create();
+
+        customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
+                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        customDialog2 = customBuilder.create();
+
+        customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setTitle("温馨提示").setMessage("请前往最近的还车点还车")        //TODO
+                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        customDialog3 = customBuilder.create();
+
+
+        loadingDialogWithHelp = new LoadingDialogWithHelp(context);
+        loadingDialogWithHelp.setCancelable(false);
+        loadingDialogWithHelp.setCanceledOnTouchOutside(false);
+
+        rl_authBtn = activity.findViewById(R.id.rl_authBtn);
+        tv_authBtn = activity.findViewById(R.id.tv_authBtn);
+        refreshLayout = activity.findViewById(R.id.mainUI_refreshLayout);
+        myLocationLayout =  activity.findViewById(R.id.mainUI_myLocationLayout);
+        slideLayout = activity.findViewById(R.id.mainUI_slideLayout);
+        linkLayout = activity.findViewById(R.id.mainUI_linkServiceLayout);
+        scanLock = activity.findViewById(R.id.mainUI_scanCode_lock);
+
+        ll_top = activity.findViewById(R.id.ll_top);
+        ll_top_navi = activity.findViewById(R.id.ll_top_navi);
+        tv_navi_name = activity.findViewById(R.id.tv_navi_name);
+        tv_navi_distance = activity.findViewById(R.id.tv_navi_distance);
+
+        ll_top_biking = activity.findViewById(R.id.ll_top_biking);
+        tv_biking_codenum = activity.findViewById(R.id.tv_biking_codenum);
+        ll_estimated_cost = activity.findViewById(R.id.ll_estimated_cost);
+        ll_electricity = activity.findViewById(R.id.ll_electricity);
+        ll_bike = activity.findViewById(R.id.ll_bike);
+        ll_ebike = activity.findViewById(R.id.ll_ebike);
+        tv_estimated_cost = activity.findViewById(R.id.tv_estimated_cost);
+        tv_car_start_time = activity.findViewById(R.id.tv_car_start_time);
+        tv_car_start_time2 = activity.findViewById(R.id.tv_car_start_time2);
+        tv_estimated_cost2 = activity.findViewById(R.id.tv_estimated_cost2);
+        tv_car_mileage = activity.findViewById(R.id.tv_car_mileage);
+        tv_car_electricity = activity.findViewById(R.id.tv_car_electricity);
+        ll_biking_openAgain = activity.findViewById(R.id.ll_biking_openAgain);
+        ll_biking_endBtn = activity.findViewById(R.id.ll_biking_endBtn);
+        ll_biking_errorEnd = activity.findViewById(R.id.ll_biking_errorEnd);
+        tv_againBtn = activity.findViewById(R.id.tv_againBtn);
+
+        ll_top_pay = activity.findViewById(R.id.ll_top_pay);
+        tv_pay_codenum = activity.findViewById(R.id.tv_pay_codenum);
+        tv_order_amount = activity.findViewById(R.id.tv_order_amount);
+        tv_pay_car_start_time = activity.findViewById(R.id.tv_pay_car_start_time);
+        tv_pay_car_end_time = activity.findViewById(R.id.tv_pay_car_end_time);
+        ll_payBtn = activity.findViewById(R.id.ll_payBtn);
+        tv_payBtn = activity.findViewById(R.id.tv_payBtn);
+
+
+        rl_authBtn.setOnClickListener(this);
+        refreshLayout.setOnClickListener(this);
+        myLocationLayout.setOnClickListener(this);
+        slideLayout.setOnClickListener(this);
+        linkLayout.setOnClickListener(this);
+        scanLock.setOnClickListener(this);
+        ll_biking_openAgain.setOnClickListener(this);
+        ll_biking_endBtn.setOnClickListener(this);
+        ll_biking_errorEnd.setOnClickListener(this);
+        ll_payBtn.setOnClickListener(this);
+
+        bikeFragment = new BikeFragment();
+        ebikeFragment = new EbikeFragment();
+        mFragments.add(bikeFragment);
+        mFragments.add(ebikeFragment);
+
+
+        for (int i = 0; i < mTitles.length; i++) {
+            mTabEntities.add(new TabTopEntity(mTitles[i]));
+//            mTabEntities.add(new TabEntity(mTitles[i], mIconSelectIds[i], mIconUnselectIds[i]));
+        }
+
+        tab = getActivity().findViewById(R.id.tab);
+
+        tab.setTabData(mTabEntities, getActivity(), R.id.fl_change2, mFragments);
+
+//        changeTab(1);
+//        tab.setCurrentTab(1);
+
+
+        leftBtn = activity.findViewById(R.id.mainUI_leftBtn);
+        rightBtn = activity.findViewById(R.id.mainUI_rightBtn);
+
+        imagePath = new ArrayList<>();
+        imageTitle = new ArrayList<>();
+        urlPath = new ArrayList<>();
+        typeList = new ArrayList<>();
+
+        mMyImageLoader = new MyImageLoader();
+        mBanner = activity.findViewById(R.id.banner);
+        //设置样式，里面有很多种样式可以自己都看看效果
+        mBanner.setBannerStyle(0);
+        //设置图片加载器
+        mBanner.setImageLoader(mMyImageLoader);
+        //设置轮播的动画效果,里面有很多种特效,可以都看看效果。
+        mBanner.setBannerAnimation(Transformer.ZoomOutSlide);
+        //轮播图片的文字
+//      mBanner.setBannerTitles(imageTitle);
+        //设置轮播间隔时间
+        mBanner.setDelayTime(3000);
+        //设置是否为自动轮播，默认是true
+        mBanner.isAutoPlay(true);
+        //设置指示器的位置，小点点，居中显示
+        mBanner.setIndicatorGravity(BannerConfig.CENTER);
+
+        rl_ad = activity.findViewById(R.id.rl_ad);
+
+        leftBtn.setOnClickListener(this);
+        rightBtn.setOnClickListener(this);
+        rl_ad.setOnClickListener(this);
+        advAgainBtn0.setOnClickListener(this);
+        advCloseBtn0.setOnClickListener(this);
+        advAgainBtn.setOnClickListener(this);
+        advCloseBtn.setOnClickListener(this);
+        advCloseBtn2.setOnClickListener(this);
+    }
+
+    private boolean checkGPSIsOpen() {
+        boolean isOpen;
+        locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE); // 高精度
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(false);
+        criteria.setCostAllowed(true);
+        criteria.setPowerRequirement(Criteria.POWER_LOW); // 低功耗
+        provider = locationManager.getBestProvider(criteria, true);
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        locationManager.requestLocationUpdates(provider, 2000, 500, locationListener);
+
+        isOpen = locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER);
+        return isOpen;
+    }
+
+    private void openGPSSettings() {
+        if (checkGPSIsOpen()) {
+        } else {
+
+            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+            customBuilder.setType(3).setTitle("温馨提示").setMessage("请在手机设置打开应用的位置权限并选择最精准的定位模式")
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            activity.finish();
+                        }
+                    })
+                    .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, PRIVATE_CODE);
+                        }
+                    });
+            customBuilder.create().show();
+
+        }
+    }
+
+
     public void car_authority() {
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 
@@ -560,6 +828,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         }else if(unauthorized_code==6) {
                             ll_top_navi.setVisibility(View.GONE);
                             ll_top.setVisibility(View.VISIBLE);
+                            rl_ad.setVisibility(View.GONE);
                             ll_top_biking.setVisibility(View.VISIBLE);
 
                             order_id = new JSONObject(bean.getOrder()).getInt("order_id");
@@ -580,6 +849,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 ebikeInfoThread = null;
                             }
 
+                            rl_ad.setVisibility(View.GONE);
                             ll_top_biking.setVisibility(View.GONE);
                             ll_top_navi.setVisibility(View.GONE);
                             ll_top.setVisibility(View.VISIBLE);
@@ -897,8 +1167,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     } else {
                                         tv_againBtn.setText("再次开锁");
                                     }
-
-
                                 }else{
                                     Log.e("mf===cycling_4", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
@@ -933,7 +1201,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                             BleManager.getInstance()
                                                     .enableLog(true)
                                                     .setReConnectCount(10, 5000)
-                                                    .setConnectOverTime(20000)
+                                                    .setConnectOverTime(timeout)
                                                     .setOperateTimeout(10000);
 
                                             setScanRule();
@@ -941,6 +1209,18 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                         }else if("4".equals(type)){
                                         }else if ("5".equals(type)  || "6".equals(type)) {
+
+                                            if(!SharedPreferencesUrls.getInstance().getBoolean("isKnow0", false)){
+                                                WindowManager windowManager = activity.getWindowManager();
+                                                Display display = windowManager.getDefaultDisplay();
+                                                WindowManager.LayoutParams lp = advDialog0.getWindow().getAttributes();
+                                                lp.width = (int) (display.getWidth() * 1);
+                                                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                                                advDialog0.getWindow().setBackgroundDrawableResource(R.color.transparent);
+                                                advDialog0.getWindow().setAttributes(lp);
+                                                advDialog0.show();
+                                            }
+
                                         }else if ("7".equals(type)) {
                                         }
 
@@ -1588,26 +1868,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    private boolean checkGPSIsOpen() {
-        boolean isOpen;
-        locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE); // 高精度
-        criteria.setAltitudeRequired(false);
-        criteria.setBearingRequired(false);
-        criteria.setCostAllowed(true);
-        criteria.setPowerRequirement(Criteria.POWER_LOW); // 低功耗
-        provider = locationManager.getBestProvider(criteria, true);
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        locationManager.requestLocationUpdates(provider, 2000, 500, locationListener);
-
-        isOpen = locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER);
-        return isOpen;
-    }
-
     private final LocationListener locationListener = new LocationListener() {
 
         @Override
@@ -1632,259 +1892,260 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     };
 
-    private void openGPSSettings() {
-        if (checkGPSIsOpen()) {
-        } else {
 
-            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-            customBuilder.setType(3).setTitle("温馨提示").setMessage("请在手机设置打开应用的位置权限并选择最精准的定位模式")
-                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            activity.finish();
-                        }
-                    })
-                    .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, PRIVATE_CODE);
-                        }
-                    });
-            customBuilder.create().show();
-
-        }
-    }
-
-    private void initView(){
-        openGPSSettings();
-
-        if (Build.VERSION.SDK_INT >= 23) {
-            int checkPermission = activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
-                } else {
-                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
-                }
-                return;
-            }
-        }
-
-        if(aMap==null){
-            aMap = mapView.getMap();
-        }
-
-        aMap.setOnMapClickListener(this);
-
-        mAMapNavi = AMapNavi.getInstance(context);
-        mAMapNavi.addAMapNaviListener(this);
-
-        aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                ll_top.setVisibility(View.GONE);
-                ll_top_navi.setVisibility(View.VISIBLE);
-
-
-//              Log.e("onMarkerClick===", marker.getTitle()+"==="+marker.getTitle().split("-")[0]);
-                Log.e("onMarkerClick===", mAMapNavi+"==="+referLatitude+"==="+referLongitude+"==="+marker.getPosition().latitude+"==="+marker.getPosition().longitude);
-
-                tv_navi_name.setText(marker.getTitle());
-                mAMapNavi.calculateWalkRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
-
-//                mAMapNavi.set
-
-
-
-                LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();//存放所有点的经纬度
-
-//                for(int i=0;i<markers.size();i++){
-//                    boundsBuilder.include(markers.get(i).getPosition());//把所有点都include进去（LatLng类型）
-//                }
-
-                boundsBuilder.include(new LatLng(referLatitude, referLongitude));
-                boundsBuilder.include(marker.getPosition());
-
-                aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 15));
-
-                return true;
-            }
-        });
-
-        loadingDialog = new LoadingDialog(activity);
-        loadingDialog.setCancelable(false);
-        loadingDialog.setCanceledOnTouchOutside(false);
-
-        loadingDialog2 = new LoadingDialog(activity);
-        loadingDialog2.setCancelable(false);
-        loadingDialog2.setCanceledOnTouchOutside(false);
-
-        advDialog0 = new Dialog(context, R.style.Theme_AppCompat_Dialog);
-        View advDialogView0 = LayoutInflater.from(context).inflate(R.layout.ui_adv_view2, null);
-        advDialog0.setContentView(advDialogView0);
-        advDialog0.setCanceledOnTouchOutside(false);
-
-        advDialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
-        View advDialogView = LayoutInflater.from(context).inflate(R.layout.ui_adv_view3, null);
-        advDialog.setContentView(advDialogView);
-        advDialog.setCanceledOnTouchOutside(false);
-
-        advDialog2 = new Dialog(context, R.style.Theme_AppCompat_Dialog);
-        View advDialogView2 = LayoutInflater.from(context).inflate(R.layout.ui_adv_view4, null);
-        advDialog2.setContentView(advDialogView2);
-        advDialog2.setCanceledOnTouchOutside(false);
-
-        advAgainBtn0 = (TextView)advDialogView0.findViewById(R.id.ui_adv_againBtn0);
-        advCloseBtn0 = (TextView)advDialogView0.findViewById(R.id.ui_adv_closeBtn0);
-
-        advAgainBtn = (TextView)advDialogView.findViewById(R.id.ui_adv_againBtn);
-        advCloseBtn = (TextView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
-
-        advCloseBtn2 = (ImageView)advDialogView2.findViewById(R.id.ui_adv_closeBtn2);
-
-//        customBuilder = new CustomDialog.Builder(context);
-//        customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
-//        customDialog = customBuilder.create();
-
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("连接失败").setMessage("蓝牙连接失败，请靠近车锁，重启软件后再试")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog2 = customBuilder.create();
-
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("请前往最近的还车点还车")        //TODO
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog3 = customBuilder.create();
-
-
-        loadingDialogWithHelp = new LoadingDialogWithHelp(context);
-        loadingDialogWithHelp.setCancelable(false);
-        loadingDialogWithHelp.setCanceledOnTouchOutside(false);
-
-        rl_authBtn = activity.findViewById(R.id.rl_authBtn);
-        tv_authBtn = activity.findViewById(R.id.tv_authBtn);
-        refreshLayout = activity.findViewById(R.id.mainUI_refreshLayout);
-        myLocationLayout =  activity.findViewById(R.id.mainUI_myLocationLayout);
-        slideLayout = activity.findViewById(R.id.mainUI_slideLayout);
-        linkLayout = activity.findViewById(R.id.mainUI_linkServiceLayout);
-        scanLock = activity.findViewById(R.id.mainUI_scanCode_lock);
-
-        ll_top = activity.findViewById(R.id.ll_top);
-        ll_top_navi = activity.findViewById(R.id.ll_top_navi);
-        tv_navi_name = activity.findViewById(R.id.tv_navi_name);
-        tv_navi_distance = activity.findViewById(R.id.tv_navi_distance);
-
-        ll_top_biking = activity.findViewById(R.id.ll_top_biking);
-        tv_biking_codenum = activity.findViewById(R.id.tv_biking_codenum);
-        ll_estimated_cost = activity.findViewById(R.id.ll_estimated_cost);
-        ll_electricity = activity.findViewById(R.id.ll_electricity);
-        ll_bike = activity.findViewById(R.id.ll_bike);
-        ll_ebike = activity.findViewById(R.id.ll_ebike);
-        tv_estimated_cost = activity.findViewById(R.id.tv_estimated_cost);
-        tv_car_start_time = activity.findViewById(R.id.tv_car_start_time);
-        tv_car_start_time2 = activity.findViewById(R.id.tv_car_start_time2);
-        tv_estimated_cost2 = activity.findViewById(R.id.tv_estimated_cost2);
-        tv_car_mileage = activity.findViewById(R.id.tv_car_mileage);
-        tv_car_electricity = activity.findViewById(R.id.tv_car_electricity);
-        ll_biking_openAgain = activity.findViewById(R.id.ll_biking_openAgain);
-        ll_biking_endBtn = activity.findViewById(R.id.ll_biking_endBtn);
-        ll_biking_errorEnd = activity.findViewById(R.id.ll_biking_errorEnd);
-        tv_againBtn = activity.findViewById(R.id.tv_againBtn);
-
-        ll_top_pay = activity.findViewById(R.id.ll_top_pay);
-        tv_pay_codenum = activity.findViewById(R.id.tv_pay_codenum);
-        tv_order_amount = activity.findViewById(R.id.tv_order_amount);
-        tv_pay_car_start_time = activity.findViewById(R.id.tv_pay_car_start_time);
-        tv_pay_car_end_time = activity.findViewById(R.id.tv_pay_car_end_time);
-        ll_payBtn = activity.findViewById(R.id.ll_payBtn);
-        tv_payBtn = activity.findViewById(R.id.tv_payBtn);
-
-
-        rl_authBtn.setOnClickListener(this);
-        refreshLayout.setOnClickListener(this);
-        myLocationLayout.setOnClickListener(this);
-        slideLayout.setOnClickListener(this);
-        linkLayout.setOnClickListener(this);
-        scanLock.setOnClickListener(this);
-        ll_biking_openAgain.setOnClickListener(this);
-        ll_biking_endBtn.setOnClickListener(this);
-        ll_biking_errorEnd.setOnClickListener(this);
-        ll_payBtn.setOnClickListener(this);
-
-        bikeFragment = new BikeFragment();
-        ebikeFragment = new EbikeFragment();
-        mFragments.add(bikeFragment);
-        mFragments.add(ebikeFragment);
-
-
-        for (int i = 0; i < mTitles.length; i++) {
-            mTabEntities.add(new TabTopEntity(mTitles[i]));
-//            mTabEntities.add(new TabEntity(mTitles[i], mIconSelectIds[i], mIconUnselectIds[i]));
-        }
-
-        tab = getActivity().findViewById(R.id.tab);
-
-        tab.setTabData(mTabEntities, getActivity(), R.id.fl_change2, mFragments);
-
-//        changeTab(1);
-//        tab.setCurrentTab(1);
-
-
-        leftBtn = activity.findViewById(R.id.mainUI_leftBtn);
-        rightBtn = activity.findViewById(R.id.mainUI_rightBtn);
-
-        imagePath = new ArrayList<>();
-        imageTitle = new ArrayList<>();
-        urlPath = new ArrayList<>();
-
-        mMyImageLoader = new MyImageLoader();
-        mBanner = activity.findViewById(R.id.banner);
-        //设置样式，里面有很多种样式可以自己都看看效果
-        mBanner.setBannerStyle(0);
-        //设置图片加载器
-        mBanner.setImageLoader(mMyImageLoader);
-        //设置轮播的动画效果,里面有很多种特效,可以都看看效果。
-        mBanner.setBannerAnimation(Transformer.ZoomOutSlide);
-        //轮播图片的文字
-//      mBanner.setBannerTitles(imageTitle);
-        //设置轮播间隔时间
-        mBanner.setDelayTime(3000);
-        //设置是否为自动轮播，默认是true
-        mBanner.isAutoPlay(true);
-        //设置指示器的位置，小点点，居中显示
-        mBanner.setIndicatorGravity(BannerConfig.CENTER);
-
-        rl_ad = activity.findViewById(R.id.rl_ad);
-
-        leftBtn.setOnClickListener(this);
-        rightBtn.setOnClickListener(this);
-        rl_ad.setOnClickListener(this);
-        advAgainBtn0.setOnClickListener(this);
-        advCloseBtn0.setOnClickListener(this);
-        advAgainBtn.setOnClickListener(this);
-        advCloseBtn.setOnClickListener(this);
-        advCloseBtn2.setOnClickListener(this);
-    }
 
     @Override
     public void OnBannerClick(int position) {
 //        Toast.makeText(context, "你点了第" + (position + 1) + "张轮播图", Toast.LENGTH_SHORT).show();
 
-        Log.e("OnBannerClick===", imageTitle.get(position)+"==="+urlPath.get(position));
+        Log.e("OnBannerClick===", imageTitle.get(position)+"==="+urlPath.get(position)+"==="+typeList.get(position)+"==="+("car_bad".equals(urlPath.get(position))));
 
-        UIHelper.goWebViewAct(context, imageTitle.get(position), urlPath.get(position));
+//        home 首页
+//        wallet 我的钱包
+//        member 会员中心
+//        recharge 充值页面
+//        cycling_card 购买套餐卡页面
+//        my_cycling_card 我的套餐卡页面
+//        cycling_card_exchange 套餐卡兑换页面
+//        bill 账单
+//        order 我的订单
+//        notice 我的消息
+//        service 客服中心
+//        phone_change 换绑手机
+//        setting 设置中心
+//        cert 认证中心
+//        cert1 免押金认证
+//        cert2 充值认证
+//        car_bad 上报故障
+
+        bannerTz(imageTitle.get(position), typeList.get(position), urlPath.get(position));
+
+
+
 
 //        initmPopupWindowView();
     }
+
+    private void bannerTz(String title, String type, String url) {
+        if("app".equals(type)){
+            if("home".equals(url)){
+                ((MainActivity)activity).changeTab(0);
+            }else if("wallet".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    ((MainActivity)activity).changeTab(1);
+                }
+            }else if("member".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    ((MainActivity)activity).changeTab(2);
+                }
+            }else if("recharge".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, RechargeActivity.class);
+                }
+            }else if("cycling_card".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    user(url);
+                }
+            }else if("my_cycling_card".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    user(url);
+                }
+            }else if("cycling_card_exchange".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    user(url);
+                }
+            }else if("bill".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, BillActivity.class);
+                }
+            }else if("order".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, MyOrderActivity.class);
+                }
+            }else if("notice".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, MyMessageActivity.class);
+                }
+            }else if("service".equals(url)){
+                UIHelper.goToAct(context, ServiceCenterActivity.class);
+            }else if("phone_change".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, ChangePhoneActivity.class);
+                }
+            }else if("setting".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, SettingActivity.class);
+                }
+            }else if("cert".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, AuthCenterActivity.class);
+                }
+            }else if("cert1".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, DepositFreeAuthActivity.class);
+                }
+            }else if("cert2".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context,RealNameAuthActivity.class);
+                }
+            }else if("car_bad".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, CarFaultProActivity.class);
+                }
+            }
+        }else if("h5".equals(type)){
+            UIHelper.goWebViewAct(context, title, url);
+        }
+    }
+
+    private void user(final String url) {
+        Log.e("pf===user", "==="+isHidden());
+
+        HttpHelper.get2(context, Urls.user, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon("pf===user", throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("pf===user1", responseString + "===" + result.data);
+
+                            UserBean bean = JSON.parseObject(result.getData(), UserBean.class);
+
+                            int cert1_status = bean.getCert1_status();
+
+                            if(cert1_status!=3){
+                                ToastUtil.showMessageApp(context, "请先进行免押金认证");
+                            }else {
+
+                                if ("cycling_card".equals(url)) {
+                                    UIHelper.goToAct(context, PayCartActivity.class);
+                                } else if ("my_cycling_card".equals(url)) {
+                                    UIHelper.goToAct(context, MyCartActivity.class);
+                                } else if ("cycling_card_exchange".equals(url)) {
+                                    UIHelper.goToAct(context, ExchangeActivity.class);
+                                }
+                            }
+
+
+                        } catch (Exception e) {
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                        }
+
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+
+                    }
+                });
+            }
+        });
+
+    }
+
 
     private void banner() {
         Log.e("mf===banner", "===" + codenum);
@@ -1917,7 +2178,17 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             if(ja_banners.length()==0){
                                 rl_ad.setVisibility(View.GONE);
                             }else{
-                                rl_ad.setVisibility(View.VISIBLE);
+                                if(unauthorized_code<6){
+                                    rl_ad.setVisibility(View.VISIBLE);
+                                }
+
+                                if(imagePath.size()>0){
+                                    imagePath.clear();
+                                    imageTitle.clear();
+                                    urlPath.clear();
+                                    typeList.clear();
+                                }
+
                                 for (int i = 0; i < ja_banners.length(); i++) {
                                     BannerBean bean = JSON.parseObject(ja_banners.get(i).toString(), BannerBean.class);
 
@@ -1925,12 +2196,17 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     imageTitle.add(bean.getH5_title());
 
                                     String action_content = bean.getAction_content();
-                                    if(action_content.contains("?")){
-                                        action_content+="&token="+access_token;
-                                    }else{
-                                        action_content+="?token="+access_token;
+                                    String action_type = bean.getAction_type();
+                                    if("h5".equals(action_type)){
+                                        if(action_content.contains("?")){
+                                            action_content+="&token="+access_token.split(" ")[1];
+                                        }else{
+                                            action_content+="?token="+access_token.split(" ")[1];
+                                        }
                                     }
                                     urlPath.add(action_content);
+                                    typeList.add(action_type);
+
 //                                urlPath.add(URLEncoder.encode(action_content));
 //                                imageTitle.add("");
                                 }
@@ -1942,8 +2218,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                         } catch (Exception e) {
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
-
-
                         }
 
                         closeLoadingDialog();
@@ -2303,10 +2577,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if(!isLookPsdBtn){   //没连上
                     closeLoadingDialog();
 
-                    if (loadingDialogWithHelp != null && !loadingDialogWithHelp.isShowing()) {
-                        loadingDialogWithHelp.setTitle("正在唤醒车锁");
-                        loadingDialogWithHelp.show();
-                    }
+//                    if (loadingDialogWithHelp != null && !loadingDialogWithHelp.isShowing()) {
+//                        loadingDialogWithHelp.setTitle("正在唤醒车锁");
+//                        loadingDialogWithHelp.show();
+//                    }
 
                     ClientManager.getClient().stopSearch();
                     ClientManager.getClient().disconnect(m_nowMac);
@@ -2536,6 +2810,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 Log.e("refreshLayout===0", parking()+"==="+isConnect+"==="+isLookPsdBtn+"==="+isContainsList+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
 
                 first = false;
+                banner();
                 car_authority();
 
 
@@ -2662,7 +2937,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     BleManager.getInstance()
                             .enableLog(true)
                             .setReConnectCount(10, 5000)
-                            .setConnectOverTime(20000)
+                            .setConnectOverTime(timeout)
                             .setOperateTimeout(10000);
 
                 }else if("4".equals(type)){
@@ -3621,22 +3896,40 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     case R.id.pop_menu_feedbackLayout:
 //                        UIHelper.goToAct(context, EndBikeFeedBackActivity.class);
 
-                        cycling3();
+                        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                        if("".equals(access_token)){
+                            ToastUtil.showMessageApp(context, "请先登录");
+
+                            Intent intent = new Intent(BaseApplication.context, LoginActivity.class);
+                            startActivity(intent);
+                        }else{
+                            cycling3();
+                        }
+
 
 
                         break;
                     case R.id.pop_menu_helpLayout:
 //                        UIHelper.goToAct(context, CarFaultActivity.class);
-                        Intent intent = new Intent(context, CarFaultProActivity.class);
-                        intent.putExtra("type", carmodel_id);
-                        intent.putExtra("bikeCode", codenum);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
+
+                        access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                        if("".equals(access_token)){
+                            ToastUtil.showMessageApp(context, "请先登录");
+
+                            Intent intent = new Intent(BaseApplication.context, LoginActivity.class);
+                            startActivity(intent);
+                        }else{
+                            Intent intent = new Intent(context, CarFaultProActivity.class);
+                            intent.putExtra("type", carmodel_id);
+                            intent.putExtra("bikeCode", codenum);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                        }
 
                         break;
                     case R.id.pop_menu_callLayout:
 //                        UIHelper.goToAct(context, ServiceCenterActivity.class);
-                        intent = new Intent(context, ServiceCenterActivity.class);
+                        Intent intent = new Intent(context, ServiceCenterActivity.class);
                         intent.putExtra("bikeCode", codenum);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -3959,6 +4252,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                 ll_top_navi.setVisibility(View.GONE);
                                 ll_top.setVisibility(View.VISIBLE);
+                                rl_ad.setVisibility(View.GONE);
                                 ll_top_biking.setVisibility(View.VISIBLE);
 
                                 cyclingThread();
@@ -4085,6 +4379,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         m_myHandler.removeCallbacksAndMessages(null);
 
         ll_top.setVisibility(View.VISIBLE);
+        rl_ad.setVisibility(View.VISIBLE);
         ll_top_biking.setVisibility(View.GONE);
         ll_top_pay.setVisibility(View.GONE);
 
@@ -4366,6 +4661,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                     ll_top_navi.setVisibility(View.GONE);
                                     ll_top.setVisibility(View.VISIBLE);
+                                    rl_ad.setVisibility(View.GONE);
                                     ll_top_biking.setVisibility(View.VISIBLE);
 
                                     cyclingThread();
@@ -4812,6 +5108,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                         closeLoadingDialog();
 
                                         Log.e("getStatus===", Code.toString(code));
+
+                                        if("锁已开".equals(Code.toString(code))){
+
+                                            car_notification(3, 5, 0);
+                                        }
+
 //                                        ToastUtil.showMessageApp(context, Code.toString(code));
                                     }
                                 });
@@ -4989,6 +5291,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         if(open) {
                             ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
+                            car_notification(3, 5, 0);
+
 //                            customDialog10.show();
                         }else {
 
@@ -5023,7 +5327,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private void connectDeviceLP() {
         BleConnectOptions options = new BleConnectOptions.Builder()
                 .setConnectRetry(3)
-                .setConnectTimeout(20000)
+                .setConnectTimeout(timeout)
                 .setServiceDiscoverRetry(1)
                 .setServiceDiscoverTimeout(10000)
                 .setEnableNotifyRetry(1)
@@ -5958,7 +6262,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 //锁已开启
                                 ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
+                                car_notification(3, 5, 0);
+
                                 isEndBtn = false;
+
+
                             }
 
                         }else if(s1.startsWith("058502")){
@@ -6005,9 +6313,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                     }
                 });
-
-
-
             }
 
             @Override
@@ -6380,9 +6685,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     }else{
                         minPolygon();
                         closeLoadingDialog();
-
-//                        customDialog3.show();
                     }
+
+//                    minPolygon();
+//                    closeLoadingDialog();
 
                     break;
                 case 4:
@@ -7233,6 +7539,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         rl_authBtn.setVisibility(View.VISIBLE);
         tv_authBtn.setText(tipRange);
 
+        car_notification(3, 4, 0);
+
         double s=0;
         double s1=0;
 
@@ -7276,6 +7584,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //
 //        polyline = aMap.addPolyline(pOption);
 
+        markerPosition = new LatLng(y, x);
+
         mAMapNavi.calculateWalkRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(y, x));
 
         Log.e("minPolygon===2", "==="+s);
@@ -7315,10 +7625,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
             if(!isLookPsdBtn){   //没连上
 
-                if (loadingDialogWithHelp != null && !loadingDialogWithHelp.isShowing()) {
-                    loadingDialogWithHelp.setTitle("正在唤醒车锁");
-                    loadingDialogWithHelp.show();
-                }
+//                if (loadingDialogWithHelp != null && !loadingDialogWithHelp.isShowing()) {
+//                    loadingDialogWithHelp.setTitle("正在唤醒车锁");
+//                    loadingDialogWithHelp.show();
+//                }
 
                 ClientManager.getClient().stopSearch();
                 ClientManager.getClient().disconnect(m_nowMac);
@@ -7391,6 +7701,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             public void run() {
                                 ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
+                                car_notification(3, 5, 0);
+
                                 closeLoadingDialog();
 
                             }
@@ -7457,6 +7769,22 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         Log.e("drawRoutes===", "==="+path.getAllLength());
 
         tv_navi_distance.setText(path.getAllLength()+"米");
+
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();//存放所有点的经纬度
+
+//                for(int i=0;i<markers.size();i++){
+//                    boundsBuilder.include(markers.get(i).getPosition());//把所有点都include进去（LatLng类型）
+//                }
+
+        boundsBuilder.include(new LatLng(referLatitude, referLongitude));
+        boundsBuilder.include(markerPosition);
+
+//                aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 15));
+
+
+//                aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(boundsBuilder.build(),10,10,10,10), 0L, null);
+
+        aMap.moveCamera(CameraUpdateFactory.newLatLngBoundsRect(boundsBuilder.build(),100,100,250,250));    //left_right_padding, left_right_padding, top_padding, bottom_padding
 
 //        routeOverlays.put(routeId, routeOverLay);
     }

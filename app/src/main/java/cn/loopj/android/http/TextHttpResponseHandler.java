@@ -129,7 +129,6 @@ public abstract class TextHttpResponseHandler extends AsyncHttpResponseHandler {
 
                 String responseString = getResponseString(responseBytes, getCharset());
 
-
                 Log.e("onSuccess===0", responseString+"===");
 
                 if(responseString!=null && !"".equals(responseString)){
@@ -147,6 +146,17 @@ public abstract class TextHttpResponseHandler extends AsyncHttpResponseHandler {
 
                         Intent intent = new Intent(BaseApplication.context, LoginActivity.class);
                         BaseApplication.context.startActivity(intent);
+                    }else if(result.getStatus_code()==406){
+                        Log.e("onSuccess===3", responseString+"==="+result.getStatus_code());
+
+                        ToastUtil.showMessageApp(BaseApplication.context, result.getMessage());
+
+//                        if (loadingDialog != null && loadingDialog.isShowing()) {
+//                            loadingDialog.dismiss();
+//                        }
+
+                        onSuccess(statusCode, headers, responseString);
+
                     }else{
                         onSuccess(statusCode, headers, responseString);
                     }

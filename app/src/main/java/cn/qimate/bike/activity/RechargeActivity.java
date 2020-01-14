@@ -86,6 +86,8 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
     private LinearLayout dealLayout;
     private String price = ""; //
 
+    private boolean isRemain = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +96,9 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
         datas = new ArrayList<>();
 //        IntentFilter filter = new IntentFilter("data.broadcast.rechargeAction");
 //        registerReceiver(broadcastReceiver, filter);
+
+        isRemain = getIntent().getBooleanExtra("isRemain", false);
+
         initView();
     }
 
@@ -275,7 +280,7 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
                             intent.putExtra("order_type", 3);
                             intent.putExtra("order_amount", order_amount);
                             intent.putExtra("order_id", order_id);
-                            intent.putExtra("isRemain", true);
+                            intent.putExtra("isRemain", isRemain);
                             context.startActivity(intent);
 
 //                            Intent rIntent = new Intent();

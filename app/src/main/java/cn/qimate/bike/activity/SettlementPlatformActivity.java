@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +16,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -45,6 +47,7 @@ import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.nostra13.universalimageloader.core.ImageLoader;
 import cn.qimate.bike.R;
 import cn.qimate.bike.alipay.PayResult;
+import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.ble.BLEService;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
@@ -83,6 +86,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
     private TextView tv_balance;
     private TextView tv_recharge;
     private TextView tv_order_amount;
+    private RelativeLayout ll_pay;
     private LinearLayout ll_pay1;
     private LinearLayout ll_pay2;
     private LinearLayout ll_pay3;
@@ -102,11 +106,15 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
     private double balance;
     private boolean isRemain;
 
+    private boolean isToPay = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settlement_platform);
         context = this;
+
+        isToPay = false;
 
         initView();
     }
@@ -121,6 +129,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         tv_order_amount = (TextView)findViewById(R.id.tv_order_amount);
         tv_balance = (TextView)findViewById(R.id.tv_balance);
         tv_recharge = (TextView)findViewById(R.id.tv_recharge);
+        ll_pay = (RelativeLayout) findViewById(R.id.ll_pay);
         ll_pay1 = (LinearLayout) findViewById(R.id.ll_pay1);
         ll_pay2 = (LinearLayout) findViewById(R.id.ll_pay2);
         ll_pay3 = (LinearLayout) findViewById(R.id.ll_pay3);
@@ -161,9 +170,12 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
         tv_order_amount.setText("¥"+order_amount);
 
-        Log.e("spa===onResume", order_id+"==="+order_type);
+        Log.e("spa===onResume", isRemain+"==="+isToPay+"==="+order_id+"==="+order_type);
 
-        user();
+        if(!isToPay){
+            user();
+        }
+
     }
 
     private void user() {
@@ -241,13 +253,13 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            Log.e("ura===payments1", responseString + "===" + result.data);
-
                             JSONArray array = new JSONArray(result.getData());
 
                             ll_pay1.setVisibility(View.GONE);
                             ll_pay2.setVisibility(View.GONE);
                             ll_pay3.setVisibility(View.GONE);
+
+                            Log.e("ura===payments1", responseString + "===" + result.data);
 
                             for (int i = 0; i < array.length(); i++) {
 
@@ -255,20 +267,77 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
                                 PaymentBean bean = JSON.parseObject(array.getJSONObject(i).toString(), PaymentBean.class);
 
-                                Log.e("ura===payments3", "==="+bean.getId());
+
+
+//                                int top = 180/ Math.round(BaseApplication.density) *(i+1);
+
+                                int top = 43*Math.round(BaseApplication.density) *(i+1);
+
+                                Log.e("ura===payments3", top+"==="+bean.getId());
 
                                 if(bean.getId()==1){
                                     ll_pay1.setVisibility(View.VISIBLE);
                                     ImageLoader.getInstance().displayImage(bean.getIcon(), iv_balance_icon);
 
+//                                    ll_pay.addView(ll_pay1);
+
+                                    if(i==0){
+                                        payment_id = 1;
+                                        iv_balance.setImageResource(R.drawable.pay_type_selected);
+                                    }
+
+
+                                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll_pay1.getLayoutParams();
+                                    params.setMargins(0, top, 0, 0);
+                                    ll_pay1.setLayoutParams(params);
+
+
+//                                    m_myHandler.sendEmptyMessage(0);
+
                                 }else if(bean.getId()==2){      //wechat
+
                                     ll_pay2.setVisibility(View.VISIBLE);
                                     ImageLoader.getInstance().displayImage(bean.getIcon(), iv_wechat_icon);
 
+//                                    ll_pay.addView(ll_pay2);
+
+//                                    TextView tv = new TextView(context);
+//                                    tv.setText("我和猫猫是新添加的");
+//                                    tv.setBackgroundColor(Color.GRAY);
+//                                    LinearLayout.LayoutParams LP_WW = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                                    FrameLayout.LayoutParams  LP_WW = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+
+//                                    LinearLayout.LayoutParams LP_WW = (LinearLayout.LayoutParams)ll_pay2.getLayoutParams();
+//                                    LP_WW.topMargin = 100;
+//                                    LP_WW.setMargins(0, 100, 0, 0);//设置边距
+//                                    ll_pay2.setLayoutParams(LP_WW);
+
+//                                    ll_pay.addView(ll_pay2);
+
+                                    if(i==0){
+                                        payment_id = 2;
+                                        iv_wechat.setImageResource(R.drawable.pay_type_selected);
+                                    }
+
+//                                    ll_pay2.setPadding(0, top, 0, 0);
+                                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll_pay2.getLayoutParams();
+                                    params.setMargins(0, top, 0, 0);
+                                    ll_pay2.setLayoutParams(params);
                                 }else if(bean.getId()==3){      //alipay
                                     ll_pay3.setVisibility(View.VISIBLE);
                                     ImageLoader.getInstance().displayImage(bean.getIcon(), iv_alipay_icon);
 
+//                                    ll_pay.addView(ll_pay3);
+
+                                    if(i==0){
+                                        payment_id = 3;
+                                        iv_alipay.setImageResource(R.drawable.pay_type_selected);
+                                    }
+
+//                                    ll_pay3.setPadding(0, top, 0, 0);
+                                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll_pay3.getLayoutParams();
+                                    params.setMargins(0, top, 0, 0);
+                                    ll_pay3.setLayoutParams(params);
                                 }
 
 //                                datas.add(bean);
@@ -291,6 +360,30 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         });
 
     }
+
+    private Handler m_myHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message mes) {
+            switch (mes.what) {
+                case 0:
+//                    ll_pay1.setPadding(0, top, 0, 0);
+//                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll_pay1.getLayoutParams();
+//                    FrameLayout.LayoutParams params= (FrameLayout.LayoutParams)ll_pay1.getLayoutParams();
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll_pay1.getLayoutParams();
+                    params.setMargins(0, 100, 0, 0);
+                    ll_pay1.setLayoutParams(params);
+
+//                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                    lp.setMargins(0, 100, 0, 0);
+//                    ll_pay1.setLayoutParams(lp);
+                    break;
+
+                default:
+                    break;
+            }
+            return false;
+        }
+    });
 
     private void cycling() {
         Log.e("ura===order_detail", "==="+order_id);
@@ -400,13 +493,15 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                    Log.e("spa===pay1", responseString+"==="+result.getStatus_code());
+                    Log.e("spa===pay1", payment_id+"==="+responseString+"==="+result.getStatus_code());
 
                     if(result.getStatus_code()==0){
-                        if(payment_id==1){
+                        if(payment_id==1){  //余额
                             Toast.makeText(context,"支付成功",Toast.LENGTH_SHORT).show();
                             end();
-                        }else if(payment_id==2){
+                        }else if(payment_id==2){    //微信
+                            isToPay = true;
+
 //                          OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
                             api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
                             api.registerApp("wx86d98ec252f67d07");
@@ -443,7 +538,9 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                             } else {
                                 Toast.makeText(context, "请下载最新版微信App", Toast.LENGTH_LONG).show();
                             }
-                        }else if(payment_id==3){
+                        }else if(payment_id==3){    //支付宝
+                            isToPay = true;
+
                             final  JSONObject jsonObject = new JSONObject(result.getData());
                             Runnable payRunnable = new Runnable() {
                                 @Override
@@ -617,6 +714,10 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
                                         Log.e("spa===query_order2", order_type+ "===" +order_id);
 
+                                        iv_balance.setImageResource(R.drawable.pay_type_normal);
+                                        iv_wechat.setImageResource(R.drawable.pay_type_normal);
+                                        iv_alipay.setImageResource(R.drawable.pay_type_normal);
+
                                         user();
                                     }else {
                                         scrollToFinishActivity();
@@ -675,13 +776,27 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
 
             case R.id.ll_pay1:  //balance
+                Log.e("ll_pay1===", "===");
+
                 iv_balance.setImageResource(R.drawable.pay_type_selected);
                 iv_alipay.setImageResource(R.drawable.pay_type_normal);
                 iv_wechat.setImageResource(R.drawable.pay_type_normal);
                 payment_id = 1;
                 break;
 
+            case R.id.ll_pay2:  //wechat
+                Log.e("ll_pay2===", "===");
+
+                iv_balance.setImageResource(R.drawable.pay_type_normal);
+                iv_wechat.setImageResource(R.drawable.pay_type_selected);
+                iv_alipay.setImageResource(R.drawable.pay_type_normal);
+
+                payment_id = 2;
+                break;
+
             case R.id.ll_pay3:  //alipay
+                Log.e("ll_pay3===", "===");
+
                 iv_balance.setImageResource(R.drawable.pay_type_normal);
                 iv_wechat.setImageResource(R.drawable.pay_type_normal);
                 iv_alipay.setImageResource(R.drawable.pay_type_selected);
@@ -689,13 +804,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                 payment_id = 3;
                 break;
 
-            case R.id.ll_pay2:  //wechat
-                iv_balance.setImageResource(R.drawable.pay_type_normal);
-                iv_wechat.setImageResource(R.drawable.pay_type_selected);
-                iv_alipay.setImageResource(R.drawable.pay_type_normal);
 
-                payment_id = 2;
-                break;
 
 
 
@@ -706,7 +815,6 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                 }
 
                 Log.e("spf===submitBtn", "===");
-
                 pay();
 
                 break;
@@ -720,8 +828,15 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                 order_type2 = order_type;
                 order_id2 = order_id;
 
+                isToPay = false;
+
+                iv_balance.setImageResource(R.drawable.pay_type_normal);
+                iv_wechat.setImageResource(R.drawable.pay_type_normal);
+                iv_alipay.setImageResource(R.drawable.pay_type_normal);
+
                 Intent intent = new Intent();
                 intent.setClass(context, RechargeActivity.class);
+                intent.putExtra("isRemain", true);
                 startActivityForResult(intent, 1);
                 break;
         }

@@ -862,7 +862,11 @@ public class BikeFaultFragment extends BaseFragment implements View.OnClickListe
 
             for (int i = 0;i<TagsList.size();i++){
                 if("车锁".equals(TagsList.get(i))){
-                    content += TagsList.get(i)+":"+subTag1+";";
+                    if("".equals(subTag1)){
+                        content += TagsList.get(i)+";";
+                    }else{
+                        content += TagsList.get(i)+":"+subTag1+";";
+                    }
                 }else{
                     content += TagsList.get(i)+";";
                 }

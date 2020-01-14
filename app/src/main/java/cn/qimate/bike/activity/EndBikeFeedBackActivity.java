@@ -1176,9 +1176,18 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 
                 if("车锁".equals(TagsList.get(i))){
                     if(isSelected1){
-                        content += TagsList.get(i)+":"+subTag1+";";
+                        if("".equals(subTag1)){
+                            content += TagsList.get(i)+";";
+                        }else{
+                            content += TagsList.get(i)+":"+subTag1+";";
+                        }
+
                     }else{
-                        content += TagsList.get(i)+":"+subTag21+";";
+                        if("".equals(subTag21)){
+                            content += TagsList.get(i)+";";
+                        }else{
+                            content += TagsList.get(i)+":"+subTag21+";";
+                        }
                     }
                 }else{
                     content += TagsList.get(i)+";";

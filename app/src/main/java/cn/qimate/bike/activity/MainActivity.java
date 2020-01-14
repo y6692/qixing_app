@@ -136,6 +136,7 @@ import cn.qimate.bike.model.OrderBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.TabEntity;
 import cn.qimate.bike.model.TabTopEntity;
+import cn.qimate.bike.model.UserBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.ByteUtil;
 import cn.qimate.bike.util.Globals;
@@ -223,6 +224,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     private String app_type;
     private String app_id;
     private String action_content;
+    private String action_type;
 
     private ImageView closeBtn;
     private Dialog advDialog;
@@ -381,10 +383,17 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 
-        Log.e("ma===onResume",  access_token + "===" + type);
+        boolean flag = getIntent().getBooleanExtra("flag", false);
+
+        Log.e("ma===onResume",  flag + "===" + access_token + "===" + type);
 
         if("".equals(access_token)){
             tab.setCurrentTab(0);
+        }
+
+        if(flag){
+            purseFragment.user();
+            mineFragment.initHttp();
         }
 
 //        mainFragment.show
@@ -542,14 +551,17 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                                 imageUrl = bean.getImage_url();
                                 h5_title = bean.getH5_title();
 
+
                                 action_content = bean.getAction_content();
-                                if(action_content.contains("?")){
-                                    action_content += "&token="+access_token;
-                                }else{
-                                    action_content += "?token="+access_token;
+                                action_type = bean.getAction_type();
+                                if("h5".equals(action_type)){
+                                    if(action_content.contains("?")){
+                                        action_content+="&token="+access_token.split(" ")[1];
+                                    }else{
+                                        action_content+="?token="+access_token.split(" ")[1];
+                                    }
                                 }
 
-//                                imagePath.add(imageUrl);
 
                                 if (imageUrl != null && !"".equals(imageUrl)){
                                     WindowManager windowManager = getWindowManager();
@@ -872,20 +884,243 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 break;
             case R.id.ui_adv_image:
 
-                Log.e("OnClick===", h5_title+"==="+action_content);
+                Log.e("OnClick===", h5_title+"==="+action_content+"==="+action_type);
 
-                UIHelper.goWebViewAct(context, h5_title, action_content);
+                if(!"".equals(action_type)){
+                    if (advDialog != null && advDialog.isShowing()) {
+                        advDialog.dismiss();
+                    }
+
+                    bannerTz(h5_title, action_type, action_content);
+                }
+
 
                 break;
-
-
 
             default:
                 break;
         }
     }
 
+    private void bannerTz(String title, String type, String url) {
+        if("app".equals(type)){
+            if("home".equals(url)){
+                changeTab(0);
+            }else if("wallet".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
 
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    changeTab(1);
+                }
+            }else if("member".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    changeTab(2);
+                }
+            }else if("recharge".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, RechargeActivity.class);
+                }
+            }else if("cycling_card".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    user(url);
+                }
+            }else if("my_cycling_card".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    user(url);
+                }
+            }else if("cycling_card_exchange".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    user(url);
+                }
+            }else if("bill".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, BillActivity.class);
+                }
+            }else if("order".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, MyOrderActivity.class);
+                }
+            }else if("notice".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, MyMessageActivity.class);
+                }
+            }else if("service".equals(url)){
+                UIHelper.goToAct(context, ServiceCenterActivity.class);
+            }else if("phone_change".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, ChangePhoneActivity.class);
+                }
+            }else if("setting".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, SettingActivity.class);
+                }
+            }else if("cert".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, AuthCenterActivity.class);
+                }
+            }else if("cert1".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, DepositFreeAuthActivity.class);
+                }
+            }else if("cert2".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context,RealNameAuthActivity.class);
+                }
+            }else if("car_bad".equals(url)){
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if("".equals(access_token)){
+                    ToastUtil.showMessageApp(context, "请先登录");
+
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    UIHelper.goToAct(context, CarFaultProActivity.class);
+                }
+            }
+        }else if("h5".equals(type)){
+            UIHelper.goWebViewAct(context, title, url);
+        }
+    }
+
+    private void user(final String url) {
+        Log.e("pf===user", "===");
+
+        HttpHelper.get2(context, Urls.user, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon("pf===user", throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("pf===user1", responseString + "===" + result.data);
+
+                            UserBean bean = JSON.parseObject(result.getData(), UserBean.class);
+
+                            int cert1_status = bean.getCert1_status();
+
+                            if(cert1_status!=3){
+                                ToastUtil.showMessageApp(context, "请先进行免押金认证");
+                            }else {
+
+                                if ("cycling_card".equals(url)) {
+                                    UIHelper.goToAct(context, PayCartActivity.class);
+                                } else if ("my_cycling_card".equals(url)) {
+                                    UIHelper.goToAct(context, MyCartActivity.class);
+                                } else if ("cycling_card_exchange".equals(url)) {
+                                    UIHelper.goToAct(context, ExchangeActivity.class);
+                                }
+                            }
+
+
+                        } catch (Exception e) {
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                        }
+
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+
+                    }
+                });
+            }
+        });
+
+    }
 
 
     private View.OnClickListener myOnClickLister = new View.OnClickListener() {

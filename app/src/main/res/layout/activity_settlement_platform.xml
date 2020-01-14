@@ -159,13 +159,15 @@
 
             android:background="#F1F1F1" />
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/ll_pay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="vertical"
             >
             <TextView
+                android:id="@+id/tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -185,19 +187,20 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="42dp"
-                    android:layout_marginTop="13dp"
-                    android:layout_marginLeft="30dp">
+                    android:layout_marginLeft="30dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
                         <ImageView
                             android:id="@+id/iv_balance_icon"
                             android:layout_width="28dp"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            android:src="@drawable/balance_logo"
                             />
 
                         <TextView
@@ -306,7 +309,6 @@
                     android:background="#E5E5E5"/>
             </LinearLayout>
 
-
             <LinearLayout
                 android:visibility="gone"
                 android:id="@+id/ll_pay2"
@@ -318,7 +320,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="42dp"
                     android:layout_marginLeft="30dp"
-                    android:layout_marginBottom="11dp"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
@@ -350,9 +351,17 @@
                         android:layout_alignParentRight="true"
                         />
                 </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line_height"
+                    android:layout_marginLeft="70dp"
+                    android:layout_marginRight="60dp"
+                    android:background="#E5E5E5"/>
             </LinearLayout>
 
-        </LinearLayout>
+
+        </RelativeLayout>
 
 
 

@@ -825,13 +825,17 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 
         RequestParams params = new RequestParams();
 
-        Log.e("submit===0", TagsList+"==="+TagsList1);
+        Log.e("submit===0", TagsList+"==="+TagsList1+"==="+subTag1+"==="+("".equals(subTag1)));
 
         String content = "";
         if (TagsList.size() != 0 && !TagsList.isEmpty()){
-            for (int i = 0;i<TagsList.size();i++){
+            for (int i = 0; i<TagsList.size(); i++){
                 if("车锁".equals(TagsList.get(i))){
-                    content += TagsList.get(i)+":"+subTag1+";";
+                    if("".equals(subTag1)){
+                        content += TagsList.get(i)+";";
+                    }else{
+                        content += TagsList.get(i)+":"+subTag1+";";
+                    }
                 }else{
                     content += TagsList.get(i)+";";
                 }

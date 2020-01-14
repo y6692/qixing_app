@@ -1128,13 +1128,21 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
 
             for (int i = 0;i<TagsList.size();i++){
 
-                Log.e("submit===0", TagsList.get(i)+"==="+isSelected1);
+                Log.e("submit===0", TagsList.get(i)+"==="+isSelected1+"==="+subTag1+"==="+subTag21);
 
                 if("车锁".equals(TagsList.get(i))){
                     if(isSelected1){
-                        content += TagsList.get(i)+":"+subTag1+";";
+                        if("".equals(subTag1)){
+                            content += TagsList.get(i)+";";
+                        }else{
+                            content += TagsList.get(i)+":"+subTag1+";";
+                        }
                     }else{
-                        content += TagsList.get(i)+":"+subTag21+";";
+                        if("".equals(subTag21)){
+                            content += TagsList.get(i)+";";
+                        }else{
+                            content += TagsList.get(i)+":"+subTag21+";";
+                        }
                     }
                 }else{
                     content += TagsList.get(i)+";";

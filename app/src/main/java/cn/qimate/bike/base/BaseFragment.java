@@ -115,6 +115,8 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 //		RefreshLogin();
 	}
 
+
+
 	private void init() {
 		baseApplication = (BaseApplication) getActivity().getApplication();
 	}

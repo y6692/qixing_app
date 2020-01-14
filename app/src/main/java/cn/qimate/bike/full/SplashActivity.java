@@ -582,9 +582,9 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 
 								action_content = bean.getAction_content();
 								if(action_content.contains("?")){
-									action_content += "&token="+access_token;
+									action_content += "&token="+access_token.split(" ")[1];
 								}else{
-									action_content += "?token="+access_token;
+									action_content += "?token="+access_token.split(" ")[1];
 								}
 
 //                                imagePath.add(imageUrl);

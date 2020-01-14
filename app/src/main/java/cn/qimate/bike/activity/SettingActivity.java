@@ -212,7 +212,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
 
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (access_token != null && !"".equals(access_token)){
-            HttpHelper.get(context, Urls.aboutus+"?token="+access_token, new TextHttpResponseHandler() {
+            HttpHelper.get(context, Urls.aboutus+"?token="+access_token.split(" ")[1], new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
                     onStartCommon("正在加载");

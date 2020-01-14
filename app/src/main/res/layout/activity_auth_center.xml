@@ -129,7 +129,7 @@
                         android:layout_marginTop="18dp"
                         android:textSize="30sp"
                         android:textColor="#ffffff"
-                        android:text="充值200元立即用车"
+                        android:text="充值元立即用车"
                         />
 
                     <TextView

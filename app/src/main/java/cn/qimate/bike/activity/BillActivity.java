@@ -89,13 +89,12 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
 
     private void initView(){
         item.add("骑行订单");       //TODO  3
-        item.add("套餐卡订单");
         item.add("充值订单");
-        item.add("认证充值订单");
+        item.add("购买套餐卡订单");
         item.add("调度费订单");
         item.add("赔偿费订单");
-        item.add("充值+认证充值订单");
-        item.add("调度费+赔偿费订单");
+//        item.add("充值+认证充值订单");
+//        item.add("调度费+赔偿费订单");
 
         ll_back = (LinearLayout) findViewById(R.id.ll_backBtn);
 
@@ -153,8 +152,24 @@ public class BillActivity extends SwipeBackActivity implements View.OnClickListe
 
             @Override
             public void onOptionsSelect(int options1, int option2, int options3) {
+//                item.add("骑行订单");       //TODO  3
+//                item.add("购买套餐卡订单");
+//                item.add("充值订单");
+//                item.add("调度费订单");
+//                item.add("赔偿费订单");
+                if("骑行订单".equals(item.get(options1))){
+                    order_type = 1;
+                }else if("购买套餐卡订单".equals(item.get(options1))){
+                    order_type = 2;
+                }else if("充值订单".equals(item.get(options1))){
+                    order_type = 7;
+                }else if("调度费订单".equals(item.get(options1))){
+                    order_type = 5;
+                }else if("赔偿费订单".equals(item.get(options1))){
+                    order_type = 6;
+                }
 
-                order_type = options1+1;
+//                order_type = options1+1;
                 tv_bill.setText(item.get(options1));
 
                 datas.clear();

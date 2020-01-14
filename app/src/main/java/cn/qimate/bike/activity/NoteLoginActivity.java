@@ -300,7 +300,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         params.put("phone", telphone);
         params.put("verification_code", telcode);
 
-        HttpHelper.post(context, Urls.authorizations, params, new TextHttpResponseHandler() {
+        HttpHelper.post2(context, Urls.authorizations, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 onStartCommon("正在加载");

@@ -80,6 +80,7 @@ import cn.qimate.bike.activity.MyOrderActivity;
 import cn.qimate.bike.activity.ServiceCenterActivity;
 import cn.qimate.bike.activity.SettingActivity;
 import cn.qimate.bike.activity.SuperVipActivity;
+import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.core.common.BitmapUtils1;
 import cn.qimate.bike.core.common.DisplayUtil;
@@ -97,6 +98,7 @@ import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserBean;
 import cn.qimate.bike.model.UserIndexBean;
 import cn.qimate.bike.util.FileUtil;
+import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
@@ -205,7 +207,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         }else{
             //resume
 
-            initHttp();
+            String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+            if("".equals(access_token)){
+                ToastUtil.showMessageApp(context, "请先登录");
+
+                Intent intent = new Intent(BaseApplication.context, LoginActivity.class);
+                startActivity(intent);
+            }else{
+                initHttp();
+            }
+
         }
     }
 
@@ -812,7 +823,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.personUI_creditLayout:
-                UIHelper.goWebViewAct(context, credit_scores_h5_title, credit_scores_h5_url+"?token="+access_token);
+                Log.e("personUI_creditLayout", credit_scores_h5_url+"==="+access_token.split(" ")[1]);
+                UIHelper.goWebViewAct(context, credit_scores_h5_title, credit_scores_h5_url+"?token="+access_token.split(" ")[1]);
                 break;
 
             case R.id.personUI_serviceCenterLayout:
@@ -837,7 +849,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.personUI_inviteLayout:
-                UIHelper.goWebViewAct(context, invite_h5_title, invite_h5_url);
+                UIHelper.goWebViewAct(context, invite_h5_title, invite_h5_url+"?token="+access_token.split(" ")[1]);
                 break;
 
 
@@ -1047,14 +1059,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         });
     }
 
-    private void initHttp() {
+    public void initHttp() {
         Log.e("minef===initHttp", "==="+isHidden());
 
         if(isHidden()) return;
 
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
         if (access_token != null && !"".equals(access_token)) {
-            HttpHelper.get2(context, Urls.user, new TextHttpResponseHandler() {
+            HttpHelper.get(context, Urls.user, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
                     if (loadingDialog != null && !loadingDialog.isShowing()) {

@@ -242,8 +242,6 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 
 			Log.e("splash===init", isAdv+"==="+getVersion()+"==="+SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)+"==="+SharedPreferencesUrls.getInstance().getInt("version", 0));
 
-
-
 			synchronized(ss){
 
 				skipLayout.setEnabled(false);
@@ -550,9 +548,9 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 
 									action_content = bean.getAction_content();
 									if(action_content.contains("?")){
-										action_content += "&token="+access_token;
+										action_content += "&token="+access_token.split(" ")[1];
 									}else{
-										action_content += "?token="+access_token;
+										action_content += "?token="+access_token.split(" ")[1];
 									}
 
 //                                imagePath.add(imageUrl);
