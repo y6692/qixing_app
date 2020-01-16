@@ -172,6 +172,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
     private String identityNumber;
     private String price;
 
+    private int state;
+
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             // 三级联动效果
@@ -671,7 +673,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                 Glide.with(context).load(bean.getHolding_cert_photo_url()).crossFade().into(uploadImage2);
 
 //                                status; //认证状态 0待认证 1认证中 2已驳回 3认证成功
-                                int state = bean.getStatus();
+                                state = bean.getStatus();
 
                                 if(state==0){
                                     ll_submit.setVisibility(View.VISIBLE);
@@ -813,10 +815,18 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             ToastUtil.showMessageApp(context, result.getMessage());
 
                             if(result.getStatus_code()==200){
-                                order();
 
-//                                UIHelper.goToAct(context, MainActivity.class);
-//                                scrollToFinishActivity();
+                                if(state==2){
+//                                    UIHelper.goToAct(context, MainActivity.class);
+                                    setResult(RESULT_OK);
+                                    scrollToFinishActivity();
+
+                                }else{
+                                    order();
+                                }
+
+
+
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

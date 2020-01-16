@@ -348,16 +348,35 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         surfaceView = (SurfaceView) findViewById(R.id.capture_preview);
 
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+        }
+        //蓝牙锁
+        if (mBluetoothAdapter == null) {
+            BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            mBluetoothAdapter = bluetoothManager.getAdapter();
+        }
 
-        BleManager.getInstance().init(getApplication());
-        BleManager.getInstance()
-                .enableLog(true)
-                .setReConnectCount(10, 5000)
-                .setConnectOverTime(20000)
-                .setOperateTimeout(10000);
+        if (mBluetoothAdapter == null) {
+            ToastUtil.showMessageApp(context, "获取蓝牙失败");
+            return;
+        }
 
-        setScanRule();
-        scan();
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 188);
+        } else {
+            BleManager.getInstance().init(getApplication());
+            BleManager.getInstance()
+                    .enableLog(true)
+                    .setReConnectCount(10, 5000)
+                    .setConnectOverTime(20000)
+                    .setOperateTimeout(10000);
+
+            setScanRule();
+            scan();
+        }
+
 
 //        initHttp();
 //        cycling();
@@ -689,6 +708,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //            MainActivityPermissionsDispatcher.connectDeviceWithPermissionCheck(ActivityScanerCode.this, deviceuuid);
 
         } else if (viewId == R.id.top_back) {
+            inputMethodManager.hideSoftInputFromWindow(bikeNumEdit.getWindowToken(), 0);
             scrollToFinishActivity();
         } else if (viewId == R.id.ll_confirm) {
             String bikeNum = bikeNumEdit.getText().toString().trim();
@@ -3610,16 +3630,27 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         loadingDialog.dismiss();
                     }
 
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("正在唤醒车锁");
-                        loadingDialog.show();
-                    }
+//                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                        loadingDialog.setTitle("正在唤醒车锁");
+//                        loadingDialog.show();
+//                    }
 
                     Log.e("188===", m_nowMac+"==="+type+"==="+deviceuuid);
 
 //                    if (!TextUtils.isEmpty(m_nowMac)) {
 //                    }
 
+                    BleManager.getInstance().init(getApplication());
+                    BleManager.getInstance()
+                            .enableLog(true)
+                            .setReConnectCount(10, 5000)
+                            .setConnectOverTime(20000)
+                            .setOperateTimeout(10000);
+
+                    setScanRule();
+                    scan();
+
+                    /*
                     if("4".equals(type)){
                         bleService.connect(m_nowMac);
                         checkConnect();
@@ -3723,6 +3754,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     }else{
                         connect();
                     }
+                    */
 
                     break;
                 }
@@ -3751,6 +3783,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
+            inputMethodManager.hideSoftInputFromWindow(bikeNumEdit.getWindowToken(), 0);
+
             if(isHide){
                 isHide = false;
 
@@ -3763,7 +3797,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 mCropLayout2.setVisibility(View.VISIBLE);
                 ll_input.setVisibility(View.GONE);
 
-                inputMethodManager.hideSoftInputFromWindow(bikeNumEdit.getWindowToken(), 0);
+
             }else{
                 finishMine();
             }

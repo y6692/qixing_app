@@ -3,6 +3,7 @@ package cn.qimate.bike.wxapi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
@@ -44,6 +45,8 @@ public class WXPayEntryActivity extends SwipeBackActivity implements IWXAPIEvent
 
     @Override
     public void onResp(BaseResp resp) {
+        Log.e("onResp===", resp.getType()+"==="+resp.errCode);
+
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
             if (resp.errCode == -2) {
                 Toast.makeText(this, "取消付款！", Toast.LENGTH_LONG).show();

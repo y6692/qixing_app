@@ -297,8 +297,17 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
 
             final MyCartBean bean = getDatas().get(position);
 
+
+
             GradientDrawable drawable = (GradientDrawable)ll_bg.getBackground();
-            drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[1]), Color.parseColor(bean.getLinear_gradient()[0])});
+            if(bean.getLinear_gradient()!=null){
+                if(bean.getLinear_gradient().length==1){
+                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[0]), Color.parseColor(bean.getLinear_gradient()[0])});
+                }else{
+                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[1]), Color.parseColor(bean.getLinear_gradient()[0])});
+                }
+            }
+
 
             name.setText(bean.getName());
             remaining.setText(bean.getRemaining());
@@ -354,68 +363,73 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
         HttpHelper.get(context, Urls.my_cycling_cards, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                setFooterType(1);
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setFooterType(1);
+                    }
+                });
+
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                UIHelper.ToastError(context, throwable.toString());
-                swipeRefreshLayout.setRefreshing(false);
-                isRefresh = false;
-                setFooterType(3);
-                setFooterVisibility();
+            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        UIHelper.ToastError(context, throwable.toString());
+                        swipeRefreshLayout.setRefreshing(false);
+                        isRefresh = false;
+                        setFooterType(3);
+                        setFooterVisibility();
+                    }
+                });
+
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    Log.e("my_cycling_cards===eb_1","==="+responseString);
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Log.e("my_cycling_cards===eb_1","==="+responseString);
 
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                    JSONArray array = new JSONArray(result.getData());
-                    if (array.length() == 0 && showPage == 1) {
-                        footerLayout.setVisibility(View.VISIBLE);
-                        setFooterType(4);
-                        return;
-                    } else if (array.length() < GlobalConfig.PAGE_SIZE && showPage == 1) {
-                        footerLayout.setVisibility(View.GONE);
-                        setFooterType(5);
-                    } else if (array.length() < GlobalConfig.PAGE_SIZE) {
-                        footerLayout.setVisibility(View.VISIBLE);
-                        setFooterType(2);
-                    } else if (array.length() >= 10) {
-                        footerLayout.setVisibility(View.VISIBLE);
-                        setFooterType(0);
+                            JSONArray array = new JSONArray(result.getData());
+                            if (array.length() == 0 && showPage == 1) {
+                                footerLayout.setVisibility(View.VISIBLE);
+                                setFooterType(4);
+                                return;
+                            } else if (array.length() < GlobalConfig.PAGE_SIZE && showPage == 1) {
+                                footerLayout.setVisibility(View.GONE);
+                                setFooterType(5);
+                            } else if (array.length() < GlobalConfig.PAGE_SIZE) {
+                                footerLayout.setVisibility(View.VISIBLE);
+                                setFooterType(2);
+                            } else if (array.length() >= 10) {
+                                footerLayout.setVisibility(View.VISIBLE);
+                                setFooterType(0);
+                            }
+
+                            for (int i = 0; i < array.length();i++){
+                                MyCartBean bean = JSON.parseObject(array.getJSONObject(i).toString(), MyCartBean.class);
+
+
+                                datas.add(bean);
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            swipeRefreshLayout.setRefreshing(false);
+                            isRefresh = false;
+                            setFooterVisibility();
+                        }
                     }
+                });
 
-                    for (int i = 0; i < array.length();i++){
-                        MyCartBean bean = JSON.parseObject(array.getJSONObject(i).toString(), MyCartBean.class);
-
-
-                        datas.add(bean);
-                    }
-
-//                    Intent intent = new Intent("data.broadcast.action");
-//                    intent.putExtra("codenum", codenum);
-//                    intent.putExtra("count", Integer.parseInt(totalnum));
-//                    context.sendBroadcast(intent);
-
-//                    if (result.getFlag().equals("Success")) {
-//
-//                    } else {
-//                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-//                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    swipeRefreshLayout.setRefreshing(false);
-                    isRefresh = false;
-                    setFooterVisibility();
-                }
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
             }
         });
     }

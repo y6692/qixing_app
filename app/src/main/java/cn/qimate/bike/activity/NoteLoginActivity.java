@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -85,11 +86,15 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
 
     private String telphone = "";
 
+    InputMethodManager inputMethodManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_login);
         context = this;
+
+        inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
         telphone = getIntent().getStringExtra("telphone");
 
@@ -139,6 +144,8 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                 Log.e("icv_input===", icv.getContent()+"===");
 
                 if(icv.getContent().length()==6){
+                    inputMethodManager.hideSoftInputFromWindow(icv.getWindowToken(), 0); // 隐藏
+
                     loginHttp(icv.getContent());
                 }
 
@@ -150,6 +157,8 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
             }
         });
 
+//        inputMethodManager.showSoftInput(icv, InputMethodManager.RESULT_SHOWN);
+//        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
 //        sendCode();
 

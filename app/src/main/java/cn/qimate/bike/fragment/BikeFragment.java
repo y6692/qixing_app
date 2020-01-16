@@ -1590,7 +1590,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //        osn = SharedPreferencesUrls.getInstance().getString("osn", "");
 //        type = SharedPreferencesUrls.getInstance().getString("type", "");
 
-        ToastUtil.showMessage(context, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getString("iscert", "") + ">>>" + m_nowMac);
+        ToastUtil.showMessage(context, ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getString("iscert", "") + ">>>" + m_nowMac);
 
 
 //        closeBroadcast();
@@ -1831,11 +1831,16 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //                        schoolRange();
                         initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
                         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
+
+                        accuracy = amapLocation.getAccuracy();
+
+                        addChooseMarker();
+                        addCircle(myLocation, amapLocation.getAccuracy());
                     } else {
-                        centerMarker.remove();
-                        mCircle.remove();
-                        centerMarker = null;
-                        mCircle = null;
+//                        centerMarker.remove();
+//                        mCircle.remove();
+//                        centerMarker = null;
+//                        mCircle = null;
 
                         if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
                             isContainsList.clear();
@@ -1847,41 +1852,38 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                     ToastUtil.showMessage(context, isContainsList.contains(true) + "======" + near);
 
-                    accuracy = amapLocation.getAccuracy();
 
-                    addChooseMarker();
-                    addCircle(myLocation, amapLocation.getAccuracy());
 
-                    if(!SharedPreferencesUrls.getInstance().getBoolean("switcher",false)){
-                        if (start) {
-                            start = false;
-
-                            if (mlocationClient != null) {
-                                mlocationClient.setLocationListener(BikeFragment.this);
-                                mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-                                mLocationOption.setInterval(2 * 1000);
-                                mlocationClient.setLocationOption(mLocationOption);
-                                mlocationClient.startLocation();
-                            }
-
-                            macList2 = new ArrayList<> (macList);
-                            BaseApplication.getInstance().getIBLE().getLockStatus();
-                        } else {
-
-                            if (isContainsList.contains(true) && near==1){
-                                macList2 = new ArrayList<> (macList);
-
-                                ToastUtil.showMessage(context,"biking---》》》里");
-                                BaseApplication.getInstance().getIBLE().getLockStatus();
-                            }else if (!isContainsList.contains(true) && near==0){
-                                macList2 = new ArrayList<> (macList);
-
-                                ToastUtil.showMessage(context,"biking---》》》外");
-                                BaseApplication.getInstance().getIBLE().getLockStatus();
-                            }
-
-                        }
-                    }
+//                    if(!SharedPreferencesUrls.getInstance().getBoolean("switcher",false)){
+//                        if (start) {
+//                            start = false;
+//
+//                            if (mlocationClient != null) {
+//                                mlocationClient.setLocationListener(BikeFragment.this);
+//                                mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+//                                mLocationOption.setInterval(2 * 1000);
+//                                mlocationClient.setLocationOption(mLocationOption);
+//                                mlocationClient.startLocation();
+//                            }
+//
+//                            macList2 = new ArrayList<> (macList);
+//                            BaseApplication.getInstance().getIBLE().getLockStatus();
+//                        } else {
+//
+//                            if (isContainsList.contains(true) && near==1){
+//                                macList2 = new ArrayList<> (macList);
+//
+//                                ToastUtil.showMessage(context,"biking---》》》里");
+//                                BaseApplication.getInstance().getIBLE().getLockStatus();
+//                            }else if (!isContainsList.contains(true) && near==0){
+//                                macList2 = new ArrayList<> (macList);
+//
+//                                ToastUtil.showMessage(context,"biking---》》》外");
+//                                BaseApplication.getInstance().getIBLE().getLockStatus();
+//                            }
+//
+//                        }
+//                    }
 
 
                     if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)) {
@@ -2311,110 +2313,110 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     protected void submit(String uid, String access_token){
 
-        Log.e("main===submit",macList2.size()+"==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+uid+"==="+access_token+"==="+oid+"==="+referLatitude+"==="+referLongitude);
-
-        RequestParams params = new RequestParams();
-        params.put("uid", uid);
-        params.put("access_token", access_token);
-        params.put("oid", oid);
-        params.put("latitude", referLatitude);
-        params.put("longitude", referLongitude);
-        if (macList2.size() > 0){
-            params.put("xinbiao",macList2.get(0));
-        }
-        HttpHelper.post(context, Urls.backBikescan, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                onStartCommon("正在提交");
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.e("base===","结束用车:"+responseString);
-                        try {
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                            if (result.getFlag().equals("Success")) {
-
-                                SharedPreferencesUrls.getInstance().putString("type","");
-                                SharedPreferencesUrls.getInstance().putString("m_nowMac","");
-                                SharedPreferencesUrls.getInstance().putString("oid","");
-                                SharedPreferencesUrls.getInstance().putString("osn","");
-                                SharedPreferencesUrls.getInstance().putString("type","");
-                                SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
-                                SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
-                                SharedPreferencesUrls.getInstance().putString("biking_latitude","");
-                                SharedPreferencesUrls.getInstance().putString("biking_longitude","");
-
-                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                    loadingDialog.dismiss();
-                                }
-                                if (customDialog3 != null && customDialog3.isShowing()){
-                                    customDialog3.dismiss();
-                                }
-
-                                if ("1".equals(result.getData())){
-                                    ToastUtil.showMessageApp(context, result.getMsg());
-                                    if ("已为您免单,欢迎反馈问题".equals(result.getMsg())){
-
-                                        ToastUtil.showMessage(context,"context==="+context);
-
-//								if(context instanceof CurRoadStartActivity){
-//									CurRoadStartActivity.isEnd = true;
-//									CurRoadStartActivity.instance.finish();
-//								}
-
-                                        tz = 1;
-                                        UIHelper.goToAct(context, FeedbackActivity.class);
-//								UIHelper.goToAct(context, Main2Activity.class);
-//                              scrollToFinishActivity();
-
-                                        Log.e("base===","base===Feedback");
-                                    }else {
-                                        tz = 2;
-                                        Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
-                                        intent.putExtra("oid",oid);
-                                        startActivity(intent);
-
-                                        Log.e("base===","base===HistoryRoadDetail==="+oid);
-                                    }
-                                }else {
-                                    ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
-
-                                    tz = 3;
-                                    UIHelper.goToAct(context, CurRoadBikedActivity.class);
-
-//							Intent intent = new Intent(getApplicationContext(),  CurRoadBikedActivity.class);
-//							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-//							startActivity(intent);
-
-                                    Log.e("base===","base===CurRoadBiked");
-                                }
-//                        scrollToFinishActivity();
-
-                            }else {
-                                ToastUtil.showMessageApp(context, result.getMsg());
-                            }
-                        }catch (Exception e){
-
-                        }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                        if (customDialog3 != null && customDialog3.isShowing()){
-                            customDialog3.dismiss();
-                        }
-                    }
-                });
-
-            }
-        });
+//        Log.e("main===submit",macList2.size()+"==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+uid+"==="+access_token+"==="+oid+"==="+referLatitude+"==="+referLongitude);
+//
+//        RequestParams params = new RequestParams();
+//        params.put("uid", uid);
+//        params.put("access_token", access_token);
+//        params.put("oid", oid);
+//        params.put("latitude", referLatitude);
+//        params.put("longitude", referLongitude);
+//        if (macList2.size() > 0){
+//            params.put("xinbiao",macList2.get(0));
+//        }
+//        HttpHelper.post(context, Urls.backBikescan, params, new TextHttpResponseHandler() {
+//            @Override
+//            public void onStart() {
+//                onStartCommon("正在提交");
+//            }
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                onFailureCommon(throwable.toString());
+//            }
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+//                m_myHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Log.e("base===","结束用车:"+responseString);
+//                        try {
+//                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//                            if (result.getFlag().equals("Success")) {
+//
+//                                SharedPreferencesUrls.getInstance().putString("type","");
+//                                SharedPreferencesUrls.getInstance().putString("m_nowMac","");
+//                                SharedPreferencesUrls.getInstance().putString("oid","");
+//                                SharedPreferencesUrls.getInstance().putString("osn","");
+//                                SharedPreferencesUrls.getInstance().putString("type","");
+//                                SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
+//                                SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
+//                                SharedPreferencesUrls.getInstance().putString("biking_latitude","");
+//                                SharedPreferencesUrls.getInstance().putString("biking_longitude","");
+//
+//                                if (loadingDialog != null && loadingDialog.isShowing()){
+//                                    loadingDialog.dismiss();
+//                                }
+//                                if (customDialog3 != null && customDialog3.isShowing()){
+//                                    customDialog3.dismiss();
+//                                }
+//
+//                                if ("1".equals(result.getData())){
+//                                    ToastUtil.showMessageApp(context, result.getMsg());
+//                                    if ("已为您免单,欢迎反馈问题".equals(result.getMsg())){
+//
+//                                        ToastUtil.showMessage(context,"context==="+context);
+//
+////								if(context instanceof CurRoadStartActivity){
+////									CurRoadStartActivity.isEnd = true;
+////									CurRoadStartActivity.instance.finish();
+////								}
+//
+//                                        tz = 1;
+//                                        UIHelper.goToAct(context, FeedbackActivity.class);
+////								UIHelper.goToAct(context, Main2Activity.class);
+////                              scrollToFinishActivity();
+//
+//                                        Log.e("base===","base===Feedback");
+//                                    }else {
+//                                        tz = 2;
+//                                        Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
+//                                        intent.putExtra("oid",oid);
+//                                        startActivity(intent);
+//
+//                                        Log.e("base===","base===HistoryRoadDetail==="+oid);
+//                                    }
+//                                }else {
+//                                    ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
+//
+//                                    tz = 3;
+//                                    UIHelper.goToAct(context, CurRoadBikedActivity.class);
+//
+////							Intent intent = new Intent(getApplicationContext(),  CurRoadBikedActivity.class);
+////							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+////							startActivity(intent);
+//
+//                                    Log.e("base===","base===CurRoadBiked");
+//                                }
+////                        scrollToFinishActivity();
+//
+//                            }else {
+//                                ToastUtil.showMessageApp(context, result.getMsg());
+//                            }
+//                        }catch (Exception e){
+//
+//                        }
+//                        if (loadingDialog != null && loadingDialog.isShowing()){
+//                            loadingDialog.dismiss();
+//                        }
+//                        if (customDialog3 != null && customDialog3.isShowing()){
+//                            customDialog3.dismiss();
+//                        }
+//                    }
+//                });
+//
+//            }
+//        });
     }
 
     public void carClose(){
@@ -3468,38 +3470,38 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void addMaplocation(double latitude,double longitude){
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (access_token != null && !"".equals(access_token)){
-            RequestParams params = new RequestParams();
-            params.put("uid",uid);
-            params.put("access_token",access_token);
-            params.put("oid",oid);
-            params.put("osn",osn);
-            params.put("latitude",latitude);
-            params.put("longitude",longitude);
-            HttpHelper.post(context, Urls.addMaplocation, params, new TextHttpResponseHandler() {
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                        if (result.getFlag().equals("Success")) {
-                            if (myLocation != null){
-                                SharedPreferencesUrls.getInstance().putString("biking_latitude",""+myLocation.latitude);
-                                SharedPreferencesUrls.getInstance().putString("biking_longitude",""+myLocation.longitude);
-                            }
-                        }
-                    }catch (Exception e){
-
-                    }
-                }
-            });
-        }
+//        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+//        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+//        if (access_token != null && !"".equals(access_token)){
+//            RequestParams params = new RequestParams();
+//            params.put("uid",uid);
+//            params.put("access_token",access_token);
+//            params.put("oid",oid);
+//            params.put("osn",osn);
+//            params.put("latitude",latitude);
+//            params.put("longitude",longitude);
+//            HttpHelper.post(context, Urls.addMaplocation, params, new TextHttpResponseHandler() {
+//                @Override
+//                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//
+//                }
+//
+//                @Override
+//                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+//                    try {
+//                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//                        if (result.getFlag().equals("Success")) {
+//                            if (myLocation != null){
+//                                SharedPreferencesUrls.getInstance().putString("biking_latitude",""+myLocation.latitude);
+//                                SharedPreferencesUrls.getInstance().putString("biking_longitude",""+myLocation.longitude);
+//                            }
+//                        }
+//                    }catch (Exception e){
+//
+//                    }
+//                }
+//            });
+//        }
     }
 
     @Override

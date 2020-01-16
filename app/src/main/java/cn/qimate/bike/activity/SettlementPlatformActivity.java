@@ -4,8 +4,10 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -29,8 +31,11 @@ import com.sofi.blelocker.library.search.SearchRequest;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.utils.GlobalParameterUtils;
+import com.tencent.mm.sdk.modelbase.BaseReq;
+import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.xiaoantech.sdk.XiaoanBleApiClient;
 import com.zxing.lib.scaner.activity.MainFragmentPermissionsDispatcher;
@@ -63,11 +68,12 @@ import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.ToastUtil;
+import cn.qimate.bike.wxapi.WXEntryActivity;
 
 /**
  * Created by yuanyi on 2019/12/9.
  */
-public class SettlementPlatformActivity extends SwipeBackActivity implements View.OnClickListener{
+public class SettlementPlatformActivity extends SwipeBackActivity implements View.OnClickListener {
 
 
     private Context context;
@@ -116,8 +122,35 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
         isToPay = false;
 
+        IntentFilter filter = new IntentFilter("data.broadcast.rechargeAction");
+        registerReceiver(broadcastReceiver, filter);
         initView();
     }
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, Intent intent) {
+            m_myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+//                    if("1".equals(gamestatus)){
+//                        UIHelper.goToAct(context,MainActivity.class);
+//                    }else{
+//                        Intent intent2 = new Intent(context, WebviewActivity.class);
+//                        intent2.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
+//                        intent2.putExtra("title", "活动详情");
+//                        startActivity(intent2);
+//                    }
+//                    scrollToFinishActivity();
+
+                    Log.e("broadcastReceiver===", "===");
+
+                    query_order();
+                }
+            });
+
+        }
+    };
 
     private void initView(){
 
@@ -150,6 +183,9 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         tv_recharge.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
+        api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
+        api.registerApp("wx86d98ec252f67d07");
+//        api.handleIntent(getIntent(), SettlementPlatformActivity.this);
     }
 
     @Override
@@ -157,6 +193,13 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         super.onNewIntent(intent);
 //      must store the new intent unless getIntent() will return the old one
         setIntent(intent);
+
+        Log.e("spa===onNewIntent", isRemain+"==="+isToPay+"==="+order_id+"==="+order_type);
+
+//        if(api!=null){
+//            api.handleIntent(getIntent(), SettlementPlatformActivity.this);
+//        }
+
     }
 
     @Override
@@ -168,9 +211,19 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         order_amount = getIntent().getStringExtra("order_amount");
         isRemain = getIntent().getBooleanExtra("isRemain", false);
 
-        tv_order_amount.setText("¥"+order_amount);
+        if(order_amount==null){
+            tv_order_amount.setText("");
+        }else{
+            tv_order_amount.setText("¥"+order_amount);
+        }
+
 
         Log.e("spa===onResume", isRemain+"==="+isToPay+"==="+order_id+"==="+order_type);
+
+//        if(api!=null){
+//            api.handleIntent(getIntent(), SettlementPlatformActivity.this);
+//        }
+
 
         if(!isToPay){
             user();
@@ -505,8 +558,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                             isToPay = true;
 
 //                          OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
-                            api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
-                            api.registerApp("wx86d98ec252f67d07");
+
                             JSONObject jsonObject2 = new JSONObject(result.getData());
 
                             String payinfo = jsonObject2.getString("payinfo");
@@ -536,10 +588,15 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                             // 后台返回的签名
                             // 调微信支付
                             if (api.isWXAppInstalled() && api.isWXAppSupportAPI()) {
+                                Log.e("pay===3", payinfo +"===");
                                 api.sendReq(req);
                             } else {
+                                Log.e("pay===4", payinfo +"===");
                                 Toast.makeText(context, "请下载最新版微信App", Toast.LENGTH_LONG).show();
                             }
+
+//                            startActivity(new Intent(WXEntryActivity.this, PayActivity.class));
+//
                         }else if(payment_id==3){    //支付宝
                             isToPay = true;
 
@@ -933,4 +990,17 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         }
         return super.onKeyDown(keyCode, event);
     }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (broadcastReceiver != null) {
+            unregisterReceiver(broadcastReceiver);
+            broadcastReceiver = null;
+        }
+    }
+
+
 }

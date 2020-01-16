@@ -308,9 +308,17 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
                                     String action_type = bean.getAction_type();
                                     if("h5".equals(action_type)){
                                         if(action_content.contains("?")){
-                                            action_content+="&token="+access_token.split(" ")[1];
+                                            if(access_token.contains(" ")){
+                                                action_content += "&token="+access_token.split(" ")[1];
+                                            }else{
+                                                action_content += "&token="+access_token;
+                                            }
                                         }else{
-                                            action_content+="?token="+access_token.split(" ")[1];
+                                            if(access_token.contains(" ")){
+                                                action_content += "?token="+access_token.split(" ")[1];
+                                            }else{
+                                                action_content += "?token="+access_token;
+                                            }
                                         }
                                     }
                                     urlPath.add(action_content);

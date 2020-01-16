@@ -25,8 +25,11 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alipay.sdk.app.PayTask;
+import com.tencent.mm.sdk.modelbase.BaseReq;
+import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import org.apache.http.Header;
@@ -53,7 +56,7 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
  * Created by Administrator on 2017/9/9 0009.
  */
 
-public class PayMontCartActivity extends SwipeBackActivity implements View.OnClickListener {
+public class PayMontCartActivity extends SwipeBackActivity implements View.OnClickListener, IWXAPIEventHandler {
     private static final int SDK_PAY_FLAG = 1;
     private IWXAPI api;
     private Context context;
@@ -479,6 +482,8 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
             }
         });
 
+//        api.handleIntent(getIntent(), this);
+
         RequestParams params = new RequestParams();
         params.put("uid",uid);
         params.put("access_token",access_token);
@@ -494,6 +499,8 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                             if (result.getFlag().equals("Success")) {
                                 api = WXAPIFactory.createWXAPI(context, "wx86d98ec252f67d07", false);
                                 api.registerApp("wx86d98ec252f67d07");
+//                                api.handleIntent(getIntent(), context);
+//                                api.handleIntent(getIntent(), this);
                                 JSONObject jsonObject = new JSONObject(result.getData());
                                 PayReq req = new PayReq();
                                 req.appId = jsonObject.getString("appid");// wpay.getAppid();//
@@ -669,5 +676,15 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onReq(BaseReq req) {
+        Log.e("onReq===", req+"==="+req.openId+"==="+req.getType());
+    }
+
+    @Override
+    public void onResp(BaseResp req) {
+        Log.e("onResp===", req+"==="+req.openId+"==="+req.getType());
     }
 }
