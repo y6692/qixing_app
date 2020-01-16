@@ -53,12 +53,15 @@ public class UnpayOtherActivity extends SwipeBackActivity implements View.OnClic
     private int order_id;
     private String order_amount;
     private int order_type;
+    private int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unpay_other);
         context = this;
+
+        type = getIntent().getIntExtra("type", 1);
 
         initView();
     }
@@ -88,9 +91,12 @@ public class UnpayOtherActivity extends SwipeBackActivity implements View.OnClic
     }
 
     private void other() {
-        Log.e("uoa===other", "===");
+        Log.e("uoa===other", "==="+type);
 
-        HttpHelper.get(context, Urls.other, new TextHttpResponseHandler() {
+        RequestParams params = new RequestParams();
+        params.put("type", type);
+
+        HttpHelper.get(context, Urls.other, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 onStartCommon("正在加载");

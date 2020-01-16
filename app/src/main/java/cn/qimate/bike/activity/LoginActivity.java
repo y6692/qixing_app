@@ -312,8 +312,9 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                             intent.setClass(context, NoteLoginActivity.class);
                             intent.putExtra("telphone",telphone);
                             startActivity(intent);
+                        }else{
+                            ToastUtil.showMessageApp(context, result.getMessage());
                         }
-
 
 //                        if (result.getFlag().equals("Success")) {
 //

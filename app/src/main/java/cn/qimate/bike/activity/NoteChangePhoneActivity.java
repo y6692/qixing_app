@@ -184,6 +184,8 @@ public class NoteChangePhoneActivity extends SwipeBackActivity implements View.O
 //                }
 //                sendCode(telphone);
 
+                UIHelper.goToAct(context, ServiceCenterActivity.class);
+
                 break;
         }
     }

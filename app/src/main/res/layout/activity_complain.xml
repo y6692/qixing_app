@@ -88,6 +88,8 @@
                             android:drawableRight="@drawable/delete_selector"
                             android:gravity="center_vertical"
                             android:hint="填写原手机号"
+                            android:inputType="phone"
+                            android:maxLength="11"
                             android:textColor="@color/tx_black"
                             android:textColorHint="#B2B2B2"
                             android:textSize="@dimen/sp16" />
@@ -114,7 +116,7 @@
                             android:background="@null"
                             android:drawableRight="@drawable/delete_selector"
                             android:gravity="center_vertical"
-                            android:hint="填写原密码"
+                            android:hint="填写原密码（非必填）"
                             android:textColor="@color/tx_black"
                             android:textColorHint="#B2B2B2"
                             android:textSize="@dimen/sp16" />
@@ -140,6 +142,8 @@
                             android:drawableRight="@drawable/delete_selector"
                             android:gravity="center_vertical"
                             android:hint="填写新手机号"
+                            android:inputType="phone"
+                            android:maxLength="11"
                             android:textColor="@color/tx_black"
                             android:textColorHint="#B2B2B2"
                             android:textSize="@dimen/sp16" />
@@ -167,6 +171,7 @@
                             android:drawableRight="@drawable/delete_selector"
                             android:gravity="center_vertical"
                             android:hint="输入验证码"
+                            android:inputType="number"
                             android:textColor="@color/tx_black"
                             android:textColorHint="#B2B2B2"
                             android:textSize="@dimen/sp16" />

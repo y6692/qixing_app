@@ -212,7 +212,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
     private OptionsPickerView pvOptions;
     private ArrayList<String> item = new ArrayList<>();
 
-    private String question_type;
+    private String question_type = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,7 +242,6 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
             ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
     }
-
 
 
     private void initView(){
@@ -473,16 +472,16 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         pvOptions.setPicker(item);
         pvOptions.setCyclic(false, false, false);
         pvOptions.setSelectOptions(0, 0, 0);
-        question_type = "车辆故障";
-        tv_question.setText("车辆故障");
-
-        if(carmodel_id==2){
-            ll_bike_fault.setVisibility(View.GONE);
-            ll_ebike_fault.setVisibility(View.VISIBLE);
-        }else{
-            ll_bike_fault.setVisibility(View.VISIBLE);
-            ll_ebike_fault.setVisibility(View.GONE);
-        }
+//        question_type = "车辆故障";
+//        tv_question.setText("车辆故障");
+//
+//        if(carmodel_id==2){
+//            ll_bike_fault.setVisibility(View.GONE);
+//            ll_ebike_fault.setVisibility(View.VISIBLE);
+//        }else{
+//            ll_bike_fault.setVisibility(View.VISIBLE);
+//            ll_ebike_fault.setVisibility(View.GONE);
+//        }
 
         ll_restCauseEdit.setVisibility(View.GONE);
 
@@ -1552,11 +1551,11 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         int height = options.outHeight;
         int width= options.outWidth;
         int inSampleSize = 2; // 默认像素压缩比例，压缩为原图的1/2
-        int minLen = Math.min(height, width); // 原图的最小边长
-        if(minLen > 100) { // 如果原始图像的最小边长大于100dp（此处单位我认为是dp，而非px）
-            float ratio = (float)minLen / 100.0f; // 计算像素压缩比例
-            inSampleSize = (int)ratio;
-        }
+//        int minLen = Math.min(height, width); // 原图的最小边长
+//        if(minLen > 100) { // 如果原始图像的最小边长大于100dp（此处单位我认为是dp，而非px）
+//            float ratio = (float)minLen / 100.0f; // 计算像素压缩比例
+//            inSampleSize = (int)ratio;
+//        }
         options.inJustDecodeBounds = false; // 计算好压缩比例后，这次可以去加载原图了
         options.inSampleSize = inSampleSize; // 设置为刚才计算的压缩比例
         upBitmap = BitmapFactory.decodeFile(urlpath, options); // 解码文件

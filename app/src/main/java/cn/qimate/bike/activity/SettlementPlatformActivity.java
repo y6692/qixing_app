@@ -426,7 +426,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                                 if("0.00".equals(bean.getOrder_amount()) || "0".equals(bean.getOrder_amount())){
                                     Toast.makeText(context,"已为您取消本次订单，谢谢使用",Toast.LENGTH_SHORT).show();
                                     end();
-                                }else if(Double.parseDouble(bean.getOrder_amount())<balance){
+                                }else if(Double.parseDouble(bean.getOrder_amount())<=balance){
                                     pay();
                                 }else{
 
@@ -449,7 +449,9 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
     private void end(){
         if(order_type>=2){
-            UIHelper.goToAct(context, MainActivity.class);
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.putExtra("flag", true);
+            startActivity(intent);
         }else{
             Intent intent = new Intent(context, MyOrderDetailActivity.class);
             intent.putExtra("order_id", order_id);
@@ -720,6 +722,10 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
                                         user();
                                     }else {
+
+                                        Intent intent = new Intent(context, MainActivity.class);
+                                        intent.putExtra("flag", true);
+                                        startActivity(intent);
                                         scrollToFinishActivity();
                                     }
                                 }

@@ -47,6 +47,7 @@ import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.ToastUtil;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -190,6 +191,8 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
 //                }
 //                sendCode(telphone);
 
+                UIHelper.goToAct(context, ServiceCenterActivity.class);
+
                 break;
         }
     }
@@ -254,11 +257,15 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
 
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
+                        if(result.getStatus_code()==200){
+                            handler.sendEmptyMessage(2);
 
-                        handler.sendEmptyMessage(2);
+                            // 开始60秒倒计时
+                            handler.sendEmptyMessageDelayed(1, 1000);
+                        }else{
+                            ToastUtil.showMessageApp(context, result.getMessage());
+                        }
 
-                        // 开始60秒倒计时
-                        handler.sendEmptyMessageDelayed(1, 1000);
 
 //                        if (result.getFlag().equals("Success")) {
 //

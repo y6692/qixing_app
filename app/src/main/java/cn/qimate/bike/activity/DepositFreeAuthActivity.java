@@ -168,6 +168,9 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
     private int school_id;
     private String time = "";
 
+    InputMethodManager inputMethodManager;
+
+
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             // 三级联动效果
@@ -183,6 +186,8 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deposit_free_auth);
         context = this;
+
+        inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
         CrashHandler.getInstance().setmContext(this);
 
@@ -330,6 +335,8 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                 break;
 
             case R.id.ui_deposit_free_auth_time:
+                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
                 pvOptions.show();
                 break;
 
@@ -1127,11 +1134,11 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
         int height = options.outHeight;
         int width= options.outWidth;
         int inSampleSize = 2; // 默认像素压缩比例，压缩为原图的1/2
-        int minLen = Math.min(height, width); // 原图的最小边长
-        if(minLen > 100) { // 如果原始图像的最小边长大于100dp（此处单位我认为是dp，而非px）
-            float ratio = (float)minLen / 100.0f; // 计算像素压缩比例
-            inSampleSize = (int)ratio;
-        }
+//        int minLen = Math.min(height, width); // 原图的最小边长
+//        if(minLen > 100) { // 如果原始图像的最小边长大于100dp（此处单位我认为是dp，而非px）
+//            float ratio = (float)minLen / 100.0f; // 计算像素压缩比例
+//            inSampleSize = (int)ratio;
+//        }
         options.inJustDecodeBounds = false; // 计算好压缩比例后，这次可以去加载原图了
         options.inSampleSize = inSampleSize; // 设置为刚才计算的压缩比例
         upBitmap = BitmapFactory.decodeFile(urlpath, options); // 解码文件

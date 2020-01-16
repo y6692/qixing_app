@@ -205,6 +205,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
             user();
         }
 
+
     }
 
     public void user() {

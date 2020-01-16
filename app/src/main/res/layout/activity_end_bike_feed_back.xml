@@ -129,7 +129,8 @@
                                     android:paddingLeft="2dp"
                                     android:textColor="#666666"
                                     android:textColorHint="#B2B2B2"
-                                    android:textSize="@dimen/sp16" />
+                                    android:textSize="@dimen/sp16"
+                                    android:enabled="false"/>
 
                             </RelativeLayout>
 
@@ -174,6 +175,7 @@
                                 android:paddingLeft="19dp"
                                 android:gravity="center_vertical"
                                 android:text=""
+                                android:hint="请选择"
                                 android:textSize="@dimen/sp16"
                                 android:textColor="@color/tx_black"/>
 

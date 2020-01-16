@@ -447,16 +447,31 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 	public void onClick(View view) {
 //		String uid = SharedPreferencesUrls.getInstance().getString("uid","");
 //		String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+
+		Log.e("sa===onClick0", "ui_adv==="+app_type+"==="+h5_title+"==="+action_content);
+
 		switch (view.getId()){
 			case R.id.plash_loading_main:
 
+				Log.e("sa===onClick", "ui_adv==="+app_type+"==="+h5_title+"==="+action_content);
+
 				isAdv = true;
 
-				tz();
+				if(!isTz){
+					isTz = true;
+
+					try{
+						tz();
+
+					}catch (Exception e){
+
+					}
+				}
+
 
 //				isStop = true;
 
-				Log.e("sa===onClick", "ui_adv==="+app_type+"==="+h5_title+"==="+action_content);
+
 //
 //				UIHelper.goWebViewAct(context, h5_title, action_content);
 
@@ -556,7 +571,7 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 //                                imagePath.add(imageUrl);
 
 									if (imageUrl == null || "".equals(imageUrl)) {
-//								loadingImage.setBackgroundResource(R.drawable.enter_bg);
+//										loadingImage.setBackgroundResource(R.drawable.enter_bg);
 									} else {
 										// 加载图片
 										Glide.with(context).load(imageUrl).into(loadingImage);

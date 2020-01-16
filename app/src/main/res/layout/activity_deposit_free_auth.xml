@@ -158,6 +158,7 @@
                             android:background="@null"
                             android:drawableRight="@drawable/delete_selector"
                             android:gravity="center_vertical"
+                            android:inputType="number"
                             android:hint="填写学号"
                             android:textColor="@color/tx_black"
                             android:textColorHint="#B2B2B2"

@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_gravity="center"
-            android:text="您还未有订单，请快下单吧！"
+            android:text=""
             android:textColor="#BBBBBB"
             android:textSize="@dimen/sp16" />
 

@@ -192,6 +192,11 @@ public class BikeServiceFragment extends BaseFragment implements View.OnClickLis
         footerViewType05 = footerView.findViewById(R.id.footer_Layout_type05);// 暂无数据
         footerLayout = footerView.findViewById(R.id.footer_Layout);
 
+//        iv_type05 = footerView.findViewById(R.id.footer_Layout_iv_type05);
+//        iv_type05.setImageResource(R.drawable.no_msg_icon);
+//        TextView tv_type05 = footerView.findViewById(R.id.footer_Layout_tv_type05);
+//        tv_type05.setText("您还未有消息！");
+
 
         swipeRefreshLayout = (SwipeRefreshLayout)getActivity().findViewById(R.id.Layout_swipeParentLayout);
         listview = (ListView)getActivity().findViewById(R.id.Layout_swipeListView);
