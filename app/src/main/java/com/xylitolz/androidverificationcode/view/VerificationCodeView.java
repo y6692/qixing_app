@@ -160,11 +160,32 @@ public class VerificationCodeView extends RelativeLayout {
             @Override
             public void afterTextChanged(Editable s) {
                 String content = s.toString();
+
+                Log.e("afterTextChanged===", codeNum+"==="+content);
+
                 if (!TextUtils.isEmpty(content)) {
-                    if (content.length() == 1) {
-                        setText(content);
+
+                    String[] strArray = content.split("");
+
+                    Log.e("afterTextChanged===1", strArray.length+"==="+content);
+
+                    for (int i = 0; i < strArray.length; i++) {
+
+                        // 不能大于输入框个数
+                        if (i > codeNum) {
+                            break;
+                        }
+
+                        if (!TextUtils.isEmpty(strArray[i])) {
+                            setText(strArray[i]);
+                            editText.setText("");
+                        }
                     }
-                    editText.setText("");
+
+//                    if (content.length() == 1) {
+//                        setText(content);
+//                    }
+//                    editText.setText("");
                 }
             }
         };

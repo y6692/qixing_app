@@ -8,7 +8,8 @@ import org.json.JSONObject;
 
 public class CarAuthorityBean {
 
-    private int unauthorized_code;
+    private int unauthorized_code;      //未授权码（判断可否用车时用） 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 5需要充值余额或购买骑行卡 6有进行中行程 7有待支付行程 8有待支付调度费 9有待支付赔偿费
+    private int notice_code;        //消息码 同未授权码（展示公告时用）可以用车但认证中或被驳回此值不为0，为3或4
     private String order;
 
     public int getUnauthorized_code() {
@@ -17,6 +18,14 @@ public class CarAuthorityBean {
 
     public void setUnauthorized_code(int unauthorized_code) {
         this.unauthorized_code = unauthorized_code;
+    }
+
+    public int getNotice_code() {
+        return notice_code;
+    }
+
+    public void setNotice_code(int notice_code) {
+        this.notice_code = notice_code;
     }
 
     public String getOrder() {

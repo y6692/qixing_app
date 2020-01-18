@@ -15,6 +15,8 @@ public class UserBean {
     private String balance; //余额
     private int cert1_status;   //免押金认证状态 0待认证 1认证中 2已驳回 3认证成功
     private int cert2_status;   //充值认证状态 0待认证 1认证中 2已驳回 3认证成功
+    private int can_cert1;   //1可进入 0不可进入
+    private int can_cert2;	//1可进入 0不可进入
     private int status; //用户状态 0锁定 1正常 2已注销
     private String created_at;  //注册时间
     private String is_new;  //是否新用户 1是 0不是
@@ -22,6 +24,8 @@ public class UserBean {
     private String invite_h5_url;  //邀请有礼H5地址
     private String credit_scores_h5_title;  //信用分H5标题
     private String credit_scores_h5_url;  //信用分H5地址 需要拼接上 ?token=xxx
+    private String history_order_h5_title;  //历史订单H5标题
+    private String history_order_h5_url;    //历史订单H5地址 需要拼接上 ?token=xxx
     private int unread_count; //未读消息数 为0时不显示红点 否则显示红点
 
 
@@ -105,6 +109,22 @@ public class UserBean {
         this.cert2_status = cert2_status;
     }
 
+    public int getCan_cert1() {
+        return can_cert1;
+    }
+
+    public void setCan_cert1(int can_cert1) {
+        this.can_cert1 = can_cert1;
+    }
+
+    public int getCan_cert2() {
+        return can_cert2;
+    }
+
+    public void setCan_cert2(int can_cert2) {
+        this.can_cert2 = can_cert2;
+    }
+
     public int getStatus() {
         return status;
     }
@@ -159,6 +179,22 @@ public class UserBean {
 
     public void setCredit_scores_h5_url(String credit_scores_h5_url) {
         this.credit_scores_h5_url = credit_scores_h5_url;
+    }
+
+    public String getHistory_order_h5_title() {
+        return history_order_h5_title;
+    }
+
+    public void setHistory_order_h5_title(String history_order_h5_title) {
+        this.history_order_h5_title = history_order_h5_title;
+    }
+
+    public String getHistory_order_h5_url() {
+        return history_order_h5_url;
+    }
+
+    public void setHistory_order_h5_url(String history_order_h5_url) {
+        this.history_order_h5_url = history_order_h5_url;
     }
 
     public int getUnread_count() {

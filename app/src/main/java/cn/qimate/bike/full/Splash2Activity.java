@@ -556,8 +556,6 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 								for (int i = 0; i < ja_banners.length(); i++) {
 									BannerBean bean = JSON.parseObject(ja_banners.get(i).toString(), BannerBean.class);
 
-
-
 									imageUrl = bean.getImage_url();
 									h5_title = bean.getH5_title();
 
@@ -578,7 +576,7 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 
 									Log.e("sa===banner2", imageUrl+"==="+h5_title+"==="+action_content);
 
-//                                imagePath.add(imageUrl);
+//                                		imagePath.add(imageUrl);
 
 									if (imageUrl == null || "".equals(imageUrl)) {
 //										loadingImage.setBackgroundResource(R.drawable.enter_bg);
@@ -592,9 +590,6 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 
 								}
 							}
-
-
-
 
 //                            mBanner.setBannerTitles(imageTitle);
 //                            mBanner.setImages(imagePath).setOnBannerListener(MainActivity.this).start();

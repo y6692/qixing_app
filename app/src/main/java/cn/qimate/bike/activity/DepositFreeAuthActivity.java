@@ -160,6 +160,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
     private String upToken = "";
 
     private Bitmap upBitmap;
+    private Bitmap upBitmap2;
     File picture;
 
     private String realname;
@@ -392,7 +393,20 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 //                        SubmitBtn();
 //                    }
 
-                    SubmitBtn();
+                    loadingDialog.setTitle("正在提交");
+                    loadingDialog.show();
+
+                    if("".equals(imageurl) || "".equals(imageurl2)){
+                        m_myHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                uploadImage(1, upBitmap);
+                                uploadImage(2, upBitmap2);
+                            }
+                        });
+                    }else{
+                        SubmitBtn();
+                    }
                 }
                 break;
 
@@ -622,7 +636,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
     }
 
-    public void uploadImage() {
+    public void uploadImage(final int i, final Bitmap bitmap) {
         //定义数据上传结束后的处理动作
         final UpCompletionHandler upCompletionHandler = new UpCompletionHandler() {
             @Override
@@ -635,23 +649,55 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                 try {
                     JSONObject jsonObject = new JSONObject(response.getString("image"));
 
-                    if(photo == 1){
+                    if(i == 1){
                         imageurl = jsonObject.getString("key");
                     }else{
                         imageurl2 = jsonObject.getString("key");
                     }
 
+                    Log.e("UpCompletion===", imageurl+"==="+imageurl2+jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
 
+                    if(!"".equals(imageurl) && !"".equals(imageurl2)){
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
 
-                    Log.e("UpCompletion===", jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
+                        SubmitBtn();
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                if (loadingDialog != null && loadingDialog.isShowing()) {
+
+                if (loadingDialog != null && loadingDialog.isShowing()){
                     loadingDialog.dismiss();
                 }
 
+
+//                {ver:7.3.3,ResponseInfo:1574237736489492,status:200, reqId:HpgAAAAlr6vh0NgV, xlog:X-Log, xvia:, host:upload.qiniu.com, path:/, ip:/180.101.136.11:80, port:80, duration:183.000000 s, time:1574237736, sent:25256,error:null}==={"image":null,"ret":"success"}
+
+//                http://q0xo2if8t.bkt.clouddn.com/y2.png?e=1574241198&token=FXDJS_lmH1Gfs-Ni9I9kpPf6MZFTGz5U5BP1CgNu:q2uGajiCFq6t7E-9CxrYXWF0bIQ=&attname=
+
+//                Glide.with(context)
+//                        .load("http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken)
+//                        .crossFade()
+//                        .into(uploadImage);
+
+//                Glide.with(context)
+//                        .load("/storage/emulated/0/com.gamefox.samecity.fish/activity/bill1.png")
+//                        .crossFade()
+//                        .into(uploadImage);
+
+//                ImageLoader.getInstance().displayImage("/storage/emulated/0/com.gamefox.samecity.fish/activity/bill1.png", uploadImage);
+
+//                Glide.with(context)
+//                        .load("http://q0xo2if8t.bkt.clouddn.com/y3.png?e=1574242008&token=FXDJS_lmH1Gfs-Ni9I9kpPf6MZFTGz5U5BP1CgNu:cbzS4BHzqrRF8-iENlvHv7v8i94=&attname=")
+////                        .fitCenter()
+////                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                        .crossFade()
+//                        .into(uploadImage);
+
+//                Glide.with(context).load(Urls.host+"/Public/uploads/201911/201911201609453660.jpg").crossFade().into(uploadImage);
             }
         };
         final UploadOptions uploadOptions = new UploadOptions(null, null, false, new UpProgressHandler() {
@@ -673,7 +719,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
         });
         try {
             //上传图片jjj
-            Log.e("uploadImage===", "==="+upToken);
+            Log.e("uploadImage===", bitmap+"==="+upToken);
 
 //            ByteArrayOutputStream baos = new ByteArrayOutputStream();
 //            Log.e("uploadImage===1", upBitmap+"===");
@@ -690,20 +736,31 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
 //            QiNiuInitialize.getSingleton().put(buf.array(), null, upToken, upCompletionHandler, uploadOptions);
 //            QiNiuInitialize.getSingleton().put(baos.toByteArray(), null, upToken, upCompletionHandler, uploadOptions);
-            QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        QiNiuInitialize.getSingleton().put(getByte(bitmap), null, upToken, upCompletionHandler, uploadOptions);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     //获取资源文件中的图片
-    public byte[] getByte() {
+    public byte[] getByte(Bitmap bitmap) {
 //        Resources res = getResources();
 //        Bitmap bm = BitmapFactory.decodeResource(res, R.drawable.bike3);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 //        bm.compress(Bitmap.CompressFormat.PNG, 80, baos);
         Log.e("getByte===1", upBitmap+"===");
-        upBitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
+//        upBitmap.compress(Bitmap.CompressFormat.PNG, 10, baos);
         Log.e("getByte===2", upBitmap+"==="+baos.toByteArray().length);
 
 //        QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
@@ -1010,21 +1067,23 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 //                                        Bitmap bitmap = BitmapFactory.decodeFile(filepath.getPath());
 //                                        upBitmap = BitmapFactory.decodeFile(urlpath);
 
-                                compress(); //压缩图片
-
                                 if(photo == 1){
+                                    compress();
                                     uploadImage.setImageBitmap(upBitmap);
                                 }else{
-                                    uploadImage2.setImageBitmap(upBitmap);
+                                    compress2();
+                                    uploadImage2.setImageBitmap(upBitmap2);
                                 }
 
                                 Log.e("REQUESTCODE_PICK===3", data.getData()+"==="+filepath.getPath());
 
-                                uploadImage();
+//                                        uploadImage();
                             }else{
-                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                    loadingDialog.dismiss();
-                                }
+
+                            }
+
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
                             }
                         }else {
                             if (loadingDialog != null && loadingDialog.isShowing()) {
@@ -1065,21 +1124,23 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 //                                upBitmap = BitmapFactory.decodeFile(urlpath);
 
 
-                        compress(); //压缩图片
-
                         if(photo == 1){
+                            compress();
                             uploadImage.setImageBitmap(upBitmap);
                         }else{
-                            uploadImage2.setImageBitmap(upBitmap);
+                            compress2();
+                            uploadImage2.setImageBitmap(upBitmap2);
                         }
 
                         Log.e("REQUESTCODE_TAKE===3", photo+"==="+upBitmap+"==="+filepath.getPath());
 
-                        uploadImage();
+//                                uploadImage();
                     }else{
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
-                        }
+
+                    }
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
                     }
 
 //                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
@@ -1142,6 +1203,32 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
         options.inJustDecodeBounds = false; // 计算好压缩比例后，这次可以去加载原图了
         options.inSampleSize = inSampleSize; // 设置为刚才计算的压缩比例
         upBitmap = BitmapFactory.decodeFile(urlpath, options); // 解码文件
+
+//        imageUrlList.add(upBitmap);
+//
+//        Log.e("compress===", "==="+imageUrlList.size());
+    }
+
+    void compress2(){
+        // 设置参数
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true; // 只获取图片的大小信息，而不是将整张图片载入在内存中，避免内存溢出
+        BitmapFactory.decodeFile(urlpath, options);
+        int height = options.outHeight;
+        int width= options.outWidth;
+        int inSampleSize = 2; // 默认像素压缩比例，压缩为原图的1/2
+//        int minLen = Math.min(height, width); // 原图的最小边长
+//        if(minLen > 100) { // 如果原始图像的最小边长大于100dp（此处单位我认为是dp，而非px）
+//            float ratio = (float)minLen / 100.0f; // 计算像素压缩比例
+//            inSampleSize = (int)ratio;
+//        }
+        options.inJustDecodeBounds = false; // 计算好压缩比例后，这次可以去加载原图了
+        options.inSampleSize = inSampleSize; // 设置为刚才计算的压缩比例
+        upBitmap2 = BitmapFactory.decodeFile(urlpath, options); // 解码文件
+
+//        imageUrlList.add(upBitmap);
+//
+//        Log.e("compress===", "==="+imageUrlList.size());
     }
 
     /**

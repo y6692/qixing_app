@@ -49,6 +49,7 @@ public class MyOrderActivity extends SwipeBackActivity implements View.OnClickLi
 
     private Context context = this;
     private LinearLayout ll_back;
+    private TextView rightBtn;
     // List
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView myList;
@@ -78,18 +79,28 @@ public class MyOrderActivity extends SwipeBackActivity implements View.OnClickLi
     private ArrayList<String> item = new ArrayList<>();
 
     private int order_type = 0;
+    private String history_order_h5_title;
+    private String history_order_h5_url;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_order);
         datas = new ArrayList<>();
+
+        history_order_h5_title = getIntent().getStringExtra("history_order_h5_title");
+        history_order_h5_url = getIntent().getStringExtra("history_order_h5_url");
+
         initView();
     }
 
     private void initView(){
 
         ll_back = (LinearLayout) findViewById(R.id.ll_backBtn);
+        rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
+        rightBtn.setText("历史订单");
+
 
         pvOptions = new OptionsPickerView(context,false);
         pvOptions.setTitle("交易类型");
@@ -129,6 +140,7 @@ public class MyOrderActivity extends SwipeBackActivity implements View.OnClickLi
         myList.setAdapter(myAdapter);
 
         ll_back.setOnClickListener(this);
+        rightBtn.setOnClickListener(this);
         ll_bill.setOnClickListener(this);
         footerLayout.setOnClickListener(this);
 
@@ -196,9 +208,23 @@ public class MyOrderActivity extends SwipeBackActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
 
+        final String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+        if (access_token == null || "".equals(access_token)) {
+            Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         switch (v.getId()) {
             case R.id.ll_backBtn:
                 scrollToFinishActivity();
+                break;
+
+            case R.id.mainUI_title_rightBtn:
+//                private String history_order_h5_title;
+//                private String history_order_h5_url;
+
+                Log.e("moa===", history_order_h5_title+"==="+history_order_h5_url);
+                UIHelper.goWebViewAct(context, history_order_h5_title, history_order_h5_url+"?token="+access_token.split(" ")[1]);
                 break;
 
             case R.id.ll_bill:

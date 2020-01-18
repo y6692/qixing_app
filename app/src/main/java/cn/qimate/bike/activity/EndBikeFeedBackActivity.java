@@ -338,38 +338,38 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+//                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+//                        restCauseEdit.getText().toString().trim() == null
+//                                || "".equals(restCauseEdit.getText().toString().trim()))){
+//                    submitBtn.setEnabled(false);
+//                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+//                    submitBtn.setEnabled(false);
+//                }else{
+//                    if (bikeCodeEdit.getText().toString().trim() != null &&
+//                            !"".equals(bikeCodeEdit.getText().toString().trim())){
+//                        submitBtn.setEnabled(true);
+//                    }else {
+//                        submitBtn.setEnabled(false);
+//                    }
+//                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+//                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+//                        restCauseEdit.getText().toString().trim() == null
+//                                || "".equals(restCauseEdit.getText().toString().trim()))){
+//                    submitBtn.setEnabled(false);
+//                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+//                    submitBtn.setEnabled(false);
+//                }else{
+//                    if (bikeCodeEdit.getText().toString().trim() != null &&
+//                            !"".equals(bikeCodeEdit.getText().toString().trim())){
+//                        submitBtn.setEnabled(true);
+//                    }else {
+//                        submitBtn.setEnabled(false);
+//                    }
+//                }
             }
         });
 
@@ -381,38 +381,38 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+//                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+//                        restCauseEdit.getText().toString().trim() == null
+//                                || "".equals(restCauseEdit.getText().toString().trim()))){
+//                    submitBtn.setEnabled(false);
+//                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+//                    submitBtn.setEnabled(false);
+//                }else{
+//                    if (bikeCodeEdit.getText().toString().trim() != null &&
+//                            !"".equals(bikeCodeEdit.getText().toString().trim())){
+//                        submitBtn.setEnabled(true);
+//                    }else {
+//                        submitBtn.setEnabled(false);
+//                    }
+//                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                        || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+//                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+//                        restCauseEdit.getText().toString().trim() == null
+//                        || "".equals(restCauseEdit.getText().toString().trim()))){
+//                    submitBtn.setEnabled(false);
+//                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+//                    submitBtn.setEnabled(false);
+//                }else{
+//                    if (bikeCodeEdit.getText().toString().trim() != null &&
+//                            !"".equals(bikeCodeEdit.getText().toString().trim())){
+//                        submitBtn.setEnabled(true);
+//                    }else {
+//                        submitBtn.setEnabled(false);
+//                    }
+//                }
             }
         });
 
@@ -438,22 +438,25 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                             dialog.cancel();
                             imageUrlList.remove(position);
 
-                            if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                                    restCauseEdit.getText().toString().trim() == null
-                                            || "".equals(restCauseEdit.getText().toString().trim()))){
-                                submitBtn.setEnabled(false);
-                            }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                                submitBtn.setEnabled(false);
-                            }else{
-                                if (bikeCodeEdit.getText().toString().trim() != null &&
-                                        !"".equals(bikeCodeEdit.getText().toString().trim())){
-                                    submitBtn.setEnabled(true);
-                                }else {
-                                    submitBtn.setEnabled(false);
-                                }
-                            }
+//                            if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+//                                    restCauseEdit.getText().toString().trim() == null
+//                                            || "".equals(restCauseEdit.getText().toString().trim()))){
+//                                submitBtn.setEnabled(false);
+//                            }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+//                                submitBtn.setEnabled(false);
+//                            }else{
+//                                if (bikeCodeEdit.getText().toString().trim() != null &&
+//                                        !"".equals(bikeCodeEdit.getText().toString().trim())){
+//                                    submitBtn.setEnabled(true);
+//                                }else {
+//                                    submitBtn.setEnabled(false);
+//                                }
+//                            }
 
                             myAdapter.notifyDataSetChanged();
+
+
+                            Log.e("photoMyGridview===", "==="+imageUrlList.size());
                         }
                     });
                     customBuilder.create().show();
@@ -1055,8 +1058,30 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                 break;
 
             case R.id.endBikeFeedBackUI_submitBtn:
-                submit();
+//                if(isSubmit) return;
+//
+//                isSubmit = true;
+
+                loadingDialog.setTitle("正在提交");
+                loadingDialog.show();
+
+                if(imageList.size()==0){
+                    for(int i =0; i<imageUrlList.size(); i++){
+                        upBitmap = imageUrlList.get(i);
+
+                        m_myHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                uploadImage();
+                            }
+                        });
+                    }
+                }else{
+                    submit();
+                }
+
                 break;
+
             default:
                 break;
         }
@@ -1099,31 +1124,31 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 
 
     private void pd(){
-        Log.e("pd===", TagsList+"==="+latitude+"==="+longitude+"==="+imageList);
-
-        if("车辆故障".equals(question_type)){
-            if (TagsList.size() == 0 || TagsList.isEmpty()){
-                submitBtn.setEnabled(false);
-            }else if(imageList.size() == 0 || imageList.isEmpty()) {
-                submitBtn.setEnabled(false);
-            }else{
-                if (bikeCodeEdit.getText().toString().trim() != null && !"".equals(bikeCodeEdit.getText().toString().trim())){
-                    submitBtn.setEnabled(true);
-                }else {
-                    submitBtn.setEnabled(false);
-                }
-            }
-        }else{
-            if(imageList.size() == 0 || imageList.isEmpty()) {
-                submitBtn.setEnabled(false);
-            }else{
-                if (bikeCodeEdit.getText().toString().trim() != null && !"".equals(bikeCodeEdit.getText().toString().trim())){
-                    submitBtn.setEnabled(true);
-                }else {
-                    submitBtn.setEnabled(false);
-                }
-            }
-        }
+//        Log.e("pd===", TagsList+"==="+latitude+"==="+longitude+"==="+imageList);
+//
+//        if("车辆故障".equals(question_type)){
+//            if (TagsList.size() == 0 || TagsList.isEmpty()){
+//                submitBtn.setEnabled(false);
+//            }else if(imageList.size() == 0 || imageList.isEmpty()) {
+//                submitBtn.setEnabled(false);
+//            }else{
+//                if (bikeCodeEdit.getText().toString().trim() != null && !"".equals(bikeCodeEdit.getText().toString().trim())){
+//                    submitBtn.setEnabled(true);
+//                }else {
+//                    submitBtn.setEnabled(false);
+//                }
+//            }
+//        }else{
+//            if(imageList.size() == 0 || imageList.isEmpty()) {
+//                submitBtn.setEnabled(false);
+//            }else{
+//                if (bikeCodeEdit.getText().toString().trim() != null && !"".equals(bikeCodeEdit.getText().toString().trim())){
+//                    submitBtn.setEnabled(true);
+//                }else {
+//                    submitBtn.setEnabled(false);
+//                }
+//            }
+//        }
 
     }
 
@@ -1151,9 +1176,10 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
     });
 
     private void submit(){
-        if(isSubmit) return;
 
-        isSubmit = true;
+//        onStartCommon("正在提交");
+
+//        imageUrlList
 
         String address = addressEdit.getText().toString().trim();
         String other = restCauseEdit.getText().toString().trim();
@@ -1165,12 +1191,6 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
         if ("车辆故障".equals(question_type) && TagsList.size() != 0 && !TagsList.isEmpty()){
 
             for (int i = 0;i<TagsList.size();i++){
-//                    if (i != TagsList.size() - 1){
-//                        content = content + TagsList.get(i)+",";
-//                    }else {
-//                        content = content + TagsList.get(i)+ "。";
-//                    }
-
                 Log.e("submit===0", TagsList.get(i)+"==="+isSelected1);
 
                 if("车锁".equals(TagsList.get(i))){
@@ -1191,54 +1211,9 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                 }else{
                     content += TagsList.get(i)+";";
                 }
-
             }
 
-//            if ((isSelected6 || isSelected26) && other != null && !"".equals(other)){
-//                for (int i = 0; i < TagsList.size(); i++){
-////                     content = content + TagsList.get(i)+",";
-//                    content += TagsList.get(i)+";";
-//                }
-////                content = content + other+ "。";
-//            }else {
-//
-//            }
         }
-//        else {
-//            content = other + "。";
-//        }
-
-//        String content1 = "";
-//        if (isSelected1 || isSelected21){
-//            for (int i = 0; i<TagsList1.size(); i++){
-//                if (i != TagsList1.size() - 1){
-//                    content1 = content1 + TagsList1.get(i)+",";
-//                }else {
-//                    content1 = content1 + TagsList1.get(i)+ "。";
-//                }
-//            }
-//        }
-
-//        if (content == null || "".equals(content)){
-//            m_myHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    ToastUtil.showMessageApp(context,"请选择问题类型");
-//                }
-//            });
-//
-//            return;
-//        }
-//        if (imageList.size() == 0 || imageList.isEmpty()){
-//            m_myHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    ToastUtil.showMessageApp(context,"请上传照片");
-//                }
-//            });
-//
-//            return;
-//        }
 
         Log.e("submit===", bikeCode+"==="+TagsList+"==="+TagsList1+"==="+question_type+"==="+latitude+"==="+longitude+"==="+content+"==="+other+"==="+address+"==="+imageList);
 
@@ -1261,7 +1236,6 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 onFailureCommon(throwable.toString());
             }
-
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, final String responseString) {
@@ -1408,10 +1382,9 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 
                                 compress(); //压缩图片
 
-
                                 Log.e("REQUESTCODE_TAKE===3", "==="+filepath.getPath());
 
-                                uploadImage();
+//                                uploadImage();
                             }
 
                         }else {
@@ -1451,11 +1424,22 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 
                     pd();
                     Log.e("UpCompletion===", imageList+"==="+jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
+
+                    if(imageList.size()==imageUrlList.size()){
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+
+                        submit();
+                    }
                 } catch (JSONException e) {
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+
                     e.printStackTrace();
                 }
-
-
 
 
 
@@ -1513,7 +1497,6 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 //            Log.e("uploadImage===2", upBitmap+"==="+baos.toByteArray().length);
 
 
-
 //            int bytes = upBitmap.getByteCount();
 //            ByteBuffer buf = ByteBuffer.allocate(bytes);
 //            upBitmap.copyPixelsToBuffer(buf);
@@ -1521,7 +1504,19 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 
 //            QiNiuInitialize.getSingleton().put(buf.array(), null, upToken, upCompletionHandler, uploadOptions);
 //            QiNiuInitialize.getSingleton().put(baos.toByteArray(), null, upToken, upCompletionHandler, uploadOptions);
-            QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1562,6 +1557,8 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 
         imageUrlList.add(upBitmap);
         myAdapter.notifyDataSetChanged();
+
+        Log.e("compress===", "==="+imageUrlList.size());
     }
 
     /**

@@ -779,7 +779,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="可借车位置"
+                            android:text="可还车位置"
                             android:textColor="#666666"
                             android:textSize="@dimen/sp14"
                             />

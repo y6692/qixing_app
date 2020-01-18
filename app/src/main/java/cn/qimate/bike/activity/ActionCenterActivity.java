@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +27,13 @@ import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.adapter.ActionCenterAdapter;
 import cn.qimate.bike.core.common.HttpHelper;
+import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.model.ActionCenterBean;
 import cn.qimate.bike.model.GlobalConfig;
 import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.model.UserBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 /**
@@ -61,6 +64,8 @@ public class ActionCenterActivity extends SwipeBackActivity implements View.OnCl
     private boolean isRefresh = true;// 是否刷新中
     private boolean isLast = false;
     private int showPage = 1;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,12 +110,16 @@ public class ActionCenterActivity extends SwipeBackActivity implements View.OnCl
 
         backImg.setOnClickListener(this);
         footerLayout.setOnClickListener(this);
+
+//        user();
     }
+
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //        UIHelper.goWebViewAct(context,"活动中心",Urls.activityDetail+"&id="+myAdapter.getDatas().get(position).getId());
-        Intent intent = new Intent(context,ActionWebviewActivity.class);
+        Intent intent = new Intent(context, ActionWebviewActivity.class);
         intent.putExtra("title","活动中心");
         intent.putExtra("link",Urls.activityDetail+"&id="+myAdapter.getDatas().get(position).getId());
         intent.putExtra("imageUrl",Urls.host+myAdapter.getDatas().get(position).getAc_thumb());

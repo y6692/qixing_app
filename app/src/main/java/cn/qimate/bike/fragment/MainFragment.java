@@ -252,6 +252,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private String first_time;
     private String continued_price;
     private String continued_time;
+    private Boolean isMac;
 
     private String keySource = "";
     //密钥索引
@@ -355,10 +356,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     boolean isFrist1 = true;
     boolean stopScan = false;
     private int clickCount = 0;
-    int tz = 0;
-    String transtype = "";
-    int major = 0;
-    int minor = 0;
+    private int tz = 0;
+    private String transtype = "";
+    private int major = 0;
+    private int minor = 0;
     private boolean isGPS_Lo = false;
     private boolean scan = false;
     private boolean isTemp = false;
@@ -370,6 +371,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private boolean isWaitEbikeInfo = true;
     private Thread ebikeInfoThread;
     public String oid = "";
+    private int notice_code = 0;
 
     private boolean first = true;
     private boolean isMin = false;
@@ -543,17 +545,21 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                ll_top.setVisibility(View.GONE);
-                ll_top_navi.setVisibility(View.VISIBLE);
+
+                Log.e("onMarkerClick===", marker.getTitle()+"==="+mAMapNavi+"==="+referLatitude+"==="+referLongitude+"==="+marker.getPosition().latitude+"==="+marker.getPosition().longitude);
+
+                if(marker.getTitle()!=null && !"".equals(marker.getTitle())){
+                    ll_top.setVisibility(View.GONE);
+                    ll_top_navi.setVisibility(View.VISIBLE);
 
 
 //              Log.e("onMarkerClick===", marker.getTitle()+"==="+marker.getTitle().split("-")[0]);
-                Log.e("onMarkerClick===", mAMapNavi+"==="+referLatitude+"==="+referLongitude+"==="+marker.getPosition().latitude+"==="+marker.getPosition().longitude);
 
-                markerPosition = marker.getPosition();
+                    markerPosition = marker.getPosition();
+                    tv_navi_name.setText(marker.getTitle());
+                    mAMapNavi.calculateWalkRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
 
-                tv_navi_name.setText(marker.getTitle());
-                mAMapNavi.calculateWalkRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
+                }
 
 
                 return true;
@@ -794,14 +800,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                     CarAuthorityBean bean = JSON.parseObject(result.getData(), CarAuthorityBean.class);
 
-                    SharedPreferencesUrls.getInstance().putString("iscert", ""+bean.getUnauthorized_code());
-
-                    Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder());
-//                        Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder()+"==="+new JSONObject(bean.getOrder()).getInt("order_id"));
+//                  Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder()+"==="+new JSONObject(bean.getOrder()).getInt("order_id"));
 
 //                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 5需要充值余额或购买骑行卡 6有进行中行程 7有待支付行程 8有待支付调度费 9有待支付赔偿费
                     unauthorized_code = bean.getUnauthorized_code();
+                    notice_code = bean.getNotice_code();
 
+                    SharedPreferencesUrls.getInstance().putString("iscert", ""+notice_code);
+                    Log.e("mf===car_authority2", notice_code+"==="+unauthorized_code+"==="+bean.getOrder());
 
                     ll_top.setVisibility(View.VISIBLE);
                     ll_top_biking.setVisibility(View.GONE);
@@ -815,25 +821,24 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         ebikeFragment.initNearby(referLatitude, referLongitude);
                     }
 
-
-                    if(unauthorized_code==0) {
+                    if(notice_code==0) {
 
                     }else{
-                        if(unauthorized_code<6) {
+                        if(notice_code<6) {
                             rl_authBtn.setVisibility(View.VISIBLE);
                         }
 
-                        if(unauthorized_code==1) {
+                        if(notice_code==1) {
                             tv_authBtn.setText("您还未登录，请点击进行登录！");
-                        }else if(unauthorized_code==2) {
+                        }else if(notice_code==2) {
                             tv_authBtn.setText("您还未认证，请点击进行认证！");
-                        }else if(unauthorized_code==3) {
+                        }else if(notice_code==3) {
                             tv_authBtn.setText("您处于认证中，请点击进行刷新！");
-                        }else if(unauthorized_code==4) {
+                        }else if(notice_code==4) {
                             tv_authBtn.setText("您认证未通过，请点击重新认证！");
-                        }else if(unauthorized_code==5) {
+                        }else if(notice_code==5) {
                             tv_authBtn.setText("您还未充值或购买套餐卡，请点击进行操作");
-                        }else if(unauthorized_code==6) {
+                        }else if(notice_code==6) {
                             ll_top_navi.setVisibility(View.GONE);
                             ll_top.setVisibility(View.VISIBLE);
                             rl_ad.setVisibility(View.GONE);
@@ -850,7 +855,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 cycling2();
                             }
 
-                        }else if(unauthorized_code>=7){
+                        }else if(notice_code>=7){
                             isWaitEbikeInfo = false;
                             if (ebikeInfoThread != null) {
                                 ebikeInfoThread.interrupt();
@@ -863,12 +868,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             ll_top.setVisibility(View.VISIBLE);
                             ll_top_pay.setVisibility(View.VISIBLE);
 
-                            if(unauthorized_code==7){
+                            if(notice_code==7){
                                 order_type = 1;
                                 tv_payBtn.setText("骑行支付");
 
                                 cycling2();
-                            }else if(unauthorized_code==8 || unauthorized_code==9){
+                            }else if(notice_code==8 || notice_code==9){
                                 order_type = 3;
 
                                 JSONObject jsonObject = new JSONObject(bean.getOrder());
@@ -878,7 +883,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 tv_pay_car_end_time.setText(jsonObject.getString("car_end_time"));
                                 tv_order_amount.setText("¥"+jsonObject.getString("order_amount"));
 
-                                if(unauthorized_code==8){
+                                if(notice_code==8){
                                     tv_payBtn.setText("调度费支付");
                                 }else{
                                     tv_payBtn.setText("赔偿费支付");
@@ -893,7 +898,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         tv_authBtn.setText(tipRange);
                     }
 
-                    Log.e("mf===car_authority4", unauthorized_code+"==="+isMin);
+                    Log.e("mf===car_authority4", notice_code+"==="+isMin);
 
                 } catch (Exception e) {
 
@@ -949,13 +954,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                     closeLoadingDialog();
 
-                    SharedPreferencesUrls.getInstance().putString("iscert", ""+bean.getUnauthorized_code());
+
 
                     Log.e("mf===car_authority22", bean.getUnauthorized_code()+"==="+bean.getOrder());
 //                        Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder()+"==="+new JSONObject(bean.getOrder()).getInt("order_id"));
 
 //                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 5需要充值余额或购买骑行卡 6有进行中行程 7有待支付行程 8有待支付调度费 9有待支付赔偿费
                     unauthorized_code = bean.getUnauthorized_code();
+                    notice_code = bean.getNotice_code();
+
+                    SharedPreferencesUrls.getInstance().putString("iscert", ""+notice_code);
 
                     switch (unauthorized_code){
 
@@ -1629,7 +1637,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void cycling3() {
-        Log.e("mf===cycling3", "===");
+        Log.e("mf===cycling3", "==="+access_token);
+
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 
         if (access_token == null || "".equals(access_token)){
             Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
@@ -2778,7 +2788,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 //                    未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 5需要充值余额或购买骑行卡 6有进行中行程 7有待支付行程 8有待支付调度费 9有待支付赔偿费
                     switch (SharedPreferencesUrls.getInstance().getString("iscert","")){
-                        case "1":
+                        case "1":   //1未登录
 //                            closeBroadcast();
 //                            deactivate();
 
@@ -3238,8 +3248,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 popupwindow.dismiss();
                             } else if ("2".equals(type) || "3".equals(type)) {    //单车蓝牙锁
 
-//                                unlock();
-
                                 if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                                     ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                                     popupwindow.dismiss();
@@ -3261,57 +3269,22 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     startActivityForResult(enableBtIntent, 188);
                                 } else {
 
-                                    Log.e("order===2",  isLookPsdBtn + "===" + type + "===" + jsonObject.getString("order_sn"));
+                                    Log.e("order===2",  isMac + "===" + isLookPsdBtn + "===" + type + "===" + jsonObject.getString("order_sn"));
 
 
                                     if (!TextUtils.isEmpty(m_nowMac)) {
                                         isOpenLock = true;
 
-                                        connect();
-//                                        if(isLookPsdBtn){
-//                                            connect();
-//                                        }else{
-//                                            scan2();
-//
-//                                        }
+                                        if(isMac){
+                                            connect();
+                                        }else{
+                                            setScanRule();
+                                            scan2();
+                                        }
 
                                     }
                                 }
-                            }
-//                            else if ("3".equals(type)) {    //单车3合1锁
-//
-////                                unlock();
-//
-//                                if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-//                                    ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-//                                    popupwindow.dismiss();
-//                                }
-//                                BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
-//                                mBluetoothAdapter = bluetoothManager.getAdapter();
-//
-//                                if (mBluetoothAdapter == null) {
-//                                    ToastUtil.showMessageApp(context, "获取蓝牙失败");
-//                                    popupwindow.dismiss();
-//                                    return;
-//                                }
-//                                if (!mBluetoothAdapter.isEnabled()) {
-//                                    isPermission = false;
-//                                    closeLoadingDialog2();
-//                                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                                    startActivityForResult(enableBtIntent, 188);
-//                                } else {
-//                                    if (!TextUtils.isEmpty(m_nowMac)) {
-//                                        Log.e("scan===3_1", "==="+m_nowMac);
-//
-//                                        if (!TextUtils.isEmpty(m_nowMac)) {
-//                                            isOpenLock = true;
-//                                            connect();
-//                                        }
-//                                    }
-//                                }
-//
-//                            }
-                            else if ("4".equals(type)) {
+                            }else if ("4".equals(type)) {
 
                                 unlock();
 
@@ -5436,7 +5409,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     //泺平===连接设备
     private void connectDeviceLP() {
         BleConnectOptions options = new BleConnectOptions.Builder()
-                .setConnectRetry(3)
+                .setConnectRetry(1)
                 .setConnectTimeout(timeout)
                 .setServiceDiscoverRetry(1)
                 .setServiceDiscoverTimeout(10000)
@@ -5457,6 +5430,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if (loadingDialogWithHelp != null && loadingDialogWithHelp.isShowing()){
                     loadingDialogWithHelp.dismiss();
                 }
+
+                if(popupwindow!=null){
+                    popupwindow.dismiss();
+                }
+
+                Toast.makeText(context,"蓝牙连接失败，重启手机试试吧！",Toast.LENGTH_LONG).show();
+                car_notification(isOpenLock?1:isAgain?2:isEndBtn?3:0, 2, 0);
+
             }
 
             @Override
@@ -6326,7 +6307,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     void scan2(){
-//        loadingDialog = DialogUtils.getLoadingDialog(context, "正在搜索...");
+//      loadingDialog = DialogUtils.getLoadingDialog(context, "正在搜索...");
 //		loadingDialog.setTitle("正在搜索");
 //		loadingDialog.show();
 
@@ -7042,6 +7023,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         minPolygon();
                         closeLoadingDialog();
                     }
+
+//                    minPolygon();
+//                    closeLoadingDialog();
 
 //                    minPolygon();
 //                    closeLoadingDialog();
@@ -8062,6 +8046,19 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void drawRoutes(int routeId, AMapNaviPath path) {
+
+//        if(!bikeFragment.isHidden()){
+//            if (bikeFragment.myLocation != null) {
+//                CameraUpdate update = CameraUpdateFactory.changeLatLng(bikeFragment.myLocation);
+//                aMap.animateCamera(update);
+//            }
+//        }else{
+//            if (ebikeFragment.myLocation != null) {
+//                CameraUpdate update = CameraUpdateFactory.changeLatLng(ebikeFragment.myLocation);
+//                aMap.animateCamera(update);
+//            }
+//        }
+
 //        calculateSuccess = true;
         aMap.moveCamera(CameraUpdateFactory.changeTilt(0));
         //路径绘制图层
@@ -8085,11 +8082,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         boundsBuilder.include(markerPosition);
 
 //                aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 15));
-
-
 //                aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(boundsBuilder.build(),10,10,10,10), 0L, null);
 
-        aMap.moveCamera(CameraUpdateFactory.newLatLngBoundsRect(boundsBuilder.build(),100,100,250,250));    //left_right_padding, left_right_padding, top_padding, bottom_padding
+        aMap.moveCamera(CameraUpdateFactory.newLatLngBoundsRect(boundsBuilder.build(),100,100,230 * Math.round(BaseApplication.density),100 * Math.round(BaseApplication.density)));    //left_right_padding, left_right_padding, top_padding, bottom_padding
+
 
 //        routeOverlays.put(routeId, routeOverLay);
     }
@@ -8219,16 +8215,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             deviceuuid = data.getStringExtra("deviceuuid");
                             electricity = data.getStringExtra("electricity");
                             mileage = data.getStringExtra("mileage");
-
                             carmodel_name = data.getStringExtra("carmodel_name");
                             each_free_time = data.getStringExtra("each_free_time");
                             first_price = data.getStringExtra("first_price");
                             first_time = data.getStringExtra("first_time");
                             continued_price = data.getStringExtra("continued_price");
                             continued_time = data.getStringExtra("continued_time");
+                            isMac = data.getBooleanExtra("isMac", false);
 
 
-                            Log.e("mf===requestCode1", codenum+"==="+carmodel_id+"==="+type+"==="+bleid +"==="+deviceuuid+"==="+carmodel_name+"==="+each_free_time);
+                            Log.e("mf===requestCode1", isMac+"==="+codenum+"==="+carmodel_id+"==="+type+"==="+bleid +"==="+deviceuuid+"==="+carmodel_name+"==="+each_free_time);
 
 
                             initmPopupRentWindowView();

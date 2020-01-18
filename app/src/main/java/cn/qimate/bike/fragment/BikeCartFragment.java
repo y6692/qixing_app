@@ -111,6 +111,9 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
     private View footerViewType04;
     private View footerViewType05;
 
+    private ImageView iv_type05;
+    private TextView tv_type05;
+
     private View footerLayout;
 
     private String badtime="2115-02-08 20:20";
@@ -220,6 +223,10 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
         footerLayout = footerView.findViewById(R.id.footer_Layout);
         footerViewType01.setVisibility(View.GONE);
 
+        iv_type05 = footerView.findViewById(R.id.footer_Layout_iv_type05);
+        tv_type05 = footerView.findViewById(R.id.footer_Layout_tv_type05);
+        iv_type05.setImageResource(R.drawable.no_card_icon);
+        tv_type05.setText("暂无套餐卡");
 
         swipeRefreshLayout = (SwipeRefreshLayout)getActivity().findViewById(R.id.Layout_swipeParentLayout);
         listview = (ListView)getActivity().findViewById(R.id.Layout_swipeListView);
@@ -473,6 +480,12 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
 //                        footerLayout.setVisibility(View.VISIBLE);
 //                        setFooterType(0);
 //                    }
+
+                    if (array.length() == 0) {
+                        footerViewType05.setVisibility(View.VISIBLE);
+                    }else{
+                        footerViewType05.setVisibility(View.GONE);
+                    }
 
                     for (int i = 0; i < array.length();i++){
                         PayCartBean bean = JSON.parseObject(array.getJSONObject(i).toString(), PayCartBean.class);

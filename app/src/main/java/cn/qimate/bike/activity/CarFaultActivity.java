@@ -321,38 +321,38 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+//                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+//                        restCauseEdit.getText().toString().trim() == null
+//                                || "".equals(restCauseEdit.getText().toString().trim()))){
+//                    submitBtn.setEnabled(false);
+//                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+//                    submitBtn.setEnabled(false);
+//                }else{
+//                    if (bikeCodeEdit.getText().toString().trim() != null &&
+//                            !"".equals(bikeCodeEdit.getText().toString().trim())){
+//                        submitBtn.setEnabled(true);
+//                    }else {
+//                        submitBtn.setEnabled(false);
+//                    }
+//                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+//                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+//                        restCauseEdit.getText().toString().trim() == null
+//                                || "".equals(restCauseEdit.getText().toString().trim()))){
+//                    submitBtn.setEnabled(false);
+//                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+//                    submitBtn.setEnabled(false);
+//                }else{
+//                    if (bikeCodeEdit.getText().toString().trim() != null &&
+//                            !"".equals(bikeCodeEdit.getText().toString().trim())){
+//                        submitBtn.setEnabled(true);
+//                    }else {
+//                        submitBtn.setEnabled(false);
+//                    }
+//                }
             }
         });
 
@@ -364,38 +364,38 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                                || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+//                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+//                        restCauseEdit.getText().toString().trim() == null
+//                                || "".equals(restCauseEdit.getText().toString().trim()))){
+//                    submitBtn.setEnabled(false);
+//                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+//                    submitBtn.setEnabled(false);
+//                }else{
+//                    if (bikeCodeEdit.getText().toString().trim() != null &&
+//                            !"".equals(bikeCodeEdit.getText().toString().trim())){
+//                        submitBtn.setEnabled(true);
+//                    }else {
+//                        submitBtn.setEnabled(false);
+//                    }
+//                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                        restCauseEdit.getText().toString().trim() == null
-                        || "".equals(restCauseEdit.getText().toString().trim()))){
-                    submitBtn.setEnabled(false);
-                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                    submitBtn.setEnabled(false);
-                }else{
-                    if (bikeCodeEdit.getText().toString().trim() != null &&
-                            !"".equals(bikeCodeEdit.getText().toString().trim())){
-                        submitBtn.setEnabled(true);
-                    }else {
-                        submitBtn.setEnabled(false);
-                    }
-                }
+//                if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+//                        restCauseEdit.getText().toString().trim() == null
+//                        || "".equals(restCauseEdit.getText().toString().trim()))){
+//                    submitBtn.setEnabled(false);
+//                }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+//                    submitBtn.setEnabled(false);
+//                }else{
+//                    if (bikeCodeEdit.getText().toString().trim() != null &&
+//                            !"".equals(bikeCodeEdit.getText().toString().trim())){
+//                        submitBtn.setEnabled(true);
+//                    }else {
+//                        submitBtn.setEnabled(false);
+//                    }
+//                }
             }
         });
 
@@ -421,20 +421,20 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
                             dialog.cancel();
                             imageUrlList.remove(position);
 
-                            if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
-                                    restCauseEdit.getText().toString().trim() == null
-                                            || "".equals(restCauseEdit.getText().toString().trim()))){
-                                submitBtn.setEnabled(false);
-                            }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
-                                submitBtn.setEnabled(false);
-                            }else{
-                                if (bikeCodeEdit.getText().toString().trim() != null &&
-                                        !"".equals(bikeCodeEdit.getText().toString().trim())){
-                                    submitBtn.setEnabled(true);
-                                }else {
-                                    submitBtn.setEnabled(false);
-                                }
-                            }
+//                            if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
+//                                    restCauseEdit.getText().toString().trim() == null
+//                                            || "".equals(restCauseEdit.getText().toString().trim()))){
+//                                submitBtn.setEnabled(false);
+//                            }else if(imageUrlList.size() == 0 || imageUrlList.isEmpty()) {
+//                                submitBtn.setEnabled(false);
+//                            }else{
+//                                if (bikeCodeEdit.getText().toString().trim() != null &&
+//                                        !"".equals(bikeCodeEdit.getText().toString().trim())){
+//                                    submitBtn.setEnabled(true);
+//                                }else {
+//                                    submitBtn.setEnabled(false);
+//                                }
+//                            }
 
                             myAdapter.notifyDataSetChanged();
                         }
@@ -999,7 +999,23 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
                 break;
 
             case R.id.carFaultUI_submitBtn:
-                submit();
+                loadingDialog.setTitle("正在提交");
+                loadingDialog.show();
+
+                if(imageList.size()==0){
+                    for(int i =0; i<imageUrlList.size(); i++){
+                        upBitmap = imageUrlList.get(i);
+
+                        m_myHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                uploadImage();
+                            }
+                        });
+                    }
+                }else{
+                    submit();
+                }
                 break;
             default:
                 break;
@@ -1043,31 +1059,31 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
 
 
     private void pd(){
-        Log.e("pd===", TagsList+"==="+latitude+"==="+longitude+"==="+imageList);
-
-        if("车辆故障".equals(question_type)){
-            if (TagsList.size() == 0 || TagsList.isEmpty()){
-                submitBtn.setEnabled(false);
-            }else if(imageList.size() == 0 || imageList.isEmpty()) {
-                submitBtn.setEnabled(false);
-            }else{
-                if (bikeCodeEdit.getText().toString().trim() != null && !"".equals(bikeCodeEdit.getText().toString().trim())){
-                    submitBtn.setEnabled(true);
-                }else {
-                    submitBtn.setEnabled(false);
-                }
-            }
-        }else{
-            if(imageList.size() == 0 || imageList.isEmpty()) {
-                submitBtn.setEnabled(false);
-            }else{
-                if (bikeCodeEdit.getText().toString().trim() != null && !"".equals(bikeCodeEdit.getText().toString().trim())){
-                    submitBtn.setEnabled(true);
-                }else {
-                    submitBtn.setEnabled(false);
-                }
-            }
-        }
+//        Log.e("pd===", TagsList+"==="+latitude+"==="+longitude+"==="+imageList);
+//
+//        if("车辆故障".equals(question_type)){
+//            if (TagsList.size() == 0 || TagsList.isEmpty()){
+//                submitBtn.setEnabled(false);
+//            }else if(imageList.size() == 0 || imageList.isEmpty()) {
+//                submitBtn.setEnabled(false);
+//            }else{
+//                if (bikeCodeEdit.getText().toString().trim() != null && !"".equals(bikeCodeEdit.getText().toString().trim())){
+//                    submitBtn.setEnabled(true);
+//                }else {
+//                    submitBtn.setEnabled(false);
+//                }
+//            }
+//        }else{
+//            if(imageList.size() == 0 || imageList.isEmpty()) {
+//                submitBtn.setEnabled(false);
+//            }else{
+//                if (bikeCodeEdit.getText().toString().trim() != null && !"".equals(bikeCodeEdit.getText().toString().trim())){
+//                    submitBtn.setEnabled(true);
+//                }else {
+//                    submitBtn.setEnabled(false);
+//                }
+//            }
+//        }
 
     }
 
@@ -1095,9 +1111,9 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
     });
 
     private void submit(){
-        if(isSubmit) return;
-
-        isSubmit = true;
+//        if(isSubmit) return;
+//
+//        isSubmit = true;
 
         String address = addressEdit.getText().toString().trim();
         String other = restCauseEdit.getText().toString().trim();
@@ -1109,22 +1125,6 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
 
         String content = "";
         if (TagsList.size() != 0 && !TagsList.isEmpty()){
-//            if ((isSelected6) && other != null && !"".equals(other)){
-//                for (int i = 0; i < TagsList.size(); i++){
-//                    content = content + TagsList.get(i)+",";
-//                }
-//                content = content + other+ "。";
-//            }else {
-//                for (int i = 0;i<TagsList.size();i++){
-//                    if (i != TagsList.size() - 1){
-//                        content = content + TagsList.get(i)+",";
-//                    }else {
-//                        content = content + TagsList.get(i)+ "。";
-//                    }
-//                }
-//            }
-
-
 
             for (int i = 0;i<TagsList.size();i++){
 
@@ -1151,46 +1151,9 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
 
 
         }
-//        else {
-//            content = other + "。";
-//        }
 
         Log.e("submit===00", "==="+content);
 
-
-//        String content1 = "";
-//        if (isSelected1){
-//            for (int i = 0;i<TagsList1.size();i++){
-//                if (i != TagsList1.size() - 1){
-//                    content1 = content1 + TagsList1.get(i)+",";
-//                }else {
-//                    content1 = content1 + TagsList1.get(i)+ "。";
-//                }
-//            }
-//        }
-//
-//        Log.e("submit===000", "==="+content1);
-//
-//        if (content == null || "".equals(content)){
-//            m_myHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    ToastUtil.showMessageApp(context,"请选择问题类型");
-//                }
-//            });
-//
-//            return;
-//        }
-//        if (imageList.size() == 0 || imageList.isEmpty()){
-//            m_myHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    ToastUtil.showMessageApp(context,"请上传照片");
-//                }
-//            });
-//
-//            return;
-//        }
 
         Log.e("submit===", bikeCode+"==="+TagsList+"==="+TagsList1+"==="+latitude+"==="+longitude+"==="+content+"==="+other+"==="+address+"==="+imageList);
 
@@ -1357,13 +1320,11 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
                                 Uri filepath = Uri.fromFile(temp);
 //                                upBitmap = BitmapFactory.decodeFile(urlpath);
 
-
                                 compress(); //压缩图片
-
 
                                 Log.e("REQUESTCODE_TAKE===3", "==="+filepath.getPath());
 
-                                uploadImage();
+//                                uploadImage();
                             }
 
                         }else {
@@ -1403,6 +1364,14 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
 
                     pd();
                     Log.e("UpCompletion===", imageList+"==="+jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
+
+                    if(imageList.size()==imageUrlList.size()){
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+
+                        submit();
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -1473,7 +1442,17 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
 
 //            QiNiuInitialize.getSingleton().put(buf.array(), null, upToken, upCompletionHandler, uploadOptions);
 //            QiNiuInitialize.getSingleton().put(baos.toByteArray(), null, upToken, upCompletionHandler, uploadOptions);
-            QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1514,6 +1493,8 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
 
         imageUrlList.add(upBitmap);
         myAdapter.notifyDataSetChanged();
+
+        Log.e("compress===", "==="+imageUrlList.size());
     }
 
     /**

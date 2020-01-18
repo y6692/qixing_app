@@ -74,6 +74,8 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
     private TextView tv_auth, tv_auth2, tv_depositprice;
     private LinearLayout submitBtn;
 
+    private int can_cert1;
+    private int can_cert2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,9 +131,14 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
 //                UIHelper.goToAct(context, DepositFreeAuthActivity.class);
 //                setResult(RESULT_OK);
 
-                Intent intent = new Intent(context, DepositFreeAuthActivity.class);
-                startActivityForResult(intent, 10);
+                if(can_cert1==1){
+                    Intent intent = new Intent(context, DepositFreeAuthActivity.class);
+                    startActivityForResult(intent, 10);
 //                setResult(RESULT_OK, intent);
+                }else{
+                    ToastUtil.showMessageApp(context, "已认证通过");
+                }
+
 
                 break;
 
@@ -142,8 +149,13 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
 //                UIHelper.goToAct(context, RealNameAuthActivity.class);
 //                setResult(RESULT_OK);
 
-                intent = new Intent(context, RealNameAuthActivity.class);
-                startActivityForResult(intent, 10);
+                if(can_cert2==1){
+                    Intent intent = new Intent(context, RealNameAuthActivity.class);
+                    startActivityForResult(intent, 10);
+                }else{
+                    ToastUtil.showMessageApp(context, "已认证通过");
+                }
+
 
                 break;
 
@@ -152,6 +164,7 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
                     Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 UIHelper.goToAct(context, ServiceCenterActivity.class);
                 break;
 
@@ -162,7 +175,6 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
                 }
 
                 UIHelper.goToAct(context, RealNameAuthActivity.class);
-
                 break;
         }
     }
@@ -212,6 +224,9 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
                             if(result.getStatus_code()==0){
                                 UserBean bean = JSON.parseObject(result.getData(), UserBean.class);
 
+                                can_cert1 = bean.getCan_cert1();
+                                can_cert2 = bean.getCan_cert2();
+
                                 int  status1 = bean.getCert1_status();
                                 int  status2 = bean.getCert2_status();
                                 tv_auth.setText(status1==0?"点击认证":status1==1?"认证中":status1==2?"已驳回":"认证成功");
@@ -234,6 +249,7 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
             }
         });
     }
+
 
     private void depositprice(){
         HttpHelper.get(context, Urls.depositprice, new TextHttpResponseHandler() {

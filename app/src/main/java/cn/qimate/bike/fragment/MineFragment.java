@@ -150,6 +150,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private String credit_scores_h5_url;
     private String invite_h5_title;
     private String invite_h5_url;
+    private String history_order_h5_title;
+    private String history_order_h5_url;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_mine, null);
@@ -815,7 +817,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.personUI_myOrderLayout:
-                UIHelper.goToAct(context, MyOrderActivity.class);
+//                UIHelper.goToAct(context, MyOrderActivity.class);
+
+//                private String history_order_h5_title;
+//                private String history_order_h5_url;
+
+                intent = new Intent(context, MyOrderActivity.class);
+                intent.putExtra("history_order_h5_title", history_order_h5_title);
+                intent.putExtra("history_order_h5_url", history_order_h5_url);
+                startActivity(intent);
+
                 break;
 
             case R.id.personUI_myMeaaageLayout:
@@ -1105,6 +1116,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                         credit_scores_h5_url = bean.getCredit_scores_h5_url();
                         invite_h5_title = bean.getInvite_h5_title();
                         invite_h5_url = bean.getInvite_h5_url();
+                        history_order_h5_title = bean.getHistory_order_h5_title();
+                        history_order_h5_url = bean.getHistory_order_h5_url();
 
                         //TODO  3
 //                            if (bean.getHeadimg() != null && !"".equals(bean.getHeadimg())) {

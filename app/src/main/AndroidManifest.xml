@@ -193,6 +193,9 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
+
+
+
         </activity>
 
         <activity

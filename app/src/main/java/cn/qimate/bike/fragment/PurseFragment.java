@@ -76,7 +76,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
     private Context context;
     private Activity activity;
 
-    private TextView tv_balance, tv_recharge;
+    private TextView tv_1, tv_balance, tv_recharge;
 
     private RelativeLayout rl_payCart;
     private RelativeLayout rl_exchange;
@@ -141,6 +141,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
 //        title = (TextView) getActivity().findViewById(R.id.mainUI_title_titleText);
 //        title.setText("我的钱包");
 
+        tv_1 = getActivity().findViewById(R.id.tv_1);
         tv_balance = getActivity().findViewById(R.id.tv_balance);
         tv_recharge = getActivity().findViewById(R.id.tv_recharge);
         rl_payCart = getActivity().findViewById(R.id.rl_payCart);
@@ -239,6 +240,8 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
 
                             cert1_status = bean.getCert1_status();
 
+
+                            tv_1.setText("¥");
                             tv_balance.setText(""+bean.getBalance());
 
                         } catch (Exception e) {

@@ -76,7 +76,7 @@
                             android:textColor="#666666"
                             android:textSize="@dimen/sp14"
                             android:lineSpacingExtra="6dp"
-                            android:text="请至校内还车点关锁并点击还车，或重启软件再试。"/>
+                            android:text="请至运营区P点关锁并距车1米内点击还车，或重启软件再试。"/>
 
                     </LinearLayout>
 
@@ -640,7 +640,7 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="#666666"
                                 android:textSize="@dimen/sp16"
-                                android:text="请确定损坏车辆当前位置"/>
+                                android:text="请告诉我们车辆当前位置"/>
 
                         </LinearLayout>
 
@@ -708,7 +708,7 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp18"
                         android:gravity="center"
-                        android:enabled="false"/>
+                        android:enabled="true"/>
 
                 </LinearLayout>
 
