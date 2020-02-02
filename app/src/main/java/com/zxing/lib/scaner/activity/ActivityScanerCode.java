@@ -317,6 +317,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
     private List<String> macList = new ArrayList<String>();
 
+    private boolean isPermission = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -345,12 +347,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //        BaseApplication.getInstance().getIBLE().disconnect();
 
         //界面控件初始化
+
         initView();
         //权限初始化
         initPermission();
         //扫描动画初始化
         initScanerAnimation();
         //初始化 CameraManager
+
         CameraManager.init(mActivity);
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
@@ -359,341 +363,15 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
         surfaceView = (SurfaceView) findViewById(R.id.capture_preview);
 
-        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-        }
-        //蓝牙锁
-        if (mBluetoothAdapter == null) {
-            BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-            mBluetoothAdapter = bluetoothManager.getAdapter();
-        }
 
-        if (mBluetoothAdapter == null) {
-            ToastUtil.showMessageApp(context, "获取蓝牙失败");
-            return;
-        }
 
-        if (!mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, 188);
-        } else {
-            BleManager.getInstance().init(getApplication());
-            BleManager.getInstance()
-                    .enableLog(true)
-                    .setReConnectCount(10, 5000)
-                    .setConnectOverTime(20000)
-                    .setOperateTimeout(10000);
 
-            setScanRule();
-            scan();
-        }
+
+
 
 
 //        initHttp();
 //        cycling();
-    }
-
-    private void setScanRule() {
-//        String[] uuids;
-//        String str_uuid = et_uuid.getText().toString();
-//        if (TextUtils.isEmpty(str_uuid)) {
-//            uuids = null;
-//        } else {
-//            uuids = str_uuid.split(",");
-//        }
-//        UUID[] serviceUuids = null;
-//        if (uuids != null && uuids.length > 0) {
-//            serviceUuids = new UUID[uuids.length];
-//            for (int i = 0; i < uuids.length; i++) {
-//                String name = uuids[i];
-//                String[] components = name.split("-");
-//                if (components.length != 5) {
-//                    serviceUuids[i] = null;
-//                } else {
-//                    serviceUuids[i] = UUID.fromString(uuids[i]);
-//                }
-//            }
-//        }
-
-//        String[] names;
-//        String str_name = et_name.getText().toString();
-//        if (TextUtils.isEmpty(str_name)) {
-//            names = null;
-//        } else {
-//            names = str_name.split(",");
-//        }
-//
-//        String mac = et_mac.getText().toString();
-//
-//        boolean isAutoConnect = sw_auto.isChecked();
-
-        BleScanRuleConfig scanRuleConfig = new BleScanRuleConfig.Builder()
-//                .setServiceUuids(serviceUuids)      // 只扫描指定的服务的设备，可选
-//                .setDeviceName(true, names)   // 只扫描指定广播名的设备，可选
-//				.setDeviceMac(address)                  // 只扫描指定mac的设备，可选
-//                .setAutoConnect(true)                 // 连接时的autoConnect参数，可选，默认false
-                .setScanTimeOut(10000)              // 扫描超时时间，可选，默认10秒
-                .build();
-        BleManager.getInstance().initScanRule(scanRuleConfig);
-    }
-
-    void scan(){
-//        loadingDialog = DialogUtils.getLoadingDialog(context, "正在搜索...");
-//		loadingDialog.setTitle("正在搜索");
-//		loadingDialog.show();
-
-        BleManager.getInstance().scan(new BleScanCallback() {
-            @Override
-            public void onScanStarted(boolean success) {
-//                mDeviceAdapter.clearScanDevice();
-//                mDeviceAdapter.notifyDataSetChanged();
-//                img_loading.startAnimation(operatingAnim);
-//                img_loading.setVisibility(View.VISIBLE);
-//                btn_scan.setText(getString(R.string.stop_scan));
-                Log.e("asc===onScanStarted", "==="+success);
-
-            }
-
-            @Override
-            public void onLeScan(BleDevice bleDevice) {
-                super.onLeScan(bleDevice);
-
-                Log.e("asc===onLeScan", bleDevice+"==="+bleDevice.getMac());
-            }
-
-            @Override
-            public void onScanning(final BleDevice bleDevice) {
-//                mDeviceAdapter.addDevice(bleDevice);
-//                mDeviceAdapter.notifyDataSetChanged();
-
-                Log.e("asc===onScanning", bleDevice+"==="+bleDevice.getMac());
-
-                macList.add(bleDevice.getMac());
-
-
-//				m_myHandler.post(new Runnable() {
-//					@Override
-//					public void run() {
-//						if(address.equals(bleDevice.getMac())){
-//							//                            if (loadingDialog != null && loadingDialog.isShowing()) {
-////                                loadingDialog.dismiss();
-////                            }
-//
-//							BleManager.getInstance().cancelScan();
-//
-//							Log.e("onScanning===2", isConnect+"==="+bleDevice+"==="+bleDevice.getMac());
-//
-//							Toast.makeText(context, "搜索成功", Toast.LENGTH_LONG).show();
-//
-//							connect();
-//
-////                            m_myHandler.postDelayed(new Runnable() {
-////                                @Override
-////                                public void run() {
-////                                    if(!isConnect)
-////                                        connect();
-////                                }
-////                            }, 5 * 1000);
-//						}
-//					}
-//				});
-
-            }
-
-            @Override
-            public void onScanFinished(List<BleDevice> scanResultList) {
-//                img_loading.clearAnimation();
-//                img_loading.setVisibility(View.INVISIBLE);
-//                btn_scan.setText(getString(R.string.start_scan));
-
-                Log.e("asc===onScanFinished", scanResultList+"==="+scanResultList.size());
-            }
-        });
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ToastUtil.showMessage(this, "scaner====" + referLatitude);
-
-//        bleService.connect("34:03:DE:54:E6:C6");
-//
-//        bleService.sleep(2000);
-//
-//        bleService.write(new byte[]{0x03, (byte) 0x81, 0x01, (byte) 0x82});
-//
-//        button9();
-//
-//        bleService.sleep(2000);
-//
-//        button3();
-
-//        try {
-//            if (internalReceiver != null) {
-//                unregisterReceiver(internalReceiver);
-//                internalReceiver = null;
-//            }
-//        } catch (Exception e) {
-//            ToastUtil.showMessage(this, "eee===="+e);
-//        }
-
-
-//        if(surfaceView != null) return;
-
-
-//        surfaceView.clearAnimation();
-
-        Log.e("surface===0", "==="+hasSurface);
-
-        if (!hasSurface) {
-            //Camera初始化
-//            initCamera(surfaceHolder);
-//            resetCamera(surfaceHolder);
-
-            if(surfaceHolder==null){
-                surfaceHolder = surfaceView.getHolder();
-
-                surfaceHolder.addCallback(new SurfaceHolder.Callback() {
-                    @Override
-                    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-                    }
-
-                    @Override
-                    public void surfaceCreated(SurfaceHolder holder) {
-                        Log.e("surface===1", "==="+hasSurface);
-
-                        if (!hasSurface) {
-                            hasSurface = true;
-
-                            initCamera(holder);
-                        }
-                    }
-
-                    @Override
-                    public void surfaceDestroyed(SurfaceHolder holder) {
-                        Log.e("surface===2", "==="+hasSurface);
-
-                        hasSurface = false;
-
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
-                        }
-                    }
-                });
-                surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-            }
-
-
-
-        } else {
-            initCamera(surfaceHolder);
-        }
-
-
-//        try {
-//
-//            mCamera = Camera.open();
-//
-//            mCamera.setPreviewDisplay(surfaceHolder);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-    }
-
-    private void releaseCamera() {
-        if (mCamera != null) {
-
-            Log.e("0===releaseCamera", "==="+mCamera);
-
-//            mCamera.setPreviewCallback(null);
-            mCamera.stopPreview();
-
-            previewing = false;
-            mCamera.setPreviewCallback(null);
-            Log.e("1===releaseCamera", "==="+mCamera);
-            mCamera.release();
-            Log.e("2===releaseCamera", "==="+mCamera);
-            mCamera = null;
-        }
-    }
-
-    private void resetCamera(SurfaceHolder surfaceHolder){
-        Log.e("===resetCamera", "==="+mCamera);
-
-        previewing = true;
-
-        try {
-            mCameraManager.openDriver(surfaceHolder);
-            mCamera = mCameraManager.getCamera();
-            Point point = mCameraManager.getCameraResolution();
-            AtomicInteger width = new AtomicInteger(point.y);
-            AtomicInteger height = new AtomicInteger(point.x);
-            int cropWidth = mCropLayout.getWidth() * width.get() / mContainer.getWidth();
-            int cropHeight = mCropLayout.getHeight() * height.get() / mContainer.getHeight();
-            setCropWidth(cropWidth);
-            setCropHeight(cropHeight);
-        } catch (Exception e) {
-            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
-            return;
-        }
-
-        if (handler == null) {
-            handler = new CaptureActivityHandler(ActivityScanerCode.this);
-        }
-
-//        Log.e("111====resetCamera", mCamera+"==="+previewCb+"==="+autoFocusCB);
-//
-//        surfaceView.r
-//        mPreview = new CameraPreview(context, mCamera, previewCb, autoFocusCB);
-//        scanPreview.addView(mPreview);
-    }
-
-    private Handler autoFocusHandler;
-    Camera.AutoFocusCallback autoFocusCB = new Camera.AutoFocusCallback() {
-        public void onAutoFocus(boolean success, Camera camera) {
-//            autoFocusHandler.postDelayed(doAutoFocus, 1000);
-
-            mCamera.cancelAutoFocus();
-        }
-    };
-
-    private Runnable doAutoFocus = new Runnable() {
-        public void run() {
-            if (previewing)
-                mCamera.autoFocus(autoFocusCB);
-        }
-    };
-
-    private void initCamera(SurfaceHolder surfaceHolder) {
-        try {
-            mCameraManager = CameraManager.get();
-            mCameraManager.openDriver(surfaceHolder);
-            mCamera = mCameraManager.getCamera();
-            Point point = mCameraManager.getCameraResolution();
-            AtomicInteger width = new AtomicInteger(point.y);
-            AtomicInteger height = new AtomicInteger(point.x);
-            int cropWidth = mCropLayout.getWidth() * width.get() / mContainer.getWidth();
-            int cropHeight = mCropLayout.getHeight() * height.get() / mContainer.getHeight();
-            setCropWidth(cropWidth);
-            setCropHeight(cropHeight);
-
-//            mCamera.startPreview();
-//            mCamera.autoFocus(autoFocusCB);
-
-//            if (handler == null) {
-//                handler = new CaptureActivityHandler(ActivityScanerCode.this);
-//            }
-
-            handler = new CaptureActivityHandler(ActivityScanerCode.this);
-        } catch (Exception e) {
-            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
-            Log.e("initCamera===ASC_e", "===="+e);
-//            return;
-        }
-
     }
 
     public void btn(View view) {
@@ -724,6 +402,60 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         } else if (viewId == R.id.top_back) {
             inputMethodManager.hideSoftInputFromWindow(bikeNumEdit.getWindowToken(), 0);
             scrollToFinishActivity();
+//            CameraManager.init(mActivity);
+//            hasSurface = false;
+//            inactivityTimer = new InactivityTimer(this);
+//
+//            mCameraManager = CameraManager.get();
+//
+//            surfaceView = (SurfaceView) findViewById(R.id.capture_preview);
+//
+//
+//            if (!hasSurface) {
+//
+//                if(surfaceHolder==null){
+//                    surfaceHolder = surfaceView.getHolder();
+//
+//                    Log.e("surface===0_1", isPermission+"==="+hasSurface+"==="+surfaceHolder);
+//
+//                    surfaceHolder.addCallback(new SurfaceHolder.Callback() {
+//                        @Override
+//                        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+//
+//                        }
+//
+//                        @Override
+//                        public void surfaceCreated(SurfaceHolder holder) {
+//                            Log.e("surface===1", "==="+hasSurface);
+//
+//                            if (!hasSurface) {
+//                                hasSurface = true;
+//                                initCamera(holder);
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void surfaceDestroyed(SurfaceHolder holder) {
+//                            Log.e("surface===2", "==="+hasSurface);
+//
+//                            hasSurface = false;
+//
+//                            if (loadingDialog != null && loadingDialog.isShowing()) {
+//                                loadingDialog.dismiss();
+//                            }
+//                        }
+//                    });
+//                    surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+//                }
+//
+//            } else {
+//                Log.e("surface===3", "==="+hasSurface);
+//
+//                initCamera(surfaceHolder);
+//            }
+
+
+
         } else if (viewId == R.id.ll_confirm) {
             String bikeNum = bikeNumEdit.getText().toString().trim();
 
@@ -846,6 +578,367 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         }
     }
 
+    private void setScanRule() {
+//        String[] uuids;
+//        String str_uuid = et_uuid.getText().toString();
+//        if (TextUtils.isEmpty(str_uuid)) {
+//            uuids = null;
+//        } else {
+//            uuids = str_uuid.split(",");
+//        }
+//        UUID[] serviceUuids = null;
+//        if (uuids != null && uuids.length > 0) {
+//            serviceUuids = new UUID[uuids.length];
+//            for (int i = 0; i < uuids.length; i++) {
+//                String name = uuids[i];
+//                String[] components = name.split("-");
+//                if (components.length != 5) {
+//                    serviceUuids[i] = null;
+//                } else {
+//                    serviceUuids[i] = UUID.fromString(uuids[i]);
+//                }
+//            }
+//        }
+
+//        String[] names;
+//        String str_name = et_name.getText().toString();
+//        if (TextUtils.isEmpty(str_name)) {
+//            names = null;
+//        } else {
+//            names = str_name.split(",");
+//        }
+//
+//        String mac = et_mac.getText().toString();
+//
+//        boolean isAutoConnect = sw_auto.isChecked();
+
+        BleScanRuleConfig scanRuleConfig = new BleScanRuleConfig.Builder()
+//                .setServiceUuids(serviceUuids)      // 只扫描指定的服务的设备，可选
+//                .setDeviceName(true, names)   // 只扫描指定广播名的设备，可选
+//				.setDeviceMac(address)                  // 只扫描指定mac的设备，可选
+//                .setAutoConnect(true)                 // 连接时的autoConnect参数，可选，默认false
+                .setScanTimeOut(10000)              // 扫描超时时间，可选，默认10秒
+                .build();
+        BleManager.getInstance().initScanRule(scanRuleConfig);
+    }
+
+    void scan(){
+//        loadingDialog = DialogUtils.getLoadingDialog(context, "正在搜索...");
+//		loadingDialog.setTitle("正在搜索");
+//		loadingDialog.show();
+
+        BleManager.getInstance().scan(new BleScanCallback() {
+            @Override
+            public void onScanStarted(boolean success) {
+//                mDeviceAdapter.clearScanDevice();
+//                mDeviceAdapter.notifyDataSetChanged();
+//                img_loading.startAnimation(operatingAnim);
+//                img_loading.setVisibility(View.VISIBLE);
+//                btn_scan.setText(getString(R.string.stop_scan));
+                Log.e("asc===onScanStarted", "==="+success);
+
+            }
+
+            @Override
+            public void onLeScan(BleDevice bleDevice) {
+                super.onLeScan(bleDevice);
+
+                Log.e("asc===onLeScan", bleDevice+"==="+bleDevice.getMac());
+            }
+
+            @Override
+            public void onScanning(final BleDevice bleDevice) {
+//                mDeviceAdapter.addDevice(bleDevice);
+//                mDeviceAdapter.notifyDataSetChanged();
+
+                Log.e("asc===onScanning", bleDevice+"==="+bleDevice.getMac());
+
+                macList.add(bleDevice.getMac());
+
+
+//				m_myHandler.post(new Runnable() {
+//					@Override
+//					public void run() {
+//						if(address.equals(bleDevice.getMac())){
+//							//                            if (loadingDialog != null && loadingDialog.isShowing()) {
+////                                loadingDialog.dismiss();
+////                            }
+//
+//							BleManager.getInstance().cancelScan();
+//
+//							Log.e("onScanning===2", isConnect+"==="+bleDevice+"==="+bleDevice.getMac());
+//
+//							Toast.makeText(context, "搜索成功", Toast.LENGTH_LONG).show();
+//
+//							connect();
+//
+////                            m_myHandler.postDelayed(new Runnable() {
+////                                @Override
+////                                public void run() {
+////                                    if(!isConnect)
+////                                        connect();
+////                                }
+////                            }, 5 * 1000);
+//						}
+//					}
+//				});
+
+            }
+
+            @Override
+            public void onScanFinished(List<BleDevice> scanResultList) {
+//                img_loading.clearAnimation();
+//                img_loading.setVisibility(View.INVISIBLE);
+//                btn_scan.setText(getString(R.string.start_scan));
+
+                Log.e("asc===onScanFinished", scanResultList+"==="+scanResultList.size());
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ToastUtil.showMessage(this, "scaner====" + referLatitude);
+
+
+        Log.e("surface===0", isPermission+"==="+hasSurface+"==="+surfaceHolder);
+
+//        surfaceHolder = surfaceView.getHolder();
+//        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+//        initCamera(surfaceHolder);
+
+
+        if(!isPermission){
+            if (!hasSurface) {
+
+                if(surfaceHolder==null){
+                    surfaceHolder = surfaceView.getHolder();
+
+                    Log.e("surface===0_1", isPermission+"==="+hasSurface+"==="+surfaceHolder);
+
+                    surfaceHolder.addCallback(new SurfaceHolder.Callback() {
+                        @Override
+                        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+                        }
+
+                        @Override
+                        public void surfaceCreated(SurfaceHolder holder) {
+                            Log.e("surface===1", "==="+hasSurface);
+
+                            if (!hasSurface) {
+                                hasSurface = true;
+                                initCamera(holder);
+
+                                if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                                    ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+                                }
+                                //蓝牙锁
+                                if (mBluetoothAdapter == null) {
+                                    BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+                                    mBluetoothAdapter = bluetoothManager.getAdapter();
+                                }
+
+                                if (mBluetoothAdapter == null) {
+                                    ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                                    return;
+                                }
+
+                                if (!mBluetoothAdapter.isEnabled()) {
+                                    isPermission = true;
+
+                                    previewing = false;
+                                    mCropLayout2.setVisibility(View.GONE);
+
+                                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                                    startActivityForResult(enableBtIntent, 188);
+                                } else {
+
+                                    BleManager.getInstance().init(getApplication());
+                                    BleManager.getInstance()
+                                            .enableLog(true)
+                                            .setReConnectCount(10, 5000)
+                                            .setConnectOverTime(20000)
+                                            .setOperateTimeout(10000);
+
+                                    setScanRule();
+                                    scan();
+
+                                    Log.e("asc===onCreate", "==="+mCamera);
+
+                                    if (mCamera!=null){
+
+                                    }
+
+
+                                }
+
+
+                            }
+                        }
+
+                        @Override
+                        public void surfaceDestroyed(SurfaceHolder holder) {
+                            Log.e("surface===2", "==="+hasSurface);
+
+                            hasSurface = false;
+
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+                        }
+                    });
+                    surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+                }
+
+            } else {
+                Log.e("surface===3", "==="+hasSurface);
+
+                initCamera(surfaceHolder);
+            }
+
+//            previewing = false;
+//            hasSurface = false;
+//            mCropLayout2.setVisibility(View.GONE);
+
+
+        }
+
+
+//        try {
+//
+//            mCamera = Camera.open();
+//
+//            mCamera.setPreviewDisplay(surfaceHolder);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            loadingDialog.dismiss();
+        }
+
+//        hasSurface = false;
+
+        Log.e("scan===onPause", "==="+isPermission);
+
+        super.onPause();
+
+        if(isPermission){
+
+        }
+
+        if (handler != null) {
+            handler.quitSynchronously();
+        }
+
+        mCameraManager.closeDriver();
+
+    }
+
+    private void releaseCamera() {
+        if (mCamera != null) {
+
+            Log.e("0===releaseCamera", "==="+mCamera);
+
+//            mCamera.setPreviewCallback(null);
+            mCamera.stopPreview();
+
+            previewing = false;
+            mCamera.setPreviewCallback(null);
+            Log.e("1===releaseCamera", "==="+mCamera);
+            mCamera.release();
+            Log.e("2===releaseCamera", "==="+mCamera);
+            mCamera = null;
+        }
+    }
+
+    private void resetCamera(SurfaceHolder surfaceHolder){
+        Log.e("===resetCamera", "==="+mCamera);
+
+        previewing = true;
+
+        try {
+            mCameraManager.openDriver(surfaceHolder);
+            mCamera = mCameraManager.getCamera();
+            Point point = mCameraManager.getCameraResolution();
+            AtomicInteger width = new AtomicInteger(point.y);
+            AtomicInteger height = new AtomicInteger(point.x);
+            int cropWidth = mCropLayout.getWidth() * width.get() / mContainer.getWidth();
+            int cropHeight = mCropLayout.getHeight() * height.get() / mContainer.getHeight();
+            setCropWidth(cropWidth);
+            setCropHeight(cropHeight);
+        } catch (Exception e) {
+            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+            return;
+        }
+
+        if (handler == null) {
+            handler = new CaptureActivityHandler(ActivityScanerCode.this);
+        }
+
+//        Log.e("111====resetCamera", mCamera+"==="+previewCb+"==="+autoFocusCB);
+//
+//        surfaceView.r
+//        mPreview = new CameraPreview(context, mCamera, previewCb, autoFocusCB);
+//        scanPreview.addView(mPreview);
+    }
+
+    private Handler autoFocusHandler;
+    Camera.AutoFocusCallback autoFocusCB = new Camera.AutoFocusCallback() {
+        public void onAutoFocus(boolean success, Camera camera) {
+//            autoFocusHandler.postDelayed(doAutoFocus, 1000);
+
+            mCamera.cancelAutoFocus();
+        }
+    };
+
+    private Runnable doAutoFocus = new Runnable() {
+        public void run() {
+            if (previewing)
+                mCamera.autoFocus(autoFocusCB);
+        }
+    };
+
+    private void initCamera(SurfaceHolder surfaceHolder) {
+        try {
+            mCameraManager = CameraManager.get();
+            mCameraManager.openDriver(surfaceHolder);
+            mCamera = mCameraManager.getCamera();
+            Point point = mCameraManager.getCameraResolution();
+            AtomicInteger width = new AtomicInteger(point.y);
+            AtomicInteger height = new AtomicInteger(point.x);
+            int cropWidth = mCropLayout.getWidth() * width.get() / mContainer.getWidth();
+            int cropHeight = mCropLayout.getHeight() * height.get() / mContainer.getHeight();
+            setCropWidth(cropWidth);
+            setCropHeight(cropHeight);
+
+//            mCamera.startPreview();
+//            mCamera.autoFocus(autoFocusCB);
+
+//            if (handler == null) {
+//                handler = new CaptureActivityHandler(ActivityScanerCode.this);
+//            }
+
+            handler = new CaptureActivityHandler(ActivityScanerCode.this);
+
+            Log.e("initCamera===", "====");
+
+        } catch (Exception e) {
+            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+            Log.e("initCamera===ASC_e", "===="+e);
+//            return;
+        }
+
+    }
+
+
+
 //    onInputMethodListener = new OnInputMethodListener() {
 //        @Override
 //        public void onShow(boolean result) {
@@ -863,35 +956,19 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         button9();
     }
 
-
-    @Override
-    protected void onPause() {
-        if (loadingDialog != null && loadingDialog.isShowing()) {
-            loadingDialog.dismiss();
-        }
-
-//        hasSurface = false;
-
-        Log.e("scan===onPause", "===");
-
-        super.onPause();
-        if (handler != null) {
-            handler.quitSynchronously();
-        }
-
-        mCameraManager.closeDriver();
-    }
-
     @Override
     protected void onDestroy() {
-        try{
-            inactivityTimer.shutdown();
-            mScanerListener = null;
-            if (loadingDialog != null && loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
+        super.onDestroy();
 
-            Log.e("scan===onDestroy", m_nowMac+"==="+type+"==="+isTz);
+        try{
+            if(isPermission){
+                inactivityTimer.shutdown();
+                mScanerListener = null;
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
+
+                Log.e("scan===onDestroy", m_nowMac+"==="+type+"==="+isTz);
 
 //            if(!isTz){
 //                if("5".equals(type)  || "6".equals(type)){
@@ -918,17 +995,19 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //                }
 //            }
 
-            super.onDestroy();
 
-            inputMethodManager.hideSoftInputFromWindow(bikeNumEdit.getWindowToken(), 0);
 
-            if (broadcastReceiver != null) {
-                unregisterReceiver(broadcastReceiver);
-                broadcastReceiver = null;
+                inputMethodManager.hideSoftInputFromWindow(bikeNumEdit.getWindowToken(), 0);
+
+                if (broadcastReceiver != null) {
+                    unregisterReceiver(broadcastReceiver);
+                    broadcastReceiver = null;
+                }
+                m_myHandler.removeCallbacksAndMessages(null);
             }
-            m_myHandler.removeCallbacksAndMessages(null);
+
         }catch (Exception e){
-            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+//            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
         }
 
 
@@ -1320,9 +1399,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             @Override
             public void run() {
                 try{
+                    Log.e("handleDecode===", "==="+previewing);
+
                     if(!previewing) return;
 
-                    Log.e("handleDecode===", "===");
+
 
                     if(previewing)
                     inactivityTimer.onActivity();
@@ -3730,6 +3811,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.e("188===", isPermission+"==="+requestCode+"==="+resultCode);
+
         if(resultCode == RESULT_OK)
         {
             switch (requestCode) {
@@ -3741,15 +3825,37 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         loadingDialog.dismiss();
                     }
 
+                    isPermission = true;
+
 //                    if (loadingDialog != null && !loadingDialog.isShowing()) {
 //                        loadingDialog.setTitle("正在唤醒车锁");
 //                        loadingDialog.show();
 //                    }
 
-                    Log.e("188===", m_nowMac+"==="+type+"==="+deviceuuid);
+
 
 //                    if (!TextUtils.isEmpty(m_nowMac)) {
 //                    }
+
+//                    //权限初始化
+//                    initPermission();
+//                    //扫描动画初始化
+//                    initScanerAnimation();
+//                    //初始化 CameraManager
+//
+//                    CameraManager.init(mActivity);
+//                    hasSurface = false;
+//                    inactivityTimer = new InactivityTimer(this);
+//
+//                    mCameraManager = CameraManager.get();
+//
+//                    surfaceView = (SurfaceView) findViewById(R.id.capture_preview);
+
+                    Log.e("188===1", m_nowMac+"==="+type+"==="+deviceuuid+"==="+hasSurface+"==="+surfaceHolder);
+
+                    previewing = true;
+                    initCamera(surfaceHolder);
+                    mCropLayout2.setVisibility(View.VISIBLE);
 
                     BleManager.getInstance().init(getApplication());
                     BleManager.getInstance()
@@ -3760,6 +3866,98 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                     setScanRule();
                     scan();
+
+
+
+
+
+//                    if(surfaceHolder==null){
+//                        surfaceHolder = surfaceView.getHolder();
+//
+//                        surfaceHolder.addCallback(new SurfaceHolder.Callback() {
+//                            @Override
+//                            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+//
+//                            }
+//
+//                            @Override
+//                            public void surfaceCreated(SurfaceHolder holder) {
+//                                Log.e("surface===1", "==="+hasSurface);
+//
+//                                if (!hasSurface) {
+//                                    hasSurface = true;
+//                                    initCamera(holder);
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void surfaceDestroyed(SurfaceHolder holder) {
+//                                Log.e("surface===2", "==="+hasSurface);
+//
+//                                hasSurface = false;
+//
+//                                if (loadingDialog != null && loadingDialog.isShowing()) {
+//                                    loadingDialog.dismiss();
+//                                }
+//                            }
+//                        });
+//                        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+//                    }
+
+//                    previewing = true;
+//                    initCamera(surfaceHolder);
+//                    mCropLayout2.setVisibility(View.VISIBLE);
+
+
+
+//                    initCamera(surfaceHolder);
+
+//                    if (!hasSurface) {
+//                        //Camera初始化
+////                      initCamera(surfaceHolder);
+////                      resetCamera(surfaceHolder);
+//
+//                        if(surfaceHolder==null){
+//                            surfaceHolder = surfaceView.getHolder();
+//
+//                            surfaceHolder.addCallback(new SurfaceHolder.Callback() {
+//                                @Override
+//                                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+//
+//                                }
+//
+//                                @Override
+//                                public void surfaceCreated(SurfaceHolder holder) {
+//                                    Log.e("surface===1", "==="+hasSurface);
+//
+//                                    if (!hasSurface) {
+//                                        hasSurface = true;
+//
+//                                        initCamera(holder);
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void surfaceDestroyed(SurfaceHolder holder) {
+//                                    Log.e("surface===2", "==="+hasSurface);
+//
+//                                    hasSurface = false;
+//
+//                                    if (loadingDialog != null && loadingDialog.isShowing()) {
+//                                        loadingDialog.dismiss();
+//                                    }
+//                                }
+//                            });
+//                            surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+//                        }
+//
+//
+//
+//                    } else {
+//                        initCamera(surfaceHolder);
+//                    }
+
+
 
                     /*
                     if("4".equals(type)){
@@ -3877,13 +4075,13 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             ToastUtil.showMessageApp(this, "需要打开蓝牙");
 
             if("".equals(oid)){
+//                setResult(RESULT_OK);
                 scrollToFinishActivity();
             }else{
                 if(!isFinishing()){
                     tzEnd();
                 }
             }
-
 
         }
     }
@@ -3925,6 +4123,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     @Override
     protected void onStop() {
         super.onStop();
+
+        Log.e("onStop===", "===");
+
         if (mBLEStateChangeBroadcast != null) {
             unregisterReceiver(mBLEStateChangeBroadcast);
         }

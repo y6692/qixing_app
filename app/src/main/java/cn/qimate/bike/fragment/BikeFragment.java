@@ -594,72 +594,90 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                         Log.e("main_b===schoolRange21", loadingDialog+"==="+loadingDialog.isShowing());
 
-                        if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
-                            isContainsList.clear();
-                        }
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try{
+                                    if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                                        isContainsList.clear();
+                                    }
 
-                        if (!listPoint.isEmpty() || 0 != listPoint.size()){
-                            listPoint.clear();
-                        }
+                                    if (!listPoint.isEmpty() || 0 != listPoint.size()){
+                                        listPoint.clear();
+                                    }
 
-                        if (!centerList.isEmpty() || 0 != centerList.size()){
-                            centerList.clear();
-                        }
+                                    if (!centerList.isEmpty() || 0 != centerList.size()){
+                                        centerList.clear();
+                                    }
 
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            List<LatLng> list = new ArrayList<>();
-                            List<LatLng> list2 = new ArrayList<>();
-                            int flag=0;
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        List<LatLng> list = new ArrayList<>();
+                                        List<LatLng> list2 = new ArrayList<>();
+                                        int flag=0;
 
-                            JSONArray jsonArray2 = new JSONArray(jsonArray.getJSONObject(i).getString("ranges"));;
-                            JSONObject jsonObject = new JSONObject(jsonArray.getJSONObject(i).getString("parking"));
+                                        JSONArray jsonArray2 = new JSONArray(jsonArray.getJSONObject(i).getString("ranges"));;
+                                        JSONObject jsonObject = new JSONObject(jsonArray.getJSONObject(i).getString("parking"));
 
-                            Log.e("main_b===schoolRange22", jsonArray2.length()+"==="+jsonArray2);
+//                                        Log.e("main_b===schoolRange22", jsonArray2.length()+"==="+jsonArray2);
 
-                            for (int j = 0; j < jsonArray2.length(); j++) {
-                                LatLng latLng = new LatLng(Double.parseDouble(jsonArray2.getJSONObject(j).getString("latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude")));
+                                        for (int j = 0; j < jsonArray2.length(); j++) {
+                                            LatLng latLng = new LatLng(Double.parseDouble(jsonArray2.getJSONObject(j).getString("latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude")));
 
-                                Log.e("main_b===schoolRange222", jsonArray2.length()+"==="+jsonArray2);
+//                                            Log.e("main_b===schoolRange222", jsonArray2.length()+"==="+jsonArray2);
 
-                                flag=0;
-                                list.add(latLng);
+                                            flag=0;
+                                            list.add(latLng);
 
-                                listPoint.add(latLng);
+                                            listPoint.add(latLng);
+                                        }
+
+//                                        Log.e("main_b===schoolRange23", "==="+list.size());
+
+                                        Polygon polygon = null;
+                                        PolygonOptions pOption = new PolygonOptions();
+
+                                        pOption.addAll(list);
+
+                                        polygon = aMap.addPolygon(pOption.strokeColor(Color.argb(0, 255, 255, 255)).fillColor(Color.argb(0, 255, 255, 255)));
+
+//                                        Log.e("main_b===schoolRange24", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
+
+                                        LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
+                                        marker_park_Option.title(jsonObject.getString("name")).position(latLng);
+                                        aMap.addMarker(marker_park_Option);
+
+                                        centerList.add(latLng);
+
+
+                                        if(!isHidden){
+                                            pOptions.add(polygon);
+
+                                            isContainsList.add(polygon.contains(myLocation));
+                                        }else{
+                                        }
+                                    }
+
+                                    if (loadingDialog != null && loadingDialog.isShowing()){
+                                        loadingDialog.dismiss();
+                                    }
+                                }catch (Exception e){
+                                    if (loadingDialog != null && loadingDialog.isShowing()){
+                                        loadingDialog.dismiss();
+                                    }
+                                }
                             }
-
-                            Log.e("main_b===schoolRange23", "==="+list.size());
-
-                            Polygon polygon = null;
-                            PolygonOptions pOption = new PolygonOptions();
-
-                            pOption.addAll(list);
-
-                            polygon = aMap.addPolygon(pOption.strokeColor(Color.argb(0, 255, 255, 255)).fillColor(Color.argb(0, 255, 255, 255)));
-
-                            Log.e("main_b===schoolRange24", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
-
-                            LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
-                            marker_park_Option.title(jsonObject.getString("name")).position(latLng);
-                            aMap.addMarker(marker_park_Option);
-
-                            centerList.add(latLng);
+                        }).start();
 
 
-                            if(!isHidden){
-                                pOptions.add(polygon);
-
-                                isContainsList.add(polygon.contains(myLocation));
-                            }else{
-                            }
-                        }
                     }catch (Exception e){
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
                     }
 
                     Log.e("main_b===schoolRange25", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
 
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
+
 
                 }
             });
@@ -700,74 +718,93 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                         return;
                                     }
 
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try{
+                                                if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                                                    isContainsList.clear();
+                                                }
 
-                                    if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
-                                        isContainsList.clear();
-                                    }
+                                                if (!listPoint.isEmpty() || 0 != listPoint.size()){
+                                                    listPoint.clear();
+                                                }
 
-                                    if (!listPoint.isEmpty() || 0 != listPoint.size()){
-                                        listPoint.clear();
-                                    }
+                                                if (!centerList.isEmpty() || 0 != centerList.size()){
+                                                    centerList.clear();
+                                                }
 
-                                    if (!centerList.isEmpty() || 0 != centerList.size()){
-                                        centerList.clear();
-                                    }
+                                                for (int i = 0; i < jsonArray.length(); i++) {
+                                                    List<LatLng> list = new ArrayList<>();
+                                                    List<LatLng> list2 = new ArrayList<>();
+                                                    int flag=0;
 
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        List<LatLng> list = new ArrayList<>();
-                                        List<LatLng> list2 = new ArrayList<>();
-                                        int flag=0;
+                                                    JSONArray jsonArray2 = new JSONArray(jsonArray.getJSONObject(i).getString("ranges"));;
+                                                    JSONObject jsonObject = new JSONObject(jsonArray.getJSONObject(i).getString("parking"));
 
-                                        JSONArray jsonArray2 = new JSONArray(jsonArray.getJSONObject(i).getString("ranges"));;
-                                        JSONObject jsonObject = new JSONObject(jsonArray.getJSONObject(i).getString("parking"));
+//                                                    Log.e("main_b===schoolRange2", jsonArray2.length()+"==="+jsonArray2);
 
-                                        Log.e("main_b===schoolRange2", jsonArray2.length()+"==="+jsonArray2);
+                                                    for (int j = 0; j < jsonArray2.length(); j++) {
+                                                        LatLng latLng = new LatLng(Double.parseDouble(jsonArray2.getJSONObject(j).getString("latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude")));
 
-                                        for (int j = 0; j < jsonArray2.length(); j++) {
-                                            LatLng latLng = new LatLng(Double.parseDouble(jsonArray2.getJSONObject(j).getString("latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude")));
+//                                                        Log.e("main_b===schoolRange22", jsonArray2.length()+"==="+jsonArray2);
 
-                                            Log.e("main_b===schoolRange22", jsonArray2.length()+"==="+jsonArray2);
+                                                        flag=0;
+                                                        list.add(latLng);
 
-                                            flag=0;
-                                            list.add(latLng);
+                                                        listPoint.add(latLng);
+                                                    }
 
-                                            listPoint.add(latLng);
+//                                                    Log.e("main_b===schoolRange3", "==="+list.size());
+
+                                                    Polygon polygon = null;
+                                                    PolygonOptions pOption = new PolygonOptions();
+
+                                                    pOption.addAll(list);
+
+                                                    polygon = aMap.addPolygon(pOption.strokeColor(Color.argb(0, 255, 255, 255)).fillColor(Color.argb(0, 255, 255, 255)));
+
+//                                                    Log.e("main_b===schoolRange4", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
+
+                                                    LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
+                                                    marker_park_Option.title(jsonObject.getString("name")).position(latLng);
+                                                    aMap.addMarker(marker_park_Option);
+
+                                                    centerList.add(latLng);
+
+                                                    if(!isHidden){
+                                                        pOptions.add(polygon);
+                                                        isContainsList.add(polygon.contains(myLocation));
+                                                    }else{
+                                                    }
+                                                }
+
+                                                Log.e("main_b===schoolRange5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
+
+                                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                                    loadingDialog.dismiss();
+                                                }
+                                            }catch (Exception e){
+                                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                                    loadingDialog.dismiss();
+                                                }
+                                            }
                                         }
-
-                                        Log.e("main_b===schoolRange3", "==="+list.size());
-
-                                        Polygon polygon = null;
-                                        PolygonOptions pOption = new PolygonOptions();
-
-                                        pOption.addAll(list);
-
-                                        polygon = aMap.addPolygon(pOption.strokeColor(Color.argb(0, 255, 255, 255)).fillColor(Color.argb(0, 255, 255, 255)));
-
-                                        Log.e("main_b===schoolRange4", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
-
-                                        LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
-                                        marker_park_Option.title(jsonObject.getString("name")).position(latLng);
-                                        aMap.addMarker(marker_park_Option);
-
-                                        centerList.add(latLng);
-
-                                        if(!isHidden){
-                                            pOptions.add(polygon);
-                                            isContainsList.add(polygon.contains(myLocation));
-                                        }else{
-                                        }
-                                    }
-
-                                    Log.e("main_b===schoolRange5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
+                                    }).start();
 
                                 }else {
+                                    if (loadingDialog != null && loadingDialog.isShowing()){
+                                        loadingDialog.dismiss();
+                                    }
                                     ToastUtil.showMessageApp(context,result.getMsg());
                                 }
                             }catch (Exception e){
+
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
                             }
-                            if (loadingDialog != null && loadingDialog.isShowing()){
-                                loadingDialog.dismiss();
-                            }
+
                         }
                     });
 
@@ -835,12 +872,12 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                     JSONArray jsonArray2 = new JSONArray(jsonArray.getJSONObject(i).getString("ranges"));;
                                     JSONObject jsonObject = new JSONObject(jsonArray.getJSONObject(i).getString("parking"));
 
-                                    Log.e("main_b===schoolRange2", jsonArray2.length()+"==="+jsonArray2);
+//                                    Log.e("main_b===schoolRange2", jsonArray2.length()+"==="+jsonArray2);
 
                                     for (int j = 0; j < jsonArray2.length(); j++) {
                                         LatLng latLng = new LatLng(Double.parseDouble(jsonArray2.getJSONObject(j).getString("latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude")));
 
-                                        Log.e("main_b===schoolRange22", jsonArray2.length()+"==="+jsonArray2);
+//                                        Log.e("main_b===schoolRange22", jsonArray2.length()+"==="+jsonArray2);
 
                                         flag=0;
                                         list.add(latLng);
@@ -848,7 +885,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                         listPoint.add(latLng);
                                     }
 
-                                    Log.e("main_b===schoolRange3", "==="+list.size());
+//                                    Log.e("main_b===schoolRange3", "==="+list.size());
 
                                     Polygon polygon = null;
                                     PolygonOptions pOption = new PolygonOptions();
@@ -857,7 +894,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                     polygon = aMap.addPolygon(pOption.strokeColor(Color.argb(0, 255, 255, 255)).fillColor(Color.argb(0, 255, 255, 255)));
 
-                                    Log.e("main_b===schoolRange4", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
+//                                    Log.e("main_b===schoolRange4", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
 
                                     LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
                                     marker_park_Option.title(jsonObject.getString("name")).position(latLng);

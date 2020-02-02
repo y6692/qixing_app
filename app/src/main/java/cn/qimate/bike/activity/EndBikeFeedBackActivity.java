@@ -1066,16 +1066,21 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                 loadingDialog.show();
 
                 if(imageList.size()==0){
-                    for(int i =0; i<imageUrlList.size(); i++){
-                        upBitmap = imageUrlList.get(i);
+                    if(imageUrlList.size()>0){
+                        for(int i =0; i<imageUrlList.size(); i++){
+                            upBitmap = imageUrlList.get(i);
 
-                        m_myHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                uploadImage();
-                            }
-                        });
+                            m_myHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    uploadImage();
+                                }
+                            });
+                        }
+                    }else{
+                        submit();
                     }
+
                 }else{
                     submit();
                 }
@@ -1332,25 +1337,30 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                         break;
 
                     case REQUESTCODE_PICK:// 直接从相册获取
-                        if (data != null){
-                            try {
-                                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-                                    if (imageUri != null) {
-                                        urlpath = getRealFilePath(context, data.getData());
-                                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                                            loadingDialog.setTitle("请稍等");
-                                            loadingDialog.show();
+                        if (resultCode == RESULT_OK) {
+                            if (data != null){
+                                try {
+                                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                                        if (imageUri != null) {
+                                            urlpath = getRealFilePath(context, data.getData());
+                                            if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                                loadingDialog.setTitle("请稍等");
+                                                loadingDialog.show();
+                                            }
+                                            new Thread(uploadImageRunnable).start();
                                         }
-                                        new Thread(uploadImageRunnable).start();
-                                    }
 //                            }
-                                }else {
-                                    ToastUtil.showMessageApp(context,"未找到存储卡，无法存储照片！");
+                                    }else {
+                                        ToastUtil.showMessageApp(context,"未找到存储卡，无法存储照片！");
+                                    }
+                                } catch (NullPointerException e) {
+                                    e.printStackTrace();// 用户点击取消操作
                                 }
-                            } catch (NullPointerException e) {
-                                e.printStackTrace();// 用户点击取消操作
                             }
+                        }else{
+                            Toast.makeText(context,"已取消！",Toast.LENGTH_SHORT).show();
                         }
+
                         break;
                     case REQUESTCODE_TAKE:// 调用相机拍照
 
@@ -1367,29 +1377,33 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
 //                        }else {
 //                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
 //                        }
+                        if (resultCode == RESULT_OK) {
+                            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
 
-                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-
-                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
-                            if (Uri.fromFile(temp) != null) {
-                                urlpath = getRealFilePath(context, Uri.fromFile(temp));
-                                Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
+                                File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
+                                if (Uri.fromFile(temp) != null) {
+                                    urlpath = getRealFilePath(context, Uri.fromFile(temp));
+                                    Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
 
 //                                File picture = new File(urlpath);
-                                Uri filepath = Uri.fromFile(temp);
+                                    Uri filepath = Uri.fromFile(temp);
 //                                upBitmap = BitmapFactory.decodeFile(urlpath);
 
 
-                                compress(); //压缩图片
+                                    compress(); //压缩图片
 
-                                Log.e("REQUESTCODE_TAKE===3", "==="+filepath.getPath());
+                                    Log.e("REQUESTCODE_TAKE===3", "==="+filepath.getPath());
 
 //                                uploadImage();
-                            }
+                                }
 
-                        }else {
-                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+                            }
+                        }else{
+                            Toast.makeText(context,"已取消！",Toast.LENGTH_SHORT).show();
                         }
+
 
                         break;
                     case REQUESTCODE_CUTTING:// 取得裁剪后的图片

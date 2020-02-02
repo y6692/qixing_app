@@ -149,6 +149,8 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
     private String cert_method = "";
     private  boolean flag = false;
     private  boolean isVisible = false;
+    private  boolean isPic1 = false;
+    private  boolean isPic2 = false;
 
     private String upToken = "";
 
@@ -335,8 +337,24 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
                     m_myHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            uploadImage(1, upBitmap);
-                            uploadImage(2, upBitmap2);
+
+                            if(isPic1 || isPic2){
+                                if((!"".equals(imageurl) && !isPic2) || (!"".equals(imageurl2) && !isPic1)){
+                                    SubmitBtn();
+                                }else{
+                                    if("".equals(imageurl) && isPic1){
+                                        uploadImage(1, upBitmap);
+                                    }
+
+                                    if("".equals(imageurl2) && isPic2){
+                                        uploadImage(2, upBitmap2);
+                                    }
+                                }
+
+                            }else{
+                                SubmitBtn();
+                            }
+
                         }
                     });
                 }else{
@@ -500,21 +518,23 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
 
                     Log.e("UpCompletion===", imageurl+"==="+imageurl2+jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
 
-                    if(!"".equals(imageurl) && !"".equals(imageurl2)){
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
+                    if((!isPic2 && isPic1 && !"".equals(imageurl)) || (!isPic1 && isPic2 && !"".equals(imageurl2)) || (isPic1 && isPic2 && !"".equals(imageurl) && !"".equals(imageurl2))){
+//                        if (loadingDialog != null && loadingDialog.isShowing()){
+//                            loadingDialog.dismiss();
+//                        }
 
                         SubmitBtn();
                     }
                 } catch (JSONException e) {
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
                     e.printStackTrace();
                 }
 
 
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
+
 
 
 //                {ver:7.3.3,ResponseInfo:1574237736489492,status:200, reqId:HpgAAAAlr6vh0NgV, xlog:X-Log, xvia:, host:upload.qiniu.com, path:/, ip:/180.101.136.11:80, port:80, duration:183.000000 s, time:1574237736, sent:25256,error:null}==={"image":null,"ret":"success"}
@@ -852,17 +872,18 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
                         break;
 
                     case REQUESTCODE_PICK:// 直接从相册获取
-                        if (data != null){
-                            if (loadingDialog != null && !loadingDialog.isShowing()) {
-                                loadingDialog.setTitle("请稍等");
-                                loadingDialog.show();
-                            }
+                        if (resultCode == RESULT_OK) {
+                            if (data != null){
+                                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                    loadingDialog.setTitle("请稍等");
+                                    loadingDialog.show();
+                                }
 
-                            try {
-                                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-                                    if (imageUri != null) {
+                                try {
+                                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                                        if (imageUri != null) {
 //                                        urlpath = getRealFilePath(context, data.getData());
-                                        urlpath  = FileUtil.getFilePathByUri(context, data.getData());
+                                            urlpath  = FileUtil.getFilePathByUri(context, data.getData());
 //                                        if (loadingDialog != null && !loadingDialog.isShowing()) {
 //                                            loadingDialog.setTitle("请稍等");
 //                                            loadingDialog.show();
@@ -870,7 +891,7 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
 
 //                                        RequestOptions requestOptions1 = new RequestOptions().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE);
 
-                                        Log.e("REQUESTCODE_PICK===", data.getData()+"==="+urlpath);
+                                            Log.e("REQUESTCODE_PICK===", data.getData()+"==="+urlpath);
 
 //                                        Glide.with(context)
 //                                        .load(urlpath)
@@ -882,109 +903,108 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
 //
 
 //                                        File picture = new File(Environment.getExternalStorageDirectory(), "com.gamefox.samecity.fish/activity/bill1.png");
-                                        picture = new File(urlpath);
+                                            picture = new File(urlpath);
 //                                        Uri filepath;
-                                        Uri filepath = Uri.fromFile(picture);
+                                            Uri filepath = Uri.fromFile(picture);
 //                                        Bitmap bitmap = BitmapFactory.decodeFile(filepath.getPath());
 //                                        upBitmap = BitmapFactory.decodeFile(urlpath);
 
-                                        if(photo == 1){
-                                            compress();
-                                            uploadImage.setImageBitmap(upBitmap);
-                                        }else{
-                                            compress2();
-                                            uploadImage2.setImageBitmap(upBitmap2);
-                                        }
+                                            if(photo == 1){
+                                                isPic1 = true;
+                                                compress();
+                                                uploadImage.setImageBitmap(upBitmap);
+                                            }else{
+                                                isPic2 = true;
+                                                compress2();
+                                                uploadImage2.setImageBitmap(upBitmap2);
+                                            }
 
-                                        Log.e("REQUESTCODE_PICK===3", data.getData()+"==="+filepath.getPath());
+                                            Log.e("REQUESTCODE_PICK===3", data.getData()+"==="+filepath.getPath());
 
 //                                        uploadImage();
-                                    }else{
+                                        }else{
 
+                                        }
+
+                                        if (loadingDialog != null && loadingDialog.isShowing()){
+                                            loadingDialog.dismiss();
+                                        }
+
+                                    }else {
+                                        if (loadingDialog != null && loadingDialog.isShowing()){
+                                            loadingDialog.dismiss();
+                                        }
+
+                                        Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                                     }
+                                } catch (NullPointerException e) {
+                                    e.printStackTrace();// 用户点击取消操作
 
                                     if (loadingDialog != null && loadingDialog.isShowing()){
                                         loadingDialog.dismiss();
                                     }
-
-                                }else {
-                                    if (loadingDialog != null && loadingDialog.isShowing()){
-                                        loadingDialog.dismiss();
-                                    }
-
-                                    Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
-                                }
-                            } catch (NullPointerException e) {
-                                e.printStackTrace();// 用户点击取消操作
-
-                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                    loadingDialog.dismiss();
                                 }
                             }
-                        }
-                        break;
-                    case REQUESTCODE_TAKE:// 调用相机拍照
-                        if (loadingDialog != null && !loadingDialog.isShowing()) {
-                            loadingDialog.setTitle("请稍等");
-                            loadingDialog.show();
+                        }else{
+                            Toast.makeText(context,"已取消！",Toast.LENGTH_SHORT).show();
                         }
 
-                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                        break;
+                    case REQUESTCODE_TAKE:// 调用相机拍照
+                        if (resultCode == RESULT_OK) {
+                            if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                loadingDialog.setTitle("请稍等");
+                                loadingDialog.show();
+                            }
+
+                            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
 
 //                            if (imageUri != null) {
 //                                Log.e("REQUESTCODE_TAKE===", data+"===");
 //                                urlpath  = FileUtil.getFilePathByUri(context, data.getData());
 
-                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
-                            if (Uri.fromFile(temp) != null) {
-                                urlpath = getRealFilePath(context, Uri.fromFile(temp));
-                                Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
+                                File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
+                                if (Uri.fromFile(temp) != null) {
+                                    urlpath = getRealFilePath(context, Uri.fromFile(temp));
+                                    Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
 
 //                                File picture = new File(urlpath);
-                                Uri filepath = Uri.fromFile(temp);
+                                    Uri filepath = Uri.fromFile(temp);
 //                                upBitmap = BitmapFactory.decodeFile(urlpath);
 
 
-                                if(photo == 1){
-                                    compress();
-                                    uploadImage.setImageBitmap(upBitmap);
-                                }else{
-                                    compress2();
-                                    uploadImage2.setImageBitmap(upBitmap2);
-                                }
+                                    if(photo == 1){
+                                        isPic1 = true;
+                                        compress();
+                                        uploadImage.setImageBitmap(upBitmap);
+                                    }else{
+                                        isPic2 = true;
+                                        compress2();
+                                        uploadImage2.setImageBitmap(upBitmap2);
+                                    }
 
-                                Log.e("REQUESTCODE_TAKE===3", photo+"==="+upBitmap+"==="+filepath.getPath());
+                                    Log.e("REQUESTCODE_TAKE===3", photo+"==="+upBitmap+"==="+filepath.getPath());
 
 //                                uploadImage();
-                            }else{
+                                }else{
 
+                                }
+
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
+
+                            }else {
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
+
+                                Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                             }
-
-                            if (loadingDialog != null && loadingDialog.isShowing()){
-                                loadingDialog.dismiss();
-                            }
-
-
-//                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
-//                            if (Uri.fromFile(temp) != null) {
-//                                urlpath = getRealFilePath(context, Uri.fromFile(temp));
-//
-//                                Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
-//
-//                                if (loadingDialog != null && !loadingDialog.isShowing()) {
-//                                    loadingDialog.setTitle("请稍等");
-//                                    loadingDialog.show();
-//                                }
-//
-//                                new Thread(uploadImageRunnable).start();
-//                            }
-                        }else {
-                            if (loadingDialog != null && loadingDialog.isShowing()){
-                                loadingDialog.dismiss();
-                            }
-
-                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(context,"已取消！",Toast.LENGTH_SHORT).show();
                         }
+
                         break;
                     case REQUESTCODE_CUTTING:// 取得裁剪后的图片
                         if (data != null) {
