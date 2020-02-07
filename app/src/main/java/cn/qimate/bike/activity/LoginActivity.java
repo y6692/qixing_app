@@ -17,6 +17,7 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -71,6 +72,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
     private TextView change_phone;
     private Button loginBtn;
     private TextView serviceProtocol;
+    private TextView privacyProtocol;
 
     public static boolean isForeground = false;
 
@@ -136,6 +138,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
         change_phone = (TextView) findViewById(R.id.loginUI_change_phone);
         loginBtn = (Button) findViewById(R.id.loginUI_btn);
         serviceProtocol = (TextView) findViewById(R.id.loginUI_serviceProtocol);
+        privacyProtocol = (TextView) findViewById(R.id.loginUI_privacyProtocol);
 
 
         if (SharedPreferencesUrls.getInstance().getString("userName", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("userName", ""))) {
@@ -232,6 +235,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
         change_phone.setOnClickListener(this);
         loginBtn.setOnClickListener(this);
         serviceProtocol.setOnClickListener(this);
+        privacyProtocol.setOnClickListener(this);
     }
 
     @Override
@@ -260,10 +264,18 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                 UIHelper.goToAct(context, ComplainActivity.class);
 
                 break;
+
             case R.id.loginUI_serviceProtocol:
                 agreement();
 
                 break;
+
+            case R.id.loginUI_privacyProtocol:
+                agreement2();
+
+                break;
+
+
         }
     }
 
@@ -396,7 +408,66 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
     }
 
+    private void agreement2() {
 
+        Log.e("agreement===0", "===");
+
+        try{
+//          协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议 use_car用车服务协议 privacy隐私协议
+            HttpHelper.get(context, Urls.agreement+"privacy", new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+                    Log.e("agreement===fail", throwable.toString()+"==="+responseString);
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+                        Log.e("agreement===", "==="+responseString);
+
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        H5Bean bean = JSON.parseObject(result.getData(), H5Bean.class);
+
+
+
+						UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
+//                        UIHelper.goWebViewAct(context, bean.getH5_title(), Urls.agreement+"register");
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                }
+
+
+            });
+        }catch (Exception e){
+            Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+        }
+
+    }
 
     private void LoginHttp(String telphone, String password) {
 

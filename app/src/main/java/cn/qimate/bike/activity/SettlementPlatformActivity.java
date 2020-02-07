@@ -501,9 +501,13 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
 
     private void end(){
-        if(order_type>=2){
+        if(order_type>=3){
             Intent intent = new Intent(context, MainActivity.class);
             intent.putExtra("flag", true);
+            startActivity(intent);
+        }else if(order_type==2){
+            Intent intent = new Intent(context, MyCartActivity.class);
+//            intent.putExtra("flag", true);
             startActivity(intent);
         }else{
             Intent intent = new Intent(context, MyOrderDetailActivity.class);
@@ -780,10 +784,18 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                                         user();
                                     }else {
 
-                                        Intent intent = new Intent(context, MainActivity.class);
-                                        intent.putExtra("flag", true);
-                                        startActivity(intent);
-                                        scrollToFinishActivity();
+                                        if(order_type==2){
+                                            Intent intent = new Intent(context, MyCartActivity.class);
+//                                            intent.putExtra("flag", true);
+                                            startActivity(intent);
+                                            scrollToFinishActivity();
+                                        }else{
+                                            Intent intent = new Intent(context, MainActivity.class);
+                                            intent.putExtra("flag", true);
+                                            startActivity(intent);
+                                            scrollToFinishActivity();
+                                        }
+
                                     }
                                 }
                             }

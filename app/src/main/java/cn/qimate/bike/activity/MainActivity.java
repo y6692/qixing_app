@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -29,7 +30,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -131,6 +138,7 @@ import cn.qimate.bike.fragment.MineFragment;
 import cn.qimate.bike.fragment.PurseFragment;
 import cn.qimate.bike.model.BannerBean;
 import cn.qimate.bike.model.CarBean;
+import cn.qimate.bike.model.H5Bean;
 import cn.qimate.bike.model.KeyBean;
 import cn.qimate.bike.model.OrderBean;
 import cn.qimate.bike.model.ResultConsel;
@@ -226,7 +234,9 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     private String action_content;
     private String action_type;
 
-    private ImageView closeBtn;
+    private TextView privacyText;
+    private TextView closeBtn;
+    private TextView confirmBtn;
     private Dialog advDialog;
     private ImageView advImageView;
     private ImageView advCloseBtn;
@@ -236,6 +246,10 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     private Banner mBanner;
     private MyImageLoader mMyImageLoader;
 
+    private String title;
+    private String url;
+    private String title2;
+    private String url2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -288,26 +302,41 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
-        View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_frist_view, null);
-        dialog.setContentView(dialogView);
-        dialog.setCanceledOnTouchOutside(false);
+//        dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+//        View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_frist_view, null);
+//        dialog.setContentView(dialogView);
+//        dialog.setCanceledOnTouchOutside(false);
 
         advDialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
         View advDialogView = LayoutInflater.from(context).inflate(R.layout.ui_adv_view, null);
         advDialog.setContentView(advDialogView);
         advDialog.setCanceledOnTouchOutside(false);
 
-
-
 //        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
-        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
+//        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
 //        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
 //        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
-        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
+//        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
         advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
         advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+
+
+		dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+//        dialog = new Dialog(context, R.style.UpdateDialogStyle);
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_privacy_view, null);
+
+        dialog.setOnKeyListener(keylistener);
+        dialog.setContentView(dialogView);
+        dialog.setCanceledOnTouchOutside(false);
+
+
+        privacyText = (TextView)dialogView.findViewById(R.id.ui_privacy_text);
+        closeBtn = (TextView)dialogView.findViewById(R.id.ui_privacy_closeBtn);
+        confirmBtn = (TextView)dialogView.findViewById(R.id.ui_privacy_confirmBtn);
+
+        closeBtn.setOnClickListener(this);
+        confirmBtn.setOnClickListener(this);
 
 
 //        imagePath = new ArrayList<>();
@@ -333,33 +362,294 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //        rl_ad = findViewById(R.id.rl_purse_ad);
 //        rl_ad.setOnClickListener(this);
 
-        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
-            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
-            WindowManager windowManager = getWindowManager();
-            Display display = windowManager.getDefaultDisplay();
-            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-            dialog.getWindow().setAttributes(lp);
-            dialog.show();
-        } else {
-//            initHttp();
+//        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
+//            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
+//            WindowManager windowManager = getWindowManager();
+//            Display display = windowManager.getDefaultDisplay();
+//            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+//            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+//            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+//            dialog.getWindow().setAttributes(lp);
+//            dialog.show();
+//        } else {
+////            initHttp();
+//
+//
+//        }
 
+        advImageView.setOnClickListener(this);
+        advCloseBtn.setOnClickListener(this);
+        closeBtn.setOnClickListener(this);
+        confirmBtn.setOnClickListener(this);
+
+        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
+			agreement();
+		}else{
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     m_myHandler.sendEmptyMessage(5);
                 }
             }).start();
-        }
+		}
+
+
+
 //        exImage_1.setOnClickListener(myOnClickLister);
 //        exImage_2.setOnClickListener(myOnClickLister);
 
-        advImageView.setOnClickListener(this);
-        advCloseBtn.setOnClickListener(this);
-        closeBtn.setOnClickListener(myOnClickLister);
 
+
+    }
+
+    DialogInterface.OnKeyListener keylistener = new DialogInterface.OnKeyListener(){
+        public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+            Log.e("sa===keylistener", "==="+keyCode);
+
+            if (keyCode==KeyEvent.KEYCODE_BACK && event.getRepeatCount()==0){
+//				dialog.dismiss();
+//				finishMine();
+                return true;
+            }else{
+                return false;
+            }
+        }
+    };
+
+    private void agreement() {
+
+        Log.e("agreement===0", "===");
+
+        try{
+//          协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议 use_car用车服务协议
+            HttpHelper.get(context, Urls.agreement+"use_car", new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+                    Log.e("agreement===fail", throwable.toString()+"==="+responseString);
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+                        Log.e("agreement===", "==="+responseString);
+
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        H5Bean bean = JSON.parseObject(result.getData(), H5Bean.class);
+
+                        title = bean.getH5_title();
+                        url = bean.getH5_url();
+
+                        agreement2();
+
+//						UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
+//                        UIHelper.goWebViewAct(context, bean.getH5_title(), Urls.agreement+"register");
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                }
+
+
+            });
+        }catch (Exception e){
+            Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void agreement2() {
+
+        Log.e("agreement===0", "===");
+
+        try{
+//          协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议 use_car用车服务协议 privacy隐私协议
+            HttpHelper.get(context, Urls.agreement+"privacy", new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+                    Log.e("agreement===fail", throwable.toString()+"==="+responseString);
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+                        Log.e("agreement===", "==="+responseString);
+
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        H5Bean bean = JSON.parseObject(result.getData(), H5Bean.class);
+
+                        title2 = bean.getH5_title();
+                        url2 = bean.getH5_url();
+
+//						WindowManager windowManager = getWindowManager();
+//						Display display = windowManager.getDefaultDisplay();
+//						WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+//						lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+//						lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//						dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+//						dialog.getWindow().setAttributes(lp);
+//                        dialog.show();
+
+                        WindowManager windowManager = getWindowManager();
+                        Display display = windowManager.getDefaultDisplay();
+                        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+                        lp.width = (int) (display.getWidth() * 1);
+                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                        dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+                        dialog.getWindow().setAttributes(lp);
+                        dialog.show();
+
+//						handler.sendEmptyMessageDelayed(1, 2000);
+
+                        privacyText.setMovementMethod(LinkMovementMethod.getInstance());
+                        String text = "亲爰的用户：感谢您信任并使用7MA出行！<br>" +
+//                                "我们依据相关法律制定了<a href=\""+url+"\"><font  color='red'>《服务协议》</font></a>和<a href=\""+url2+"\">《7MA隐私政策》</a>，请您在点击同意之前仔细阅读并充分理解相关条款，其中的重点条款已为您标注，方便您了解自己的权利。<br>" +
+                                "我们依据相关法律制定了<a href=\""+url+"\" style='font-color:red'>《用户协议》</a>和<a href=\""+url2+"\">《隐私政策》</a>，请您在点击同意之前仔细阅读并充分理解相关条款，其中的重点条款已为您标注，方便您了解自己的权利。<br>" +
+                                "我们将通过隐私政策向您说明：";
+//                                "1、为了您享受骑行服务，我们会根据您的授权内容，收集和使用对应的必要信息（例如位置信息、相机权限等）<br>" +
+//                                "2、我们的产品可能涉及使用第三方提供的自动化工具（如代码、接口、开发工具包（SDK）等）嵌入或接入。<br>" +
+//                                "3、您可以对上述信息进行访问、更正、删除以及注销账户，我们也将提供专门的个人信息保护联系方式。<br>" +
+//                                "4、未经您的授权同意，我们不会将上述信息共享给第三方或用于您未授权的其他用途。<br>" +
+//                                "详细内容请仔细阅读《7MA隐私保护政策》";
+//						Spanned text = Html.fromHtml("123<a href=\""+bean.getH5_url()+"\">隐私政策</a>456");
+//						privacyText.setText(text);
+                        privacyText.setText(setTextLink(context, text));
+
+
+//						UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
+//                        UIHelper.goWebViewAct(context, bean.getH5_title(), Urls.agreement+"register");
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                }
+
+
+            });
+        }catch (Exception e){
+            Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public SpannableStringBuilder setTextLink(final Context context, String answerstring) {
+
+        Log.e("sa===setTextLink", "==="+answerstring);
+
+        if(!TextUtils.isEmpty(answerstring)) {
+
+            //fromHtml(String source)在Android N中已经弃用，推荐使用fromHtml(String source, int
+            // flags)，flags 参数说明，
+            // Html.FROM_HTML_MODE_COMPACT：html块元素之间使用一个换行符分隔
+            // Html.FROM_HTML_MODE_LEGACY：html块元素之间使用两个换行符分隔
+            Spanned htmlString = Html.fromHtml(answerstring, Html.FROM_HTML_MODE_COMPACT);
+//            Spanned htmlString = Html.fromHtml(answerstring, null, new HtmlTagHandler("font"));
+
+//            tv_price.setText(Html.fromHtml(price, null, new HtmlTagHandler("font")));
+
+            if(htmlString instanceof SpannableStringBuilder) {
+                final SpannableStringBuilder spannablestringbuilder = (SpannableStringBuilder) htmlString;
+                //取得与a标签相关的span
+                Object[] objs = spannablestringbuilder.getSpans(0, spannablestringbuilder.length(), URLSpan.class);
+                if(null != objs && objs.length != 0) {
+                    for(Object obj : objs) {
+
+
+                        final int start = spannablestringbuilder.getSpanStart(obj);
+                        final int end = spannablestringbuilder.getSpanEnd(obj);
+
+                        Log.e("sa===setTextLink1", obj.getClass() + "===" +start + "===" + end+ "===" + htmlString+ "===" + spannablestringbuilder);
+
+
+
+                        if(obj instanceof URLSpan) {
+                            //先移除这个span，再新添加一个自己实现的span。
+                            URLSpan span = (URLSpan) obj;
+
+                            Log.e("sa===setTextLink2", span + "===" + span.toString());
+
+//                            span.s
+
+                            final String url = span.getURL();
+
+
+
+                            spannablestringbuilder.removeSpan(obj);
+
+
+
+                            spannablestringbuilder.setSpan(new ClickableSpan() {
+                                @Override
+                                public void onClick(View widget) {
+                                    //这里可以实现自己的跳转逻辑
+                                    Log.e("agreement===onclick", url+"==="+start+"==="+end+"==="+((TextView)widget).getText());
+
+                                    if(spannablestringbuilder.toString().substring(start, end).contains("隐私")){
+                                        UIHelper.goWebViewAct(context, title2, url);
+                                    }else{
+                                        UIHelper.goWebViewAct(context, title, url);
+                                    }
+
+                                }
+                            }, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+                            spannablestringbuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.red)), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+//                            spannablestringbuilder.setSpan(new ForegroundColorSpan(Color.parseColor("FF0000")), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+                        }
+                    }
+                }
+                return spannablestringbuilder;
+            }
+        }
+        return new SpannableStringBuilder(answerstring);
     }
 
     @Override
@@ -885,6 +1175,25 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //                }
 //                UIHelper.goToAct(context, PersonAlterActivity.class);
 //                break;
+
+            case R.id.ui_privacy_closeBtn:
+                dialog.dismiss();
+                finishMine();
+                break;
+
+            case R.id.ui_privacy_confirmBtn:
+                dialog.dismiss();
+                SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        m_myHandler.sendEmptyMessage(5);
+                    }
+                }).start();
+
+                break;
+
             case R.id.ui_adv_closeBtn:
                 if (advDialog != null && advDialog.isShowing()) {
                     advDialog.dismiss();

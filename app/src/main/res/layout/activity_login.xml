@@ -149,8 +149,27 @@
                         android:layout_height="wrap_content"
                         android:textColor="#FF0000"
                         android:textSize="@dimen/sp12"
-                        android:text="《服务协议》"
+                        android:text="《用户协议》"
                         android:layout_alignParentRight="true"/>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp12"
+                        android:text="和"
+                        android:layout_alignParentRight="true"/>
+
+                    <TextView
+                        android:id="@+id/loginUI_privacyProtocol"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FF0000"
+                        android:textSize="@dimen/sp12"
+                        android:text="《隐私政策》"
+                        android:layout_alignParentRight="true"/>
+
                 </LinearLayout>
 
 

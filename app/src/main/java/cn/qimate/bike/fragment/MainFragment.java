@@ -392,6 +392,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private boolean isPermission = true;
     private boolean isFind = false;
 
+    private boolean isNavi = false;
+
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_main, null);
         unbinder = ButterKnife.bind(this, v);
@@ -495,6 +497,32 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+        Log.e("onHiddenChanged===mf", hidden+"==="+isNavi+"==="+SharedPreferencesUrls.getInstance().getString("iscert", "")+"==="+access_token);
+
+
+        if(hidden){
+            //pause
+
+//            if(routeOverLay!=null && ll_top!=null && !ll_top.isShown()){
+//                routeOverLay.removeFromMap();
+//
+//                ll_top.setVisibility(View.VISIBLE);
+//                ll_top_navi.setVisibility(View.GONE);
+//            }
+
+        }else{
+            //resume
+            if(!isNavi){
+                banner();
+                car_authority();
+            }
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
@@ -503,7 +531,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         boolean flag = activity.getIntent().getBooleanExtra("flag", false);
 
 
-        Log.e("mf===onResume", isPermission+"==="+flag+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+type);
+        Log.e("mf===onResume", isNavi+"==="+isPermission+"==="+flag+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+type);
 
         mapView.onResume();
 
@@ -512,8 +540,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }
 
         if(isPermission){
-            banner();
-            car_authority();
+            if(!isNavi){
+                banner();
+                car_authority();
+            }
+
         }
     }
 
@@ -545,19 +576,21 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                Log.e("onMarkerClick===", marker.getTitle()+"==="+mAMapNavi+"==="+referLatitude+"==="+referLongitude+"==="+marker.getPosition().latitude+"==="+marker.getPosition().longitude);
+                Log.e("onMarkerClick===", ll_top_navi.isShown()+"==="+marker.getTitle()+"==="+mAMapNavi+"==="+referLatitude+"==="+referLongitude+"==="+marker.getPosition().latitude+"==="+marker.getPosition().longitude);
 
                 if(marker.getTitle()!=null && !"".equals(marker.getTitle())){
                     ll_top.setVisibility(View.GONE);
                     ll_top_navi.setVisibility(View.VISIBLE);
+                    isNavi = true;
 
-
-//              Log.e("onMarkerClick===", marker.getTitle()+"==="+marker.getTitle().split("-")[0]);
+                    Log.e("onMarkerClick===1", ll_top_navi.isShown()+"==="+marker.getTitle()+"==="+marker.getTitle().split("-")[0]);
 
                     markerPosition = marker.getPosition();
                     tv_navi_name.setText(marker.getTitle());
                     mAMapNavi.calculateWalkRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
-
+//                    mAMapNavi.calculateRideRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
+//                    mAMapNavi.calculateDriveRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
+//                    mAMapNavi.c
                 }
 
 
@@ -893,9 +926,33 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     }
 
                     if(isMin){
-                        rl_authBtn.setVisibility(View.VISIBLE);
-                        tv_authBtn.setText(tipRange);
+                        if(notice_code==6){
+                            rl_authBtn.setVisibility(View.VISIBLE);
+                            tv_authBtn.setText(tipRange);
+                        }else{
+                            clearRoute();
+                        }
                     }
+
+                    if(notice_code!=6){
+                        isWaitEbikeInfo = false;
+                        if (ebikeInfoThread != null) {
+                            ebikeInfoThread.interrupt();
+                            ebikeInfoThread = null;
+                        }
+
+                        banner();
+                    }
+
+//                    else{
+//
+//
+//                        isMin = false;
+//                        tv_authBtn.setText("");
+//                        if(routeOverLay != null){
+//                            routeOverLay.removeFromMap();
+//                        }
+//                    }
 
                     Log.e("mf===car_authority4", notice_code+"==="+isMin);
 
@@ -1025,6 +1082,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                                      closeBroadcast();
 //                                      deactivate();
 
+                                if(routeOverLay!=null && ll_top!=null && !ll_top.isShown()){
+                                    routeOverLay.removeFromMap();
+
+                                    ll_top.setVisibility(View.VISIBLE);
+                                    ll_top_navi.setVisibility(View.GONE);
+                                }
+
+                                end2();
+
                                 Intent intent = new Intent();
                                 intent.setClass(context, ActivityScanerCode.class);
 //                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -1098,6 +1164,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void run() {
                 while (isWaitEbikeInfo) {
+
+                    Log.e("cyclingThread===1", notice_code+"==="+ebikeInfoThread);
 
                     m_myHandler.sendEmptyMessage(4);
 
@@ -1733,6 +1801,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             if(null == bean.getOrder_sn() || bean.getOrder_state()>20){
                                 ToastUtil.showMessageApp(context, "当前行程已结束");
 
+                                end2();
+
                                 car_authority();
                             }else{
                                 order_id2 = bean.getOrder_id();
@@ -1756,6 +1826,132 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
+
+    private void cycling5() {
+        Log.e("mf===cycling5", "===");
+
+//        loadingDialog.setTitle("正在还车中，请勿离开");
+//        loadingDialog.show();
+
+        HttpHelper.get(context, Urls.cycling, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在还车中，请勿离开");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon("mf===cycling5", throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("mf===cycling5_1", responseString + "===" + result.data);
+
+                            OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
+
+
+                            if(null == bean.getOrder_sn() || bean.getOrder_state()>20){
+                                ToastUtil.showMessageApp(context, "当前行程已结束");
+
+                                end2();
+
+                                car_authority();
+                            }else{
+                                if(carmodel_id==2){
+                                    carInfo_open();
+                                }else{
+                                    car_can_unlock();
+                                }
+                            }
+
+                        } catch (Exception e) {
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                        }
+
+
+
+                    }
+                });
+            }
+        });
+
+    }
+
+
+    private void cycling6() {
+        Log.e("mf===cycling6", "===");
+
+//        loadingDialog.setTitle("正在还车中，请勿离开");
+//        loadingDialog.show();
+
+        HttpHelper.get(context, Urls.cycling, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在还车中，请勿离开");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon("mf===cycling6", throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("mf===cycling6_1", responseString + "===" + result.data);
+
+                            OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
+
+
+                            if(null == bean.getOrder_sn() || bean.getOrder_state()>20){
+                                ToastUtil.showMessageApp(context, "当前行程已结束");
+
+                                end2();
+
+                                car_authority();
+                            }else{
+                                //TODO
+                                Intent intent = new Intent(context, EndBikeFeedBackActivity.class);
+                                intent.putExtra("bikeCode", codenum);
+                                intent.putExtra("carmodel_id", carmodel_id);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                context.startActivity(intent);
+                            }
+
+                        } catch (Exception e) {
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                        }
+
+
+
+                    }
+                });
+            }
+        });
+
+    }
 
     private void closeBroadcast() {
         try {
@@ -1783,29 +1979,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
 
-        Log.e("onHiddenChanged===mf", hidden+"==="+SharedPreferencesUrls.getInstance().getString("iscert", "")+"==="+access_token);
-
-
-        if(hidden){
-            //pause
-
-            if(routeOverLay!=null && ll_top!=null && !ll_top.isShown()){
-                routeOverLay.removeFromMap();
-
-                ll_top.setVisibility(View.VISIBLE);
-                ll_top_navi.setVisibility(View.GONE);
-            }
-
-        }else{
-            //resume
-            banner();
-            car_authority();
-        }
-    }
 
     private final LocationListener locationListener = new LocationListener() {
 
@@ -2113,6 +2287,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             JSONArray ja_banners = new JSONArray(new JSONObject(result.getData()).getString("banners"));
 
                             Log.e("mf===banner1", ja_banners.length() + "===" + result.data);
+
+
 
                             if(ja_banners.length()==0){
                                 rl_ad.setVisibility(View.GONE);
@@ -2792,11 +2968,20 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 
             case R.id.mainUI_refreshLayout:
-                Log.e("refreshLayout===0", parking()+"==="+isConnect+"==="+isLookPsdBtn+"==="+isContainsList+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
+                Log.e("refreshLayout===0", notice_code+"==="+isNavi+"==="+isMin+"==="+isConnect+"==="+isLookPsdBtn+"==="+isContainsList+"==="+SharedPreferencesUrls.getInstance().getString("iscert", ""));
+                Log.e("refreshLayout===1", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+isContainsList);
+
 
                 first = false;
-                banner();
-                car_authority();
+
+
+
+
+                if(!isNavi){
+                    banner();
+                    car_authority();
+                }
+
 
 //                bikeFragment.sr();
 //                ebikeFragment.sr();
@@ -2976,11 +3161,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 }else if ("再次开锁".equals(tvAgain)){
 //                    car_can_unlock();
 
-                    if(carmodel_id==2){
-                        carInfo_open();
-                    }else{
-                        car_can_unlock();
-                    }
+                    cycling5();
+
+
                 }
 
                 break;
@@ -2991,12 +3174,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
             case R.id.ll_biking_errorEnd:
                 Log.e("ll_errorEnd===onClick", access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
-                //TODO
-                intent = new Intent(context, EndBikeFeedBackActivity.class);
-                intent.putExtra("bikeCode", codenum);
-                intent.putExtra("carmodel_id", carmodel_id);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                context.startActivity(intent);
+
+                cycling6();
+
+
                 break;
 
             case R.id.mainUI_scanCode_lock:
@@ -3072,6 +3253,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     return;
                 }
 //                if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+
                 if (isLookPsdBtn){
                     if (loadingDialog != null && !loadingDialog.isShowing()){
                         loadingDialog.setTitle("请稍等");
@@ -3080,21 +3262,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                     Log.e("biking===endBtn_2",macList.size()+"==="+isLookPsdBtn+"==="+force_backcar);
 
-//                    isLookPsdBtn = false;
-//                    m_myHandler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            closeLoadingDialog();
-//
-//                            if(!isLookPsdBtn){
-//                                if(force_backcar==0){
-//                                    customDialog2.show();
-//                                }else{
-//                                    clickCountDeal();
-//                                }
-//                            }
-//                        }
-//                    }, 10 * 1000);
 
                     macList2 = new ArrayList<> (macList);
 //                    BaseApplication.getInstance().getIBLE().getLockStatus();
@@ -3107,32 +3274,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         loadingDialog.show();
                     }
 
-                    isLookPsdBtn = false;
-//                    m_myHandler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            closeLoadingDialog();
-//
-//                            if(!isLookPsdBtn){
-//                                stopScan = true;
-////                                BaseApplication.getInstance().getIBLE().refreshCache();
-////                                BaseApplication.getInstance().getIBLE().close();
-////                                BaseApplication.getInstance().getIBLE().disconnect();
-//
-//                                if (!isLookPsdBtn){
-//                                    if(force_backcar==0){
-//                                        customDialog2.show();
-//                                    }else{
-//                                        clickCountDeal();
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }, 10 * 1000);
-
                     isOpenLock = false;
-                    connect();
+                    scan2();
                 }
+
             }
         }else if(carmodel_id==2){
             car();
@@ -4397,6 +4542,34 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //            car_notification(3, 4, 0);
 
             closeLoadingDialog();
+        }
+    }
+
+    private void end2() {
+
+        Log.e("mf==end2", type+"==="+order_id+"==="+order_type);
+
+        if("5".equals(type)  || "6".equals(type)){
+            ClientManager.getClient().stopSearch();
+
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+            ClientManager.getClient().disconnect(m_nowMac);
+
+            ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+            ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener2);
+
+        }else if("4".equals(type)){
+        }else if("7".equals(type)){
+            if (apiClient != null) {
+                apiClient.onDestroy();
+            }
+        }else{
+            BleManager.getInstance().disconnectAllDevice();
+            BleManager.getInstance().destroy();
         }
     }
 
@@ -7584,7 +7757,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }else {
             Log.e("biking===endBtn4",macList.size()+"==="+isContainsList.contains(true)+"==="+type+"==="+first3);
 
-            clearRoute();
+//            clearRoute();
 
             if (macList.size() > 0){
                 lock();
@@ -7652,12 +7825,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                    checkConnect2();
 //                }
 
-            }else {
-                minPolygon();
-                closeLoadingDialog();
-
-//                customDialog3.show();
             }
+//            else {
+//                minPolygon();
+//                closeLoadingDialog();
+//
+////                customDialog3.show();
+//            }
 
 
         }
@@ -7671,7 +7845,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }else {
             Log.e("biking===endBtn5",macList.size()+"==="+isContainsList.contains(true)+"==="+type+"==="+m_nowMac);
 
-            clearRoute();
+//            clearRoute();
 
 
             if (macList.size() > 0){
@@ -7684,12 +7858,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             if (isContainsList.contains(true)){
                 queryState();
 
-            }else {
-                minPolygon();
-                closeLoadingDialog();
-
-//                customDialog3.show();
             }
+//            else {
+//                minPolygon();
+//                closeLoadingDialog();
+//
+////                customDialog3.show();
+//            }
 
 
         }
@@ -7703,7 +7878,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }else {
             Log.e("biking===endBtn7",macList.size()+"==="+type+"==="+deviceuuid+"==="+isConnect);
 
-            clearRoute();
+//            clearRoute();
 
             if (macList.size() > 0){
 //                flag = 2;
@@ -7817,12 +7992,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     }
                 }
 
-            }else {
-                minPolygon();
-                closeLoadingDialog();
-
-//                customDialog3.show();
             }
+//            else {
+//                minPolygon();
+//                closeLoadingDialog();
+//
+////                customDialog3.show();
+//            }
 
 
         }
@@ -7880,6 +8056,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         markerPosition = new LatLng(y, x);
 
+        isNavi = false;
         mAMapNavi.calculateWalkRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(y, x));
 
         Log.e("minPolygon===2", "==="+s);
@@ -8020,10 +8197,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         Log.e("onMapClick===", ll_top.isShown()+"===" + routeOverLay+"===" + ll_top_navi);
 
         if(!ll_top.isShown()){
-            routeOverLay.removeFromMap();
+            if(routeOverLay!=null){
+                routeOverLay.removeFromMap();
+            }
+
 
             ll_top.setVisibility(View.VISIBLE);
             ll_top_navi.setVisibility(View.GONE);
+            isNavi = false;
         }
     }
 

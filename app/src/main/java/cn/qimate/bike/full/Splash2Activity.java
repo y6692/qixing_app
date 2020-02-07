@@ -2,6 +2,7 @@ package cn.qimate.bike.full;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,9 +17,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,9 +61,11 @@ import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.Md5Helper;
 import cn.qimate.bike.core.common.NetworkUtils;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
+import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.model.BannerBean;
+import cn.qimate.bike.model.H5Bean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.util.ToastUtil;
 
@@ -92,6 +105,17 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 	private String action_content;
 	private boolean isAdv = false;
 
+	private Dialog dialog;
+
+	private TextView privacyText;
+	private TextView closeBtn;
+	private TextView confirmBtn;
+
+	private String title;
+	private String url;
+	private String title2;
+	private String url2;
+
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
@@ -120,9 +144,404 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 
 		loadingImage.setOnClickListener(this);
 
+//		dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+//		dialog = new Dialog(context, R.style.UpdateDialogStyle);
+//		View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_privacy_view, null);
+//
+//		dialog.setOnKeyListener(keylistener);
+//		dialog.setContentView(dialogView);
+//		dialog.setCanceledOnTouchOutside(false);
+//
+//
+//		privacyText = (TextView)dialogView.findViewById(R.id.ui_privacy_text);
+//		closeBtn = (TextView)dialogView.findViewById(R.id.ui_privacy_closeBtn);
+//		confirmBtn = (TextView)dialogView.findViewById(R.id.ui_privacy_confirmBtn);
+//
+//		closeBtn.setOnClickListener(this);
+//		confirmBtn.setOnClickListener(this);
 
-		init();
+//		if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
+//			agreement();
+//		}else{
+//			init();
+//		}
 
+        init();
+
+	}
+
+	DialogInterface.OnKeyListener keylistener = new DialogInterface.OnKeyListener(){
+		public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+			Log.e("sa===keylistener", "==="+keyCode);
+
+			if (keyCode==KeyEvent.KEYCODE_BACK && event.getRepeatCount()==0){
+//				dialog.dismiss();
+//				finishMine();
+				return true;
+			}else{
+				return false;
+			}
+		}
+	};
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		Log.e("sa===onKeyDown", "==="+keyCode);
+
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+//			AppManager.getAppManager().AppExit(context);
+			finishMine();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+
+	@Override
+	public void onClick(View view) {
+//		String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+//		String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+
+		Log.e("sa===onClick0", "ui_adv==="+app_type+"==="+h5_title+"==="+action_content);
+
+		switch (view.getId()){
+			case R.id.ui_privacy_closeBtn:
+				dialog.dismiss();
+				finishMine();
+				break;
+
+			case R.id.ui_privacy_confirmBtn:
+				dialog.dismiss();
+				SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
+				init();
+				break;
+
+			case R.id.plash_loading_main:
+
+				Log.e("sa===onClick", "ui_adv==="+app_type+"==="+h5_title+"==="+action_content);
+
+				isAdv = true;
+
+				if(!isTz){
+					isTz = true;
+
+					try{
+						tz();
+
+					}catch (Exception e){
+
+					}
+				}
+
+
+//				isStop = true;
+
+
+//
+//				UIHelper.goWebViewAct(context, h5_title, action_content);
+
+				break;
+
+
+
+			default:
+				break;
+		}
+	}
+
+	private void initHttp() {
+		Log.e("sa===banner", "===");
+
+		HttpHelper.get2(context, Urls.banner + 1, new TextHttpResponseHandler() {
+			@Override
+			public void onStart() {
+				onStartCommon("正在加载");
+			}
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+				Log.e("sa===banner=fail", "===" + throwable.toString());
+				onFailureCommon(throwable.toString());
+			}
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+				m_myHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							Log.e("sa===banner0", responseString + "===");
+
+							ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+							JSONArray ja_banners = new JSONArray(new JSONObject(result.getData()).getString("banners"));
+
+							Log.e("sa===banner1", ja_banners.length() + "===" + result.data);
+
+							if(ja_banners.length()==0){
+								tz();
+							}else{
+								for (int i = 0; i < ja_banners.length(); i++) {
+									BannerBean bean = JSON.parseObject(ja_banners.get(i).toString(), BannerBean.class);
+
+									imageUrl = bean.getImage_url();
+									h5_title = bean.getH5_title();
+
+									action_content = bean.getAction_content();
+									if(action_content.contains("?")){
+										if(access_token.contains(" ")){
+											action_content += "&token="+access_token.split(" ")[1];
+										}else{
+											action_content += "&token="+access_token;
+										}
+									}else{
+										if(access_token.contains(" ")){
+											action_content += "?token="+access_token.split(" ")[1];
+										}else{
+											action_content += "?token="+access_token;
+										}
+									}
+
+									Log.e("sa===banner2", imageUrl+"==="+h5_title+"==="+action_content);
+
+//                                		imagePath.add(imageUrl);
+
+									if (imageUrl == null || "".equals(imageUrl)) {
+//										loadingImage.setBackgroundResource(R.drawable.enter_bg);
+									} else {
+										// 加载图片
+										Glide.with(context).load(imageUrl).into(loadingImage);
+									}
+
+									skipLayout.setVisibility(View.VISIBLE);
+									handler.sendEmptyMessageDelayed(0, 900);
+
+								}
+							}
+
+//                            mBanner.setBannerTitles(imageTitle);
+//                            mBanner.setImages(imagePath).setOnBannerListener(MainActivity.this).start();
+
+						} catch (Exception e) {
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+
+							if (loadingDialog != null && loadingDialog.isShowing()) {
+								loadingDialog.dismiss();
+							}
+						}
+
+					}
+				});
+			}
+		});
+	}
+
+	private void agreement() {
+
+		Log.e("agreement===0", "===");
+
+		try{
+//          协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议 use_car用车服务协议
+			HttpHelper.get(context, Urls.agreement+"use_car", new TextHttpResponseHandler() {
+				@Override
+				public void onStart() {
+					if (loadingDialog != null && !loadingDialog.isShowing()) {
+						loadingDialog.setTitle("请稍等");
+						loadingDialog.show();
+					}
+				}
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+					Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+					Log.e("agreement===fail", throwable.toString()+"==="+responseString);
+
+					if (loadingDialog != null && loadingDialog.isShowing()){
+						loadingDialog.dismiss();
+					}
+					UIHelper.ToastError(context, throwable.toString());
+				}
+
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, String responseString) {
+					try {
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+						Log.e("agreement===", "==="+responseString);
+
+						ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+						H5Bean bean = JSON.parseObject(result.getData(), H5Bean.class);
+
+						title = bean.getH5_title();
+						url = bean.getH5_url();
+
+						agreement2();
+
+//						UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
+//                        UIHelper.goWebViewAct(context, bean.getH5_title(), Urls.agreement+"register");
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						if (loadingDialog != null && loadingDialog.isShowing()) {
+							loadingDialog.dismiss();
+						}
+					}
+				}
+
+
+			});
+		}catch (Exception e){
+			Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+		}
+
+	}
+
+	private void agreement2() {
+
+		Log.e("agreement===0", "===");
+
+		try{
+//          协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议 use_car用车服务协议 privacy隐私协议
+			HttpHelper.get(context, Urls.agreement+"privacy", new TextHttpResponseHandler() {
+				@Override
+				public void onStart() {
+					if (loadingDialog != null && !loadingDialog.isShowing()) {
+						loadingDialog.setTitle("请稍等");
+						loadingDialog.show();
+					}
+				}
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+					Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+					Log.e("agreement===fail", throwable.toString()+"==="+responseString);
+
+					if (loadingDialog != null && loadingDialog.isShowing()){
+						loadingDialog.dismiss();
+					}
+					UIHelper.ToastError(context, throwable.toString());
+				}
+
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, String responseString) {
+					try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+						Log.e("agreement===", "==="+responseString);
+
+						ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+						H5Bean bean = JSON.parseObject(result.getData(), H5Bean.class);
+
+						title2 = bean.getH5_title();
+						url2 = bean.getH5_url();
+
+//						WindowManager windowManager = getWindowManager();
+//						Display display = windowManager.getDefaultDisplay();
+//						WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+//						lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+//						lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//						dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+//						dialog.getWindow().setAttributes(lp);
+						dialog.show();
+
+//						handler.sendEmptyMessageDelayed(1, 2000);
+
+						privacyText.setMovementMethod(LinkMovementMethod.getInstance());
+						String text = "亲爰的用户：感谢您信任并使用7MA出行！<br>" +
+								"我们依据相关法律制定了<a href=\""+url+"\">《服务协议》</a>和<a href=\""+url2+"\">《7MA隐私政策》</a>，请您在点击同意之前仔细阅读并充分理解相关条款，其中的重点条款已为您标注，方便您了解自己的权利。<br>" +
+								"我们将通过隐私政策向您说明：<br>" +
+								"1、为了您享受骑行服务，我们会根据您的授权内容，收集和使用对应的必要信息（例如位置信息、相机权限等）<br>" +
+								"2、我们的产品可能涉及使用第三方提供的自动化工具（如代码、接口、开发工具包（SDK）等）嵌入或接入。<br>" +
+								"3、您可以对上述信息进行访问、更正、删除以及注销账户，我们也将提供专门的个人信息保护联系方式。<br>" +
+								"4、未经您的授权同意，我们不会将上述信息共享给第三方或用于您未授权的其他用途。<br>" +
+								"详细内容请仔细阅读《7MA隐私保护政策》";
+//						Spanned text = Html.fromHtml("123<a href=\""+bean.getH5_url()+"\">隐私政策</a>456");
+//						privacyText.setText(text);
+						privacyText.setText(setTextLink(context, text));
+
+
+//						UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
+//                        UIHelper.goWebViewAct(context, bean.getH5_title(), Urls.agreement+"register");
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						if (loadingDialog != null && loadingDialog.isShowing()) {
+							loadingDialog.dismiss();
+						}
+					}
+				}
+
+
+			});
+		}catch (Exception e){
+			Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+		}
+
+	}
+
+	public SpannableStringBuilder setTextLink(final Context context, String answerstring) {
+
+		Log.e("sa===setTextLink", "==="+answerstring);
+
+		if(!TextUtils.isEmpty(answerstring)) {
+
+			//fromHtml(String source)在Android N中已经弃用，推荐使用fromHtml(String source, int
+			// flags)，flags 参数说明，
+			// Html.FROM_HTML_MODE_COMPACT：html块元素之间使用一个换行符分隔
+			// Html.FROM_HTML_MODE_LEGACY：html块元素之间使用两个换行符分隔
+			Spanned htmlString = Html.fromHtml(answerstring, Html.FROM_HTML_MODE_COMPACT);
+			if(htmlString instanceof SpannableStringBuilder) {
+				final SpannableStringBuilder spannablestringbuilder = (SpannableStringBuilder) htmlString;
+				//取得与a标签相关的span
+				Object[] objs = spannablestringbuilder.getSpans(0, spannablestringbuilder.length(), URLSpan.class);
+				if(null != objs && objs.length != 0) {
+					for(Object obj : objs) {
+
+
+						final int start = spannablestringbuilder.getSpanStart(obj);
+						final int end = spannablestringbuilder.getSpanEnd(obj);
+
+						Log.e("sa===setTextLink1", obj.getClass() + "===" +start + "===" + end+ "===" + htmlString+ "===" + spannablestringbuilder);
+
+
+
+						if(obj instanceof URLSpan) {
+							//先移除这个span，再新添加一个自己实现的span。
+							URLSpan span = (URLSpan) obj;
+
+							Log.e("sa===setTextLink2", span + "===" + span.toString());
+
+							final String url = span.getURL();
+							spannablestringbuilder.removeSpan(obj);
+							spannablestringbuilder.setSpan(new ClickableSpan() {
+								@Override
+								public void onClick(View widget) {
+									//这里可以实现自己的跳转逻辑
+									Log.e("agreement===onclick", url+"==="+start+"==="+end+"==="+((TextView)widget).getText());
+
+									if(spannablestringbuilder.toString().substring(start, end).contains("隐私")){
+										UIHelper.goWebViewAct(context, title2, url);
+									}else{
+										UIHelper.goWebViewAct(context, title, url);
+									}
+
+
+//									Toast.makeText(MainActivity.this, url, Toast.LENGTH_LONG).show();
+								}
+							}, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+						}
+					}
+				}
+				return spannablestringbuilder;
+			}
+		}
+		return new SpannableStringBuilder(answerstring);
 	}
 
 	@Override
@@ -323,11 +742,19 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 	@Override
 	protected void onDestroy() {
 		isForeground = false;
+
+		if(dialog!=null && dialog.isShowing()){
+			dialog.dismiss();
+		}
+
 		super.onDestroy();
 
 //		handler.removeCallbacksAndMessages(null);
 
-		unregisterReceiver(mMessageReceiver);
+		if(mMessageReceiver!=null){
+			unregisterReceiver(mMessageReceiver);
+		}
+
 
 		stopLocation();
 
@@ -373,6 +800,10 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 //					time();
 					splashActivity.time();
 					break;
+
+				case 1:
+					splashActivity.show();
+					break;
 				default:
 					break;
 			}
@@ -393,6 +824,10 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 //			return false;
 //		}
 //	});
+
+	private void show(){
+		dialog.show();
+	}
 
 	private void time(){
 
@@ -443,46 +878,7 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 	}
 
 
-	@Override
-	public void onClick(View view) {
-//		String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-//		String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
-		Log.e("sa===onClick0", "ui_adv==="+app_type+"==="+h5_title+"==="+action_content);
-
-		switch (view.getId()){
-			case R.id.plash_loading_main:
-
-				Log.e("sa===onClick", "ui_adv==="+app_type+"==="+h5_title+"==="+action_content);
-
-				isAdv = true;
-
-				if(!isTz){
-					isTz = true;
-
-					try{
-						tz();
-
-					}catch (Exception e){
-
-					}
-				}
-
-
-//				isStop = true;
-
-
-//
-//				UIHelper.goWebViewAct(context, h5_title, action_content);
-
-				break;
-
-
-
-			default:
-				break;
-		}
-	}
 
 
 
@@ -513,100 +909,8 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 //
 //	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			AppManager.getAppManager().AppExit(context);
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
 
-	private void initHttp() {
-		Log.e("sa===banner", "===");
 
-		HttpHelper.get2(context, Urls.banner + 1, new TextHttpResponseHandler() {
-			@Override
-			public void onStart() {
-				onStartCommon("正在加载");
-			}
-			@Override
-			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-				Log.e("sa===banner=fail", "===" + throwable.toString());
-				onFailureCommon(throwable.toString());
-			}
-
-			@Override
-			public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-				m_myHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							Log.e("sa===banner0", responseString + "===");
-
-							ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-
-							JSONArray ja_banners = new JSONArray(new JSONObject(result.getData()).getString("banners"));
-
-							Log.e("sa===banner1", ja_banners.length() + "===" + result.data);
-
-							if(ja_banners.length()==0){
-								tz();
-							}else{
-								for (int i = 0; i < ja_banners.length(); i++) {
-									BannerBean bean = JSON.parseObject(ja_banners.get(i).toString(), BannerBean.class);
-
-									imageUrl = bean.getImage_url();
-									h5_title = bean.getH5_title();
-
-									action_content = bean.getAction_content();
-									if(action_content.contains("?")){
-										if(access_token.contains(" ")){
-											action_content += "&token="+access_token.split(" ")[1];
-										}else{
-											action_content += "&token="+access_token;
-										}
-									}else{
-										if(access_token.contains(" ")){
-											action_content += "?token="+access_token.split(" ")[1];
-										}else{
-											action_content += "?token="+access_token;
-										}
-									}
-
-									Log.e("sa===banner2", imageUrl+"==="+h5_title+"==="+action_content);
-
-//                                		imagePath.add(imageUrl);
-
-									if (imageUrl == null || "".equals(imageUrl)) {
-//										loadingImage.setBackgroundResource(R.drawable.enter_bg);
-									} else {
-										// 加载图片
-										Glide.with(context).load(imageUrl).into(loadingImage);
-									}
-
-									skipLayout.setVisibility(View.VISIBLE);
-									handler.sendEmptyMessageDelayed(0, 900);
-
-								}
-							}
-
-//                            mBanner.setBannerTitles(imageTitle);
-//                            mBanner.setImages(imagePath).setOnBannerListener(MainActivity.this).start();
-
-						} catch (Exception e) {
-//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
-
-							if (loadingDialog != null && loadingDialog.isShowing()) {
-								loadingDialog.dismiss();
-							}
-						}
-
-					}
-				});
-			}
-		});
-	}
 
 
 	/**

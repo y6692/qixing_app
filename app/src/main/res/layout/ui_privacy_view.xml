@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:background="@drawable/block_bcg_2"
+            android:orientation="vertical"
+
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:text="用户协议与隐私政策"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                />
+
+            <TextView
+                android:id="@+id/ui_privacy_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:text="123"
+                android:textSize="14sp"
+                android:textColor="@color/tx_black"
+                android:background="@android:color/transparent"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:text="1、为了您享受骑行服务，我们会根据您的授权内容，收集和使用对应的必要信息（例如位置信息、相机权限等）。\n2、我们的产品可能涉及使用第三方提供的自动化工具（如代码、接口、开发工具包（SDK）等）嵌入或接入。\n3、您可以对上述信息进行访问、更正、删除以及注销账户，我们也将提供专门的个人信息保护联系方式。\n4、未经您的授权同意，我们不会将上述信息共享给第三方或用于您未授权的其他用途。"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:background="@android:color/transparent"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:text="详细内容请仔细阅读《隐私政策》"
+                android:textSize="14sp"
+                android:textColor="#B2B2B2"
+                android:background="@android:color/transparent"
+                />
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp">
+
+            <TextView
+                android:id="@+id/ui_privacy_closeBtn"
+                android:layout_width="67dp"
+                android:layout_height="30dp"
+                android:background="@drawable/block_bcg_2"
+                android:layout_marginLeft="25dp"
+                android:gravity="center"
+                android:text="不同意"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                />
+
+            <TextView
+                android:id="@+id/ui_privacy_confirmBtn"
+                android:layout_width="67dp"
+                android:layout_height="30dp"
+                android:background="@drawable/block_bcg_2"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="25dp"
+                android:gravity="center"
+                android:text="同意"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                />
+
+        </RelativeLayout>
+
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:background="@android:color/transparent"-->
+            <!--&gt;-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/ui_privacy_closeBtn"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_marginTop="30dp"-->
+                <!--android:text="暂不使用"-->
+                <!--android:textSize="16sp"-->
+                <!--android:gravity="center"-->
+                <!--android:background="@android:color/transparent"/>-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/ui_privacy_confirmBtn"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_marginTop="30dp"-->
+                <!--android:text="同意"-->
+                <!--android:textSize="16sp"-->
+                <!--android:gravity="center"-->
+                <!--android:background="@android:color/transparent"/>-->
+
+        <!--</LinearLayout>-->
+
+    </LinearLayout>
+</LinearLayout>

@@ -999,10 +999,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                 inputMethodManager.hideSoftInputFromWindow(bikeNumEdit.getWindowToken(), 0);
 
-                if (broadcastReceiver != null) {
-                    unregisterReceiver(broadcastReceiver);
-                    broadcastReceiver = null;
-                }
+//                if (broadcastReceiver != null) {
+//                    unregisterReceiver(broadcastReceiver);
+//                    broadcastReceiver = null;
+//                }
                 m_myHandler.removeCallbacksAndMessages(null);
             }
 
