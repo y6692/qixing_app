@@ -112,6 +112,10 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -188,8 +192,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     static private final int REQUEST_CODE_ASK_PERMISSIONS = 101;
 
     private LoadingDialog2 lockLoading;
-    private LoadingDialog loadingDialog1;
-    private LoadingDialog loadingDialog2;
     public static boolean isForeground = false;
 
 //    private ImageView leftBtn, rightBtn;
@@ -300,6 +302,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
     private boolean firstH = true;
 
+    public List<Polygon> pOptionsNear;
+
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_bike, null);
         unbinder = ButterKnife.bind(this, v);
@@ -329,6 +333,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         macList2 = new ArrayList<>();
         pOptions = new ArrayList<>();
         bikeMarkerList = new ArrayList<>();
+        pOptionsNear= new ArrayList<>();
         imageWith = (int) (activity.getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 
 //        mapView = (MapView) activity.findViewById(R.id.mainUI_map);
@@ -430,7 +435,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             }
 
             schoolRange();
-            operating_areas();
+//            operating_areas();
 
             if(referLatitude!=0 && referLongitude!=0){
                 myLocation = new LatLng(referLatitude, referLongitude);
@@ -579,11 +584,14 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     public void schoolRange(){
         if(isHidden) return;
 
-        Log.e("main_b===schoolRange", isHidden+"==="+jsonArray);
+//        if(referLatitude==0.0 || referLongitude==0.0) return;
+
+        Log.e("main_b===schoolRange", isHidden+"==="+referLatitude+"==="+referLongitude+"==="+jsonArray);
+
 
         if(jsonArray != null){
             Log.e("main_b===schoolRange20", loadingDialog+"==="+loadingDialog.isShowing());
-            onStartCommon("正在加载");
+            onStartCommon2("正在加载");
 
             m_myHandler.post(new Runnable() {
                 @Override
@@ -638,13 +646,18 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                         pOption.addAll(list);
 
-                                        polygon = aMap.addPolygon(pOption.strokeColor(Color.argb(0, 255, 255, 255)).fillColor(Color.argb(0, 255, 255, 255)));
+                                        polygon = aMap.addPolygon(pOption
+//                                                .strokeWidth(2)
+//                                                .strokeColor(Color.argb(255, 0, 135, 255))
+//                                                .fillColor(Color.argb(77, 0, 173, 255)));
+                                                .strokeColor(Color.argb(0, 255, 255, 255))
+                                                .fillColor(Color.argb(0, 255, 255, 255)));
 
 //                                        Log.e("main_b===schoolRange24", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
 
                                         LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
-                                        marker_park_Option.title(jsonObject.getString("name")).position(latLng);
-                                        aMap.addMarker(marker_park_Option);
+//                                        marker_park_Option.title(jsonObject.getString("name")).position(latLng);
+//                                        aMap.addMarker(marker_park_Option);
 
                                         centerList.add(latLng);
 
@@ -657,22 +670,16 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                         }
                                     }
 
-                                    if (loadingDialog != null && loadingDialog.isShowing()){
-                                        loadingDialog.dismiss();
-                                    }
+                                    closeLoadingDialog2();
                                 }catch (Exception e){
-                                    if (loadingDialog != null && loadingDialog.isShowing()){
-                                        loadingDialog.dismiss();
-                                    }
+                                    closeLoadingDialog2();
                                 }
                             }
                         }).start();
 
 
                     }catch (Exception e){
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
+                        closeLoadingDialog2();
                     }
 
                     Log.e("main_b===schoolRange25", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
@@ -685,17 +692,21 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         }else{
             RequestParams params = new RequestParams();
+//            params.put("latitude", referLatitude);
+//            params.put("longitude", referLongitude);
+
+//            "latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude"
 
             HttpHelper.get2(context, Urls.parking_ranges, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
                     if(!isHidden){
-                        onStartCommon("正在加载");
+                        onStartCommon2("正在加载");
                     }
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    onFailureCommon("bf===schoolRange", throwable.toString());
+                    onFailureCommon2("bf===schoolRange", throwable.toString());
                 }
 
                 @Override
@@ -762,13 +773,17 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                                     pOption.addAll(list);
 
-                                                    polygon = aMap.addPolygon(pOption.strokeColor(Color.argb(0, 255, 255, 255)).fillColor(Color.argb(0, 255, 255, 255)));
-
+                                                    polygon = aMap.addPolygon(pOption
+//                                                            .strokeWidth(2)
+//                                                            .strokeColor(Color.argb(255, 0, 135, 255))
+//                                                            .fillColor(Color.argb(77, 0, 173, 255)));
+                                                            .strokeColor(Color.argb(0, 255, 255, 255))
+                                                            .fillColor(Color.argb(0, 255, 255, 255)));
 //                                                    Log.e("main_b===schoolRange4", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
 
                                                     LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
-                                                    marker_park_Option.title(jsonObject.getString("name")).position(latLng);
-                                                    aMap.addMarker(marker_park_Option);
+//                                                    marker_park_Option.title(jsonObject.getString("name")).position(latLng);
+//                                                    aMap.addMarker(marker_park_Option);
 
                                                     centerList.add(latLng);
 
@@ -781,28 +796,20 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                                 Log.e("main_b===schoolRange5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
 
-                                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                                    loadingDialog.dismiss();
-                                                }
+                                                closeLoadingDialog2();
                                             }catch (Exception e){
-                                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                                    loadingDialog.dismiss();
-                                                }
+                                                closeLoadingDialog2();
                                             }
                                         }
                                     }).start();
 
                                 }else {
-                                    if (loadingDialog != null && loadingDialog.isShowing()){
-                                        loadingDialog.dismiss();
-                                    }
+                                    closeLoadingDialog2();
                                     ToastUtil.showMessageApp(context,result.getMsg());
                                 }
                             }catch (Exception e){
 
-                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                    loadingDialog.dismiss();
-                                }
+                                closeLoadingDialog2();
                             }
 
                         }
@@ -813,6 +820,297 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
 
     }
+
+    public void closeLoadingDialog2(){
+        if (loadingDialog2 != null && loadingDialog2.isShowing()){
+            loadingDialog2.dismiss();
+        }
+    }
+
+    public void initNearby(final double latitude, final double longitude){
+
+        if(isHidden) return;
+
+        if(latitude==0.0 || longitude==0.0) return;
+
+        Log.e("bf===initNearby0", unauthorized_code+"==="+latitude+"==="+longitude);
+
+        RequestParams params = new RequestParams();
+        params.put("latitude", latitude);
+        params.put("longitude", longitude);
+//        params.put("type", 1);
+        HttpHelper.get2(context, Urls.car_nearby+"1/nearby", params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+//                onStartCommon("正在加载");
+
+//                ArrayList<BitmapDescriptor> iconList = new ArrayList<>();
+//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout1, null)));
+//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout2, null)));
+//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout3, null)));
+//
+//                MarkerOptions centerMarkerOption = new MarkerOptions();
+//                centerMarkerOption.position(myLocation).icons(iconList).period(2);
+
+
+                if(centerMarker!=null){
+                    centerMarker.setMarkerOptions(centerMarkerOptionLoading);
+
+//                    if(unauthorized_code==6){
+//                        centerMarker.setAlpha(0);
+//                    }else{
+//                        centerMarker.setAlpha(255);
+//                    }
+                }
+
+
+//                centerMarker.setIcon(iconList);
+//                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+                if(isHidden) return;
+
+                try {
+                    Log.e("initNearby===Bike", "==="+responseString);
+
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                    car_count = new JSONObject(result.getData()).getInt("count");
+
+
+                    Log.e("initNearby===Bike1", "==="+car_count);
+
+//                    tv_car_count.setText(count+"辆");
+
+//                    centerMarker.setMarkerOptions(centerMarkerOption);
+
+                    View view = View.inflate(context, R.layout.marker_info_layout, null);
+                    tv_car_count = view.findViewById(R.id.tv_car_count);
+                    tv_car_count.setText((car_count>99?99:car_count)+"辆");
+                    centerMarkerOption = new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.fromView(view));
+
+                    if(centerMarker!=null){
+                        centerMarker.remove();
+                    }
+
+                    centerMarker = aMap.addMarker(centerMarkerOption);
+
+//                    if(unauthorized_code==6){
+//                        centerMarker.setAlpha(0);
+//                    }else{
+//                        centerMarker.setAlpha(255);
+//                    }
+
+//                    if (result.getFlag().equals("Success")) {
+//                        JSONArray array = new JSONArray(result.getData());
+//
+//                        Log.e("initNearby===Bike", "==="+array.length());
+//
+//                        for (Marker marker : bikeMarkerList){
+//                            if (marker != null){
+//                                marker.remove();
+//                            }
+//                        }
+//                        if (!bikeMarkerList.isEmpty() || 0 != bikeMarkerList.size()){
+//                            bikeMarkerList.clear();
+//                        }
+//                        if (0 == array.length()){
+//                            ToastUtils.show("附近没有单车");
+//                        }else {
+//                            for (int i = 0; i < array.length(); i++){
+//                                NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
+//                                // 加入自定义标签
+//
+////                                Log.e("initNearby===Bike", bean.getLatitude()+"==="+bean.getLongitude());
+//
+//                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
+//                                Marker bikeMarker = aMap.addMarker(bikeMarkerOption);
+//                                bikeMarkerList.add(bikeMarker);
+//                            }
+//
+//                        }
+//                    } else {
+//                        ToastUtils.show(result.getMsg());
+//                    }
+                } catch (Exception e) {
+
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+
+
+//        params = new RequestParams();
+//        params.put("latitude", referLatitude);
+//        params.put("longitude", referLongitude);
+
+//            "latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude"
+
+        HttpHelper.get2(context, Urls.parking_ranges, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if(!isHidden){
+                    onStartCommon("正在加载");
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon("bf===parking_ranges", throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+                Log.e("main_b===parking_r0", "==="+responseString);
+
+                final ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (1==1 || result.getFlag().equals("Success")) {
+                                final JSONArray jsonArray = new JSONArray(result.getData());
+
+                                Log.e("main_b===parking_r1", jsonArray.length()+"==="+jsonArray);
+
+                                if(isHidden){
+                                    return;
+                                }
+
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try{
+//                                            if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+//                                                isContainsList.clear();
+//                                            }
+//
+//                                            if (!listPoint.isEmpty() || 0 != listPoint.size()){
+//                                                listPoint.clear();
+//                                            }
+//
+//                                            if (!centerList.isEmpty() || 0 != centerList.size()){
+//                                                centerList.clear();
+//                                            }
+
+//                                            aMap.clear();
+
+                                            for (Marker marker : bikeMarkerList){
+                                                if (marker != null){
+                                                    marker.remove();
+                                                }
+                                            }
+                                            if (!bikeMarkerList.isEmpty() || 0 != bikeMarkerList.size()){
+                                                bikeMarkerList.clear();
+                                            }
+
+
+
+                                            for ( int i = 0; i < pOptionsNear.size(); i++){
+                                                pOptionsNear.get(i).remove();
+                                            }
+
+                                            if (!pOptionsNear.isEmpty() || 0 != pOptionsNear.size()){
+                                                pOptionsNear.clear();
+                                            }
+
+                                            if (0 == jsonArray.length()){
+                                                ToastUtils.show("附近没有停车点");
+                                            }else {
+                                                for (int i = 0; i < jsonArray.length(); i++) {
+                                                    List<LatLng> list = new ArrayList<>();
+                                                    List<LatLng> list2 = new ArrayList<>();
+                                                    int flag=0;
+
+                                                    JSONArray jsonArray2 = new JSONArray(jsonArray.getJSONObject(i).getString("ranges"));;
+                                                    JSONObject jsonObject = new JSONObject(jsonArray.getJSONObject(i).getString("parking"));
+
+//                                                    Log.e("main_b===schoolRange2", jsonArray2.length()+"==="+jsonArray2);
+
+                                                    for (int j = 0; j < jsonArray2.length(); j++) {
+                                                        LatLng latLng = new LatLng(Double.parseDouble(jsonArray2.getJSONObject(j).getString("latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude")));
+
+//                                                        Log.e("main_b===schoolRange22", jsonArray2.length()+"==="+jsonArray2);
+
+                                                        flag=0;
+                                                        list.add(latLng);
+
+//                                                    listPoint.add(latLng);
+                                                    }
+
+//                                                    Log.e("main_b===schoolRange3", "==="+list.size());
+
+                                                    Polygon polygon = null;
+                                                    PolygonOptions pOption = new PolygonOptions();
+
+                                                    pOption.addAll(list);
+
+                                                    polygon = aMap.addPolygon(pOption
+                                                            .strokeWidth(2)
+                                                            .strokeColor(Color.argb(255, 0, 135, 255))
+                                                            .fillColor(Color.argb(77, 0, 173, 255)));
+
+                                                    LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
+                                                    marker_park_Option.title(jsonObject.getString("name")).position(latLng);
+                                                    Marker bikeMarker = aMap.addMarker(marker_park_Option);
+                                                    bikeMarkerList.add(bikeMarker);
+
+//                                                  centerList.add(latLng);
+
+                                                    if(!isHidden){
+                                                        pOptionsNear.add(polygon);
+//                                                      isContainsList.add(polygon.contains(myLocation));
+                                                    }else{
+                                                    }
+                                                }
+                                            }
+
+
+
+                                            Log.e("main_b===parking_r5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
+
+                                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                                loadingDialog.dismiss();
+                                            }
+                                        }catch (Exception e){
+                                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                                loadingDialog.dismiss();
+                                            }
+                                        }
+                                    }
+                                }).start();
+
+                            }else {
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
+                                ToastUtil.showMessageApp(context,result.getMsg());
+                            }
+                        }catch (Exception e){
+
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+                        }
+
+                    }
+                });
+
+            }
+        });
+    }
+
 
     public void sr(){
         if(isHidden) return;
@@ -1314,143 +1612,27 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    public void initNearby(final double latitude, final double longitude){
-
-        if(isHidden) return;
-
-        Log.e("bf===initNearby0", unauthorized_code+"==="+latitude+"==="+longitude);
-
-        RequestParams params = new RequestParams();
-        params.put("latitude", latitude);
-        params.put("longitude", longitude);
-//        params.put("type", 1);
-        HttpHelper.get2(context, Urls.car_nearby+"1/nearby", params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-//                onStartCommon("正在加载");
-
-//                ArrayList<BitmapDescriptor> iconList = new ArrayList<>();
-//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout1, null)));
-//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout2, null)));
-//                iconList.add(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout3, null)));
-//
-//                MarkerOptions centerMarkerOption = new MarkerOptions();
-//                centerMarkerOption.position(myLocation).icons(iconList).period(2);
-
-
-                if(centerMarker!=null){
-                    centerMarker.setMarkerOptions(centerMarkerOptionLoading);
-
-                    if(unauthorized_code==6){
-                        centerMarker.setAlpha(0);
-                    }else{
-                        centerMarker.setAlpha(255);
-                    }
-                }
-
-
-//                centerMarker.setIcon(iconList);
-//                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
-
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon(throwable.toString());
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-
-                if(isHidden) return;
-
-                try {
-                    Log.e("initNearby===Bike", "==="+responseString);
-
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-
-                    car_count = new JSONObject(result.getData()).getInt("count");
-
-
-                    Log.e("initNearby===Bike1", "==="+car_count);
-
-//                    tv_car_count.setText(count+"辆");
-
-//                    centerMarker.setMarkerOptions(centerMarkerOption);
-
-                    View view = View.inflate(context, R.layout.marker_info_layout, null);
-                    tv_car_count = view.findViewById(R.id.tv_car_count);
-                    tv_car_count.setText((car_count>99?99:car_count)+"辆");
-                    centerMarkerOption = new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.fromView(view));
-
-                    if(centerMarker!=null){
-                        centerMarker.remove();
-                    }
-
-                    centerMarker = aMap.addMarker(centerMarkerOption);
-
-                    if(unauthorized_code==6){
-                        centerMarker.setAlpha(0);
-                    }else{
-                        centerMarker.setAlpha(255);
-                    }
-
-//                    if (result.getFlag().equals("Success")) {
-//                        JSONArray array = new JSONArray(result.getData());
-//
-//                        Log.e("initNearby===Bike", "==="+array.length());
-//
-//                        for (Marker marker : bikeMarkerList){
-//                            if (marker != null){
-//                                marker.remove();
-//                            }
-//                        }
-//                        if (!bikeMarkerList.isEmpty() || 0 != bikeMarkerList.size()){
-//                            bikeMarkerList.clear();
-//                        }
-//                        if (0 == array.length()){
-//                            ToastUtils.show("附近没有单车");
-//                        }else {
-//                            for (int i = 0; i < array.length(); i++){
-//                                NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
-//                                // 加入自定义标签
-//
-////                                Log.e("initNearby===Bike", bean.getLatitude()+"==="+bean.getLongitude());
-//
-//                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
-//                                Marker bikeMarker = aMap.addMarker(bikeMarkerOption);
-//                                bikeMarkerList.add(bikeMarker);
-//                            }
-//
-//                        }
-//                    } else {
-//                        ToastUtils.show(result.getMsg());
-//                    }
-                } catch (Exception e) {
-
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-            }
-        });
-    }
 
     private void initView() {
         loadingDialog = new LoadingDialog(context);
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
+        loadingDialog2 = new LoadingDialog(context);
+        loadingDialog2.setCancelable(false);
+        loadingDialog2.setCanceledOnTouchOutside(false);
+
         lockLoading = new LoadingDialog2(context);
         lockLoading.setCancelable(false);
         lockLoading.setCanceledOnTouchOutside(false);
 
-        loadingDialog1 = new LoadingDialog(context);
-        loadingDialog1.setCancelable(false);
-        loadingDialog1.setCanceledOnTouchOutside(false);
-
-        loadingDialog2 = new LoadingDialog(context);
-        loadingDialog2.setCancelable(false);
-        loadingDialog2.setCanceledOnTouchOutside(false);
+//        loadingDialog1 = new LoadingDialog(context);
+//        loadingDialog1.setCancelable(false);
+//        loadingDialog1.setCanceledOnTouchOutside(false);
+//
+//        loadingDialog2 = new LoadingDialog(context);
+//        loadingDialog2.setCancelable(false);
+//        loadingDialog2.setCanceledOnTouchOutside(false);
 
 
         CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
@@ -1517,7 +1699,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         if(aMap==null){
             aMap = mapView.getMap();
-            setUpMap();
+//            setUpMap();
         }
 //        else{
 //            aMap.clear();
@@ -1527,14 +1709,14 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //            setUpMap();
 //        }
 
-        aMap.setMapType(AMap.MAP_TYPE_NAVI);
-        aMap.getUiSettings().setZoomControlsEnabled(false);
-        aMap.getUiSettings().setMyLocationButtonEnabled(false);
-        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
-        aMap.getUiSettings().setLogoBottomMargin(-50);
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18f);// 设置缩放监听
-        aMap.moveCamera(cameraUpdate);
+//        aMap.setMapType(AMap.MAP_TYPE_NAVI);
+//        aMap.getUiSettings().setZoomControlsEnabled(false);
+//        aMap.getUiSettings().setMyLocationButtonEnabled(false);
+//        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+//        aMap.getUiSettings().setLogoBottomMargin(-100);
+//
+//        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18f);// 设置缩放监听
+//        aMap.moveCamera(cameraUpdate);
 //        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
         successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
         freeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.free_icon);
@@ -1760,6 +1942,61 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);// 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
 //        aMap.setLoadOfflineData(true);
+
+//        String styleName = "style.data";
+//        FileOutputStream outputStream = null;
+//        InputStream inputStream = null;
+//        String filePath = null;
+//        try {
+//            inputStream = context.getAssets().open(styleName);
+//            byte[] b = new byte[inputStream.available()];
+//            inputStream.read(b);
+//
+//            filePath = context.getFilesDir().getAbsolutePath();
+//            File file = new File(filePath + "/" + styleName);
+//
+//            Log.e("setUpMap===0", b.length+"==="+context.getAssets()+"==="+file+"==="+file.exists());
+//
+//            if (file.exists()) {
+//                file.delete();
+//            }
+//            file.createNewFile();
+//            outputStream = new FileOutputStream(file);
+//            outputStream.write(b);
+//
+//
+//            Log.e("setUpMap===1", context.getAssets()+"==="+file+"==="+file.exists());
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if (inputStream != null)
+//                    inputStream.close();
+//
+//                if (outputStream != null)
+//                    outputStream.close();
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+////        aMap.setCustomMapStylePath(filePath + "/" + styleName);
+////        aMap.setMapCustomEnable(true);
+//
+//        aMap.setCustomMapStyle(
+//                new com.amap.api.maps.model.CustomMapStyleOptions()
+//                        .setEnable(true)
+////                        .setStyleDataPath(filePath)
+////                      .setStyleExtraPath(filePath)
+//                        .setStyleId("1b319281566f48d9ce57449b30be3b6e")//官网控制台-自定义样式 获取
+//
+////                      .setStyleExtraPath("/mnt/sdcard/amap/style_extra.data")
+////                      .setStyleTexturePath("/mnt/sdcard/amap/textures.zip")
+//        );
+//
+//        Log.e("setUpMap===2", context.getAssets()+"===");
     }
 
     @Override
@@ -1858,7 +2095,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     referLongitude = amapLocation.getLongitude();
                     myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
 
-                    Log.e("main===Changed>>>0", "》》》"+mFirstFix);
+                    Log.e("main===Changed>>>0", referLatitude+"==="+referLongitude+"》》》"+mFirstFix);
 
                     if (mFirstFix) {
 
@@ -2997,11 +3234,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
             centerMarker = aMap.addMarker(centerMarkerOption);
 
-            if(unauthorized_code==6){
-                centerMarker.setAlpha(0);
-            }else{
-                centerMarker.setAlpha(255);
-            }
+//            if(unauthorized_code==6){
+//                centerMarker.setAlpha(0);
+//            }else{
+//                centerMarker.setAlpha(255);
+//            }
 
             handler.postDelayed(new Runnable() {
                 @Override
@@ -3272,7 +3509,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                             if (result.getFlag().equals("Success")) {
                                 if ("[]".equals(result.getData()) || 0 == result.getData().length()){
                                     SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
-                                    cardCheck();
+//                                    cardCheck();  //TODO
                                 }else {
                                     if (loadingDialog != null && loadingDialog.isShowing()){
                                         loadingDialog.dismiss();
@@ -3309,179 +3546,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
             }
         });
-    }
-
-    private void cardCheck() {
-
-        String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-        if (access_token == null || "".equals(access_token)) {
-            ToastUtils.show("请先登录您的账号");
-            UIHelper.goToAct(context, LoginActivity.class);
-        } else {
-            RequestParams params = new RequestParams();
-            params.put("uid", uid);
-            params.put("access_token", access_token);
-            HttpHelper.get(context, Urls.useinfo, params, new TextHttpResponseHandler() {
-                @Override
-                public void onStart() {
-                    m_myHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (loadingDialog1 != null && !loadingDialog1.isShowing()) {
-                                loadingDialog1.setTitle("正在提交");
-                                loadingDialog1.show();
-                            }
-                        }
-                    });
-
-                }
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                    m_myHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (loadingDialog1 != null && loadingDialog1.isShowing()) {
-                                loadingDialog1.dismiss();
-                            }
-                            UIHelper.ToastError(context, throwable.toString());
-                        }
-                    });
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                    m_myHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                                if (result.getFlag().equals("Success")) {
-                                    CardinfoBean bean = JSON.parseObject(result.getData(), CardinfoBean.class);
-                                    if (!"2".equals(bean.getCardcheck())){
-
-                                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                        customBuilder.setTitle("温馨提示").setMessage("为了您的骑行安全，请上传身份证完善保险信息")
-                                                .setNegativeButton("去上传", new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        Intent intent1 = new Intent(context, InsureanceActivity.class);
-                                                        intent1.putExtra("isBack",true);
-                                                        context.startActivity(intent1);
-                                                        dialog.cancel();
-                                                    }
-                                                }).setPositiveButton("直接用车", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                if (Build.VERSION.SDK_INT >= 23) {
-                                                    int checkPermission = activity.checkSelfPermission(Manifest.permission.CAMERA);
-                                                    if (checkPermission != PERMISSION_GRANTED) {
-                                                        flag = 1;
-
-                                                        if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                                                            requestPermissions(new String[] { Manifest.permission.CAMERA }, 100);
-                                                        } else {
-                                                            CustomDialog.Builder customBuilder1 = new CustomDialog.Builder(context);
-                                                            customBuilder1.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
-                                                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                                                        public void onClick(DialogInterface dialog, int which) {
-                                                                            dialog.cancel();
-                                                                        }
-                                                                    }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                                                public void onClick(DialogInterface dialog, int which) {
-                                                                    dialog.cancel();
-                                                                    requestPermissions(
-                                                                            new String[] { Manifest.permission.CAMERA },
-                                                                            100);
-                                                                }
-                                                            });
-                                                            customBuilder1.create().show();
-                                                        }
-                                                        if (loadingDialog1 != null && loadingDialog1.isShowing()){
-                                                            loadingDialog1.dismiss();
-                                                        }
-                                                        return;
-                                                    }
-                                                }
-                                                try {
-
-//                                                    closeBroadcast();
-//                                                    deactivate();
-//
-//                                                    Intent intent = new Intent();
-//                                                    intent.setClass(context, ActivityScanerCode.class);
-//                                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                                    startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
-
-                                                } catch (Exception e) {
-                                                    UIHelper.showToastMsg(context, "相机打开失败,请检查相机是否可正常使用", R.drawable.ic_error);
-                                                }
-                                                dialog.cancel();
-                                                if (loadingDialog1 != null && loadingDialog1.isShowing()){
-                                                    loadingDialog1.dismiss();
-                                                }
-                                            }
-                                        });
-                                        customDialog2 = customBuilder.create();
-                                        customDialog2.show();
-                                    }else {
-                                        if (Build.VERSION.SDK_INT >= 23) {
-                                            int checkPermission = activity.checkSelfPermission(Manifest.permission.CAMERA);
-                                            if (checkPermission != PERMISSION_GRANTED) {
-                                                if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                                                    requestPermissions(new String[] { Manifest.permission.CAMERA }, 100);
-                                                } else {
-                                                    CustomDialog.Builder customBuilder1 = new CustomDialog.Builder(context);
-                                                    customBuilder1.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
-                                                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                                                public void onClick(DialogInterface dialog, int which) {
-                                                                    dialog.cancel();
-                                                                }
-                                                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                            dialog.cancel();
-                                                            requestPermissions(
-                                                                    new String[] { Manifest.permission.CAMERA },
-                                                                    100);
-                                                        }
-                                                    });
-                                                    customBuilder1.create().show();
-                                                }
-                                                if (loadingDialog1 != null && loadingDialog1.isShowing()){
-                                                    loadingDialog1.dismiss();
-                                                }
-                                                return;
-                                            }
-                                        }
-                                        if (loadingDialog1 != null && loadingDialog1.isShowing()){
-                                            loadingDialog1.dismiss();
-                                        }
-                                        try {
-//                                            closeBroadcast();
-//                                            deactivate();
-//
-//                                            Intent intent = new Intent();
-//                                            intent.setClass(context, ActivityScanerCode.class);
-//                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                            startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
-
-
-                                        } catch (Exception e) {
-                                            UIHelper.showToastMsg(context, "相机打开失败,请检查相机是否可正常使用", R.drawable.ic_error);
-                                        }
-                                    }
-                                } else {
-                                    ToastUtils.show(result.getMsg());
-                                }
-                            } catch (Exception e) {
-                            }
-                            if (loadingDialog1 != null && loadingDialog1.isShowing()) {
-                                loadingDialog1.dismiss();
-                            }
-                        }
-                    });
-
-                }
-            });
-        }
     }
 
     @Override

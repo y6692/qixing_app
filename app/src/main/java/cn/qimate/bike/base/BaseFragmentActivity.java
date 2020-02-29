@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -143,9 +144,13 @@ public class BaseFragmentActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 //		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		context = this;
 		BaseApplication.context = context;
+
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);		//设定为竖屏
 
 //		registerReceiver(Config.initFilter());
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
@@ -197,6 +202,13 @@ public class BaseFragmentActivity extends AppCompatActivity
 
 //		isRefresh = false;
 		Log.e("BFA===onCreate", "==="+LoginActivity.isForeground);
+
+//		if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
+//			// 透明状态栏
+//			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//			// 透明导航栏
+//			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//		}
 	}
 
 	@Override

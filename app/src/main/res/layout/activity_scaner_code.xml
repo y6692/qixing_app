@@ -340,7 +340,7 @@
                         android:background="@drawable/shape_et_codenum"
                         android:drawableRight="@drawable/delete_selector"
                         android:gravity="center"
-                        android:inputType="numberDecimal"
+                        android:inputType="text"
                         android:hint="请输入车辆编号"
                         android:lineSpacingExtra="@dimen/dp5"
                         android:paddingBottom="0dp"

@@ -50,9 +50,11 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
@@ -140,6 +142,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -219,7 +225,7 @@ import static com.sofi.blelocker.library.Constants.STATUS_CONNECTED;
 import static com.sunshine.blelibrary.utils.EncryptUtils.Encrypt;
 
 @SuppressLint("NewApi")
-public class MainFragment extends BaseFragment implements View.OnClickListener, OnBannerListener, OnConnectionListener, BleStateChangeListener, ScanResultCallback, AMap.OnMapClickListener, AMapNaviListener {
+public class MainFragment extends BaseFragment implements View.OnClickListener, OnBannerListener, LocationSource, OnConnectionListener, BleStateChangeListener, ScanResultCallback, AMap.OnMapClickListener, AMapNaviListener {
 
     private View v;
     Unbinder unbinder;
@@ -565,7 +571,17 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         if(aMap==null){
             aMap = mapView.getMap();
+            setUpMap();
         }
+
+//        aMap.setMapType(AMap.MAP_TYPE_NAVI);
+        aMap.getUiSettings().setZoomControlsEnabled(false);
+        aMap.getUiSettings().setMyLocationButtonEnabled(false);
+        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+        aMap.getUiSettings().setLogoBottomMargin(-100);
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18f);// 设置缩放监听
+        aMap.moveCamera(cameraUpdate);
 
         aMap.setOnMapClickListener(this);
 
@@ -762,6 +778,173 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         advCloseBtn2.setOnClickListener(this);
     }
 
+    private void setUpMap() {
+//        aMap.setLocationSource(this);// 设置定位监听
+//        aMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
+//        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+//        aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);// 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
+//        aMap.setLoadOfflineData(true);
+
+
+
+        final String STYLE_NAME = "style.data";
+        final String STYLE_EXTRA_NAME = "style_extra.data";
+
+
+        final String filePath = context.getFilesDir().getAbsolutePath() + "/" + STYLE_NAME;
+        final String filePathExtra = context.getFilesDir().getAbsolutePath() + "/" + STYLE_EXTRA_NAME;
+        final File file = new File(filePath);
+        final File fileExtra = new File(filePathExtra);
+
+        Log.e("setUpMap===000", context.getAssets()+"==="+file+"==="+file.exists()+"==="+fileExtra.exists());
+
+        if (file.exists()) {
+//            aMap.setCustomMapStyle(
+//                    new com.amap.api.maps.model.CustomMapStyleOptions()
+//                            .setEnable(true)
+//                            .setStyleDataPath(filePath)
+//                            .setStyleExtraPath(filePathExtra)
+//            );
+//            return;//本地已有，不再下载
+            file.delete();
+        }
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FileOutputStream outputStream = null;
+        InputStream inputStream = null;
+        try {
+            Log.e("setUpMap===00", context.getAssets()+"==="+inputStream);
+
+            inputStream = context.getAssets().open(STYLE_NAME);
+
+            Log.e("setUpMap===0", context.getAssets()+"==="+inputStream);
+
+            byte[] b = new byte[inputStream.available()];
+            inputStream.read(b);
+            outputStream = new FileOutputStream(file);
+            outputStream.write(b);
+
+//                    String filePath = context.getFilesDir().getAbsolutePath() + "/" + STYLE_NAME;
+
+//                    aMap.setCustomMapStylePath(filePath);
+//                    aMap.setMapCustomEnable(true);
+//                    aMap.showMapText(true);
+
+            Log.e("setUpMap===", "==="+filePath);
+
+//            aMap.setCustomMapStyle(
+//                    new com.amap.api.maps.model.CustomMapStyleOptions()
+//                            .setEnable(true)
+//                            .setStyleDataPath(filePath)
+////                                    .setStyleExtraPath(filePath)
+////                                    .setStyleId("1b319281566f48d9ce57449b30be3b6e")//官网控制台-自定义样式 获取
+//
+////                                    .setStyleExtraPath("/mnt/sdcard/amap/style_extra.data")
+////                                    .setStyleTexturePath("/mnt/sdcard/amap/textures.zip")
+//            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            Log.e("setUpMap===e", context.getAssets()+"==="+e.getMessage());
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        if (fileExtra.exists()) {
+//            aMap.setCustomMapStyle(
+//                    new com.amap.api.maps.model.CustomMapStyleOptions()
+//                            .setEnable(true)
+//                            .setStyleDataPath(filePath)
+//                            .setStyleExtraPath(filePathExtra)
+//            );
+//            return;//本地已有，不再下载
+            fileExtra.delete();
+        }
+        try {
+            fileExtra.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        outputStream = null;
+        inputStream = null;
+        try {
+            Log.e("setUpMap===100", context.getAssets()+"==="+inputStream);
+
+            inputStream = context.getAssets().open(STYLE_EXTRA_NAME);
+
+            Log.e("setUpMap===10", context.getAssets()+"==="+inputStream);
+
+            byte[] b = new byte[inputStream.available()];
+            inputStream.read(b);
+            outputStream = new FileOutputStream(fileExtra);
+            outputStream.write(b);
+
+//                    String filePath = context.getFilesDir().getAbsolutePath() + "/" + STYLE_NAME;
+
+//                    aMap.setCustomMapStylePath(filePath);
+//                    aMap.setMapCustomEnable(true);
+//                    aMap.showMapText(true);
+
+            Log.e("setUpMap===1", "==="+filePathExtra);
+
+            aMap.setCustomMapStyle(
+                    new com.amap.api.maps.model.CustomMapStyleOptions()
+                            .setEnable(true)
+                            .setStyleDataPath(filePath)
+                            .setStyleExtraPath(filePathExtra)
+//                                    .setStyleId("1b319281566f48d9ce57449b30be3b6e")//官网控制台-自定义样式 获取
+
+//                                    .setStyleExtraPath("/mnt/sdcard/amap/style_extra.data")
+//                                    .setStyleTexturePath("/mnt/sdcard/amap/textures.zip")
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            Log.e("setUpMap===1e", context.getAssets()+"==="+e.getMessage());
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        }).start();
+
+
+
+        Log.e("setUpMap===2", "==="+context.getFilesDir().getAbsolutePath());
+
+
+    }
+
     private boolean checkGPSIsOpen() {
         boolean isOpen;
         locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
@@ -824,125 +1007,127 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Log.e("mf===car_authority1", "==="+responseString);
 
-                try {
-                    Log.e("mf===car_authority1", "==="+responseString);
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-
-                    CarAuthorityBean bean = JSON.parseObject(result.getData(), CarAuthorityBean.class);
+                            CarAuthorityBean bean = JSON.parseObject(result.getData(), CarAuthorityBean.class);
 
 //                  Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder()+"==="+new JSONObject(bean.getOrder()).getInt("order_id"));
 
 //                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 5需要充值余额或购买骑行卡 6有进行中行程 7有待支付行程 8有待支付调度费 9有待支付赔偿费
-                    unauthorized_code = bean.getUnauthorized_code();
-                    notice_code = bean.getNotice_code();
+                            unauthorized_code = bean.getUnauthorized_code();
+                            notice_code = bean.getNotice_code();
 
-                    SharedPreferencesUrls.getInstance().putString("iscert", ""+notice_code);
-                    Log.e("mf===car_authority2", notice_code+"==="+unauthorized_code+"==="+bean.getOrder());
+                            SharedPreferencesUrls.getInstance().putString("iscert", ""+notice_code);
+                            Log.e("mf===car_authority2", notice_code+"==="+unauthorized_code+"==="+bean.getOrder());
 
-                    ll_top.setVisibility(View.VISIBLE);
-                    ll_top_biking.setVisibility(View.GONE);
-                    ll_top_pay.setVisibility(View.GONE);
-                    rl_authBtn.setVisibility(View.GONE);
-                    tv_authBtn.setText("");
-
-                    if(!bikeFragment.isHidden()){
-                        bikeFragment.initNearby(referLatitude, referLongitude);
-                    }else{
-                        ebikeFragment.initNearby(referLatitude, referLongitude);
-                    }
-
-                    if(notice_code==0) {
-
-                    }else{
-                        if(notice_code<6) {
-                            rl_authBtn.setVisibility(View.VISIBLE);
-                        }
-
-                        if(notice_code==1) {
-                            tv_authBtn.setText("您还未登录，请点击进行登录！");
-                        }else if(notice_code==2) {
-                            tv_authBtn.setText("您还未认证，请点击进行认证！");
-                        }else if(notice_code==3) {
-                            tv_authBtn.setText("您处于认证中，请点击进行刷新！");
-                        }else if(notice_code==4) {
-                            tv_authBtn.setText("您认证未通过，请点击重新认证！");
-                        }else if(notice_code==5) {
-                            tv_authBtn.setText("您还未充值或购买套餐卡，请点击进行操作");
-                        }else if(notice_code==6) {
-                            ll_top_navi.setVisibility(View.GONE);
                             ll_top.setVisibility(View.VISIBLE);
-                            rl_ad.setVisibility(View.GONE);
-                            ll_top_biking.setVisibility(View.VISIBLE);
-
-                            order_id = new JSONObject(bean.getOrder()).getInt("order_id");
-
-                            Log.e("mf===car_authority3", ebikeInfoThread+"==="+order_id);
-
-                            if (ebikeInfoThread == null) {
-                                cycling();
-                                cyclingThread();
-                            }else{
-                                cycling2();
-                            }
-
-                        }else if(notice_code>=7){
-                            isWaitEbikeInfo = false;
-                            if (ebikeInfoThread != null) {
-                                ebikeInfoThread.interrupt();
-                                ebikeInfoThread = null;
-                            }
-
-                            rl_ad.setVisibility(View.GONE);
                             ll_top_biking.setVisibility(View.GONE);
-                            ll_top_navi.setVisibility(View.GONE);
-                            ll_top.setVisibility(View.VISIBLE);
-                            ll_top_pay.setVisibility(View.VISIBLE);
+                            ll_top_pay.setVisibility(View.GONE);
+                            rl_authBtn.setVisibility(View.GONE);
+                            tv_authBtn.setText("");
 
-                            if(notice_code==7){
-                                order_type = 1;
-                                tv_payBtn.setText("骑行支付");
+                            if(!bikeFragment.isHidden()){
+                                bikeFragment.initNearby(referLatitude, referLongitude);
+                            }else{
+                                ebikeFragment.initNearby(referLatitude, referLongitude);
+                            }
 
-                                cycling2();
-                            }else if(notice_code==8 || notice_code==9){
-                                order_type = 3;
+                            if(notice_code==0) {
 
-                                JSONObject jsonObject = new JSONObject(bean.getOrder());
+                            }else{
+                                if(notice_code<6) {
+                                    rl_authBtn.setVisibility(View.VISIBLE);
+                                }
 
-                                tv_pay_codenum.setText(jsonObject.getString("car_number"));
-                                tv_pay_car_start_time.setText(jsonObject.getString("car_start_time"));
-                                tv_pay_car_end_time.setText(jsonObject.getString("car_end_time"));
-                                tv_order_amount.setText("¥"+jsonObject.getString("order_amount"));
+                                if(notice_code==1) {
+                                    tv_authBtn.setText("您还未登录，请点击进行登录！");
+                                }else if(notice_code==2) {
+                                    tv_authBtn.setText("您还未认证，请点击进行认证！");
+                                }else if(notice_code==3) {
+                                    tv_authBtn.setText("您处于认证中，请点击进行刷新！");
+                                }else if(notice_code==4) {
+                                    tv_authBtn.setText("您认证未通过，请点击重新认证！");
+                                }else if(notice_code==5) {
+                                    tv_authBtn.setText("您还未充值或购买套餐卡，请点击进行操作");
+                                }else if(notice_code==6) {
+                                    ll_top_navi.setVisibility(View.GONE);
+                                    ll_top.setVisibility(View.VISIBLE);
+                                    rl_ad.setVisibility(View.GONE);
+                                    ll_top_biking.setVisibility(View.VISIBLE);
 
-                                if(notice_code==8){
-                                    tv_payBtn.setText("调度费支付");
-                                }else{
-                                    tv_payBtn.setText("赔偿费支付");
+                                    order_id = new JSONObject(bean.getOrder()).getInt("order_id");
+
+                                    Log.e("mf===car_authority3", ebikeInfoThread+"==="+order_id);
+
+                                    if (ebikeInfoThread == null) {
+                                        cycling();
+                                        cyclingThread();
+                                    }else{
+                                        cycling2();
+                                    }
+
+                                }else if(notice_code>=7){
+                                    isWaitEbikeInfo = false;
+                                    if (ebikeInfoThread != null) {
+                                        ebikeInfoThread.interrupt();
+                                        ebikeInfoThread = null;
+                                    }
+
+                                    rl_ad.setVisibility(View.GONE);
+                                    ll_top_biking.setVisibility(View.GONE);
+                                    ll_top_navi.setVisibility(View.GONE);
+                                    ll_top.setVisibility(View.VISIBLE);
+                                    ll_top_pay.setVisibility(View.VISIBLE);
+
+                                    if(notice_code==7){
+                                        order_type = 1;
+                                        tv_payBtn.setText("骑行支付");
+
+                                        cycling2();
+                                    }else if(notice_code==8 || notice_code==9){
+                                        order_type = 3;
+
+                                        JSONObject jsonObject = new JSONObject(bean.getOrder());
+
+                                        tv_pay_codenum.setText(jsonObject.getString("car_number"));
+                                        tv_pay_car_start_time.setText(jsonObject.getString("car_start_time"));
+                                        tv_pay_car_end_time.setText(jsonObject.getString("car_end_time"));
+                                        tv_order_amount.setText("¥"+jsonObject.getString("order_amount"));
+
+                                        if(notice_code==8){
+                                            tv_payBtn.setText("调度费支付");
+                                        }else{
+                                            tv_payBtn.setText("赔偿费支付");
+                                        }
+                                    }
+
                                 }
                             }
 
-                        }
-                    }
+                            if(isMin){
+                                if(notice_code==6){
+                                    rl_authBtn.setVisibility(View.VISIBLE);
+                                    tv_authBtn.setText(tipRange);
+                                }else{
+                                    clearRoute();
+                                }
+                            }
 
-                    if(isMin){
-                        if(notice_code==6){
-                            rl_authBtn.setVisibility(View.VISIBLE);
-                            tv_authBtn.setText(tipRange);
-                        }else{
-                            clearRoute();
-                        }
-                    }
+                            if(notice_code!=6){
+                                isWaitEbikeInfo = false;
+                                if (ebikeInfoThread != null) {
+                                    ebikeInfoThread.interrupt();
+                                    ebikeInfoThread = null;
+                                }
 
-                    if(notice_code!=6){
-                        isWaitEbikeInfo = false;
-                        if (ebikeInfoThread != null) {
-                            ebikeInfoThread.interrupt();
-                            ebikeInfoThread = null;
-                        }
-
-                        banner();
-                    }
+                                banner();
+                            }
 
 //                    else{
 //
@@ -954,12 +1139,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                        }
 //                    }
 
-                    Log.e("mf===car_authority4", notice_code+"==="+isMin);
+                            Log.e("mf===car_authority4", notice_code+"==="+isMin);
 
-                } catch (Exception e) {
+                        } catch (Exception e) {
 
-                    e.printStackTrace();
-                }
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
 
 //                closeLoadingDialog();
 
@@ -3293,6 +3481,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 public void run() {
                     try {
                         int n=0;
+
+                        Log.e("biking===endBtn_4",macList.size()+"==="+isContainsList.contains(true));
+
                         while(macList.size() == 0 && !isContainsList.contains(true)){
                             Thread.sleep(100);
                             n++;
@@ -3387,7 +3578,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 } else {
 
                                     Log.e("order===2",  isMac + "===" + isLookPsdBtn + "===" + type + "===" + jsonObject.getString("order_sn"));
-
 
                                     if (!TextUtils.isEmpty(m_nowMac)) {
                                         isOpenLock = true;
@@ -5566,7 +5756,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     //泺平===连接设备
     private void connectDeviceLP() {
         BleConnectOptions options = new BleConnectOptions.Builder()
-                .setConnectRetry(1)
+                .setConnectRetry(0)
                 .setConnectTimeout(timeout)
                 .setServiceDiscoverRetry(1)
                 .setServiceDiscoverTimeout(10000)
@@ -6105,6 +6295,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onResult(ScanResult scanResult) {
+
+    }
+
+    @Override
+    public void activate(OnLocationChangedListener onLocationChangedListener) {
+
+    }
+
+    @Override
+    public void deactivate() {
 
     }
 
@@ -6697,7 +6897,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         }else if(s1.startsWith("0502")){    //开锁
                             Log.e("openLock===", "==="+s1);
 
-//                            Toast.makeText(context, "开锁成功", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "开锁成功", Toast.LENGTH_LONG).show();
 
                             m_myHandler.sendEmptyMessage(7);
                         }else if(s1.startsWith("0508")){   //关锁==050801RET：RET取值如下：0x00，锁关闭成功。0x01，锁关闭失败。0x02，锁关闭异常。
@@ -6764,13 +6964,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                     Log.e("closeLock===3", "锁已关闭===" + macList2.size());
                                 }
+
                             } else {
                                 //锁已开启
                                 ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
                                 car_notification(3, 5, 0);
 
-                                isEndBtn = false;
+//                                isEndBtn = false;
                             }
 
                         }else if(s1.startsWith("058502")){
@@ -7487,10 +7688,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             }
 //                if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
             if (isLookPsdBtn){
-                if (loadingDialog != null && !loadingDialog.isShowing()){
-                    loadingDialog.setTitle("请稍等");
-                    loadingDialog.show();
-                }
+//                if (loadingDialog != null && !loadingDialog.isShowing()){
+//                    loadingDialog.setTitle("请稍等");
+//                    loadingDialog.show();
+//                }
 
                 Log.e("biking===endBtn_2",macList.size()+"==="+isLookPsdBtn+"==="+force_backcar);
 
@@ -7501,10 +7702,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             } else {
                 Log.e("biking===endBtn_3",macList.size()+"==="+isLookPsdBtn+"==="+force_backcar);
 
-                if (loadingDialog != null && !loadingDialog.isShowing()){
-                    loadingDialog.setTitle("正在连接");
-                    loadingDialog.show();
-                }
+//                if (loadingDialog != null && !loadingDialog.isShowing()){
+//                    loadingDialog.setTitle("正在连接");
+//                    loadingDialog.show();
+//                }
 
                 isOpenLock = false;
                 scan2();
@@ -7626,18 +7827,18 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 return;
             }
             if (isLookPsdBtn){
-                if (loadingDialog != null && !loadingDialog.isShowing()){
-                    loadingDialog.setTitle("请稍等");
-                    loadingDialog.show();
-                }
+//                if (loadingDialog != null && !loadingDialog.isShowing()){
+//                    loadingDialog.setTitle("请稍等");
+//                    loadingDialog.show();
+//                }
 
                 macList2 = new ArrayList<> (macList);
                 getLockStatus();
             } else {
-                if (loadingDialog != null && !loadingDialog.isShowing()){
-                    loadingDialog.setTitle("正在连接");
-                    loadingDialog.show();
-                }
+//                if (loadingDialog != null && !loadingDialog.isShowing()){
+//                    loadingDialog.setTitle("正在连接");
+//                    loadingDialog.show();
+//                }
 
                 isOpenLock = false;
 //                connect();
@@ -8701,6 +8902,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                                car_notification(1, 2, 0);
                             }
                         }
+                        break;
 
                     case 189:
                         Log.e("189===", oid+"===");

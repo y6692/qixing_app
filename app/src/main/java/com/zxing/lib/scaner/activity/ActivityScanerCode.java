@@ -21,7 +21,9 @@ import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.TextKeyListener;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -1100,6 +1102,20 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         findViewById(R.id.right_mask).setOnClickListener(this);
         findViewById(R.id.bottom_mask).setOnClickListener(this);
 
+        bikeNumEdit.setKeyListener(new TextKeyListener(TextKeyListener.Capitalize.NONE, false) {
+            @Override
+//                public int getInputType() {
+//                    优先弹出数字键盘
+//                    return InputType.TYPE_CLASS_PHONE;
+//                }
+
+            public int getInputType() {
+                //优先弹出字母键盘
+//				return InputType.TYPE_MASK_CLASS;
+                return InputType.TYPE_CLASS_NUMBER;
+            }
+        });
+
 //        LoadingDialog2 lockLoading = new LoadingDialog2(this);
 //        lockLoading.setCancelable(false);
 //        lockLoading.setCanceledOnTouchOutside(false);
@@ -1218,6 +1234,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 mCropLayout2.setVisibility(View.VISIBLE);
                 ll_input.setVisibility(View.GONE);
 
+                initCamera(surfaceHolder);
+
                 break;
             case R.id.ll_scan_positiveButton:
                 Log.e("onClick=ll_positiveB", customDialog+"==="+customDialog.isShowing());
@@ -1231,6 +1249,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                 mCropLayout2.setVisibility(View.VISIBLE);
                 ll_input.setVisibility(View.GONE);
+
+                initCamera(surfaceHolder);
 
                 break;
             case R.id.scan_cancelBtn2:
@@ -1246,6 +1266,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 mCropLayout2.setVisibility(View.VISIBLE);
                 ll_input.setVisibility(View.GONE);
 
+                initCamera(surfaceHolder);
+
                 break;
             case R.id.ll_scan_positiveButton2:
                 Log.e("onClick=ll_positiveB", customDialog+"==="+customDialog.isShowing());
@@ -1259,6 +1281,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                 mCropLayout2.setVisibility(View.VISIBLE);
                 ll_input.setVisibility(View.GONE);
+
+                initCamera(surfaceHolder);
 
                 break;
             case R.id.pop_circlesMenu_positiveButton:
@@ -1480,6 +1504,17 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //        useCar(result);
     }
 
+    private void closeBtnBikeNum(){
+        isHand = false;
+        btnBikeNum.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.top_hand), null, null);
+
+        previewing = true;
+        initCamera(surfaceHolder);
+
+        mCropLayout2.setVisibility(View.VISIBLE);
+        ll_input.setVisibility(View.GONE);
+    }
+
     private void order_authority(final String tokencode) {
         Log.e("order_authority===", "==="+tokencode);
 
@@ -1496,6 +1531,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
 
                 onFailureCommon(throwable.toString());
+
+                closeBtnBikeNum();
             }
 
             @Override
@@ -1519,6 +1556,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                 if(code==0){
                                     car(tokencode);
+//                                    customDialog2.show();
 
                                     if (loadingDialog != null && loadingDialog.isShowing()) {
                                         loadingDialog.dismiss();
@@ -1529,22 +1567,26 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     if (loadingDialog != null && loadingDialog.isShowing()) {
                                         loadingDialog.dismiss();
                                     }
+
                                 }else if(code==2){
                                     customDialog.show();
 
                                     if (loadingDialog != null && loadingDialog.isShowing()) {
                                         loadingDialog.dismiss();
                                     }
+
                                 }
                             }else{
-                                ToastUtil.showMessageApp(context, result.getMessage());
+                                Log.e("order_authority===3",  "====" + result.getMessage());
 
-                                mCropLayout2.setVisibility(View.VISIBLE);
-                                ll_input.setVisibility(View.GONE);
+                                ToastUtil.showMessageApp(context, result.getMessage());
 
                                 if (loadingDialog != null && loadingDialog.isShowing()) {
                                     loadingDialog.dismiss();
                                 }
+
+                                closeBtnBikeNum();
+
                             }
 
 
@@ -1553,6 +1595,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             if (loadingDialog != null && loadingDialog.isShowing()) {
                                 loadingDialog.dismiss();
                             }
+
+                            closeBtnBikeNum();
+
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
                         }
 
@@ -1575,6 +1620,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 onFailureCommon(throwable.toString());
+                closeBtnBikeNum();
             }
 
             @Override
@@ -1682,6 +1728,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 loadingDialog.dismiss();
                             }
 
+                            closeBtnBikeNum();
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
                         }
 
@@ -1696,7 +1743,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
 
     void macLoop(){
-
 
         try {
 

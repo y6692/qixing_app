@@ -1016,7 +1016,15 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
                         }
                     }else{
                         submit();
+
+//                        if (loadingDialog != null && loadingDialog.isShowing()){
+//                            loadingDialog.dismiss();
+//                        }
+//
+//                        ToastUtil.showMessageApp(context, "请上传照片");
                     }
+
+
 
                 }else{
                     submit();
@@ -1167,7 +1175,11 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
         params.put("damaged_part_desc", content);     //损坏部件(提交车辆故障时必传)
         params.put("remark", other);     //损坏部件(提交车辆故障时必传)
         params.put("position", address);     //位置信息(选传)
-        params.put("images", ""+imageList);     //图片key数组，json字符串
+        if(imageList.size()==0){
+            params.put("images", "");
+        }else{
+            params.put("images", ""+imageList);     //图片key数组，json字符串
+        }
         params.put("latitude", ""+latitude);
         params.put("longitude", ""+longitude);
 

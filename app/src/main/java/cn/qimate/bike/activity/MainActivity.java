@@ -261,11 +261,11 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         type = SharedPreferencesUrls.getInstance().getString("type", "");
 
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        filter.addAction(Intent.ACTION_USER_PRESENT);
-        registerReceiver(mScreenReceiver, filter);
+//        IntentFilter filter = new IntentFilter();
+//        filter.addAction(Intent.ACTION_SCREEN_ON);
+//        filter.addAction(Intent.ACTION_SCREEN_OFF);
+//        filter.addAction(Intent.ACTION_USER_PRESENT);
+//        registerReceiver(mScreenReceiver, filter);
 
         m_myHandler.sendEmptyMessage(4);
 

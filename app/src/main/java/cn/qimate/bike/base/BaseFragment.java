@@ -1,6 +1,7 @@
 package cn.qimate.bike.base;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +22,7 @@ import com.zxing.lib.scaner.activity.ActivityScanerCode;
 import org.apache.http.Header;
 import org.json.JSONArray;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -55,6 +57,7 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 	public Boolean userlogin = false;
 
 	protected LoadingDialog loadingDialog;
+	protected LoadingDialog loadingDialog2;
 	protected Context context;
 
 	public BLEService bleService = new BLEService();
@@ -81,6 +84,8 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 
 	public static JSONArray jsonArray;
 	public static JSONArray jsonArray2;
+
+	protected Handler m_myHandler = new MainHandler(this);
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +104,8 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 
 		BaseApplication.context = context;
 
+		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);		//设定为竖屏
+
 //		RefreshLogin();
 	}
 
@@ -115,7 +122,26 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 //		RefreshLogin();
 	}
 
+	class MainHandler extends Handler {
+		WeakReference<BaseFragment> softReference;
 
+		public MainHandler(BaseFragment fragment) {
+			softReference = new WeakReference<BaseFragment>(fragment);
+		}
+
+		@Override
+		public void handleMessage(Message mes) {
+			BaseFragment baseFragment = softReference.get();
+
+			switch (mes.what) {
+				case 0:
+					break;
+				default:
+					break;
+			}
+//			return false;
+		}
+	}
 
 	private void init() {
 		baseApplication = (BaseApplication) getActivity().getApplication();
@@ -185,6 +211,19 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 
 	}
 
+	public void onStartCommon2(final String title) {
+		m_myHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (loadingDialog2 != null && !loadingDialog2.isShowing()) {
+					loadingDialog2.setTitle(title);
+					loadingDialog2.show();
+				}
+			}
+		});
+
+	}
+
 	public void onFailureCommon(final String s) {
 		m_myHandler.post(new Runnable() {
 			@Override
@@ -215,18 +254,35 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 		});
 	}
 
-	Handler m_myHandler = new Handler(new Handler.Callback() {
-		@Override
-		public boolean handleMessage(Message mes) {
-			switch (mes.what) {
-				case 0:
-					break;
-				default:
-					break;
+
+	public void onFailureCommon2(final String title, final String s) {
+		m_myHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (loadingDialog2 != null && loadingDialog2.isShowing()){
+					loadingDialog2.dismiss();
+				}
+
+				Log.e("onFailureCommon===", title+"==="+s);
+
+				UIHelper.ToastError(context, s);
 			}
-			return false;
-		}
-	});
+		});
+	}
+
+
+//	Handler m_myHandler = new Handler(new Handler.Callback() {
+//		@Override
+//		public boolean handleMessage(Message mes) {
+//			switch (mes.what) {
+//				case 0:
+//					break;
+//				default:
+//					break;
+//			}
+//			return false;
+//		}
+//	});
 
 	@Override
 	public SwipeBackLayout getSwipeBackLayout() {

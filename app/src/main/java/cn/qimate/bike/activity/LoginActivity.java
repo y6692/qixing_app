@@ -417,48 +417,46 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
             HttpHelper.get(context, Urls.agreement+"privacy", new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("请稍等");
-                        loadingDialog.show();
-                    }
+                    onStartCommon("请稍等");
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
 
-                    Log.e("agreement===fail", throwable.toString()+"==="+responseString);
-
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
+                    onFailureCommon("agreement===fail", throwable.toString());
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
 
 //                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
 
-                        Log.e("agreement===", "==="+responseString);
+                                Log.e("agreement===", "==="+responseString);
 
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                        H5Bean bean = JSON.parseObject(result.getData(), H5Bean.class);
+                                H5Bean bean = JSON.parseObject(result.getData(), H5Bean.class);
 
 
 
-						UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
+                                UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
 //                        UIHelper.goWebViewAct(context, bean.getH5_title(), Urls.agreement+"register");
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                if (loadingDialog != null && loadingDialog.isShowing()) {
+                                    loadingDialog.dismiss();
+                                }
+                            }
                         }
-                    }
+                    });
+
                 }
 
 

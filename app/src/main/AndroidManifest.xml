@@ -102,6 +102,7 @@
         <activity
             android:name=".full.SplashActivity"
             android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait"
             >
 
 
@@ -110,6 +111,7 @@
         <activity
             android:name=".full.Splash2Activity"
             android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait"
             >
 
             <intent-filter>
@@ -121,6 +123,8 @@
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
+            android:theme="@style/AppTheme3"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -128,6 +132,7 @@
 
         <activity
             android:name=".full.EnterActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -136,6 +141,7 @@
         <activity
             android:name=".activity.LoginActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -144,6 +150,7 @@
         <activity
             android:name=".activity.NoteLoginActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize">
 
 
@@ -151,7 +158,8 @@
 
         <activity
             android:name=".activity.NoteTestActivity"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
 
 
         </activity>
@@ -159,6 +167,7 @@
         <activity
             android:name=".activity.RechargeActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -167,6 +176,7 @@
         <activity
             android:name=".activity.RealNameAuthActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -175,6 +185,7 @@
         <activity
             android:name=".activity.DepositFreeAuthActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -182,6 +193,7 @@
 
         <activity
             android:name=".activity.RealNameAuth2Activity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -191,6 +203,7 @@
         <activity
             android:name=".activity.ComplainActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -201,6 +214,7 @@
         <activity
             android:name=".activity.AuthCenterActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -210,6 +224,7 @@
         <activity
             android:name=".activity.SettlementPlatformActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
             <!--<intent-filter>-->
@@ -222,6 +237,7 @@
         <activity
             android:name=".activity.EndBikeFeedBackActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -230,6 +246,7 @@
         <activity
             android:name=".activity.UnpayRouteActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -238,6 +255,7 @@
         <activity
             android:name=".activity.MyOrderActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
         </activity>
@@ -245,6 +263,7 @@
         <activity
             android:name=".activity.MyOrderDetailActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
         </activity>
@@ -252,6 +271,7 @@
         <activity
             android:name=".activity.CarFaultProActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -260,6 +280,7 @@
         <activity
             android:name=".activity.CarFaultActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -267,6 +288,7 @@
 
         <activity
             android:name=".activity.PayDemoActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -275,6 +297,7 @@
         <activity
             android:name=".activity.UnpayOtherActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -283,6 +306,7 @@
         <activity
             android:name=".activity.ChangePhoneActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -291,6 +315,7 @@
         <activity
             android:name=".activity.NoteChangePhoneActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize" >
 
         </activity>
@@ -302,16 +327,19 @@
         <activity
             android:name=".activity.ExchangeActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <activity
             android:name=".activity.BillActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <activity
             android:name=".activity.PayCartActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
 
@@ -320,12 +348,14 @@
         <activity
             android:name=".activity.MyCartActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
         </activity>
 
         <activity
             android:name=".activity.SchoolSelectActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
         </activity>
@@ -335,6 +365,7 @@
         <activity
             android:name="com.zxing.lib.scaner.activity.ActivityScanerCode"
 
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             >
 
@@ -346,19 +377,23 @@
         <activity
             android:name=".activity.SettingActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <activity
             android:name=".activity.MyMessageActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.MyMessageDatailActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <activity
             android:name="com.zxing.lib.scaner.activity.ActivityScanerCode2"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             >
 
@@ -368,26 +403,31 @@
 
         <activity
             android:name=".activity.RegisterActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <activity
             android:name=".activity.FindPsdActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <activity
             android:name=".activity.Login2Activity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
         </activity>
 
         <activity
             android:name=".activity.SplashTestActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
         </activity>
 
         <activity
             android:name=".activity.DeviceDetailActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 
         </activity>
@@ -461,122 +501,157 @@
 
         <activity
             android:name=".activity.InstructionsActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <activity
             android:name=".activity.ActionCenterActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.CurRoadStartActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.CurRoadBikingActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.CurRoadBikedActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <activity
             android:name=".activity.ChangePhoneNumActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.HistoryRoadActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.HistoryRoadFiltateActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.MyPurseActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.WebviewActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.MonthlyCardActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.MyIntegralActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <activity
             android:name=".activity.FeedbackActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.ChangePasswordPhoneActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.ChangePasswordActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
 
 
         <activity
             android:name=".activity.HistoryRoadDetailActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.MapTaceActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.RechargeRecordActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.PersonAlterActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.ClientServiceActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.ServiceCenter0Activity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.ServiceCenter3Activity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.ServiceCenterActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.ServiceCenter2Activity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.SuperVipActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.PayMontCartActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.ActionWebviewActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.InsureanceActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.InviteCodeActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.CouponActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
             />
         <activity
             android:name=".activity.MyCommissionActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.WithdrawActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.MyInviterListActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.CouponDetailActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <!-- 二维码扫描器 -->
         <activity
             android:name="com.zbar.lib.ScanCaptureAct"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <!-- 后台定位服务 -->
@@ -597,7 +672,8 @@
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
 
         <!-- 分享 -->
         <!-- 没安装客户端下登录 -->
@@ -605,6 +681,7 @@
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

@@ -2,6 +2,7 @@
 package cn.qimate.bike.swipebacklayout.app;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -56,7 +57,9 @@ public class SwipeBackActivity extends BaseFragmentActivity implements SwipeBack
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 //		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		
+
+
+
 //		mHelper = new SwipeBackActivityHelper(this);
 //		mHelper.onActivityCreate();
 //		// 修改状态栏颜色，4.4+生效

@@ -1080,46 +1080,43 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             HttpHelper.get(context, Urls.user, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("正在加载");
-                        loadingDialog.show();
-                    }
+                    onStartCommon("正在加载");
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
+                    onFailureCommon(throwable.toString());
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-                        Log.e("minef===initHttp", "==="+responseString);
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Log.e("minef===initHttp", "==="+responseString);
 
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                        UserBean bean = JSON.parseObject(result.getData(), UserBean.class);
+                                UserBean bean = JSON.parseObject(result.getData(), UserBean.class);
 //                            myPurse.setText(bean.getMoney());
 //                            myIntegral.setText(bean.getPoints());
-                        userName.setText(bean.getPhone());
+                                userName.setText(bean.getPhone());
 
-                        if(bean.getUnread_count()==0){
-                            iv_isRead.setVisibility(View.GONE);
-                        }else{
-                            iv_isRead.setVisibility(View.VISIBLE);
-                        }
+                                if(bean.getUnread_count()==0){
+                                    iv_isRead.setVisibility(View.GONE);
+                                }else{
+                                    iv_isRead.setVisibility(View.VISIBLE);
+                                }
 
-                        credit_scores_h5_title = bean.getCredit_scores_h5_title();
-                        credit_scores_h5_url = bean.getCredit_scores_h5_url();
-                        invite_h5_title = bean.getInvite_h5_title();
-                        invite_h5_url = bean.getInvite_h5_url();
-                        history_order_h5_title = bean.getHistory_order_h5_title();
-                        history_order_h5_url = bean.getHistory_order_h5_url();
+                                credit_scores_h5_title = bean.getCredit_scores_h5_title();
+                                credit_scores_h5_url = bean.getCredit_scores_h5_url();
+                                invite_h5_title = bean.getInvite_h5_title();
+                                invite_h5_url = bean.getInvite_h5_url();
+                                history_order_h5_title = bean.getHistory_order_h5_title();
+                                history_order_h5_url = bean.getHistory_order_h5_url();
 
-                        //TODO  3
+                                //TODO  3
 //                            if (bean.getHeadimg() != null && !"".equals(bean.getHeadimg())) {
 //                                if ("gif".equalsIgnoreCase(bean.getHeadimg().substring(bean.getHeadimg().lastIndexOf(".") + 1, bean.getHeadimg().length()))) {
 //                                    Glide.with(getActivity()).load(Urls.host + bean.getHeadimg()).asGif().centerCrop().into(headerImageView);
@@ -1128,12 +1125,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //                                }
 //                            }
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+                        }
+                    });
+
                 }
             });
         } else {
