@@ -587,7 +587,13 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             // flags)，flags 参数说明，
             // Html.FROM_HTML_MODE_COMPACT：html块元素之间使用一个换行符分隔
             // Html.FROM_HTML_MODE_LEGACY：html块元素之间使用两个换行符分隔
-            Spanned htmlString = Html.fromHtml(answerstring, Html.FROM_HTML_MODE_COMPACT);
+            Spanned htmlString;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                htmlString = Html.fromHtml(answerstring,Html.FROM_HTML_MODE_COMPACT);
+            } else {
+                htmlString = Html.fromHtml(answerstring);
+            }
+//            Spanned htmlString = Html.fromHtml(answerstring, Html.FROM_HTML_MODE_COMPACT);
 //            Spanned htmlString = Html.fromHtml(answerstring, null, new HtmlTagHandler("font"));
 
 //            tv_price.setText(Html.fromHtml(price, null, new HtmlTagHandler("font")));
