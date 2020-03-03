@@ -345,9 +345,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private ScanManager scanManager;
     private BluetoothAdapter.LeScanCallback mLeScanCallback;
 
-    private List<Object> macList;
-    private List<Object> macList2;
-
+    private List<Object> macList = new ArrayList<>();
+    private List<Object> macList2 = new ArrayList<>();
 
     private boolean isConnect = false;
     private boolean isStop = false;
@@ -379,6 +378,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private Thread ebikeInfoThread;
     public String oid = "";
     private int notice_code = 0;
+    private int open = 0;
+    private boolean isBleInit = false;
 
     private boolean first = true;
     private boolean isMin = false;
@@ -485,8 +486,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             }
         };
 
-        macList = new ArrayList<>();
-        macList2 = new ArrayList<>();
+
         initView();
 
         String h5_title = activity.getIntent().getStringExtra("h5_title");
@@ -3277,6 +3277,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     scan = false;
                     isTemp = false;
                     backType = "";
+                    open = 0;
+                    isBleInit = false;
 
                     order_type = 0;
                     isWaitEbikeInfo = true;
@@ -3487,6 +3489,26 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         while(macList.size() == 0 && !isContainsList.contains(true)){
                             Thread.sleep(100);
                             n++;
+
+//                            if(n%20==0 && n%40!=0){
+////                                scanManager.stopScan();
+////                                scanManager.startScan();
+//
+//                                stopXB();
+////                                startXB();
+//
+//                                Log.e("biking===n2",macList.size()+"=="+n);
+//                            }
+//
+//                            if(n%40==0){
+////                                scanManager.stopScan();
+////                                scanManager.startScan();
+//
+////                                stopXB();
+//                                startXB();
+//
+//                                Log.e("biking===n3",macList.size()+"=="+n);
+//                            }
 
                             Log.e("biking===n",macList.size()+"=="+n);
 
@@ -3829,29 +3851,68 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 macList.clear();
             }
 
-            scanManager.startScan();
-//            manager.startEddyStoneScan();
+//            scanManager = new ScanManager(context);
+////        scanManager.setUuid("00000000-0000-0000-0000-000000000000");//添加需要扫描的uuid 只有符合的才会返回 不设置返回所有
+////        scanManager.setMajor(222);//添加需要扫描的beacon的major 只有符合的major才会返回 不设置返回所有
+////        scanManager.setMinor(111);//添加需要扫描的beacon的minor 只有符合的minor才会返回 不设置返回所有
+//            scanManager.setScanPeriod(100);//设置beacon扫描 反馈结果时间间隔  时间越久 扫描丢失率越低 默认3000ms
+////        scanManager.startScan();//启动扫描
+////        scanManager.stopScan();//停止扫描
+////        scanManager.setScanListener(new ScanManager.MyScanListener());//设置扫描监听 监听扫描返回数据
+//            scanManager.setScanListener(new ScanManager.MyScanListener() {
+//                @Override
+//                public void onScanListenre(ArrayList<Beacon> beacons) {
+//                    Log.e("biking===scanM2", "---beacons.size = " + beacons.size());
+//
+//                    for (Beacon beacon : beacons) {
+//
+//                        Log.e("biking===scanM2", beacon.getName()+"=====" +beacon.getRssi()+"=====" + beacon.getMacAddress());
+//
+////                    macList.add(""+beacon.getMacAddress());
+//                        macList.add(""+beacon.getName());
+//
+//                        scan = true;
+//                    }
+//
+//                }
+//            });
 
-            Log.e("biking===startXB",mBluetoothAdapter+"==="+mLeScanCallback);
-            UUID[] uuids = {Config.xinbiaoUUID};
-            mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
+//            BleManager.getInstance().init(activity.getApplication());
+//            BleManager.getInstance()
+//                    .enableLog(true)
+//                    .setReConnectCount(10, 5000)
+//                    .setConnectOverTime(timeout)
+//                    .setOperateTimeout(10000);
+//
+//            setScanRule();
+            scan_end();
+
+////            scanManager.setScanPeriod(100);
+//            scanManager.startScan();
+////            manager.startEddyStoneScan();
+//
+//            Log.e("biking===startXB",mBluetoothAdapter+"==="+mLeScanCallback);
+//            UUID[] uuids = {Config.xinbiaoUUID};
+//            mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
 
         }
     }
 
     private void stopXB() {
-        if (!"1".equals(type)) {
-            scanManager.stopScan();
-//            manager.stopEddyStoneScan();
+//        BleManager.getInstance().cancelScan();
+//        BleManager.getInstance().disconnectAllDevice();
+//        BleManager.getInstance().destroy();
 
-            Log.e("biking===stopXB",mBluetoothAdapter+"==="+mLeScanCallback);
-
-            if (mLeScanCallback != null && mBluetoothAdapter != null) {
-                mBluetoothAdapter.stopLeScan(mLeScanCallback);
-            }
-
-
-        }
+////        scanManager.setScanPeriod(0);
+//        scanManager.stopScan();
+//
+////      manager.stopEddyStoneScan();
+//
+//        Log.e("biking===stopXB",mBluetoothAdapter+"==="+mLeScanCallback);
+//
+//        if (mLeScanCallback != null && mBluetoothAdapter != null) {
+//            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+//        }
     }
 
     public LatLng minPoint(double lat, double lon) {
@@ -4399,6 +4460,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                                         Log.e("biking===","biking=n=="+n);
 
+//                                                        if(n%20==0){
+//                                                            scanManager.stopScan();
+//                                                            scanManager.startScan();
+//                                                        }
+
+
                                                         if(n>=101) break;
 
                                                     }
@@ -4821,7 +4888,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
             BleManager.getInstance().disconnectAllDevice();
             BleManager.getInstance().destroy();
-
         }
 
         isWaitEbikeInfo = false;
@@ -5005,12 +5071,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                 if(!isOpenLock && !isAgain && !isEndBtn) return;
 
+                if(action_type==3){
+                    isEndBtn = false;
+                }
+
                 Log.e("mf===car_notification", isAgain + "===" + action_type +"==="+ lock_status+"==="+ back_type +"==="+ oid+"==="+ referLatitude+"==="+referLongitude);
 
                 RequestParams params = new RequestParams();
 //        params.put("scene", isAgain?2:1); //场景值 必传 1借还车上报 2再次开(关)锁上报
                 params.put("action_type", Md5Helper.encode(oid+":action_type:"+action_type));   //操作类型 1开锁 2临时上锁 3还车
-                params.put("lock_status", Md5Helper.encode(oid+":lock_status:"+lock_status));     //车锁状态 必传1成功 2连接不上蓝牙 3蓝牙操作失败
+                params.put("lock_status", Md5Helper.encode(oid+":lock_status:"+lock_status));     //车锁状态 必传 1成功 2连接不上蓝牙 3蓝牙操作失败 4还车时不在停车点(蓝牙、助力车都得上报) 5车锁未关
                 params.put("parking", parking());
                 params.put("longitude", referLongitude);
                 params.put("latitude", referLatitude);
@@ -5106,9 +5176,25 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     }
 
                                 } catch (Exception e) {
-//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+//                                  memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
                                 }
-                                closeLoadingDialog();
+
+                                if(action_type==3 && lock_status==5 && open>1){
+                                    m_myHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Log.e("closeLoadingDialog===", "===");
+
+                                            ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+
+                                            closeLoadingDialog();
+
+                                        }
+                                    }, 9*1000);
+                                }else{
+                                    closeLoadingDialog();
+                                }
+
                             }
                         });
 
@@ -5703,13 +5789,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //        UIHelper.showProgress(this, R.string.collectState);
         ClientManager.getClient().queryOpenState(m_nowMac, new IQueryOpenStateResponse() {
             @Override
-            public void onResponseSuccess(final boolean open) {
+            public void onResponseSuccess(final boolean isOpen) {
 //                UIHelper.dismiss();
 
                 m_myHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("queryOpenState===", "===="+open);
+                        Log.e("queryOpenState===", "===="+isOpen);
 
 //                        getBleRecord();
 
@@ -5718,8 +5804,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                            loadingDialogWithHelp.dismiss();
 //                        }
 
-                        if(open) {
-                            ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+                        if(isOpen) {
+//                            ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+
+                            if(isEndBtn){
+                                open++;
+                            }
+
+                            if(open<2){
+                                ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+                            }
 
                             car_notification(3, 5, 0);
 
@@ -6597,6 +6691,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //		loadingDialog.setTitle("正在搜索");
 //		loadingDialog.show();
 
+//        if(macList!=null){
+//            macList.clear();
+//        }
+
         BleManager.getInstance().scan(new BleScanCallback() {
             @Override
             public void onScanStarted(boolean success) {
@@ -6613,7 +6711,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             public void onLeScan(BleDevice bleDevice) {
                 super.onLeScan(bleDevice);
 
-                Log.e("mf===onLeScan", bleDevice+"==="+bleDevice.getMac());
+//                D1:E4:39:55:3D:F9
+
+//                if (bleDevice.getName()!=null && bleDevice.getName().startsWith("abeacon_")){
+//                    macList.add(""+bleDevice.getName());
+//                }
+
+                Log.e("mf===onLeScan", bleDevice.getName()+"==="+bleDevice.getMac());
             }
 
             @Override
@@ -6621,7 +6725,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                mDeviceAdapter.addDevice(bleDevice);
 //                mDeviceAdapter.notifyDataSetChanged();
 
-                Log.e("mf===onScanning", bleDevice+"==="+bleDevice.getMac());
+//                if(macList.size()>0){
+//                    BleManager.getInstance().cancelScan();
+//                }
+
+                Log.e("mf===onScanning", bleDevice.getName()+"==="+bleDevice.getMac());
 
 //				m_myHandler.post(new Runnable() {
 //					@Override
@@ -6659,6 +6767,108 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                btn_scan.setText(getString(R.string.start_scan));
 
                 Log.e("mf===onScanFinished", scanResultList+"==="+scanResultList.size());
+            }
+        });
+    }
+
+    void scan_end(){
+//        loadingDialog = DialogUtils.getLoadingDialog(context, "正在搜索...");
+//		loadingDialog.setTitle("正在搜索");
+//		loadingDialog.show();
+
+        if(macList!=null){
+            macList.clear();
+        }
+
+        if(!"2".equals(type) && !"3".equals(type)){
+
+            if(!isBleInit){
+                isBleInit = true;
+
+                BleManager.getInstance().init(activity.getApplication());
+                BleManager.getInstance()
+                        .enableLog(true)
+                        .setReConnectCount(10, 5000)
+                        .setConnectOverTime(timeout)
+                        .setOperateTimeout(10000);
+
+                setScanRule();
+            }
+
+        }
+
+        BleManager.getInstance().scan(new BleScanCallback() {
+            @Override
+            public void onScanStarted(boolean success) {
+//                mDeviceAdapter.clearScanDevice();
+//                mDeviceAdapter.notifyDataSetChanged();
+//                img_loading.startAnimation(operatingAnim);
+//                img_loading.setVisibility(View.VISIBLE);
+//                btn_scan.setText(getString(R.string.stop_scan));
+                Log.e("mf===onScanStarted_end", "==="+success);
+
+            }
+
+            @Override
+            public void onLeScan(BleDevice bleDevice) {
+                super.onLeScan(bleDevice);
+
+//                D1:E4:39:55:3D:F9
+
+                if (bleDevice.getName()!=null && (bleDevice.getName().startsWith("abeacon_") || "BC01".equals(bleDevice.getName()))){
+                    macList.add(""+bleDevice.getName());
+                }
+
+                Log.e("mf===onLeScan_end", bleDevice.getName()+"==="+bleDevice.getMac());
+            }
+
+            @Override
+            public void onScanning(final BleDevice bleDevice) {
+//                mDeviceAdapter.addDevice(bleDevice);
+//                mDeviceAdapter.notifyDataSetChanged();
+
+                if(macList.size()>0){
+                    BleManager.getInstance().cancelScan();
+                }
+
+                Log.e("mf===onScanning_end", bleDevice.getName()+"==="+bleDevice.getMac());
+
+//				m_myHandler.post(new Runnable() {
+//					@Override
+//					public void run() {
+//						if(address.equals(bleDevice.getMac())){
+//							//                            if (loadingDialog != null && loadingDialog.isShowing()) {
+////                                loadingDialog.dismiss();
+////                            }
+//
+//							BleManager.getInstance().cancelScan();
+//
+//							Log.e("onScanning===2", isConnect+"==="+bleDevice+"==="+bleDevice.getMac());
+//
+//							Toast.makeText(context, "搜索成功", Toast.LENGTH_LONG).show();
+//
+//							connect();
+//
+////                            m_myHandler.postDelayed(new Runnable() {
+////                                @Override
+////                                public void run() {
+////                                    if(!isConnect)
+////                                        connect();
+////                                }
+////                            }, 5 * 1000);
+//						}
+//					}
+//				});
+
+            }
+
+            @Override
+            public void onScanFinished(List<BleDevice> scanResultList) {
+//                img_loading.clearAnimation();
+//                img_loading.setVisibility(View.INVISIBLE);
+//                btn_scan.setText(getString(R.string.start_scan));
+
+                Log.e("mf===onScanFinished_end", scanResultList+"==="+scanResultList.size());
             }
         });
     }
@@ -6910,7 +7120,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 Log.e("closeLock===fail", "==="+first3);
                             }
                         }else if(s1.startsWith("050F")){   //锁状态
-                            Log.e("lockState===0", "==="+s1);
+                            Log.e("lockState===0", isEndBtn+"==="+s1);
 
 
                             isStop = true;
@@ -6960,14 +7170,23 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 if(isEndBtn){
                                     Log.e("closeLock===2", "锁已关闭==="+isEndBtn);
 
-                                    m_myHandler.sendEmptyMessage(6);
+//                                    m_myHandler.sendEmptyMessage(6);
+                                    car_notification(3, 1, 1);
 
                                     Log.e("closeLock===3", "锁已关闭===" + macList2.size());
                                 }
 
                             } else {
                                 //锁已开启
-                                ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+
+
+                                if(isEndBtn){
+                                    open++;
+                                }
+
+                                if(open<2){
+                                    ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+                                }
 
                                 car_notification(3, 5, 0);
 
@@ -8220,7 +8439,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         for (int i = 0; i < centerList.size(); i++) {
 
-            Log.e("minPolygon===", centerList.get(i).latitude+"==="+referLatitude+">>>"+centerList.get(i).longitude+"==="+referLongitude);
+//            Log.e("minPolygon===", centerList.get(i).latitude+"==="+referLatitude+">>>"+centerList.get(i).longitude+"==="+referLongitude);
 
             s1 = (centerList.get(i).latitude-referLatitude)*(centerList.get(i).latitude-referLatitude) + (centerList.get(i).longitude-referLongitude)*(centerList.get(i).longitude-referLongitude);
 
@@ -8701,6 +8920,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     isWaitEbikeInfo = true;
                                     ebikeInfoThread = null;
                                     oid = "";
+                                    open = 0;
+                                    isBleInit = false;
 
                                     if ("2".equals(type) || "3".equals(type)){
 
