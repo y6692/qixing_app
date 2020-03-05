@@ -20,6 +20,7 @@ import pl.droidsonroids.gif.GifImageView;
 public class LoadingDialog extends Dialog {
 
 	private static final int CHANGE_TITLE_WHAT = 1;
+	private static final int CHANGE_TITLE_DISMISS = 2;
 	private static final int CHNAGE_TITLE_DELAYMILLIS = 300;
 	private static final int MAX_SUFFIX_NUMBER = 3;
 	private static final char SUFFIX = '.';
@@ -32,8 +33,11 @@ public class LoadingDialog extends Dialog {
 
 	GifDrawable gifDrawable;
 
+	private int n = 0;
+
 	private Handler handler = new Handler() {
 		private int num = 0;
+
 
 		public void handleMessage(android.os.Message msg) {
 			if (msg.what == CHANGE_TITLE_WHAT) {
@@ -46,15 +50,25 @@ public class LoadingDialog extends Dialog {
 					builder.append(SUFFIX);
 				}
 
-				Log.e("LoadingDialog===handler", detail_tv.getText()+"==="+builder.toString());
+				Log.e("LoadingDialog===handler", n+"==="+detail_tv.getText()+"==="+builder.toString());
+
+				n++;
 
 				tv_point.setText(builder.toString());
 				if (isShowing()) {
-					handler.sendEmptyMessageDelayed(CHANGE_TITLE_WHAT, CHNAGE_TITLE_DELAYMILLIS);
+					if(n<70){
+						handler.sendEmptyMessageDelayed(CHANGE_TITLE_WHAT, CHNAGE_TITLE_DELAYMILLIS);
+					}else{
+						handler.sendEmptyMessage(CHANGE_TITLE_DISMISS);
+					}
+
 				} else {
 					num = 0;
 				}
+			}else if (msg.what == CHANGE_TITLE_DISMISS) {
+				dismiss();
 			}
+
 		};
 	};
 
@@ -97,6 +111,7 @@ public class LoadingDialog extends Dialog {
 //		Glide.with(context).load(R.drawable.loading_large).crossFade().into(iv_route);
 		gifDrawable.start();
 
+		n=0;
 		handler.sendEmptyMessage(CHANGE_TITLE_WHAT);
 		super.show();
 	}

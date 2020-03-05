@@ -14,6 +14,7 @@ import java.util.UUID;
 public class Config {
 
     public static final UUID xinbiaoUUID = UUID.fromString("0000fbca-0000-1000-8000-00805f9b34fb");
+    public static final UUID xinbiaoUUID2 = UUID.fromString("b5b182c7-eab1-4988-aa99-b5c1517008d9");
 
     public static final String NOT_SUPPORTED = "com.sunshine.blelibrary.config.not_supported";
     public static final int OBJECT_EMPTY = -1;

@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.ScanCallback;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,6 +29,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -473,11 +475,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                        test_xinbiao += parseAdvData(rssi,scanRecord)+ "====" +device.getName()+ "====" + device.getAddress()+"\n";
 //                        tv_test_xinbiao.setText(test_xinbiao);
 
-                        if ("BC01".equals(device.getName()) && !macList.contains(""+device.getAddress())){
-                            macList.add(""+device.getName());
-//                            macList.add(""+device.getAddress());
-//                          title.setText(isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + k);
+                        if (bleDevice.getName()!=null && (bleDevice.getName().startsWith("abeacon_") || "BC01".equals(bleDevice.getName()))){
+                            macList.add(""+bleDevice.getName());
                         }
+
+//                        if ("BC01".equals(device.getName()) && !macList.contains(""+device.getAddress())){
+//                            macList.add(""+device.getName());
+////                            macList.add(""+device.getAddress());
+////                          title.setText(isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + k);
+//                        }
 
                         scan = true;
 
@@ -550,7 +556,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 banner();
                 car_authority();
             }
-
         }
     }
 
@@ -3885,20 +3890,42 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                    .setOperateTimeout(10000);
 //
 //            setScanRule();
-            scan_end();
+//            scan_end();
 
 ////            scanManager.setScanPeriod(100);
 //            scanManager.startScan();
 ////            manager.startEddyStoneScan();
 //
 //            Log.e("biking===startXB",mBluetoothAdapter+"==="+mLeScanCallback);
-//            UUID[] uuids = {Config.xinbiaoUUID};
+//            UUID[] uuids = {Config.xinbiaoUUID, Config.xinbiaoUUID2};
 //            mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
+
+            mBluetoothAdapter.getBluetoothLeScanner().startScan(scanCallback);
+
 
         }
     }
 
+    ScanCallback scanCallback = new ScanCallback() {
+        @Override
+        public void onScanResult(int callbackType, android.bluetooth.le.ScanResult result) {
+            super.onScanResult(callbackType, result);
+            BluetoothDevice device = result.getDevice();
+            int rssi = result.getRssi();//获取rssi
+
+            Log.e("scanCallback===", device+"==="+device.getName());
+
+            if (device.getName()!=null && (device.getName().startsWith("abeacon_") || "BC01".equals(device.getName()))){
+                macList.add(""+device.getName());
+            }
+
+            //这里写你自己的逻辑
+        }
+    };
+
     private void stopXB() {
+        mBluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
+
 //        BleManager.getInstance().cancelScan();
 //        BleManager.getInstance().disconnectAllDevice();
 //        BleManager.getInstance().destroy();
@@ -5190,7 +5217,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                             closeLoadingDialog();
 
                                         }
-                                    }, 9*1000);
+                                    }, 0*1000);
                                 }else{
                                     closeLoadingDialog();
                                 }
@@ -5805,7 +5832,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                        }
 
                         if(isOpen) {
-//                            ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
 
                             if(isEndBtn){
                                 open++;
@@ -7107,7 +7133,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         }else if(s1.startsWith("0502")){    //开锁
                             Log.e("openLock===", "==="+s1);
 
-                            Toast.makeText(context, "开锁成功", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(context, "开锁成功", Toast.LENGTH_LONG).show();
 
                             m_myHandler.sendEmptyMessage(7);
                         }else if(s1.startsWith("0508")){   //关锁==050801RET：RET取值如下：0x00，锁关闭成功。0x01，锁关闭失败。0x02，锁关闭异常。
@@ -7121,7 +7147,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             }
                         }else if(s1.startsWith("050F")){   //锁状态
                             Log.e("lockState===0", isEndBtn+"==="+s1);
-
 
                             isStop = true;
                             isLookPsdBtn = true;
@@ -7182,13 +7207,17 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                 if(isEndBtn){
                                     open++;
+
+                                    if(open<2){
+                                        ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+                                    }
+
+                                    car_notification(3, 5, 0);
                                 }
 
-                                if(open<2){
-                                    ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
-                                }
 
-                                car_notification(3, 5, 0);
+
+
 
 //                                isEndBtn = false;
                             }

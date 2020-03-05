@@ -114,7 +114,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
                 ToastUtil.showMessageApp(mContext, ">>>"+ex.getMessage());
 
-                memberEvent(mContext.getClass().getName()+"_"+ex.getStackTrace()[0].getLineNumber()+"_"+ex.getMessage());
+//                memberEvent(mContext.getClass().getName()+"_"+ex.getStackTrace()[0].getLineNumber()+"_"+ex.getMessage());
 
                 Looper.loop();
             }

@@ -974,7 +974,7 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 
 					if(flag){
 						flag = false;
-						PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
+//						PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
 					}
 
 				} else {

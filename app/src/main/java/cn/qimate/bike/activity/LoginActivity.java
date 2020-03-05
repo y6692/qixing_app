@@ -161,6 +161,8 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.e("onTextChanged===", count+"==="+phoneEdit.getText());
+
                 if (count == 1) {
                     if (s.length() == 4) {
                         String text = s.subSequence(0, s.length() - 1) + " " + s.subSequence(s.length() - 1, s.length());
@@ -190,6 +192,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
             @Override
             public void afterTextChanged(Editable s) {
+                Log.e("afterTextChanged===", "==="+phoneEdit.getText());
 
                 String phone = phoneEdit.getText().toString().trim().replaceAll("\\s+", "");
 
@@ -206,7 +209,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
-                Log.e("onFocusChange===", "==="+hasFocus);
+                Log.e("onFocusChange===", hasFocus+"==="+telphone);
 
                 if (hasFocus) {
                     if (telphone.length() == 11) {

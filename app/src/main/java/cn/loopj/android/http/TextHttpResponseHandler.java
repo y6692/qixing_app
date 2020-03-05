@@ -125,42 +125,50 @@ public abstract class TextHttpResponseHandler extends AsyncHttpResponseHandler {
         m_myHandler.post(new Runnable() {
             @Override
             public void run() {
-                Log.e("onSuccess===00", responseBytes+"===");
 
-                String responseString = getResponseString(responseBytes, getCharset());
+                try {
+                    Log.e("onSuccess===00", responseBytes+"===");
 
-                Log.e("onSuccess===0", responseString+"===");
+                    String responseString = getResponseString(responseBytes, getCharset());
 
-                if(responseString!=null && !"".equals(responseString)){
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    Log.e("onSuccess===0", responseString+"===");
 
-                    Log.e("onSuccess===1", responseString+"==="+result.getStatus_code());
+                    if(responseString!=null && !"".equals(responseString)){
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                    if(result.getStatus_code()==401){
-                        Log.e("onSuccess===2", responseString+"==="+result.getStatus_code());
+                        Log.e("onSuccess===1", responseString+"==="+result.getStatus_code());
 
-                        SharedPreferencesUrls.getInstance().putString("access_token", "");
-                        SharedPreferencesUrls.getInstance().putString("iscert", "");
+                        if(result.getStatus_code()==401){
+                            Log.e("onSuccess===2", responseString+"==="+result.getStatus_code());
 
-                        ToastUtil.showMessageApp(BaseApplication.context, result.getMessage());
+                            SharedPreferencesUrls.getInstance().putString("access_token", "");
+                            SharedPreferencesUrls.getInstance().putString("iscert", "");
 
-                        Intent intent = new Intent(BaseApplication.context, LoginActivity.class);
-                        BaseApplication.context.startActivity(intent);
-                    }else if(result.getStatus_code()==406){
-                        Log.e("onSuccess===3", responseString+"==="+result.getStatus_code());
+                            ToastUtil.showMessageApp(BaseApplication.context, result.getMessage());
 
-                        ToastUtil.showMessageApp(BaseApplication.context, result.getMessage());
+                            Intent intent = new Intent(BaseApplication.context, LoginActivity.class);
+                            BaseApplication.context.startActivity(intent);
+                        }else if(result.getStatus_code()==406){
+                            Log.e("onSuccess===3", responseString+"==="+result.getStatus_code());
+
+                            ToastUtil.showMessageApp(BaseApplication.context, result.getMessage());
 
 //                        if (loadingDialog != null && loadingDialog.isShowing()) {
 //                            loadingDialog.dismiss();
 //                        }
 
-                        onSuccess(statusCode, headers, responseString);
+                            onSuccess(statusCode, headers, responseString);
 
-                    }else{
-                        onSuccess(statusCode, headers, responseString);
+                        }else{
+                            onSuccess(statusCode, headers, responseString);
+                        }
                     }
+                } catch (Exception e) {
+                    Log.e("onSuccess===e", "===" + e.toString());
+                    e.printStackTrace();
                 }
+
+
 
             }
         });
