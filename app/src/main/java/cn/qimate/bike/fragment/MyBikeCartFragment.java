@@ -301,8 +301,13 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
 
             final MyCartBean bean = getDatas().get(position);
 
+            Log.e("mbcf===MyAdapter", bean.getName()+"==="+bean.getLinear_gradient().length+"==="+bean.getLinear_gradient()[0]);
+
             GradientDrawable drawable = (GradientDrawable)ll_bg.getBackground();
             if(bean.getLinear_gradient()!=null){
+
+                drawable.mutate();
+
                 if(bean.getLinear_gradient().length==1){
                     drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[0]), Color.parseColor(bean.getLinear_gradient()[0])});
                 }else{

@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.sofi.blelocker.library.search.SearchRequest;
 import com.sunshine.blelibrary.config.Config;
@@ -603,6 +604,8 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 //
                         }else if(payment_id==3){    //支付宝
                             isToPay = true;
+
+                            EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
 
                             final  JSONObject jsonObject = new JSONObject(result.getData());
                             Runnable payRunnable = new Runnable() {

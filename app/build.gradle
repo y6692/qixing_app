@@ -69,7 +69,10 @@ android {
         release {
             debuggable true
             signingConfig signingConfigs.release
+            // true - 打开混淆
             minifyEnabled false
+//            // true - 打开资源压缩
+//            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             android.applicationVariants.all { variant ->

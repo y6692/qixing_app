@@ -301,6 +301,9 @@ public class MyEbikeCartFragment extends BaseFragment implements View.OnClickLis
 
             GradientDrawable drawable = (GradientDrawable)ll_bg.getBackground();
             if(bean.getLinear_gradient()!=null){
+
+                drawable.mutate();
+
                 if(bean.getLinear_gradient().length==1){
                     drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[0]), Color.parseColor(bean.getLinear_gradient()[0])});
                 }else{
