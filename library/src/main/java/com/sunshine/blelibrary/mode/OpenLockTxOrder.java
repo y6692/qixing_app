@@ -1,5 +1,7 @@
 package com.sunshine.blelibrary.mode;
 
+import android.util.Log;
+
 import com.sunshine.blelibrary.config.Config;
 
 /**
@@ -12,5 +14,7 @@ public class OpenLockTxOrder extends TxOrder {
         super(TYPE.OPEN_LOCK);
         byte[] bytes = {0x06, Config.password[0], Config.password[1], Config.password[2], Config.password[3], Config.password[4], Config.password[5]};
         add(bytes);
+
+        Log.e("OpenLockTxOrder===", getDatas().size()+"==="+getDatas());
     }
 }

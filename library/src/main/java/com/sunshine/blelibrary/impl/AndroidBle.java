@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -278,16 +279,29 @@ public class AndroidBle implements IBLE {
         if (mBluetoothGatt == null || write_characteristic == null) {
             return false;
         }
-        byte[] miwen = Encrypt(ConvertUtils.hexString2Bytes(txOrder.generateString()), Config.key);
 
-//        StringBuilder builder = new StringBuilder();
-//        for (int i = 0; i < miwen.length; i++) {
-//            byte value = miwen[i];//获取数据
-//            builder.append(formatByte2HexStr(value));//拼凑数据
-//        }
-//        Log.e("miwen===", miwen.length+"==="+builder);
+
+
+//        txOrder.generateString();
+        byte[] miwen = Encrypt(ConvertUtils.hexString2Bytes(txOrder.generateString()), Config.key);
+//        byte[] miwen = {0x05, 0x01, 0x06, 0x32, 0x30, 0x31, 0x37, 0x31, 0x35};
+//        byte[] miwen = {-89, -21, -114, 97, -85, 56, 2, -94, -44, -46, -6, -3, 54, -85, -49, -65};
+//        B0B774A4
+
+//        txOrder.toString()+"==="+txOrder.generateString()+
+
+//        SharedPreferencesUrls.getInstance().String("latitude", "")
+
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < miwen.length; i++) {
+            byte value = miwen[i];//获取数据
+            builder.append(formatByte2HexStr(value));//拼凑数据
+        }
+
+        Log.e("miwen===", "==="+miwen.length+"==="+builder);
 
         if (miwen != null) {
+//            write_characteristic.setValue(miwen);
             write_characteristic.setValue(miwen);
             mHandler.removeMessages(0);
             mHandler.sendEmptyMessage(0);
@@ -373,9 +387,16 @@ public class AndroidBle implements IBLE {
                 byte[] values = characteristic.getValue();
                 byte[] x = new byte[16];
                 System.arraycopy(values, 0, x, 0, 16);
+
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < x.length; i++) {
+                    byte value = x[i];//获取数据
+                    builder.append(formatByte2HexStr(value));//拼凑数据
+                }
+
                 mingwen = EncryptUtils.Decrypt(x, Config.key);
                 mToken.handlerRequest(ConvertUtils.bytes2HexString(mingwen));
-                Logger.e(TAG, "返回：" + ConvertUtils.bytes2HexString(mingwen));
+                Logger.e(TAG, "返回：" + builder+"==="+ConvertUtils.bytes2HexString(mingwen));
             } catch (Exception e) {
                 Logger.e(TAG, "没有该指令：" + ConvertUtils.bytes2HexString(mingwen));
             }

@@ -4251,6 +4251,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             @Override
             public void run() {
                 BaseApplication.getInstance().getIBLE().getToken();
+//                BaseApplication.getInstance().getIBLE().openLock();
             }
         }, 500);
     }

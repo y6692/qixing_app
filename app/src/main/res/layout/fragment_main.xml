@@ -833,6 +833,57 @@
 
 
         <LinearLayout
+            android:id="@+id/ll_top_route"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
+
+
+            <RelativeLayout
+                android:id="@+id/rl_navi2"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/rl_ad"
+                android:background="@drawable/block_bcg"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="13dp"
+                    android:orientation="horizontal"
+                    android:layout_alignParentLeft="true">
+
+                    <TextView
+                        android:id="@+id/tv_navi_name2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="大学"
+                        android:textColor="#EC3F4C"
+                        android:textSize="@dimen/sp12"
+                        android:layout_marginLeft="7dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_navi_distance2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10米"
+                        android:textColor="#EC3F4C"
+                        android:textSize="@dimen/sp12"
+                        android:layout_marginLeft="7dp"/>
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/mainUI_scanCode_lock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

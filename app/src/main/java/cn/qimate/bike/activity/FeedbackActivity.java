@@ -1151,7 +1151,7 @@ public class FeedbackActivity
                     InputStream is = conn.getInputStream();
                     resultStr = NetUtil.readString(is);
 
-                    Log.e("upload===", imgUrl+"==="+urlpath+"==="+resultStr);
+                    Log.e("upload===", SharedPreferencesUrls.getInstance().getString("uid", "")+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+imgUrl+"==="+urlpath+"==="+resultStr);
                 } else {
                     ToastUtil.showMessageApp(context, "请求URL失败！");
                 }
