@@ -1507,8 +1507,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                             }
 
 
-                                        }else if("4".equals(type)){
-                                        }else if ("5".equals(type)  || "6".equals(type)) {
+                                        }else if("4".equals(type) || "8".equals(type)){
+                                        }else if ("5".equals(type) || "6".equals(type)) {
 
                                             if(!SharedPreferencesUrls.getInstance().getBoolean("isKnow0", false)){
                                                 WindowManager windowManager = activity.getWindowManager();
@@ -2723,7 +2723,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void closeAgain(){
-        if("4".equals(type)){
+        if("4".equals(type) || "8".equals(type)){
             lock();
 
 //                        if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -2849,7 +2849,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     }
                 }
             }
-        }else if("4".equals(type)){
+        }else if("4".equals(type) || "8".equals(type)){
             unlock();
 
 //            if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -3305,7 +3305,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 .setConnectOverTime(timeout)
                                 .setOperateTimeout(10000);
 
-                    }else if("4".equals(type)){
+                    }else if("4".equals(type) || "8".equals(type)){
 
 //                        BLEService.bluetoothAdapter = mBluetoothAdapter;
 //                        bleService.view = context;
@@ -3618,7 +3618,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                     }
                                 }
-                            }else if ("4".equals(type)) {
+                            }else if ("4".equals(type) || "8".equals(type)) {
 
                                 unlock();
 
@@ -4459,7 +4459,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     if(isContainsList.contains(true)){
                                         isGPS_Lo = true;
 
-                                        if("4".equals(type)){
+                                        if("4".equals(type) || "8".equals(type)){
                                             endBtn4();
                                         }else{
                                             endBtn7();
@@ -4846,7 +4846,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
             ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener2);
 
-        }else if("4".equals(type)){
+        }else if("4".equals(type) || "8".equals(type)){
         }else if("7".equals(type)){
             if (apiClient != null) {
                 apiClient.onDestroy();
@@ -4880,7 +4880,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
             ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener2);
 
-        }else if("4".equals(type)){
+        }else if("4".equals(type) || "8".equals(type)){
         }else if("7".equals(type)){
             if (apiClient != null) {
                 apiClient.onDestroy();
@@ -6520,7 +6520,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
             ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener2);
 
-        }else if("4".equals(type)){
+        }else if("4".equals(type) || "8".equals(type)){
         }else if("7".equals(type)){
             if (apiClient != null) {
                 apiClient.onDestroy();
@@ -7627,7 +7627,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             endBtn();
                         }else if("3".equals(type)){
                             endBtn3();
-                        }else if("4".equals(type)){
+                        }else if("4".equals(type) || "8".equals(type)){
                             endBtn4();
                         }else if("5".equals(type) || "6".equals(type)){
                             endBtn5();
@@ -8967,7 +8967,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                                 .setConnectOverTime(timeout)
                                                 .setOperateTimeout(10000);
 
-                                    }else if("4".equals(type)){
+                                    }else if("4".equals(type) || "8".equals(type)){
 
 //                                      BLEService.bluetoothAdapter = mBluetoothAdapter;
 //                                      bleService.view = context;

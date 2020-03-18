@@ -497,7 +497,7 @@ public class EndBikeFeedBackActivity extends SwipeBackActivity implements View.O
                 tv_question.setText(item.get(options1));
 
                 if("车辆故障".equals(question_type)){
-                    if("4".equals(type) || "7".equals(type)){
+                    if(carmodel_id==2){
                         ll_bike_fault.setVisibility(View.GONE);
                         ll_ebike_fault.setVisibility(View.VISIBLE);
                     }else{
