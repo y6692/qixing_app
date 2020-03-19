@@ -232,6 +232,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private View v;
     Unbinder unbinder;
 
+    UUID[] uuids = {Config.xinbiaoUUID, Config.xinbiaoUUID2};
+
     private static MainFragment mainFragment;
 
     private final static int SCANNIN_GREQUEST_CODE = 1;
@@ -346,6 +348,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     private ScanManager scanManager;
     private BluetoothAdapter.LeScanCallback mLeScanCallback;
+    private ScanCallback scanCallback;
 
     private List<Object> macList = new ArrayList<>();
     private List<Object> macList2 = new ArrayList<>();
@@ -455,29 +458,45 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             }
         });
 
-        mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-            @Override
-            public void onLeScan(final BluetoothDevice device, final int rssi, final byte[] scanRecord) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            scanCallback = new ScanCallback() {
+                @Override
+                public void onScanResult(int callbackType, android.bluetooth.le.ScanResult result) {
+                    super.onScanResult(callbackType, result);
+                    BluetoothDevice device = result.getDevice();
+                    int rssi = result.getRssi();//获取rssi
+
+                    Log.e("scanCallback===", device+"==="+device.getName());
+
+                    if (device.getName()!=null && (device.getName().startsWith("abeacon_") || "BC01".equals(device.getName()))){
+                        macList.add(""+device.getName());
+                    }
+                }
+            };
+        }else{
+            mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+                @Override
+                public void onLeScan(final BluetoothDevice device, final int rssi, final byte[] scanRecord) {
 //           if (!macList.contains(parseAdvData(rssi,scanRecord))){
 //               macList.add(parseAdvData(rssi,scanRecord));
 //           }
 
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
 
 //                        k++;
 
 //                      device.fetchUuidsWithSdp();
 
-                        Log.e("biking===LeScan", new String(scanRecord)+ "====" +scanRecord.length+ "====" +device.getName() + "====" +device.fetchUuidsWithSdp()+ "====" +device.describeContents() + "====" + device.getAddress() + "====" + device.getUuids() + "====" + rssi);
+                            Log.e("biking===LeScan", new String(scanRecord)+ "====" +scanRecord.length+ "====" +device.getName() + "====" +device.fetchUuidsWithSdp()+ "====" +device.describeContents() + "====" + device.getAddress() + "====" + device.getUuids() + "====" + rssi);
 
 //                        test_xinbiao += parseAdvData(rssi,scanRecord)+ "====" +device.getName()+ "====" + device.getAddress()+"\n";
 //                        tv_test_xinbiao.setText(test_xinbiao);
 
-                        if (bleDevice.getName()!=null && (bleDevice.getName().startsWith("abeacon_") || "BC01".equals(bleDevice.getName()))){
-                            macList.add(""+bleDevice.getName());
-                        }
+                            if (device.getName()!=null && (device.getName().startsWith("abeacon_") || "BC01".equals(device.getName()))){
+                                macList.add(""+device.getName());
+                            }
 
 //                        if ("BC01".equals(device.getName()) && !macList.contains(""+device.getAddress())){
 //                            macList.add(""+device.getName());
@@ -485,12 +504,17 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 ////                          title.setText(isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + k);
 //                        }
 
-                        scan = true;
+                            scan = true;
 
-                    }
-                });
-            }
-        };
+                        }
+                    });
+                }
+            };
+
+        }
+
+
+
 
 
         initView();
@@ -3897,34 +3921,33 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 ////            manager.startEddyStoneScan();
 //
 //            Log.e("biking===startXB",mBluetoothAdapter+"==="+mLeScanCallback);
-//            UUID[] uuids = {Config.xinbiaoUUID, Config.xinbiaoUUID2};
-//            mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
 
-            mBluetoothAdapter.getBluetoothLeScanner().startScan(scanCallback);
+
+
+
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                mBluetoothAdapter.getBluetoothLeScanner().startScan(scanCallback);
+            }else{
+//                mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
+                mBluetoothAdapter.startLeScan(mLeScanCallback);
+            }
+
 
 
         }
     }
 
-    ScanCallback scanCallback = new ScanCallback() {
-        @Override
-        public void onScanResult(int callbackType, android.bluetooth.le.ScanResult result) {
-            super.onScanResult(callbackType, result);
-            BluetoothDevice device = result.getDevice();
-            int rssi = result.getRssi();//获取rssi
 
-            Log.e("scanCallback===", device+"==="+device.getName());
-
-            if (device.getName()!=null && (device.getName().startsWith("abeacon_") || "BC01".equals(device.getName()))){
-                macList.add(""+device.getName());
-            }
-
-            //这里写你自己的逻辑
-        }
-    };
 
     private void stopXB() {
-        mBluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            mBluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
+        }else{
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+        }
+
 
 //        BleManager.getInstance().cancelScan();
 //        BleManager.getInstance().disconnectAllDevice();
@@ -7687,24 +7710,24 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 
                     if(!isLookPsdBtn){
-                        SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
-                                .searchBluetoothLeDevice(0)
-                                .build();
-
-
-                        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            Log.e("usecar===1", "===");
-
-                            break;
-                        }
-
-
-                        if(isEndBtn){
-                            ClientManager.getClient().search(request, mSearchResponse3);
-                        }else{
-
-                            ClientManager.getClient().search(request, mSearchResponse);
-                        }
+//                        SearchRequest request = new SearchRequest.Builder()      //duration为0时无限扫描
+//                                .searchBluetoothLeDevice(0)
+//                                .build();
+//
+//
+//                        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                            Log.e("usecar===1", "===");
+//
+//                            break;
+//                        }
+//
+//
+//                        if(isEndBtn){
+//                            ClientManager.getClient().search(request, mSearchResponse3);
+//                        }else{
+//
+//                            ClientManager.getClient().search(request, mSearchResponse);
+//                        }
 
                         connectDeviceLP();
                         ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
