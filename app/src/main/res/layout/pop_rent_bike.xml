@@ -43,7 +43,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="22dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/calendar_icon"/>
+                android:src="@drawable/x"/>
 
         </RelativeLayout>
 
