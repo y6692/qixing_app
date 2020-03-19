@@ -18,7 +18,6 @@ public class Urls {
 //	public static String host = HTTP + "uat.7mate.cn";
 //  public static String host = HTTP + "192.168.206.10:8345";
 
-
 	//注册登录接口、退出登录接口delete
 	public static String authorizations = host2 + "/authorizations";
 	//获取验证码接口
