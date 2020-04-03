@@ -692,7 +692,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             mineFragment.initHttp();
         }
 
-//        mainFragment.show
+//        mainFragment.sho
 //        tab.setCurrentTab(0);
     }
 
@@ -817,7 +817,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         HttpHelper.get2(context, Urls.banner + 2, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                onStartCommon("正在加载");
+//                onStartCommon("正在加载");
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {

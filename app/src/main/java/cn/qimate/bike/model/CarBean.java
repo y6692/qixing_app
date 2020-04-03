@@ -20,6 +20,7 @@ public class CarBean {
     private String vendor_lock_id;  //厂商锁ID、deviceuuid
     private String lock_no; //锁lock_no
     private String lock_mac;    //锁mac
+    private String lock_password;   //锁密码
     private String lock_secretkey;  //锁秘钥、行运兔bleid
     private int lock_status;    //车锁状态 0未知 1已上锁 2已开锁 3离线
     private String lock_code;   //车锁操作状态码 701离线 702超时 703骑行中 704第三方服务器内部错误 705设备内存错误
@@ -144,6 +145,14 @@ public class CarBean {
 
     public void setLock_mac(String lock_mac) {
         this.lock_mac = lock_mac;
+    }
+
+    public String getLock_password() {
+        return lock_password;
+    }
+
+    public void setLock_password(String lock_password) {
+        this.lock_password = lock_password;
     }
 
     public String getLock_secretkey() {

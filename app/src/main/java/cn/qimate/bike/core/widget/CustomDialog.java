@@ -239,6 +239,9 @@ public class CustomDialog extends Dialog {
 			}else{
 				if(type==2){
 					layout = inflater.inflate(R.layout.alertdialog2, null);
+
+					dialog.setCancelable(true);
+					dialog.setCanceledOnTouchOutside(true);
 				}else if(type==3){
 					layout = inflater.inflate(R.layout.alertdialog3, null);
 				}else if(type==4){

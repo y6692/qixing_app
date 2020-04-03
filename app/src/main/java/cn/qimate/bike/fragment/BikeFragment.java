@@ -293,6 +293,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     private MarkerOptions centerMarkerOptionLoading;
     private MarkerOptions centerMarkerOption;
 
+    private ImageView iv_marker;
     private TextView tv_car_count;
     int car_count;
 
@@ -591,101 +592,92 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         if(jsonArray != null){
             Log.e("main_b===schoolRange20", loadingDialog+"==="+loadingDialog.isShowing());
-            onStartCommon2("正在加载");
+//            onStartCommon2("正在加载");
 
             m_myHandler.post(new Runnable() {
                 @Override
                 public void run() {
 
-                    try{
-                        if(isHidden) return;
+                    if(isHidden) return;
 
-                        Log.e("main_b===schoolRange21", loadingDialog+"==="+loadingDialog.isShowing());
+                    Log.e("main_b===schoolRange21", loadingDialog+"==="+loadingDialog.isShowing());
 
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try{
-                                    if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
-                                        isContainsList.clear();
-                                    }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try{
+                                if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                                    isContainsList.clear();
+                                }
 
-                                    if (!listPoint.isEmpty() || 0 != listPoint.size()){
-                                        listPoint.clear();
-                                    }
+                                if (!listPoint.isEmpty() || 0 != listPoint.size()){
+                                    listPoint.clear();
+                                }
 
-                                    if (!centerList.isEmpty() || 0 != centerList.size()){
-                                        centerList.clear();
-                                    }
+                                if (!centerList.isEmpty() || 0 != centerList.size()){
+                                    centerList.clear();
+                                }
 
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        List<LatLng> list = new ArrayList<>();
-                                        List<LatLng> list2 = new ArrayList<>();
-                                        int flag=0;
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    List<LatLng> list = new ArrayList<>();
+                                    List<LatLng> list2 = new ArrayList<>();
+                                    int flag=0;
 
-                                        JSONArray jsonArray2 = new JSONArray(jsonArray.getJSONObject(i).getString("ranges"));;
-                                        JSONObject jsonObject = new JSONObject(jsonArray.getJSONObject(i).getString("parking"));
+                                    JSONArray jsonArray2 = new JSONArray(jsonArray.getJSONObject(i).getString("ranges"));;
+                                    JSONObject jsonObject = new JSONObject(jsonArray.getJSONObject(i).getString("parking"));
 
 //                                        Log.e("main_b===schoolRange22", jsonArray2.length()+"==="+jsonArray2);
 
-                                        for (int j = 0; j < jsonArray2.length(); j++) {
-                                            LatLng latLng = new LatLng(Double.parseDouble(jsonArray2.getJSONObject(j).getString("latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude")));
+                                    for (int j = 0; j < jsonArray2.length(); j++) {
+                                        LatLng latLng = new LatLng(Double.parseDouble(jsonArray2.getJSONObject(j).getString("latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude")));
 
 //                                            Log.e("main_b===schoolRange222", jsonArray2.length()+"==="+jsonArray2);
 
-                                            flag=0;
-                                            list.add(latLng);
+                                        flag=0;
+                                        list.add(latLng);
 
-                                            listPoint.add(latLng);
-                                        }
+                                        listPoint.add(latLng);
+                                    }
 
 //                                        Log.e("main_b===schoolRange23", "==="+list.size());
 
-                                        Polygon polygon = null;
-                                        PolygonOptions pOption = new PolygonOptions();
+                                    Polygon polygon = null;
+                                    PolygonOptions pOption = new PolygonOptions();
 
-                                        pOption.addAll(list);
+                                    pOption.addAll(list);
 
-                                        polygon = aMap.addPolygon(pOption
+                                    polygon = aMap.addPolygon(pOption
 //                                                .strokeWidth(2)
 //                                                .strokeColor(Color.argb(255, 0, 135, 255))
 //                                                .fillColor(Color.argb(77, 0, 173, 255)));
-                                                .strokeColor(Color.argb(0, 255, 255, 255))
-                                                .fillColor(Color.argb(0, 255, 255, 255)));
+                                            .strokeColor(Color.argb(0, 255, 255, 255))
+                                            .fillColor(Color.argb(0, 255, 255, 255)));
 
 //                                        Log.e("main_b===schoolRange24", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
 
-                                        LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
+                                    LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
 //                                        marker_park_Option.title(jsonObject.getString("name")).position(latLng);
 //                                        aMap.addMarker(marker_park_Option);
 
-                                        centerList.add(latLng);
+                                    centerList.add(latLng);
 
 
-                                        if(!isHidden){
-                                            pOptions.add(polygon);
+                                    if(!isHidden){
+                                        pOptions.add(polygon);
 
-                                            isContainsList.add(polygon.contains(myLocation));
-                                        }else{
-                                        }
+                                        isContainsList.add(polygon.contains(myLocation));
+                                    }else{
                                     }
-
-                                    closeLoadingDialog2();
-                                }catch (Exception e){
-                                    closeLoadingDialog2();
                                 }
+
+                                closeLoadingDialog2();
+
+//                              Log.e("main_b===schoolRange25", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
+                            }catch (Exception e){
+                                closeLoadingDialog2();
                             }
-                        }).start();
-
-
-                    }catch (Exception e){
-                        closeLoadingDialog2();
-                    }
-
-                    Log.e("main_b===schoolRange25", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
-
-
-
+                        }
+                    }).start();
                 }
             });
 
@@ -700,9 +692,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             HttpHelper.get2(context, Urls.parking_ranges, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    if(!isHidden){
-                        onStartCommon2("正在加载");
-                    }
+//                    if(!isHidden){
+//                        onStartCommon2("正在加载");
+//                    }
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -835,10 +827,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         Log.e("bf===initNearby0", unauthorized_code+"==="+latitude+"==="+longitude);
 
+
         RequestParams params = new RequestParams();
         params.put("latitude", latitude);
         params.put("longitude", longitude);
-//        params.put("type", 1);
+
         HttpHelper.get2(context, Urls.car_nearby+"1/nearby", params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -893,6 +886,16 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //                    centerMarker.setMarkerOptions(centerMarkerOption);
 
                     View view = View.inflate(context, R.layout.marker_info_layout, null);
+                    iv_marker = view.findViewById(R.id.iv);
+                    if(unauthorized_code==6){
+                        if("10".equals(type)){
+                            iv_marker.setImageResource(R.drawable.marker3);
+                        }else{
+                            iv_marker.setImageResource(R.drawable.marker2);
+                        }
+                    }else{
+                        iv_marker.setImageResource(R.drawable.marker1);
+                    }
                     tv_car_count = view.findViewById(R.id.tv_car_count);
                     tv_car_count.setText((car_count>99?99:car_count)+"辆");
                     centerMarkerOption = new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.fromView(view));
@@ -949,19 +952,12 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
             }
         });
 
-
-//        params = new RequestParams();
-//        params.put("latitude", referLatitude);
-//        params.put("longitude", referLongitude);
-
-//            "latitude")), Double.parseDouble(jsonArray2.getJSONObject(j).getString("longitude"
-
         HttpHelper.get2(context, Urls.parking_ranges, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if(!isHidden){
-                    onStartCommon("正在加载");
-                }
+//                if(!isHidden){
+//                    onStartCommon("正在加载");
+//                }
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -1074,6 +1070,31 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                                     }else{
                                                     }
                                                 }
+
+                                                Log.e("main_b===parking_r4", type+"==="+unauthorized_code+"==="+isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
+
+
+                                                View view = View.inflate(context, R.layout.marker_info_layout, null);
+                                                iv_marker = view.findViewById(R.id.iv);
+                                                if(unauthorized_code==6){
+                                                    if("10".equals(type)){
+                                                        iv_marker.setImageResource(R.drawable.marker3);
+                                                    }else{
+                                                        iv_marker.setImageResource(R.drawable.marker2);
+                                                    }
+                                                }else{
+                                                    iv_marker.setImageResource(R.drawable.marker1);
+                                                }
+                                                tv_car_count = view.findViewById(R.id.tv_car_count);
+                                                tv_car_count.setText((car_count>99?99:car_count)+"辆");
+                                                centerMarkerOption = new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.fromView(view));
+
+                                                if(centerMarker!=null){
+                                                    centerMarker.remove();
+                                                }
+
+                                                centerMarker = aMap.addMarker(centerMarkerOption);
+
                                             }
 
 
@@ -1109,6 +1130,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
             }
         });
+
+
+
     }
 
 
@@ -3212,6 +3236,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
         if(centerMarker == null){
 
             View view = View.inflate(context, R.layout.marker_info_layout, null);
+            iv_marker = view.findViewById(R.id.iv);
+            iv_marker.setImageResource(R.drawable.marker1);
             tv_car_count = view.findViewById(R.id.tv_car_count);
             tv_car_count.setText((car_count>99?99:car_count)+"辆");
 //            ImageView iv_marker = view.findViewById(R.id.iv_marker);

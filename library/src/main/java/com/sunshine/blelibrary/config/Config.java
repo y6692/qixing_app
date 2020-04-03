@@ -33,6 +33,7 @@ public class Config {
      * 马蹄锁
      */
     public static byte[] key = {30,85,45,80,52,73,60,70,45,75,60,86,10,90,40,42};
+    public static byte[] key2 = {30,85,45,80,52,73,60,70,45,75,60,86,10,90,40,42};
 
 //    public static byte[] key = {36,87,48,82,54,75,26,71,48,80,65,88,12,99,45,23};
     /**
@@ -41,6 +42,7 @@ public class Config {
     public static byte[] yx_key = {58,96,67,42,92,01,33,31,41,30,15,78,12,19,40,37};
 
     public static byte[] password = {0x32, 0x30, 0x31, 0x37, 0x31, 0x35};
+    public static byte[] password2 = {0x32, 0x30, 0x31, 0x37, 0x31, 0x35};
 
     public static final String TOKEN_ACTION = "com.sunshine.blelibrary.config.token_action";
     public static final String BATTERY_ACTION = "com.sunshine.blelibrary.config.battery_action";

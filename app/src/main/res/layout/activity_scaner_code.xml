@@ -3,8 +3,9 @@
                 android:id="@+id/capture_containter"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#88000000"
                 android:fitsSystemWindows="true"
+                android:clipToPadding="true"
+                android:background="#88000000"
                 >
 
 
@@ -68,11 +69,6 @@
             android:onClick="btn"
             android:visibility="gone"/>
     </RelativeLayout>
-
-    <!--android:layout_centerInParent="true"-->
-    <!--android:layout_centerHorizontal="true"-->
-    <!--android:layout_above="@+id/tv_tip"-->
-
 
 
     <ImageView
@@ -205,21 +201,6 @@
         </RelativeLayout>
 
     </RelativeLayout>
-
-
-
-
-
-    <!--<ImageView-->
-        <!--android:layout_width="220dp"-->
-        <!--android:layout_height="53dp"-->
-        <!--android:layout_below="@id/rl_crop"-->
-        <!--android:src="@null"-->
-        <!--android:background="@drawable/scan_mask"-->
-        <!--android:layout_centerHorizontal="true"/>-->
-
-    <!--android:layout_below="@id/capture_crop_layout"-->
-
 
 
     <LinearLayout
@@ -378,41 +359,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
-
-    <RelativeLayout
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="105dp"
-        android:layout_marginTop="@dimen/dp5"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        >
-
-        <TextView
-            android:id="@+id/loginUI_noteLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:gravity="center_vertical"
-            android:paddingLeft="@dimen/dp25"
-            android:paddingRight="@dimen/dp20"
-            android:text="短信验证码登录"
-            android:textColor="@color/tx_black_light"
-            android:textSize="@dimen/sp14" />
-
-        <TextView
-            android:id="@+id/loginUI_findPsd"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:gravity="center_vertical"
-            android:paddingLeft="@dimen/dp20"
-            android:paddingRight="@dimen/dp25"
-            android:text="忘记密码?"
-            android:textColor="@color/tx_black_light"
-            android:textSize="@dimen/sp14" />
-    </RelativeLayout>
 
 </RelativeLayout>

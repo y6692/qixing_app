@@ -550,7 +550,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 		HttpHelper.get(context, Urls.banner + 1, new TextHttpResponseHandler() {
 			@Override
 			public void onStart() {
-				onStartCommon("正在加载");
+//				onStartCommon("正在加载");
 			}
 			@Override
 			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {

@@ -204,6 +204,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     private AMapLocationClientOption mLocationOption;
     private MarkerOptions centerMarkerOption;
 
+    private ImageView iv_marker;
     private TextView tv_car_count;
     int car_count;
 
@@ -709,7 +710,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
             Log.e("main_eb===schoolRange2", isHidden+"===");
 
-            onStartCommon2("正在加载");
+//            onStartCommon2("正在加载");
 
             m_myHandler.post(new Runnable() {
                 @Override
@@ -785,7 +786,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                 closeLoadingDialog2();
 
-                                Log.e("main_eb===schoolRange25", pOptions.size()+"==="+pOptions+"==="+isContainsList.size()+"==="+isContainsList);
+//                                Log.e("main_eb===schoolRange25", pOptions.size()+"==="+pOptions+"==="+isContainsList.size()+"==="+isContainsList);
                             }catch (Exception e){
                                 closeLoadingDialog2();
                             }
@@ -806,7 +807,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             HttpHelper.get2(context, Urls.parking_ranges, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    onStartCommon2("正在加载");
+//                    onStartCommon2("正在加载");
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -945,7 +946,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         RequestParams params = new RequestParams();
         params.put("latitude", latitude);
         params.put("longitude", longitude);
-//        params.put("type", 1);
+
         HttpHelper.get2(context, Urls.car_nearby+"2/nearby", params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -997,6 +998,16 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //                    centerMarker.setMarkerOptions(centerMarkerOption);
 
                     View view = View.inflate(context, R.layout.marker_info_layout, null);
+                    iv_marker = view.findViewById(R.id.iv);
+                    if(unauthorized_code==6){
+                        if("10".equals(type)){
+                            iv_marker.setImageResource(R.drawable.marker3);
+                        }else{
+                            iv_marker.setImageResource(R.drawable.marker2);
+                        }
+                    }else{
+                        iv_marker.setImageResource(R.drawable.marker1);
+                    }
                     tv_car_count = view.findViewById(R.id.tv_car_count);
                     tv_car_count.setText((car_count>99?99:car_count)+"辆");
                     centerMarkerOption = new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.fromView(view));
@@ -1057,9 +1068,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         HttpHelper.get2(context, Urls.parking_ranges, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if(!isHidden){
-                    onStartCommon("正在加载");
-                }
+//                if(!isHidden){
+//                    onStartCommon("正在加载");
+//                }
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -1172,6 +1183,28 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                                     }else{
                                                     }
                                                 }
+
+                                                View view = View.inflate(context, R.layout.marker_info_layout, null);
+                                                iv_marker = view.findViewById(R.id.iv);
+                                                if(unauthorized_code==6){
+                                                    if("10".equals(type)){
+                                                        iv_marker.setImageResource(R.drawable.marker3);
+                                                    }else{
+                                                        iv_marker.setImageResource(R.drawable.marker2);
+                                                    }
+                                                }else{
+                                                    iv_marker.setImageResource(R.drawable.marker1);
+                                                }
+                                                tv_car_count = view.findViewById(R.id.tv_car_count);
+                                                tv_car_count.setText((car_count>99?99:car_count)+"辆");
+                                                centerMarkerOption = new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.fromView(view));
+
+                                                if(centerMarker!=null){
+                                                    centerMarker.remove();
+                                                }
+
+                                                centerMarker = aMap.addMarker(centerMarkerOption);
+
                                             }
 
 

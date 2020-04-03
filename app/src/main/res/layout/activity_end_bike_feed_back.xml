@@ -76,7 +76,7 @@
                             android:textColor="#666666"
                             android:textSize="@dimen/sp14"
                             android:lineSpacingExtra="6dp"
-                            android:text="请至运营区P点关锁并距车1米内点击还车，或重启软件再试。"/>
+                            android:text="请至运营区关锁并距车1米内点击还车，或重启软件再试。"/>
 
                     </LinearLayout>
 

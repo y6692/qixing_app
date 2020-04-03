@@ -366,12 +366,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         surfaceView = (SurfaceView) findViewById(R.id.capture_preview);
 
 
-
-
-
-
-
-
 //        initHttp();
 //        cycling();
     }
@@ -1011,9 +1005,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         }catch (Exception e){
 //            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
         }
-
-
-
     }
 
     void tzEnd(){
@@ -1657,38 +1648,52 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             continued_price = bean.getContinued_price();
                             continued_time = bean.getContinued_time();
 
-                            if("2".equals(type) || "3".equals(type)){
-                                n=0;
-                                macLoop();
-                            }else{
-                                Intent rIntent = new Intent();
-                                rIntent.putExtra("codenum", codenum);
-                                rIntent.putExtra("m_nowMac", m_nowMac);
-                                rIntent.putExtra("carmodel_id", carmodel_id);
-                                rIntent.putExtra("type", type);
-                                rIntent.putExtra("lock_no", lock_no);
-                                rIntent.putExtra("bleid", bleid);
-                                rIntent.putExtra("deviceuuid", deviceuuid);
-                                rIntent.putExtra("electricity", electricity);
-                                rIntent.putExtra("mileage", mileage);
-                                rIntent.putExtra("carmodel_name", carmodel_name);
-                                rIntent.putExtra("each_free_time", each_free_time);
-                                rIntent.putExtra("first_price", first_price);
-                                rIntent.putExtra("first_time", first_time);
-                                rIntent.putExtra("continued_price", continued_price);
-                                rIntent.putExtra("continued_time", continued_time);
-                                rIntent.putExtra("isMac",false);
 
+                            String lock_secretkey = bean.getLock_secretkey();
+                            String lock_password = bean.getLock_password();
 
-                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                    loadingDialog.dismiss();
-                                }
-
-                                BleManager.getInstance().cancelScan();
-
-                                setResult(RESULT_OK, rIntent);
-                                scrollToFinishActivity();
+                            if("9".equals(type) || "10".equals(type)){
+                                Config.key = hexStringToByteArray(lock_secretkey);
+                                Config.password = hexStringToByteArray(lock_password);
+                            }else if("2".equals(type) || "3".equals(type)){
+                                Config.key = Config.key2;
+                                Config.password = Config.password2;
                             }
+
+//                            if("2".equals(type) || "3".equals(type)){
+//                                n=0;
+//                                macLoop();
+//                            }else{
+//
+//                            }
+
+                            Intent rIntent = new Intent();
+                            rIntent.putExtra("codenum", codenum);
+                            rIntent.putExtra("m_nowMac", m_nowMac);
+                            rIntent.putExtra("carmodel_id", carmodel_id);
+                            rIntent.putExtra("type", type);
+                            rIntent.putExtra("lock_no", lock_no);
+                            rIntent.putExtra("bleid", bleid);
+                            rIntent.putExtra("deviceuuid", deviceuuid);
+                            rIntent.putExtra("electricity", electricity);
+                            rIntent.putExtra("mileage", mileage);
+                            rIntent.putExtra("carmodel_name", carmodel_name);
+                            rIntent.putExtra("each_free_time", each_free_time);
+                            rIntent.putExtra("first_price", first_price);
+                            rIntent.putExtra("first_time", first_time);
+                            rIntent.putExtra("continued_price", continued_price);
+                            rIntent.putExtra("continued_time", continued_time);
+                            rIntent.putExtra("isMac",false);
+
+
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+
+                            BleManager.getInstance().cancelScan();
+
+                            setResult(RESULT_OK, rIntent);
+                            scrollToFinishActivity();
 
 
 //                            order(codenum);
@@ -1739,6 +1744,23 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             }
         });
 
+    }
+
+    public static byte[] hexStringToByteArray(String str) {
+        if(str == null || str.trim().equals("")) {
+            return new byte[0];
+        }
+
+        byte[] bytes = new byte[str.length() / 2];
+        for(int i = 0; i < str.length() / 2; i++) {
+            String subStr = str.substring(i * 2, i * 2 + 2);
+            bytes[i] = (byte) Integer.parseInt(subStr, 16);
+        }
+
+        Log.e("StringToByte===1", bytes+"==="+bytes[0]);
+
+
+        return bytes;
     }
 
 

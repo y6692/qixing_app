@@ -1,57 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:minWidth="240dip"
-    android:layout_height="wrap_content">
+android:layout_width="270dp"
+android:minWidth="270dip"
+android:layout_height="200dp"
+android:layout_gravity="center"
+android:background="@drawable/block_dialog_bcg"
+android:orientation="vertical"
+    >
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#f57752"
-        android:orientation="vertical">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="40dp"
+    android:gravity="center"
+    >
 
-        <TextView
-            android:id="@+id/title"
-            style="@style/DialogText.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="@dimen/dp10"
-            android:textColor="#ffffff" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/content"
-        android:orientation="vertical"
-        android:background="@drawable/border2"
-        android:layout_width="fill_parent"
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        >
+        android:textColor="#333333"
+        android:text="11111"
+        android:textSize="18sp"
+        />
 
-        <TextView
-            style="@style/DialogText"
-            android:id="@+id/message"
-            android:paddingBottom="@dimen/dp15"
-            android:paddingTop="@dimen/dp15"
-            android:gravity="center"
-            android:lineSpacingExtra="5dp"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/dp5"
-            android:paddingRight="@dimen/dp5"/>
 
-        <TextView
-            android:id="@+id/hintText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="注:该车须至校内还车"
-            android:textColor="@color/red"
-            android:textSize="@dimen/sp14"
-            android:layout_marginBottom="@dimen/dp10"
-            android:visibility="gone"/>
-    </LinearLayout>
+</RelativeLayout>
+
+<LinearLayout
+    android:id="@+id/content"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="31dp"
+    android:gravity="center"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    >
+
+
+    <TextView
+        style="@style/DialogText"
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="5dp"
+        android:singleLine="false"
+        android:text="2222"
+        android:textColor="#666666"
+        android:textSize="14sp"
+        />
+
+</LinearLayout>
+
+
+
+
+<LinearLayout
+    android:id="@+id/ll_scan_positiveButton2"
+    android:layout_width="270dp"
+    android:layout_height="40dp"
+    android:layout_marginTop="32dp"
+    android:layout_marginBottom="12dp"
+    android:orientation="horizontal"
+    android:layout_gravity="center_horizontal"
+    android:layout_alignParentBottom="true"
+    >
+
+    <Button
+        android:id="@+id/negativeButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/btn_bcg_cancel2"
+        android:text="取消"
+        android:textSize="@dimen/sp18"
+        android:textColor="@color/white"
+        android:layout_centerInParent="true"
+        android:stateListAnimator="@null"
+        />
+    <Button
+        android:id="@+id/positiveButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/btn_bcg_confirm"
+        android:text="确定"
+        android:textSize="@dimen/sp18"
+        android:textColor="@color/white"
+        android:layout_centerInParent="true"
+        android:stateListAnimator="@null"
+        />
+
+    <!--<TextView-->
+    <!--android:id="@+id/positiveButton2"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="换辆车试试"-->
+    <!--android:textSize="@dimen/sp16"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--/>-->
+</LinearLayout>
+
 
 
 </LinearLayout>

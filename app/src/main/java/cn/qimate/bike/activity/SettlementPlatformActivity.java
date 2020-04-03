@@ -605,7 +605,11 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                         }else if(payment_id==3){    //支付宝
                             isToPay = true;
 
-                            EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+
+                            if("https://testnewmapi.7mate.cn/api".equals(Urls.host2)){
+                                EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+                            }
+
 
                             final  JSONObject jsonObject = new JSONObject(result.getData());
                             Runnable payRunnable = new Runnable() {

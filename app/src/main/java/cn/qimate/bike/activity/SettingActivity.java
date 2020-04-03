@@ -75,6 +75,8 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
     private TextView tv_version;
     private ImageView iv_isUpdate;
 
+    private TextView serviceProtocol;
+    private TextView privacyProtocol;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,12 +127,16 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
         logoutLayout = (RelativeLayout)findViewById(R.id.settingUI_logoutLayout);
         tv_version = (TextView)findViewById(R.id.tv_version);
         iv_isUpdate = (ImageView)findViewById(R.id.iv_isUpdate);
+        serviceProtocol = (TextView) findViewById(R.id.loginUI_serviceProtocol);
+        privacyProtocol = (TextView) findViewById(R.id.loginUI_privacyProtocol);
 
         backImg.setOnClickListener(this);
         cleanLayout.setOnClickListener(this);
         checkUpdateLayout.setOnClickListener(this);
         aboutUsLayout.setOnClickListener(this);
         logoutLayout.setOnClickListener(this);
+        serviceProtocol.setOnClickListener(this);
+        privacyProtocol.setOnClickListener(this);
 
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -205,6 +211,15 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
                 customDialog.show();
                 break;
 
+            case R.id.loginUI_serviceProtocol:
+                agreement();
+
+                break;
+
+            case R.id.loginUI_privacyProtocol:
+                agreement2();
+
+                break;
         }
     }
 
@@ -364,6 +379,123 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
             Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
             UIHelper.goToAct(context,LoginActivity.class);
         }
+    }
+
+    private void agreement() {
+
+        Log.e("agreement===0", "===");
+
+        try{
+//          协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议 use_car用车服务协议
+            HttpHelper.get(context, Urls.agreement+"use_car", new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+                    Log.e("agreement===fail", throwable.toString()+"==="+responseString);
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+                        Log.e("agreement===", "==="+responseString);
+
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        H5Bean bean = JSON.parseObject(result.getData(), H5Bean.class);
+
+                        UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
+//                        UIHelper.goWebViewAct(context, bean.getH5_title(), Urls.agreement+"register");
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                }
+
+
+            });
+        }catch (Exception e){
+            Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void agreement2() {
+
+        Log.e("agreement===0", "===");
+
+        try{
+//          协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议 use_car用车服务协议 privacy隐私协议
+            HttpHelper.get(context, Urls.agreement+"privacy", new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    onStartCommon("请稍等");
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+                    onFailureCommon("agreement===fail", throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+                                Log.e("agreement===", "==="+responseString);
+
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                                H5Bean bean = JSON.parseObject(result.getData(), H5Bean.class);
+
+
+
+                                UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
+//                        UIHelper.goWebViewAct(context, bean.getH5_title(), Urls.agreement+"register");
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                if (loadingDialog != null && loadingDialog.isShowing()) {
+                                    loadingDialog.dismiss();
+                                }
+                            }
+                        }
+                    });
+
+                }
+
+
+            });
+        }catch (Exception e){
+            Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 

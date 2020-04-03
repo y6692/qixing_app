@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/sp14"
                     android:textColor="#666666"
-                    android:text="123456"/>
+                    android:text=""/>
             </LinearLayout>
 
             <LinearLayout
@@ -118,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/sp14"
                     android:textColor="#666666"
-                    android:text="80%"/>
+                    android:text=""/>
             </LinearLayout>
 
             <LinearLayout
@@ -138,7 +138,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/sp14"
                     android:textColor="#666666"
-                    android:text="40KM"/>
+                    android:text=""/>
 
             </LinearLayout>
 
@@ -169,7 +169,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/sp14"
                     android:textColor="#666666"
-                    android:text="0.35元"/>
+                    android:text=""/>
 
                 <TextView
                     android:id="@+id/tv_first_time"
@@ -177,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/sp14"
                     android:textColor="#666666"
-                    android:text="/15分钟"/>
+                    android:text=""/>
             </LinearLayout>
 
             <LinearLayout
@@ -197,7 +197,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/sp14"
                     android:textColor="#666666"
-                    android:text="0.35元"/>
+                    android:text=""/>
 
                 <TextView
                     android:id="@+id/tv_continued_time"
@@ -205,7 +205,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/sp14"
                     android:textColor="#666666"
-                    android:text="15分钟"/>
+                    android:text=""/>
 
             </LinearLayout>
 
@@ -234,28 +234,34 @@
             android:gravity="center_horizontal"
             >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textSize="@dimen/sp14"
-                android:textColor="#424242"
-                android:text="请在运营区"
-                android:gravity="center"/>
-
             <ImageView
-                android:layout_width="29dp"
-                android:layout_height="29dp"
-                android:layout_marginLeft="6dp"
-                android:layout_marginRight="6dp"
-                android:src="@drawable/park_icon"/>
+            android:layout_width="23dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/warn_icon"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textSize="@dimen/sp14"
                 android:textColor="#424242"
-                android:text="点还车"
+                android:text="请在运营区还车"
                 android:gravity="center"/>
+
+            <!--<ImageView-->
+                <!--android:layout_width="29dp"-->
+                <!--android:layout_height="29dp"-->
+                <!--android:layout_marginLeft="6dp"-->
+                <!--android:layout_marginRight="6dp"-->
+                <!--android:src="@drawable/park_icon"/>-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:textSize="@dimen/sp14"-->
+                <!--android:textColor="#424242"-->
+                <!--android:text="点还车"-->
+                <!--android:gravity="center"/>-->
 
         </LinearLayout>
 

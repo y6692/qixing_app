@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="270dp"
     android:minWidth="270dip"
-    android:layout_height="200dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@drawable/block_dialog_bcg"
     android:orientation="vertical"
@@ -31,7 +31,7 @@
     <LinearLayout
         android:id="@+id/content"
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="270dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="31dp"
         android:gravity="center"
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:lineSpacingExtra="5dp"
             android:singleLine="false"
-            android:text="2222"
+            android:text="2222122131231231231233333333333"
             android:textColor="#666666"
             android:textSize="14sp"
             />

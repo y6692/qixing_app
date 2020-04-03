@@ -15,7 +15,9 @@ public class OrderBean {
 	private int order_state;	//订单状态 订单状态 0已取消 10已下单 20进行中 30待支付 40已完成
 	private String electricity;	//订单金额
 	private String mileage;	//订单金额
-
+	private int temporary_lock;	//0未临时上锁 1临时上锁中 3临时上锁完毕
+	private int order_refresh_interval;	//当前行程刷新频率 单位：毫秒
+	private int temp_lock_refresh_interval;	//临时上锁中刷新频率 单位：毫秒
 
 
 
@@ -121,5 +123,29 @@ public class OrderBean {
 
 	public void setMileage(String mileage) {
 		this.mileage = mileage;
+	}
+
+	public int getTemporary_lock() {
+		return temporary_lock;
+	}
+
+	public void setTemporary_lock(int temporary_lock) {
+		this.temporary_lock = temporary_lock;
+	}
+
+	public int getOrder_refresh_interval() {
+		return order_refresh_interval;
+	}
+
+	public void setOrder_refresh_interval(int order_refresh_interval) {
+		this.order_refresh_interval = order_refresh_interval;
+	}
+
+	public int getTemp_lock_refresh_interval() {
+		return temp_lock_refresh_interval;
+	}
+
+	public void setTemp_lock_refresh_interval(int temp_lock_refresh_interval) {
+		this.temp_lock_refresh_interval = temp_lock_refresh_interval;
 	}
 }

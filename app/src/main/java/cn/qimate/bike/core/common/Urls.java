@@ -11,7 +11,7 @@ public class Urls {
 //	https://newmapi.7mate.cn/
 	public static String HTTP = "https://";
 	public static String host = HTTP + "app.7mate.cn";
-//	public static String host2 = HTTP + "newmapi.7mate.cn/api";
+//	public static String host2 = HTTP + "newmapi.7mate.cn/api";	//https://newmapi.7mate.cn/api
 	public static String host2 = HTTP + "testnewmapi.7mate.cn/api";
 //	public static String host = HTTP + "web1.7mate.cn";
 //	public static String host = HTTP + "test.7mate.cn";
@@ -114,6 +114,10 @@ public class Urls {
 	//押金价格接口
 	public static String depositprice = host2 + "/depositprice";
 
+	//网络锁(自动还车场景)临时上锁接口
+	public static String temp_lock = host2 + "/order/temp_lock";
+
+//	http://testnewmapi.7mate.cn/api/order/temp_lock
 //	http://testnewmapi.7mate.cn/api/depositprice
 //	http://testnewmapi.7mate.cn/api/aboutus
 //	http://testnewmapi.7mate.cn/api/car/{carmodel_id}/nearby
