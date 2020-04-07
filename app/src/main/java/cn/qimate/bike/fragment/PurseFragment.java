@@ -312,15 +312,15 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
                                     if("h5".equals(action_type)){
                                         if(action_content.contains("?")){
                                             if(access_token.contains(" ")){
-                                                action_content += "&token="+access_token.split(" ")[1];
+                                                action_content += "&client=android&token="+access_token.split(" ")[1];
                                             }else{
-                                                action_content += "&token="+access_token;
+                                                action_content += "&client=android&token="+access_token;
                                             }
                                         }else{
                                             if(access_token.contains(" ")){
-                                                action_content += "?token="+access_token.split(" ")[1];
+                                                action_content += "?client=android&token="+access_token.split(" ")[1];
                                             }else{
-                                                action_content += "?token="+access_token;
+                                                action_content += "?client=android&token="+access_token;
                                             }
                                         }
                                     }

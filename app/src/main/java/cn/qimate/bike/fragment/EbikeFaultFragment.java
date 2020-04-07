@@ -1093,7 +1093,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
                     imageList.add("\""+jsonObject.getString("key")+"\"");
 
                     pd();
-                    Log.e("UpCompletion===", imageList+"==="+jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
+                    Log.e("UpCompletion===", imageList+"==="+jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

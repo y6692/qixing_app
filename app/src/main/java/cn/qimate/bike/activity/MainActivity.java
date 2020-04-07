@@ -702,7 +702,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     public void OnBannerClick(int position) {
 //        Toast.makeText(context, "你点了第" + (position + 1) + "张轮播图", Toast.LENGTH_SHORT).show();
 
-        Log.e("OnBannerClick===", h5_title+"==="+action_content);
+        Log.e("ma===OnBannerClick", h5_title+"==="+action_content);
 
         UIHelper.goWebViewAct(context, h5_title, action_content);
 
@@ -847,25 +847,25 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                                 imageUrl = bean.getImage_url();
                                 h5_title = bean.getH5_title();
 
-
                                 action_content = bean.getAction_content();
                                 action_type = bean.getAction_type();
                                 if("h5".equals(action_type)){
                                     if(action_content.contains("?")){
                                         if(access_token.contains(" ")){
-                                            action_content += "&token="+access_token.split(" ")[1];
+                                            action_content += "&client=android&token="+access_token.split(" ")[1];
                                         }else{
-                                            action_content += "&token="+access_token;
+                                            action_content += "&client=android&token="+access_token;
                                         }
                                     }else{
                                         if(access_token.contains(" ")){
-                                            action_content += "?token="+access_token.split(" ")[1];
+                                            action_content += "?client=android&token="+access_token.split(" ")[1];
                                         }else{
-                                            action_content += "?token="+access_token;
+                                            action_content += "?client=android&token="+access_token;
                                         }
                                     }
                                 }
 
+                                Log.e("ma===banner3", action_content+"===");
 
                                 if (imageUrl != null && !"".equals(imageUrl)){
                                     WindowManager windowManager = getWindowManager();

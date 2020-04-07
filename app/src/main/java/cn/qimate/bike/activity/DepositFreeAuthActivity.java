@@ -673,7 +673,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                         imageurl2 = jsonObject.getString("key");
                     }
 
-                    Log.e("UpCompletion===", imageurl+"==="+imageurl2+isPic1+"==="+isPic2+"==="+jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp+"==="+"http://q0xo2if8t.bkt.clouddn.com/" + key+"?e="+info.timeStamp+"&token="+upToken);
+                    Log.e("UpCompletion===", imageurl+"==="+imageurl2+isPic1+"==="+isPic2+"==="+jsonObject+"==="+jsonObject.getString("key")+"==="+key+"==="+info+"==="+response+"==="+info.timeStamp);
 
                     if((!isPic2 && isPic1 && !"".equals(imageurl)) || (!isPic1 && isPic2 && !"".equals(imageurl2)) || (isPic1 && isPic2 && !"".equals(imageurl) && !"".equals(imageurl2))){
 //                        if (loadingDialog != null && loadingDialog.isShowing()){

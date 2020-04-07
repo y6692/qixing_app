@@ -589,8 +589,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         boolean flag = activity.getIntent().getBooleanExtra("flag", false);
 
-
-        Log.e("mf===onResume", isNavi+"==="+isPermission+"==="+flag+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+type);
+        access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+        Log.e("mf===onResume", isNavi+"==="+isPermission+"==="+flag+"==="+access_token+"==="+type);
 
         mapView.onResume();
 
@@ -2469,7 +2469,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     public void OnBannerClick(int position) {
 //        Toast.makeText(context, "你点了第" + (position + 1) + "张轮播图", Toast.LENGTH_SHORT).show();
 
-        Log.e("OnBannerClick===", imageTitle.get(position)+"==="+urlPath.get(position)+"==="+typeList.get(position)+"==="+("car_bad".equals(urlPath.get(position))));
+        Log.e("mf===OnBannerClick", imageTitle.get(position)+"==="+urlPath.get(position)+"==="+typeList.get(position)+"==="+("car_bad".equals(urlPath.get(position))));
 
 //        home 首页
 //        wallet 我的钱包
@@ -2775,15 +2775,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     if("h5".equals(action_type)){
                                         if(action_content.contains("?")){
                                             if(access_token.contains(" ")){
-                                                action_content += "&token="+access_token.split(" ")[1];
+                                                action_content += "&client=android&token="+access_token.split(" ")[1];
                                             }else{
-                                                action_content += "&token="+access_token;
+                                                action_content += "&client=android&token="+access_token;
                                             }
                                         }else{
                                             if(access_token.contains(" ")){
-                                                action_content += "?token="+access_token.split(" ")[1];
+                                                action_content += "?client=android&token="+access_token.split(" ")[1];
                                             }else{
-                                                action_content += "?token="+access_token;
+                                                action_content += "?client=android&token="+access_token;
                                             }
                                         }
                                     }

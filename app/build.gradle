@@ -42,17 +42,27 @@ android {
             abiFilters 'armeabi-v7a'
         }
 
-//        ndk {
-//            abiFilters 'armeabi'
-//        }
     }
 
     signingConfigs {
+//        config {
+////            keyPassword 'password'
+////            keyAlias "android.keystore"
+////            storeFile file('debug.keystore')
+////            storePassword 'password'
+//
+//            keyAlias "7MA"
+//            keyPassword "123456"
+//            storeFile file("../7ma.jks")
+//            storePassword "123456"
+//        }
+
         config {
-            keyPassword 'password'
-            keyAlias "android.keystore"
-            storeFile file('debug.keystore')
-            storePassword 'password'
+            keyPassword 'android'
+            keyAlias "qixing"
+            storeFile file('E:\\qixing-主App.keystore')
+            storePassword 'android'
+
         }
 
         release {
@@ -67,7 +77,7 @@ android {
     buildTypes {
         release {
             debuggable true
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.config
             // true - 打开混淆
             minifyEnabled false
 //            // true - 打开资源压缩
@@ -81,12 +91,12 @@ android {
             }
         }
 
-        debug {
-            debuggable true
-            signingConfig signingConfigs.release
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+//        debug {
+//            debuggable true
+//            signingConfig signingConfigs.release
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//        }
     }
 
 

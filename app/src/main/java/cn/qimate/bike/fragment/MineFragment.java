@@ -835,7 +835,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
             case R.id.personUI_creditLayout:
                 Log.e("personUI_creditLayout", credit_scores_h5_url+"==="+access_token.split(" ")[1]);
-                UIHelper.goWebViewAct(context, credit_scores_h5_title, credit_scores_h5_url+"?token="+access_token.split(" ")[1]);
+                UIHelper.goWebViewAct(context, credit_scores_h5_title, credit_scores_h5_url+"?client=android&token="+access_token.split(" ")[1]);
+
                 break;
 
             case R.id.personUI_serviceCenterLayout:
@@ -860,7 +861,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.personUI_inviteLayout:
-                UIHelper.goWebViewAct(context, invite_h5_title, invite_h5_url+"?token="+access_token.split(" ")[1]);
+
+                Log.e("personUI_inviteLayout", invite_h5_title+"==="+invite_h5_url);
+
+                UIHelper.goWebViewAct(context, invite_h5_title, invite_h5_url+"?client=android&token="+access_token.split(" ")[1]);
                 break;
 
 
@@ -1115,6 +1119,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                                 invite_h5_url = bean.getInvite_h5_url();
                                 history_order_h5_title = bean.getHistory_order_h5_title();
                                 history_order_h5_url = bean.getHistory_order_h5_url();
+
+                                if(invite_h5_url==null || "".equals(invite_h5_url)){
+                                    inviteLayout.setVisibility(View.GONE);
+                                }
 
                                 //TODO  3
 //                            if (bean.getHeadimg() != null && !"".equals(bean.getHeadimg())) {

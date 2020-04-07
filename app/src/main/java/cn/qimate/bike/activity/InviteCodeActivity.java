@@ -27,7 +27,6 @@ import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.Log;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;

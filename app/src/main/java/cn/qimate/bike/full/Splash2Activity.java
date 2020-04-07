@@ -289,15 +289,15 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 									action_content = bean.getAction_content();
 									if(action_content.contains("?")){
 										if(access_token.contains(" ")){
-											action_content += "&token="+access_token.split(" ")[1];
+											action_content += "&client=android&token="+access_token.split(" ")[1];
 										}else{
-											action_content += "&token="+access_token;
+											action_content += "&client=android&token="+access_token;
 										}
 									}else{
 										if(access_token.contains(" ")){
-											action_content += "?token="+access_token.split(" ")[1];
+											action_content += "?client=android&token="+access_token.split(" ")[1];
 										}else{
-											action_content += "?token="+access_token;
+											action_content += "?client=android&token="+access_token;
 										}
 									}
 

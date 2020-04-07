@@ -674,6 +674,15 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
+        <!--<activity-->
+            <!--android:name="com.umeng.socialize.view.ShareActivity"-->
+            <!--android:configChanges="orientation|keyboard"-->
+            <!--android:launchMode="singleTask"-->
+            <!--android:noHistory="true"-->
+            <!--android:theme="@style/Theme.UMDialog"-->
+            <!--android:windowSoftInputMode="stateVisible|adjustResize" >-->
+        <!--</activity>-->
+
         <!-- 分享 -->
         <!-- 没安装客户端下登录 -->
         <!-- tencent -->
@@ -693,6 +702,7 @@
         </activity>
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- wechat callback -->
@@ -700,13 +710,17 @@
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait"
+             />
         <!-- alipay callback -->
         <activity
             android:name=".activity.ShareEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" />
 
         <!-- 友盟key -->
         <meta-data
