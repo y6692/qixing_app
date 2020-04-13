@@ -127,19 +127,19 @@ public abstract class TextHttpResponseHandler extends AsyncHttpResponseHandler {
             public void run() {
 
                 try {
-                    Log.e("onSuccess===00", responseBytes+"===");
+//                    Log.e("onSuccess===00", responseBytes+"===");
 
                     String responseString = getResponseString(responseBytes, getCharset());
 
-                    Log.e("onSuccess===0", responseString+"===");
+//                    Log.e("onSuccess===0", responseString+"===");
 
                     if(responseString!=null && !"".equals(responseString)){
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                        Log.e("onSuccess===1", responseString+"==="+result.getStatus_code());
+//                        Log.e("onSuccess===1", responseString+"==="+result.getStatus_code());
 
                         if(result.getStatus_code()==401){
-                            Log.e("onSuccess===2", responseString+"==="+result.getStatus_code());
+//                            Log.e("onSuccess===2", responseString+"==="+result.getStatus_code());
 
                             SharedPreferencesUrls.getInstance().putString("access_token", "");
                             SharedPreferencesUrls.getInstance().putString("iscert", "");
@@ -149,7 +149,7 @@ public abstract class TextHttpResponseHandler extends AsyncHttpResponseHandler {
                             Intent intent = new Intent(BaseApplication.context, LoginActivity.class);
                             BaseApplication.context.startActivity(intent);
                         }else if(result.getStatus_code()==406){
-                            Log.e("onSuccess===3", responseString+"==="+result.getStatus_code());
+//                            Log.e("onSuccess===3", responseString+"==="+result.getStatus_code());
 
                             ToastUtil.showMessageApp(BaseApplication.context, result.getMessage());
 

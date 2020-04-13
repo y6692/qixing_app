@@ -2095,7 +2095,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
             if ((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
 
-            Log.e("main===Changed", isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
+//            Log.e("main===Changed", isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
             ToastUtil.showMessage(context, isContainsList.contains(true) + "》》》" + near + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
 
             if (amapLocation != null && amapLocation.getErrorCode() == 0) {
@@ -2119,11 +2119,11 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                     referLongitude = amapLocation.getLongitude();
                     myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
 
-                    Log.e("main===Changed>>>0", referLatitude+"==="+referLongitude+"》》》"+mFirstFix);
+//                    Log.e("main===Changed>>>0", referLatitude+"==="+referLongitude+"》》》"+mFirstFix);
 
                     if (mFirstFix) {
 
-                        Log.e("main===Changed>>>1", "》》》");
+//                        Log.e("main===Changed>>>1", "》》》");
 
                         mFirstFix = false;
 //                        schoolRange();

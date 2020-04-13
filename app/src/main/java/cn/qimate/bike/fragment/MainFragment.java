@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -137,6 +138,7 @@ import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
 import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
+import com.zxing.lib.scaner.QRCodeUtil;
 import com.zxing.lib.scaner.activity.ActivityScanerCode;
 import com.zxing.lib.scaner.activity.MainFragmentPermissionsDispatcher;
 
@@ -202,6 +204,7 @@ import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.core.widget.LoadingDialogWithHelp;
 import cn.qimate.bike.lock.utils.ToastUtils;
+import cn.qimate.bike.lock.utils.Utils;
 import cn.qimate.bike.model.BannerBean;
 import cn.qimate.bike.model.CarAuthorityBean;
 import cn.qimate.bike.model.CarBean;
@@ -264,6 +267,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private String first_time;
     private String continued_price;
     private String continued_time;
+    private String credit_score_desc;
     private Boolean isMac;
 
     private String keySource = "";
@@ -431,6 +435,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         unbinder = ButterKnife.bind(this, v);
 
         mainFragment = this;
+
+
+
         return v;
     }
 
@@ -875,6 +882,37 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         advAgainBtn.setOnClickListener(this);
         advCloseBtn.setOnClickListener(this);
         advCloseBtn2.setOnClickListener(this);
+
+//        String s0 = "[\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":340,\\\\\\\"left\\\\\\\":0,\\\\\\\"right\\\\\\\":984,\\\\\\\"top\\\\\\\":0}\\\",2131165295,0,false,\\\"[6,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":95,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":10}\\\",2131165449,2131165450,true,\\\"[6,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":427,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":10}\\\",2131165455,2131165456,true,\\\"[9,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":760,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":10}\\\",2131165390,2131165391,true,\\\"[16,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":95,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":180}\\\",2131165447,2131165448,true,\\\"[5,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":427,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":180}\\\",2131165449,2131165450,true,\\\"[6,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":760,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":180}\\\",2131165392,2131165393,true,\\\"[17,1,2]\\\"]\"]"
+//                +"[\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":340,\\\\\\\"left\\\\\\\":0,\\\\\\\"right\\\\\\\":984,\\\\\\\"top\\\\\\\":0}\\\",2131457568295,0,false,\\\"[6,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":95,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":10}\\\",2131165449,2131165450,true,\\\"[6,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":427,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":10}\\\",2131165455,2131165456,true,\\\"[9,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":760,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":10}\\\",2131165390,2131165391,true,\\\"[16,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":95,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":180}\\\",2131165447,2131165448,true,\\\"[5,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":427,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":180}\\\",2131165449,2131165450,true,\\\"[6,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":760,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":180}\\\",2131165392,2131165393,true,\\\"[17,1,2]\\\"]\"]"
+//                +"[\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":340,\\\\\\\"left\\\\\\\":0,\\\\\\\"right\\\\\\\":984,\\\\\\\"top\\\\\\\":0}\\\",2131un8295,0,false,\\\"[6,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":95,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":10}\\\",2131165449,2131165450,true,\\\"[6,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":427,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":10}\\\",2131165455,2131165456,true,\\\"[9,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":760,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":10}\\\",2131165390,2131165391,true,\\\"[16,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":95,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":180}\\\",2131165447,2131165448,true,\\\"[5,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":427,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":180}\\\",2131165449,2131165450,true,\\\"[6,1,2]\\\"]\",\"[\\\"iv\\\",\\\"{\\\\\\\"bottom\\\\\\\":152,\\\\\\\"left\\\\\\\":760,\\\\\\\"right\\\\\\\":137,\\\\\\\"top\\\\\\\":180}\\\",2131165392,2131165393,true,\\\"[17,1,2]\\\"]\"]";
+//
+//        try {
+//            String s = Utils.compress(s0);
+//
+//
+//
+//
+//            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.light2);
+//            String bs = Utils.bitmaptoString(bitmap);
+//
+//            String s1 = Utils.compress(bs);
+//
+//            Log.e("mf===onCreate6", s+"===");
+//
+//            ImageView iv = activity.findViewById(R.id.iv);
+////            Bitmap bitmap = QRCodeUtil.createQRCodeBitmap(s, 500);
+//            iv.setImageBitmap(QRCodeUtil.createQRCodeBitmap(s1, 50000));
+//
+////            ImageView iv = activity.findViewById(R.id.iv);
+////            iv.setImageBitmap(Utils.stringtoBitmap(bs));
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
+
     }
 
     private void setUpMap() {
@@ -1092,7 +1130,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     public void car_authority() {
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 
-        Log.e("mf===car_authority", "==="+access_token);
+//        Log.e("mf===car_authority", "==="+access_token);
 
         HttpHelper.get(context, Urls.car_authority, new TextHttpResponseHandler() {
             @Override
@@ -1110,7 +1148,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     @Override
                     public void run() {
                         try {
-                            Log.e("mf===car_authority1", "==="+responseString);
+//                            Log.e("mf===car_authority1", "==="+responseString);
 
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
@@ -1125,7 +1163,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             notice_code = bean.getNotice_code();
 
                             OrderBean orderBean = JSON.parseObject(bean.getOrder(), OrderBean.class);
-                            order_id = orderBean.getOrder_id();
+                            if(notice_code==8 || notice_code==9){
+                                order_id = orderBean.getOrder_id();
+                            }
                             temporary_lock = orderBean.getTemporary_lock();	//0未临时上锁 1临时上锁中 3临时上锁完毕
                             order_refresh_interval = orderBean.getOrder_refresh_interval(); //当前行程刷新频率 单位：毫秒
                             temp_lock_refresh_interval = orderBean.getTemp_lock_refresh_interval(); //临时上锁中刷新频率 单位：毫秒
@@ -1179,10 +1219,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             }
 
 
-
-
                             SharedPreferencesUrls.getInstance().putString("iscert", ""+notice_code);
-                            Log.e("mf===car_authority2", ebikeInfoThread+"==="+notice_code+"==="+unauthorized_code+"==="+temporary_lock+"==="+order_refresh_interval+"==="+temp_lock_refresh_interval+"==="+refresh_interval+"==="+loopTime);
+//                            Log.e("mf===car_authority2", ebikeInfoThread+"==="+notice_code+"==="+unauthorized_code+"==="+temporary_lock+"==="+order_refresh_interval+"==="+temp_lock_refresh_interval+"==="+refresh_interval+"==="+loopTime);
 
 
                             ll_top.setVisibility(View.VISIBLE);
@@ -1235,7 +1273,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 //                                    order_id = new JSONObject(bean.getOrder()).getInt("order_id");
 
-                                    Log.e("mf===car_authority3", ebikeInfoThread+"==="+order_id);
+//                                    Log.e("mf===car_authority3", ebikeInfoThread+"==="+order_id);
 
 //                                    if (ebikeInfoThread == null) {
 //                                        cycling();
@@ -1307,7 +1345,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 banner(false);
                             }
 
-                            Log.e("mf===car_authority4", notice_code+"==="+isMin);
+//                            Log.e("mf===car_authority4", notice_code+"==="+isMin);
 
                         } catch (Exception e) {
 
@@ -1541,7 +1579,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     public void car_authority2() {
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 
-        Log.e("mf===car_authority2", "==="+access_token);
+//        Log.e("mf===car_authority2", "==="+access_token);
 
         HttpHelper.get(context, Urls.car_authority, new TextHttpResponseHandler() {
             @Override
@@ -1555,7 +1593,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 try {
-                    Log.e("mf===car_authority21", "==="+responseString);
+//                    Log.e("mf===car_authority21", "==="+responseString);
 
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
@@ -1565,7 +1603,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 
 
-                    Log.e("mf===car_authority22", bean.getUnauthorized_code()+"==="+bean.getOrder());
+//                    Log.e("mf===car_authority22", bean.getUnauthorized_code()+"==="+bean.getOrder());
 //                        Log.e("mf===car_authority2", bean.getUnauthorized_code()+"==="+bean.getOrder()+"==="+new JSONObject(bean.getOrder()).getInt("order_id"));
 
 //                      未授权码 0（有权限时为0）1需要登录 2未认证 3认证中 4认证被驳回 5需要充值余额或购买骑行卡 6有进行中行程 7有待支付行程 8有待支付调度费 9有待支付赔偿费
@@ -1718,7 +1756,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             public void run() {
                 while (isWaitEbikeInfo) {
 
-                    Log.e("cyclingThread===1", notice_code+"==="+ebikeInfoThread+"==="+loopTime);
+//                    Log.e("cyclingThread===1", notice_code+"==="+ebikeInfoThread+"==="+loopTime);
 
                     m_myHandler.sendEmptyMessage(4);
 
@@ -1739,7 +1777,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void cycling() {
-        Log.e("mf===cycling", "===");
+//        Log.e("mf===cycling", "===");
 
         HttpHelper.get(context, Urls.cycling, new TextHttpResponseHandler() {
             @Override
@@ -1766,8 +1804,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             closeLoadingDialog();
 
                             if(null != bean.getOrder_sn()){
-                                Log.e("mf===cycling_2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+//                                Log.e("mf===cycling_2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
+                                order_id = bean.getOrder_id();
                                 oid = bean.getOrder_sn();
                                 codenum = bean.getCar_number();
                                 carmodel_id = bean.getCarmodel_id();
@@ -1775,16 +1814,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 m_nowMac = bean.getCar_lock_mac();
 
 
-
                                 carInfo();
 
                                 SharedPreferencesUrls.getInstance().putString("type", type);
 
 
-                                Log.e("mf===cycling_22", carmodel_id+"===" + type+"===" + bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+//                                Log.e("mf===cycling_22", carmodel_id+"===" + type+"===" + bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
                                 if (carmodel_id==2) {
-                                    Log.e("mf===cycling_3", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+//                                    Log.e("mf===cycling_3", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
                                     changeTab(1);
 
@@ -1799,7 +1837,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                         tv_againBtn.setText("再次开锁");
                                     }
                                 }else{
-                                    Log.e("mf===cycling_4", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+//                                    Log.e("mf===cycling_4", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
                                     changeTab(0);
 
@@ -1821,7 +1859,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     }else {
                                         if ("2".equals(type) || "3".equals(type) || "9".equals(type) || "10".equals(type)){
 
-                                            Log.e("mf===requestCode2", codenum+"==="+type);
+//                                            Log.e("mf===requestCode2", codenum+"==="+type);
 
 
 //                                            closeBroadcast();     //TODO    3
@@ -1893,7 +1931,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void cycling2() {
-        Log.e("mf===cycling2", "===");
+//        Log.e("mf===cycling2", "===");
 
         HttpHelper.get(context, Urls.cycling, new TextHttpResponseHandler() {
             @Override
@@ -1915,7 +1953,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            Log.e("mf===cycling2_1", responseString + "===" + result.data);
+//                            Log.e("mf===cycling2_1", responseString + "===" + result.data);
 
                             OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
 
@@ -1924,7 +1962,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                            }
 
                             if(null != bean.getOrder_sn()){
-                                Log.e("mf===cycling2_2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+//                                Log.e("mf===cycling2_2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
                                 order_id = bean.getOrder_id();
                                 oid = bean.getOrder_sn();
@@ -2719,7 +2757,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 
     private void banner(final boolean fresh) {
-        Log.e("mf===banner", "===" + codenum);
+//        Log.e("mf===banner", "===" + codenum);
 
         HttpHelper.get2(context, Urls.banner + 3, new TextHttpResponseHandler() {
             @Override
@@ -2740,13 +2778,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     @Override
                     public void run() {
                         try {
-                            Log.e("mf===banner0", responseString + "===");
+//                            Log.e("mf===banner0", responseString + "===");
 
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
                             JSONArray ja_banners = new JSONArray(new JSONObject(result.getData()).getString("banners"));
 
-                            Log.e("mf===banner1", ja_banners.length() + "===" + result.data);
+//                            Log.e("mf===banner1", ja_banners.length() + "===" + result.data);
 
 
 
@@ -4262,7 +4300,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         @Override
         public void onReceive(Context context, final Intent intent) {
-            Log.e("broadcastReceiver===0", "==="+intent);
+//            Log.e("broadcastReceiver===0", "==="+intent);
 
             m_myHandler.post(new Runnable() {
                 @Override
@@ -4271,7 +4309,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //
 //                    }
 
-                    Log.e("broadcastReceiver===mf", "==="+intent);
+//                    Log.e("broadcastReceiver===mf", "==="+intent);
 
                     //TODO  1   推送
 //                    getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
@@ -4465,6 +4503,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         TextView tv_codenum = (TextView) customView.findViewById(R.id.tv_codenum);
         TextView tv_carmodel_name = (TextView) customView.findViewById(R.id.tv_carmodel_name);
         TextView tv_each_free_time = (TextView) customView.findViewById(R.id.tv_each_free_time);
+        TextView tv_credit_score_desc = (TextView) customView.findViewById(R.id.tv_credit_score_desc);
         TextView tv_first_price = (TextView) customView.findViewById(R.id.tv_first_price);
         TextView tv_first_time = (TextView) customView.findViewById(R.id.tv_first_time);
         TextView tv_continued_price = (TextView) customView.findViewById(R.id.tv_continued_price);
@@ -4498,6 +4537,20 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             tv_each_free_time.setText(each_free_time+"分钟免费");
         }
 
+        if("".equals(credit_score_desc)){
+            tv_credit_score_desc.setVisibility(View.GONE);
+            tv_first_price.setTextColor(0xFF666666);
+            tv_first_time.setTextColor(0xFF666666);
+            tv_continued_price.setTextColor(0xFF666666);
+            tv_continued_time.setTextColor(0xFF666666);
+        }else{
+            tv_credit_score_desc.setVisibility(View.VISIBLE);
+            tv_credit_score_desc.setText(credit_score_desc);
+            tv_first_price.setTextColor(0xFFFD555B);
+            tv_first_time.setTextColor(0xFFFD555B);
+            tv_continued_price.setTextColor(0xFFFD555B);
+            tv_continued_time.setTextColor(0xFFFD555B);
+        }
 
 //        tv_price.setText(Html.fromHtml(price));
 //        tv_price.setText(Html.fromHtml(price, null, new HtmlTagHandler("font")));
@@ -4981,7 +5034,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            Log.e("mf===unlock1", carmodel_id+ "===" + type + "===" + codenum + "===" + responseString + "===" + result.data);
+                            Log.e("mf===unlock1", loadingDialog.isShowing()+ "===" + carmodel_id+ "===" + type + "===" + codenum + "===" + responseString + "===" + result.data);
 
 
                             if(isAgain){
@@ -5835,9 +5888,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                 isFinish = true;
 
-                ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
-
-                car_notification(1, 1, 0);
+//                ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
+//
+//                car_notification(1, 1, 0);
 
 //                if("锁已开".equals(Code.toString(code))){
 //
@@ -9206,6 +9259,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             first_time = data.getStringExtra("first_time");
                             continued_price = data.getStringExtra("continued_price");
                             continued_time = data.getStringExtra("continued_time");
+                            credit_score_desc = data.getStringExtra("credit_score_desc");
                             isMac = data.getBooleanExtra("isMac", false);
 
 

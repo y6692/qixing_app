@@ -125,7 +125,7 @@ public abstract class TextHttpResponseHandler2 extends AsyncHttpResponseHandler 
         m_myHandler.post(new Runnable() {
             @Override
             public void run() {
-                Log.e("onSuccess===00", responseBytes+"===");
+//                Log.e("onSuccess===00", responseBytes+"===");
 
                 String responseString = getResponseString(responseBytes, getCharset());
 

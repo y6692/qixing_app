@@ -94,6 +94,7 @@ import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
 import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
+import com.zxing.lib.scaner.QRCodeUtil;
 import com.zxing.lib.scaner.activity.ActivityScanerCode;
 
 import org.apache.http.Header;
@@ -273,6 +274,10 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
         initData();
         initView();
+
+
+
+
     }
 
     private void initData() {

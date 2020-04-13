@@ -47,6 +47,8 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
     private TextView tv_payment_time;
     private TextView tv_price;
     private TextView tv_continued_price;
+    private TextView tv_credit_score_desc;
+    private TextView tv_credit_score_desc2;
     private TextView tv_each_free_time;
     private TextView tv_cycling_time;
 
@@ -83,6 +85,8 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
         tv_car_end_time = (TextView)findViewById(R.id.my_order_detail_tv_car_end_time);
         tv_price = (TextView)findViewById(R.id.my_order_detail_tv_price);
         tv_continued_price= (TextView)findViewById(R.id.my_order_detail_tv_continued_price);
+        tv_credit_score_desc= (TextView)findViewById(R.id.my_order_detail_tv_credit_score_desc);
+        tv_credit_score_desc2= (TextView)findViewById(R.id.my_order_detail_tv_credit_score_desc2);
         tv_each_free_time= (TextView)findViewById(R.id.my_order_detail_tv_each_free_time);
         tv_cycling_time = (TextView)findViewById(R.id.my_order_detail_tv_cycling_time);
 
@@ -149,6 +153,20 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
                                     tv_each_free_time.setText(bean.getEach_free_time()+"分钟");
                                 }else{
                                     rl_each_free_time.setVisibility(View.GONE);
+                                }
+
+                                if("".equals(bean.getCredit_score_desc())){
+                                    tv_credit_score_desc.setVisibility(View.GONE);
+                                    tv_credit_score_desc2.setVisibility(View.GONE);
+                                    tv_price.setTextColor(0xFF333333);
+                                    tv_continued_price.setTextColor(0xFF333333);
+                                }else{
+                                    tv_credit_score_desc.setVisibility(View.VISIBLE);
+                                    tv_credit_score_desc2.setVisibility(View.VISIBLE);
+                                    tv_credit_score_desc.setText("("+bean.getCredit_score_desc()+")");
+                                    tv_credit_score_desc2.setText("("+bean.getCredit_score_desc()+")");
+                                    tv_price.setTextColor(0xFFFD555B);
+                                    tv_continued_price.setTextColor(0xFFFD555B);
                                 }
 
                                 tv_cycling_time.setText(""+bean.getCycling_time());

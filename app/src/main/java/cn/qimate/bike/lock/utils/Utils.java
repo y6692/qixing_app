@@ -3,18 +3,27 @@ package cn.qimate.bike.lock.utils;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.provider.MediaStore;
 import android.text.format.Formatter;
+import android.util.Base64;
+import android.util.Log;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import cn.qimate.bike.base.BaseApplication;
 
@@ -24,6 +33,75 @@ import cn.qimate.bike.base.BaseApplication;
  * 邮箱：317097478@qq.com
  */
 public class Utils {
+
+    public static Bitmap stringtoBitmap(String string){
+        //将字符串转换成Bitmap类型
+        Bitmap bitmap=null;
+        try {
+            byte[]bitmapArray;
+            bitmapArray= Base64.decode(string, Base64.DEFAULT);
+            bitmap= BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return bitmap;
+    }
+
+
+
+    public static String bitmaptoString(Bitmap bitmap){
+        //将Bitmap转换成字符串
+        String string=null;
+        ByteArrayOutputStream bStream=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100,bStream);
+        byte[]bytes=bStream.toByteArray();
+        string=Base64.encodeToString(bytes,Base64.DEFAULT);
+        return string;
+    }
+
+    // 压缩
+    public static String compress(String str) throws IOException {
+        try {
+            if (str == null || str.length() == 0) {
+                return str;
+            }
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            GZIPOutputStream gzip = new GZIPOutputStream(out);
+            gzip.write(str.getBytes());
+            gzip.close();
+            return out.toString("ISO-8859-1");
+
+        } catch (Exception e) {
+            Log.e("utils==e", e+"===");
+            e.printStackTrace();
+
+            return "";
+        }
+
+//        return out.toString("UTF-8");
+//        return out.toString("GBK");
+    }
+
+    // 解压缩
+    public static String decompress(String str) throws IOException {
+        if (str == null || str.length() == 0) {
+            return str;
+        }
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ByteArrayInputStream in = new ByteArrayInputStream(str.getBytes("ISO-8859-1"));
+//        ByteArrayInputStream in = new ByteArrayInputStream(str.getBytes("UTF-8"));
+//        ByteArrayInputStream in = new ByteArrayInputStream(str.getBytes("GBK"));
+        GZIPInputStream gunzip = new GZIPInputStream(in);
+        byte[] buffer = new byte[256];
+        int n;
+        while ((n = gunzip.read(buffer)) >= 0) {
+            out.write(buffer, 0, n);
+        }
+        // toString()使用平台默认编码，也可以显式的指定如toString("GBK")
+        return out.toString();
+    }
+
 
     public static <T> boolean isEmpty(List<T> list) {
         if (list == null || list.isEmpty()) {

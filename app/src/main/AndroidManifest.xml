@@ -6,9 +6,6 @@
     android:versionName="1.7.7"
     android:installLocation="auto">
 
-    <uses-sdk
-        android:minSdkVersion="18"
-        android:targetSdkVersion="28" />
 
     <!--lance-->
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -122,7 +119,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme3"
+            android:theme="@style/AppTheme"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
 

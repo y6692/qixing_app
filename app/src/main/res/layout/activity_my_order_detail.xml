@@ -301,14 +301,42 @@
                         android:layout_alignParentLeft="true"
                         android:gravity="center_vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="1dp"
-                            android:text="起步价："
-                            android:textColor="#666666"
-                            android:textSize="@dimen/sp16"
-                            />
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:text="起步价"
+                                android:textColor="#666666"
+                                android:textSize="@dimen/sp16"
+                                />
+
+                            <TextView
+                                android:id="@+id/my_order_detail_tv_credit_score_desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:text=""
+                                android:textColor="#666666"
+                                android:textSize="@dimen/sp16"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:text="："
+                                android:textColor="#666666"
+                                android:textSize="@dimen/sp16"
+                                />
+
+                        </LinearLayout>
+
+
 
                         <TextView
                             android:id="@+id/my_order_detail_tv_price"
@@ -328,14 +356,40 @@
                         android:layout_alignParentLeft="true"
                         android:gravity="center_vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="1dp"
-                            android:text="续租价："
-                            android:textColor="#666666"
-                            android:textSize="@dimen/sp16"
-                            />
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:text="续租价"
+                                android:textColor="#666666"
+                                android:textSize="@dimen/sp16"
+                                />
+
+                            <TextView
+                                android:id="@+id/my_order_detail_tv_credit_score_desc2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:text=""
+                                android:textColor="#666666"
+                                android:textSize="@dimen/sp16"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:text="："
+                                android:textColor="#666666"
+                                android:textSize="@dimen/sp16"
+                                />
+
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/my_order_detail_tv_continued_price"

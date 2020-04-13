@@ -211,19 +211,41 @@
 
         </LinearLayout>
 
-
-        <TextView
-            android:id="@+id/tv_each_free_time"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:background="@drawable/btn_bcg_free"
-            android:text="1小时免费"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:gravity="center"/>
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/tv_each_free_time"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginRight="7dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:background="@drawable/btn_bcg_free"
+                android:text="1小时免费"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/tv_credit_score_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:background="@drawable/btn_bcg_credit"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+
 
 
         <LinearLayout

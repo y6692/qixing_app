@@ -33,7 +33,7 @@ public class HttpHelper {
 
 	static {
 
-		client.setTimeout(15000); // 设置链接超时，如果不设置，默认为10s
+		client.setTimeout(30000); // 设置链接超时，如果不设置，默认为10s
 		client.setUserAgent("Mozilla/5.0 (Linux; U; Android " + android.os.Build.VERSION.RELEASE + "; zh-cn; "
 				+ android.os.Build.MODEL + ") AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30");
 
@@ -235,7 +235,7 @@ public class HttpHelper {
 				return;
 			}
 
-			Log.e("header===0", "===" + SharedPreferencesUrls.getInstance().getString("access_token",""));
+//			Log.e("header===0", "===" + SharedPreferencesUrls.getInstance().getString("access_token",""));
 
 			client.addHeader("Authorization", SharedPreferencesUrls.getInstance().getString("access_token",""));
 			client.addHeader("Accept", "application/vnd.ws.v1+json");
@@ -247,7 +247,7 @@ public class HttpHelper {
 			client.addHeader("Device_UUID", "" + tm.getDeviceId());
 			client.addHeader("Client", "Android_APP");
 
-			Log.e("post===", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+SystemUtil.getSystemVersion()+"==="+context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName+"==="+tm.getDeviceId());
+//			Log.e("post===", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+SystemUtil.getSystemVersion()+"==="+context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName+"==="+tm.getDeviceId());
 
 
 		} catch (Exception e) {
@@ -264,7 +264,7 @@ public class HttpHelper {
 				return;
 			}
 
-			Log.e("header===0", "===" + SharedPreferencesUrls.getInstance().getString("access_token",""));
+//			Log.e("header===0", "===" + SharedPreferencesUrls.getInstance().getString("access_token",""));
 
 			client.addHeader("Accept", "application/vnd.ws.v1+json");
 			client.addHeader("Phone-Brand", new Build().MANUFACTURER.toUpperCase());
@@ -275,7 +275,7 @@ public class HttpHelper {
 			client.addHeader("Device_UUID", "" + tm.getDeviceId());
 			client.addHeader("Client", "Android_APP");
 
-			Log.e("post===", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+SystemUtil.getSystemVersion()+"==="+context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName+"==="+tm.getDeviceId());
+//			Log.e("post===", new Build().MANUFACTURER.toUpperCase()+"==="+new Build().MODEL+"==="+SystemUtil.getSystemVersion()+"==="+context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName+"==="+tm.getDeviceId());
 
 
 		} catch (Exception e) {

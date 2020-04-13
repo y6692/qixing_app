@@ -125,6 +125,7 @@ import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.core.widget.LoadingDialog2;
 import cn.qimate.bike.fragment.BikeFragment;
+import cn.qimate.bike.lock.utils.Utils;
 import cn.qimate.bike.model.CarBean;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.EbikeInfoBean;
@@ -258,6 +259,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private String first_time = "";
     private String continued_price = "";
     private String continued_time = "";
+    private String credit_score_desc = "";
     // 输入法
     private Dialog dialog;
     private EditText bikeNumEdit;
@@ -1468,7 +1470,17 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     }
 
     private void useBike(final String result) {
-        Log.e("scan===useBike", result.indexOf('&') + "<===>" + result);
+//        try {
+//            String s = Utils.decompress(result);
+//
+//            Log.e("scan===useBike", "===" + s);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        Log.e("scan===useBike", "===" + result);
+
+
 
 //        int code = 0;
 //        if (result.split("&").length == 1) {
@@ -1487,6 +1499,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //        } else {
 //            useCar(result);
 //        }
+
+
 
         order_authority(result);
 
@@ -1647,6 +1661,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             first_time = bean.getFirst_time();
                             continued_price = bean.getContinued_price();
                             continued_time = bean.getContinued_time();
+                            credit_score_desc = bean.getCredit_score_desc();
+//                            credit_score_desc = "123";
 
 
                             String lock_secretkey = bean.getLock_secretkey();
@@ -1683,6 +1699,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             rIntent.putExtra("first_time", first_time);
                             rIntent.putExtra("continued_price", continued_price);
                             rIntent.putExtra("continued_time", continued_time);
+                            rIntent.putExtra("credit_score_desc", credit_score_desc);
                             rIntent.putExtra("isMac",false);
 
 

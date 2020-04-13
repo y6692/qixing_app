@@ -1522,7 +1522,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
             if ((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
 
-            Log.e("main===Changed_EB", isContainsList.contains(true) + "》》》" + amapLocation.getAccuracy() + "===" + macList.size() + "===" + type);
+//            Log.e("main===Changed_EB", isContainsList.contains(true) + "》》》" + amapLocation.getAccuracy() + "===" + macList.size() + "===" + type);
             ToastUtil.showMessage(context, isContainsList.contains(true) + "》》》" + near + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
 
             if (amapLocation != null && amapLocation.getErrorCode() == 0) {
@@ -1547,7 +1547,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                     myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
 
                     if (mFirstFix) {
-                        Log.e("main===Changed_EB1", isContainsList.contains(true) + "》》》" + amapLocation.getAccuracy() + "===" + macList.size() + "===" + type);
+//                        Log.e("main===Changed_EB1", isContainsList.contains(true) + "》》》" + amapLocation.getAccuracy() + "===" + macList.size() + "===" + type);
 
                         mFirstFix = false;
 //                        schoolRange();
@@ -1559,7 +1559,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                         addChooseMarker();
                         addCircle(myLocation, amapLocation.getAccuracy());
                     } else {
-                        Log.e("main===Changed_EB2", isContainsList.contains(true) + "》》》" + amapLocation.getAccuracy() + "===" + macList.size() + "===" + type);
+//                        Log.e("main===Changed_EB2", isContainsList.contains(true) + "》》》" + amapLocation.getAccuracy() + "===" + macList.size() + "===" + type);
 
 //                        centerMarker.remove();
 //                        centerMarker = null;

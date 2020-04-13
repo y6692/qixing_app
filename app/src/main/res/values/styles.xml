@@ -28,8 +28,8 @@
         <!--<item name="android:windowIsTranslucent">true</item>-->
 
         <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowDisablePreview">true</item>
-        <item name="android:windowFullscreen">true</item>
+        <!--<item name="android:windowDisablePreview">true</item>-->
+        <!--<item name="android:windowFullscreen">true</item>-->
     </style>
 
     <!---->
