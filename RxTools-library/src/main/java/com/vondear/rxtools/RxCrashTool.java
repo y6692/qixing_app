@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -108,6 +109,9 @@ public class RxCrashTool {
     public static void init(Context context) {
         mContext = context;
         try {
+
+            Log.e("rct===", context+"===");
+
             PackageInfo pi = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
             if (pi != null) {
                 versionName = pi.versionName;
@@ -148,6 +152,8 @@ public class RxCrashTool {
             int labelRes = packageInfo.applicationInfo.labelRes;
             String name = mContext.getResources().getString(labelRes);
             mCrashDirPath = RxFileTool.getRootPath() + File.separator + name + File.separator + "crash" + File.separator;
+
+            Log.e("rct===init", mCrashDirPath+"===");
         } catch (Exception e) {
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
                 mCrashDirPath = mContext.getExternalCacheDir().getPath() + File.separator + "crash" + File.separator;

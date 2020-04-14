@@ -465,7 +465,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
             if(centerMarker!=null){
                 centerMarker.remove();
-                centerMarker = null;
+//                centerMarker = null;
             }
             if(mCircle!=null){
                 mCircle.remove();

@@ -9,6 +9,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
 
 
 import com.alibaba.fastjson.JSON;
@@ -87,15 +89,49 @@ public class CrashHandler implements UncaughtExceptionHandler {
      */
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
+        Log.e("uncaughtException===", mDefaultHandler+"==="+ex.getMessage());
+
         if (mDefaultHandler != null) {
             handleException(ex);// 如果自定义的没有处理则让系统默认的异常处理器来处理
             mDefaultHandler.uncaughtException(thread, ex);// 退出程序
+
+//            mContext.startActivity(mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName()));
+
+
             android.os.Process.killProcess(android.os.Process.myPid());
+
+            Log.e("uncaughtException===1", "==="+ex.getMessage());
 
 //            StackTraceElement[] stackTrace = ex.getStackTrace();
 //            stackTrace[1].getLineNumber();
         }
     }
+
+//    private boolean handlerException(Throwable ex) {
+//        if (ex == null)
+//        {
+//            return true;
+//        }
+//        final String msg = ex.getLocalizedMessage();
+//        new Thread() {
+//            @Override
+//            public void run()
+//            {
+//                Looper.prepare();
+//                Toast toast = Toast.makeText(mContext, "程序出错啦！" + msg, Toast.LENGTH_SHORT);
+//                toast.setGravity(Gravity.CENTER, 0, 0);
+//                toast.show();
+//                Looper.loop();
+//            }
+//        }.start();
+////// 收集设备信息
+////        collectDeviceInfo(mContext);
+////// 保存错误
+////        saveCrashInfoToFiles(ex);
+////// 发送错误报告到服务器
+////        sendCrashReportsToServer(mContext);
+//        return true;
+//    }
 
     /**
      * 自定义错误处理,收集错误信息 发送错误报告等操作均在此完成.
@@ -113,6 +149,8 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 Looper.prepare();
 
                 ToastUtil.showMessageApp(mContext, ">>>"+ex.getMessage());
+
+                Log.e("crash===e", "==="+ex.getMessage());
 
 //                memberEvent(mContext.getClass().getName()+"_"+ex.getStackTrace()[0].getLineNumber()+"_"+ex.getMessage());
 
