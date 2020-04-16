@@ -555,8 +555,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         String h5_title = activity.getIntent().getStringExtra("h5_title");
         String action_content = activity.getIntent().getStringExtra("action_content");
 
-        Log.e("mf===onResume", h5_title+"==="+action_content+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+type);
-
+        Log.e("mf===onActivityCreated", h5_title+"==="+action_content+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+type);
 
         if(h5_title!=null && !"".equals(h5_title)){
             UIHelper.goWebViewAct(context, h5_title, action_content);
@@ -611,19 +610,21 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         if(flag){
             activity.getIntent().putExtra("flag", false);
+
+            if(!isNavi){
+                banner(false);
+                car_authority();
+
+                if(!bikeFragment.isHidden()){
+                    bikeFragment.initNearby(referLatitude, referLongitude);
+                }else{
+                    ebikeFragment.initNearby(referLatitude, referLongitude);
+                }
+            }
         }
 
         if(isPermission){
-//            if(!isNavi){
-//                banner(false);
-//                car_authority();
-//
-//                if(!bikeFragment.isHidden()){
-//                    bikeFragment.initNearby(referLatitude, referLongitude);
-//                }else{
-//                    ebikeFragment.initNearby(referLatitude, referLongitude);
-//                }
-//            }
+
         }
     }
 
@@ -679,7 +680,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     mAMapNavi.calculateWalkRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
 //                    mAMapNavi.calculateRideRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
 //                    mAMapNavi.calculateDriveRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
-//                    mAMapNavi.c
                 }
 
 
@@ -3357,7 +3357,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                                    apiClient.onDestroy();
 //                                }
 
+//                                Looper.prepare();
                                 unlock();
+//                                Looper.loop();
                             }
                         }
                     }, timeout);
@@ -4789,6 +4791,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 //                            Log.e("mf===car2_1", isContainsList + "===" + isContainsList.contains(true) + "===" + pOptions + "===" + bean.getLatitude() + "===" + bean.getLongitude());
 
+
+
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -4805,21 +4809,27 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                         minPoint(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()));
                                     }
 
+//                                    isContainsList.add(true);
+
                                     Log.e("mf===car4", isContainsList.contains(true)  + "===" + bean.getLatitude()+"==="+bean.getLongitude() + "===" + isContainsList);
+
+
 
                                     if(isContainsList.contains(true)){
                                         isGPS_Lo = true;
 
-                                        m_myHandler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if("4".equals(type) || "8".equals(type)){
-                                                    endBtn4();
-                                                }else{
-                                                    endBtn7();
-                                                }
-                                            }
-                                        });
+//                                        m_myHandler.post(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//
+//                                            }
+//                                        });
+
+                                        if("4".equals(type) || "8".equals(type)){
+                                            endBtn4();
+                                        }else{
+                                            endBtn7();
+                                        }
 
                                     }else{
                                         //TODO
@@ -4975,6 +4985,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             }
         }
 
+//        Looper.prepare();
+
         HttpHelper.post(context, Urls.lock, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -5023,6 +5035,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 });
             }
         });
+
+//        Looper.loop();
     }
 
     //助力车开锁
@@ -5030,6 +5044,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         Log.e("mf===unlock", "===");
 
         isOpenLock = false;
+
+//        Looper.prepare();
 
         HttpHelper.post(context, Urls.unlock, null, new TextHttpResponseHandler() {
             @Override
@@ -5083,6 +5099,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 });
             }
         });
+
+//        Looper.loop();
     }
 
     //助力车开锁_轮询
@@ -8780,7 +8798,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 //            clearRoute();
 
-
             if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                 ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                 popupwindow.dismiss();
@@ -8815,7 +8832,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     }
 
 
-
                     MainFragmentPermissionsDispatcher.connectDeviceWithPermissionCheck(MainFragment.this, deviceuuid);
 //                          Looper.loop();
 
@@ -8825,9 +8841,18 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         public void run() {
                             if (!isConnect){
 
-                                Log.e("biking===endBtn7_3", "timeout==="+isConnect);
+                                Log.e("biking===endBtn7_3", "timeout==="+isConnect+"==="+isGPS_Lo);
+
+//                                if(!isGPS_Lo){
+//                                    Looper.prepare();
+//                                }
 
                                 lock();
+
+//                                if(!isGPS_Lo){
+//                                    Looper.loop();
+//                                }
+
                             }
                         }
                     }, timeout);
@@ -8841,7 +8866,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //
 //                    }
 //                }).start();
-
 
             }
 
