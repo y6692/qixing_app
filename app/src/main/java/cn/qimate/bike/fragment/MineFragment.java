@@ -325,16 +325,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //                    codenum = data.getStringExtra("codenum");
 //                    m_nowMac = data.getStringExtra("m_nowMac");
 
-
-
                     ((MainActivity)getActivity()).changeTab(0);
 
                 } else {
 //                    Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case REQUESTCODE_PICK:// 直接从相册获取
 
+            case REQUESTCODE_PICK:// 直接从相册获取
 
                 if (resultCode == RESULT_OK) {
 
