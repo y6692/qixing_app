@@ -611,19 +611,21 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         if(flag){
             activity.getIntent().putExtra("flag", false);
+
+            if(!isNavi){
+                banner(false);
+                car_authority();
+
+                if(!bikeFragment.isHidden()){
+                    bikeFragment.initNearby(referLatitude, referLongitude);
+                }else{
+                    ebikeFragment.initNearby(referLatitude, referLongitude);
+                }
+            }
         }
 
         if(isPermission){
-//            if(!isNavi){
-//                banner(false);
-//                car_authority();
-//
-//                if(!bikeFragment.isHidden()){
-//                    bikeFragment.initNearby(referLatitude, referLongitude);
-//                }else{
-//                    ebikeFragment.initNearby(referLatitude, referLongitude);
-//                }
-//            }
+
         }
     }
 
@@ -4810,16 +4812,18 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     if(isContainsList.contains(true)){
                                         isGPS_Lo = true;
 
-                                        m_myHandler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if("4".equals(type) || "8".equals(type)){
-                                                    endBtn4();
-                                                }else{
-                                                    endBtn7();
-                                                }
-                                            }
-                                        });
+//                                        m_myHandler.post(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//
+//                                            }
+//                                        });
+
+                                        if("4".equals(type) || "8".equals(type)){
+                                            endBtn4();
+                                        }else{
+                                            endBtn7();
+                                        }
 
                                     }else{
                                         //TODO

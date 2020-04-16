@@ -27,8 +27,8 @@ android {
         applicationId "cn.qimate.bike"
         minSdkVersion 18
         targetSdkVersion 28
-        versionCode 205
-        versionName "2.0.5"
+        versionCode 206
+        versionName "2.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
 
@@ -57,13 +57,13 @@ android {
 //            storePassword "123456"
 //        }
 
-//        config {
-//            keyPassword 'android'
-//            keyAlias "qixing"
-//            storeFile file('E:\\qixing-主App.keystore')
-//            storePassword 'android'
-//
-//        }
+        config {
+            keyPassword 'android'
+            keyAlias "qixing"
+            storeFile file('E:\\qixing-主App.keystore')
+            storePassword 'android'
+
+        }
 
         release {
             keyAlias "7MA"
@@ -77,7 +77,7 @@ android {
     buildTypes {
         release {
             debuggable true
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.config
             // true - 打开混淆
             minifyEnabled false
 //            // true - 打开资源压缩

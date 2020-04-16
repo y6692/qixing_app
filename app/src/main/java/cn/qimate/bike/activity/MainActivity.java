@@ -275,9 +275,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         initData();
         initView();
 
-
-
-
     }
 
     private void initData() {
@@ -399,12 +396,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             }).start();
 		}
 
-
-
 //        exImage_1.setOnClickListener(myOnClickLister);
 //        exImage_2.setOnClickListener(myOnClickLister);
-
-
 
     }
 
