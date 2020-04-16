@@ -251,6 +251,7 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 
 	private void initHttp() {
 		Log.e("sa===banner", "===");
+//		handler.sendEmptyMessageDelayed(0, 900);
 
 		HttpHelper.get2(context, Urls.banner + 1, new TextHttpResponseHandler() {
 			@Override

@@ -147,6 +147,8 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
                                 tv_payment_time.setText(""+bean.getPayment_time());
                                 tv_price.setText(""+bean.getPrice());
                                 tv_continued_price.setText(""+bean.getContinued_price());
+                                tv_credit_score_desc.setText("("+bean.getCredit_score_desc()+")");
+                                tv_credit_score_desc2.setText("("+bean.getCredit_score_desc()+")");
 
                                 if(!"0".equals(bean.getEach_free_time())){
                                     rl_each_free_time.setVisibility(View.VISIBLE);
@@ -155,19 +157,17 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
                                     rl_each_free_time.setVisibility(View.GONE);
                                 }
 
-                                if("".equals(bean.getCredit_score_desc())){
-                                    tv_credit_score_desc.setVisibility(View.GONE);
-                                    tv_credit_score_desc2.setVisibility(View.GONE);
-                                    tv_price.setTextColor(0xFF333333);
-                                    tv_continued_price.setTextColor(0xFF333333);
-                                }else{
-                                    tv_credit_score_desc.setVisibility(View.VISIBLE);
-                                    tv_credit_score_desc2.setVisibility(View.VISIBLE);
-                                    tv_credit_score_desc.setText("("+bean.getCredit_score_desc()+")");
-                                    tv_credit_score_desc2.setText("("+bean.getCredit_score_desc()+")");
-                                    tv_price.setTextColor(0xFFFD555B);
-                                    tv_continued_price.setTextColor(0xFFFD555B);
-                                }
+//                                if("".equals(bean.getCredit_score_desc())){
+//                                    tv_credit_score_desc.setVisibility(View.GONE);
+//                                    tv_credit_score_desc2.setVisibility(View.GONE);
+//                                    tv_price.setTextColor(0xFF333333);
+//                                    tv_continued_price.setTextColor(0xFF333333);
+//                                }else{
+//                                    tv_credit_score_desc.setVisibility(View.VISIBLE);
+//                                    tv_credit_score_desc2.setVisibility(View.VISIBLE);
+//                                    tv_price.setTextColor(0xFFFD555B);
+//                                    tv_continued_price.setTextColor(0xFFFD555B);
+//                                }
 
                                 tv_cycling_time.setText(""+bean.getCycling_time());
 

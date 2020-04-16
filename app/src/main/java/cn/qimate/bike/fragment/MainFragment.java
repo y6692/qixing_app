@@ -866,7 +866,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         mMyImageLoader = new MyImageLoader();
         mBanner = activity.findViewById(R.id.banner);
         //设置样式，里面有很多种样式可以自己都看看效果
-        mBanner.setBannerStyle(0);
+//        mBanner.setBannerStyle(0);
+        mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
         //设置图片加载器
         mBanner.setImageLoader(mMyImageLoader);
         //设置轮播的动画效果,里面有很多种特效,可以都看看效果。
@@ -3096,10 +3097,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 Log.e("closeAgain===onClick_7", "临时上锁===" + isConnect + "===" + deviceuuid + "===" + apiClient);
 
                 if(!isConnect){
-                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
-                    builder.setBleStateChangeListener(MainFragment.this);
-                    builder.setScanResultCallback(MainFragment.this);
-                    apiClient = builder.build();
+                    if(apiClient==null){
+                        XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                        builder.setBleStateChangeListener(MainFragment.this);
+                        builder.setScanResultCallback(MainFragment.this);
+                        apiClient = builder.build();
+                    }
 
                     MainFragmentPermissionsDispatcher.connectDeviceWithPermissionCheck(MainFragment.this, deviceuuid);
 
@@ -3123,7 +3126,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 }
             }
         }else{
-            temporaryAction();
+//            temporaryAction();  //泺平锁临时上锁
         }
     }
 
@@ -3330,10 +3333,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 Log.e("openAgain===onClick_7", "再次开锁===" + isConnect + "===" + deviceuuid + "===" + apiClient);
 
                 if(!isConnect){
-                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
-                    builder.setBleStateChangeListener(MainFragment.this);
-                    builder.setScanResultCallback(MainFragment.this);
-                    apiClient = builder.build();
+                    if(apiClient==null){
+                        XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                        builder.setBleStateChangeListener(MainFragment.this);
+                        builder.setScanResultCallback(MainFragment.this);
+                        apiClient = builder.build();
+                    }
 
                     MainFragmentPermissionsDispatcher.connectDeviceWithPermissionCheck(MainFragment.this, deviceuuid);
 
@@ -4522,6 +4527,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         LinearLayout ll_change_car = (LinearLayout) customView.findViewById(R.id.ll_change_car);
         LinearLayout ll_rent = (LinearLayout) customView.findViewById(R.id.ll_rent);
 
+        tv_credit_score_desc.setText(credit_score_desc);
+
         if(carmodel_id==2){
             ll_ebike.setVisibility(View.VISIBLE);
 
@@ -4545,20 +4552,21 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             tv_each_free_time.setText(each_free_time+"分钟免费");
         }
 
-        if("".equals(credit_score_desc)){
-            tv_credit_score_desc.setVisibility(View.GONE);
-            tv_first_price.setTextColor(0xFF666666);
-            tv_first_time.setTextColor(0xFF666666);
-            tv_continued_price.setTextColor(0xFF666666);
-            tv_continued_time.setTextColor(0xFF666666);
-        }else{
-            tv_credit_score_desc.setVisibility(View.VISIBLE);
-            tv_credit_score_desc.setText(credit_score_desc);
-            tv_first_price.setTextColor(0xFFFD555B);
-            tv_first_time.setTextColor(0xFFFD555B);
-            tv_continued_price.setTextColor(0xFFFD555B);
-            tv_continued_time.setTextColor(0xFFFD555B);
-        }
+        Log.e("initmPopupRent===", credit_score_desc+"===");
+
+//        if("".equals(credit_score_desc)){
+//            tv_credit_score_desc.setVisibility(View.GONE);
+//            tv_first_price.setTextColor(0xFF666666);
+//            tv_first_time.setTextColor(0xFF666666);
+//            tv_continued_price.setTextColor(0xFF666666);
+//            tv_continued_time.setTextColor(0xFF666666);
+//        }else{
+//            tv_credit_score_desc.setVisibility(View.VISIBLE);
+//            tv_first_price.setTextColor(0xFFFD555B);
+//            tv_first_time.setTextColor(0xFFFD555B);
+//            tv_continued_price.setTextColor(0xFFFD555B);
+//            tv_continued_time.setTextColor(0xFFFD555B);
+//        }
 
 //        tv_price.setText(Html.fromHtml(price));
 //        tv_price.setText(Html.fromHtml(price, null, new HtmlTagHandler("font")));
@@ -5153,7 +5161,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    //助力车关锁_轮询
+    //助力车关锁_轮询w
     private void carLoopClose() {
         Log.e("mf===carLoopClose", order_id2+"===" +order_id+"===" + isAgain+"===" + codenum);
 
@@ -5889,9 +5897,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     public void run() {
                         Log.e("openLock===Fail", m_nowMac+"==="+Code.toString(code));
 
-                        getBleRecord();
 //                      deleteBleRecord(null);
 
+                        getBleRecord();
                         car_notification(1, 3, 0);
 
 //                      ToastUtil.showMessageApp(context, Code.toString(code));
@@ -5910,9 +5918,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                 isFinish = true;
 
-//                ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
-//
-//                car_notification(1, 1, 0);
+                ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
+                car_notification(1, 1, 0);
 
 //                if("锁已开".equals(Code.toString(code))){
 //
@@ -6032,18 +6039,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                UIHelper.dismiss();
                 Log.e("scan===deleteBleRecord", "Success===Empty");
 
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        closeLoadingDialog();
-
-                        isFinish = true;
-
-                        ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
-
-                        car_notification(1, 1, 0);
-                    }
-                });
+//                m_myHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        closeLoadingDialog();
+//
+//                        isFinish = true;
+//                        ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
+//                        car_notification(1, 1, 0);
+//                    }
+//                });
 
             }
 
@@ -7516,7 +7521,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 }
                             }else{
                                 if(isEndBtn){
-//                                getLockStatus();
+//                                  getLockStatus();
                                     car_notification(3, 2, 0);
                                     Toast.makeText(context,"蓝牙连接失败，重启软件试试吧！",Toast.LENGTH_LONG).show();
                                 }else{

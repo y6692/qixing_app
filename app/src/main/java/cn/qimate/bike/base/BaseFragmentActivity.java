@@ -150,7 +150,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 		context = this;
 		BaseApplication.context = context;
 
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);		//设定为竖屏
+//		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);		//设定为竖屏
 
 //		registerReceiver(Config.initFilter());
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);

@@ -1662,7 +1662,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             continued_price = bean.getContinued_price();
                             continued_time = bean.getContinued_time();
                             credit_score_desc = bean.getCredit_score_desc();
-//                            credit_score_desc = "123";
 
 
                             String lock_secretkey = bean.getLock_secretkey();

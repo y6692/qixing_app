@@ -1120,9 +1120,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                                 history_order_h5_title = bean.getHistory_order_h5_title();
                                 history_order_h5_url = bean.getHistory_order_h5_url();
 
-                                if(invite_h5_url==null || "".equals(invite_h5_url)){
-                                    inviteLayout.setVisibility(View.GONE);
-                                }
+//                                if(invite_h5_url==null || "".equals(invite_h5_url)){
+//                                    inviteLayout.setVisibility(View.GONE);
+//                                }
 
                                 //TODO  3
 //                            if (bean.getHeadimg() != null && !"".equals(bean.getHeadimg())) {

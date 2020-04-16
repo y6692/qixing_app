@@ -33,7 +33,7 @@ public class CarBean {
     private String first_price;    //起步价格
     private String continued_time; //后续时间 单位：分钟
     private String continued_price; //后续价格
-    private String credit_score_desc; //
+    private String credit_score_desc = ""; //
 
 
     public int getId() {

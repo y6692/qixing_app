@@ -316,6 +316,7 @@
                                 />
 
                             <TextView
+                                android:visibility="gone"
                                 android:id="@+id/my_order_detail_tv_credit_score_desc"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -371,6 +372,7 @@
                                 />
 
                             <TextView
+                                android:visibility="gone"
                                 android:id="@+id/my_order_detail_tv_credit_score_desc2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

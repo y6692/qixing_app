@@ -411,6 +411,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:visibility="gone"
                         android:id="@+id/personUI_inviteLayout"
                         android:layout_width="match_parent"
                         android:layout_height="24dp"

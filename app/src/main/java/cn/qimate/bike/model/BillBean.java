@@ -15,7 +15,7 @@ public class BillBean {
 	private String car_end_time = "";	//结束时间
 	private String price = "";	//骑行起步价
 	private String continued_price = "";	//骑行后续价
-	private String credit_score_desc = "789";	//
+	private String credit_score_desc = "";	//
 	private String cycling_time = "";	//骑行时间
 	private String each_free_time = "";	//每次免费时长
 	private int order_type;	//订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单
