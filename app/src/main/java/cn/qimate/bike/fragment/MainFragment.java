@@ -4554,19 +4554,19 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         Log.e("initmPopupRent===", credit_score_desc+"===");
 
-//        if("".equals(credit_score_desc)){
-//            tv_credit_score_desc.setVisibility(View.GONE);
-//            tv_first_price.setTextColor(0xFF666666);
-//            tv_first_time.setTextColor(0xFF666666);
-//            tv_continued_price.setTextColor(0xFF666666);
-//            tv_continued_time.setTextColor(0xFF666666);
-//        }else{
-//            tv_credit_score_desc.setVisibility(View.VISIBLE);
-//            tv_first_price.setTextColor(0xFFFD555B);
-//            tv_first_time.setTextColor(0xFFFD555B);
-//            tv_continued_price.setTextColor(0xFFFD555B);
-//            tv_continued_time.setTextColor(0xFFFD555B);
-//        }
+        if("".equals(credit_score_desc)){
+            tv_credit_score_desc.setVisibility(View.GONE);
+            tv_first_price.setTextColor(0xFF666666);
+            tv_first_time.setTextColor(0xFF666666);
+            tv_continued_price.setTextColor(0xFF666666);
+            tv_continued_time.setTextColor(0xFF666666);
+        }else{
+            tv_credit_score_desc.setVisibility(View.VISIBLE);
+            tv_first_price.setTextColor(0xFFFD555B);
+            tv_first_time.setTextColor(0xFFFD555B);
+            tv_continued_price.setTextColor(0xFFFD555B);
+            tv_continued_time.setTextColor(0xFFFD555B);
+        }
 
 //        tv_price.setText(Html.fromHtml(price));
 //        tv_price.setText(Html.fromHtml(price, null, new HtmlTagHandler("font")));
