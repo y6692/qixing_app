@@ -1128,7 +1128,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                         }
 
                         isInitNearby = false;
-
                     }
                 });
 
