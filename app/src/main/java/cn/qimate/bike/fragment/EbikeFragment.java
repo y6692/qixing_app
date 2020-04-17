@@ -301,6 +301,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     private MarkerOptions marker_tip_Option2;
 
     private boolean firstH = true;
+    private boolean isInitNearby;
 
     public List<Polygon> pOptionsNear;
 
@@ -410,6 +411,12 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //            }
 
 //            schoolRange();
+
+//            aMap.clear();
+//
+            if(centerMarker!=null){
+                centerMarker.remove();
+            }
         }else{
             //resume
 
@@ -937,11 +944,20 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     public void initNearby(final double latitude, final double longitude){
 
+        Log.e("ebf===initNearby0", isHidden+"==="+isInitNearby+"==="+latitude+"==="+longitude);
+
         if(isHidden) return;
+
+        if(!isInitNearby){
+            isInitNearby = true;
+        }else{
+            isInitNearby = false;
+            return;
+        }
 
         if(latitude==0.0 || longitude==0.0) return;
 
-        Log.e("ebf===initNearby0", latitude+"==="+longitude);
+//        Log.e("ebf===initNearby0", latitude+"==="+longitude);
 
         RequestParams params = new RequestParams();
         params.put("latitude", latitude);
@@ -979,91 +995,73 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
 
-                if(isHidden) return;
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(isHidden) return;
 
-                try {
-                    Log.e("initNearby===EBike", "==="+responseString);
+                        try {
+                            Log.e("initNearby===EBike", "==="+responseString);
 
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                    car_count = new JSONObject(result.getData()).getInt("count");
+                            car_count = new JSONObject(result.getData()).getInt("count");
 
 
-                    Log.e("initNearby===EBike1", "==="+car_count);
+                            Log.e("initNearby===EBike1", "==="+car_count);
 
 //                    tv_car_count.setText(count+"辆");
 
 //                    centerMarker.setMarkerOptions(centerMarkerOption);
 
-                    View view = View.inflate(context, R.layout.marker_info_layout, null);
-                    iv_marker = view.findViewById(R.id.iv);
-                    if(unauthorized_code==6){
-                        if("10".equals(type)){
-                            iv_marker.setImageResource(R.drawable.marker3);
-                        }else{
-                            iv_marker.setImageResource(R.drawable.marker2);
+                            View view = View.inflate(context, R.layout.marker_info_layout, null);
+                            iv_marker = view.findViewById(R.id.iv);
+                            if(unauthorized_code==6){
+                                if("10".equals(type)){
+                                    iv_marker.setImageResource(R.drawable.marker3);
+                                }else{
+                                    iv_marker.setImageResource(R.drawable.marker2);
+                                }
+                            }else{
+                                iv_marker.setImageResource(R.drawable.marker1);
+                            }
+                            tv_car_count = view.findViewById(R.id.tv_car_count);
+                            tv_car_count.setText((car_count>99?99:car_count)+"辆");
+                            centerMarkerOption = new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.fromView(view));
+
+                            if(centerMarker!=null){
+                                centerMarker.remove();
+                            }
+
+                            if(isHidden) return;
+                            centerMarker = aMap.addMarker(centerMarkerOption);
+
+                            parking_ranges(latitude, longitude);
+
+                        } catch (Exception e) {
+
                         }
-                    }else{
-                        iv_marker.setImageResource(R.drawable.marker1);
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
                     }
-                    tv_car_count = view.findViewById(R.id.tv_car_count);
-                    tv_car_count.setText((car_count>99?99:car_count)+"辆");
-                    centerMarkerOption = new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.fromView(view));
+                });
 
-                    if(centerMarker!=null){
-                        centerMarker.remove();
-                    }
-
-                    centerMarker = aMap.addMarker(centerMarkerOption);
-
-//                    if(unauthorized_code==6){
-//                        centerMarker.setAlpha(0);
-//                    }else{
-//                        centerMarker.setAlpha(255);
-//                    }
-
-//                    if (result.getFlag().equals("Success")) {
-//                        JSONArray array = new JSONArray(result.getData());
-//
-//                        Log.e("initNearby===Bike", "==="+array.length());
-//
-//                        for (Marker marker : bikeMarkerList){
-//                            if (marker != null){
-//                                marker.remove();
-//                            }
-//                        }
-//                        if (!bikeMarkerList.isEmpty() || 0 != bikeMarkerList.size()){
-//                            bikeMarkerList.clear();
-//                        }
-//                        if (0 == array.length()){
-//                            ToastUtils.show("附近没有单车");
-//                        }else {
-//                            for (int i = 0; i < array.length(); i++){
-//                                NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
-//                                // 加入自定义标签
-//
-////                                Log.e("initNearby===Bike", bean.getLatitude()+"==="+bean.getLongitude());
-//
-//                                MarkerOptions bikeMarkerOption = new MarkerOptions().position(new LatLng(Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(bikeDescripter);
-//                                Marker bikeMarker = aMap.addMarker(bikeMarkerOption);
-//                                bikeMarkerList.add(bikeMarker);
-//                            }
-//
-//                        }
-//                    } else {
-//                        ToastUtils.show(result.getMsg());
-//                    }
-                } catch (Exception e) {
-
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
             }
         });
 
+
+
+
+    }
+
+    void parking_ranges(final double latitude, final double longitude){
+
+        RequestParams params = new RequestParams();
+        params.put("latitude", latitude);
+        params.put("longitude", longitude);
 
         HttpHelper.get2(context, Urls.parking_ranges, params, new TextHttpResponseHandler() {
             @Override
@@ -1079,6 +1077,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+                if(isHidden) return;
 
                 Log.e("main_eb===parking_r0", "==="+responseString);
 
@@ -1203,6 +1203,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                                     centerMarker.remove();
                                                 }
 
+                                                if(isHidden) return;
                                                 centerMarker = aMap.addMarker(centerMarkerOption);
 
                                             }
@@ -1235,12 +1236,13 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                             }
                         }
 
+                        isInitNearby = false;
+
                     }
                 });
 
             }
         });
-
     }
 
 

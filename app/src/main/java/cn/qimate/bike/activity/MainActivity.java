@@ -1008,7 +1008,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //            mapView.onDestroy();
 //        }
 
-        unregisterReceiver(mScreenReceiver);
+//        unregisterReceiver(mScreenReceiver);
     }
 
 

@@ -621,7 +621,7 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 			locationOption = new AMapLocationClientOption();
 		}
 		initjpush();
-		registerMessageReceiver();
+//		registerMessageReceiver();
 		initLocation();
 
 		skipLayout.setOnClickListener(new View.OnClickListener() {
@@ -752,9 +752,9 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 
 //		handler.removeCallbacksAndMessages(null);
 
-		if(mMessageReceiver!=null){
-			unregisterReceiver(mMessageReceiver);
-		}
+//		if(mMessageReceiver!=null){
+//			unregisterReceiver(mMessageReceiver);
+//		}
 
 
 		stopLocation();
@@ -1070,35 +1070,35 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 
 
 	// for receive customer msg from jpush server
-	private MessageReceiver mMessageReceiver;
+//	private MessageReceiver mMessageReceiver;
 	public static final String MESSAGE_RECEIVED_ACTION = "com.example.jpushdemo.MESSAGE_RECEIVED_ACTION";
 	public static final String KEY_TITLE = "title";
 	public static final String KEY_MESSAGE = "message";
 	public static final String KEY_EXTRAS = "extras";
 
-	public void registerMessageReceiver() {
-		mMessageReceiver = new MessageReceiver();
-		IntentFilter filter = new IntentFilter();
-		filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
-		filter.addAction(MESSAGE_RECEIVED_ACTION);
-		registerReceiver(mMessageReceiver, filter);
-	}
-
-	public class MessageReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (MESSAGE_RECEIVED_ACTION.equals(intent.getAction())) {
-				String messge = intent.getStringExtra(KEY_MESSAGE);
-				String extras = intent.getStringExtra(KEY_EXTRAS);
-				StringBuilder showMsg = new StringBuilder();
-				showMsg.append(KEY_MESSAGE + " : " + messge + "\n");
-				if (extras != null && !"".equals(extras)) {
-					showMsg.append(KEY_EXTRAS + " : " + extras + "\n");
-				}
-			}
-		}
-	}
+//	public void registerMessageReceiver() {
+//		mMessageReceiver = new MessageReceiver();
+//		IntentFilter filter = new IntentFilter();
+//		filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+//		filter.addAction(MESSAGE_RECEIVED_ACTION);
+//		registerReceiver(mMessageReceiver, filter);
+//	}
+//
+//	public class MessageReceiver extends BroadcastReceiver {
+//
+//		@Override
+//		public void onReceive(Context context, Intent intent) {
+//			if (MESSAGE_RECEIVED_ACTION.equals(intent.getAction())) {
+//				String messge = intent.getStringExtra(KEY_MESSAGE);
+//				String extras = intent.getStringExtra(KEY_EXTRAS);
+//				StringBuilder showMsg = new StringBuilder();
+//				showMsg.append(KEY_MESSAGE + " : " + messge + "\n");
+//				if (extras != null && !"".equals(extras)) {
+//					showMsg.append(KEY_EXTRAS + " : " + extras + "\n");
+//				}
+//			}
+//		}
+//	}
 
 
 
