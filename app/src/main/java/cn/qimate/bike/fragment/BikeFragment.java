@@ -541,6 +541,8 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                     PolygonOptions pOption = new PolygonOptions();
 
                                     pOption.addAll(list);
+
+                                    if(isHidden) return;
                                     polygon = aMap.addPolygon(pOption.strokeWidth(3)
 //                                            .strokeDashStyle()
                                             .strokeColor(Color.argb(255, 0, 135, 255))
@@ -654,6 +656,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                     pOption.addAll(list);
 
+                                    if(isHidden) return;
                                     polygon = aMap.addPolygon(pOption
 //                                                .strokeWidth(2)
 //                                                .strokeColor(Color.argb(255, 0, 135, 255))
@@ -773,6 +776,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                                     pOption.addAll(list);
 
+                                                    if(isHidden) return;
                                                     polygon = aMap.addPolygon(pOption
 //                                                            .strokeWidth(2)
 //                                                            .strokeColor(Color.argb(255, 0, 135, 255))
@@ -1048,10 +1052,13 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                                     pOption.addAll(list);
 
+                                                    if(isHidden) return;
                                                     polygon = aMap.addPolygon(pOption
                                                             .strokeWidth(2)
                                                             .strokeColor(Color.argb(255, 0, 135, 255))
                                                             .fillColor(Color.argb(77, 0, 173, 255)));
+
+                                                    if(isHidden) return;
 
                                                     LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
                                                     marker_park_Option.title(jsonObject.getString("name")).position(latLng);

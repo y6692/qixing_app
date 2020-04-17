@@ -339,7 +339,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //        mapView.onCreate(savedInstanceState);
 
 
-
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
@@ -390,7 +389,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         if (loadingDialog != null && loadingDialog.isShowing()){
             loadingDialog.dismiss();
         }
-
 
 
         if(hidden){
@@ -546,6 +544,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                     PolygonOptions pOption = new PolygonOptions();
                                     pOption.addAll(list);
 
+                                    if(isHidden) return;
                                     polygon = aMap.addPolygon(pOption.strokeWidth(2)
                                             .strokeColor(Color.argb(255, 48, 191, 186))
                                             .fillColor(Color.argb(75, 18, 237, 226)));
@@ -656,6 +655,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                     PolygonOptions pOption = new PolygonOptions();
 
                                     pOption.addAll(list);
+
+                                    if(isHidden) return;
                                     polygon = aMap.addPolygon(pOption.strokeWidth(2)
                                             .strokeColor(Color.argb(255, 0, 135, 255))
                                             .fillColor(Color.argb(0, 0, 0, 0)));
@@ -764,6 +765,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                     pOption.addAll(list);
 
+                                    if(isHidden) return;
                                     polygon = aMap.addPolygon(pOption
 //                                            .strokeWidth(2)
 //                                            .strokeColor(Color.argb(255, 0, 135, 255))
@@ -881,6 +883,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                                     pOption.addAll(list);
 
+                                                    if(isHidden) return;
                                                     polygon = aMap.addPolygon(pOption
 //                                                            .strokeWidth(2)
 //                                                            .strokeColor(Color.argb(255, 0, 135, 255))
@@ -1163,11 +1166,13 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                                     pOption.addAll(list);
 
+                                                    if(isHidden) return;
                                                     polygon = aMap.addPolygon(pOption
                                                             .strokeWidth(2)
                                                             .strokeColor(Color.argb(255, 0, 135, 255))
                                                             .fillColor(Color.argb(77, 0, 173, 255)));
 
+                                                    if(isHidden) return;
                                                     LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
                                                     marker_park_Option.title(jsonObject.getString("name")).position(latLng);
                                                     Marker bikeMarker = aMap.addMarker(marker_park_Option);
@@ -1318,6 +1323,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                     pOption.addAll(list);
 
+                                    if(isHidden) return;
                                     polygon = aMap.addPolygon(pOption.strokeColor(Color.argb(0, 255, 255, 255)).fillColor(Color.argb(0, 255, 255, 255)));
 
 
@@ -1386,6 +1392,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                             PolygonOptions pOption = new PolygonOptions();
                             pOption.addAll(list);
 
+                            if(isHidden) return;
                             polygon = aMap.addPolygon(pOption.strokeWidth(2)
                                     .strokeColor(Color.argb(255, 48, 191, 186))
                                     .fillColor(Color.argb(75, 18, 237, 226)));
@@ -1449,6 +1456,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                         PolygonOptions pOption = new PolygonOptions();
                                         pOption.addAll(list);
 
+                                        if(isHidden) return;
                                         polygon = aMap.addPolygon(pOption.strokeWidth(2)
                                                 .strokeColor(Color.argb(255, 48, 191, 186))
                                                 .fillColor(Color.argb(75, 18, 237, 226)));
