@@ -385,8 +385,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         Log.e("onHiddenChanged===ebike", type+"==="+hidden+"==="+firstH+"==="+referLatitude+"==="+mlocationClient);
 
 
-
-
         isHidden = hidden;
 
         if (loadingDialog != null && loadingDialog.isShowing()){
