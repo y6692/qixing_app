@@ -8810,7 +8810,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 
                 if(!isConnect){
-//                          Looper.prepare();
+//                  Looper.prepare();
                     if(apiClient==null){
                         XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
                         builder.setBleStateChangeListener(MainFragment.this);
@@ -8818,10 +8818,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         apiClient = builder.build();
                     }
 
-
-
                     MainFragmentPermissionsDispatcher.connectDeviceWithPermissionCheck(MainFragment.this, deviceuuid);
-//                          Looper.loop();
+//                  Looper.loop();
 
                     isConnect = false;
                     m_myHandler.postDelayed(new Runnable() {
