@@ -7756,7 +7756,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         }
 
-
     }
 
     private void getBleToken(){
