@@ -41,6 +41,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -232,7 +233,7 @@ import static com.sofi.blelocker.library.Constants.STATUS_CONNECTED;
 import static com.sunshine.blelibrary.utils.EncryptUtils.Encrypt;
 
 @SuppressLint("NewApi")
-public class MainFragment extends BaseFragment implements View.OnClickListener, OnBannerListener, LocationSource, OnConnectionListener, BleStateChangeListener, ScanResultCallback, AMap.OnMapClickListener, AMapNaviListener {
+public class MainFragment extends BaseFragment implements View.OnClickListener, OnBannerListener, LocationSource, OnConnectionListener, BleStateChangeListener, ScanResultCallback, AMap.OnMapClickListener, AMap.OnMapLongClickListener, AMapNaviListener {
 
     private View v;
     Unbinder unbinder;
@@ -659,9 +660,50 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         aMap.moveCamera(cameraUpdate);
 
         aMap.setOnMapClickListener(this);
+        aMap.setOnMapLongClickListener(this);
 
         mAMapNavi = AMapNavi.getInstance(context);
         mAMapNavi.addAMapNaviListener(this);
+
+//        aMap.getUiSettings().setAllGesturesEnabled(false);
+//        aMap.getUiSettings().setTiltGesturesEnabled(false);//禁止倾斜手势.
+
+//        aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
+//            @Override
+//            public void onTouch(MotionEvent motionEvent) {
+////                if(marker.getTitle()!=null && !"".equals(marker.getTitle())){
+////
+////                }
+//                Log.e("onMarkerTouch===", motionEvent.getAction()+"==="+motionEvent.getX()+"==="+motionEvent.getY());
+//
+//
+//                if(motionEvent.getAction()==0){
+//                    aMap.getUiSettings().setAllGesturesEnabled(false);
+//                }else if(motionEvent.getAction()==1){
+//                    aMap.getUiSettings().setAllGesturesEnabled(true);
+//                }
+//
+//            }
+//        });
+
+        aMap.setOnMarkerDragListener(new AMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                Log.e("onMarkerDragStart===", marker+"==="+marker.getPosition());
+
+//                marker.setPosition(myLocation);
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+                Log.e("onMarkerDrag===", marker+"==="+marker.getPosition());
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                Log.e("onMarkerDragEnd===", marker+"==="+marker.getPosition());
+            }
+        });
 
         aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
             @Override
@@ -4774,20 +4816,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             final LocationBean bean = JSON.parseObject(result.getData(), LocationBean.class);
 
-//                            if (loadingDialog != null && loadingDialog.isShowing()) {
-//                                loadingDialog.dismiss();
-//                            }
-
-//                            bean.setLatitude("31.764387");
-//                            bean.setLongitude("119.92056");
 
                             Log.e("mf===car2", isContainsList.contains(true) + "===" + pOptions + "===" + bean.getLatitude() + "===" + bean.getLongitude() + "===" + isContainsList);
 
-//                            type = ""+bean.getLock_id();
-//                            bleid = bean.getLock_secretkey();
-//                            deviceuuid = bean.getVendor_lock_id();
-//                            codenum = bean.getNumber();
-//                            m_nowMac = bean.getLock_mac();
 
                             if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
                                 isContainsList.clear();
@@ -4798,55 +4829,55 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    for ( int i = 0; i < pOptions.size(); i++){
 
-//                                        Log.e("mf===car2_2", isContainsList + "===" + isContainsList.contains(true) + "===" + pOptions.size() + "===" + bean.getLatitude() + "===" + bean.getLongitude());
+                                }
+                            }).start();
 
-                                        isContainsList.add(pOptions.get(i).contains(new LatLng(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()))));
-                                    }
+                            for ( int i = 0; i < pOptions.size(); i++){
+                                isContainsList.add(pOptions.get(i).contains(new LatLng(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()))));
+                            }
 
-                                    Log.e("mf===car3", isContainsList.contains(true)  + "===" + bean.getLatitude()+"==="+bean.getLongitude() + "===" + isContainsList);
+                            Log.e("mf===car3", isContainsList.contains(true)  + "===" + bean.getLatitude()+"==="+bean.getLongitude() + "===" + isContainsList);
 
-                                    if(!isContainsList.contains(true)){
-                                        minPoint(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()));
-                                    }
+                            if(!isContainsList.contains(true)){
+                                minPoint(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()));
+                            }
 
-                                    Log.e("mf===car4", isContainsList.contains(true)  + "===" + bean.getLatitude()+"==="+bean.getLongitude() + "===" + isContainsList);
+                            Log.e("mf===car4", isContainsList.contains(true)  + "===" + bean.getLatitude()+"==="+bean.getLongitude() + "===" + isContainsList);
 
-                                    if(isContainsList.contains(true)){
-                                        isGPS_Lo = true;
+                            if(isContainsList.contains(true)){
+                                isGPS_Lo = true;
 
 //                                        m_myHandler.post(new Runnable() {
 //                                            @Override
 //                                            public void run() {
-//
 //                                            }
 //                                        });
 
-                                        if("4".equals(type) || "8".equals(type)){
-                                            endBtn4();
-                                        }else{
-                                            endBtn7();
-                                        }
+                                if("4".equals(type) || "8".equals(type)){
+                                    endBtn4();
+                                }else{
+                                    endBtn7();
+                                }
 
-                                    }else{
-                                        //TODO
+                            }else{
+                                //TODO
 
-                                        isGPS_Lo = false;
+                                isGPS_Lo = false;
 
-                                        startXB();
+                                startXB();
 
-                                        new Thread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                try {
-                                                    int n=0;
-                                                    while(macList.size() == 0){
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            int n=0;
+                                            while(macList.size() == 0){
 
-                                                        Thread.sleep(100);
-                                                        n++;
+                                                Thread.sleep(100);
+                                                n++;
 
-                                                        Log.e("biking===","biking=n=="+n);
+                                                Log.e("biking===","biking=n=="+n);
 
 //                                                        if(n%20==0){
 //                                                            scanManager.stopScan();
@@ -4854,21 +4885,17 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                                                        }
 
 
-                                                        if(n>=101) break;
+                                                if(n>=101) break;
 
-                                                    }
-                                                } catch (InterruptedException e) {
-                                                    e.printStackTrace();
-                                                }
-
-                                                m_myHandler.sendEmptyMessage(3);
                                             }
-                                        }).start();
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        m_myHandler.sendEmptyMessage(3);
                                     }
-                                }
-                            }).start();
-
-
+                                }).start();
+                            }
 
                         } catch (Exception e) {
                             closeLoadingDialog();
@@ -4987,7 +5014,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void onStart() {
                 if(isAgain){
-
                 }
                 onStartCommon("正在加载");
             }
@@ -5074,7 +5100,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 closeLoadingDialog();
                             }else{
                                 popupwindow.dismiss();
-
 
                                 n=0;
                                 carLoopOpen();
@@ -5258,7 +5283,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             }else{
                 ebikeFragment.initNearby(referLatitude, referLongitude);
             }
-
 
 
             if("5".equals(type)  || "6".equals(type)){
@@ -5478,14 +5502,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private String parking(){
-        Log.e("mf===parking", jsonArray+"==="+jsonArray2);
+//        Log.e("mf===parking", jsonArray+"==="+jsonArray2);
 
 
         if(jsonArray != null){
 
             try{
 
-                Log.e("mf===parking1", jsonArray+"==="+jsonArray.length());
+//                Log.e("mf===parking1", jsonArray+"==="+jsonArray.length());
 
                 for ( int i = 0; i < pOptions.size(); i++){
 
@@ -5493,6 +5517,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                     if(pOptions.get(i).contains(new LatLng(referLatitude, referLongitude))){
 //                        Log.e("mf===parking13", "==="+jsonArray.getJSONObject(i));
+
+//                        Log.e("mf===parking2", "==="+jsonArray.getJSONObject(i));
 
                         return ""+jsonArray.getJSONObject(i);
                     }
@@ -5508,18 +5534,18 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         if(jsonArray2 != null){
 
-            Log.e("mf===parking2", "===");
+//            Log.e("mf===parking2", "===");
 
             try{
 
-                Log.e("mf===parking21", jsonArray2+"==="+jsonArray2.length());
+//                Log.e("mf===parking21", jsonArray2+"==="+jsonArray2.length());
 
                 for ( int i = 0; i < pOptions.size(); i++){
 
-                    Log.e("mf===parking22", i+"==="+pOptions.get(i)+"==="+pOptions.get(i).contains(new LatLng(referLatitude, referLongitude)));
+//                    Log.e("mf===parking22", i+"==="+pOptions.get(i)+"==="+pOptions.get(i).contains(new LatLng(referLatitude, referLongitude)));
 
                     if(pOptions.get(i).contains(new LatLng(referLatitude, referLongitude))){
-                        Log.e("mf===parking23", "==="+jsonArray2.getJSONObject(i));
+//                        Log.e("mf===parking23", "==="+jsonArray2.getJSONObject(i));
 
                         return ""+jsonArray2.getJSONObject(i);
                     }
@@ -5553,7 +5579,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 Log.e("mf===car_notification", isAgain + "===" + action_type +"==="+ lock_status+"==="+ back_type +"==="+ oid+"==="+ referLatitude+"==="+referLongitude);
 
                 RequestParams params = new RequestParams();
-//        params.put("scene", isAgain?2:1); //场景值 必传 1借还车上报 2再次开(关)锁上报
+//              params.put("scene", isAgain?2:1); //场景值 必传 1借还车上报 2再次开(关)锁上报
                 params.put("action_type", Md5Helper.encode(oid+":action_type:"+action_type));   //操作类型 1开锁 2临时上锁 3还车
                 params.put("lock_status", Md5Helper.encode(oid+":lock_status:"+lock_status));     //车锁状态 必传 1成功 2连接不上蓝牙 3蓝牙操作失败 4还车时不在停车点(蓝牙、助力车都得上报) 5车锁未关
                 params.put("parking", parking());
@@ -6694,7 +6720,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
         try {
             isConnect = true;
-//        m_myHandler.removeCallbacksAndMessages(null);
+//          m_myHandler.removeCallbacksAndMessages(null);
 
             m_myHandler.postDelayed(new Runnable() {
                 @Override
@@ -6739,7 +6765,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             if(isConnect){
                 isConnect = false;
 
-                Log.e("mf===Xiaoan2", "DisConnect==="+isConnect);
+//                Log.e("mf===Xiaoan2", "DisConnect==="+isConnect);
                 return;
             }
 
@@ -6919,6 +6945,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     public void deactivate() {
 
     }
+
+
 
     class MyPagerAdapter extends FragmentPagerAdapter {
         private String[] titles = new String[]{"用车券", "商家券"};
@@ -8816,11 +8844,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 if(!isConnect){
 //                  Looper.prepare();
                     if(apiClient==null){
-                        XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
-                        builder.setBleStateChangeListener(MainFragment.this);
-                        builder.setScanResultCallback(MainFragment.this);
-                        apiClient = builder.build();
+
                     }
+
+                    XiaoanBleApiClient.Builder builder = new XiaoanBleApiClient.Builder(context);
+                    builder.setBleStateChangeListener(MainFragment.this);
+                    builder.setScanResultCallback(MainFragment.this);
+                    apiClient = builder.build();
 
                     MainFragmentPermissionsDispatcher.connectDeviceWithPermissionCheck(MainFragment.this, deviceuuid);
 //                  Looper.loop();
@@ -9113,16 +9143,52 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
+    @Override
+    public void onMapLongClick(LatLng point) {
+        Log.e("onMapLongClick===", pOptions.size() + "===" + point.latitude+"===" + point.longitude+"===" + point);
+
+        for ( int i = 0; i < pOptions.size(); i++){
+
+//            isContainsList.add(pOptions.get(i).contains(new LatLng(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()))));
+
+            if(pOptions.get(i).contains(point)){
+                Log.e("onMapLongClick===2", "==="+pOptions.get(i).getPoints());
+            }
+
+//            Log.e("onMapClick===1", pOptions.get(i)+"==="+pOptions.get(i).contains(point));
+//            Log.e("onMapClick===1", pOptions.get(i).contains(point)+"===");
+
+//            isContainsList.add(pOptions.get(i).contains(point));
+
+        }
+    }
 
     @Override
     public void onMapClick(LatLng point) {
-        Log.e("onMapClick===", ll_top.isShown()+"===" + routeOverLay+"===" + ll_top_navi);
+//        Log.e("onMapClick===", ll_top.isShown()+"===" + routeOverLay+"===" + ll_top_navi+"===" + point.latitude+"===" + point.longitude+"===" + point);
+        Log.e("onMapClick===", pOptions.size() + "===" + point.latitude+"===" + point.longitude+"===" + point);
+
+        for ( int i = 0; i < pOptions.size(); i++){
+
+//            isContainsList.add(pOptions.get(i).contains(new LatLng(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()))));
+
+            if(pOptions.get(i).contains(point)){
+                Log.e("onMapClick===2", "==="+pOptions.get(i).getPoints());
+            }
+
+//            Log.e("onMapClick===1", pOptions.get(i)+"==="+pOptions.get(i).contains(point));
+//            Log.e("onMapClick===1", pOptions.get(i).contains(point)+"===");
+
+//            isContainsList.add(pOptions.get(i).contains(point));
+
+        }
+
+
 
         if(!ll_top.isShown()){
             if(routeOverLay!=null){
                 routeOverLay.removeFromMap();
             }
-
 
             ll_top.setVisibility(View.VISIBLE);
             ll_top_navi.setVisibility(View.GONE);

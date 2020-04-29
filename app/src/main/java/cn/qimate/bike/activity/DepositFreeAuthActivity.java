@@ -121,6 +121,8 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
     private String imgUrl = Urls.uploadsImg;
 
+    private String image_url = "";
+    private String image_url2 = "";
     private String imageurl = "";
     private String imageurl2 = "";
     private Uri imageUri;
@@ -398,7 +400,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                     loadingDialog.setTitle("正在提交");
                     loadingDialog.show();
 
-                    if("".equals(imageurl) || "".equals(imageurl2)){
+                    if("".equals(image_url) || "".equals(image_url2) || "".equals(imageurl) || "".equals(imageurl2)){
                         m_myHandler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -415,7 +417,6 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                                             uploadImage(2, upBitmap2);
                                         }
                                     }
-
                                 }else{
                                     SubmitBtn();
                                 }
@@ -823,8 +824,8 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                                 schoolText.setText(bean.getSchool_name());
                                 timeText.setText(bean.getAdmission_time());
 
-                                imageurl = bean.getCert_photo();
-                                imageurl2 = bean.getHolding_cert_photo();
+                                image_url = bean.getCert_photo();
+                                image_url2 = bean.getHolding_cert_photo();
 
                                 Glide.with(context).load(bean.getCert_photo_url()).crossFade().into(uploadImage);
                                 Glide.with(context).load(bean.getHolding_cert_photo_url()).crossFade().into(uploadImage2);
@@ -888,8 +889,8 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
         params.put("student_id", student_id);
         params.put("school_id", school_id);
         params.put("admission_time", time);
-        params.put("cert_photo", imageurl);
-        params.put("holding_cert_photo", imageurl2);
+        params.put("cert_photo", "".equals(imageurl)?image_url:imageurl);
+        params.put("holding_cert_photo", "".equals(imageurl2)?image_url2:imageurl2);
 
 
         HttpHelper.post(context, Urls.cert, params, new TextHttpResponseHandler() {     //TODO

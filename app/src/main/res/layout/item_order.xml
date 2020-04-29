@@ -39,17 +39,25 @@
                 android:textSize="@dimen/sp14" />
         </LinearLayout>
 
-        <TextView
+        <!--<TextView-->
+            <!--android:id="@+id/item_order_state"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginLeft="6dp"-->
+            <!--android:layout_marginRight="30dp"-->
+            <!--android:text="待支付"-->
+            <!--android:textColor="#FF6A00"-->
+            <!--android:textSize="@dimen/sp12" />-->
+
+        <ImageView
             android:id="@+id/item_order_state"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="30dp"
-            android:text="待支付"
-            android:textColor="#FF6A00"
-            android:textSize="@dimen/sp12" />
+            android:src="@drawable/order_state0"
+            />
 
     </RelativeLayout>
 

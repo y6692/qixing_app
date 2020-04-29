@@ -98,8 +98,8 @@ public class MyOrderActivity extends SwipeBackActivity implements View.OnClickLi
     private void initView(){
 
         ll_back = (LinearLayout) findViewById(R.id.ll_backBtn);
-        rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
-        rightBtn.setText("历史订单");
+//        rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
+//        rightBtn.setText("历史订单");
 
 
         pvOptions = new OptionsPickerView(context,false);
@@ -140,7 +140,7 @@ public class MyOrderActivity extends SwipeBackActivity implements View.OnClickLi
         myList.setAdapter(myAdapter);
 
         ll_back.setOnClickListener(this);
-        rightBtn.setOnClickListener(this);
+//        rightBtn.setOnClickListener(this);
         ll_bill.setOnClickListener(this);
         footerLayout.setOnClickListener(this);
 

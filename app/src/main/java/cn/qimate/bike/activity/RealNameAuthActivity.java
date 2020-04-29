@@ -127,6 +127,9 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
     private String imgUrl = Urls.uploadsImg;
 
+    private String image_url = "";
+    private String image_url2 = "";
+
     private String imageurl = "";
     private String imageurl2 = "";
     private Uri imageUri;
@@ -373,7 +376,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //                    }
 
 
-                    Log.e("onClick===", imageurl+"==="+imageurl2);
+                    Log.e("onClick===", image_url+"==="+image_url2+"==="+imageurl+"==="+imageurl2+"==="+isPic1+"==="+isPic2);
 
 //                    if (imageurl == null || "".equals(imageurl)){
 //                        Toast.makeText(context,"请上传您的证件照片",Toast.LENGTH_SHORT).show();
@@ -397,7 +400,31 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                     loadingDialog.setTitle("正在提交");
                     loadingDialog.show();
 
-                    if("".equals(imageurl) || "".equals(imageurl2)){
+//                    if(isPic1 || isPic2){
+//                        m_myHandler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//
+//                                if((!"".equals(imageurl) && !isPic2) || (!"".equals(imageurl2) && !isPic1)){
+//                                    SubmitBtn();
+//                                }else{
+//                                    if("".equals(imageurl) && isPic1){
+//                                        uploadImage(1, upBitmap);
+//                                    }
+//
+//                                    if("".equals(imageurl2) && isPic2){
+//                                        uploadImage(2, upBitmap2);
+//                                    }
+//                                }
+//
+//                            }
+//                        });
+//                    }else{
+//                        SubmitBtn();
+//                    }
+
+
+                    if("".equals(image_url) || "".equals(image_url2) || "".equals(imageurl) || "".equals(imageurl2)){
                         m_myHandler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -414,7 +441,6 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                             uploadImage(2, upBitmap2);
                                         }
                                     }
-
                                 }else{
                                     SubmitBtn();
                                 }
@@ -424,6 +450,17 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                     }else{
                         SubmitBtn();
                     }
+
+
+//                    if("".equals(image_url) && "".equals(image_url2)){
+//
+//                    }else{
+//
+//
+//                        SubmitBtn();
+//                    }
+
+
 
                 }
                 break;
@@ -721,8 +758,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                 realNameEdit.setText(bean.getUser_name());
                                 identityNumberEdit.setText(bean.getIdentity_number());
 
-                                imageurl = bean.getCert_photo();
-                                imageurl2 = bean.getHolding_cert_photo();
+                                image_url = bean.getCert_photo();
+                                image_url2 = bean.getHolding_cert_photo();
 
                                 Glide.with(context).load(bean.getCert_photo_url()).crossFade().into(uploadImage);
                                 Glide.with(context).load(bean.getHolding_cert_photo_url()).crossFade().into(uploadImage2);
@@ -839,14 +876,14 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
     private void SubmitBtn(){
 
-        Log.e("rnaa===SubmitBtn", realname+"==="+identityNumber+"==="+imageurl+"==="+imageurl2);
+        Log.e("rnaa===SubmitBtn", realname+"==="+identityNumber+"==="+imageurl+"==="+imageurl2+"==="+image_url+"==="+image_url2);
 
         RequestParams params = new RequestParams();
         params.put("type", 2);
         params.put("user_name", realname);
         params.put("identity_number", identityNumber);
-        params.put("cert_photo", imageurl);
-        params.put("holding_cert_photo", imageurl2);
+        params.put("cert_photo", "".equals(imageurl)?image_url:imageurl);
+        params.put("holding_cert_photo", "".equals(imageurl2)?image_url2:imageurl2);
 
 
         HttpHelper.post(context, Urls.cert, params, new TextHttpResponseHandler() {     //TODO  1

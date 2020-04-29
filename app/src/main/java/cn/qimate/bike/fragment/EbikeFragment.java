@@ -168,7 +168,9 @@ import static cn.qimate.bike.core.common.Urls.schoolrangeList;
 
 @SuppressLint("NewApi")
 public class EbikeFragment extends BaseFragment implements View.OnClickListener, LocationSource,
-        AMapLocationListener, AMap.OnCameraChangeListener, AMap.OnMapTouchListener, OnConnectionListener
+        AMapLocationListener, AMap.OnCameraChangeListener,
+//        AMap.OnMapTouchListener,
+        OnConnectionListener
 //        , AMap.OnMapClickListener
 //        , AMapNaviListener
 {
@@ -460,7 +462,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //                }
 //            });
 
-            aMap.setOnMapTouchListener(this);
+//            aMap.setOnMapTouchListener(this);
 //            aMap.setOnMapClickListener(this);
             aMap.setOnCameraChangeListener(this);
 //            setUpLocationStyle();
@@ -945,7 +947,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
     public void initNearby(final double latitude, final double longitude){
 
-        Log.e("ebf===initNearby0", isHidden+"==="+isInitNearby+"==="+latitude+"==="+longitude);
+//        Log.e("ebf===initNearby0", isHidden+"==="+isInitNearby+"==="+latitude+"==="+longitude);
 
         if(isHidden) return;
 
@@ -1011,7 +1013,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                             car_count = new JSONObject(result.getData()).getInt("count");
 
 
-                            Log.e("initNearby===EBike1", "==="+car_count);
+//                            Log.e("initNearby===EBike1", "==="+car_count);
 
 //                    tv_car_count.setText(count+"辆");
 
@@ -1081,7 +1083,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                 if(isHidden) return;
 
-                Log.e("main_eb===parking_r0", "==="+responseString);
+//                Log.e("main_eb===parking_r0", "==="+responseString);
 
                 final ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
@@ -1092,7 +1094,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                             if (1==1 || result.getFlag().equals("Success")) {
                                 final JSONArray jsonArray = new JSONArray(result.getData());
 
-                                Log.e("main_eb===parking_r1", jsonArray.length()+"==="+jsonArray);
+//                                Log.e("main_eb===parking_r1", jsonArray.length()+"==="+jsonArray);
 
                                 if(isHidden){
                                     return;
@@ -1213,7 +1215,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
 
 
-                                            Log.e("main_eb===parking_r5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
+//                                            Log.e("main_eb===parking_r5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
 
                                             if (loadingDialog != null && loadingDialog.isShowing()){
                                                 loadingDialog.dismiss();
@@ -1668,20 +1670,20 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //        }
 //    }
 
-    public void onTouch(MotionEvent motionEvent) {
-        Log.e("main===onTouch_EB",  "===");
-
-        if (motionEvent.getAction() == MotionEvent.ACTION_UP || motionEvent.getAction() == MotionEvent.ACTION_CANCEL || motionEvent.getAction() == MotionEvent.ACTION_OUTSIDE || motionEvent.getActionMasked() == MotionEvent.ACTION_POINTER_UP){
-            isUp = true;
-        }else {
-            isUp = false;
-        }
-    }
+//    public void onTouch(MotionEvent motionEvent) {
+//        Log.e("main===onTouch_EB",  "===");
+//
+//        if (motionEvent.getAction() == MotionEvent.ACTION_UP || motionEvent.getAction() == MotionEvent.ACTION_CANCEL || motionEvent.getAction() == MotionEvent.ACTION_OUTSIDE || motionEvent.getActionMasked() == MotionEvent.ACTION_POINTER_UP){
+//            isUp = true;
+//        }else {
+//            isUp = false;
+//        }
+//    }
 
     public void onCameraChangeFinish(CameraPosition cameraPosition) {
         Log.e("main===ChangeFinish_Eb", isContainsList.contains(true) + "》》》" + cameraPosition.target.latitude + "===" + centerMarker);
 
-        if (isUp && !isHidden){
+        if (!isHidden){
             initNearby(cameraPosition.target.latitude, cameraPosition.target.longitude);
 
             if (centerMarker != null) {
@@ -1697,7 +1699,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void animMarker() {
-        Log.e("animMarker==", isMovingMarker+"==="+animator);
+//        Log.e("animMarker==", isMovingMarker+"==="+animator);
 
         isMovingMarker = false;
         if (animator != null) {
@@ -1707,7 +1709,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
 //        centerMarker.setPositionByPixels(mapView.getWidth() / 2, mapView.getHeight() / 2);
 //        centerMarker.setIcon(successDescripter);
-        Log.e("animMarker==1", isMovingMarker+"==="+animator);
+//        Log.e("animMarker==1", isMovingMarker+"==="+animator);
 
         animator = ValueAnimator.ofFloat(mapView.getHeight() / 2, mapView.getHeight() / 2 - 30);
         animator.setInterpolator(new DecelerateInterpolator());
@@ -1717,7 +1719,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                Log.e("onAnimationUpdate===", centerMarker+"==="+isMovingMarker);
+//                Log.e("onAnimationUpdate===", centerMarker+"==="+isMovingMarker);
 
                 Float value = (Float) animation.getAnimatedValue();
                 centerMarker.setPositionByPixels(mapView.getWidth() / 2, Math.round(value));
@@ -1726,7 +1728,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                Log.e("onAnimationEnd===", centerMarker+"==="+isMovingMarker);
+//                Log.e("onAnimationEnd===", centerMarker+"==="+isMovingMarker);
 
 //                centerMarker.setIcon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_info_layout, null)));
             }
@@ -1863,7 +1865,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         marker_tip_Option = new MarkerOptions().icon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_tip_layout, null)));
         marker_tip_Option2 = new MarkerOptions().icon(BitmapDescriptorFactory.fromView(View.inflate(context, R.layout.marker_tip_layout2, null)));
 
-        aMap.setOnMapTouchListener(this);
+//        aMap.setOnMapTouchListener(this);
 //        aMap.setOnMapClickListener(this);
         setUpLocationStyle();
 

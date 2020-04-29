@@ -622,7 +622,7 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 		}
 		initjpush();
 //		registerMessageReceiver();
-		initLocation();
+//		initLocation();
 
 		skipLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
