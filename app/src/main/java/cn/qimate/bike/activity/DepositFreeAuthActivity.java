@@ -406,16 +406,31 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
                             public void run() {
 
                                 if(isPic1 || isPic2){
-                                    if((!"".equals(imageurl) && !isPic2) || (!"".equals(imageurl2) && !isPic1)){
-                                        SubmitBtn();
-                                    }else{
+//                                    if((!"".equals(imageurl) && !isPic2) || (!"".equals(imageurl2) && !isPic1)){
+//                                        SubmitBtn();
+//                                    }else{
+//                                        if("".equals(imageurl) && isPic1){
+//                                            uploadImage(1, upBitmap);
+//                                        }
+//
+//                                        if("".equals(imageurl2) && isPic2){
+//                                            uploadImage(2, upBitmap2);
+//                                        }
+//                                    }
+
+                                    if(("".equals(imageurl) && isPic1) || ("".equals(imageurl2) && isPic2)){
                                         if("".equals(imageurl) && isPic1){
+                                            Log.e("onClick===4", image_url+"==="+image_url2+"==="+imageurl+"==="+imageurl2+"==="+isPic1+"==="+isPic2);
                                             uploadImage(1, upBitmap);
                                         }
 
                                         if("".equals(imageurl2) && isPic2){
+                                            Log.e("onClick===5", image_url+"==="+image_url2+"==="+imageurl+"==="+imageurl2+"==="+isPic1+"==="+isPic2);
                                             uploadImage(2, upBitmap2);
                                         }
+                                    }else{
+                                        Log.e("onClick===3", image_url+"==="+image_url2+"==="+imageurl+"==="+imageurl2+"==="+isPic1+"==="+isPic2);
+                                        SubmitBtn();
                                     }
                                 }else{
                                     SubmitBtn();

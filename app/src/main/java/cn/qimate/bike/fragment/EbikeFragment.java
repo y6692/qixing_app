@@ -614,7 +614,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                 Log.e("ebf===operating_areas1", "==="+jsonArray);
 
-                                if(isHidden) return;
+//                                if(isHidden) return;
 
                                 if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
                                     isContainsList.clear();
@@ -658,7 +658,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                     pOption.addAll(list);
 
-                                    if(isHidden) return;
+//                                    if(isHidden) return;
                                     polygon = aMap.addPolygon(pOption.strokeWidth(2)
                                             .strokeColor(Color.argb(255, 0, 135, 255))
                                             .fillColor(Color.argb(0, 0, 0, 0)));
@@ -708,7 +708,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void schoolRange(){
-        if(isHidden) return;
+//        if(isHidden) return;
 
 //        if(referLatitude==0.0 || referLongitude==0.0) return;
 
@@ -723,7 +723,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             m_myHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if(isHidden) return;
+//                    if(isHidden) return;
 
                     new Thread(new Runnable() {
                         @Override
@@ -767,7 +767,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                     pOption.addAll(list);
 
-                                    if(isHidden) return;
+//                                    if(isHidden) return;
                                     polygon = aMap.addPolygon(pOption
 //                                            .strokeWidth(2)
 //                                            .strokeColor(Color.argb(255, 0, 135, 255))
@@ -783,21 +783,21 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                     centerList.add(latLng);
 
+                                    pOptions.add(polygon);
 
-                                    if(!isHidden){
-                                        pOptions.add(polygon);
-
-                                        isContainsList.add(polygon.contains(myLocation));
-                                    }else{
-                                    }
+                                    isContainsList.add(polygon.contains(myLocation));
+//                                    if(!isHidden){
+//
+//                                    }else{
+//                                    }
 
                                 }
 
-                                closeLoadingDialog2();
+//                                closeLoadingDialog2();
 
 //                                Log.e("main_eb===schoolRange25", pOptions.size()+"==="+pOptions+"==="+isContainsList.size()+"==="+isContainsList);
                             }catch (Exception e){
-                                closeLoadingDialog2();
+//                                closeLoadingDialog2();
                             }
 
 
@@ -809,6 +809,8 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             });
 
         }else{
+            Log.e("main_eb===schoolRange#", "==="+isHidden);
+
             RequestParams params = new RequestParams();
 //            params.put("latitude", referLatitude);
 //            params.put("longitude", referLongitude);
@@ -840,7 +842,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                     Log.e("main_eb===schoolRange1", isHidden+"==="+jsonArray2.length()+"==="+jsonArray2);
 
-                                    if(isHidden) return;
+//                                    if(isHidden) return;
 
                                     new Thread(new Runnable() {
                                         @Override
@@ -885,7 +887,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                                     pOption.addAll(list);
 
-                                                    if(isHidden) return;
+//                                                    if(isHidden) return;
                                                     polygon = aMap.addPolygon(pOption
 //                                                            .strokeWidth(2)
 //                                                            .strokeColor(Color.argb(255, 0, 135, 255))
@@ -901,33 +903,33 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
                                                     centerList.add(latLng);
 
+                                                    pOptions.add(polygon);
 
-                                                    if(!isHidden){
-                                                        pOptions.add(polygon);
-
-                                                        isContainsList.add(polygon.contains(myLocation));
-                                                    }else{
-                                                    }
+                                                    isContainsList.add(polygon.contains(myLocation));
+//                                                    if(!isHidden){
+//
+//                                                    }else{
+//                                                    }
                                                 }
 
-                                                Log.e("main_eb===schoolRange5", pOptions.size()+"==="+pOptions+"==="+isContainsList.size()+"==="+isContainsList);
+                                                Log.e("main_eb===schoolRange5", isHidden+"==="+pOptions.size()+"==="+pOptions+"==="+isContainsList.size()+"==="+isContainsList);
 
-                                                closeLoadingDialog2();
+//                                                closeLoadingDialog2();
                                             }catch (Exception e){
 
-                                                closeLoadingDialog2();
+//                                                closeLoadingDialog2();
                                             }
                                         }
                                     }).start();
 
 
                                 }else {
-                                    closeLoadingDialog2();
+//                                    closeLoadingDialog2();
                                     ToastUtil.showMessageApp(context,result.getMsg());
                                 }
                             }catch (Exception e){
 
-                                closeLoadingDialog2();
+//                                closeLoadingDialog2();
                             }
 
                         }
@@ -1046,18 +1048,14 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                         } catch (Exception e) {
 
                         }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
+//                        if (loadingDialog != null && loadingDialog.isShowing()){
+//                            loadingDialog.dismiss();
+//                        }
                     }
                 });
 
             }
         });
-
-
-
-
     }
 
     void parking_ranges(final double latitude, final double longitude){
@@ -1217,28 +1215,28 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
 //                                            Log.e("main_eb===parking_r5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
 
-                                            if (loadingDialog != null && loadingDialog.isShowing()){
-                                                loadingDialog.dismiss();
-                                            }
+//                                            if (loadingDialog != null && loadingDialog.isShowing()){
+//                                                loadingDialog.dismiss();
+//                                            }
                                         }catch (Exception e){
-                                            if (loadingDialog != null && loadingDialog.isShowing()){
-                                                loadingDialog.dismiss();
-                                            }
+//                                            if (loadingDialog != null && loadingDialog.isShowing()){
+//                                                loadingDialog.dismiss();
+//                                            }
                                         }
                                     }
                                 }).start();
 
                             }else {
-                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                    loadingDialog.dismiss();
-                                }
+//                                if (loadingDialog != null && loadingDialog.isShowing()){
+//                                    loadingDialog.dismiss();
+//                                }
                                 ToastUtil.showMessageApp(context,result.getMsg());
                             }
                         }catch (Exception e){
 
-                            if (loadingDialog != null && loadingDialog.isShowing()){
-                                loadingDialog.dismiss();
-                            }
+//                            if (loadingDialog != null && loadingDialog.isShowing()){
+//                                loadingDialog.dismiss();
+//                            }
                         }
 
                         isInitNearby = false;
@@ -1435,7 +1433,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                         @Override
                         public void run() {
 
-
                             try {
                                 ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                                 if (result.getFlag().equals("Success")) {
@@ -1469,7 +1466,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                         }
                                     }
 
-//                              minPolygon();
+//                                  minPolygon();
 
                                 }else {
                                     ToastUtil.showMessageApp(context,result.getMsg());

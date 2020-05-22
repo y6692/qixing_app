@@ -114,6 +114,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
     private boolean isRemain;
 
     private boolean isToPay = false;
+    private boolean isPause = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +127,8 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         IntentFilter filter = new IntentFilter("data.broadcast.rechargeAction");
         registerReceiver(broadcastReceiver, filter);
         initView();
+
+        Log.e("spa===onCreate", isRemain+"==="+isToPay+"==="+isPause+"==="+order_id+"==="+order_type);
     }
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -195,7 +198,9 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 //      must store the new intent unless getIntent() will return the old one
         setIntent(intent);
 
-        Log.e("spa===onNewIntent", isRemain+"==="+isToPay+"==="+order_id+"==="+order_type);
+        isPause = false;
+
+        Log.e("spa===onNewIntent", isRemain+"==="+isToPay+"==="+isPause+"==="+order_id+"==="+order_type);
 
 //        if(api!=null){
 //            api.handleIntent(getIntent(), SettlementPlatformActivity.this);
@@ -219,16 +224,39 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         }
 
 
-        Log.e("spa===onResume", isRemain+"==="+isToPay+"==="+order_id+"==="+order_type);
+
+
+        Log.e("spa===onResume", payment_id+"==="+isRemain+"==="+isToPay+"==="+isPause+"==="+order_id+"==="+order_type);
+
+//        if(payment_id==0){
+//            iv_balance.setImageResource(R.drawable.pay_type_normal);
+//            iv_wechat.setImageResource(R.drawable.pay_type_normal);
+//            iv_alipay.setImageResource(R.drawable.pay_type_normal);
+//        }
 
 //        if(api!=null){
 //            api.handleIntent(getIntent(), SettlementPlatformActivity.this);
 //        }
 
 
+//        if(!isToPay || !isPause){
+//            user();
+//        }
+
         if(!isToPay){
             user();
         }
+
+        isPause = false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        Log.e("spa===onPause", isToPay+"==="+isPause+"==="+order_id+"==="+order_type);
+
+        isPause = true;
 
     }
 
@@ -315,6 +343,8 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
                             Log.e("ura===payments1", responseString + "===" + result.data);
 
+
+
                             for (int i = 0; i < array.length(); i++) {
 
                                 Log.e("ura===payments2", "==="+array.getJSONObject(i).toString());
@@ -327,7 +357,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
                                 int top = 43*Math.round(BaseApplication.density) *(i+1);
 
-                                Log.e("ura===payments3", top+"==="+bean.getId());
+                                Log.e("ura===payments3", payment_id+"==="+top+"==="+bean.getId());
 
                                 if(bean.getId()==1){
                                     ll_pay1.setVisibility(View.VISIBLE);
@@ -336,8 +366,15 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 //                                    ll_pay.addView(ll_pay1);
 
                                     if(i==0){
-                                        payment_id = 1;
-                                        iv_balance.setImageResource(R.drawable.pay_type_selected);
+
+                                        if(payment_id!=1){
+                                            iv_balance.setImageResource(R.drawable.pay_type_normal);
+                                        }else{
+                                            iv_balance.setImageResource(R.drawable.pay_type_selected);
+                                            payment_id = 1;
+                                        }
+
+//
                                     }
 
 
@@ -369,8 +406,14 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 //                                    ll_pay.addView(ll_pay2);
 
                                     if(i==0){
-                                        payment_id = 2;
-                                        iv_wechat.setImageResource(R.drawable.pay_type_selected);
+
+                                        if(payment_id!=2){
+                                            iv_wechat.setImageResource(R.drawable.pay_type_normal);
+                                        }else{
+                                            iv_wechat.setImageResource(R.drawable.pay_type_selected);
+                                            payment_id = 2;
+                                        }
+//
                                     }
 
 //                                    ll_pay2.setPadding(0, top, 0, 0);
@@ -384,8 +427,15 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 //                                    ll_pay.addView(ll_pay3);
 
                                     if(i==0){
-                                        payment_id = 3;
-                                        iv_alipay.setImageResource(R.drawable.pay_type_selected);
+
+                                        if(payment_id!=3){
+                                            iv_alipay.setImageResource(R.drawable.pay_type_normal);
+                                        }else{
+                                            iv_alipay.setImageResource(R.drawable.pay_type_selected);
+                                            payment_id = 3;
+                                        }
+
+
                                     }
 
 //                                    ll_pay3.setPadding(0, top, 0, 0);
@@ -606,7 +656,13 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                             isToPay = true;
 
 
-                            if("https://testnewmapi.7mate.cn/api".equals(Urls.host2)){
+//                            if("https://testnewmapi.7mate.cn/api".equals(Urls.host2)){
+//                                EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+//                            }
+
+                            if("https://newmapi.7mate.cn/api".equals(Urls.host2)){
+
+                            }else{
                                 EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
                             }
 
@@ -784,9 +840,9 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
                                         Log.e("spa===query_order2", order_type+ "===" +order_id);
 
-                                        iv_balance.setImageResource(R.drawable.pay_type_normal);
-                                        iv_wechat.setImageResource(R.drawable.pay_type_normal);
-                                        iv_alipay.setImageResource(R.drawable.pay_type_normal);
+//                                        iv_balance.setImageResource(R.drawable.pay_type_normal);
+//                                        iv_wechat.setImageResource(R.drawable.pay_type_normal);
+//                                        iv_alipay.setImageResource(R.drawable.pay_type_normal);
 
                                         user();
                                     }else {
@@ -912,9 +968,11 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
                 isToPay = false;
 
-                iv_balance.setImageResource(R.drawable.pay_type_normal);
-                iv_wechat.setImageResource(R.drawable.pay_type_normal);
-                iv_alipay.setImageResource(R.drawable.pay_type_normal);
+
+
+//                iv_balance.setImageResource(R.drawable.pay_type_normal);
+//                iv_wechat.setImageResource(R.drawable.pay_type_normal);
+//                iv_alipay.setImageResource(R.drawable.pay_type_normal);
 
                 Intent intent = new Intent();
                 intent.setClass(context, RechargeActivity.class);

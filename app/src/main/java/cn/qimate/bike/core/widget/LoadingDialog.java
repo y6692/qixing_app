@@ -56,8 +56,9 @@ public class LoadingDialog extends Dialog {
 
 				tv_point.setText(builder.toString());
 				if (isShowing()) {
-					if(n<70){
-						handler.sendEmptyMessageDelayed(CHANGE_TITLE_WHAT, CHNAGE_TITLE_DELAYMILLIS);
+					if(n<20){
+//						handler.sendEmptyMessageDelayed(CHANGE_TITLE_WHAT, CHNAGE_TITLE_DELAYMILLIS);
+						handler.sendEmptyMessageDelayed(CHANGE_TITLE_WHAT, 1000);
 					}else{
 						handler.sendEmptyMessage(CHANGE_TITLE_DISMISS);
 					}

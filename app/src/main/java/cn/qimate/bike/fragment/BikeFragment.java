@@ -595,7 +595,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     public void schoolRange(){
-        if(isHidden) return;
+//        if(isHidden) return;
 
 //        if(referLatitude==0.0 || referLongitude==0.0) return;
 
@@ -610,7 +610,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 @Override
                 public void run() {
 
-                    if(isHidden) return;
+//                    if(isHidden) return;
 
                     Log.e("main_b===schoolRange21", loadingDialog+"==="+loadingDialog.isShowing());
 
@@ -658,7 +658,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                     pOption.addAll(list);
 
-                                    if(isHidden) return;
+//                                    if(isHidden) return;
                                     polygon = aMap.addPolygon(pOption
 //                                                .strokeWidth(2)
 //                                                .strokeColor(Color.argb(255, 0, 135, 255))
@@ -674,20 +674,19 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                     centerList.add(latLng);
 
+                                    pOptions.add(polygon);
 
-                                    if(!isHidden){
-                                        pOptions.add(polygon);
-
-                                        isContainsList.add(polygon.contains(myLocation));
-                                    }else{
-                                    }
+                                    isContainsList.add(polygon.contains(myLocation));
+//                                    if(!isHidden){
+//                                    }else{
+//                                    }
                                 }
 
-                                closeLoadingDialog2();
+//                                closeLoadingDialog2();
 
 //                              Log.e("main_b===schoolRange25", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
                             }catch (Exception e){
-                                closeLoadingDialog2();
+//                                closeLoadingDialog2();
                             }
                         }
                     }).start();
@@ -730,9 +729,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 //                                    Log.e("main_b===schoolRange1", jsonArray.length()+"==="+jsonArray);
 
-                                    if(isHidden){
-                                        return;
-                                    }
+//                                    if(isHidden){
+//                                        return;
+//                                    }
 
                                     new Thread(new Runnable() {
                                         @Override
@@ -778,7 +777,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                                     pOption.addAll(list);
 
-                                                    if(isHidden) return;
+//                                                    if(isHidden) return;
                                                     polygon = aMap.addPolygon(pOption
 //                                                            .strokeWidth(2)
 //                                                            .strokeColor(Color.argb(255, 0, 135, 255))
@@ -793,29 +792,29 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                                     centerList.add(latLng);
 
-                                                    if(!isHidden){
-                                                        pOptions.add(polygon);
-                                                        isContainsList.add(polygon.contains(myLocation));
-                                                    }else{
-                                                    }
+                                                    pOptions.add(polygon);
+                                                    isContainsList.add(polygon.contains(myLocation));
+//                                                    if(!isHidden){
+//
+//                                                    }else{
+//                                                    }
                                                 }
 
-//                                                Log.e("main_b===schoolRange5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
+                                                Log.e("main_b===schoolRange5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
 
-                                                closeLoadingDialog2();
+//                                                closeLoadingDialog2();
                                             }catch (Exception e){
-                                                closeLoadingDialog2();
+//                                                closeLoadingDialog2();
                                             }
                                         }
                                     }).start();
 
                                 }else {
-                                    closeLoadingDialog2();
+//                                    closeLoadingDialog2();
                                     ToastUtil.showMessageApp(context, result.getMsg());
                                 }
                             }catch (Exception e){
-
-                                closeLoadingDialog2();
+//                                closeLoadingDialog2();
                             }
 
                         }
@@ -939,9 +938,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                         } catch (Exception e) {
 
                         }
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
+//                        if (loadingDialog != null && loadingDialog.isShowing()){
+//                            loadingDialog.dismiss();
+//                        }
                     }
                 });
             }
@@ -1110,28 +1109,28 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
                                             Log.e("main_b===parking_r5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
 
-                                            if (loadingDialog != null && loadingDialog.isShowing()){
-                                                loadingDialog.dismiss();
-                                            }
+//                                            if (loadingDialog != null && loadingDialog.isShowing()){
+//                                                loadingDialog.dismiss();
+//                                            }
                                         }catch (Exception e){
-                                            if (loadingDialog != null && loadingDialog.isShowing()){
-                                                loadingDialog.dismiss();
-                                            }
+//                                            if (loadingDialog != null && loadingDialog.isShowing()){
+//                                                loadingDialog.dismiss();
+//                                            }
                                         }
                                     }
                                 }).start();
 
                             }else {
-                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                    loadingDialog.dismiss();
-                                }
+//                                if (loadingDialog != null && loadingDialog.isShowing()){
+//                                    loadingDialog.dismiss();
+//                                }
                                 ToastUtil.showMessageApp(context,result.getMsg());
                             }
                         }catch (Exception e){
 
-                            if (loadingDialog != null && loadingDialog.isShowing()){
-                                loadingDialog.dismiss();
-                            }
+//                            if (loadingDialog != null && loadingDialog.isShowing()){
+//                                loadingDialog.dismiss();
+//                            }
                         }
 
                         isInitNearby = false;

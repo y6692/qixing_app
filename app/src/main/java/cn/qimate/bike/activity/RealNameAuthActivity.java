@@ -428,26 +428,49 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                         m_myHandler.post(new Runnable() {
                             @Override
                             public void run() {
+                                Log.e("onClick===1", image_url+"==="+image_url2+"==="+imageurl+"==="+imageurl2+"==="+isPic1+"==="+isPic2);
 
                                 if(isPic1 || isPic2){
-                                    if((!"".equals(imageurl) && !isPic2) || (!"".equals(imageurl2) && !isPic1)){
-                                        SubmitBtn();
-                                    }else{
+                                    Log.e("onClick===2", image_url+"==="+image_url2+"==="+imageurl+"==="+imageurl2+"==="+isPic1+"==="+isPic2);
+//                                    if((!"".equals(imageurl) && !isPic2) || (!"".equals(imageurl2) && !isPic1)){
+//                                        Log.e("onClick===3", image_url+"==="+image_url2+"==="+imageurl+"==="+imageurl2+"==="+isPic1+"==="+isPic2);
+//                                        SubmitBtn();
+//                                    }else{
+//                                        if("".equals(imageurl) && isPic1){
+//                                            Log.e("onClick===4", image_url+"==="+image_url2+"==="+imageurl+"==="+imageurl2+"==="+isPic1+"==="+isPic2);
+//                                            uploadImage(1, upBitmap);
+//                                        }
+//
+//                                        if("".equals(imageurl2) && isPic2){
+//                                            Log.e("onClick===5", image_url+"==="+image_url2+"==="+imageurl+"==="+imageurl2+"==="+isPic1+"==="+isPic2);
+//                                            uploadImage(2, upBitmap2);
+//                                        }
+//                                    }
+
+                                    if(("".equals(imageurl) && isPic1) || ("".equals(imageurl2) && isPic2)){
                                         if("".equals(imageurl) && isPic1){
+                                            Log.e("onClick===4", image_url+"==="+image_url2+"==="+imageurl+"==="+imageurl2+"==="+isPic1+"==="+isPic2);
                                             uploadImage(1, upBitmap);
                                         }
 
                                         if("".equals(imageurl2) && isPic2){
+                                            Log.e("onClick===5", image_url+"==="+image_url2+"==="+imageurl+"==="+imageurl2+"==="+isPic1+"==="+isPic2);
                                             uploadImage(2, upBitmap2);
                                         }
+                                    }else{
+                                        Log.e("onClick===3", image_url+"==="+image_url2+"==="+imageurl+"==="+imageurl2+"==="+isPic1+"==="+isPic2);
+                                        SubmitBtn();
                                     }
+
                                 }else{
+                                    Log.e("onClick===6", image_url+"==="+image_url2+"==="+imageurl+"==="+imageurl2+"==="+isPic1+"==="+isPic2);
                                     SubmitBtn();
                                 }
 
                             }
                         });
                     }else{
+                        Log.e("onClick===7", image_url+"==="+image_url2+"==="+imageurl+"==="+imageurl2+"==="+isPic1+"==="+isPic2);
                         SubmitBtn();
                     }
 
@@ -767,6 +790,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //                                status; //认证状态 0待认证 1认证中 2已驳回 3认证成功
                                 state = bean.getStatus();
 
+                                Log.e("getCertification===1", uploadImage+"==="+uploadImage2+"==="+state);
+
                                 if(state==0){
                                     ll_submit.setVisibility(View.VISIBLE);
                                     rl_recharge.setVisibility(View.VISIBLE);
@@ -790,6 +815,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 //                                Toast.makeText(context, result.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         } catch (Exception e) {
+                            Log.e("getCertification===e", "==="+e);
                             e.printStackTrace();
                         }
                         if (loadingDialog != null && loadingDialog.isShowing()){
@@ -1065,7 +1091,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                                 uploadImage2.setImageBitmap(upBitmap2);
                                             }
 
-                                            Log.e("REQUESTCODE_PICK===3", data.getData()+"==="+filepath.getPath());
+                                            Log.e("REQUESTCODE_PICK===3", photo+"==="+urlpath+"==="+data.getData()+"==="+filepath.getPath());
 
 //                                        uploadImage();
 

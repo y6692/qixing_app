@@ -339,9 +339,19 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
                         public void run() {
 
                             if(isPic1 || isPic2){
-                                if((!"".equals(imageurl) && !isPic2) || (!"".equals(imageurl2) && !isPic1)){
-                                    SubmitBtn();
-                                }else{
+//                                if((!"".equals(imageurl) && !isPic2) || (!"".equals(imageurl2) && !isPic1)){
+//                                    SubmitBtn();
+//                                }else{
+//                                    if("".equals(imageurl) && isPic1){
+//                                        uploadImage(1, upBitmap);
+//                                    }
+//
+//                                    if("".equals(imageurl2) && isPic2){
+//                                        uploadImage(2, upBitmap2);
+//                                    }
+//                                }
+
+                                if(("".equals(imageurl) && isPic1) || ("".equals(imageurl2) && isPic2)){
                                     if("".equals(imageurl) && isPic1){
                                         uploadImage(1, upBitmap);
                                     }
@@ -349,6 +359,8 @@ public class ComplainActivity extends SwipeBackActivity implements View.OnClickL
                                     if("".equals(imageurl2) && isPic2){
                                         uploadImage(2, upBitmap2);
                                     }
+                                }else{
+                                    SubmitBtn();
                                 }
 
                             }else{
