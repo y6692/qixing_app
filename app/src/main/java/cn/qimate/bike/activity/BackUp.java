@@ -25,6 +25,45 @@ import cn.qimate.bike.util.ToastUtil;
 public class BackUp {
 }
 
+//                                    m_myHandler.postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            LogUtil.e("order===11_3", "timeout==="+TbitBle.getBleConnectionState());
+//                                            TbitBle.disConnect();
+//                                            unlock();
+//
+////                                            LogUtil.e("order===11_4", "timeout==="+TbitBle.getBleConnectionState());
+////                                            if (TbitBle.getBleConnectionState()==0){
+////
+////                                            }
+//                                        }
+//                                    }, timeout);
+
+// 添加装饰器
+// 方式一：
+// 过滤设备名字的装饰器
+////      FilterNameCallback filterNameCallback = new FilterNameCallback(DEVICE_NAME, scannerCallback);
+//        FilterNameCallback filterNameCallback = new FilterNameCallback("[DD-EBIKE]", scannerCallback);
+//        // 确保结果非重复的装饰器
+//        NoneRepeatCallback noneRepeatCallback = new NoneRepeatCallback(filterNameCallback);
+//        // 收集日志的装饰器，这个最好放在最外层包裹
+//        LogCallback logCallback = new LogCallback(noneRepeatCallback);
+//
+//        // 方式二：(与上述效果相同)
+//        ScanBuilder builder = new ScanBuilder(scannerCallback);
+//        ScannerCallback decoratedCallback = builder
+//                .setFilter("[DD-EBIKE]")
+//                .setRepeatable(false)
+//                .setLogMode(true)
+//                .build();
+//
+//        // 开始扫描(目前同一时间仅支持启动一个扫描),返回状态码
+//        int code = TbitBle.startScan(decoratedCallback, 10000);
+
+//        int code = TbitBle.startScan(scannerCallback, 10000);
+//
+//        machineId = "003486809";    //===CGFDV0ETMGTWGHUB
+
 //                    if(unauthorized_code==6){
 //                        centerMarker.setAlpha(0);
 //                    }else{

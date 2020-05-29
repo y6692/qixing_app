@@ -1098,39 +1098,78 @@
             </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/ll_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            >
+
+            <cn.qimate.bike.core.widget.MyScrollView
+                android:id="@+id/sv_test"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/white"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/tv_test0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="车辆编号："
+                        android:textColor="#000000"
+                        android:textSize="16sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_test"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ffasfaffdffgdfhdhgfhfgjhjghkjkgturtytsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd"
+                        android:textColor="#717171"
+                        android:textSize="16sp"
+                        />
+
+                </LinearLayout>
+
+            </cn.qimate.bike.core.widget.MyScrollView>
+
+            <RelativeLayout
+                android:visibility="gone"
+                android:id="@+id/rl_test"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+                <Button
+                    android:id="@+id/btn_clear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="清除"/>
+
+                <Button
+                    android:id="@+id/btn_log"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="日志"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
     </RelativeLayout>
 
 
-    <!--<FrameLayout-->
-        <!--android:id="@+id/fl_change"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="1">-->
-    <!--</FrameLayout>-->
-
-    <!--<LinearLayout-->
-        <!--android:id="@+id/ll_tab"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="vertical">-->
-        <!--<View android:layout_width="match_parent"-->
-            <!--android:layout_height="1px"-->
-            <!--android:background="#dcdcdc"></View>-->
-        <!--<com.flyco.tablayout.CommonTabLayout-->
-            <!--android:id="@+id/tab"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="50dp"-->
-            <!--android:background="#ffffff"-->
-            <!--app:tl_iconHeight="25dp"-->
-            <!--app:tl_iconWidth="25dp"-->
-            <!--app:tl_indicator_color="@color/white"-->
-            <!--app:tl_indicator_height="0dp"-->
-            <!--app:tl_textSelectColor="@color/red"-->
-            <!--app:tl_textUnselectColor="#66000000"-->
-            <!--app:tl_textsize="10sp"-->
-            <!--app:tl_underline_color="#DDDDDD"-->
-            <!--app:tl_underline_height="1dp"/>-->
-    <!--</LinearLayout>-->
 
 
 </LinearLayout>

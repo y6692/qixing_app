@@ -388,9 +388,9 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
         isHidden = hidden;
 
-        if (loadingDialog != null && loadingDialog.isShowing()){
-            loadingDialog.dismiss();
-        }
+//        if (loadingDialog != null && loadingDialog.isShowing()){
+//            loadingDialog.dismiss();
+//        }
 
 
         if(hidden){

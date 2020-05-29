@@ -116,6 +116,8 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
     private boolean isToPay = false;
     private boolean isPause = false;
 
+    private boolean isPay = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -594,6 +596,8 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                     loadingDialog.dismiss();
                 }
                 UIHelper.ToastError(context, throwable.toString());
+
+                isPay = false;
             }
 
             @Override
@@ -721,6 +725,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                 if (loadingDialog != null && loadingDialog.isShowing()){
                     loadingDialog.dismiss();
                 }
+                isPay = false;
             }
         });
     }
@@ -952,8 +957,15 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                     return;
                 }
 
-                Log.e("spf===submitBtn", "===");
-                pay();
+                Log.e("spf===submitBtn", "==="+isPay);
+
+                if(!isPay){
+                    Log.e("spf===submitBtn_1", "==="+isPay);
+
+                    isPay = true;
+                    pay();
+                }
+
 
                 break;
 

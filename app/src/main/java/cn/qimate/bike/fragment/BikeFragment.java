@@ -359,9 +359,9 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
         isHidden = hidden;
 
-        if (loadingDialog != null && loadingDialog.isShowing()){
-            loadingDialog.dismiss();
-        }
+//        if (loadingDialog != null && loadingDialog.isShowing()){
+//            loadingDialog.dismiss();
+//        }
 
 
 
