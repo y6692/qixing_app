@@ -7314,7 +7314,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 Toast.makeText(context,"蓝牙连接失败，重启软件试试吧！",Toast.LENGTH_LONG).show();
 //                car_notification(isOpenLock?1:isAgain?2:isEndBtn?3:0, 2, 0);
                 car_notification(action_type, 2, 0, type+"==="+code+"==="+Code.toString(code));
-
             }
 
             @Override
