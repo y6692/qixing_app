@@ -119,6 +119,7 @@ import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.base.BaseActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragmentActivity;
 import cn.qimate.bike.ble.BLEService;
@@ -161,7 +162,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.sofi.blelocker.library.Constants.STATUS_CONNECTED;
 
 @SuppressLint("NewApi")
-public class MainActivity extends BaseFragmentActivity implements View.OnClickListener, OnBannerListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, OnBannerListener {
 
     private Activity mActivity = this;
     private static final String TAG = MainActivity.class.getSimpleName();

@@ -345,7 +345,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 	protected void onPause() {
 		isForeground = false;
 		super.onPause();
-		JPushInterface.onPause(this);
+//		JPushInterface.onPause(this);
 
 //		try {
 //			if (internalReceiver != null) {

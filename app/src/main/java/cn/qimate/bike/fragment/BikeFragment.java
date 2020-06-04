@@ -716,7 +716,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
 
-                    Log.e("main_b===schoolRange0", "==="+responseString);
+//                    Log.e("main_b===schoolRange0", "==="+responseString);
 
                     final ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
@@ -800,7 +800,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //                                                    }
                                                 }
 
-                                                Log.e("main_b===schoolRange5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
+//                                                Log.e("main_b===schoolRange5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
 
 //                                                closeLoadingDialog2();
                                             }catch (Exception e){

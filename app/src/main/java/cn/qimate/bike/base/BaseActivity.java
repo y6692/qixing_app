@@ -25,11 +25,16 @@ import java.util.Set;
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
+import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
+import cn.qimate.bike.full.Splash2Activity;
+import cn.qimate.bike.full.Splash3Activity;
+import cn.qimate.bike.full.SplashActivity;
+import cn.qimate.bike.model.AppStatus;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
@@ -40,6 +45,23 @@ public class BaseActivity extends BaseFragmentActivity {
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
+
+		Log.e("ba===onCreate", "==="+AppStatusManager.getInstance().getAppStatus());
+
+		//判断app状态
+		if (AppStatusManager.getInstance().getAppStatus() == AppStatus.STATUS_RECYCLE){
+
+
+
+			//被回收，跳转到启动页面
+			Intent intent = new Intent(this, Splash3Activity.class);
+			startActivity(intent);
+
+			finish();
+
+			return;
+		}
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		context = this;
 		BaseApplication.context = context;
@@ -63,7 +85,7 @@ public class BaseActivity extends BaseFragmentActivity {
 		if (newConfig.fontScale != 1)//非默认值
 			getResources();
 
-		Log.e("ba===1", "===");
+//		Log.e("ba===1", "===");
 
 		super.onConfigurationChanged(newConfig);
 	}
@@ -77,7 +99,7 @@ public class BaseActivity extends BaseFragmentActivity {
 			res.updateConfiguration(newConfig, res.getDisplayMetrics());
 		}
 
-		Log.e("ba===2", res+"==="+res.getConfiguration().fontScale);
+//		Log.e("ba===2", res+"==="+res.getConfiguration().fontScale);
 
 		return res;
 	}

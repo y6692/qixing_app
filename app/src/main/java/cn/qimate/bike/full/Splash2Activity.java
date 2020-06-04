@@ -55,6 +55,8 @@ import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.CrashHandler;
 import cn.qimate.bike.activity.MainActivity;
+import cn.qimate.bike.base.AppStatusManager;
+import cn.qimate.bike.base.Base2Activity;
 import cn.qimate.bike.base.BaseActivity;
 import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.HttpHelper;
@@ -64,13 +66,14 @@ import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
+import cn.qimate.bike.model.AppStatus;
 import cn.qimate.bike.model.BannerBean;
 import cn.qimate.bike.model.H5Bean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.util.ToastUtil;
 
 @SuppressLint("NewApi")
-public class Splash2Activity extends BaseActivity implements View.OnClickListener{
+public class Splash2Activity extends Base2Activity implements View.OnClickListener{
 
 	public static boolean isForeground = false;
 
@@ -667,6 +670,7 @@ public class Splash2Activity extends BaseActivity implements View.OnClickListene
 				skipLayout.setEnabled(false);
 //				UIHelper.goToAct(context, MainActivity.class);
 
+				AppStatusManager.getInstance().setAppStatus(AppStatus.STATUS_NORMAL);
 				Intent intent = new Intent(context, MainActivity.class);
 				if(isAdv){
 					intent.putExtra("h5_title", h5_title);

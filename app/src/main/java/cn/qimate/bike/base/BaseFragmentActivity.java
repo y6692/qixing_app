@@ -80,7 +80,9 @@ import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.full.Splash2Activity;
 import cn.qimate.bike.full.SplashActivity;
+import cn.qimate.bike.model.AppStatus;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
@@ -144,7 +146,16 @@ public class BaseFragmentActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 //		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-
+//		Log.e("bfa===onCreate", "==="+AppStatusManager.getInstance().getAppStatus());
+//
+//		//判断app状态
+//		if (AppStatusManager.getInstance().getAppStatus() == AppStatus.STATUS_RECYCLE){
+//			//被回收，跳转到启动页面
+//			Intent intent = new Intent(this, Splash2Activity.class);
+//			startActivity(intent);
+//			finish();
+//			return;
+//		}
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		context = this;
