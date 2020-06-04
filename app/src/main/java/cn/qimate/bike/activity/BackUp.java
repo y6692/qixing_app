@@ -7,6 +7,9 @@ import com.alibaba.fastjson.JSON;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Polygon;
 import com.amap.api.maps.model.PolygonOptions;
+import com.clj.fastble.BleManager;
+import com.clj.fastble.callback.BleScanCallback;
+import com.clj.fastble.data.BleDevice;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -20,10 +23,189 @@ import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.util.LogUtil;
 import cn.qimate.bike.util.ToastUtil;
 
 public class BackUp {
 }
+
+//                                    m_myHandler.postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//
+//                                            connectDeviceLP();
+//                                            ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
+////                                          ClientManager.getClient().notifyClose(mac, mCloseListener);
+//
+////                                    LogUtil.e("0x98===", "==="+isStop);
+////
+////                                    m_myHandler.postDelayed(new Runnable() {
+////                                        @Override
+////                                        public void run() {
+////                                            if (!isStop){
+////                                                if (loadingDialog != null && loadingDialog.isShowing()) {
+////                                                    loadingDialog.dismiss();
+////                                                }
+////
+////                                                Toast.makeText(context,"扫码唤醒失败，重启手机蓝牙换辆车试试吧！",Toast.LENGTH_LONG).show();
+////
+////                                                ClientManager.getClient().stopSearch();
+////                                                ClientManager.getClient().disconnect(mac);
+////                                                ClientManager.getClient().disconnect(mac);
+////                                                ClientManager.getClient().disconnect(mac);
+////                                                ClientManager.getClient().disconnect(mac);
+////                                                ClientManager.getClient().disconnect(mac);
+////                                                ClientManager.getClient().disconnect(mac);
+////                                                ClientManager.getClient().unregisterConnectStatusListener(mac, mConnectStatusListener);
+////
+////                                                finish();
+////                                            }
+////                                        }
+////                                    }, 15 * 1000);
+//
+//                                        }
+//                                    }, 0 * 1000);
+
+//                                    new Thread(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            try {
+//                                                activity.runOnUiThread(new Runnable() {
+//                                                    @Override
+//                                                    public void run() {
+//
+////                                                        ClientManager.getClient().stopSearch();
+////                                                        ClientManager.getClient().disconnect(m_nowMac);
+////                                                        ClientManager.getClient().disconnect(m_nowMac);
+////                                                        ClientManager.getClient().disconnect(m_nowMac);
+////                                                        ClientManager.getClient().disconnect(m_nowMac);
+////                                                        ClientManager.getClient().disconnect(m_nowMac);
+////                                                        ClientManager.getClient().disconnect(m_nowMac);
+////                                                        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+////                                                        ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener2);
+//
+////                                                        SearchRequest request = new SearchRequest.Builder().searchBluetoothLeDevice(0).build();      //duration为0时无限扫描
+////
+////                                                        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+////                                                            LogUtil.e("usecar===1", "===");
+////
+////                                                            return;
+////                                                        }
+//
+//                                                        LogUtil.e("usecar===2", "===");
+//
+////                                                                ClientManager.getClient().stopSearch();
+//                                                        m_myHandler.sendEmptyMessage(0x98);
+////                                                        ClientManager.getClient().search(request, mSearchResponse);
+//                                                    }
+//                                                });
+//                                            } catch (Exception e) {
+//                                                e.printStackTrace();
+//                                            }
+//                                        }
+//                                    }).start();
+
+//    void scan_end(){
+////        loadingDialog = DialogUtils.getLoadingDialog(context, "正在搜索...");
+////		loadingDialog.setTitle("正在搜索");
+////		loadingDialog.show();
+//
+//        if(macList!=null){
+//            macList.clear();
+//        }
+//
+//        if(!"2".equals(type) && !"3".equals(type) && !"9".equals(type) && !"10".equals(type)){
+//
+//            if(!isBleInit){
+//                isBleInit = true;
+//
+//                BleManager.getInstance().init(activity.getApplication());
+//                BleManager.getInstance()
+//                        .enableLog(true)
+//                        .setReConnectCount(10, 5000)
+//                        .setConnectOverTime(timeout)
+//                        .setOperateTimeout(10000);
+//
+//                setScanRule();
+//            }
+//
+//        }
+//
+//        BleManager.getInstance().scan(new BleScanCallback() {
+//            @Override
+//            public void onScanStarted(boolean success) {
+////                mDeviceAdapter.clearScanDevice();
+////                mDeviceAdapter.notifyDataSetChanged();
+////                img_loading.startAnimation(operatingAnim);
+////                img_loading.setVisibility(View.VISIBLE);
+////                btn_scan.setText(getString(R.string.stop_scan));
+//                LogUtil.e("mf===onScanStarted_end", "==="+success);
+//
+//            }
+//
+//            @Override
+//            public void onLeScan(BleDevice bleDevice) {
+//                super.onLeScan(bleDevice);
+//
+////                D1:E4:39:55:3D:F9
+//
+//                if (bleDevice.getName()!=null && (bleDevice.getName().startsWith("abeacon_") || "BC01".equals(bleDevice.getName()))){
+//                    macList.add(""+bleDevice.getName());
+//                }
+//
+//                LogUtil.e("mf===onLeScan_end", bleDevice.getName()+"==="+bleDevice.getMac());
+//            }
+//
+//            @Override
+//            public void onScanning(final BleDevice bleDevice) {
+////                mDeviceAdapter.addDevice(bleDevice);
+////                mDeviceAdapter.notifyDataSetChanged();
+//
+//                if(macList.size()>0){
+//                    BleManager.getInstance().cancelScan();
+//                }
+//
+//                LogUtil.e("mf===onScanning_end", bleDevice.getName()+"==="+bleDevice.getMac());
+//
+////				m_myHandler.post(new Runnable() {
+////					@Override
+////					public void run() {
+////						if(address.equals(bleDevice.getMac())){
+////							//                            if (loadingDialog != null && loadingDialog.isShowing()) {
+//////                                loadingDialog.dismiss();
+//////                            }
+////
+////							BleManager.getInstance().cancelScan();
+////
+////							LogUtil.e("onScanning===2", isConnect+"==="+bleDevice+"==="+bleDevice.getMac());
+////
+////							Toast.makeText(context, "搜索成功", Toast.LENGTH_LONG).show();
+////
+////							connect();
+////
+//////                            m_myHandler.postDelayed(new Runnable() {
+//////                                @Override
+//////                                public void run() {
+//////                                    if(!isConnect)
+//////                                        connect();
+//////                                }
+//////                            }, 5 * 1000);
+////						}
+////					}
+////				});
+//
+//            }
+//
+//            @Override
+//            public void onScanFinished(List<BleDevice> scanResultList) {
+////                img_loading.clearAnimation();
+////                img_loading.setVisibility(View.INVISIBLE);
+////                btn_scan.setText(getString(R.string.start_scan));
+//
+//                LogUtil.e("mf===onScanFinished_end", scanResultList+"==="+scanResultList.size());
+//            }
+//        });
+//    }
 
 //                                    m_myHandler.postDelayed(new Runnable() {
 //                                        @Override

@@ -712,11 +712,11 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 
 //        if(referLatitude==0.0 || referLongitude==0.0) return;
 
-        Log.e("main_eb===schoolRange", isHidden+"==="+referLatitude+"==="+referLongitude+"==="+jsonArray2);
+//        Log.e("main_eb===schoolRange", isHidden+"==="+referLatitude+"==="+referLongitude+"==="+jsonArray2);
 
         if(jsonArray2 != null){
 
-            Log.e("main_eb===schoolRange2", isHidden+"===");
+//            Log.e("main_eb===schoolRange2", isHidden+"===");
 
 //            onStartCommon2("正在加载");
 
@@ -809,7 +809,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             });
 
         }else{
-            Log.e("main_eb===schoolRange#", "==="+isHidden);
+//            Log.e("main_eb===schoolRange#", "==="+isHidden);
 
             RequestParams params = new RequestParams();
 //            params.put("latitude", referLatitude);
@@ -828,7 +828,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
 
-                    Log.e("main_eb===schoolRange0", "==="+responseString);
+//                    Log.e("main_eb===schoolRange0", "==="+responseString);
 
                     final ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
@@ -840,7 +840,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                 if (1==1 || result.getFlag().equals("Success")) {
                                     jsonArray2 = new JSONArray(result.getData());
 
-                                    Log.e("main_eb===schoolRange1", isHidden+"==="+jsonArray2.length()+"==="+jsonArray2);
+//                                    Log.e("main_eb===schoolRange1", isHidden+"==="+jsonArray2.length()+"==="+jsonArray2);
 
 //                                    if(isHidden) return;
 
@@ -1267,7 +1267,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
 
-                Log.e("main_eb===schoolRange0", "==="+responseString);
+//                Log.e("main_eb===schoolRange0", "==="+responseString);
 
                 final ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
@@ -1279,7 +1279,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                             if (1==1 || result.getFlag().equals("Success")) {
                                 jsonArray2 = new JSONArray(result.getData());
 
-                                Log.e("main_eb===schoolRange1", jsonArray2.length()+"==="+jsonArray2);
+//                                Log.e("main_eb===schoolRange1", jsonArray2.length()+"==="+jsonArray2);
 
                                 if(isHidden) return;
 
@@ -1303,12 +1303,12 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                     JSONArray jsonArray3 = new JSONArray(jsonArray2.getJSONObject(i).getString("ranges"));;
                                     JSONObject jsonObject = new JSONObject(jsonArray2.getJSONObject(i).getString("parking"));
 
-                                    Log.e("main_eb===schoolRange2", jsonArray3.length()+"==="+jsonArray3);
+//                                    Log.e("main_eb===schoolRange2", jsonArray3.length()+"==="+jsonArray3);
 
                                     for (int j = 0; j < jsonArray3.length(); j++) {
                                         LatLng latLng = new LatLng(Double.parseDouble(jsonArray3.getJSONObject(j).getString("latitude")), Double.parseDouble(jsonArray3.getJSONObject(j).getString("longitude")));
 
-                                        Log.e("main_eb===schoolRange22", jsonArray3.length()+"==="+jsonArray3);
+//                                        Log.e("main_eb===schoolRange22", jsonArray3.length()+"==="+jsonArray3);
 
                                         flag=0;
                                         list.add(latLng);
@@ -1316,7 +1316,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                     }
 
 
-                                    Log.e("main_eb===schoolRange3", "==="+list.size());
+//                                    Log.e("main_eb===schoolRange3", "==="+list.size());
 
                                     Polygon polygon = null;
                                     PolygonOptions pOption = new PolygonOptions();
@@ -1327,7 +1327,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                     polygon = aMap.addPolygon(pOption.strokeColor(Color.argb(0, 255, 255, 255)).fillColor(Color.argb(0, 255, 255, 255)));
 
 
-                                    Log.e("main_eb===schoolRange4", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
+//                                    Log.e("main_eb===schoolRange4", jsonObject.getString("name")+"==="+jsonObject.getString("latitude")+"==="+polygon);
 
                                     LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
                                     marker_park_Option.title(jsonObject.getString("name")).position(latLng);
@@ -1344,7 +1344,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
                                     }
                                 }
 
-                                Log.e("main_eb===schoolRange5", pOptions.size()+"==="+pOptions+"==="+isContainsList.size()+"==="+isContainsList);
+//                                Log.e("main_eb===schoolRange5", pOptions.size()+"==="+pOptions+"==="+isContainsList.size()+"==="+isContainsList);
 
                             }else {
                                 ToastUtil.showMessageApp(context,result.getMsg());

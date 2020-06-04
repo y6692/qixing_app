@@ -109,24 +109,21 @@ public class BaseApplication extends Application {
 
 		Log.e("BaseApplication===", density+"==="+width+"==="+height);
 
-		BluetoothContext.set(this);
+
 
 		setDebug(false);
-//		setTestLog(true);
 		setTestLog(false);
-//		setTest(true);
 		setTest(false);
-
-//		registerReceiver(broadcastReceiver2, Config.initFilter());
-//		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
 
 //		AdHub.initialize(this, "2597");
 
-		bleManager = new AndroidBle(this);
-		RxTool.init(getApplicationContext());
-		ToastUtils.init(getApplicationContext());
-		// registerUncaughtExceptionHandler();
+//		BluetoothContext.set(this);
+//		bleManager = new AndroidBle(this);
+//		RxTool.init(getApplicationContext());
+//		ToastUtils.init(getApplicationContext());
+//		// registerUncaughtExceptionHandler();
 		initImageLoader(getApplicationContext());
+
 		try {
 			packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 		} catch (NameNotFoundException e) {
