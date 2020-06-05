@@ -34,6 +34,9 @@ public class LogUtil {
 
                 Log.e(s1, s2);
 
+                if(MainFragment.testLog.length()>60000){
+                    MainFragment.testLog = "";
+                }
 
 //              MainFragment.tv_test0.setText(MainFragment.testLog);
                 MainFragment.testLog += (s1 + "：" + s2 + "\n");

@@ -267,6 +267,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     BluetoothAdapter mBluetoothAdapter;
     private XiaoanBleApiClient apiClient;
 
+
     public String codenum = "";
     private String m_nowMac = "";
     private int carmodel_id;
@@ -1964,6 +1965,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     ll_bike.setVisibility(View.GONE);
                                     ll_ebike.setVisibility(View.VISIBLE);
 
+                                    if("10".equals(type)){
+                                        ll_oprate.setVisibility(View.GONE);
+                                        ll_oprate_auto.setVisibility(View.VISIBLE);
+                                    }else{
+                                        ll_oprate.setVisibility(View.VISIBLE);
+                                        ll_oprate_auto.setVisibility(View.GONE);
+                                    }
+
                                 }else{
 //                                    changeTab(0);
 
@@ -3292,26 +3301,31 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 startActivityForResult(enableBtIntent, 188);
             } else {
 
-                m_myHandler2.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
+                if(!"3".equals(type)){
+                    m_myHandler2.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+
+                            LogUtil.e("openAgain===2_timeout", type + "===" + state + "===" + lockStatus + "===" + remark);
+
+                            if(lockStatus==2 || lockStatus==3){
+                                getBleRecord();
+                                ToastUtil.showMessageApp(context, "开锁超时");
+                                car_notification(4, lockStatus, 0, type+"===开锁超时");
+                            }
+
                         }
+                    }, 10 * 1000);
 
-                        LogUtil.e("openAgain===2_timeout", type + "===" + state + "===" + lockStatus + "===" + remark);
+                    state = 0;
+                    lockStatus = 2;
+                }
 
-                        if(lockStatus==2 || lockStatus==3){
-                            getBleRecord();
-                            ToastUtil.showMessageApp(context, "开锁超时");
-                            car_notification(4, lockStatus, 0, type+"===开锁超时");
-                        }
 
-                    }
-                }, 10 * 1000);
-
-                state = 0;
-                lockStatus = 2;
+                LogUtil.e("openAgain===2_1", isLookPsdBtn + "===");
 
                 if(!isLookPsdBtn){   //没连上
                     isTemp = true;
@@ -3381,10 +3395,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             } else {
                 LogUtil.e("openAgain===5", "==="+isLookPsdBtn+"==="+m_nowMac);
 
-//                closeLoadingDialog();
-
-//                lockStatus = 2;
-
                 m_myHandler2.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -3406,7 +3416,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 state = 0;
                 lockStatus = 2;
                 m_myHandler.sendEmptyMessage(0x98);
-
 
             }
         }else if("7".equals(type)){
@@ -4033,7 +4042,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 break;
 
             case R.id.ll_rent:
-                LogUtil.e("ll_rent===onClick", "==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
+                LogUtil.e("ll_rent===onClick", type+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
                 isOpenLock = false;
                 isConnect = false;
@@ -4467,26 +4476,29 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                                            scan2();
 //                                        }
 
-                                        m_myHandler2.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                                    loadingDialog.dismiss();
+                                        if(!"3".equals(type)){
+                                            m_myHandler2.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (loadingDialog != null && loadingDialog.isShowing()){
+                                                        loadingDialog.dismiss();
+                                                    }
+
+                                                    LogUtil.e("mf===2_timeout", type + "===" + state + "===" + lockStatus + "===" + remark);
+
+                                                    if(lockStatus==2 || lockStatus==3){
+                                                        getBleRecord();
+                                                        ToastUtil.showMessageApp(context, "开锁超时");
+                                                        car_notification(1, lockStatus, 0, type+"===开锁超时");
+                                                    }
+
                                                 }
+                                            }, 10 * 1000);
 
-                                                LogUtil.e("mf===2_timeout", type + "===" + state + "===" + lockStatus + "===" + remark);
+                                            state = 0;
+                                            lockStatus = 2;
+                                        }
 
-                                                if(lockStatus==2 || lockStatus==3){
-                                                    getBleRecord();
-                                                    ToastUtil.showMessageApp(context, "开锁超时");
-                                                    car_notification(1, lockStatus, 0, type+"===开锁超时");
-                                                }
-
-                                            }
-                                        }, 10 * 1000);
-
-                                        state = 0;
-                                        lockStatus = 2;
                                         connect();
                                     }
                                 }
@@ -4624,8 +4636,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                         public void run() {
                                             if (!isConnect){
 //                                                closeLoadingDialog();
-
-
 
                                                 LogUtil.e("mf===7==timeout", loadingDialog.isShowing() + "==="+isConnect + "==="+activity.isFinishing()+ "==="+apiClient);
 
@@ -5789,7 +5799,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     //助力车开锁
     private void unlock() {
-        LogUtil.e("mf===unlock", "==="+isNetSuc);
+        LogUtil.e("mf===unlock", isAgain+"==="+isNetSuc);
 
         isNetSuc = false;
 
@@ -6079,13 +6089,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 ClientManager.getClient().stopSearch();
 
                 ClientManager.getClient().disconnect(m_nowMac);
-                ClientManager.getClient().disconnect(m_nowMac);
-                ClientManager.getClient().disconnect(m_nowMac);
-                ClientManager.getClient().disconnect(m_nowMac);
-                ClientManager.getClient().disconnect(m_nowMac);
-                ClientManager.getClient().disconnect(m_nowMac);
-
-                ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
+//                ClientManager.getClient().disconnect(m_nowMac);
+//                ClientManager.getClient().disconnect(m_nowMac);
+//                ClientManager.getClient().disconnect(m_nowMac);
+//                ClientManager.getClient().disconnect(m_nowMac);
+//                ClientManager.getClient().disconnect(m_nowMac);
+//
+//                ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
 //                ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener2);
 
             }else if("4".equals(type) || "8".equals(type)){
@@ -6350,25 +6360,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 car_notification(isAgain?4:1, 3, 0, remark);
                             }
 
-//                            remark = result.getMessage();
-//
-//                            KeyBean bean = JSON.parseObject(result.getData(), KeyBean.class);
-//
-//                            encryptionKey = bean.getEncryptionKey();
-//                            keys = bean.getKeys();
-//                            serverTime = bean.getServerTime();
-//
-//                            LogUtil.e("rent===2", m_nowMac+"==="+encryptionKey+"==="+keys);
-//
-////                              getBleRecord();
-////                              iv_help.setVisibility(View.GONE);
-//
-//                            if(isAgain){
-//                                openAgainBleLock(null);
-//                            }else{
-//                                openBleLock(null);
-//                            }
-
                         }catch (Exception e){
                             closeLoadingDialog();
                             LogUtil.e("mf===rent_e", "==="+e);
@@ -6458,19 +6449,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             public void run() {
                 m_myHandler2.removeCallbacksAndMessages(null);
 
+                LogUtil.e("mf===car_notification_0",  type+ "===" +isAgain + "===" + action_type +"==="+ lock_status+"==="+ back_type +"==="+ remark+"==="+ oid+"==="+ referLatitude+"==="+referLongitude+"==="+Md5Helper.encode(oid+":action_type:"+action_type)+"==="+Md5Helper.encode(oid+":lock_status:"+lock_status));
+
                 if(lock_status==2 || lock_status==3){
                     endBle();
                 }
 
-//                m_myHandler2.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                        LogUtil.e("mf===car_notification#", loadingDialog.isShowing() + "===" + isOpenLock + "===" + isAgain +"==="+ isEndBtn);
-//                    }
-//                });
 
-                LogUtil.e("mf===car_notification0", loadingDialog.isShowing() + "===" + isOpenLock + "===" + isAgain +"==="+ isEndBtn);
+                LogUtil.e("mf===car_notification_1", loadingDialog.isShowing() + "===" + isOpenLock + "===" + isAgain +"==="+ isEndBtn);
 
                 if(!isOpenLock && !isAgain && !isEndBtn) return;
 
@@ -6478,20 +6464,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     isEndBtn = false;
                 }
 
-                LogUtil.e("mf===car_notification", isAgain + "===" + action_type +"==="+ lock_status+"==="+ back_type +"==="+ remark+"==="+ oid+"==="+ referLatitude+"==="+referLongitude+"==="+Md5Helper.encode(oid+":action_type:"+action_type)+"==="+Md5Helper.encode(oid+":lock_status:"+lock_status));
-
+                LogUtil.e("mf===car_notification_2",  type+ "===" +isAgain + "===" + action_type +"==="+ lock_status+"==="+ back_type +"==="+ remark+"==="+ oid+"==="+ referLatitude+"==="+referLongitude+"==="+Md5Helper.encode(oid+":action_type:"+action_type)+"==="+Md5Helper.encode(oid+":lock_status:"+lock_status));
 
                 final RequestParams params = new RequestParams();
-//                      params.put("scene", isAgain?2:1); //场景值 必传 1借还车上报 2再次开(关)锁上报
                 params.put("action_type", Md5Helper.encode(oid+":action_type:"+action_type));   //操作类型 1开锁 2临时上锁 3还车 4临时开锁(为type11时使用)
                 params.put("lock_status", Md5Helper.encode(oid+":lock_status:"+lock_status));     //车锁状态 必传 1成功 2连接不上蓝牙 3蓝牙操作失败 4还车时不在停车点(蓝牙、助力车都得上报) 5车锁未关
                 params.put("parking", parking());
                 params.put("longitude", referLongitude);
                 params.put("latitude", referLatitude);
                 params.put("remark", remark);
-//                      params.put("report_type", Md5Helper.encode(oid+":report_type:"+report_type));     //1蓝牙开锁 2网络开锁 3蓝牙上锁 4网络上锁 【需加密，加密方式同上，例如md5('191004143208756404:report_type:1')】
                 if(back_type!=0){
-//                          params.put("back_type", Md5Helper.encode(oid+":back_type:"+(!"1".equals(backType)?backType:back_type)));      //1手机gps在电子围栏 2锁gps在电子围栏 3信标 4锁与信标【需加密，加密方式同上，例如md5('191004143208756404:back_type:1')】
 
                     if(major!=0){
                         LogUtil.e("mf===car_notification1", major+"==="+macList+"==="+macList2+"==="+isContainsList.contains(true)+"==="+uid+"==="+access_token);
@@ -6539,7 +6521,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                     LogUtil.e("mf===car_notification6", responseString + "====" + action_type+ "====" +lock_status);
 
-                                    if(action_type == 1) {
+                                    if(action_type == 1 || action_type == 4) {
                                         if(lock_status==1){
                                             ToastUtil.showMessageApp(context, "恭喜您,开锁成功!");
                                         }
@@ -6716,7 +6698,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     }else{
                         isLookPsdBtn = false;
 
-                        ToastUtil.showMessageApp(context,"蓝牙连接已断开");
+//                        ToastUtil.showMessageApp(context,"蓝牙连接已断开");
 //                        ToastUtil.showMessageApp(context,"设备断开连接");
                     }
 
@@ -6737,64 +6719,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         }
     };
 
-    private void getStateLP(String mac){
-        ClientManager.getClient().getStatus(mac, new IGetStatusResponse() {
-            @Override
-            public void onResponseSuccess(String version, String keySerial, String macKey, String vol) {
-//              quantity = vol+"";
 
-                LogUtil.e("getStatus===Success", "===="+macKey);
-                keySource = keySerial;
-
-//                int i = 1/0;
-
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        LogUtil.e("mf===getStatus1", "==="+isEndBtn);
-
-//                      getBleRecord();
-
-                        if(isEndBtn){
-                            queryOpenState();
-                        }else{
-                            rent();
-
-//                            if (loadingDialog != null && !loadingDialog.isShowing()) {
-//                                loadingDialog.setTitle("开锁中");
-//                                loadingDialog.show();
-//                            }
-                        }
-
-
-                        LogUtil.e("scan===", "scan===="+loadingDialog);
-
-                    }
-                });
-            }
-
-            @Override
-            public void onResponseFail(final int code) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        LogUtil.e("getStatus===Fail", code+"==="+Code.toString(code));
-                        getBleRecord();
-                        ToastUtil.showMessageApp(context, "开锁失败");
-                        car_notification(isAgain?4:1, 3, 0, type+"==="+code+"==="+Code.toString(code));
-
-//                        if("锁已开".equals(Code.toString(code))){
-//                            ToastUtil.showMessageApp(context, Code.toString(code));
-//                        }
-
-                        closeLoadingDialog();
-
-                    }
-                });
-            }
-
-        });
-    }
 
     //泺平--》监听当前连接状态
     private final BleConnectStatusListener mConnectStatusListener2 = new BleConnectStatusListener() {
@@ -6840,182 +6765,356 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     //泺平，临时开锁
     private void openAgainBleLock(RRent.ResultBean resultBean) {
-        LogUtil.e("biking=openAgainBleLock", serverTime+"==="+keys+"==="+encryptionKey);
 
-        ClientManager.getClient().openLock(m_nowMac,"000000000000", (int) serverTime, keys, encryptionKey, new IEmptyResponse(){
-            @Override
-            public void onResponseFail(final int code) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        closeLoadingDialog();
+        try{
+            LogUtil.e("openAgainBleLock===", serverTime+"==="+keys+"==="+encryptionKey);
 
-                        getBleRecord2();
-                        ToastUtil.showMessageApp(context, "开锁失败");
-                        car_notification(4, 3, 0, type+"==="+code+"==="+Code.toString(code));
+//            int i = 1/0;
+
+            ClientManager.getClient().openLock(m_nowMac,"000000000000", (int) serverTime, keys, encryptionKey, new IEmptyResponse(){
+                @Override
+                public void onResponseFail(final int code) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            closeLoadingDialog();
+
+                            getBleRecord2();
+                            ToastUtil.showMessageApp(context, "开锁失败");
+                            car_notification(4, 3, 0, type+"===openAgainBleLock==="+code+"==="+Code.toString(code));
 //                        ToastUtil.showMessageApp(context, Code.toString(code));
-                    }
-                });
+                        }
+                    });
+                }
+
+                @Override
+                public void onResponseSuccess() {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try{
+                                getBleRecord2();
+
+                                LogUtil.e("openAgainBleLock===Suc", "===");
+
+                                ToastUtil.showMessageApp(context, "开锁成功");
+
+//                            int i = 1/0;
+
+                                car_notification(4, 1, 0, "");
+                            }catch (Exception e){
+                                closeLoadingDialog();
+
+                                String tvAgain = tv_againBtn.getText().toString().trim();
+                                int action_type;
+                                LogUtil.e("openAgainBleLock===onRS_e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+                                if(isAgain){
+                                    if("再次开锁".equals(tvAgain)){
+                                        action_type=4;
+                                        ToastUtil.showMessageApp(context,"开锁失败");
+                                    }else{
+                                        action_type=2;
+                                        ToastUtil.showMessageApp(context,"关锁失败");
+                                    }
+                                }else{
+                                    if(isEndBtn){
+                                        action_type=3;
+                                        ToastUtil.showMessageApp(context,"还车失败");
+                                    }else{
+                                        action_type=1;
+                                        ToastUtil.showMessageApp(context,"开锁失败");
+                                    }
+                                }
+                                car_notification(action_type, 3, 0, type+"===openAgainBleLock_onRS_e==="+e);
+                            }
+
+                        }
+                    });
+
+                }
+            });
+        }catch (Exception e){
+            closeLoadingDialog();
+
+            String tvAgain = tv_againBtn.getText().toString().trim();
+            int action_type;
+            LogUtil.e("openAgainBleLock===e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+            if(isAgain){
+                if("再次开锁".equals(tvAgain)){
+                    action_type=4;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }else{
+                    action_type=2;
+                    ToastUtil.showMessageApp(context,"关锁失败");
+                }
+            }else{
+                if(isEndBtn){
+                    action_type=3;
+                    ToastUtil.showMessageApp(context,"还车失败");
+                }else{
+                    action_type=1;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }
             }
-
-            @Override
-            public void onResponseSuccess() {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-//                        closeLoadingDialog();
-
-                        getBleRecord2();
-
-                        LogUtil.e("openAgainLock===Success", "===");
-
-                        ToastUtil.showMessageApp(context, "开锁成功");
-
-                        car_notification(4, 1, 0, "");
-
-                    }
-                });
-
-            }
-        });
+            car_notification(action_type, 3, 0, type+"===openAgainBleLock_e==="+e);
+        }
     }
 
     //泺平，开锁
     private void openBleLock(RRent.ResultBean resultBean) {
-        LogUtil.e("mf===openBleLock", loadingDialog.isShowing()+"==="+serverTime+"==="+keys+"==="+encryptionKey);
+        try{
+            LogUtil.e("openBleLock===", loadingDialog.isShowing()+"==="+serverTime+"==="+keys+"==="+encryptionKey);
 
-        ClientManager.getClient().openLock(m_nowMac,"000000000000", (int) serverTime, keys, encryptionKey, new IEmptyResponse(){
-            @Override
-            public void onResponseFail(final int code) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        LogUtil.e("openLock===Fail", m_nowMac+"==="+Code.toString(code));
-//                      deleteBleRecord(null);
+            ClientManager.getClient().openLock(m_nowMac,"000000000000", (int) serverTime, keys, encryptionKey, new IEmptyResponse(){
+                @Override
+                public void onResponseFail(final int code) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LogUtil.e("openLock===Fail", m_nowMac+"==="+Code.toString(code));
+//                          deleteBleRecord(null);
+
+                            getBleRecord();
+                            ToastUtil.showMessageApp(context, "开锁失败");
+                            car_notification(1, 3, 0, type+"===openBleLock==="+code+"==="+Code.toString(code));
+
+
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onResponseSuccess() {
+
+                    try{
+                        LogUtil.e("openBleLock===Success", "===");
+                        lockStatus = 1;
 
                         getBleRecord();
-                        ToastUtil.showMessageApp(context, "开锁失败");
-                        car_notification(1, 3, 0, type+"==="+code+"==="+Code.toString(code));
 
-//                      ToastUtil.showMessageApp(context, Code.toString(code));
+                        closeLoadingDialog();
+
+//                        int i = 1/0;
+
+                        ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
+                        car_notification(1, 1, 0, "");
+                    }catch (Exception e){
+                        closeLoadingDialog();
+
+                        String tvAgain = tv_againBtn.getText().toString().trim();
+                        int action_type;
+                        LogUtil.e("openBleLock===onRS_e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+                        if(isAgain){
+                            if("再次开锁".equals(tvAgain)){
+                                action_type=4;
+                                ToastUtil.showMessageApp(context,"开锁失败");
+                            }else{
+                                action_type=2;
+                                ToastUtil.showMessageApp(context,"关锁失败");
+                            }
+                        }else{
+                            if(isEndBtn){
+                                action_type=3;
+                                ToastUtil.showMessageApp(context,"还车失败");
+                            }else{
+                                action_type=1;
+                                ToastUtil.showMessageApp(context,"开锁失败");
+                            }
+                        }
+                        car_notification(action_type, 3, 0, type+"===openBleLock_onRS_e==="+e);
                     }
-                });
 
+                }
+            });
+        }catch (Exception e){
+            closeLoadingDialog();
+
+            String tvAgain = tv_againBtn.getText().toString().trim();
+            int action_type;
+            LogUtil.e("openBleLock===e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+            if(isAgain){
+                if("再次开锁".equals(tvAgain)){
+                    action_type=4;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }else{
+                    action_type=2;
+                    ToastUtil.showMessageApp(context,"关锁失败");
+                }
+            }else{
+                if(isEndBtn){
+                    action_type=3;
+                    ToastUtil.showMessageApp(context,"还车失败");
+                }else{
+                    action_type=1;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }
             }
-
-            @Override
-            public void onResponseSuccess() {
-                LogUtil.e("openLock===Success", "===");
-                lockStatus = 1;
-
-                getBleRecord();
-
-                closeLoadingDialog();
-
-                ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
-                car_notification(1, 1, 0, "");
-
-//                if("锁已开".equals(Code.toString(code))){
-//
-//                }else{
-//                    car_notification(1, 3, 0);
-//                }
-
-//                ClientManager.getClient().stopSearch();
-//                ClientManager.getClient().disconnect(m_nowMac);
-//                ClientManager.getClient().unnotifyClose(mac, mCloseListener);
-//                ClientManager.getClient().unregisterConnectStatusListener(m_nowMac, mConnectStatusListener);
-
-            }
-        });
+            car_notification(action_type, 3, 0, type+"===openBleLock_e==="+e);
+        }
     }
 
 
 
     //泺平===与设备，获取记录
     private void getBleRecord() {
+        try{
+            LogUtil.e("getBleRecord===", type+"==="+m_nowMac);
 
-        LogUtil.e("getBleRecord===", "###==="+m_nowMac);
+//            int i = 1/0;
 
-        ClientManager.getClient().getRecord(m_nowMac, new IGetRecordResponse() {
+            ClientManager.getClient().getRecord(m_nowMac, new IGetRecordResponse() {
 
-            @Override
-            public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp, String transType, String mackey, String index, int Major, int Minor, String vol) {
-                LogUtil.e("getBleRecord===0", transType + "==Major:"+ Major +"---Minor:"+Minor+"==="+bikeTradeNo);
-                deleteBleRecord(bikeTradeNo);
+                @Override
+                public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp, String transType, String mackey, String index, int Major, int Minor, String vol) {
+                    LogUtil.e("getBleRecord===0", transType + "==Major:"+ Major +"---Minor:"+Minor+"==="+bikeTradeNo);
+                    deleteBleRecord(bikeTradeNo);
 
-//                if (loadingDialog != null && loadingDialog.isShowing()){
-//                    loadingDialog.dismiss();
-//                }
-//
-//                ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
-//
-//                SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
-//                SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
-//                SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
-//                SharedPreferencesUrls.getInstance().putString("type", type);
-//                SharedPreferencesUrls.getInstance().putString("tempStat","0");
-//                SharedPreferencesUrls.getInstance().putString("bleid",bleid);
-//
-//                UIHelper.goToAct(context, CurRoadBikingActivity.class);
-//                scrollToFinishActivity();
-            }
+                }
 
-            @Override
-            public void onResponseSuccessEmpty() {
+                @Override
+                public void onResponseSuccessEmpty() {
 //                ToastUtil.showMessageApp(context, "record empty");
-                LogUtil.e("getBleRecord===1", "Success===Empty");
-            }
+                    LogUtil.e("getBleRecord===1", "Success===Empty");
+                }
 
-            @Override
-            public void onResponseFail(int code) {
-                LogUtil.e("getBleRecord===2", Code.toString(code));
-//                ToastUtil.showMessageApp(context, Code.toString(code));
+                @Override
+                public void onResponseFail(int code) {
+                    LogUtil.e("getBleRecord===onResponseFail", Code.toString(code));
+
+                    closeLoadingDialog();
+
+                    String tvAgain = tv_againBtn.getText().toString().trim();
+                    int action_type;
+//                    LogUtil.e("getBleRecord===e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+                    if(isAgain){
+                        if("再次开锁".equals(tvAgain)){
+                            action_type=4;
+                            ToastUtil.showMessageApp(context,"开锁失败");
+                        }else{
+                            action_type=2;
+                            ToastUtil.showMessageApp(context,"关锁失败");
+                        }
+                    }else{
+                        if(isEndBtn){
+                            action_type=3;
+                            ToastUtil.showMessageApp(context,"还车失败");
+                        }else{
+                            action_type=1;
+                            ToastUtil.showMessageApp(context,"开锁失败");
+                        }
+                    }
+                    car_notification(action_type, 3, 0, type+"===getBleRecord_onResponseFail==="+code+"==="+Code.toString(code));
+                }
+            });
+        }catch (Exception e){
+            closeLoadingDialog();
+
+            String tvAgain = tv_againBtn.getText().toString().trim();
+            int action_type;
+            LogUtil.e("getBleRecord===e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+            if(isAgain){
+                if("再次开锁".equals(tvAgain)){
+                    action_type=4;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }else{
+                    action_type=2;
+                    ToastUtil.showMessageApp(context,"关锁失败");
+                }
+            }else{
+                if(isEndBtn){
+                    action_type=3;
+                    ToastUtil.showMessageApp(context,"还车失败");
+                }else{
+                    action_type=1;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }
             }
-        });
+            car_notification(action_type, 3, 0, type+"===getBleRecord_e==="+e);
+        }
     }
 
     //泺平===与设备，删除记录
     private void deleteBleRecord(String tradeNo) {
-//        UIHelper.showProgress(this, R.string.delete_bike_record);
-        ClientManager.getClient().deleteRecord(m_nowMac, tradeNo, new IGetRecordResponse() {
-//            @Override
-//            public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp, String transType, String mackey, String index, String cap, String vol) {
-//                LogUtil.e("scan===deleteBleRecord", "Success===");
-//                deleteBleRecord(bikeTradeNo);
-//            }
 
-            @Override
-            public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp, String transType, String mackey, String index, int Major, int Minor, String vol) {
-                LogUtil.e("biking=deleteBleRecord", "Major:"+ Major +"---Minor:"+Minor);
-                deleteBleRecord(bikeTradeNo);
+
+        try{
+            ClientManager.getClient().deleteRecord(m_nowMac, tradeNo, new IGetRecordResponse() {
+
+                @Override
+                public void onResponseSuccess(String phone, String bikeTradeNo, String timestamp, String transType, String mackey, String index, int Major, int Minor, String vol) {
+                    LogUtil.e("biking=deleteBleRecord", "Major:"+ Major +"---Minor:"+Minor);
+                    deleteBleRecord(bikeTradeNo);
+                }
+
+                @Override
+                public void onResponseSuccessEmpty() {
+                    LogUtil.e("scan===deleteBleRecord", "Success===Empty");
+                }
+
+                @Override
+                public void onResponseFail(int code) {
+                    LogUtil.e("deleteBleRecord===onResponseFail", Code.toString(code));
+                    popupwindow.dismiss();
+
+                    closeLoadingDialog();
+
+                    String tvAgain = tv_againBtn.getText().toString().trim();
+                    int action_type;
+//                    LogUtil.e("deleteBleRecord===e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+                    if(isAgain){
+                        if("再次开锁".equals(tvAgain)){
+                            action_type=4;
+                            ToastUtil.showMessageApp(context,"开锁失败");
+                        }else{
+                            action_type=2;
+                            ToastUtil.showMessageApp(context,"关锁失败");
+                        }
+                    }else{
+                        if(isEndBtn){
+                            action_type=3;
+                            ToastUtil.showMessageApp(context,"还车失败");
+                        }else{
+                            action_type=1;
+                            ToastUtil.showMessageApp(context,"开锁失败");
+                        }
+                    }
+                    car_notification(action_type, 3, 0, type+"===deleteBleRecord_onResponseFail==="+code+"==="+Code.toString(code));
+                }
+            });
+        }catch (Exception e){
+            closeLoadingDialog();
+
+            String tvAgain = tv_againBtn.getText().toString().trim();
+            int action_type;
+            LogUtil.e("deleteBleRecord===e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+            if(isAgain){
+                if("再次开锁".equals(tvAgain)){
+                    action_type=4;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }else{
+                    action_type=2;
+                    ToastUtil.showMessageApp(context,"关锁失败");
+                }
+            }else{
+                if(isEndBtn){
+                    action_type=3;
+                    ToastUtil.showMessageApp(context,"还车失败");
+                }else{
+                    action_type=1;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }
             }
-
-            @Override
-            public void onResponseSuccessEmpty() {
-//                UIHelper.dismiss();
-                LogUtil.e("scan===deleteBleRecord", "Success===Empty");
-
-//                m_myHandler.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        closeLoadingDialog();
-//
-//                        isFinish = true;
-//                        ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
-//                        car_notification(1, 1, 0);
-//                    }
-//                });
-
-            }
-
-            @Override
-            public void onResponseFail(int code) {
-                LogUtil.e("scan===deleteBleRecord", Code.toString(code));
-//                ToastUtil.showMessageApp(context, Code.toString(code));
-                popupwindow.dismiss();
-            }
-        });
+            car_notification(action_type, 3, 0, type+"===deleteBleRecord_e==="+e);
+        }
     }
 
     private final SearchResponse mSearchResponse3 = new SearchResponse() {
@@ -7122,256 +7221,564 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     //与设备，获取记录
     private void getBleRecord2() {
-        ClientManager.getClient().getRecord(m_nowMac, new IGetRecordResponse() {
-            @Override
-            public void onResponseSuccess(String phone, final String bikeTradeNo, String timestamp, final String transType, final String mackey, String index, final int Major, final int Minor, String vol) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        LogUtil.e("getBleRecord===###", transType+"==Major:"+ Major +"---Minor:"+Minor+"---mackey:"+mackey);
+        try{
+            LogUtil.e("getBleRecord2===", type+"==="+m_nowMac);
 
-                        if(BaseApplication.getInstance().isTestLog()){
+//            int i = 1/0;
+
+            ClientManager.getClient().getRecord(m_nowMac, new IGetRecordResponse() {
+                @Override
+                public void onResponseSuccess(String phone, final String bikeTradeNo, String timestamp, final String transType, final String mackey, String index, final int Major, final int Minor, String vol) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LogUtil.e("getBleRecord2===onResponseS", transType+"==Major:"+ Major +"---Minor:"+Minor+"---mackey:"+mackey);
+
+                            if(BaseApplication.getInstance().isTestLog()){
 //                            macText.setText(Major+"==="+Minor+"==="+macList);
+                            }
+
+//                          ToastUtil.showMessageApp(context, "Major:"+ Major +"---Minor:"+Minor);
+
+                            transtype = transType;
+                            major = Major;
+                            minor = Minor;
+
+                            SharedPreferencesUrls.getInstance().putInt("major", major);
+
+//                          m_myHandler.sendEmptyMessage(9);
+
+                            deleteBleRecord2(bikeTradeNo);
                         }
-
-//                      ToastUtil.showMessageApp(context, "Major:"+ Major +"---Minor:"+Minor);
-
-                        transtype = transType;
-                        major = Major;
-                        minor = Minor;
-
-                        SharedPreferencesUrls.getInstance().putInt("major", major);
-
-//                      m_myHandler.sendEmptyMessage(9);
-
-                        deleteBleRecord2(bikeTradeNo);
-                    }
-                });
+                    });
 
 
+                }
+
+                @Override
+                public void onResponseSuccessEmpty() {
+
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LogUtil.e("getBleRecord2===", "Success===Empty");
+                        }
+                    });
+                }
+
+                @Override
+                public void onResponseFail(final int code) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LogUtil.e("getBleRecord2===fail", Code.toString(code));
+
+                            closeLoadingDialog();
+
+                            String tvAgain = tv_againBtn.getText().toString().trim();
+                            int action_type;
+
+                            if(isAgain){
+                                if("再次开锁".equals(tvAgain)){
+                                    action_type=4;
+                                    ToastUtil.showMessageApp(context,"开锁失败");
+                                }else{
+                                    action_type=2;
+                                    ToastUtil.showMessageApp(context,"关锁失败");
+                                }
+                            }else{
+                                if(isEndBtn){
+                                    action_type=3;
+                                    ToastUtil.showMessageApp(context,"还车失败");
+                                }else{
+                                    action_type=1;
+                                    ToastUtil.showMessageApp(context,"开锁失败");
+                                }
+                            }
+                            car_notification(action_type, 3, 0, type+"===getBleRecord2_fail==="+code+"==="+Code.toString(code));
+                        }
+                    });
+                }
+            });
+        }catch (Exception e){
+            closeLoadingDialog();
+
+            String tvAgain = tv_againBtn.getText().toString().trim();
+            int action_type;
+            LogUtil.e("getBleRecord2===e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+            if(isAgain){
+                if("再次开锁".equals(tvAgain)){
+                    action_type=4;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }else{
+                    action_type=2;
+                    ToastUtil.showMessageApp(context,"关锁失败");
+                }
+            }else{
+                if(isEndBtn){
+                    action_type=3;
+                    ToastUtil.showMessageApp(context,"还车失败");
+                }else{
+                    action_type=1;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }
             }
-
-            @Override
-            public void onResponseSuccessEmpty() {
-//                ToastUtil.showMessageApp(context, "record empty");
-                LogUtil.e("getBleRecord===", "Success===Empty");
-
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
-                });
-
-            }
-
-            @Override
-            public void onResponseFail(final int code) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        LogUtil.e("getBleRecord===fail", Code.toString(code));
-                    }
-                });
-            }
-        });
+            car_notification(action_type, 3, 0, type+"===getBleRecord2_e==="+e);
+        }
     }
 
 
     //与设备，删除记录
     private void deleteBleRecord2(String tradeNo) {
-        ClientManager.getClient().deleteRecord(m_nowMac, tradeNo, new IGetRecordResponse() {
-            @Override
-            public void onResponseSuccess(String phone, final String bikeTradeNo, String timestamp, final String transType, String mackey, String index, final int Major, final int Minor, String vol) {
 
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        LogUtil.e("deleteBleRecord2===", transType+"==Major:"+ Major +"---Minor:"+Minor);
 
-                        transtype = transType;
-                        major = Major;
-                        minor = Minor;
+        try{
+            ClientManager.getClient().deleteRecord(m_nowMac, tradeNo, new IGetRecordResponse() {
+                @Override
+                public void onResponseSuccess(String phone, final String bikeTradeNo, String timestamp, final String transType, String mackey, String index, final int Major, final int Minor, String vol) {
 
-                        deleteBleRecord2(bikeTradeNo);
-                    }
-                });
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LogUtil.e("deleteBleRecord2===", transType+"==Major:"+ Major +"---Minor:"+Minor);
+
+                            transtype = transType;
+                            major = Major;
+                            minor = Minor;
+
+                            deleteBleRecord2(bikeTradeNo);
+                        }
+                    });
+                }
+
+                @Override
+                public void onResponseSuccessEmpty() {
+                    LogUtil.e("biking=deleteBleRecord2", "Success===Empty");
+
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                        }
+                    });
+                }
+
+                @Override
+                public void onResponseFail(final int code) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LogUtil.e("deleteBleRecord2===onResponseFail", Code.toString(code));
+
+                            closeLoadingDialog();
+
+                            String tvAgain = tv_againBtn.getText().toString().trim();
+                            int action_type;
+//                            LogUtil.e("deleteBleRecord2===onResponseFail", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+                            if(isAgain){
+                                if("再次开锁".equals(tvAgain)){
+                                    action_type=4;
+                                    ToastUtil.showMessageApp(context,"开锁失败");
+                                }else{
+                                    action_type=2;
+                                    ToastUtil.showMessageApp(context,"关锁失败");
+                                }
+                            }else{
+                                if(isEndBtn){
+                                    action_type=3;
+                                    ToastUtil.showMessageApp(context,"还车失败");
+                                }else{
+                                    action_type=1;
+                                    ToastUtil.showMessageApp(context,"开锁失败");
+                                }
+                            }
+                            car_notification(action_type, 3, 0, type+"===deleteBleRecord2_onResponseFail==="+code+"==="+Code.toString(code));
+                        }
+                    });
+
+                }
+            });
+        }catch (Exception e){
+            closeLoadingDialog();
+
+            String tvAgain = tv_againBtn.getText().toString().trim();
+            int action_type;
+            LogUtil.e("deleteBleRecord2===e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+            if(isAgain){
+                if("再次开锁".equals(tvAgain)){
+                    action_type=4;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }else{
+                    action_type=2;
+                    ToastUtil.showMessageApp(context,"关锁失败");
+                }
+            }else{
+                if(isEndBtn){
+                    action_type=3;
+                    ToastUtil.showMessageApp(context,"还车失败");
+                }else{
+                    action_type=1;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }
             }
-
-            @Override
-            public void onResponseSuccessEmpty() {
-                LogUtil.e("biking=deleteBleRecord2", "Success===Empty");
-
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
-                });
-            }
-
-            @Override
-            public void onResponseFail(final int code) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        LogUtil.e("biking=deleteBleRecord2", Code.toString(code));
-                    }
-                });
-
-            }
-        });
+            car_notification(action_type, 3, 0, type+"===deleteBleRecord2_e==="+e);
+        }
     }
 
     //泺平===还车_查锁是否关闭
     private void queryOpenState() {
-        LogUtil.e("queryOpenState===0", "===="+m_nowMac);
 
-//        UIHelper.showProgress(this, R.string.collectState);
-        ClientManager.getClient().queryOpenState(m_nowMac, new IQueryOpenStateResponse() {
-            @Override
-            public void onResponseSuccess(final boolean isOpen) {
-//                UIHelper.dismiss();
+        try{
+            LogUtil.e("queryOpenState===0", "===="+m_nowMac);
 
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        LogUtil.e("queryOpenState===", "===="+isOpen);
+//            int i = 1/0;
 
-//                        getBleRecord();
+            ClientManager.getClient().queryOpenState(m_nowMac, new IQueryOpenStateResponse() {
+                @Override
+                public void onResponseSuccess(final boolean isOpen) {
 
-//                        closeLoadingDialog();
-//                        if (loadingDialogWithHelp != null && loadingDialogWithHelp.isShowing()){
-//                            loadingDialogWithHelp.dismiss();
-//                        }
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try{
+                                LogUtil.e("queryOpenState===onRS", "===="+isOpen);
 
-                        if(isOpen) {
+//                              int i = 1/0;
 
-                            if(isEndBtn){
-                                open++;
+                                if(isOpen) {
+
+                                    if(isEndBtn){
+                                        open++;
+                                    }
+
+                                    if(open<2){
+                                        ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+                                    }
+
+                                    car_notification(3, 5, 0, "");
+
+                                }else {
+
+                                    car_notification(3, 1, 1, "");
+
+                                }
+                            }catch (Exception e){
+                                closeLoadingDialog();
+
+                                String tvAgain = tv_againBtn.getText().toString().trim();
+                                int action_type;
+                                LogUtil.e("queryOpenState===onRS_e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+                                if(isAgain){
+                                    if("再次开锁".equals(tvAgain)){
+                                        action_type=4;
+                                        ToastUtil.showMessageApp(context,"开锁失败");
+                                    }else{
+                                        action_type=2;
+                                        ToastUtil.showMessageApp(context,"关锁失败");
+                                    }
+                                }else{
+                                    if(isEndBtn){
+                                        action_type=3;
+                                        ToastUtil.showMessageApp(context,"还车失败");
+                                    }else{
+                                        action_type=1;
+                                        ToastUtil.showMessageApp(context,"开锁失败");
+                                    }
+                                }
+                                car_notification(action_type, 3, 0, type+"===queryOpenState_onRS_e==="+e);
                             }
-
-                            if(open<2){
-                                ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
-                            }
-
-                            car_notification(3, 5, 0, "");
-
-//                            customDialog10.show();
-                        }else {
-
-                            car_notification(3, 1, 1, "");
 
                         }
+                    });
+                }
 
+                @Override
+                public void onResponseFail(final int code) {
+                    LogUtil.e("queryOpenState===f",  Code.toString(code));
+                    ToastUtil.showMessageApp(context,"还车失败");
+                    car_notification(3, 3, 1, type+"==="+code+"==="+Code.toString(code));
 
-                    }
-                });
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            closeLoadingDialog();
+                        }
+                    });
+
+                }
+            });
+        }catch (Exception e){
+            closeLoadingDialog();
+
+            String tvAgain = tv_againBtn.getText().toString().trim();
+            int action_type;
+            LogUtil.e("queryOpenState===e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+            if(isAgain){
+                if("再次开锁".equals(tvAgain)){
+                    action_type=4;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }else{
+                    action_type=2;
+                    ToastUtil.showMessageApp(context,"关锁失败");
+                }
+            }else{
+                if(isEndBtn){
+                    action_type=3;
+                    ToastUtil.showMessageApp(context,"还车失败");
+                }else{
+                    action_type=1;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }
             }
+            car_notification(action_type, 3, 0, type+"===queryOpenState_e==="+e);
+        }
+    }
 
-            @Override
-            public void onResponseFail(final int code) {
-                LogUtil.e("queryOpenState===f",  Code.toString(code));
-                ToastUtil.showMessageApp(context,"还车失败");
-                car_notification(3, 3, 1, type+"==="+code+"==="+Code.toString(code));
-//                UIHelper.dismiss();
+    private void getStateLP(String mac){
 
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-//                        ToastUtil.showMessageApp(context,Code.toString(code));
+        try{
+//            int i = 1/0;
 
-                        closeLoadingDialog();
-                    }
-                });
+            ClientManager.getClient().getStatus(mac, new IGetStatusResponse() {
+                @Override
+                public void onResponseSuccess(String version, final String keySerial, final String macKey, String vol) {
+//                  quantity = vol+"";
 
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            try{
+                                LogUtil.e("getStateLP===Success", "===="+macKey);
+                                keySource = keySerial;
+
+                                LogUtil.e("getStateLP===1", "==="+isEndBtn);
+
+//                                int i = 1/0;
+
+                                if(isEndBtn){
+                                    queryOpenState();
+                                }else{
+                                    rent();
+                                }
+
+                                LogUtil.e("getStateLP===2", "==="+loadingDialog.isShowing());
+
+                            }catch (Exception e){
+                                closeLoadingDialog();
+
+                                String tvAgain = tv_againBtn.getText().toString().trim();
+                                int action_type;
+                                LogUtil.e("getStateLP===onRS_e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+                                if(isAgain){
+                                    if("再次开锁".equals(tvAgain)){
+                                        action_type=4;
+                                        ToastUtil.showMessageApp(context,"开锁失败");
+                                    }else{
+                                        action_type=2;
+                                        ToastUtil.showMessageApp(context,"关锁失败");
+                                    }
+                                }else{
+                                    if(isEndBtn){
+                                        action_type=3;
+                                        ToastUtil.showMessageApp(context,"还车失败");
+                                    }else{
+                                        action_type=1;
+                                        ToastUtil.showMessageApp(context,"开锁失败");
+                                    }
+                                }
+                                car_notification(action_type, 3, 0, type+"===getStateLP_onRS_e==="+e);
+                            }
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onResponseFail(final int code) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LogUtil.e("getStateLP===Fail", code+"==="+Code.toString(code));
+                            getBleRecord();
+                            ToastUtil.showMessageApp(context, "开锁失败");
+                            car_notification(isAgain?4:1, 3, 0, type+"==="+code+"==="+Code.toString(code));
+
+//                        if("锁已开".equals(Code.toString(code))){
+//                            ToastUtil.showMessageApp(context, Code.toString(code));
+//                        }
+
+                            closeLoadingDialog();
+
+                        }
+                    });
+                }
+
+            });
+        }catch (Exception e){
+            closeLoadingDialog();
+
+            String tvAgain = tv_againBtn.getText().toString().trim();
+            int action_type;
+            LogUtil.e("getStateLP===e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+            if(isAgain){
+                if("再次开锁".equals(tvAgain)){
+                    action_type=4;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }else{
+                    action_type=2;
+                    ToastUtil.showMessageApp(context,"关锁失败");
+                }
+            }else{
+                if(isEndBtn){
+                    action_type=3;
+                    ToastUtil.showMessageApp(context,"还车失败");
+                }else{
+                    action_type=1;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }
             }
-        });
+            car_notification(action_type, 3, 0, type+"===getStateLP_e==="+e);
+        }
     }
 
     //泺平===连接设备
     private void connectDeviceLP() {
-        BleConnectOptions options = new BleConnectOptions.Builder()
-                .setConnectRetry(3)
-                .setConnectTimeout(2000)
+
+        try{
+            BleConnectOptions options = new BleConnectOptions.Builder()
+                    .setConnectRetry(3)
+                    .setConnectTimeout(2000)
+//                .setConnectTimeout(8000)
 //                .setConnectRetry(0)
 //                .setConnectTimeout(timeout)
 //                .setServiceDiscoverRetry(1)
 //                .setServiceDiscoverTimeout(10000)
 //                .setEnableNotifyRetry(1)
 //                .setEnableNotifyTimeout(10000)
-                .build();
+                    .build();
 
-        ClientManager.getClient().connect(m_nowMac, options, new IConnectResponse() {
-            @Override
-            public void onResponseFail(int code) {
-                isStop = false;
-                isLookPsdBtn = false;
+//            int i = 1/0;
 
-                m_myHandler2.removeCallbacksAndMessages(null);
+            ClientManager.getClient().connect(m_nowMac, options, new IConnectResponse() {
+                @Override
+                public void onResponseFail(int code) {
+                    isStop = false;
+                    isLookPsdBtn = false;
 
-                LogUtil.e("connectDeviceLP===", "Fail==="+code+"==="+Code.toString(code));
+                    m_myHandler2.removeCallbacksAndMessages(null);
+
+                    LogUtil.e("connectDeviceLP===", "Fail==="+code+"==="+Code.toString(code));
 //                ToastUtil.showMessageApp(context, Code.toString(code));
 
-//                closeLoadingDialog();
-//                if (loadingDialogWithHelp != null && loadingDialogWithHelp.isShowing()){
-//                    loadingDialogWithHelp.dismiss();
-//                }
 
-                if(popupwindow!=null){
-                    popupwindow.dismiss();
-                }
-
-                String tvAgain = tv_againBtn.getText().toString().trim();
-                int action_type;
-                LogUtil.e("connectDeviceLP===1", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
-
-                if(isAgain){
-                    if("再次开锁".equals(tvAgain)){
-                        action_type=4;
-                    }else{
-                        action_type=2;
+                    if(popupwindow!=null){
+                        popupwindow.dismiss();
                     }
-                }else{
-                    if(isEndBtn){
-                        action_type=3;
-                    }else{
-                        action_type=1;
-                    }
-                }
 
-                Toast.makeText(context,"蓝牙连接失败，重启软件试试吧！",Toast.LENGTH_LONG).show();
+                    String tvAgain = tv_againBtn.getText().toString().trim();
+                    int action_type;
+                    LogUtil.e("connectDeviceLP===1", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+                    if(isAgain){
+                        if("再次开锁".equals(tvAgain)){
+                            action_type=4;
+                        }else{
+                            action_type=2;
+                        }
+                    }else{
+                        if(isEndBtn){
+                            action_type=3;
+                        }else{
+                            action_type=1;
+                        }
+                    }
+
+                    Toast.makeText(context,"蓝牙连接失败，重启软件试试吧！",Toast.LENGTH_LONG).show();
 //                car_notification(isOpenLock?1:isAgain?2:isEndBtn?3:0, 2, 0);
-                car_notification(action_type, 2, 0, type+"==="+code+"==="+Code.toString(code));
-            }
-
-            @Override
-            public void onResponseSuccess(BleGattProfile profile) {
-//                BluetoothLog.v(String.format("profile:\n%s", profile));
-//                refreshData(true);
-
-                isStop = true;
-                isLookPsdBtn = true;
-                state = 1;  //连接成功
-                lockStatus = 3;
-
-                LogUtil.e("connectDeviceLP===", "Success==="+profile);
-
-//                closeLoadingDialog();
-//                if (loadingDialogWithHelp != null && loadingDialogWithHelp.isShowing()){
-//                    loadingDialogWithHelp.dismiss();
-//                }
-
-                if(isEndBtn){
-                    queryOpenState();
-                }else{
-                    getStateLP(m_nowMac);
+                    car_notification(action_type, 2, 0, type+"==="+code+"==="+Code.toString(code));
                 }
 
-//                if (Globals.bType == 1) {
-//                    ToastUtil.showMessageApp(context, "正在关锁中");
-////                    getBleRecord();
-//                }
+                @Override
+                public void onResponseSuccess(BleGattProfile profile) {
+
+                    try{
+                        isStop = true;
+                        isLookPsdBtn = true;
+                        state = 1;  //连接成功
+                        lockStatus = 3;
+
+                        LogUtil.e("connectDeviceLP===", "Success==="+profile);
+
+
+//                      int i = 1/0;
+
+                        if(isEndBtn){
+                            queryOpenState();
+                        }else{
+                            getStateLP(m_nowMac);
+                        }
+                    }catch (Exception e){
+                        closeLoadingDialog();
+
+                        String tvAgain = tv_againBtn.getText().toString().trim();
+                        int action_type;
+                        LogUtil.e("connectDeviceLP===onRS_e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+                        if(isAgain){
+                            if("再次开锁".equals(tvAgain)){
+                                action_type=4;
+                                ToastUtil.showMessageApp(context,"开锁失败");
+                            }else{
+                                action_type=2;
+                                ToastUtil.showMessageApp(context,"关锁失败");
+                            }
+                        }else{
+                            if(isEndBtn){
+                                action_type=3;
+                                ToastUtil.showMessageApp(context,"还车失败");
+                            }else{
+                                action_type=1;
+                                ToastUtil.showMessageApp(context,"开锁失败");
+                            }
+                        }
+                        car_notification(action_type, 3, 0, type+"===connectDeviceLP_onRS_e==="+e);
+                    }
+
+                }
+            });
+        }catch (Exception e){
+            closeLoadingDialog();
+
+            String tvAgain = tv_againBtn.getText().toString().trim();
+            int action_type;
+            LogUtil.e("connectDeviceLP===e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+            if(isAgain){
+                if("再次开锁".equals(tvAgain)){
+                    action_type=4;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }else{
+                    action_type=2;
+                    ToastUtil.showMessageApp(context,"关锁失败");
+                }
+            }else{
+                if(isEndBtn){
+                    action_type=3;
+                    ToastUtil.showMessageApp(context,"还车失败");
+                }else{
+                    action_type=1;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }
             }
-        });
+            car_notification(action_type, 3, 0, type+"===connectDeviceLP_e==="+e);
+        }
     }
 
 
@@ -8426,10 +8833,14 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //        loadingDialog.setTitle("正在连接");
 //        loadingDialog.show();
 
-        LogUtil.e("connect===", carmodel_id+"==="+type+"==="+isLookPsdBtn+"==="+isOpenLock+"==="+loadingDialog.isShowing());
+
 
         try{
+            LogUtil.e("connect===", carmodel_id+"==="+type+"==="+isLookPsdBtn+"==="+isOpenLock+"==="+loadingDialog.isShowing());
+
             BleManager.getInstance().cancelScan();
+
+//            int i = 1/0;
 
             BleManager.getInstance().connect(m_nowMac, new BleGattCallback() {
                 @Override
@@ -8552,148 +8963,172 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                     @Override
                                     public void onCharacteristicChanged(byte[] data) {
-//                            byte[] values = characteristic.getValue();
+                                        try{
+                                            LogUtil.e("onCharacteristicC", loadingDialog.isShowing()+"===0");
 
-                                        LogUtil.e("onCharacteristicC", loadingDialog.isShowing()+"===0");
+                                            byte[] x = new byte[16];
+                                            System.arraycopy(data, 0, x, 0, 16);
 
-                                        byte[] x = new byte[16];
-                                        System.arraycopy(data, 0, x, 0, 16);
+                                            byte[] mingwen = EncryptUtils.Decrypt(x, Config.key);    //060207FE02433001010606D41FC9553C  FE024330 01 01 06
 
-                                        byte[] mingwen = EncryptUtils.Decrypt(x, Config.key);    //060207FE02433001010606D41FC9553C  FE024330 01 01 06
+                                            LogUtil.e("onCharacteristicC2", x.length+"==="+ ConvertUtils.bytes2HexString(data)+"==="+ConvertUtils.bytes2HexString(mingwen));
 
-                                        LogUtil.e("onCharacteristicC2", x.length+"==="+ ConvertUtils.bytes2HexString(data)+"==="+ConvertUtils.bytes2HexString(mingwen));
+//                                            int i = 1/0;
 
-                                        String s1 = ConvertUtils.bytes2HexString(mingwen);
+                                            String s1 = ConvertUtils.bytes2HexString(mingwen);
 
-                                        if(s1.startsWith("0602")){      //获取token
+                                            if(s1.startsWith("0602")){      //获取token
 
-                                            token = s1.substring(6, 14);    //0602070C0580E001010406C8D6DC1949
-                                            GlobalParameterUtils.getInstance().setToken(ConvertUtils.hexString2Bytes(token));
+                                                token = s1.substring(6, 14);    //0602070C0580E001010406C8D6DC1949
+                                                GlobalParameterUtils.getInstance().setToken(ConvertUtils.hexString2Bytes(token));
+
+                                                String tvAgain = tv_againBtn.getText().toString().trim();
+
+                                                LogUtil.e("token===", tvAgain+"==="+isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+token+"==="+s1);
+
+                                                if(isAgain){
+                                                    if("再次开锁".equals(tvAgain)){
+                                                        openLock();
+                                                    }
+                                                }else{
+                                                    if(isEndBtn){
+                                                        getLockStatus();
+                                                    }else if(isOpenLock){
+                                                        openLock();
+                                                    }
+                                                }
+
+                                            }else if(s1.startsWith("0502")){    //开锁
+                                                LogUtil.e("openLock===", "==="+s1);
+
+                                                if ("00".equals(s1.substring(6, 8))) {
+                                                    lockStatus = 1;
+
+//                                                  Toast.makeText(context, "开锁成功", Toast.LENGTH_LONG).show();
+
+                                                    m_myHandler.sendEmptyMessage(7);
+                                                }else{
+                                                    Toast.makeText(context, "开锁失败", Toast.LENGTH_LONG).show();
+
+                                                    car_notification(isAgain?4:1, 3, 0, type+"===开锁失败");
+                                                }
+
+                                            }else if(s1.startsWith("0508")){   //关锁==050801RET：RET取值如下：0x00，锁关闭成功。0x01，锁关闭失败。0x02，锁关闭异常。
+                                                if ("00".equals(s1.substring(6, 8))) {
+                                                    ToastUtil.showMessageApp(context,"关锁成功");
+                                                    LogUtil.e("closeLock===suc", "==="+first3);
+
+                                                } else {
+                                                    ToastUtil.showMessageApp(context,"关锁失败");
+                                                    LogUtil.e("closeLock===fail", "==="+first3);
+                                                }
+                                            }else if(s1.startsWith("050F")){   //锁状态
+                                                LogUtil.e("lockState===0", isEndBtn+"==="+s1);
+
+                                                isStop = true;
+                                                isLookPsdBtn = true;
+
+//                                              查询锁开关状态==050F:0x00表示开启状态；0x01表示关闭状态。
+                                                if ("01".equals(s1.substring(6, 8))) {
+                                                    ToastUtil.showMessageApp(context,"锁已关闭");
+                                                    LogUtil.e("closeLock===1", "锁已关闭==="+first3);
+
+                                                    m_myHandler.postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            getXinbiao();
+                                                            new Thread(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    try {
+                                                                        int n=0;
+                                                                        major=0;
+                                                                        LogUtil.e("closeLock===n0",major+"=="+n);
+                                                                        while(major==0){
+
+                                                                            Thread.sleep(500);
+                                                                            n++;
+
+                                                                            getXinbiao();
+
+                                                                            LogUtil.e("closeLock===n","=="+n);
+
+                                                                            if(n>=11) break;
+
+                                                                        }
+
+                                                                        LogUtil.e("closeLock===n2",major+"=="+n);
+                                                                    } catch (InterruptedException e) {
+                                                                        e.printStackTrace();
+                                                                    }
+//                                                                  m_myHandler.sendEmptyMessage(3);
+                                                                }
+                                                            }).start();
+                                                        }
+                                                    }, 2000);
+
+                                                    if(isEndBtn){
+                                                        LogUtil.e("closeLock===2", "锁已关闭==="+isEndBtn);
+
+//                                                      m_myHandler.sendEmptyMessage(6);
+                                                        car_notification(3, 1, 1, "");
+
+                                                        LogUtil.e("closeLock===3", "锁已关闭===" + macList2.size());
+                                                    }
+
+                                                } else {
+                                                    //锁已开启
+
+                                                    if(isEndBtn){
+                                                        open++;
+
+                                                        if(open<2){
+                                                            ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
+                                                        }
+
+                                                        car_notification(3, 5, 0, "");
+                                                    }
+
+//                                                  isEndBtn = false;
+                                                }
+
+                                            }else if(s1.startsWith("058502")){
+
+                                                LogUtil.e("xinbiao===", "当前操作：搜索信标成功"+s1.substring(2*10, 2*10+2)+"==="+s1.substring(2*11, 2*11+2)+"==="+s1);
+
+                                                if("000000000000".equals(s1.substring(2*4, 2*10))){
+                                                    major = 0;
+                                                }else{
+                                                    major = 1;
+                                                }
+                                            }
+                                        }catch(Exception e){
+                                            closeLoadingDialog();
 
                                             String tvAgain = tv_againBtn.getText().toString().trim();
-
-                                            LogUtil.e("token===", tvAgain+"==="+isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+token+"==="+s1);
+                                            int action_type;
+                                            LogUtil.e("onCharacteristicChanged_e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
 
                                             if(isAgain){
                                                 if("再次开锁".equals(tvAgain)){
-                                                    openLock();
+                                                    action_type=4;
+                                                    ToastUtil.showMessageApp(context,"开锁失败");
+                                                }else{
+                                                    action_type=2;
+                                                    ToastUtil.showMessageApp(context,"关锁失败");
                                                 }
                                             }else{
                                                 if(isEndBtn){
-                                                    getLockStatus();
-                                                }else if(isOpenLock){
-                                                    openLock();
+                                                    action_type=3;
+                                                    ToastUtil.showMessageApp(context,"还车失败");
+                                                }else{
+                                                    action_type=1;
+                                                    ToastUtil.showMessageApp(context,"开锁失败");
                                                 }
                                             }
-
-                                        }else if(s1.startsWith("0502")){    //开锁
-                                            LogUtil.e("openLock===", "==="+s1);
-
-                                            if ("00".equals(s1.substring(6, 8))) {
-                                                lockStatus = 1;
-
-//                                  Toast.makeText(context, "开锁成功", Toast.LENGTH_LONG).show();
-
-                                                m_myHandler.sendEmptyMessage(7);
-                                            }else{
-                                                Toast.makeText(context, "开锁失败", Toast.LENGTH_LONG).show();
-
-                                                car_notification(isAgain?4:1, 3, 0, type+"===开锁失败");
-                                            }
-
-
-                                        }else if(s1.startsWith("0508")){   //关锁==050801RET：RET取值如下：0x00，锁关闭成功。0x01，锁关闭失败。0x02，锁关闭异常。
-                                            if ("00".equals(s1.substring(6, 8))) {
-                                                ToastUtil.showMessageApp(context,"关锁成功");
-                                                LogUtil.e("closeLock===suc", "==="+first3);
-
-                                            } else {
-                                                ToastUtil.showMessageApp(context,"关锁失败");
-                                                LogUtil.e("closeLock===fail", "==="+first3);
-                                            }
-                                        }else if(s1.startsWith("050F")){   //锁状态
-                                            LogUtil.e("lockState===0", isEndBtn+"==="+s1);
-
-                                            isStop = true;
-                                            isLookPsdBtn = true;
-
-//                              closeLoadingDialog2();
-
-//                              查询锁开关状态==050F:0x00表示开启状态；0x01表示关闭状态。
-                                            if ("01".equals(s1.substring(6, 8))) {
-                                                ToastUtil.showMessageApp(context,"锁已关闭");
-                                                LogUtil.e("closeLock===1", "锁已关闭==="+first3);
-
-                                                m_myHandler.postDelayed(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        getXinbiao();
-                                                        new Thread(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                try {
-                                                                    int n=0;
-                                                                    major=0;
-                                                                    LogUtil.e("closeLock===n0",major+"=="+n);
-                                                                    while(major==0){
-
-                                                                        Thread.sleep(500);
-                                                                        n++;
-
-                                                                        getXinbiao();
-
-                                                                        LogUtil.e("closeLock===n","=="+n);
-
-                                                                        if(n>=11) break;
-
-                                                                    }
-
-                                                                    LogUtil.e("closeLock===n2",major+"=="+n);
-                                                                } catch (InterruptedException e) {
-                                                                    e.printStackTrace();
-                                                                }
-//                                                  m_myHandler.sendEmptyMessage(3);
-                                                            }
-                                                        }).start();
-                                                    }
-                                                }, 2000);
-
-                                                if(isEndBtn){
-                                                    LogUtil.e("closeLock===2", "锁已关闭==="+isEndBtn);
-
-//                                      m_myHandler.sendEmptyMessage(6);
-                                                    car_notification(3, 1, 1, "");
-
-                                                    LogUtil.e("closeLock===3", "锁已关闭===" + macList2.size());
-                                                }
-
-                                            } else {
-                                                //锁已开启
-
-                                                if(isEndBtn){
-                                                    open++;
-
-                                                    if(open<2){
-                                                        ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
-                                                    }
-
-                                                    car_notification(3, 5, 0, "");
-                                                }
-
-//                                  isEndBtn = false;
-                                            }
-
-                                        }else if(s1.startsWith("058502")){
-
-                                            LogUtil.e("xinbiao===", "当前操作：搜索信标成功"+s1.substring(2*10, 2*10+2)+"==="+s1.substring(2*11, 2*11+2)+"==="+s1);
-
-                                            if("000000000000".equals(s1.substring(2*4, 2*10))){
-                                                major = 0;
-                                            }else{
-                                                major = 1;
-                                            }
-
+                                            car_notification(action_type, 3, 0, type+"===onCharacteristicChanged==="+e);
                                         }
+
 
                                     }
                                 });
@@ -8716,8 +9151,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 }else{
                                     if(isEndBtn){
                                         action_type=3;
+                                        ToastUtil.showMessageApp(context,"还车失败");
                                     }else{
                                         action_type=1;
+                                        ToastUtil.showMessageApp(context,"开锁失败");
                                     }
                                 }
                                 car_notification(action_type, 3, 0, type+"===onConnectSuccess==="+e);
@@ -8757,135 +9194,261 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         car_notification(action_type, 2, 0, type+"===onDisConnected");  //TODO
                     }
 
+                }
+            });
+        }catch (Exception e){
+            closeLoadingDialog();
 
-//                    car_notification(isOpenLock?1:isAgain?2:isEndBtn?3:0, 2, 0);
-//                    if(popupwindow!=null){
-//                        popupwindow.dismiss();
-//                    }
+            String tvAgain = tv_againBtn.getText().toString().trim();
+            int action_type;
+            LogUtil.e("connect=e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
 
-//                    if (isActiveDisConnected) {
-//                        Toast.makeText(MainActivity.this, getString(R.string.active_disconnected), Toast.LENGTH_LONG).show();
-//                    } else {
-//                        Toast.makeText(MainActivity.this, getString(R.string.disconnected), Toast.LENGTH_LONG).show();
-//                        ObserverManager.getInstance().notifyObserver(bleDevice);
-//                    }
+            if(isAgain){
+                if("再次开锁".equals(tvAgain)){
+                    action_type=4;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }else{
+                    action_type=2;
+                    ToastUtil.showMessageApp(context,"关锁失败");
+                }
+            }else{
+                if(isEndBtn){
+                    action_type=3;
+                    ToastUtil.showMessageApp(context,"还车失败");
+                }else{
+                    action_type=1;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }
+            }
+            car_notification(action_type, 2, 0, type+"===connect==="+e);
+        }
+    }
+
+    private void getBleToken(){
+        try{
+            String s = new GetTokenTxOrder().generateString();  //06010101490E602E46311640422E5238
+
+            LogUtil.e("getBleToken===1", "==="+s);  //1648395B
+
+            byte[] bb = Encrypt(ConvertUtils.hexString2Bytes(s), Config.key);
+
+//            int i = 1/0;
+
+            BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb", bb, true, new BleWriteCallback() {
+                @Override
+                public void onWriteSuccess(int current, int total, byte[] justWrite) {
+                    LogUtil.e("getBleToken==onWriteSuc", current+"==="+total+"==="+ConvertUtils.bytes2HexString(justWrite));
+                }
+
+                @Override
+                public void onWriteFailure(BleException exception) {
+                    LogUtil.e("getBleToken=onWriteFail", "==="+exception);
+
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                    String tvAgain = tv_againBtn.getText().toString().trim();
+                    int action_type;
+
+                    if(isAgain){
+                        if("再次开锁".equals(tvAgain)){
+                            action_type=4;
+                        }else{
+                            action_type=2;
+                        }
+                    }else{
+                        if(isEndBtn){
+                            action_type=3;
+                        }else{
+                            action_type=1;
+                        }
+                    }
+                    car_notification(action_type, 3, 0, type+"===getBleToken==="+exception);
 
                 }
             });
         }catch (Exception e){
             closeLoadingDialog();
-            LogUtil.e("connect===e", "==="+e);
+
+            String tvAgain = tv_againBtn.getText().toString().trim();
+            int action_type;
+            LogUtil.e("getBleToken===e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+            if(isAgain){
+                if("再次开锁".equals(tvAgain)){
+                    action_type=4;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }else{
+                    action_type=2;
+                    ToastUtil.showMessageApp(context,"关锁失败");
+                }
+            }else{
+                if(isEndBtn){
+                    action_type=3;
+                    ToastUtil.showMessageApp(context,"还车失败");
+                }else{
+                    action_type=1;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }
+            }
+            car_notification(action_type, 3, 0, type+"===getBleToken==="+e);
         }
 
-
-    }
-
-    private void getBleToken(){
-        String s = new GetTokenTxOrder().generateString();  //06010101490E602E46311640422E5238
-
-        LogUtil.e("getBleToken===1", "==="+s);  //1648395B
-
-        byte[] bb = Encrypt(ConvertUtils.hexString2Bytes(s), Config.key);
-
-        BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb", bb, true, new BleWriteCallback() {
-            @Override
-            public void onWriteSuccess(int current, int total, byte[] justWrite) {
-                LogUtil.e("getBleToken==onWriteSuc", current+"==="+total+"==="+ConvertUtils.bytes2HexString(justWrite));
-            }
-
-            @Override
-            public void onWriteFailure(BleException exception) {
-                LogUtil.e("getBleToken=onWriteFail", "==="+exception);
-
-                ToastUtil.showMessageApp(context,"开锁失败");
-                String tvAgain = tv_againBtn.getText().toString().trim();
-                int action_type;
-
-                if(isAgain){
-                    if("再次开锁".equals(tvAgain)){
-                        action_type=4;
-                    }else{
-                        action_type=2;
-                    }
-                }else{
-                    if(isEndBtn){
-                        action_type=3;
-                    }else{
-                        action_type=1;
-                    }
-                }
-                car_notification(action_type, 3, 0, type+"===getBleToken==="+exception);
-
-            }
-        });
     }
 
     private void getLockStatus(){
-        String s = new GetLockStatusTxOrder().generateString();  //06010101490E602E46311640422E5238
+        try{
+            String s = new GetLockStatusTxOrder().generateString();  //06010101490E602E46311640422E5238
 
-        LogUtil.e("getLockStatus===1", "==="+isLookPsdBtn);  //1648395B
+            LogUtil.e("getLockStatus===1", "==="+isLookPsdBtn);  //1648395B
 
-        byte[] bb = Encrypt(ConvertUtils.hexString2Bytes(s), Config.key);
+            byte[] bb = Encrypt(ConvertUtils.hexString2Bytes(s), Config.key);
 
-        BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb", bb, true, new BleWriteCallback() {
-            @Override
-            public void onWriteSuccess(int current, int total, byte[] justWrite) {
-                LogUtil.e("getLockStatus==onWriteS", current+"==="+total+"==="+ConvertUtils.bytes2HexString(justWrite));
+//            int i = 1/0;
+
+            BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb", bb, true, new BleWriteCallback() {
+                @Override
+                public void onWriteSuccess(int current, int total, byte[] justWrite) {
+                    LogUtil.e("getLockStatus==onWriteS", current+"==="+total+"==="+ConvertUtils.bytes2HexString(justWrite));
+                }
+
+                @Override
+                public void onWriteFailure(BleException exception) {
+                    LogUtil.e("getLockStatus=onWriteFa", "==="+exception);
+
+                    ToastUtil.showMessageApp(context,"还车失败");
+                    car_notification(3, 3, 1, type+"===getLockStatus==="+exception);
+                }
+            });
+        }catch (Exception e){
+            closeLoadingDialog();
+
+            String tvAgain = tv_againBtn.getText().toString().trim();
+            int action_type;
+            LogUtil.e("getLockStatus===e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+            if(isAgain){
+                if("再次开锁".equals(tvAgain)){
+                    action_type=4;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }else{
+                    action_type=2;
+                    ToastUtil.showMessageApp(context,"关锁失败");
+                }
+            }else{
+                if(isEndBtn){
+                    action_type=3;
+                    ToastUtil.showMessageApp(context,"还车失败");
+                }else{
+                    action_type=1;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }
             }
+            car_notification(action_type, 3, 0, type+"===getLockStatus==="+e);
+        }
 
-            @Override
-            public void onWriteFailure(BleException exception) {
-                LogUtil.e("getLockStatus=onWriteFa", "==="+exception);
-
-                ToastUtil.showMessageApp(context,"还车失败");
-                car_notification(3, 3, 1, type+"===getLockStatus==="+exception);
-            }
-        });
     }
 
     private void getXinbiao(){
-        String s = new XinbiaoTxOrder().generateString();  //06010101490E602E46311640422E5238
+        try{
+            String s = new XinbiaoTxOrder().generateString();  //06010101490E602E46311640422E5238
 
-        LogUtil.e("getXinbiao===1", "==="+s);  //1648395B
+            LogUtil.e("getXinbiao===1", "==="+s);  //1648395B
 
-        byte[] bb = Encrypt(ConvertUtils.hexString2Bytes(s), Config.key);
+            byte[] bb = Encrypt(ConvertUtils.hexString2Bytes(s), Config.key);
 
-        BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb", bb, true, new BleWriteCallback() {
-            @Override
-            public void onWriteSuccess(int current, int total, byte[] justWrite) {
-                LogUtil.e("getXinbiao==onWriteS", current+"==="+total+"==="+ConvertUtils.bytes2HexString(justWrite));
+//            int i = 1/0;
+
+            BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb", bb, true, new BleWriteCallback() {
+                @Override
+                public void onWriteSuccess(int current, int total, byte[] justWrite) {
+                    LogUtil.e("getXinbiao==onWriteS", current+"==="+total+"==="+ConvertUtils.bytes2HexString(justWrite));
+                }
+
+                @Override
+                public void onWriteFailure(BleException exception) {
+                    LogUtil.e("getXinbiao=onWriteFa", "==="+exception);
+                }
+            });
+        }catch (Exception e){
+            closeLoadingDialog();
+
+            String tvAgain = tv_againBtn.getText().toString().trim();
+            int action_type;
+            LogUtil.e("getXinbiao===e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+            if(isAgain){
+                if("再次开锁".equals(tvAgain)){
+                    action_type=4;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }else{
+                    action_type=2;
+                    ToastUtil.showMessageApp(context,"关锁失败");
+                }
+            }else{
+                if(isEndBtn){
+                    action_type=3;
+                    ToastUtil.showMessageApp(context,"还车失败");
+                }else{
+                    action_type=1;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }
             }
+            car_notification(action_type, 3, 0, type+"===getXinbiao==="+e);
+        }
 
-            @Override
-            public void onWriteFailure(BleException exception) {
-                LogUtil.e("getXinbiao=onWriteFa", "==="+exception);
-            }
-        });
     }
 
     private void openLock() {
-        String s = new OpenLockTxOrder().generateString();
+        try{
+            String s = new OpenLockTxOrder().generateString();
 
-//        s= s.substring(0, 18) + token + s.substring(26, 32);
+            LogUtil.e("onWriteSuccess===1", token+"==="+s);     //989C064A===050106323031373135989C064A750217
 
-        LogUtil.e("onWriteSuccess===1", token+"==="+s);     //989C064A===050106323031373135989C064A750217
+            byte[] bb = Encrypt(ConvertUtils.hexString2Bytes(s), Config.key);
 
-        byte[] bb = Encrypt(ConvertUtils.hexString2Bytes(s), Config.key);
+//            int i = 1/0;
 
-        BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb", bb, true, new BleWriteCallback() {
-            @Override
-            public void onWriteSuccess(int current, int total, byte[] justWrite) {
-                LogUtil.e("onWriteSuccess===a", current+"==="+total+"==="+justWrite);
+            BleManager.getInstance().write(bleDevice, "0000fee7-0000-1000-8000-00805f9b34fb", "000036f5-0000-1000-8000-00805f9b34fb", bb, true, new BleWriteCallback() {
+                @Override
+                public void onWriteSuccess(int current, int total, byte[] justWrite) {
+                    LogUtil.e("onWriteSuccess===a", current+"==="+total+"==="+justWrite);
+                }
+
+                @Override
+                public void onWriteFailure(BleException exception) {
+                    LogUtil.e("onWriteFailure===a", "==="+exception);
+
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                    car_notification(isAgain?4:1, 3, 0, type+"===openLock==="+exception);
+                }
+            });
+        }catch (Exception e){
+            closeLoadingDialog();
+
+            String tvAgain = tv_againBtn.getText().toString().trim();
+            int action_type;
+            LogUtil.e("openLock===e", isAgain+"==="+isEndBtn+"==="+isOpenLock+"==="+tvAgain);
+
+            if(isAgain){
+                if("再次开锁".equals(tvAgain)){
+                    action_type=4;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }else{
+                    action_type=2;
+                    ToastUtil.showMessageApp(context,"关锁失败");
+                }
+            }else{
+                if(isEndBtn){
+                    action_type=3;
+                    ToastUtil.showMessageApp(context,"还车失败");
+                }else{
+                    action_type=1;
+                    ToastUtil.showMessageApp(context,"开锁失败");
+                }
             }
+            car_notification(action_type, 3, 0, type+"===openLock==="+e);
+        }
 
-            @Override
-            public void onWriteFailure(BleException exception) {
-                LogUtil.e("onWriteFailure===a", "==="+exception);
 
-                ToastUtil.showMessageApp(context,"开锁失败");
-                car_notification(isAgain?4:1, 3, 0, type+"===openLock==="+exception);
-            }
-        });
     }
 
     protected void connect2() {
@@ -9459,7 +10022,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     }
 
                 }
-            }, 10 * 1000);
+            }, 20 * 1000);
 
             state = 0;
             lockStatus = 2;
@@ -10012,11 +10575,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     if(lockStatus==2 || lockStatus==3){
                         getBleRecord();
                         ToastUtil.showMessageApp(context, "还车超时");
-                        car_notification(4, lockStatus, 0, "还车超时");
+                        car_notification(3, lockStatus, 0, type+"===还车超时");
                     }
 
                 }
-            }, 30 * 1000);
+            }, 20 * 1000);
 
             state = 0;
             lockStatus = 2;

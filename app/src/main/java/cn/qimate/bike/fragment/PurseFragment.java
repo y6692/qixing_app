@@ -200,7 +200,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
         activity = getActivity();
         boolean flag = activity.getIntent().getBooleanExtra("flag", false);
 //        SharedPreferencesUrls.getInstance().getString("access_token", "");
-        Log.e("pf===onResume", flag+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+type);
+        Log.e("pf===onResume", flag+"==="+SharedPreferencesUrls.getInstance().getString("access_token", ""));
 
         if(flag){
             user();

@@ -296,7 +296,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
             boolean flag = activity.getIntent().getBooleanExtra("flag", false);
 
-            Log.e("minef===onResume", flag+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+type);
+            Log.e("minef===onResume", flag+"==="+SharedPreferencesUrls.getInstance().getString("access_token", ""));
 
             if(flag){
 

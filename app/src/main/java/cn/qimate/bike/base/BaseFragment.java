@@ -66,12 +66,12 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 //	protected BitmapDescriptor successDescripter;
 //	protected MapView mapView;
 
-
+	public String type = "";
 	public static String m_nowMac = "";  //"A8:1B:6A:B4:E7:C9"
 	public static int order_id;
 //	public static String oid = "";
 	public static String osn = "";
-	public static String type = "";
+
 	public static int unauthorized_code;
 
 	public static List<Polygon> pOptions;
@@ -97,7 +97,7 @@ public class BaseFragment extends Fragment implements OnConnectionListener, Swip
 //		m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
 //		oid = SharedPreferencesUrls.getInstance().getString("oid", "");
 //		osn = SharedPreferencesUrls.getInstance().getString("osn", "");
-		type = SharedPreferencesUrls.getInstance().getString("type", "");
+//		type = SharedPreferencesUrls.getInstance().getString("type", "");
 
 
 		context = getActivity();
