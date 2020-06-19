@@ -92,13 +92,13 @@ public class CrashHandler implements UncaughtExceptionHandler {
         Log.e("uncaughtException===", mDefaultHandler+"==="+ex.getMessage());
 
         if (mDefaultHandler != null) {
-            handleException(ex);// 如果自定义的没有处理则让系统默认的异常处理器来处理
+//            handleException(ex);// 如果自定义的没有处理则让系统默认的异常处理器来处理
             mDefaultHandler.uncaughtException(thread, ex);// 退出程序
 
 //            mContext.startActivity(mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName()));
 
 
-            android.os.Process.killProcess(android.os.Process.myPid());
+//            android.os.Process.killProcess(android.os.Process.myPid());
 
             Log.e("uncaughtException===1", "==="+ex.getMessage());
 
@@ -161,13 +161,13 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
 
         // 收集设备参数信息
-        collectDeviceInfo(mContext);
-        // 保存日志文件
-        final String exString = getCrashInfoString(ex);
-
-        Log.e("crash===", exString+"==="+ex);
-
-        saveCrashInfo2File(exString, mContext);
+//        collectDeviceInfo(mContext);
+//        // 保存日志文件
+//        final String exString = getCrashInfoString(ex);
+//
+//        Log.e("crash===", exString+"==="+ex);
+//
+//        saveCrashInfo2File(exString, mContext);
         return true;
     }
 

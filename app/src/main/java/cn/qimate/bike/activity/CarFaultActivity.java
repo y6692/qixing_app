@@ -1161,8 +1161,6 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
                     content += TagsList.get(i)+";";
                 }
             }
-
-
         }
 
         Log.e("submit===00", "==="+content);

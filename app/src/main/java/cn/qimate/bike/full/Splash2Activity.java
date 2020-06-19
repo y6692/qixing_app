@@ -169,6 +169,8 @@ public class Splash2Activity extends Base2Activity implements View.OnClickListen
 //			init();
 //		}
 
+//		int i = 1/0;
+
         init();
 
 	}

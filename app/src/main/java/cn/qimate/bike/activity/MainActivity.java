@@ -3,6 +3,7 @@ package cn.qimate.bike.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -109,6 +110,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import cn.http.OkHttpClientManager;
@@ -259,7 +261,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setContentView(R.layout.ui_main);
 //        ButterKnife.bind(this);
 
-        CrashHandler.getInstance().setmContext(this);
+//        CrashHandler.getInstance().setmContext(this);
+        CrashHandler.getInstance().init(context);
 
         type = SharedPreferencesUrls.getInstance().getString("type", "");
 
@@ -272,6 +275,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         m_myHandler.sendEmptyMessage(4);
 
         Log.e("main===onCreate", "===");
+
+//        int i = 1/0;
 
         initData();
         initView();
@@ -1108,11 +1113,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-//        mapView.onSaveInstanceState(outState);
+        Log.e("main===onSIS", "==="+isProcessExist(context, android.os.Process.myPid()));
 
-        Log.e("main===onSIS", "==="+type);
+        super.onSaveInstanceState(outState);
     }
+
+    public static boolean isProcessExist(Context context, int pid) {
+
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> lists ;
+        if (am != null) {
+            lists = am.getRunningAppProcesses();
+            for (ActivityManager.RunningAppProcessInfo appProcess : lists) {
+                if (appProcess.pid == pid) {
+                    Log.e("TAG","333333");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         private String action = null;
