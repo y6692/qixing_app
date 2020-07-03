@@ -163,7 +163,7 @@
             android:orientation="vertical"
             >
             <RelativeLayout
-                android:id="@+id/rl_crop"
+                android:id="@+id/capture_crop_view"
                 android:layout_width="206dp"
                 android:layout_height="206dp"
                 android:background="@drawable/capture"
@@ -182,7 +182,7 @@
             <RelativeLayout
                 android:layout_width="220dp"
                 android:layout_height="53dp"
-                android:layout_below="@+id/rl_crop"
+                android:layout_below="@+id/capture_crop_view"
                 android:contentDescription="@string/app_name">
 
                 <TextView

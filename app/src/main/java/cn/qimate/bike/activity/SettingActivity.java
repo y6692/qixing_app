@@ -145,11 +145,13 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
             e.printStackTrace(System.err);
         }
 
+        Log.e("sa===initView", "===");
+
         UpdateManager.getUpdateManager().setType(0).checkAppUpdate(this, context, 3, iv_isUpdate);
 
 //        initHttp();
 
-        Log.e("initView===", "===");
+        Log.e("sa===initView1", "===");
     }
 
     @Override

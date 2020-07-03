@@ -36,6 +36,9 @@ public class Urls {
 	//入学时间选项接口
 	public static String admission_time = host2 + "/admission_time";
 
+    //log
+    public static String log = host2 + "/log";
+
 	//换绑手机接口
 	public static String change_phone = host2 + "/user/change_phone";
 

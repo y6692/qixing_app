@@ -554,7 +554,7 @@ public class Splash2Activity extends Base2Activity implements View.OnClickListen
 	protected void onResume() {
 		isForeground = true;
 		super.onResume();
-		JPushInterface.onResume(this);
+//		JPushInterface.onResume(this);
 
 		Log.e("splash===onResume", "===");
 
@@ -625,7 +625,7 @@ public class Splash2Activity extends Base2Activity implements View.OnClickListen
 		if (null == locationOption) {
 			locationOption = new AMapLocationClientOption();
 		}
-		initjpush();
+//		initjpush();	//TODO
 //		registerMessageReceiver();
 //		initLocation();
 
@@ -734,7 +734,7 @@ public class Splash2Activity extends Base2Activity implements View.OnClickListen
 	protected void onPause() {
 		isForeground = false;
 		super.onPause();
-		JPushInterface.onPause(this);
+//		JPushInterface.onPause(this);
 
 //		try {
 //			if (internalReceiver != null) {

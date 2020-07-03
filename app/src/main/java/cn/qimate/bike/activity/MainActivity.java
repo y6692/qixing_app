@@ -679,7 +679,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 //        inputMethodManager.hideSoftInputFromWindow(context.getWindowToken(), 0); // 隐藏
 
-        JPushInterface.onResume(context);
+//        JPushInterface.onResume(context);
 
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 
@@ -993,7 +993,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onPause() {
         super.onPause();
-        JPushInterface.onPause(context);
+//        JPushInterface.onPause(context);
     }
 
 

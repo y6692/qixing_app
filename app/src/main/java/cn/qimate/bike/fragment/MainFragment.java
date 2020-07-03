@@ -840,17 +840,20 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         customBuilder.setType(2).setTitle("温馨提示").setMessage("关锁后将自动还车，如有延迟，可尝试手动还车")
                 .setPositiveButton("手动还车", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        btnLog("A1");
+
                         cycling4();
 
                         dialog.cancel();
                     }
                 }).setNegativeButton("联系客服", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+                        dialog.cancel();
 
-                cycling6();
-            }
-        });
+                        cycling6();
+                    }
+                }
+        );
         customDialog4 = customBuilder.create();
 
 
@@ -3467,9 +3470,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         @Override
                         public void run() {
                             if (!isConnect){
-//                                            if (loadingDialog != null && loadingDialog.isShowing()) {
-//                                                loadingDialog.dismiss();
-//                                            }
 
                                 LogUtil.e("openAgain===7==timeout", "再次开锁==="+isConnect + "==="+activity.isFinishing());
 
@@ -4162,6 +4162,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
             case R.id.ll_biking_openAgain:
             case R.id.ll_biking_openAgain_auto:
+
+
+
                 String tvAgain;
                 if("10".equals(type)){
                     tvAgain = tv_againBtn_auto.getText().toString().trim();
@@ -4182,9 +4185,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //                }
 
                 if ("临时上锁".equals(tvAgain)){
+                    btnLog("A2");
 //                    car_can_lock();
                     carInfo_close();
                 }else if ("再次开锁".equals(tvAgain)){
+                    btnLog("A3");
 //                    car_can_unlock();
 
                     cycling5();
@@ -4193,6 +4198,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 break;
 
             case R.id.ll_biking_endBtn:
+                btnLog("A1");
+
                 if(!isEndClick){
                     isEndClick = true;
                     cycling4();
@@ -4244,6 +4251,48 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             default:
                 break;
         }
+    }
+
+    private void btnLog(String event) {
+        LogUtil.e("mf===btnLog", event+"===");
+
+        RequestParams params = new RequestParams();
+        params.put("event", event); //0上报未临时上锁(再次开锁成功后上报) 1上报临时上锁中
+
+        HttpHelper.post(context, Urls.log, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+//                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+                LogUtil.e("mf===btnLog_fail", responseString + "===" + throwable.toString());
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            LogUtil.e("mf===btnLog_1", "===" + responseString);
+
+
+                        } catch (Exception e) {
+//                            closeLoadingDialog();
+                            LogUtil.e("mf===btnLog_e", "==="+e);
+                        }
+
+                    }
+                });
+            }
+        });
     }
 
     private void bleInit(){

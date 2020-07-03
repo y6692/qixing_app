@@ -19,12 +19,12 @@ public final class ActivityScanerCodePermissionsDispatcher {
   }
 
   static void connectDeviceWithPermissionCheck(ActivityScanerCode target, String imei) {
-    if (PermissionUtils.hasSelfPermissions(target, PERMISSION_CONNECTDEVICE)) {
-      target.connectDevice(imei);
-    } else {
-      PENDING_CONNECTDEVICE = new MainActivityConnectDevicePermissionRequest(target, imei);
-      ActivityCompat.requestPermissions(target, PERMISSION_CONNECTDEVICE, REQUEST_CONNECTDEVICE);
-    }
+//    if (PermissionUtils.hasSelfPermissions(target, PERMISSION_CONNECTDEVICE)) {
+//      target.connectDevice(imei);
+//    } else {
+//      PENDING_CONNECTDEVICE = new MainActivityConnectDevicePermissionRequest(target, imei);
+//      ActivityCompat.requestPermissions(target, PERMISSION_CONNECTDEVICE, REQUEST_CONNECTDEVICE);
+//    }
   }
 
   static void onRequestPermissionsResult(ActivityScanerCode target, int requestCode, int[] grantResults) {
@@ -65,9 +65,9 @@ public final class ActivityScanerCodePermissionsDispatcher {
 
     @Override
     public void grant() {
-      ActivityScanerCode target = weakTarget.get();
-      if (target == null) return;
-      target.connectDevice(imei);
+//      ActivityScanerCode target = weakTarget.get();
+//      if (target == null) return;
+//      target.connectDevice(imei);
     }
   }
 }
