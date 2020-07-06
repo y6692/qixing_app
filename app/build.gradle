@@ -25,7 +25,7 @@ android {
         applicationId "cn.qimate.bike"
         minSdkVersion 18
         targetSdkVersion 28
-        versionCode 2010
+        versionCode 2011
         versionName "2.0.11"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
