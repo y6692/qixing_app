@@ -233,7 +233,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 		if (null == locationOption) {
 			locationOption = new AMapLocationClientOption();
 		}
-		initjpush();
+//		initjpush();
 		registerMessageReceiver();
 		initLocation();
 

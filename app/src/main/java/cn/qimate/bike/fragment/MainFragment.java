@@ -697,6 +697,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18f);// 设置缩放监听
         aMap.moveCamera(cameraUpdate);
 
+
         aMap.setOnMapClickListener(this);
         aMap.setOnMapLongClickListener(this);
 
@@ -1030,13 +1031,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         LogUtil.e("setUpMap===000", context.getAssets()+"==="+file+"==="+file.exists()+"==="+fileExtra.exists());
 
         if (file.exists()) {
-//            aMap.setCustomMapStyle(
-//                    new com.amap.api.maps.model.CustomMapStyleOptions()
-//                            .setEnable(true)
-//                            .setStyleDataPath(filePath)
-//                            .setStyleExtraPath(filePathExtra)
-//            );
-//            return;//本地已有，不再下载
             file.delete();
         }
         try {
@@ -1059,24 +1053,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             outputStream = new FileOutputStream(file);
             outputStream.write(b);
 
-//                    String filePath = context.getFilesDir().getAbsolutePath() + "/" + STYLE_NAME;
-
-//                    aMap.setCustomMapStylePath(filePath);
-//                    aMap.setMapCustomEnable(true);
-//                    aMap.showMapText(true);
 
             LogUtil.e("setUpMap===", "==="+filePath);
 
-//            aMap.setCustomMapStyle(
-//                    new com.amap.api.maps.model.CustomMapStyleOptions()
-//                            .setEnable(true)
-//                            .setStyleDataPath(filePath)
-////                                    .setStyleExtraPath(filePath)
-////                                    .setStyleId("1b319281566f48d9ce57449b30be3b6e")//官网控制台-自定义样式 获取
-//
-////                                    .setStyleExtraPath("/mnt/sdcard/amap/style_extra.data")
-////                                    .setStyleTexturePath("/mnt/sdcard/amap/textures.zip")
-//            );
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1097,13 +1076,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 
         if (fileExtra.exists()) {
-//            aMap.setCustomMapStyle(
-//                    new com.amap.api.maps.model.CustomMapStyleOptions()
-//                            .setEnable(true)
-//                            .setStyleDataPath(filePath)
-//                            .setStyleExtraPath(filePathExtra)
-//            );
-//            return;//本地已有，不再下载
             fileExtra.delete();
         }
         try {
@@ -1126,12 +1098,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             outputStream = new FileOutputStream(fileExtra);
             outputStream.write(b);
 
-//                    String filePath = context.getFilesDir().getAbsolutePath() + "/" + STYLE_NAME;
-
-//                    aMap.setCustomMapStylePath(filePath);
-//                    aMap.setMapCustomEnable(true);
-//                    aMap.showMapText(true);
-
             LogUtil.e("setUpMap===1", "==="+filePathExtra);
 
             aMap.setCustomMapStyle(
@@ -1139,9 +1105,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             .setEnable(true)
                             .setStyleDataPath(filePath)
                             .setStyleExtraPath(filePathExtra)
-//                                    .setStyleId("1b319281566f48d9ce57449b30be3b6e")//官网控制台-自定义样式 获取
-//                                    .setStyleExtraPath("/mnt/sdcard/amap/style_extra.data")
-//                                    .setStyleTexturePath("/mnt/sdcard/amap/textures.zip")
             );
 
         } catch (Exception e) {
@@ -1161,12 +1124,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
             }
         }
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//            }
-//        }).start();
 
 
 
@@ -1190,7 +1147,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 //            return false;
 //        }
-
+//
 //        locationManager.requestLocationUpdates(provider, 1000, 10, locationListener);
 //        locationManager.requestLocationUpdates(provider, 2000, 500, locationListener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
@@ -7557,6 +7514,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 public void onResponseSuccess(BleGattProfile profile) {
 
                     try{
+                        m_myHandler2.removeCallbacksAndMessages(null);
+
                         isStop = true;
                         isLookPsdBtn = true;
                         state = 1;  //连接成功
@@ -9015,6 +8974,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         public void run() {
 
                             try{
+                                m_myHandler2.removeCallbacksAndMessages(null);
+
                                 state = 1;
                                 lockStatus = 3;
                                 isLookPsdBtn = true;

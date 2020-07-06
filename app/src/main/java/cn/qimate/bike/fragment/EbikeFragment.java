@@ -418,16 +418,6 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
         }else{
             //resume
 
-//            if(firstH){
-//                firstH = false;
-//
-//                if(!"4".equals(type) && !"7".equals(type)){
-//                    MainFragment.getInstance().changeTab(0);
-//                    return;
-//                }
-//            }
-
-//            mapView.onResume();
 
             if(aMap==null){
                 aMap = mapView.getMap();
@@ -438,39 +428,13 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             aMap.clear();
             aMap.reloadMap();
 
-//            aMap = mapView.getMap();
             setUpMap();
 
-//            mAMapNavi = AMapNavi.getInstance(context);
-//            mAMapNavi.addAMapNaviListener(this);
-//
-//
-//            aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
-//                @Override
-//                public boolean onMarkerClick(Marker marker) {
-//
-//                    ll_top.setVisibility(View.GONE);
-//                    ll_top_navi.setVisibility(View.VISIBLE);
-//
-//
-//                    Log.e("onMarkerClick===E", mAMapNavi+"==="+referLatitude+"==="+referLongitude+"==="+marker.getPosition().latitude+"==="+marker.getPosition().longitude);
-//
-//                    mAMapNavi.calculateRideRoute(new NaviLatLng(referLatitude, referLongitude), new NaviLatLng(marker.getPosition().latitude, marker.getPosition().longitude));
-//
-//
-//                    return true;
-//                }
-//            });
-
-//            aMap.setOnMapTouchListener(this);
-//            aMap.setOnMapClickListener(this);
             aMap.setOnCameraChangeListener(this);
-//            setUpLocationStyle();
 
 
             if(centerMarker!=null){
                 centerMarker.remove();
-//                centerMarker = null;
             }
             if(mCircle!=null){
                 mCircle.remove();
@@ -485,20 +449,16 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
             }
 
             schoolRange();
-//            operating_areas();
 
             if(referLatitude!=0 && referLongitude!=0){
                 myLocation = new LatLng(referLatitude, referLongitude);
 
                 initNearby(referLatitude, referLongitude);
-//                aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
 
                 addChooseMarker();
                 addCircle(myLocation, accuracy);
             }
 
-//            ll_top.setVisibility(View.VISIBLE);
-//            ll_top_navi.setVisibility(View.GONE);
 
 
             Log.e("ll_top===E", "===");

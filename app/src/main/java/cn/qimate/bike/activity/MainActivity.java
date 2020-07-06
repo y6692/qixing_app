@@ -169,6 +169,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private Activity mActivity = this;
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private static final int PRIVATE_CODE = 1315;//开启GPS权限
+
     BluetoothAdapter mBluetoothAdapter;
     private XiaoanBleApiClient apiClient;
 
@@ -255,6 +257,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private String title2;
     private String url2;
 
+    LocationManager locationManager;
+    String provider = LocationManager.GPS_PROVIDER;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -283,7 +288,90 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     }
 
+    private final LocationListener locationListener = new LocationListener() {
+
+        @Override
+        public void onLocationChanged(Location location) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String arg0) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String arg0) {
+
+        }
+
+        @Override
+        public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+
+        }
+
+    };
+
+    @SuppressLint("MissingPermission")
+    private boolean checkGPSIsOpen() {
+        boolean isOpen;
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+//        Criteria criteria = new Criteria();
+//        criteria.setAccuracy(Criteria.ACCURACY_FINE); // 高精度
+//        criteria.setAltitudeRequired(false);
+//        criteria.setBearingRequired(false);
+//        criteria.setCostAllowed(true);
+//        criteria.setPowerRequirement(Criteria.POWER_LOW); // 低功耗
+//        provider = locationManager.getBestProvider(criteria, true);
+//        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            return false;
+//        }
+//
+//        locationManager.requestLocationUpdates(provider, 1000, 10, locationListener);
+//        locationManager.requestLocationUpdates(provider, 2000, 500, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
+
+        isOpen = locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER);
+        return isOpen;
+    }
+
+    private void openGPSSettings() {
+        if (checkGPSIsOpen()) {
+        } else {
+
+            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+            customBuilder.setType(3).setTitle("温馨提示").setMessage("请在手机设置打开应用的位置权限并选择最精准的定位模式")
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            finish();
+                        }
+                    })
+                    .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, PRIVATE_CODE);
+                        }
+                    });
+            customBuilder.create().show();
+
+        }
+    }
+
     private void initData() {
+//        openGPSSettings();
+//
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            int checkPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+//            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+//                requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, 101);
+//                return;
+//            }
+//        }
+
+
         mContext = this;
 
         mainFragment = new MainFragment();
