@@ -77,6 +77,7 @@ import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.activity.MyMessageActivity;
 import cn.qimate.bike.activity.MyOrderActivity;
+import cn.qimate.bike.activity.PersonInfoActivity;
 import cn.qimate.bike.activity.ServiceCenterActivity;
 import cn.qimate.bike.activity.SettingActivity;
 import cn.qimate.bike.activity.SuperVipActivity;
@@ -127,7 +128,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private ImageView headerImageView;
     private ImageView authState;
     private TextView userName;
-    private LinearLayout curRouteLayout, hisRouteLayout;
+    private LinearLayout personInfoLayout;
     private RelativeLayout  myOrderLayout, myMsgLayout, creditLayout, serviceCenterLayout, changePhoneLayout, authLayout, inviteLayout;
 
     private ImageView iv_popup_window_back;
@@ -263,6 +264,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
 //        settingLayout = getActivity().findViewById(R.id.personUI_bottom_settingLayout);
 //
+
+        personInfoLayout = getActivity().findViewById(R.id.ll_person_info);
         myOrderLayout = getActivity().findViewById(R.id.personUI_myOrderLayout);
         myMsgLayout = getActivity().findViewById(R.id.personUI_myMeaaageLayout);
         creditLayout = getActivity().findViewById(R.id.personUI_creditLayout);
@@ -272,7 +275,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         inviteLayout = getActivity().findViewById(R.id.personUI_inviteLayout);
 
         rightBtn.setOnClickListener(this);
-//        headerImageView.setOnClickListener(this);
+        personInfoLayout.setOnClickListener(this);
         myOrderLayout.setOnClickListener(this);
         myMsgLayout.setOnClickListener(this);
         creditLayout.setOnClickListener(this);
@@ -312,6 +315,95 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //            }
         }
 
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        final String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+        if (access_token == null || "".equals(access_token)) {
+            Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        switch (v.getId()) {
+            case R.id.personUI_backImage:
+                scrollToFinishActivity();
+                break;
+
+            case R.id.personUI_rightBtn:
+//                UIHelper.goToAct(context, SettingActivity.class);
+
+                Intent intent = new Intent();
+                intent.setClass(context, SettingActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(intent, 10);
+                break;
+
+            case R.id.personUI_header:
+                clickPopupWindow();
+
+                break;
+
+            case R.id.ll_person_info:
+                UIHelper.goToAct(context, PersonInfoActivity.class);
+
+                break;
+
+            case R.id.personUI_myOrderLayout:
+//                UIHelper.goToAct(context, MyOrderActivity.class);
+
+//                private String history_order_h5_title;
+//                private String history_order_h5_url;
+
+                intent = new Intent(context, MyOrderActivity.class);
+                intent.putExtra("history_order_h5_title", history_order_h5_title);
+                intent.putExtra("history_order_h5_url", history_order_h5_url);
+                startActivity(intent);
+
+                break;
+
+            case R.id.personUI_myMeaaageLayout:
+                UIHelper.goToAct(context, MyMessageActivity.class);
+                break;
+
+            case R.id.personUI_creditLayout:
+                Log.e("personUI_creditLayout", credit_scores_h5_url+"==="+access_token.split(" ")[1]);
+                UIHelper.goWebViewAct(context, credit_scores_h5_title, credit_scores_h5_url+"?client=android&token="+access_token.split(" ")[1]);
+
+                break;
+
+            case R.id.personUI_serviceCenterLayout:
+                Log.e("personUI_serviceCenterL", "===");
+
+                intent = new Intent(context, ServiceCenterActivity.class);
+//                intent.putExtra("bikeCode", MainFragment.codenum);
+                startActivity(intent);
+                break;
+
+
+            case R.id.personUI_changePhoneLayout:
+                UIHelper.goToAct(context, ChangePhoneActivity.class);
+                break;
+
+            case R.id.personUI_authLayout:
+//                UIHelper.goToAct(context, AuthCenterActivity.class);
+                intent = new Intent();
+                intent.setClass(context, AuthCenterActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(intent, 10);
+                break;
+
+            case R.id.personUI_inviteLayout:
+
+                Log.e("personUI_inviteLayout", invite_h5_title+"==="+invite_h5_url);
+
+                UIHelper.goWebViewAct(context, invite_h5_title, invite_h5_url+"?client=android&token="+access_token.split(" ")[1]);
+                break;
+
+
+            default:
+                break;
+        }
     }
 
     @Override
@@ -786,90 +878,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
 
 
-    @Override
-    public void onClick(View v) {
 
-        final String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-        if (access_token == null || "".equals(access_token)) {
-            Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        switch (v.getId()) {
-            case R.id.personUI_backImage:
-                scrollToFinishActivity();
-                break;
-
-            case R.id.personUI_rightBtn:
-//                UIHelper.goToAct(context, SettingActivity.class);
-
-                Intent intent = new Intent();
-                intent.setClass(context, SettingActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivityForResult(intent, 10);
-                break;
-
-            case R.id.personUI_header:
-                clickPopupWindow();
-//                UIHelper.goToAct(context, PersonInfoActivity.class);
-
-                break;
-
-            case R.id.personUI_myOrderLayout:
-//                UIHelper.goToAct(context, MyOrderActivity.class);
-
-//                private String history_order_h5_title;
-//                private String history_order_h5_url;
-
-                intent = new Intent(context, MyOrderActivity.class);
-                intent.putExtra("history_order_h5_title", history_order_h5_title);
-                intent.putExtra("history_order_h5_url", history_order_h5_url);
-                startActivity(intent);
-
-                break;
-
-            case R.id.personUI_myMeaaageLayout:
-                UIHelper.goToAct(context, MyMessageActivity.class);
-                break;
-
-            case R.id.personUI_creditLayout:
-                Log.e("personUI_creditLayout", credit_scores_h5_url+"==="+access_token.split(" ")[1]);
-                UIHelper.goWebViewAct(context, credit_scores_h5_title, credit_scores_h5_url+"?client=android&token="+access_token.split(" ")[1]);
-
-                break;
-
-            case R.id.personUI_serviceCenterLayout:
-                Log.e("personUI_serviceCenterL", "===");
-
-                intent = new Intent(context, ServiceCenterActivity.class);
-//                intent.putExtra("bikeCode", MainFragment.codenum);
-                startActivity(intent);
-                break;
-
-
-            case R.id.personUI_changePhoneLayout:
-                UIHelper.goToAct(context, ChangePhoneActivity.class);
-                break;
-
-            case R.id.personUI_authLayout:
-//                UIHelper.goToAct(context, AuthCenterActivity.class);
-                intent = new Intent();
-                intent.setClass(context, AuthCenterActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivityForResult(intent, 10);
-                break;
-
-            case R.id.personUI_inviteLayout:
-
-                Log.e("personUI_inviteLayout", invite_h5_title+"==="+invite_h5_url);
-
-                UIHelper.goWebViewAct(context, invite_h5_title, invite_h5_url+"?client=android&token="+access_token.split(" ")[1]);
-                break;
-
-
-            default:
-                break;
-        }
-    }
 
     private void clickPopupWindow() {
         // 获取截图的Bitmap
