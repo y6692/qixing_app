@@ -371,7 +371,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //            }
 //        }
 
-
         mContext = this;
 
         mainFragment = new MainFragment();
