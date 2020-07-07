@@ -627,11 +627,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                             final String url = span.getURL();
 
-
-
                             spannablestringbuilder.removeSpan(obj);
-
-
 
                             spannablestringbuilder.setSpan(new ClickableSpan() {
                                 @Override

@@ -18,6 +18,7 @@
             android:layout_height="@dimen/dp40">
 
             <LinearLayout
+                android:id="@+id/personUI_myMeaaageLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -64,12 +65,13 @@
 
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="42dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="18dp"
-            android:layout_marginLeft="30dp">
+            android:layout_marginLeft="30dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -77,7 +79,33 @@
                 android:text="会员中心"
                 android:textSize="30sp"
                 android:textColor="@color/tx_black"/>
-        </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_signin"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/btn_bcg_gold"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_marginLeft="9dp"
+                    android:src="@drawable/gold_icon"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="签到"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
         <ImageView
             android:layout_width="match_parent"

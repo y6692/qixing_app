@@ -7557,6 +7557,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 public void onResponseSuccess(BleGattProfile profile) {
 
                     try{
+                        m_myHandler2.removeCallbacksAndMessages(null);
+
                         isStop = true;
                         isLookPsdBtn = true;
                         state = 1;  //连接成功
@@ -9015,6 +9017,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         public void run() {
 
                             try{
+                                m_myHandler2.removeCallbacksAndMessages(null);
+
                                 state = 1;
                                 lockStatus = 3;
                                 isLookPsdBtn = true;

@@ -128,8 +128,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private ImageView headerImageView;
     private ImageView authState;
     private TextView userName;
-    private LinearLayout personInfoLayout;
-    private RelativeLayout  myOrderLayout, myMsgLayout, creditLayout, serviceCenterLayout, changePhoneLayout, authLayout, inviteLayout;
+    private LinearLayout myMsgLayout, personInfoLayout;
+    private RelativeLayout  myOrderLayout, creditLayout, serviceCenterLayout, changePhoneLayout, authLayout, inviteLayout;
 
     private ImageView iv_popup_window_back;
     private RelativeLayout rl_popup_window;
@@ -1105,7 +1105,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                         @Override
                         public void run() {
                             try {
-                                Log.e("minef===initHttp", "==="+responseString);
+                                Log.e("minef===initHttp1", "==="+responseString);
 
                                 ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 

@@ -665,20 +665,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
-        <!-- 后台定位服务 -->
-        <service
-            android:name=".service.MyService"
-            android:enabled="true" />
+        <activity android:name=".activity.WebActivity" />
+        <activity android:name=".activity.Main4Activity"></activity>
 
-        <receiver
-            android:name=".jpush.ServiceReceiver"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </receiver>
         <!-- 微信支付回调 -->
         <activity
             android:name=".wxapi.WXPayEntryActivity"
@@ -742,10 +732,10 @@
             android:name="UMENG_CHANNEL"
             android:value="Umeng" />
 
-        <uses-library
-            android:name="com.google.android.maps"
-            android:required="false" />
-        <uses-library android:name="android.test.runner" />
+        <!--<uses-library-->
+            <!--android:name="com.google.android.maps"-->
+            <!--android:required="false" />-->
+        <!--<uses-library android:name="android.test.runner" />-->
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
@@ -755,6 +745,21 @@
         <service android:name="com.amap.api.location.APSService" />
 
 
+        <!--&lt;!&ndash; 后台定位服务 &ndash;&gt;-->
+        <!--<service-->
+            <!--android:name=".service.MyService"-->
+            <!--android:enabled="true" />-->
+
+        <!--<receiver-->
+            <!--android:name=".jpush.ServiceReceiver"-->
+            <!--android:label="@string/app_name">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
+        <!---->
         <!--&lt;!&ndash; Required SDK核心功能 &ndash;&gt;-->
         <!--<activity-->
             <!--android:name="cn.jpush.android.ui.PushActivity"-->
@@ -848,8 +853,7 @@
             <!--android:name="JPUSH_APPKEY"-->
             <!--android:value="f113c47412dbd4499c9c9a61" /> &lt;!&ndash; </>值来自开发者平台取得的AppKey &ndash;&gt;-->
 
-        <activity android:name=".activity.WebActivity" />
-        <activity android:name=".activity.Main4Activity"></activity>
+
     </application>
 
 </manifest>
