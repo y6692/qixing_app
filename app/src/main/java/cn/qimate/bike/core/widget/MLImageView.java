@@ -16,6 +16,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
@@ -74,6 +75,8 @@ public class MLImageView extends AppCompatImageView {
             array.recycle();
         }
 
+        Log.e("miv===", "==="+mRadius);
+
         // 按下的画笔设置
         mPressPaint = new Paint();
         mPressPaint.setAntiAlias(true);
@@ -82,8 +85,8 @@ public class MLImageView extends AppCompatImageView {
         mPressPaint.setAlpha(0);
         mPressPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
 
-        setClickable(true);
-        setDrawingCacheEnabled(true);
+        setClickable(false);
+        setDrawingCacheEnabled(false);
         setWillNotDraw(false);
     }
 
@@ -108,7 +111,7 @@ public class MLImageView extends AppCompatImageView {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+//    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void drawDrawable(Canvas canvas, Bitmap bitmap) {
         // 画笔
         Paint paint = new Paint();
@@ -130,9 +133,12 @@ public class MLImageView extends AppCompatImageView {
         int LAYER_FLAGS = Canvas.ALL_SAVE_FLAG;
         canvas.saveLayerAlpha(0, 0, mWidth, mHeight, 0xff, LAYER_FLAGS);
 
+        Log.e("miv===", mWidth+"==="+mHeight+"==="+mShapeType);
+
         if (mShapeType == 0) {
             // 画遮罩，画出来就是一个和空间大小相匹配的圆
             canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth / 2, paint);
+//            canvas.drawCircle(0, 0, mWidth / 2, paint);
         } else {
             // 当ShapeType = 1 时 图片为圆角矩形
             RectF rectf = new RectF(0, 0, getWidth(), getHeight());
@@ -144,6 +150,8 @@ public class MLImageView extends AppCompatImageView {
         // 空间的大小 / bitmap 的大小 = bitmap 缩放的倍数
         float scaleWidth = ((float) getWidth()) / bitmap.getWidth();
         float scaleHeight = ((float) getHeight()) / bitmap.getHeight();
+
+        Log.e("miv===1", getWidth()+"==="+bitmap.getWidth()+"==="+getHeight()+"==="+bitmap.getHeight());
 
         Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleHeight);
@@ -189,22 +197,22 @@ public class MLImageView extends AppCompatImageView {
         mHeight = h;
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mPressPaint.setAlpha(mPressAlpha);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_UP:
-                mPressPaint.setAlpha(0);
-                invalidate();
-                break;
-            default:
-                invalidate();
-                break;
-        }
-        return super.onTouchEvent(event);
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                mPressPaint.setAlpha(mPressAlpha);
+//                invalidate();
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                mPressPaint.setAlpha(0);
+//                invalidate();
+//                break;
+//            default:
+//                invalidate();
+//                break;
+//        }
+//        return super.onTouchEvent(event);
+//    }
 
 }

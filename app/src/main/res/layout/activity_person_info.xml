@@ -6,59 +6,89 @@
     android:id="@+id/personUI_mainLayout"
     android:fitsSystemWindows="true"
     android:clipToPadding="true"
-    android:background="#F5F5F5">
+    android:background="@color/ui_main">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:gravity="center"
+            android:background="#FFEBEB">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="完善个人信息即可获得积分哟~"
+                android:textSize="12sp"
+                android:textColor="#666666"/>
+        </LinearLayout>
+
         <include
             layout="@layout/ui_main_title"/>
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="18dp"
+            android:layout_marginLeft="30dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="个人信息"
+                android:textSize="30sp"
+                android:textColor="@color/tx_black"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="400dp"
-            android:layout_marginTop="13dp"
-            android:layout_marginLeft="@dimen/dp10"
-            android:layout_marginRight="@dimen/dp10"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="@dimen/dp30"
+            android:layout_marginRight="@dimen/dp30"
             android:orientation="vertical"
             android:background="@drawable/block_bcg">
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="170dp"
-                android:orientation="horizontal"
-                android:gravity="center"
-                >
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="170dp"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:gravity="center"-->
+                <!--&gt;-->
 
-                <RelativeLayout
-                    android:layout_width="102dp"
-                    android:layout_height="102dp">
+                <!--<RelativeLayout-->
+                    <!--android:id="@+id/rl_header"-->
+                    <!--android:layout_width="102dp"-->
+                    <!--android:layout_height="102dp">-->
 
-                    <cn.qimate.bike.core.widget.MLImageView
-                        android:id="@+id/personUI_bottom_header"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:src="@drawable/me_header"
-                        melove:border_color="#E1E1E1"
-                        melove:border_width="1dp"
-                        melove:shape_type="round"
-                        android:layout_centerInParent="true"
-                        android:background="@null"
-                        android:scaleType="centerInside"/>
 
-                    <ImageView
-                        android:id="@+id/personUI_bottom_authState"
-                        android:layout_width="@dimen/dp30"
-                        android:layout_height="@dimen/dp30"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/camera_icon"/>
-                </RelativeLayout>
 
-            </LinearLayout>
+                    <!--<de.hdodenhof.circleimageview.CircleImageView-->
+                        <!--android:id="@+id/iv_header"-->
+                        <!--android:layout_width="100dp"-->
+                        <!--android:layout_height="100dp"-->
+                        <!--android:src="@drawable/head_icon"-->
+                        <!--android:layout_centerInParent="true"/>-->
+
+
+
+                    <!--<ImageView-->
+                        <!--android:id="@+id/iv_camera"-->
+                        <!--android:layout_width="22dp"-->
+                        <!--android:layout_height="20dp"-->
+                        <!--android:layout_marginBottom="5dp"-->
+                        <!--android:layout_alignParentBottom="true"-->
+                        <!--android:layout_alignParentRight="true"-->
+                        <!--android:src="@drawable/camera_icon"/>-->
+                <!--</RelativeLayout>-->
+
+            <!--</LinearLayout>-->
 
 
             <LinearLayout
@@ -67,19 +97,59 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:id="@+id/rl_name"
+                    android:id="@+id/rl_header"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_height="58dp"
                     android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#333333"
-                        android:textSize="@dimen/sp18"
-                        android:text="用户名"
+                        android:textSize="@dimen/sp16"
+                        android:text="头像"
+                        android:layout_centerVertical="true"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/iv_header"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            android:src="@drawable/head_icon"
+                            android:layout_centerInParent="true"/>
+
+                        <ImageView
+                            android:layout_width="8dp"
+                            android:layout_height="14dp"
+                            android:src="@drawable/yjt4"
+                            android:layout_marginLeft="9dp"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line_height"
+                    android:background="#E5E5E5"/>
+
+                <RelativeLayout
+                    android:id="@+id/rl_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp16"
+                        android:text="昵称"
                         android:layout_centerVertical="true"/>
 
                     <LinearLayout
@@ -93,16 +163,16 @@
                         <TextView
                             android:id="@+id/settingUI_name"
                             android:layout_width="wrap_content"
-                            android:layout_height="23dp"
-                            android:textSize="@dimen/sp16"
-                            android:textColor="#7D7D7D"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/sp18"
+                            android:textColor="#666666"
                             android:text="骑天大圣"/>
 
                         <ImageView
                             android:layout_width="8dp"
                             android:layout_height="14dp"
                             android:src="@drawable/yjt4"
-                            android:layout_marginLeft="11dp"/>
+                            android:layout_marginLeft="9dp"/>
                     </LinearLayout>
 
                     <!--<EditText-->
@@ -122,25 +192,60 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/line_height"
-                    android:background="#DDDDDD"
-                    android:layout_marginLeft="9dp"
-                    android:layout_marginRight="9dp"/>
+                    android:background="#E5E5E5"/>
 
 
                 <RelativeLayout
                     android:id="@+id/rl_phoneNum"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_height="58dp"
                     android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#333333"
-                        android:textSize="@dimen/sp18"
+                        android:textSize="@dimen/sp16"
                         android:text="手机号"
+                        android:layout_centerVertical="true"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="22dp"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/settingUI_phoneNum"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/sp16"
+                            android:textColor="#666666"
+                            android:text="135****1123"/>
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line_height"
+                    android:background="#E5E5E5"/>
+
+                <RelativeLayout
+                    android:id="@+id/rl_sex"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp16"
+                        android:text="性别"
                         android:layout_centerVertical="true"/>
 
                     <LinearLayout
@@ -152,29 +257,31 @@
                         android:gravity="center_vertical">
 
                         <TextView
-                            android:id="@+id/settingUI_phoneNum"
+                            android:id="@+id/tv_sex"
                             android:layout_width="wrap_content"
-                            android:layout_height="23dp"
+                            android:layout_height="wrap_content"
                             android:textSize="@dimen/sp16"
-                            android:textColor="#7D7D7D"
-                            android:text="135****1123"/>
+                            android:textColor="#666666"
+                            android:text="请选择性别"/>
 
                         <ImageView
                             android:layout_width="8dp"
                             android:layout_height="14dp"
                             android:src="@drawable/yjt4"
-                            android:layout_marginLeft="11dp"/>
+                            android:layout_marginLeft="9dp"/>
                     </LinearLayout>
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/line_height"
-                    android:background="#DDDDDD"
-                    android:layout_marginLeft="9dp"
-                    android:layout_marginRight="9dp"/>
+                    android:background="#E5E5E5"/>
+
+
+
 
                 <RelativeLayout
+                    android:visibility="gone"
                     android:id="@+id/rl_realNameAuth"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
@@ -215,6 +322,7 @@
                 </RelativeLayout>
 
                 <View
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/line_height"
                     android:background="#DDDDDD"
@@ -223,6 +331,7 @@
 
 
                 <RelativeLayout
+                    android:visibility="gone"
                     android:id="@+id/rl_studentAuth"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
@@ -271,6 +380,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="31dp"

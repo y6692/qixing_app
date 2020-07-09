@@ -1,0 +1,16 @@
+<!--<cn.qimate.bike.core.widget.MLImageView-->
+<!--android:id="@+id/iv_header"-->
+<!--android:layout_width="100dp"-->
+<!--android:layout_height="100dp"-->
+<!--android:src="@drawable/head_icon"-->
+<!--melove:border_color="@color/ml_white"-->
+<!--melove:border_width="1dp"-->
+<!--melove:shape_type="round"-->
+<!--android:layout_centerInParent="true"/>-->
+
+<!--<ImageView-->
+<!--android:id="@+id/iv_header"-->
+<!--android:layout_width="100dp"-->
+<!--android:layout_height="100dp"-->
+<!--android:src="@drawable/head_icon"-->
+<!--android:layout_centerInParent="true"/>-->

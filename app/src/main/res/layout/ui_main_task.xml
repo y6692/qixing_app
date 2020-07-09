@@ -6,9 +6,9 @@
     <!-- 弹窗背景 -->
     <ImageView
         android:id="@+id/popupWindow_back"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="#FFF5F7FA"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#AA000000"
         android:clickable="true"
         android:visibility="gone"
         android:scaleType="fitXY"/>

@@ -25,8 +25,8 @@ android {
         applicationId "cn.qimate.bike"
         minSdkVersion 18
         targetSdkVersion 28
-        versionCode 2011
-        versionName "2.0.11"
+        versionCode 2012
+        versionName "2.0.12"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
 
@@ -198,6 +198,12 @@ dependencies {
     implementation files('libs/tbitble.jar')
     implementation 'io.reactivex.rxjava2:rxjava:2.0.8'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+//    implementation 'com.github.bumptech.glide:glide:3.7.0'
+//    implementation 'jp.wasabeef:glide-transformations:4.1.0'
+    //高斯模糊
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
+    //轻松实现圆角
+    implementation files('libs/glide-3.7.0.jar')
 }
 
 afterEvaluate {

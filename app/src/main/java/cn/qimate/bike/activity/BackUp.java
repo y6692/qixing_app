@@ -29,6 +29,8 @@ import cn.qimate.bike.util.ToastUtil;
 public class BackUp {
 }
 
+
+
 //                                    m_myHandler.postDelayed(new Runnable() {
 //                                        @Override
 //                                        public void run() {

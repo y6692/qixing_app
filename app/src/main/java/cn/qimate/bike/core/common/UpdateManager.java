@@ -186,7 +186,7 @@ public class UpdateManager {
 		Log.e("checkAppUpdate===0", "===");
 
 
-		HttpHelper.get(context, Urls.version, new TextHttpResponseHandler() {		//TODO	1
+		HttpHelper.get2(context, Urls.version, new TextHttpResponseHandler() {		//TODO	1
 
 			@Override
 			public void onStart() {

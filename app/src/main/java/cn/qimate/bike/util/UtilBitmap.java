@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.ImageView;
 
 /**
@@ -77,6 +78,9 @@ public class UtilBitmap {
     public static void blurImageView(Context context, ImageView img, float level, int color) {
         // 将图片处理成模糊
         Bitmap bitmap = UtilBlurBitmap.blurBitmap(context, drawableToBitmap(img.getDrawable()), level);
+
+        Log.e("blurImageView===", img.getDrawable()+"==="+bitmap);
+
         if (bitmap != null) {
             Drawable drawable = coverColor(context, bitmap, color);
             img.setImageDrawable(drawable);

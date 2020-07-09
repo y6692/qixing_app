@@ -69,7 +69,6 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:layout_marginTop="15dp"
-            android:layout_marginBottom="18dp"
             android:layout_marginLeft="30dp"
             android:orientation="horizontal">
 
@@ -107,10 +106,10 @@
 
         </RelativeLayout>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="@drawable/divider_bcg" />
+        <!--<ImageView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="3dp"-->
+            <!--android:background="@drawable/divider_bcg" />-->
 
         <ScrollView
             android:layout_width="match_parent"
@@ -160,9 +159,31 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:visibility="gone"
+                        android:id="@+id/ll_noLogin"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="24dp"
+                        android:layout_marginLeft="16dp"
+                        android:orientation="vertical"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="64dp"
+                            android:layout_height="22dp"
+                            android:background="@drawable/block_bcg2_2"
+                            android:gravity="center"
+                            android:textSize="@dimen/sp12"
+                            android:textColor="#FD555B"
+                            android:text="登录/注册"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:id="@+id/ll_hasLogin"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="16dp"
                         android:orientation="vertical"
                         android:gravity="center_vertical">
 
@@ -171,13 +192,66 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
-                            <TextView
-                                android:id="@+id/personUI_userName"
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:id="@+id/personUI_userName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="25dp"
+                                    android:textSize="@dimen/sp18"
+                                    android:textColor="#333333"
+                                    android:text=""/>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="6dp"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="17dp"
+                                        android:textSize="@dimen/sp12"
+                                        android:textColor="#666666"
+                                        android:text="会员积分："/>
+
+                                    <ImageView
+                                        android:layout_width="15dp"
+                                        android:layout_height="15dp"
+                                        android:src="@drawable/gold_icon"/>
+
+                                    <TextView
+                                        android:id="@+id/tv_memberPoints"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="17dp"
+                                        android:textSize="@dimen/sp12"
+                                        android:textColor="#666666"
+                                        android:text=""/>
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="25dp"
-                                android:textSize="@dimen/sp18"
-                                android:textColor="#333333"
-                                android:text=""/>
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:layout_marginRight="35dp"
+                                android:orientation="horizontal"
+                                android:layout_alignParentRight="true">
+
+                                <ImageView
+                                    android:layout_width="8dp"
+                                    android:layout_height="14dp"
+                                    android:src="@drawable/yjt4"/>
+                            </LinearLayout>
 
                         </RelativeLayout>
 
@@ -237,9 +311,93 @@
                     </RelativeLayout>
 
 
+                    <RelativeLayout
+                        android:id="@+id/personUI_memberPointsLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="25dp"
+                        >
 
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:layout_marginLeft="30dp"
+                            android:orientation="horizontal"
+                            android:layout_alignParentLeft="true">
 
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/member_points_icon"/>
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="会员积分"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp18"
+                                android:layout_marginLeft="17dp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:layout_marginRight="35dp"
+                            android:orientation="horizontal"
+                            android:layout_alignParentRight="true">
+
+                            <ImageView
+                                android:layout_width="8dp"
+                                android:layout_height="14dp"
+                                android:src="@drawable/yjt4"/>
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/personUI_rankingListLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="25dp"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:layout_marginLeft="30dp"
+                            android:orientation="horizontal"
+                            android:layout_alignParentLeft="true">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ranking_list_icon"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="排行榜"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp18"
+                                android:layout_marginLeft="17dp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:layout_marginRight="35dp"
+                            android:orientation="horizontal"
+                            android:layout_alignParentRight="true">
+
+                            <ImageView
+                                android:layout_width="8dp"
+                                android:layout_height="14dp"
+                                android:src="@drawable/yjt4"/>
+                        </LinearLayout>
+                    </RelativeLayout>
 
                     <RelativeLayout
                         android:id="@+id/personUI_creditLayout"

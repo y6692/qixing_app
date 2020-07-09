@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:background="@color/white"
+    >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="195dp"
+            android:orientation="vertical"
+            android:background="@drawable/ranking_list_bg"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp40">
+
+                <LinearLayout
+                    android:id="@+id/ll_backBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/mainUI_title_backBtn"
+                        android:layout_width="23dp"
+                        android:layout_height="17dp"
+                        android:layout_marginLeft="30dp"
+                        android:src="@drawable/back_image"/>
+
+                    <TextView
+                        android:visibility="gone"
+                        android:layout_marginLeft="-10dp"
+                        android:id="@+id/tv_left"
+                        android:textSize="@dimen/sp16"
+                        android:text="返回"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="39dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true">
+
+                    <ImageView
+                        android:id="@+id/iv_share"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/share_icon"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:layout_marginBottom="18dp"
+                android:layout_marginLeft="30dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="排行榜"
+                    android:textSize="30sp"
+                    android:textColor="@color/white"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="更新：2020/06/01 22:00"
+                    android:textSize="10sp"
+                    android:textColor="@color/white"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="-74dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:background="@drawable/back_bd4"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="17dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_header"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/head_icon"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="11dp"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/personUI_userName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:textSize="@dimen/sp18"
+                        android:textColor="#333333"
+                        android:text="123"/>
+
+                    <ImageView
+                        android:id="@+id/iv_ranking"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginLeft="11dp"
+                        android:src="@drawable/ranking_icon"/>
+
+                    <TextView
+                        android:id="@+id/personUI_roleName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="3dp"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/sp14"
+                        android:textColor="#333333"
+                        android:text="NO.100+"/>
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="31dp"
+        android:layout_marginLeft="@dimen/dp30"
+        android:layout_marginRight="@dimen/dp30"
+        android:layout_below="@id/mainUI_titleLayout">
+
+        <!---->
+
+        <LinearLayout
+            android:id="@+id/ll_2"
+            android:layout_width="match_parent"
+            android:layout_height="31dp"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/block_ranking_bcg0"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!--app:tabIndicator="@drawable/block_dispatch_bcg"-->
+                <!--app:tabIndicatorColor="#F95A64"-->
+                <!--app:tabGravity="fill"-->
+                <!--app:tabMode="fixed"-->
+                <!--app:tabTextAppearance="@style/TabLayoutTextStyle2"-->
+                <!--app:tabIndicatorFullWidth="false"-->
+                <!--app:tabBackground="@drawable/tabitem"-->
+                <!---->
+
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="37dp"
+                    app:tabIndicatorHeight="0dp"
+                    app:tabGravity="fill"
+                    app:tabIndicatorColor="#F95A64"
+                    app:tabMode="fixed"
+                    app:tabMaxWidth="0dp"
+                    app:tabSelectedTextColor="#ffffff"
+                    app:tabTextAppearance="@style/TabLayoutTextStyle3"
+                    app:tabTextColor="#333333"
+                    app:tabBackground="@drawable/tabitem"
+                    />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/ll_tab"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="48dp"-->
+            <!--android:background="#ffffff"-->
+            <!--android:orientation="vertical">-->
+            <!--<View android:layout_width="match_parent"-->
+                <!--android:layout_height="1px"-->
+                <!--android:background="#E6E6E6"></View>-->
+            <!--<com.flyco.tablayout.CommonTabLayout-->
+                <!--android:id="@+id/tab"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="48dp"-->
+                <!--app:tl_iconWidth="30dp"-->
+                <!--app:tl_iconHeight="24dp"-->
+                <!--app:tl_indicator_color="@color/white"-->
+                <!--app:tl_indicator_height="0dp"-->
+                <!--app:tl_textSelectColor="#FD5558"-->
+                <!--app:tl_textUnselectColor="#666666"-->
+                <!--app:tl_textsize="12sp"-->
+                <!--app:tl_underline_color="#E6E6E6"-->
+                <!--app:tl_underline_height="1dp"/>-->
+        <!--</LinearLayout>-->
+
+        <LinearLayout
+            android:id="@+id/ll_3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/ll_2"
+            android:background="#ffffff"
+            android:orientation="vertical">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

@@ -72,6 +72,10 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="TabLayoutTextStyle3">
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <!--<style name="Theme.AppCompat.Light.NoActionBar" parent="android:Theme">-->
         <!--<item name="windowActionBar">false</item>-->
         <!--<item name="windowNoTitle">true</item>-->

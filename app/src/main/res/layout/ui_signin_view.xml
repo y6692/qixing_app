@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="377dp"
+            android:layout_marginTop="52dp"
+            android:src="@drawable/signin_bg"
+            android:layout_centerHorizontal="true"
+            />
+
+        <ImageView
+            android:layout_width="177dp"
+            android:layout_height="107dp"
+            android:src="@drawable/signin2_bg"
+            android:layout_centerHorizontal="true"
+            />
+
+        <TextView
+            android:id="@+id/tv_signin1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="142dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="恭喜您，已连续签到5天"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:id="@+id/tv_signin2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="188dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="获得5积分奖励，继续加油哦~"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            />
+
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="94dp"
+            android:layout_marginTop="261dp"
+            android:src="@drawable/gold2_icon"
+            />
+
+        <TextView
+            android:id="@+id/tv_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="265dp"
+            android:gravity="center"
+            android:text="＋5积分"
+            android:textColor="#FBE945"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/ui_signin_confirmBtn"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="350dp"
+            android:background="@drawable/block_bcg_2_1"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:text="确定"
+            android:textColor="#FD555B"
+            android:textSize="16sp"
+            />
+    </RelativeLayout>
+</LinearLayout>

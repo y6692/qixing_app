@@ -38,6 +38,7 @@ import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.loopj.android.http.TextHttpResponseHandler2;
 import cn.qimate.bike.R;
+import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.core.common.DataCleanManager;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
@@ -210,6 +211,15 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
                 break;
 
             case R.id.settingUI_logoutLayout:
+                String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+                if (access_token == null || "".equals(access_token)) {
+//                  Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                    scrollToFinishActivity();
+                    return;
+                }
+
                 customDialog.show();
                 break;
 
@@ -280,6 +290,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
     }
 
     private void logout() {
+
 
         HttpHelper.delete(context, Urls.authorizations, new TextHttpResponseHandler2() {
             @Override
@@ -389,7 +400,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
 
         try{
 //          协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议 use_car用车服务协议
-            HttpHelper.get(context, Urls.agreement+"use_car", new TextHttpResponseHandler() {
+            HttpHelper.get2(context, Urls.agreement+"use_car", new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
                     if (loadingDialog != null && !loadingDialog.isShowing()) {
@@ -447,7 +458,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
 
         try{
 //          协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议 use_car用车服务协议 privacy隐私协议
-            HttpHelper.get(context, Urls.agreement+"privacy", new TextHttpResponseHandler() {
+            HttpHelper.get2(context, Urls.agreement+"privacy", new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
                     onStartCommon("请稍等");

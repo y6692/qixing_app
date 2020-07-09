@@ -39,7 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.bumptech.glide.Glide;
+//import com.bumptech.glide.Glide;
 import com.ecloud.pulltozoomview.PullToZoomScrollViewEx;
 import com.vondear.rxtools.RxFileTool;
 
@@ -75,9 +75,11 @@ import cn.qimate.bike.activity.HistoryRoadActivity;
 import cn.qimate.bike.activity.InsureanceActivity;
 import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.activity.MainActivity;
+import cn.qimate.bike.activity.MemberPointsDetailActivity;
 import cn.qimate.bike.activity.MyMessageActivity;
 import cn.qimate.bike.activity.MyOrderActivity;
 import cn.qimate.bike.activity.PersonInfoActivity;
+import cn.qimate.bike.activity.RankingListActivity;
 import cn.qimate.bike.activity.ServiceCenterActivity;
 import cn.qimate.bike.activity.SettingActivity;
 import cn.qimate.bike.activity.SuperVipActivity;
@@ -128,8 +130,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private ImageView headerImageView;
     private ImageView authState;
     private TextView userName;
-    private LinearLayout myMsgLayout, personInfoLayout;
-    private RelativeLayout  myOrderLayout, creditLayout, serviceCenterLayout, changePhoneLayout, authLayout, inviteLayout;
+    private LinearLayout ll_noLogin, ll_hasLogin, myMsgLayout, personInfoLayout, signinLayout;
+    private RelativeLayout  myOrderLayout, memberPointsLayout, rankingListLayout, creditLayout, serviceCenterLayout, changePhoneLayout, authLayout, inviteLayout;
 
     private ImageView iv_popup_window_back;
     private RelativeLayout rl_popup_window;
@@ -153,6 +155,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private String invite_h5_url;
     private String history_order_h5_title;
     private String history_order_h5_url;
+
+    private Dialog advDialog;
+    private TextView tv_signin1;
+    private TextView tv_signin2;
+    private TextView tv_points;
+    private TextView signinConfirmBtn;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_mine, null);
@@ -212,11 +220,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
             String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
             if("".equals(access_token)){
-                ToastUtil.showMessageApp(context, "请先登录");
+//                ToastUtil.showMessageApp(context, "请先登录");
 
-                Intent intent = new Intent(BaseApplication.context, LoginActivity.class);
-                startActivity(intent);
+
+
+                ll_noLogin.setVisibility(View.VISIBLE);
+                ll_hasLogin.setVisibility(View.GONE);
             }else{
+
+
                 initHttp();
             }
 
@@ -239,6 +251,17 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
+        advDialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+        View advDialogView = LayoutInflater.from(context).inflate(R.layout.ui_signin_view, null);
+        advDialog.setContentView(advDialogView);
+        advDialog.setCanceledOnTouchOutside(false);
+
+        tv_signin1 = (TextView)advDialogView.findViewById(R.id.tv_signin1);
+        tv_signin2 = (TextView)advDialogView.findViewById(R.id.tv_signin2);
+        tv_points = (TextView)advDialogView.findViewById(R.id.tv_points);
+        signinConfirmBtn = (TextView)advDialogView.findViewById(R.id.ui_signin_confirmBtn);
+
+
         imageUri = Uri.parse("file:///sdcard/temp.jpg");
         iv_popup_window_back = getActivity().findViewById(R.id.popupWindow_back);
         rl_popup_window = getActivity().findViewById(R.id.popupWindow);
@@ -250,6 +273,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         takePhotoBtn.setOnClickListener(itemsOnClick);
         pickPhotoBtn.setOnClickListener(itemsOnClick);
         cancelBtn.setOnClickListener(itemsOnClick);
+
+        ll_noLogin = getActivity().findViewById(R.id.ll_noLogin);
+        ll_hasLogin = getActivity().findViewById(R.id.ll_hasLogin);
 
         rightBtn = getActivity().findViewById(R.id.personUI_rightBtn);
         headerImageView = getActivity().findViewById(R.id.personUI_header);
@@ -266,8 +292,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //
 
         personInfoLayout = getActivity().findViewById(R.id.ll_person_info);
+        signinLayout = getActivity().findViewById(R.id.ll_signin);
         myOrderLayout = getActivity().findViewById(R.id.personUI_myOrderLayout);
         myMsgLayout = getActivity().findViewById(R.id.personUI_myMeaaageLayout);
+        memberPointsLayout = getActivity().findViewById(R.id.personUI_memberPointsLayout);
+        rankingListLayout = getActivity().findViewById(R.id.personUI_rankingListLayout);
         creditLayout = getActivity().findViewById(R.id.personUI_creditLayout);
         serviceCenterLayout = getActivity().findViewById(R.id.personUI_serviceCenterLayout);
         changePhoneLayout = getActivity().findViewById(R.id.personUI_changePhoneLayout);
@@ -275,15 +304,22 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         inviteLayout = getActivity().findViewById(R.id.personUI_inviteLayout);
 
         rightBtn.setOnClickListener(this);
+        ll_noLogin.setOnClickListener(this);
         personInfoLayout.setOnClickListener(this);
+        signinLayout.setOnClickListener(this);
         myOrderLayout.setOnClickListener(this);
         myMsgLayout.setOnClickListener(this);
+        memberPointsLayout.setOnClickListener(this);
+        rankingListLayout.setOnClickListener(this);
         creditLayout.setOnClickListener(this);
         serviceCenterLayout.setOnClickListener(this);
         changePhoneLayout.setOnClickListener(this);
         authLayout.setOnClickListener(this);
         inviteLayout.setOnClickListener(this);
+        signinConfirmBtn.setOnClickListener(this);
 
+
+//        headerImageView.setOnClickListener(this);
 
 //        billRule();
     }
@@ -320,40 +356,79 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
 
-        final String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-        if (access_token == null || "".equals(access_token)) {
-            Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+
         switch (v.getId()) {
             case R.id.personUI_backImage:
                 scrollToFinishActivity();
                 break;
 
-            case R.id.personUI_rightBtn:
-//                UIHelper.goToAct(context, SettingActivity.class);
+            case R.id.ll_noLogin:
+                Intent intent = new Intent(BaseApplication.context, LoginActivity.class);
+                startActivity(intent);
+                break;
 
-                Intent intent = new Intent();
+            case R.id.personUI_rightBtn:
+//                if (access_token == null || "".equals(access_token)) {
+//                    Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+
+                intent = new Intent();
                 intent.setClass(context, SettingActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(intent, 10);
                 break;
 
             case R.id.personUI_header:
-                clickPopupWindow();
+//                clickPopupWindow();
+                break;
 
+            case R.id.ll_signin:
+                if (access_token == null || "".equals(access_token)) {
+                    Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                WindowManager windowManager = activity.getWindowManager();
+                Display display = windowManager.getDefaultDisplay();
+                WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
+                lp.width = (int) (display.getWidth() * 1);
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+                advDialog.getWindow().setAttributes(lp);
+                advDialog.show();
+
+                break;
+
+            case R.id.ui_signin_confirmBtn:
+                if (advDialog != null && advDialog.isShowing()) {
+                    advDialog.dismiss();
+                }
                 break;
 
             case R.id.ll_person_info:
+                if (access_token == null || "".equals(access_token)) {
+                    Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 UIHelper.goToAct(context, PersonInfoActivity.class);
 
                 break;
+
+
 
             case R.id.personUI_myOrderLayout:
 //                UIHelper.goToAct(context, MyOrderActivity.class);
 
 //                private String history_order_h5_title;
 //                private String history_order_h5_url;
+
+                if (access_token == null || "".equals(access_token)) {
+                    Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 intent = new Intent(context, MyOrderActivity.class);
                 intent.putExtra("history_order_h5_title", history_order_h5_title);
@@ -363,10 +438,34 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.personUI_myMeaaageLayout:
+                if (access_token == null || "".equals(access_token)) {
+                    Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 UIHelper.goToAct(context, MyMessageActivity.class);
                 break;
 
+            case R.id.personUI_memberPointsLayout:
+                if (access_token == null || "".equals(access_token)) {
+                    Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                UIHelper.goToAct(context, MemberPointsDetailActivity.class);
+                break;
+
+            case R.id.personUI_rankingListLayout:
+                if (access_token == null || "".equals(access_token)) {
+                    Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                UIHelper.goToAct(context, RankingListActivity.class);
+                break;
+
             case R.id.personUI_creditLayout:
+                if (access_token == null || "".equals(access_token)) {
+                    Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Log.e("personUI_creditLayout", credit_scores_h5_url+"==="+access_token.split(" ")[1]);
                 UIHelper.goWebViewAct(context, credit_scores_h5_title, credit_scores_h5_url+"?client=android&token="+access_token.split(" ")[1]);
 
@@ -382,10 +481,18 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
 
             case R.id.personUI_changePhoneLayout:
+                if (access_token == null || "".equals(access_token)) {
+                    Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 UIHelper.goToAct(context, ChangePhoneActivity.class);
                 break;
 
             case R.id.personUI_authLayout:
+                if (access_token == null || "".equals(access_token)) {
+                    Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 //                UIHelper.goToAct(context, AuthCenterActivity.class);
                 intent = new Intent();
                 intent.setClass(context, AuthCenterActivity.class);
@@ -394,7 +501,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.personUI_inviteLayout:
-
+                if (access_token == null || "".equals(access_token)) {
+                    Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Log.e("personUI_inviteLayout", invite_h5_title+"==="+invite_h5_url);
 
                 UIHelper.goWebViewAct(context, invite_h5_title, invite_h5_url+"?client=android&token="+access_token.split(" ")[1]);
@@ -437,7 +547,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                     File imgUri = new File(GetImagePath.getPath(context, data.getData()));
 
-                                    Log.e("minef=REQUESTCODE_PICK2", imgUri+"==="+BuildConfig.APPLICATION_ID);
+                                    Log.e("minef=REQUESTCODE_PICK2", imgUri+"==="+ BuildConfig.APPLICATION_ID);
 
                                     Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", imgUri);
 
@@ -1085,6 +1195,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         Log.e("minef===initHttp", "==="+isHidden());
 
         if(isHidden()) return;
+
+        ll_noLogin.setVisibility(View.GONE);
+        ll_hasLogin.setVisibility(View.VISIBLE);
 
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
         if (access_token != null && !"".equals(access_token)) {
