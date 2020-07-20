@@ -1,0 +1,997 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/member_points_bg_gradient"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:orientation="vertical">
+
+    <!--<include-->
+        <!--layout="@layout/ui_main_title"/>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/member_points_detail_bg2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_marginLeft="30dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="积分"
+                android:textSize="30sp"
+                android:textColor="@color/white"/>
+            
+            <ImageView
+                android:layout_width="@dimen/dp20"
+                android:layout_height="@dimen/dp20"
+                android:layout_marginLeft="16dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/gold3_icon"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center_vertical"
+                android:text="20"
+                android:textSize="20sp"
+                android:textColor="#FBE945"/>
+
+            <TextView
+                android:id="@+id/tv_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:text="明细"
+                android:textSize="12sp"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <cn.qimate.bike.core.widget.MyScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="166dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:orientation="vertical"
+                android:background="@drawable/back_bd5">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="23dp"
+                    android:layout_marginLeft="19dp"
+                    android:layout_marginRight="16dp"
+                    android:orientation="vertical">
+
+                    <include
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        layout="@layout/layout_swipe_list" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:orientation="vertical"
+                android:background="@drawable/back_bd5">
+
+                <RelativeLayout
+                    android:id="@+id/rl_signin_get_points"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="19dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp16"
+                        android:text="签到领积分"
+                        android:layout_centerVertical="true"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#666666"
+                            android:textSize="@dimen/sp12"
+                            android:text="已连续签到"
+                            android:layout_centerVertical="true"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp12"
+                            android:text="1"
+                            android:layout_centerVertical="true"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#666666"
+                            android:textSize="@dimen/sp12"
+                            android:text="天"
+                            android:layout_centerVertical="true"/>
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="23dp"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_sign"
+                        android:layout_width="85dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/signin_bcg"
+                        android:gravity="center"
+                        android:text="签到"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp12"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="166dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:orientation="vertical"
+                android:background="@drawable/back_bd5">
+
+                <RelativeLayout
+                    android:id="@+id/rl_oneoff_mission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="19dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp16"
+                        android:text="一次性任务"
+                        android:layout_centerVertical="true"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:src="@drawable/up2_icon"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/rl_deposit_free_mission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="19dp"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/auth2_icon"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:orientation="vertical"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"
+                                android:text="完成免押金认证"
+                                android:layout_centerVertical="true"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#666666"
+                                android:textSize="@dimen/sp10"
+                                android:text="完成认证+5积分"
+                                android:layout_centerVertical="true"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_deposit_free_mission"
+                            android:layout_width="60dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/points_exchange_bcg"
+                            android:gravity="center"
+                            android:text="做任务"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp12"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_person_info_mission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="19dp"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/person_info_icon"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:orientation="vertical"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"
+                                android:text="完成个人信息"
+                                android:layout_centerVertical="true"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#666666"
+                                android:textSize="@dimen/sp10"
+                                android:text="完成个人信息填写+5积分"
+                                android:layout_centerVertical="true"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_person_info_mission"
+                            android:layout_width="60dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/points_exchange_bcg"
+                            android:gravity="center"
+                            android:text="做任务"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp12"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="416dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:orientation="vertical"
+                android:background="@drawable/back_bd5">
+
+                <RelativeLayout
+                    android:id="@+id/rl_daily_mission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="19dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp16"
+                        android:text="日常任务"
+                        android:layout_centerVertical="true"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:src="@drawable/up2_icon"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_everyday_signin_mission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="19dp"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/everyday_signin_icon"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:orientation="vertical"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"
+                                android:text="每日签到"
+                                android:layout_centerVertical="true"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#666666"
+                                android:textSize="@dimen/sp10"
+                                android:text="每次签到获得1积分，上限5积分"
+                                android:layout_centerVertical="true"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_everyday_signin_mission"
+                            android:layout_width="60dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/points_exchange_finish_bcg"
+                            android:gravity="center"
+                            android:text="已完成"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp12"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_bike_mission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="19dp"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/bike2_icon"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:orientation="vertical"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"
+                                android:text="骑行单车"
+                                android:layout_centerVertical="true"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#666666"
+                                android:textSize="@dimen/sp10"
+                                android:text="每次骑行获得2积分"
+                                android:layout_centerVertical="true"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_bike_mission"
+                            android:layout_width="60dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/points_exchange_bcg"
+                            android:gravity="center"
+                            android:text="做任务"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp12"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_ebike_mission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="19dp"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/ebike2_icon"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:orientation="vertical"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"
+                                android:text="骑行助力车"
+                                android:layout_centerVertical="true"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#666666"
+                                android:textSize="@dimen/sp10"
+                                android:text="每次骑行获得3积分"
+                                android:layout_centerVertical="true"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_ebike_mission"
+                            android:layout_width="60dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/points_exchange_bcg"
+                            android:gravity="center"
+                            android:text="做任务"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp12"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_continuation7_bike_mission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="19dp"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/continuation7_bike_icon"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:orientation="vertical"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"
+                                android:text="连续7天骑行单车"
+                                android:layout_centerVertical="true"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#666666"
+                                android:textSize="@dimen/sp10"
+                                android:text="获得5积分"
+                                android:layout_centerVertical="true"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_continuation7_bike_mission"
+                            android:layout_width="60dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/points_exchange_bcg"
+                            android:gravity="center"
+                            android:text="1/7"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp12"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_continuation7_ebike_mission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="19dp"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/continuation7_ebike_icon"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:orientation="vertical"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"
+                                android:text="连续7天骑行单车"
+                                android:layout_centerVertical="true"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#666666"
+                                android:textSize="@dimen/sp10"
+                                android:text="获得7积分"
+                                android:layout_centerVertical="true"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_continuation7_ebike_mission"
+                            android:layout_width="60dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/points_exchange_bcg"
+                            android:gravity="center"
+                            android:text="1/7"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp12"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_month_card_mission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="19dp"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/month_card_icon"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:orientation="vertical"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"
+                                android:text="购买周卡、月卡、季卡"
+                                android:layout_centerVertical="true"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#666666"
+                                android:textSize="@dimen/sp10"
+                                android:text="获得5积分"
+                                android:layout_centerVertical="true"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_month_card_mission"
+                            android:layout_width="60dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/points_exchange_bcg"
+                            android:gravity="center"
+                            android:text="去购买"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp12"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_year_card_mission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="19dp"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/year_card_icon"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:orientation="vertical"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/sp14"
+                                android:text="购买半年卡、年卡"
+                                android:layout_centerVertical="true"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#666666"
+                                android:textSize="@dimen/sp10"
+                                android:text="获得15积分"
+                                android:layout_centerVertical="true"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_year_card_mission"
+                            android:layout_width="60dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/points_exchange_bcg"
+                            android:gravity="center"
+                            android:text="去购买"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp12"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="343dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:orientation="vertical"
+                android:background="@drawable/back_bd5">
+
+                <RelativeLayout
+                    android:id="@+id/rl_college"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="19dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp16"
+                        android:text="积分兑换"
+                        android:layout_centerVertical="true"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_college"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/sp12"
+                            android:textColor="#666666"
+                            android:gravity="right"
+                            android:hint="兑换记录"/>
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:src="@drawable/right2_icon"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <com.huewu.pla.lib.MultiColumnListView
+                    android:id="@+id/lv_pointsExchange"
+                    xmlns:pla="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    pla:plaColumnNumber="2"
+                    pla:plaLandscapeColumnNumber="3"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/white"
+                    android:layout_gravity="center_vertical"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_rule"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp16"
+                    android:textColor="@color/white"
+                    android:text="规则说明"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@color/white"
+                    android:layout_gravity="center_vertical"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </cn.qimate.bike.core.widget.MyScrollView>
+
+
+
+</LinearLayout>

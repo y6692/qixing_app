@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LongshTabStripLibrary/LongshTabStripLibrary.iml" filepath="$PROJECT_DIR$/LongshTabStripLibrary/LongshTabStripLibrary.iml" />
-      <module fileurl="file://$PROJECT_DIR$/RxTools-library/RxTools-library.iml" filepath="$PROJECT_DIR$/RxTools-library/RxTools-library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/pullzoomview/pullzoomview.iml" filepath="$PROJECT_DIR$/pullzoomview/pullzoomview.iml" />
-      <module fileurl="file://$PROJECT_DIR$/qixing_app.iml" filepath="$PROJECT_DIR$/qixing_app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sunshinelibrary/sunshinelibrary.iml" filepath="$PROJECT_DIR$/sunshinelibrary/sunshinelibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LongshTabStripLibrary/LongshTabStripLibrary.iml" filepath="$PROJECT_DIR$/LongshTabStripLibrary/LongshTabStripLibrary.iml" group="qixing_app/LongshTabStripLibrary" />
+      <module fileurl="file://$PROJECT_DIR$/RxTools-library/RxTools-library.iml" filepath="$PROJECT_DIR$/RxTools-library/RxTools-library.iml" group="qixing_app/RxTools-library" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="qixing_app/app" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" group="qixing_app/library" />
+      <module fileurl="file://$PROJECT_DIR$/pullzoomview/pullzoomview.iml" filepath="$PROJECT_DIR$/pullzoomview/pullzoomview.iml" group="qixing_app/pullzoomview" />
+      <module fileurl="file://$PROJECT_DIR$/qixing_app.iml" filepath="$PROJECT_DIR$/qixing_app.iml" group="qixing_app" />
+      <module fileurl="file://$PROJECT_DIR$/sunshinelibrary/sunshinelibrary.iml" filepath="$PROJECT_DIR$/sunshinelibrary/sunshinelibrary.iml" group="qixing_app/sunshinelibrary" />
     </modules>
   </component>
 </project>

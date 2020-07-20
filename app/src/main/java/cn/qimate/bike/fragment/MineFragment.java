@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 //import com.bumptech.glide.Glide;
+import com.bumptech.glide.Glide;
 import com.ecloud.pulltozoomview.PullToZoomScrollViewEx;
 import com.vondear.rxtools.RxFileTool;
 
@@ -75,6 +76,7 @@ import cn.qimate.bike.activity.HistoryRoadActivity;
 import cn.qimate.bike.activity.InsureanceActivity;
 import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.activity.MainActivity;
+import cn.qimate.bike.activity.MemberPointsActivity;
 import cn.qimate.bike.activity.MemberPointsDetailActivity;
 import cn.qimate.bike.activity.MyMessageActivity;
 import cn.qimate.bike.activity.MyOrderActivity;
@@ -162,6 +164,17 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private TextView tv_points;
     private TextView signinConfirmBtn;
 
+    private boolean isAuth;
+    private String avatar;
+    private String nickname;
+    private String phone = "";
+    private int sex;
+    private String school_name = "";
+    private int college_id;
+    private String college_name = "";
+    private String admission_time = "";
+    private int is_full;
+
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_mine, null);
         unbinder = ButterKnife.bind(this, v);
@@ -222,7 +235,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             if("".equals(access_token)){
 //                ToastUtil.showMessageApp(context, "请先登录");
 
-
+                headerImageView.setImageResource(R.drawable.head_icon);
 
                 ll_noLogin.setVisibility(View.VISIBLE);
                 ll_hasLogin.setVisibility(View.GONE);
@@ -390,14 +403,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                     return;
                 }
 
-                WindowManager windowManager = activity.getWindowManager();
-                Display display = windowManager.getDefaultDisplay();
-                WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
-                lp.width = (int) (display.getWidth() * 1);
-                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-                advDialog.getWindow().setAttributes(lp);
-                advDialog.show();
+//                WindowManager windowManager = activity.getWindowManager();
+//                Display display = windowManager.getDefaultDisplay();
+//                WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
+//                lp.width = (int) (display.getWidth() * 1);
+//                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//                advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+//                advDialog.getWindow().setAttributes(lp);
+//                advDialog.show();
 
                 break;
 
@@ -413,7 +426,20 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                     return;
                 }
 
-                UIHelper.goToAct(context, PersonInfoActivity.class);
+//                UIHelper.goToAct(context, PersonInfoActivity.class);
+                intent = new Intent(context, PersonInfoActivity.class);
+                intent.putExtra("isAuth", isAuth);
+                intent.putExtra("avatar", avatar);
+                intent.putExtra("nickname", nickname);
+                intent.putExtra("phone", phone);
+                intent.putExtra("sex", sex);
+                intent.putExtra("school_name", school_name);
+                intent.putExtra("college_id", college_id);
+                intent.putExtra("college_name", college_name);
+                intent.putExtra("admission_time", admission_time);
+                intent.putExtra("is_full", is_full);
+
+                startActivity(intent);
 
                 break;
 
@@ -450,7 +476,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                     Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                UIHelper.goToAct(context, MemberPointsDetailActivity.class);
+//                UIHelper.goToAct(context, MemberPointsActivity.class);
                 break;
 
             case R.id.personUI_rankingListLayout:
@@ -458,7 +484,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                     Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                UIHelper.goToAct(context, RankingListActivity.class);
+//                UIHelper.goToAct(context, RankingListActivity.class);
                 break;
 
             case R.id.personUI_creditLayout:
@@ -1194,7 +1220,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     public void initHttp() {
         Log.e("minef===initHttp", "==="+isHidden());
 
-        if(isHidden()) return;
+//        if(isHidden()) return;
 
         ll_noLogin.setVisibility(View.GONE);
         ll_hasLogin.setVisibility(View.VISIBLE);
@@ -1223,9 +1249,35 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                                 ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
                                 UserBean bean = JSON.parseObject(result.getData(), UserBean.class);
-//                            myPurse.setText(bean.getMoney());
-//                            myIntegral.setText(bean.getPoints());
-                                userName.setText(bean.getPhone());
+//                              myPurse.setText(bean.getMoney());
+//                              myIntegral.setText(bean.getPoints());
+
+
+                                int cert1_status = bean.getCert1_status();
+                                isAuth = cert1_status==3?true:false;
+
+                                avatar = bean.getAvatar();
+                                nickname = bean.getNickname();
+                                phone = bean.getPhone();
+                                sex = bean.getSex();
+                                school_name = bean.getSchool_name();
+                                college_id = bean.getCollege_id();
+                                college_name = bean.getCollege_name();
+                                admission_time = bean.getAdmission_time();
+                                is_full = bean.getIs_full();
+
+                                if(nickname==null || "".equals(nickname)){
+                                    userName.setText(phone);
+                                }else{
+                                    userName.setText(nickname);
+                                }
+
+                                if(avatar==null || "".equals(avatar)){
+                                    headerImageView.setImageResource(R.drawable.head_icon);
+                                }else{
+                                    Glide.with(context).load(avatar).crossFade().into(headerImageView);
+                                }
+
 
                                 if(bean.getUnread_count()==0){
                                     iv_isRead.setVisibility(View.GONE);

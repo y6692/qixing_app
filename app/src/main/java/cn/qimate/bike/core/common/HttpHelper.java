@@ -227,6 +227,13 @@ public class HttpHelper {
 		client.delete(context, url, responseHandler);
 	}
 
+	public static void put(Context context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+
+		addHeader(context);
+
+		client.put(context, url, params, responseHandler);
+	}
+
 	public static void addHeader(Context context) {
 		try {
 

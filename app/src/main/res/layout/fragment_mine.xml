@@ -141,17 +141,24 @@
                             android:layout_width="60dp"
                             android:layout_height="60dp">
 
-                            <cn.qimate.bike.core.widget.MLImageView
+<!--                            <cn.qimate.bike.core.widget.MLImageView-->
+<!--                                android:id="@+id/personUI_header"-->
+<!--                                android:layout_width="60dp"-->
+<!--                                android:layout_height="60dp"-->
+<!--                                android:src="@drawable/head_icon"-->
+<!--                                melove:border_color="@color/ml_white"-->
+<!--                                melove:border_width="1dp"-->
+<!--                                melove:shape_type="round"-->
+<!--                                android:layout_centerInParent="true"-->
+<!--                                android:background="@null"-->
+<!--                                android:scaleType="centerInside"/>-->
+
+                            <de.hdodenhof.circleimageview.CircleImageView
                                 android:id="@+id/personUI_header"
                                 android:layout_width="60dp"
                                 android:layout_height="60dp"
                                 android:src="@drawable/head_icon"
-                                melove:border_color="@color/ml_white"
-                                melove:border_width="1dp"
-                                melove:shape_type="round"
-                                android:layout_centerInParent="true"
-                                android:background="@null"
-                                android:scaleType="centerInside"/>
+                                android:layout_centerInParent="true"/>
 
                         </RelativeLayout>
 

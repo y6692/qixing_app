@@ -7,6 +7,12 @@ package cn.qimate.bike.model;
 public class UserBean {
     private int id; //用户ID
     private String name;    //用户姓名
+    private String nickname;    //用户昵称
+    private String avatar;  //头像
+    private int sex;  //性别
+    private int college_id;  //学院id
+    private String college_name;  //学院名字
+    private String admission_time; //入学时间
     private String phone;   //用户手机
     private int school_id;  //学校ID
     private String school_name; //学校名称
@@ -27,7 +33,7 @@ public class UserBean {
     private String history_order_h5_title;  //历史订单H5标题
     private String history_order_h5_url;    //历史订单H5地址 需要拼接上 ?token=xxx
     private int unread_count; //未读消息数 为0时不显示红点 否则显示红点
-
+    private int is_full;    //资料是否已补全 1已补全 0未补全
 
     public int getId() {
         return id;
@@ -43,6 +49,54 @@ public class UserBean {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+
+    public int getCollege_id() {
+        return college_id;
+    }
+
+    public void setCollege_id(int college_id) {
+        this.college_id = college_id;
+    }
+
+    public String getCollege_name() {
+        return college_name;
+    }
+
+    public void setCollege_name(String college_name) {
+        this.college_name = college_name;
+    }
+
+    public String getAdmission_time() {
+        return admission_time;
+    }
+
+    public void setAdmission_time(String admission_time) {
+        this.admission_time = admission_time;
     }
 
     public String getPhone() {
@@ -203,5 +257,13 @@ public class UserBean {
 
     public void setUnread_count(int unread_count) {
         this.unread_count = unread_count;
+    }
+
+    public int getIs_full() {
+        return is_full;
+    }
+
+    public void setIs_full(int is_full) {
+        this.is_full = is_full;
     }
 }

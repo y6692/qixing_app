@@ -20,9 +20,11 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,12 +35,26 @@ import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.UpCancellationSignal;
+import com.qiniu.android.storage.UpCompletionHandler;
+import com.qiniu.android.storage.UpProgressHandler;
+import com.qiniu.android.storage.UploadOptions;
 //import com.bumptech.glide.Glide;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
@@ -52,12 +68,21 @@ import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
+import cn.qimate.bike.core.widget.KeyboardLayout;
+import cn.qimate.bike.core.widget.ListenerInputView;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.core.widget.MLImageView;
+import cn.qimate.bike.model.AdmissionTimeBean;
+import cn.qimate.bike.model.CollegeListBean;
 import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.model.UpTokenBean;
+import cn.qimate.bike.model.UserBean;
 import cn.qimate.bike.model.UserIndexBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.GlideRoundTransform;
+import cn.qimate.bike.util.LogUtil;
+import cn.qimate.bike.util.QiNiuInitialize;
+import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
@@ -92,18 +117,22 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
     private TextView title;
 //    private TextView rightBtn;
 
-    private TextView nameEdit;
+    private ListenerInputView nameEdit;
     private TextView phoneNum;
     private ImageView headerImageView;
     private ImageView iv_camera;
+    private LinearLayout ll_tip, ll_info;
+    private KeyboardLayout personUI_mainLayout;
     private RelativeLayout rl_header;
     private RelativeLayout rl_name;
     private RelativeLayout rl_phoneNum;
     private RelativeLayout rl_realNameAuth;
     private RelativeLayout rl_studentAuth;
 //    private EditText nickNameEdit;
-    private RelativeLayout sexLayout;
-    private TextView sexText;
+    private RelativeLayout sexLayout, collegeLayout, admissionTimeLayout;
+    private TextView sexText, schoolText, collegeText, admissionTimeText;
+
+
 //    private RelativeLayout schoolLayout;
 //    private TextView schoolText;
 //    private RelativeLayout classLayout;
@@ -114,14 +143,31 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
     private OptionsPickerView pvOptions;
     private OptionsPickerView pvOptions1;
     private OptionsPickerView pvOptions2;
-    private String sex = "";
-    private String school = "";
+
+    private String upToken = "";
+    private boolean isAuth;
+    private String avatar = "";
+    private String nickname = "";
+    private String nickname0 = "";
+    private String phone = "";
+    private int sex;
+    private String school_name = "";
+    private int college_id;
+    private String college_name = "";
+    private String admission_time = "";
+    private int is_full;
+
+    private boolean isFirst = true;
+
+
 
     // 输入法
-//    private List<SchoolListBean> schoolList;
+    private List<CollegeListBean> collegeList = new ArrayList<>();
     static ArrayList<String> item1 = new ArrayList<>();
     static ArrayList<String> item2 = new ArrayList<>();
     static ArrayList<String> item3 = new ArrayList<>();
+    static ArrayList<String> item4 = new ArrayList<>();
+    static ArrayList<ArrayList<String>> item5 = new ArrayList<>();
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -145,7 +191,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
     private Handler handler2 = new Handler() {
         public void handleMessage(Message msg) {
             // 三级联动效果
-            pvOptions2.setPicker(item3);
+            pvOptions2.setPicker(item3, item5, true);
             pvOptions2.setCyclic(false, false, false);
             pvOptions2.setSelectOptions(0, 0, 0);
 //            classLayout.setClickable(true);
@@ -157,6 +203,20 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_info);
         context = this;
+
+        isAuth = getIntent().getBooleanExtra("isAuth", false);
+        avatar = getIntent().getStringExtra("avatar");
+        nickname = getIntent().getStringExtra("nickname");
+        phone = getIntent().getStringExtra("phone");
+        sex = getIntent().getIntExtra("sex", 0);
+        school_name = getIntent().getStringExtra("school_name");
+        college_id = getIntent().getIntExtra("college_id", 0);
+        college_name = getIntent().getStringExtra("college_name");
+        admission_time = getIntent().getStringExtra("admission_time");
+        is_full = getIntent().getIntExtra("is_full", 0);
+
+        LogUtil.e("pia===onCreate", isAuth+"==="+avatar+"==="+nickname+"==="+phone+"==="+sex+"==="+school_name+"==="+college_id+"==="+college_name+"==="+admission_time);
+
 //        schoolList = new ArrayList<>();
         initView();
     }
@@ -180,13 +240,13 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
         cancelBtn.setOnClickListener(itemsOnClick);
 
         // 选项选择器
-//        pvOptions = new OptionsPickerView(context,false);
+        pvOptions = new OptionsPickerView(context,false);
         pvOptions1 = new OptionsPickerView(context,false);
-//        pvOptions2 = new OptionsPickerView(context,false);
-//
-//        pvOptions.setTitle("选择学校");
+        pvOptions2 = new OptionsPickerView(context,false);
+
+        pvOptions.setTitle("选择学院");
         pvOptions1.setTitle("选择性别");
-//        pvOptions2.setTitle("选择年级");
+        pvOptions2.setTitle("选择入学时间");
 
         ll_back = (LinearLayout) findViewById(R.id.ll_backBtn);
 //        title = (TextView) findViewById(R.id.mainUI_title_titleText);
@@ -194,45 +254,72 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 //        rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
 //        rightBtn.setText("变更手机");
 
-
+        personUI_mainLayout = (KeyboardLayout)findViewById(R.id.personUI_mainLayout);
+        ll_tip = (LinearLayout)findViewById(R.id.ll_tip);
         rl_header = (RelativeLayout)findViewById(R.id.rl_header);
+        ll_info = (LinearLayout)findViewById(R.id.ll_info);
         headerImageView = (ImageView)findViewById(R.id.iv_header);
 //        iv_camera = (ImageView)findViewById(R.id.iv_camera);
-        nameEdit = (TextView)findViewById(R.id.settingUI_name);
+        nameEdit = (ListenerInputView)findViewById(R.id.settingUI_name);
         phoneNum = (TextView)findViewById(R.id.settingUI_phoneNum);
         rl_name = (RelativeLayout)findViewById(R.id.rl_name);
         rl_phoneNum = (RelativeLayout)findViewById(R.id.rl_phoneNum);
         sexLayout = (RelativeLayout)findViewById(R.id.rl_sex);
+        collegeLayout = (RelativeLayout)findViewById(R.id.rl_college);
+        admissionTimeLayout = (RelativeLayout)findViewById(R.id.rl_admission_time);
         rl_realNameAuth = (RelativeLayout)findViewById(R.id.rl_realNameAuth);
         rl_studentAuth = (RelativeLayout)findViewById(R.id.rl_studentAuth);
 
         sexText = (TextView)findViewById(R.id.tv_sex);
+        schoolText = (TextView)findViewById(R.id.tv_school);
+        collegeText = (TextView)findViewById(R.id.tv_college);
+        admissionTimeText = (TextView)findViewById(R.id.tv_admission_time);
+
+        if(is_full==0){
+            ll_tip.setVisibility(View.VISIBLE);
+        }else{
+            ll_tip.setVisibility(View.GONE);
+        }
+
+        if(isAuth){
+            ll_info.setVisibility(View.VISIBLE);
+        }else{
+            ll_info.setVisibility(View.GONE);
+        }
+
+        if(avatar==null || "".equals(avatar)){
+            headerImageView.setImageResource(R.drawable.head_icon);
+        }else{
+//            Glide.with(context).load(avatar).crossFade().into(headerImageView);
+            Glide.with(context).load(avatar).into(headerImageView);
+        }
+
+        nameEdit.setText(nickname);
+        phoneNum.setText(phone);
+        if(sex==1){
+            sexText.setText("男");
+        }else if(sex==2){
+            sexText.setText("女");
+        }
+        schoolText.setText(school_name);
+        collegeText.setText(college_name);
+        admissionTimeText.setText(admission_time);
 
 //        Glide.with(this).load(R.drawable.head_icon).transform(new GlideRoundTransform(this,50)).into(headerImageView);
 
-
-//        nickNameEdit = (EditText)findViewById(R.id.settingUI_nickName);
-//        sexLayout = (RelativeLayout)findViewById(R.id.settingUI_sexLayout);
-//        sexText = (TextView)findViewById(R.id.settingUI_sex);
-//        schoolLayout = (RelativeLayout)findViewById(R.id.settingUI_schoolLayout);
-//        schoolText = (TextView)findViewById(R.id.settingUI_school);
-//        classLayout = (RelativeLayout)findViewById(R.id.settingUI_classLayout);
-//        classEdit = (TextView)findViewById(R.id.settingUI_class);
-//        stuNumEdit = (EditText)findViewById(R.id.settingUI_stuNum);
-//
-//        submitBtn = (Button)findViewById(R.id.settingUI_submitBtn);
-//
 //        if (schoolList.isEmpty() || item1.isEmpty()){
 //            getSchoolList();
 //        }
 
         ll_back.setOnClickListener(this);
-        headerImageView.setOnClickListener(this);
+//        headerImageView.setOnClickListener(this);
 //        iv_camera.setOnClickListener(this);
         rl_header.setOnClickListener(this);
         rl_name.setOnClickListener(this);
-        rl_phoneNum.setOnClickListener(this);
+//        rl_phoneNum.setOnClickListener(this);
         sexLayout.setOnClickListener(this);
+        collegeLayout.setOnClickListener(this);
+        admissionTimeLayout.setOnClickListener(this);
 //        rl_realNameAuth.setOnClickListener(this);
 //        rl_studentAuth.setOnClickListener(this);
 
@@ -254,57 +341,170 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
                 handler1.sendEmptyMessage(0x123);
             }
         }).start();
-//
-//        new Thread(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                if (item3!= null && !item3.isEmpty() && 0 != item3.size()) {
-//                    handler2.sendEmptyMessage(0x123);
-//                    return;
+
+        personUI_mainLayout.setOnSizeChangedListener(new KeyboardLayout.SizeChangedListener() {
+            @Override
+            public void onChanged(boolean showKeyboard) {
+//                super.onSizeChanged(w, h, oldw, oldh);
+                Log.e("onChanged===", "---" + showKeyboard);
+
+                if(!showKeyboard){
+                    isFirst = true;
+                    nameEdit.setFocusable(false);
+                    submit_nickname();
+                }
+
+//                if (null != mChangedListener && 0 != oldw && 0 != oldh) {
+//                    if (h < oldh) {
+//                        mShowKeyboard = true;
+//                    } else {
+//                        mShowKeyboard = false;
+//                    }
+//                    mChangedListener.onChanged(mShowKeyboard);
+//                    Log.e(TAG, "mShowKeyboard-----      " + mShowKeyboard);
 //                }
-//                if (!item3.isEmpty() || 0 != item3.size()) {
-//                    item3.clear();
-//                }
-//                item3.add("大一");
-//                item3.add("大二");
-//                item3.add("大三");
-//                item3.add("大四");
-//                item3.add("硕士生");
-//                item3.add("博士生");
-//                item3.add("教职工");
-//                item3.add("其他");
-//                handler2.sendEmptyMessage(0x123);
-//            }
-//        }).start();
-//
-//        // 设置默认选中的三级项目
-//        // 监听确定选择按钮
-//        pvOptions.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
-//
-//            @Override
-//            public void onOptionsSelect(int options1, int option2, int options3) {
-//                school = item1.get(options1);
-//                schoolText.setText(school);
-//            }
-//        });
-//
+            }
+        });
+
+
+        // 设置默认选中的三级项目
+        // 监听确定选择按钮
+        pvOptions.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3) {
+                college_id = collegeList.get(options1).getId();
+                college_name = item1.get(options1);
+                collegeText.setText(college_name);
+
+                submit_college_id();
+            }
+        });
+
         pvOptions1.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
 
             @Override
             public void onOptionsSelect(int options1, int option2, int options3) {
-                sex = item2.get(options1);
+                sex = options1 + 1;
                 sexText.setText(item2.get(options1));
+
+                submit_sex();
             }
         });
-//
-//        pvOptions2.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+
+        pvOptions2.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3) {
+//                admission_time = item3.get(options1);
+                admission_time = item3.get(options1) + item5.get(options1).get(option2);
+                admissionTimeText.setText(admission_time);
+
+                submit_admission_time();
+            }
+        });
+
+
+
+
+//        new Thread(new Runnable() {
 //
 //            @Override
-//            public void onOptionsSelect(int options1, int option2, int options3) {
-//                classEdit.setText(item3.get(options1));
+//            public void run() {
+//                //        String string = new SimpleDateFormat("yyyy-MM").format(new Date()).toString();
+//                Calendar calendar = Calendar.getInstance();
+//                int year = calendar.get(Calendar.YEAR);
+//                int month = calendar.get(Calendar.MONTH)+1;
+//                LogUtil.e("admission_time===2", "==="+year+"==="+month);
+//
+//                if(item3.size()>0){
+//                    item3.clear();
+//                }
+//
+//                if(item4.size()>0){
+//                    item4.clear();
+//                }
+//
+//                for (int i=0; i<100*12; i++){
+//                    if(month!=0){
+//                    }else{
+//                        item3.add(year + "年");
+//
+//                        item5.add(item4);
+//
+//                        item4 = new ArrayList<>();
+//
+//                        month = 12;
+//                        year--;
+//                    }
+//
+//                    item4.add(month + "月");
+//
+//                    month--;
+//                }
+//                handler2.sendEmptyMessage(0x123);
+//            }
+//        }).start();
+
+        nameEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+//                nickname = nameEdit.getText().toString();
+                LogUtil.e("onFocusChange===", nameEdit.getText().toString()+"==="+hasFocus);
+
+                if(!hasFocus){
+                    submit_nickname();
+                }
+            }
+        });
+
+        nameEdit.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                LogUtil.e("onTouch===", nameEdit.getText().toString()+"==="+isFirst);
+
+                if(isFirst){
+                    isFirst = false;
+//                    nickname0 = nameEdit.getContext().toString();
+                    nickname0 = nameEdit.getText().toString();
+                }
+
+
+                nameEdit.setFocusable(true);
+                nameEdit.setFocusableInTouchMode(true);
+                nameEdit.requestFocus();
+                return false;
+            }
+        });
+
+//        nameEdit.setShowSoftInputOnFocus(true);
+
+        nameEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                LogUtil.e("onFocusChange===", "==="+hasFocus);
+            }
+        });
+//        nameEdit.setOnKeyBoardStateChangeListener(new ListenerInputView.OnKeyBoardStateChangeListener() {
+//
+//            @Override
+//            public void OnKeyBoardState(int state) {
+//                LogUtil.e("OnKeyBoardState===", "==="+state);
+//                switch (state) {
+//                    //开启
+//                    case 1:
+//                        Toast.makeText(getApplicationContext(), "输入法显示了.", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    //关闭
+//                    case 0:
+//                        Toast.makeText(getApplicationContext(), "变化为正常状态(输入法关闭).", Toast.LENGTH_SHORT).show();
+//                        break;
+//
+//                    default:
+//                        break;
+//                }
+//
 //            }
 //        });
+
 //
 //        // 切换后将EditText光标置于末尾
 //        CharSequence charSequence = stuNumEdit.getText();
@@ -327,31 +527,430 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 //            classLayout.setEnabled(true);
 //            stuNumEdit.setEnabled(true);
 //        }
+
+        admission_time();
+        getUpToken();
+        colleges();
+    }
+
+
+
+//    @Override
+//    public void onResize(int w, int h, int oldw, int oldh) {
+//        //如果第一次初始化
+//        if (oldh == 0) {
+//            return;
+//        }
+//        //如果用户横竖屏转换
+//        if (w != oldw) {
+//            return;
+//        }
+//        if (h < oldh) {
+//            //输入法弹出
+//        } else if (h > oldh) {
+//            //输入法关闭
+////            setCommentViewEnabled(false, false);
+//        }
+////        int distance = h - old;
+////        EventBus.getDefault().post(new InputMethodChangeEvent(distance,mCurrentImageId));
+//    }
+
+    public void getUpToken() {
+        RequestParams params = new RequestParams();
+        HttpHelper.get(context, Urls.uploadtoken, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            LogUtil.e("uploadtoken===", "==="+responseString);
+
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+//                            LogUtil.e("uploadtoken===1", result.getData()+"==="+result.getStatus_code());
+
+                            UpTokenBean bean = JSON.parseObject(result.getData(), UpTokenBean.class);
+
+                            LogUtil.e("uploadtoken===2", bean+"==="+bean.getToken());
+
+                            if (null != bean.getToken()) {
+
+                                upToken = bean.getToken();
+
+//                                SharedPreferencesUrls.getInstance().putString("access_token", "Bearer "+bean.getToken());
+//                                Toast.makeText(context,"恭喜您,获取成功",Toast.LENGTH_SHORT).show();
+//                                scrollToFinishActivity();
+
+//                                uploadImage();
+                            }else{
+                                Toast.makeText(context, result.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+
+            }
+        });
+
+    }
+
+    public void uploadImage() {
+        //定义数据上传结束后的处理动作
+        final UpCompletionHandler upCompletionHandler = new UpCompletionHandler() {
+            @Override
+            public void complete(String key, ResponseInfo info, final JSONObject response) {
+
+//                JSONObject jsonObject = new JSONObject(info.timeStamp);
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        LogUtil.e("uploadImage===0", "==="+response);
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(response.getString("image"));
+
+                            avatar = jsonObject.getString("key");
+//                    imageList.add("\""+imageurl+"\"");
+
+                            LogUtil.e("UpCompletion===", avatar+"===");
+
+//                    if(imageList.size()==imageUrlList.size()){
+//
+//                    }
+
+//                    iv_add_photo.setVisibility(View.GONE);
+
+//                    if (loadingDialog != null && loadingDialog.isShowing()){
+//                        loadingDialog.dismiss();
+//                    }
+
+                            submit_avatar();
+
+                        } catch (JSONException e) {
+
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+
+
+
+
+            }
+        };
+        final UploadOptions uploadOptions = new UploadOptions(null, null, false, new UpProgressHandler() {
+            @Override
+            public void progress(String key, final double percent) {
+                //百分数格式化
+                NumberFormat fmt = NumberFormat.getPercentInstance();
+                fmt.setMaximumFractionDigits(2);//最多两位百分小数，如25.23%
+
+                LogUtil.e("progress===", "==="+fmt.format(percent));
+
+//                tv.setText("图片已经上传:" + fmt.format(percent));
+            }
+        }, new UpCancellationSignal() {
+            @Override
+            public boolean isCancelled() {
+                return false;
+            }
+        });
+        try {
+            //上传图片jjj
+            LogUtil.e("uploadImage===", "==="+upToken);
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        m_myHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                    loadingDialog.setTitle("正在提交");
+                                    loadingDialog.show();
+                                }
+                            }
+                        });
+
+
+                        QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //获取资源文件中的图片
+    public byte[] getByte() {
+//        Resources res = getResources();
+//        Bitmap bm = BitmapFactory.decodeResource(res, R.drawable.bike3);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bm.compress(Bitmap.CompressFormat.PNG, 80, baos);
+        LogUtil.e("getByte===1", upBitmap+"===");
+        upBitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
+//        upBitmap.compress(Bitmap.CompressFormat.PNG, 10, baos);
+        LogUtil.e("getByte===2", upBitmap+"==="+baos.toByteArray().length);
+
+//        QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
+
+        return baos.toByteArray();
+    }
+
+    private void admission_time() {
+
+        Log.e("admission_time===0", "===");
+
+        try{
+//          协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议
+            HttpHelper.get(context, Urls.admission_time, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+                    Log.e("admission_time===fail", throwable.toString()+"==="+responseString);
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+                        Log.e("admission_time===1", "==="+responseString);
+
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        AdmissionTimeBean bean = JSON.parseObject(result.getData(), AdmissionTimeBean.class);
+
+                        long time = (long)bean.getUnix()*1000l;
+//                        long time = bean.getUnix();
+                        String s = new SimpleDateFormat("yyyy-MM").format(time);
+                        int year = Integer.parseInt(s.split("-")[0]);
+                        int month = Integer.parseInt(s.split("-")[1]);
+                        Log.e("admission_time===2", time+"==="+year+"==="+month);
+
+//                        if(item.size()>0){
+//                            item.clear();
+//                        }
+//
+//                        if(item1.size()>0){
+//                            item1.clear();
+//                        }
+//
+//                        for (int i=0; i<bean.getCount()*12; i++){
+//
+////                            Log.e("admission_time===2", year+"==="+month+"==="+item+"==="+item1+"==="+item2);
+//
+//                            if(month!=0){
+//                            }else{
+//                                item.add(year + "年");
+//
+//                                item2.add(item1);
+//
+//                                item1 = new ArrayList<>();
+//
+//                                month = 12;
+//                                year--;
+//                            }
+//
+//                            item1.add(month + "月");
+//
+//                            month--;
+//                        }
+
+                        if(item3.size()>0){
+                            item3.clear();
+                        }
+
+                        if(item4.size()>0){
+                            item4.clear();
+                        }
+
+                        for (int i=0; i<bean.getCount()*12; i++){
+                            if(month!=0){
+                            }else{
+                                item3.add(year + "年");
+
+                                item5.add(item4);
+
+                                item4 = new ArrayList<>();
+
+                                month = 12;
+                                year--;
+                            }
+
+                            item4.add(month + "月");
+
+                            month--;
+                        }
+                        handler2.sendEmptyMessage(0x123);
+
+//                        pvOptions.setPicker(item, item2, true);
+//                        pvOptions.setCyclic(false, false, false);
+//                        pvOptions.setSelectOptions(0, 0, 0);
+//                        pvOptions.setLabels("省", "市");
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                }
+
+
+            });
+        }catch (Exception e){
+            Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void colleges(){
+
+        HttpHelper.get(context, Urls.colleges, null, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Log.e("ria===colleges1", "==="+responseString);
+
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            JSONArray JSONArray = new JSONArray(result.getData());
+//                            if (schoolList.size() != 0 || !schoolList.isEmpty()){
+//                                schoolList.clear();
+//                            }
+                            if (item1.size() != 0 || !item1.isEmpty()){
+                                item1.clear();
+                            }
+                            for (int i = 0; i < JSONArray.length();i++){
+                                CollegeListBean bean = JSON.parseObject(JSONArray.getJSONObject(i).toString(), CollegeListBean.class);
+                                collegeList.add(bean);
+                                item1.add(bean.getName());
+                            }
+                            handler.sendEmptyMessage(0x123);
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+        LogUtil.e("onClick===", v+"===");
+
+//        nameEdit.clearFocus();
+        isFirst = true;
+        nameEdit.setFocusable(false);
+
         switch (v.getId()){
             case R.id.ll_backBtn:
+//                nameEdit.setFocusable(false);
+
                 scrollToFinishActivity();
                 break;
 
-            case R.id.iv_header:
+            case R.id.rl_header:
                 clickPopupWindow();
                 break;
 
-            case R.id.rl_name:
-                UIHelper.goToAct(context, ChangePhoneNumActivity.class);
-                break;
+//            case R.id.rl_name:
+//                nameEdit.setFocusable(true);
+//                nameEdit.setFocusableInTouchMode(true);
+//                nameEdit.requestFocus();
+////                UIHelper.goToAct(context, ChangePhoneNumActivity.class);
+//                break;
 
             case R.id.rl_phoneNum:
-                UIHelper.goToAct(context, ChangePhoneNumActivity.class);
+//                UIHelper.goToAct(context, ChangePhoneNumActivity.class);
                 break;
 
             case R.id.rl_sex:
                 pvOptions1.show();
+                break;
+
+            case R.id.rl_college:
+                if(collegeList.size()==0){
+                    ToastUtil.showMessageApp(context, "暂无学院");
+                }else{
+                    pvOptions.show();
+                }
+
+                break;
+
+            case R.id.rl_admission_time:
+                pvOptions2.show();
                 break;
 
             case R.id.rl_realNameAuth:
@@ -482,7 +1081,8 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
                     if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                         Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                        File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);
+//                        File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);
+                        File file = new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME);
                         if(!file.getParentFile().exists()){
                             file.getParentFile().mkdirs();
                         }
@@ -529,7 +1129,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.e("minef=onActivityResult", requestCode+"==="+resultCode);
+        Log.e("pia=onActivityResult", requestCode+"==="+resultCode);
 
         switch (requestCode) {
             case 10:
@@ -660,58 +1260,58 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 //                    Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_SHORT).show();
 //                }
 
-                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                if (resultCode == RESULT_OK) {
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
 
-                    File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
-                    if (Uri.fromFile(temp) != null) {
-                        urlpath = getRealFilePath(Uri.fromFile(temp));
-                        Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
 
-//                        Uri filepath = Uri.fromFile(temp);
+//                        Log.e("REQUESTCODE_TAKE===0", "==="+data.getData());
 
-                        compress(); //压缩图片
+                        File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
 
-                        headerImageView.setImageBitmap(upBitmap);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                        File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
 
-//                        Glide.with(this).load(upBitmap).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.head_icon).transform(new GlideRoundTransform(this,50)).into(headerImageView);
+                            if (Uri.fromFile(temp) != null) {
+                                urlpath = getRealFilePath(Uri.fromFile(temp));
+                                Log.e("REQUESTCODE_TAKE===", temp+"==="+Uri.fromFile(temp)+"==="+urlpath);
 
-//                        Glide.with(context).load(urlpath).into(headerImageView);
+
+                                File imgUri = new File(GetImagePath.getPath(context, Uri.fromFile(temp)));
+                                Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", imgUri);
+
+                                Log.e("REQUESTCODE_TAKE===1", imgUri+"==="+dataUri);
+
+//                            Uri filepath = Uri.fromFile(temp);
+                                startPhotoZoom(dataUri);
+
+//                            compress(); //压缩图片
 //
-//                        RequestOptions options = new RequestOptions()
-//                                         .centerCrop()
-//                                         .placeholder(R.mipmap.ic_launcher_round) //预加载图片
-//                                         .error(R.drawable.ic_launcher_foreground) //加载失败图片
-//                                         .priority(Priority.HIGH) //优先级
-//                                         .diskCacheStrategy(DiskCacheStrategy.NONE) //缓存
-//                                         .transform(new GlideRoundTransform(5)); //圆角
-//                        Glide.with(context).load(list.get(position).getImage()).apply(options).into(holder.imageView);
-
-//                        Glide.with(this).load(headPortrait)
-//                                .apply(RequestOptions.bitmapTransform(new CircleCrop()))
-//                                .into(personalDetailImg);//圆角
-
-
-                        Log.e("REQUESTCODE_TAKE===3", upBitmap+"===");
-
-//                        uploadImage();
-                    }
-
-//                            File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
-//                            if (Uri.fromFile(temp) != null) {
-//                                urlpath = getRealFilePath(context, Uri.fromFile(temp));
+//                            headerImageView.setImageBitmap(upBitmap);
 //
-//                                Log.e("REQUESTCODE_TAKE===", temp+"==="+urlpath);
+//                            Log.e("REQUESTCODE_TAKE===3", upBitmap+"===");
 //
-//                                if (loadingDialog != null && !loadingDialog.isShowing()) {
-//                                    loadingDialog.setTitle("请稍等");
-//                                    loadingDialog.show();
-//                                }
-//
-//                                new Thread(uploadImageRunnable).start();
+//                            if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                                loadingDialog.setTitle("正在提交");
+//                                loadingDialog.show();
 //                            }
-                }else {
-                    Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+//
+//                            uploadImage();
+
+
+                            }
+                        } else {
+                            urlpath = getRealFilePath(Uri.fromFile(temp));
+                            startPhotoZoom(Uri.fromFile(temp));
+                        }
+
+//                        File imgUri = new File(GetImagePath.getPath(context, data.getData()));
+
+                    }else {
+                        Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+                    }
                 }
+
+
 
                 break;
             case REQUESTCODE_CUTTING:// 取得裁剪后的图片
@@ -740,20 +1340,35 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
         options.inJustDecodeBounds = false; // 计算好压缩比例后，这次可以去加载原图了
         options.inSampleSize = inSampleSize; // 设置为刚才计算的压缩比例
         upBitmap = BitmapFactory.decodeFile(urlpath, options); // 解码文件
+
+//        ByteArrayOutputStream bos=new ByteArrayOutputStream();
+//        upBitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos);//参数100表示不压缩
     }
 
     private void setPicToView(Intent data) {
-        Bundle extras = data.getExtras();
-        if (imageUri != null) {
-            urlpath = getRealFilePath(imageUri);
+        m_myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+//                Bundle extras = data.getExtras();
+                if (imageUri != null) {
+                    urlpath = getRealFilePath(imageUri);    ///sdcard/temp.jpg
 //            if (loadingDialog != null && !loadingDialog.isShowing()) {
 //                loadingDialog.setTitle("请稍等");
 //                loadingDialog.show();
 //            }
 //            new Thread(uploadImageRunnable).start();
 
-            Bitmap bitmap = BitmapFactory.decodeFile(urlpath);
-            headerImageView.setImageBitmap(bitmap);
+//            upBitmap = BitmapFactory.decodeFile(urlpath);
+
+                    compress();
+
+                    headerImageView.setImageBitmap(upBitmap);
+
+                    Log.e("setPicToView===", imageUri+"==="+urlpath+"==="+upBitmap);
+
+
+
+                    uploadImage();
 
 //            Glide.with(this).load(bitmap).transform(new GlideRoundTransform(context,50)).into(headerImageView);
 
@@ -762,16 +1377,54 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 //            urlpath  = FileUtil.getFilePathByUri(context, data.getData());
 //            urlpath  = FileUtil.getFilePathByUri(context, extras);
 
-            Log.e("minef===setPicToView", data.getData()+"==="+urlpath);
+                    Log.e("pia===setPicToView", "==="+urlpath);
 
 //            compress(); //压缩图片
 //            headerImageView.setImageBitmap(upBitmap);
 
-        }
+                }
+            }
+        });
+
 
     }
 
+//    File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
+
+    public void startPhotoZoom2(Uri uri) {
+        Log.e("pia=startPhotoZoom", "==="+uri);
+
+        if (uri == null) {
+            return;
+        }
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            imageUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME));
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        }
+
+        Log.e("pia=startPhotoZoom", imageUri + "===" + uri);
+
+        intent.setDataAndType(uri, "image/*");
+        // crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        // outputX outputY 是裁剪图片宽高
+        intent.putExtra("outputX", 200);
+        intent.putExtra("outputY", 200);
+        intent.putExtra("scale", true);
+        intent.putExtra("return-data", false);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        startActivityForResult(intent, REQUESTCODE_CUTTING);
+    }
+
     public void startPhotoZoom(Uri uri) {
+        Log.e("pia=startPhotoZoom", Build.VERSION.SDK_INT+"==="+uri);
+
         if (uri == null) {
             return;
         }
@@ -794,6 +1447,8 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
         intent.putExtra("outputX", 600);
         intent.putExtra("outputY", 600);
         intent.putExtra("scale", true);
+        intent.putExtra("scaleUpIfNeeded", true);// 去黑边
+        intent.putExtra("circleCrop", true);
         intent.putExtra("return-data", false);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
@@ -828,110 +1483,177 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
         return data;
     }
 
-    private void submit(String uid,String access_token,String realname,String nickname,
-                        String sex,String school,String grade,String stunum){
+//    private void submit(String avatar, String nickname, int sex, int college_id, String admission_time){
+    private void submit_avatar(){
+        LogUtil.e("pia===submit", avatar+"==="+nickname+"==="+sex+"==="+college_id+"==="+admission_time);
+
+
 
         RequestParams params = new RequestParams();
-        params.put("uid",uid);
-        params.put("access_token",access_token);
-        params.put("realname",realname);
-        params.put("nickname",nickname);
-        params.put("sex",sex);
-        params.put("school",school);
-        params.put("grade",grade);
-        params.put("stunum",stunum);
-        HttpHelper.post(context, Urls.editUserinfo, params, new TextHttpResponseHandler() {
+        params.put("avatar", avatar);   //TODO  没有头像链接获取
+//        params.put("nickname", nickname);
+//        params.put("sex", sex);
+//        params.put("college_id", college_id);   //TODO  没同时更新college_name
+//        params.put("admission_time", admission_time);
+
+        submit(params);
+    }
+
+    private void submit_nickname(){
+        LogUtil.e("pia===submit", avatar+"==="+nickname+"==="+sex+"==="+college_id+"==="+admission_time);
+
+        RequestParams params = new RequestParams();
+//        params.put("avatar", avatar);   //TODO  没有头像链接获取
+        params.put("nickname", nameEdit.getText().toString());
+//        params.put("sex", sex);
+//        params.put("college_id", college_id);   //TODO  没同时更新college_name
+//        params.put("admission_time", admission_time);
+        submit(params);
+    }
+
+    private void submit_sex(){
+        LogUtil.e("pia===submit", avatar+"==="+nickname+"==="+sex+"==="+college_id+"==="+admission_time);
+
+        RequestParams params = new RequestParams();
+//        params.put("avatar", avatar);   //TODO  没有头像链接获取
+//        params.put("nickname", nickname);
+        params.put("sex", sex);
+//        params.put("college_id", college_id);   //TODO  没同时更新college_name
+//        params.put("admission_time", admission_time);
+        submit(params);
+    }
+
+    private void submit_college_id(){
+        LogUtil.e("pia===submit", avatar+"==="+nickname+"==="+sex+"==="+college_id+"==="+admission_time);
+
+        RequestParams params = new RequestParams();
+//        params.put("avatar", avatar);   //TODO  没有头像链接获取
+//        params.put("nickname", nickname);
+//        params.put("sex", sex);
+        params.put("college_id", college_id);   //TODO  没同时更新college_name
+//        params.put("admission_time", admission_time);
+        submit(params);
+    }
+
+    private void submit_admission_time(){
+        LogUtil.e("pia===submit", avatar+"==="+nickname+"==="+sex+"==="+college_id+"==="+admission_time);
+
+        RequestParams params = new RequestParams();
+//        params.put("avatar", avatar);   //TODO  没有头像链接获取
+//        params.put("nickname", nickname);
+//        params.put("sex", sex);
+//        params.put("college_id", college_id);   //TODO  没同时更新college_name
+        params.put("admission_time", admission_time);
+
+        submit(params);
+    }
+
+
+    private void submit(RequestParams params){
+        HttpHelper.put(context, Urls.user, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在提交");
-                    loadingDialog.show();
-                }
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (loadingDialog != null && !loadingDialog.isShowing()) {
+                            loadingDialog.setTitle("正在提交");
+                            loadingDialog.show();
+                        }
+                    }
+                });
+
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
+            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                        UIHelper.ToastError(context, throwable.toString());
+                    }
+                });
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        Toast.makeText(context,"恭喜您,信息修改成功",Toast.LENGTH_SHORT).show();
-                        scrollToFinishActivity();
-                    } else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            Log.e("pia===submit1", "==="+responseString);
+
+                            Toast.makeText(context, result.getMessage(),Toast.LENGTH_SHORT).show();
+
+                            if(result.getStatus_code()!=200){
+                                nameEdit.setText(nickname0);
+                            }
+
+                            user();
+                        } catch (Exception e) {
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+
+                            e.printStackTrace();
+                        }
+
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
+                });
+
             }
         });
     }
 
+    public void user() {
+        Log.e("pia===user", "===");
 
-    private void initHttp(){
+        HttpHelper.get(context, Urls.user, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
 
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (uid != null && !"".equals(uid) && access_token != null && !"".equals(access_token)){
-            RequestParams params = new RequestParams();
-            params.put("uid",uid);
-            params.put("access_token",access_token);
-            HttpHelper.get(context, Urls.userIndex, params, new TextHttpResponseHandler() {
-                @Override
-                public void onStart() {
-                    if (loadingDialog != null && !loadingDialog.isShowing()) {
-                        loadingDialog.setTitle("正在加载");
-                        loadingDialog.show();
-                    }
-                }
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
-                }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon(throwable.toString());
+            }
 
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                        if (result.getFlag().equals("Success")) {
-                            UserIndexBean bean = JSON.parseObject(result.getData(), UserIndexBean.class);
-                            nameEdit.setText(bean.getRealname());
-                            phoneNum.setText(bean.getTelphone());
-//                            nickNameEdit.setText(bean.getNickname());
-//                            sexText.setText(bean.getSex());
-//                            schoolText.setText(bean.getSchool());
-//                            classEdit.setText(bean.getGrade());
-//                            stuNumEdit.setText(bean.getStunum());
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Log.e("minef===initHttp1", "==="+responseString);
 
-                            sex = bean.getSex();
-                            school = bean.getSchool();
-                        } else {
-                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            UserBean bean = JSON.parseObject(result.getData(), UserBean.class);
+                            is_full = bean.getIs_full();
+
+                            if(is_full==0){
+                                ll_tip.setVisibility(View.VISIBLE);
+                            }else{
+                                ll_tip.setVisibility(View.GONE);
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
                     }
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                }
-            });
-        }else {
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
-            UIHelper.goToAct(context,LoginActivity.class);
-        }
+                });
+
+            }
+        });
     }
 
 
@@ -994,9 +1716,21 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            submit();
+            nameEdit.setFocusable(false);
+
             scrollToFinishActivity();
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (loadingDialog != null && loadingDialog.isShowing()){
+            loadingDialog.dismiss();
+        }
+
+        super.onDestroy();
     }
 }

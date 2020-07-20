@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.qimate.bike.core.widget.KeyboardLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:melove="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/personUI_mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/personUI_mainLayout"
     android:fitsSystemWindows="true"
     android:clipToPadding="true"
     android:background="@color/ui_main">
@@ -11,9 +12,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        >
 
         <LinearLayout
+            android:id="@+id/ll_tip"
             android:layout_width="match_parent"
             android:layout_height="28dp"
             android:gravity="center"
@@ -119,15 +124,26 @@
                         android:gravity="center_vertical">
 
                         <de.hdodenhof.circleimageview.CircleImageView
+                            xmlns:circleimageview="http://schemas.android.com/apk/res-auto"
                             android:id="@+id/iv_header"
                             android:layout_width="38dp"
                             android:layout_height="38dp"
                             android:src="@drawable/head_icon"
-                            android:layout_centerInParent="true"/>
+                            android:layout_alignParentRight="true"
+                            circleimageview:civ_fill_color="@android:color/transparent"
+                            />
+
+<!--                        android:background="@null"-->
+
+<!--                        circleimageview:civ_border_color="@android:color/transparent"-->
+<!--                        circleimageview:civ_border_overlay="false"-->
+<!--                        circleimageview:civ_border_width="0dp"-->
+
 
                         <ImageView
                             android:layout_width="8dp"
                             android:layout_height="14dp"
+                            android:layout_marginRight="5dp"
                             android:src="@drawable/yjt4"
                             android:layout_marginLeft="9dp"/>
                     </LinearLayout>
@@ -153,24 +169,51 @@
                         android:layout_centerVertical="true"/>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
                         android:orientation="horizontal"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical|right">
 
-                        <TextView
+<!--                        <EditText-->
+<!--                            android:id="@+id/settingUI_name"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="@null"-->
+<!--                            android:textSize="@dimen/sp18"-->
+<!--                            android:textColor="#666666"-->
+<!--                            android:focusable="false"-->
+<!--                            android:hint="请输入昵称"-->
+<!--                            android:gravity="right"-->
+<!--                            android:maxLength = "8"-->
+<!--                            android:text=""/>-->
+
+                        <cn.qimate.bike.core.widget.ListenerInputView
                             android:id="@+id/settingUI_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:background="@null"
                             android:textSize="@dimen/sp18"
                             android:textColor="#666666"
-                            android:text="骑天大圣"/>
+                            android:focusable="false"
+                            android:hint="请输入昵称"
+                            android:gravity="right"
+                            android:maxLength = "8"
+
+                            android:text=""/>
+
+<!--                        <cn.qimate.bike.core.widget.ListenerInputView-->
+<!--                            android:id="@+id/settingUI_name"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:layout_width="2dp"-->
+<!--                            android:maxLength = "8"/>-->
 
                         <ImageView
                             android:layout_width="8dp"
                             android:layout_height="14dp"
+                            android:layout_marginRight="5dp"
                             android:src="@drawable/yjt4"
                             android:layout_marginLeft="9dp"/>
                     </LinearLayout>
@@ -224,7 +267,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/sp16"
                             android:textColor="#666666"
-                            android:text="135****1123"/>
+                            android:text=""/>
 
                     </LinearLayout>
                 </RelativeLayout>
@@ -262,21 +305,154 @@
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/sp16"
                             android:textColor="#666666"
-                            android:text="请选择性别"/>
+                            android:gravity="right"
+                            android:hint="请选择性别"/>
 
                         <ImageView
                             android:layout_width="8dp"
                             android:layout_height="14dp"
+                            android:layout_marginRight="5dp"
                             android:src="@drawable/yjt4"
                             android:layout_marginLeft="9dp"/>
                     </LinearLayout>
                 </RelativeLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/line_height"
-                    android:background="#E5E5E5"/>
+                <LinearLayout
+                    android:id="@+id/ll_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/line_height"
+                        android:background="#E5E5E5"/>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_school"
+                        android:layout_width="match_parent"
+                        android:layout_height="58dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#333333"
+                            android:textSize="@dimen/sp16"
+                            android:text="学校"
+                            android:layout_centerVertical="true"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="22dp"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/tv_school"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/sp16"
+                                android:textColor="#666666"
+                                android:text=""/>
+
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/line_height"
+                        android:background="#E5E5E5"/>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_college"
+                        android:layout_width="match_parent"
+                        android:layout_height="58dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#333333"
+                            android:textSize="@dimen/sp16"
+                            android:text="学院"
+                            android:layout_centerVertical="true"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/tv_college"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/sp16"
+                                android:textColor="#666666"
+                                android:gravity="right"
+                                android:hint="请选择学院"/>
+
+                            <ImageView
+                                android:layout_width="8dp"
+                                android:layout_height="14dp"
+                                android:layout_marginRight="5dp"
+                                android:src="@drawable/yjt4"
+                                android:layout_marginLeft="9dp"/>
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/line_height"
+                        android:background="#E5E5E5"/>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_admission_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="58dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#333333"
+                            android:textSize="@dimen/sp16"
+                            android:text="入学时间"
+                            android:layout_centerVertical="true"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/tv_admission_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/sp16"
+                                android:textColor="#666666"
+                                android:gravity="right"
+                                android:hint="请选择入学时间"/>
+
+                            <ImageView
+                                android:layout_width="8dp"
+                                android:layout_height="14dp"
+                                android:layout_marginRight="5dp"
+                                android:src="@drawable/yjt4"
+                                android:layout_marginLeft="9dp"/>
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                </LinearLayout>
 
 
 
@@ -409,7 +585,7 @@
     <include
         layout="@layout/ui_main_task"/>
 
-</RelativeLayout>
+</cn.qimate.bike.core.widget.KeyboardLayout>
 
 
 

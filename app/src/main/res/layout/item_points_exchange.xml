@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+    
+    <LinearLayout
+        android:id="@+id/item_ll_point_exchange"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="0dp"
+
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/item_iv_point_exchange"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:src="@drawable/points_exchange_bg"/>
+
+        <TextView
+            android:id="@+id/item_tv_point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:gravity="center"
+            android:text="12000积分"
+            android:textColor="#FFA201"
+            android:textSize="@dimen/sp10"/>
+
+        <TextView
+            android:id="@+id/item_tv_exchange"
+            android:layout_width="69dp"
+            android:layout_height="24dp"
+            android:background="@drawable/points_exchange_bcg"
+            android:gravity="center"
+            android:text="立即兑换"
+            android:textColor="#FD555B"
+            android:textSize="@dimen/sp12"/>
+
+    </LinearLayout>
+
+</LinearLayout>

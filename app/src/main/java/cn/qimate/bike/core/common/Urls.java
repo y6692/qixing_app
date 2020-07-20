@@ -14,7 +14,7 @@ public class Urls {
 //	public static String host2 = HTTP + "newmapi.7mate.cn/api";	    //https://newmapi.7mate.cn/api
     public static String host2 = HTTP + "test-mapi.7mate.cn/api";
 //	public static String host2 = HTTP + "dev-mapi.7mate.cn/api";
-//	public static String host2 = HTTP + "testnewmapi.7mate.cn/api";
+
 //	public static String host = HTTP + "web1.7mate.cn";
 //	public static String host = HTTP + "test.7mate.cn";
 //	public static String host = HTTP + "uat.7mate.cn";
@@ -87,7 +87,7 @@ public class Urls {
 	public static String parkings = host2 + "/parkings";
 	//人工客服接口
 	public static String service_phones = host2 + "/service/phones";
-	//用户信息接口
+	//GET:用户信息接口	PUT:更新用户信息
 	public static String user = host2 + "/user";
 	//订单/账单列表接口
 	public static String orders = host2 + "/orders";
@@ -122,6 +122,9 @@ public class Urls {
 
 	//网络锁(自动还车场景)临时上锁接口
 	public static String temp_lock = host2 + "/order/temp_lock";
+
+	//用户相关 - 学院列表
+	public static String colleges = host2 + "/user/school/colleges";
 
 //	http://testnewmapi.7mate.cn/api/order/temp_lock
 //	http://testnewmapi.7mate.cn/api/depositprice

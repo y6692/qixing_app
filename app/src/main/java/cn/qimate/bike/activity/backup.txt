@@ -1,3 +1,6 @@
+
+//	public static String host2 = HTTP + "testnewmapi.7mate.cn/api";
+
 <!--<cn.qimate.bike.core.widget.MLImageView-->
 <!--android:id="@+id/iv_header"-->
 <!--android:layout_width="100dp"-->
@@ -14,3 +17,45 @@
 <!--android:layout_height="100dp"-->
 <!--android:src="@drawable/head_icon"-->
 <!--android:layout_centerInParent="true"/>-->
+
+//
+//        new Thread(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                if (item3!= null && !item3.isEmpty() && 0 != item3.size()) {
+//                    handler2.sendEmptyMessage(0x123);
+//                    return;
+//                }
+//                if (!item3.isEmpty() || 0 != item3.size()) {
+//                    item3.clear();
+//                }
+//                item3.add("大一");
+//                item3.add("大二");
+//                item3.add("大三");
+//                item3.add("大四");
+//                item3.add("硕士生");
+//                item3.add("博士生");
+//                item3.add("教职工");
+//                item3.add("其他");
+//                handler2.sendEmptyMessage(0x123);
+//            }
+//        }).start();
+
+
+//                        Glide.with(this).load(upBitmap).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.head_icon).transform(new GlideRoundTransform(this,50)).into(headerImageView);
+
+//                        Glide.with(context).load(urlpath).into(headerImageView);
+//
+//                        RequestOptions options = new RequestOptions()
+//                                         .centerCrop()
+//                                         .placeholder(R.mipmap.ic_launcher_round) //预加载图片
+//                                         .error(R.drawable.ic_launcher_foreground) //加载失败图片
+//                                         .priority(Priority.HIGH) //优先级
+//                                         .diskCacheStrategy(DiskCacheStrategy.NONE) //缓存
+//                                         .transform(new GlideRoundTransform(5)); //圆角
+//                        Glide.with(context).load(list.get(position).getImage()).apply(options).into(holder.imageView);
+
+//                        Glide.with(this).load(headPortrait)
+//                                .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+//                                .into(personalDetailImg);//圆角
