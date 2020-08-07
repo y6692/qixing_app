@@ -34,10 +34,10 @@
 
                     <ImageView
                         android:id="@+id/mainUI_title_backBtn"
-                        android:layout_width="23dp"
-                        android:layout_height="17dp"
+                        android:layout_width="24dp"
+                        android:layout_height="16dp"
                         android:layout_marginLeft="30dp"
-                        android:src="@drawable/back_image"/>
+                        android:src="@drawable/back"/>
 
                     <TextView
                         android:visibility="gone"
@@ -85,10 +85,11 @@
                     android:textColor="@color/white"/>
 
                 <TextView
+                    android:id="@+id/tv_update_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="更新：2020/06/01 22:00"
+                    android:text=""
                     android:textSize="10sp"
                     android:textColor="@color/white"/>
 
@@ -145,30 +146,32 @@
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:id="@+id/personUI_userName"
+                        android:id="@+id/tv_nickname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:textSize="@dimen/sp18"
                         android:textColor="#333333"
-                        android:text="123"/>
+                        android:text=""/>
 
                     <ImageView
                         android:id="@+id/iv_ranking"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginLeft="11dp"
+                        android:layout_centerVertical="true"
                         android:src="@drawable/ranking_icon"/>
 
                     <TextView
-                        android:id="@+id/personUI_roleName"
+                        android:id="@+id/tv_rank"
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
                         android:layout_marginLeft="3dp"
+                        android:layout_centerVertical="true"
                         android:textStyle="bold"
                         android:textSize="@dimen/sp14"
                         android:textColor="#333333"
-                        android:text="NO.100+"/>
+                        android:text=""/>
 
                 </LinearLayout>
 
@@ -185,8 +188,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="31dp"
-        android:layout_marginLeft="@dimen/dp30"
-        android:layout_marginRight="@dimen/dp30"
+
         android:layout_below="@id/mainUI_titleLayout">
 
         <!---->
@@ -195,6 +197,8 @@
             android:id="@+id/ll_2"
             android:layout_width="match_parent"
             android:layout_height="31dp"
+            android:layout_marginLeft="@dimen/dp30"
+            android:layout_marginRight="@dimen/dp30"
             android:layout_marginTop="7dp"
             android:background="@drawable/block_ranking_bcg0"
             android:orientation="vertical">
@@ -260,9 +264,129 @@
             android:id="@+id/ll_3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dp30"
+            android:layout_marginRight="@dimen/dp30"
+            android:layout_marginBottom="28dp"
             android:layout_below="@id/ll_2"
             android:background="#ffffff"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:layout_marginBottom="4dp"
+                android:background="#ffffff"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="20dp"
+                    android:layout_weight="1.1"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#666666"
+                    android:gravity="center"
+                    android:text="排名"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="20dp"
+                    android:layout_weight="8"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#666666"
+                    android:gravity="center"
+                    android:text="用户"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="20dp"
+                    android:layout_weight="2.2"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#666666"
+                    android:gravity="right"
+                    android:text="骑行次数"/>
+
+            </LinearLayout>
+
+
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="12dp"-->
+<!--                android:background="#ffffff"-->
+<!--                android:orientation="horizontal">-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="28"-->
+<!--                    android:gravity="center"-->
+<!--                    >-->
+
+<!--                    <ImageView-->
+<!--                        android:layout_width="16dp"-->
+<!--                        android:layout_height="23dp"-->
+<!--                        android:gravity="center"-->
+<!--                        android:src="@drawable/gold_medal_icon"/>-->
+
+<!--                    <TextView-->
+<!--                        android:visibility="gone"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:textSize="@dimen/sp14"-->
+<!--                        android:textColor="#666666"-->
+<!--                        android:gravity="center"-->
+<!--                        android:text="100"/>-->
+
+<!--                </LinearLayout>-->
+
+<!--&lt;!&ndash;                <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_height="20dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_weight="231"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:textSize="@dimen/sp14"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:textColor="#666666"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:gravity="center"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:text="用户"/>&ndash;&gt;-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="231"-->
+<!--                    android:gravity="center_vertical"-->
+<!--                    >-->
+
+<!--                    <de.hdodenhof.circleimageview.CircleImageView-->
+<!--                        android:id="@+id/personUI_header"-->
+<!--                        android:layout_width="30dp"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:layout_marginLeft="7dp"-->
+<!--                        android:src="@drawable/head_icon"-->
+<!--                        android:layout_centerInParent="true"/>-->
+
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="20dp"-->
+<!--                        android:layout_marginLeft="12dp"-->
+<!--                        android:textSize="@dimen/sp14"-->
+<!--                        android:textColor="#333333"-->
+<!--                        android:gravity="center"-->
+<!--                        android:text="我的昵称是什么"/>-->
+<!--                </LinearLayout>-->
+
+
+<!--                <TextView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="56"-->
+<!--                    android:textSize="@dimen/sp14"-->
+<!--                    android:textColor="#333333"-->
+<!--                    android:gravity="center_vertical|right"-->
+<!--                    android:text="100"/>-->
+
+<!--            </LinearLayout>-->
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/vp"
@@ -271,7 +395,22 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/ll_tip"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:background="#FD555B">
 
+            <TextView
+                android:id="@+id/tv_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="恭喜您，获得XX头衔~"
+                android:textSize="12sp"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
 
     </RelativeLayout>
 

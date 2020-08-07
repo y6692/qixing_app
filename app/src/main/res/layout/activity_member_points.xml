@@ -7,18 +7,32 @@
     android:clipToPadding="true"
     android:orientation="vertical">
 
-    <!--<include-->
-        <!--layout="@layout/ui_main_title"/>-->
+<!--    <include-->
+<!--        layout="@layout/ui_main_title"/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/member_points_detail_bg2">
+        android:background="@drawable/member_points_detail_bg2"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="30dp"
+                android:src="@drawable/back"/>
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="60dp"
             android:layout_marginLeft="30dp"
             android:orientation="horizontal">
 
@@ -37,11 +51,12 @@
                 android:src="@drawable/gold3_icon"/>
 
             <TextView
+                android:id="@+id/tv_user_points"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_gravity="center_vertical"
-                android:text="20"
+                android:text=""
                 android:textSize="20sp"
                 android:textColor="#FBE945"/>
 
@@ -59,19 +74,21 @@
 
     </LinearLayout>
 
+
+
     <cn.qimate.bike.core.widget.MyScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             >
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="166dp"
                 android:layout_marginLeft="30dp"
@@ -98,6 +115,8 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/ll_signin"
                 android:layout_width="match_parent"
                 android:layout_height="190dp"
                 android:layout_marginTop="24dp"
@@ -140,11 +159,12 @@
                             android:layout_centerVertical="true"/>
 
                         <TextView
+                            android:id="@+id/tv_current_signin"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#FD555B"
                             android:textSize="@dimen/sp12"
-                            android:text="1"
+                            android:text="0"
                             android:layout_centerVertical="true"/>
 
                         <TextView
@@ -157,6 +177,202 @@
 
                     </LinearLayout>
                 </RelativeLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tv_points_signin1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="+1"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp12"/>
+
+                        <ImageView
+                            android:id="@+id/iv_is_signin1"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginTop="6dp"
+                            android:src="@drawable/signin_yes_icon"/>
+
+                        <TextView
+                            android:id="@+id/tv_time_signin1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:gravity="center"
+                            android:text="06.07"
+                            android:textColor="#666666"
+                            android:textSize="@dimen/sp12"/>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="4dp"
+                        android:src="@drawable/line_icon"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tv_points_signin2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="+1"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp12"/>
+
+                        <ImageView
+                            android:id="@+id/iv_is_signin2"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginTop="6dp"
+                            android:src="@drawable/signin_no_icon"/>
+
+                        <TextView
+                            android:id="@+id/tv_time_signin2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:gravity="center"
+                            android:text="06.07"
+                            android:textColor="#666666"
+                            android:textSize="@dimen/sp12"/>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="4dp"
+                        android:src="@drawable/line_icon"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tv_points_signin3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="+1"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp12"/>
+
+                        <ImageView
+                            android:id="@+id/iv_is_signin3"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginTop="6dp"
+                            android:src="@drawable/signin_no_icon"/>
+
+                        <TextView
+                            android:id="@+id/tv_time_signin3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:gravity="center"
+                            android:text="06.07"
+                            android:textColor="#666666"
+                            android:textSize="@dimen/sp12"/>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="4dp"
+                        android:src="@drawable/line_icon"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tv_points_signin4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="+1"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp12"/>
+
+                        <ImageView
+                            android:id="@+id/iv_is_signin4"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginTop="6dp"
+                            android:src="@drawable/signin_no_icon"/>
+
+                        <TextView
+                            android:id="@+id/tv_time_signin4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:gravity="center"
+                            android:text="06.07"
+                            android:textColor="#666666"
+                            android:textSize="@dimen/sp12"/>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="4dp"
+                        android:src="@drawable/line_icon"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tv_points_signin5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="+1"
+                            android:textColor="#FD555B"
+                            android:textSize="@dimen/sp12"/>
+
+                        <ImageView
+                            android:id="@+id/iv_is_signin5"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginTop="6dp"
+                            android:src="@drawable/signin_no_icon"/>
+
+                        <TextView
+                            android:id="@+id/tv_time_signin5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:gravity="center"
+                            android:text="06.07"
+                            android:textColor="#666666"
+                            android:textSize="@dimen/sp12"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -179,11 +395,14 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/ll_oneoff_mission"
                 android:layout_width="match_parent"
-                android:layout_height="166dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
+                android:paddingBottom="18dp"
                 android:orientation="vertical"
                 android:background="@drawable/back_bd5">
 
@@ -205,13 +424,13 @@
                         android:layout_centerVertical="true"/>
 
                     <LinearLayout
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
                         android:gravity="center_vertical">
-
 
                         <ImageView
                             android:layout_width="12dp"
@@ -222,7 +441,8 @@
 
 
                 <RelativeLayout
-                    android:id="@+id/rl_deposit_free_mission"
+                    android:visibility="gone"
+                    android:id="@+id/rl_task_cert"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
@@ -238,6 +458,7 @@
                         android:gravity="center_vertical">
 
                         <ImageView
+                            android:id="@+id/iv_task_cert"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:src="@drawable/auth2_icon"/>
@@ -251,19 +472,21 @@
                             android:gravity="center_vertical">
 
                             <TextView
+                                android:id="@+id/tv_task_title_cert"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/sp14"
-                                android:text="完成免押金认证"
+                                android:text=""
                                 android:layout_centerVertical="true"/>
 
                             <TextView
+                                android:id="@+id/tv_task_desc_cert"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#666666"
                                 android:textSize="@dimen/sp10"
-                                android:text="完成认证+5积分"
+                                android:text=""
                                 android:layout_centerVertical="true"/>
 
                         </LinearLayout>
@@ -279,19 +502,20 @@
                         android:gravity="center_vertical">
 
                         <TextView
-                            android:id="@+id/tv_deposit_free_mission"
+                            android:id="@+id/tv_task_process_cert"
                             android:layout_width="60dp"
                             android:layout_height="24dp"
                             android:background="@drawable/points_exchange_bcg"
                             android:gravity="center"
-                            android:text="做任务"
+                            android:text=""
                             android:textColor="#FD555B"
                             android:textSize="@dimen/sp12"/>
                     </LinearLayout>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_person_info_mission"
+                    android:visibility="gone"
+                    android:id="@+id/rl_task_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -307,6 +531,7 @@
                         android:gravity="center_vertical">
 
                         <ImageView
+                            android:id="@+id/iv_task_info"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:src="@drawable/person_info_icon"/>
@@ -320,19 +545,21 @@
                             android:gravity="center_vertical">
 
                             <TextView
+                                android:id="@+id/tv_task_title_info"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/sp14"
-                                android:text="完成个人信息"
+                                android:text=""
                                 android:layout_centerVertical="true"/>
 
                             <TextView
+                                android:id="@+id/tv_task_desc_info"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#666666"
                                 android:textSize="@dimen/sp10"
-                                android:text="完成个人信息填写+5积分"
+                                android:text=""
                                 android:layout_centerVertical="true"/>
 
                         </LinearLayout>
@@ -348,12 +575,12 @@
                         android:gravity="center_vertical">
 
                         <TextView
-                            android:id="@+id/tv_person_info_mission"
+                            android:id="@+id/tv_task_process_info"
                             android:layout_width="60dp"
                             android:layout_height="24dp"
                             android:background="@drawable/points_exchange_bcg"
                             android:gravity="center"
-                            android:text="做任务"
+                            android:text=""
                             android:textColor="#FD555B"
                             android:textSize="@dimen/sp12"/>
                     </LinearLayout>
@@ -362,11 +589,14 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/ll_daily_mission"
                 android:layout_width="match_parent"
-                android:layout_height="416dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
+                android:paddingBottom="18dp"
                 android:orientation="vertical"
                 android:background="@drawable/back_bd5">
 
@@ -388,6 +618,7 @@
                         android:layout_centerVertical="true"/>
 
                     <LinearLayout
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -403,7 +634,8 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_everyday_signin_mission"
+                    android:visibility="gone"
+                    android:id="@+id/rl_task_signin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
@@ -419,6 +651,7 @@
                         android:gravity="center_vertical">
 
                         <ImageView
+                            android:id="@+id/iv_task_signin"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:src="@drawable/everyday_signin_icon"/>
@@ -432,19 +665,21 @@
                             android:gravity="center_vertical">
 
                             <TextView
+                                android:id="@+id/tv_task_title_signin"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/sp14"
-                                android:text="每日签到"
+                                android:text="签到"
                                 android:layout_centerVertical="true"/>
 
                             <TextView
+                                android:id="@+id/tv_task_desc_signin"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#666666"
                                 android:textSize="@dimen/sp10"
-                                android:text="每次签到获得1积分，上限5积分"
+                                android:text=""
                                 android:layout_centerVertical="true"/>
 
                         </LinearLayout>
@@ -460,19 +695,20 @@
                         android:gravity="center_vertical">
 
                         <TextView
-                            android:id="@+id/tv_everyday_signin_mission"
+                            android:id="@+id/tv_task_process_signin"
                             android:layout_width="60dp"
                             android:layout_height="24dp"
                             android:background="@drawable/points_exchange_finish_bcg"
                             android:gravity="center"
-                            android:text="已完成"
+                            android:text=""
                             android:textColor="@color/white"
                             android:textSize="@dimen/sp12"/>
                     </LinearLayout>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_bike_mission"
+                    android:visibility="gone"
+                    android:id="@+id/rl_task_cycling_bike"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -488,6 +724,7 @@
                         android:gravity="center_vertical">
 
                         <ImageView
+                            android:id="@+id/iv_task_cycling_bike"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:src="@drawable/bike2_icon"/>
@@ -501,19 +738,21 @@
                             android:gravity="center_vertical">
 
                             <TextView
+                                android:id="@+id/tv_task_title_cycling_bike"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/sp14"
-                                android:text="骑行单车"
+                                android:text="单车"
                                 android:layout_centerVertical="true"/>
 
                             <TextView
+                                android:id="@+id/tv_task_desc_cycling_bike"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#666666"
                                 android:textSize="@dimen/sp10"
-                                android:text="每次骑行获得2积分"
+                                android:text=""
                                 android:layout_centerVertical="true"/>
 
                         </LinearLayout>
@@ -529,19 +768,20 @@
                         android:gravity="center_vertical">
 
                         <TextView
-                            android:id="@+id/tv_bike_mission"
+                            android:id="@+id/tv_task_process_cycling_bike"
                             android:layout_width="60dp"
                             android:layout_height="24dp"
                             android:background="@drawable/points_exchange_bcg"
                             android:gravity="center"
-                            android:text="做任务"
+                            android:text=""
                             android:textColor="#FD555B"
                             android:textSize="@dimen/sp12"/>
                     </LinearLayout>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_ebike_mission"
+                    android:visibility="gone"
+                    android:id="@+id/rl_task_cycling_ebike"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -557,6 +797,7 @@
                         android:gravity="center_vertical">
 
                         <ImageView
+                            android:id="@+id/iv_task_cycling_ebike"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:src="@drawable/ebike2_icon"/>
@@ -570,19 +811,21 @@
                             android:gravity="center_vertical">
 
                             <TextView
+                                android:id="@+id/tv_task_title_cycling_ebike"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/sp14"
-                                android:text="骑行助力车"
+                                android:text="助力车"
                                 android:layout_centerVertical="true"/>
 
                             <TextView
+                                android:id="@+id/tv_task_desc_cycling_ebike"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#666666"
                                 android:textSize="@dimen/sp10"
-                                android:text="每次骑行获得3积分"
+                                android:text=""
                                 android:layout_centerVertical="true"/>
 
                         </LinearLayout>
@@ -598,19 +841,20 @@
                         android:gravity="center_vertical">
 
                         <TextView
-                            android:id="@+id/tv_ebike_mission"
+                            android:id="@+id/tv_task_process_cycling_ebike"
                             android:layout_width="60dp"
                             android:layout_height="24dp"
                             android:background="@drawable/points_exchange_bcg"
                             android:gravity="center"
-                            android:text="做任务"
+                            android:text=""
                             android:textColor="#FD555B"
                             android:textSize="@dimen/sp12"/>
                     </LinearLayout>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_continuation7_bike_mission"
+                    android:visibility="gone"
+                    android:id="@+id/rl_task_cycling_bike_7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -626,6 +870,7 @@
                         android:gravity="center_vertical">
 
                         <ImageView
+                            android:id="@+id/iv_task_cycling_bike_7"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:src="@drawable/continuation7_bike_icon"/>
@@ -639,19 +884,21 @@
                             android:gravity="center_vertical">
 
                             <TextView
+                                android:id="@+id/tv_task_title_cycling_bike_7"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/sp14"
-                                android:text="连续7天骑行单车"
+                                android:text="连续7天"
                                 android:layout_centerVertical="true"/>
 
                             <TextView
+                                android:id="@+id/tv_task_desc_cycling_bike_7"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#666666"
                                 android:textSize="@dimen/sp10"
-                                android:text="获得5积分"
+                                android:text=""
                                 android:layout_centerVertical="true"/>
 
                         </LinearLayout>
@@ -667,19 +914,20 @@
                         android:gravity="center_vertical">
 
                         <TextView
-                            android:id="@+id/tv_continuation7_bike_mission"
+                            android:id="@+id/tv_task_process_cycling_bike_7"
                             android:layout_width="60dp"
                             android:layout_height="24dp"
                             android:background="@drawable/points_exchange_bcg"
                             android:gravity="center"
-                            android:text="1/7"
+                            android:text=""
                             android:textColor="#FD555B"
                             android:textSize="@dimen/sp12"/>
                     </LinearLayout>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_continuation7_ebike_mission"
+                    android:visibility="gone"
+                    android:id="@+id/rl_task_cycling_ebike_7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -695,6 +943,7 @@
                         android:gravity="center_vertical">
 
                         <ImageView
+                            android:id="@+id/iv_task_cycling_ebike_7"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:src="@drawable/continuation7_ebike_icon"/>
@@ -708,19 +957,21 @@
                             android:gravity="center_vertical">
 
                             <TextView
+                                android:id="@+id/tv_task_title_cycling_ebike_7"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/sp14"
-                                android:text="连续7天骑行单车"
+                                android:text="连续7天"
                                 android:layout_centerVertical="true"/>
 
                             <TextView
+                                android:id="@+id/tv_task_desc_cycling_ebike_7"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#666666"
                                 android:textSize="@dimen/sp10"
-                                android:text="获得7积分"
+                                android:text=""
                                 android:layout_centerVertical="true"/>
 
                         </LinearLayout>
@@ -736,19 +987,20 @@
                         android:gravity="center_vertical">
 
                         <TextView
-                            android:id="@+id/tv_continuation7_ebike_mission"
+                            android:id="@+id/tv_task_process_cycling_ebike_7"
                             android:layout_width="60dp"
                             android:layout_height="24dp"
                             android:background="@drawable/points_exchange_bcg"
                             android:gravity="center"
-                            android:text="1/7"
+                            android:text=""
                             android:textColor="#FD555B"
                             android:textSize="@dimen/sp12"/>
                     </LinearLayout>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_month_card_mission"
+                    android:visibility="gone"
+                    android:id="@+id/rl_task_buy_card_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -764,6 +1016,7 @@
                         android:gravity="center_vertical">
 
                         <ImageView
+                            android:id="@+id/iv_task_buy_card_1"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:src="@drawable/month_card_icon"/>
@@ -777,19 +1030,21 @@
                             android:gravity="center_vertical">
 
                             <TextView
+                                android:id="@+id/tv_task_title_buy_card_1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/sp14"
-                                android:text="购买周卡、月卡、季卡"
+                                android:text="购买周卡"
                                 android:layout_centerVertical="true"/>
 
                             <TextView
+                                android:id="@+id/tv_task_desc_buy_card_1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#666666"
                                 android:textSize="@dimen/sp10"
-                                android:text="获得5积分"
+                                android:text=""
                                 android:layout_centerVertical="true"/>
 
                         </LinearLayout>
@@ -805,19 +1060,20 @@
                         android:gravity="center_vertical">
 
                         <TextView
-                            android:id="@+id/tv_month_card_mission"
+                            android:id="@+id/tv_task_process_buy_card_1"
                             android:layout_width="60dp"
                             android:layout_height="24dp"
                             android:background="@drawable/points_exchange_bcg"
                             android:gravity="center"
-                            android:text="去购买"
+                            android:text=""
                             android:textColor="#FD555B"
                             android:textSize="@dimen/sp12"/>
                     </LinearLayout>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_year_card_mission"
+                    android:visibility="gone"
+                    android:id="@+id/rl_task_buy_card_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -833,6 +1089,7 @@
                         android:gravity="center_vertical">
 
                         <ImageView
+                            android:id="@+id/iv_task_buy_card_2"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:src="@drawable/year_card_icon"/>
@@ -846,19 +1103,21 @@
                             android:gravity="center_vertical">
 
                             <TextView
+                                android:id="@+id/tv_task_title_buy_card_2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/sp14"
-                                android:text="购买半年卡、年卡"
+                                android:text="购买半年卡"
                                 android:layout_centerVertical="true"/>
 
                             <TextView
+                                android:id="@+id/tv_task_desc_buy_card_2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#666666"
                                 android:textSize="@dimen/sp10"
-                                android:text="获得15积分"
+                                android:text=""
                                 android:layout_centerVertical="true"/>
 
                         </LinearLayout>
@@ -874,12 +1133,12 @@
                         android:gravity="center_vertical">
 
                         <TextView
-                            android:id="@+id/tv_year_card_mission"
+                            android:id="@+id/tv_task_process_buy_card_2"
                             android:layout_width="60dp"
                             android:layout_height="24dp"
                             android:background="@drawable/points_exchange_bcg"
                             android:gravity="center"
-                            android:text="去购买"
+                            android:text=""
                             android:textColor="#FD555B"
                             android:textSize="@dimen/sp12"/>
                     </LinearLayout>
@@ -889,17 +1148,18 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="343dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
+                android:paddingBottom="22dp"
                 android:orientation="vertical"
                 android:background="@drawable/back_bd5">
 
                 <RelativeLayout
                     android:id="@+id/rl_college"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="21dp"
                     android:layout_marginTop="18dp"
                     android:layout_marginLeft="17dp"
                     android:layout_marginRight="19dp"
@@ -914,15 +1174,15 @@
                         android:layout_centerVertical="true"/>
 
                     <LinearLayout
+                        android:id="@+id/ll_points_exchange_detail"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
                         android:gravity="center_vertical">
 
                         <TextView
-                            android:id="@+id/tv_college"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/sp12"
@@ -937,17 +1197,79 @@
                     </LinearLayout>
                 </RelativeLayout>
 
-                <com.huewu.pla.lib.MultiColumnListView
-                    android:id="@+id/lv_pointsExchange"
-                    xmlns:pla="http://schemas.android.com/apk/res-auto"
+<!--                <cn.qimate.bike.core.widget.MyScrollView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="304dp">-->
+
+
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="vertical">-->
+
+<!--                        -->
+
+<!--                    </LinearLayout>-->
+<!--                </cn.qimate.bike.core.widget.MyScrollView>-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical">-->
+
+<!--                    -->
+
+<!--                </LinearLayout>-->
+
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    pla:plaColumnNumber="2"
-                    pla:plaLandscapeColumnNumber="3"
-                    />
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <com.huewu.pla.lib.MultiColumnListView
+                        android:visibility="gone"
+                        android:id="@+id/lv_pointsExchange"
+                        xmlns:pla="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        pla:plaColumnNumber="2"
+                        pla:plaLandscapeColumnNumber="3"
+                        />
+
+                    <ImageView
+                        android:visibility="gone"
+                        android:id="@+id/iv_pointsExchange"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:src="@drawable/no_cert_icon"
+                        />
+                </LinearLayout>
+
+
+                <!--                <ScrollView-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="100dp">-->
+
+
+
+
+                <!--                </ScrollView>-->
+
+                <!--                <LinearLayout-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:orientation="vertical"-->
+                <!--                    >-->
+
+
+
+
 
             </LinearLayout>
 
@@ -970,7 +1292,6 @@
                     />
 
                 <TextView
-                    android:id="@+id/tv_rule"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/sp16"
@@ -988,6 +1309,28 @@
                     />
 
             </LinearLayout>
+
+<!--            <View-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="1dp"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_marginLeft="37dp"-->
+<!--                android:layout_marginRight="37dp"-->
+<!--                android:background="@color/white"-->
+<!--                android:layout_gravity="center_vertical"-->
+<!--                />-->
+
+            <TextView
+                android:id="@+id/tv_rule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="37dp"
+                android:layout_marginRight="37dp"
+                android:textSize="10sp"
+                android:textColor="@color/white"
+                android:text=""/>
 
         </LinearLayout>
     </cn.qimate.bike.core.widget.MyScrollView>

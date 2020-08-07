@@ -5,8 +5,8 @@
     <!--<item android:drawable="@drawable/week2_icon" android:state_enabled="true" android:state_pressed="true"/>-->
     <!--<item android:drawable="@drawable/week2_icon" android:state_enabled="false"/>-->
 
-    <item android:drawable="@drawable/month2_icon" android:state_selected="true"/>
-    <item android:drawable="@drawable/month2_icon" android:state_pressed="true"/>
-    <item android:drawable="@drawable/month_icon" />
+    <item android:drawable="@drawable/month_icon" android:state_selected="true"/>
+    <item android:drawable="@drawable/month_icon" android:state_pressed="true"/>
+    <item android:drawable="@drawable/month2_icon" />
 
 </selector>

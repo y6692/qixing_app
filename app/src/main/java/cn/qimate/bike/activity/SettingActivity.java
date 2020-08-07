@@ -153,6 +153,13 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
 //        initHttp();
 
         Log.e("sa===initView1", "===");
+
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+        if (access_token == null || "".equals(access_token)) {
+            logoutLayout.setVisibility(View.GONE);
+        }else{
+            logoutLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

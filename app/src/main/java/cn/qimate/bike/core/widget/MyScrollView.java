@@ -3,6 +3,7 @@ package cn.qimate.bike.core.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.widget.ScrollView;
 
 public class MyScrollView extends ScrollView {
@@ -48,4 +49,10 @@ public class MyScrollView extends ScrollView {
 		return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, 0, 0, isTouchEvent);
 	}
 
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent ev) {
+		//关键点在这
+		getParent().requestDisallowInterceptTouchEvent(true);
+		return super.onInterceptTouchEvent(ev);
+	}
 }

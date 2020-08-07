@@ -76,6 +76,8 @@ public class HttpHelper {
 
 		addHeader(context);
 
+		Log.e("params===get", "==="+url);
+
 		client.get(context, url, responseHandler);
 	}
 

@@ -7206,11 +7206,20 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 }
 
                 @Override
-                public void onResponseFail(int code) {
-                    LogUtil.e("deleteBleRecord===onResponseFail", Code.toString(code));
-                    popupwindow.dismiss();
+                public void onResponseFail(final int code) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LogUtil.e("deleteBleRecord===onResponseFail", Code.toString(code));
+//                          ToastUtil.showMessageApp(context, Code.toString(code));
+                            if(popupwindow!=null){
+                                popupwindow.dismiss();
+                            }
 
-                    closeLoadingDialog();
+                            closeLoadingDialog();
+                        }
+                    });
+
 
 //                    String tvAgain = tv_againBtn.getText().toString().trim();
 //                    int action_type;

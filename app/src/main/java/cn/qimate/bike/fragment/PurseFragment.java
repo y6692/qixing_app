@@ -124,10 +124,13 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
 
             String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
             if("".equals(access_token)){
-                ToastUtil.showMessageApp(context, "请先登录");
+//                ToastUtil.showMessageApp(context, "请先登录");
+//
+//                Intent intent = new Intent(context, LoginActivity.class);
+//                startActivity(intent);
 
-                Intent intent = new Intent(context, LoginActivity.class);
-                startActivity(intent);
+                tv_1.setText("");
+                tv_balance.setText("");
             }else{
                 banner();
                 user();
@@ -607,10 +610,22 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public void onClick(View v) {
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+
+        Log.e("pf===onClick", "===" + access_token);
+
+        if (access_token == null || "".equals(access_token)) {
+            Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context, LoginActivity.class);
+            return;
+        }
+
         switch (v.getId()){
 
             case R.id.tv_recharge:
 //                UIHelper.goToAct(context, RechargeActivity.class);
+
+
+
 
                 Intent  intent = new Intent(context, RechargeActivity.class);
                 intent.putExtra("isRemain", false);
@@ -628,6 +643,8 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
                 break;
 
             case R.id.rl_exchange:
+
+
                 if(cert1_status!=3){
                     ToastUtil.showMessageApp(context, "请先进行免押金认证");
                 }else{

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical">
     
@@ -17,14 +17,15 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/item_iv_point_exchange"
+        <cn.qimate.bike.view.RoundImageView
+            android:id="@+id/item_iv_image"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:src="@drawable/points_exchange_bg"/>
+            android:scaleType="fitXY"
+            android:src="@null"/>
 
         <TextView
-            android:id="@+id/item_tv_point"
+            android:id="@+id/item_tv_points"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="#ffffff"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.1"
+            android:gravity="center"
+            >
+
+            <ImageView
+                android:id="@+id/iv_rank"
+                android:layout_width="16dp"
+                android:layout_height="23dp"
+                android:gravity="center"
+                android:src="@drawable/gold_medal_icon"/>
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/tv_rank"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/sp14"
+                android:textColor="#666666"
+                android:gravity="center"
+                android:text="100"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:gravity="center_vertical"
+            >
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="7dp"
+                android:src="@drawable/head_icon"
+                android:layout_centerInParent="true"/>
+
+
+            <TextView
+                android:id="@+id/tv_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginLeft="12dp"
+                android:textSize="@dimen/sp14"
+                android:textColor="#333333"
+                android:gravity="center"
+                android:text="我的昵称是什么"/>
+        </LinearLayout>
+
+
+
+        <TextView
+            android:id="@+id/tv_counts"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.2"
+            android:textSize="@dimen/sp14"
+            android:textColor="#333333"
+            android:gravity="center_vertical|right"
+            android:text="100"/>
+
+    </LinearLayout>
+
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:paddingTop="10dp"-->
+    <!--        android:paddingBottom="10dp"-->
+    <!--        android:paddingLeft="16dp"-->
+    <!--        android:paddingRight="20dp"-->
+    <!--        android:gravity="center_vertical"-->
+    <!--        android:orientation="vertical">-->
+
+    <!--        <RelativeLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:gravity="center_vertical">-->
+
+    <!--            <LinearLayout-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:gravity="center_vertical"-->
+    <!--                android:orientation="horizontal">-->
+    <!--                <TextView-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:textSize="@dimen/sp14"-->
+    <!--                    android:textColor="@color/tx_black"-->
+    <!--                    android:text="车辆编号："/>-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/item_car_number"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:textSize="@dimen/sp14"-->
+    <!--                    android:textColor="#666666"-->
+    <!--                    android:text=""/>-->
+    <!--            </LinearLayout>-->
+
+    <!--        </RelativeLayout>-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginTop="4dp"-->
+    <!--            android:layout_alignParentRight="true"-->
+    <!--            android:gravity="center_vertical"-->
+    <!--            android:orientation="horizontal">-->
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:textSize="@dimen/sp14"-->
+    <!--                android:textColor="@color/tx_black"-->
+    <!--                android:text="车辆类型："/>-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/item_car_type"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:textSize="@dimen/sp14"-->
+    <!--                android:textColor="#666666"-->
+    <!--                android:text=""/>-->
+    <!--        </LinearLayout>-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginTop="4dp"-->
+    <!--            android:gravity="center_vertical"-->
+    <!--            android:orientation="horizontal">-->
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:textSize="@dimen/sp14"-->
+    <!--                android:textColor="@color/tx_black"-->
+    <!--                android:text="车辆状态："/>-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/item_car_status"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:textSize="@dimen/sp14"-->
+    <!--                android:textColor="#666666"-->
+    <!--                android:text=""/>-->
+    <!--        </LinearLayout>-->
+
+
+    <!--    </LinearLayout>-->
+
+    <!--    <View-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="1dp"-->
+
+    <!--        android:background="#F1F1F1"-->
+    <!--        />-->
+
+</LinearLayout>

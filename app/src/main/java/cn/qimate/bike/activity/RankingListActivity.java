@@ -24,6 +24,8 @@ import java.util.List;
 import cn.qimate.bike.R;
 import cn.qimate.bike.fragment.BikeCartFragment;
 import cn.qimate.bike.fragment.EbikeCartFragment;
+import cn.qimate.bike.fragment.MonthFragment;
+import cn.qimate.bike.fragment.QuarterFragment;
 import cn.qimate.bike.fragment.WeekFragment;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
@@ -57,6 +59,8 @@ public class RankingListActivity extends SwipeBackActivity implements View.OnCli
 
   private String[] titles = new String[]{"本周", "本月", "本季"};
   int[] tabIcons = {R.drawable.tab_week_bcg, R.drawable.tab_month_bcg, R.drawable.tab_quarter_bcg};
+
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -107,29 +111,10 @@ public class RankingListActivity extends SwipeBackActivity implements View.OnCli
     ll_back.setOnClickListener(this);
 //    rightBtn.setOnClickListener(this);
 
-//    TextView tv_sn = (TextView)findViewById(R.id.dispatch_drtail_sn);
-//    TextView tv_status = (TextView)findViewById(R.id.dispatch_drtail_status);
-//    TextView tv_created_at = (TextView)findViewById(R.id.dispatch_drtail_created_at);
-//    TextView tv_end_at = (TextView)findViewById(R.id.dispatch_drtail_end_at);
-//    TextView tv_car_numbers = (TextView)findViewById(R.id.item_car_numbers);
-//    Button btn_dispatch_detail = BaseViewHolder.get(convertView,R.id.btn_dispatch_detail);
-//    Button btn_confirm_finish = BaseViewHolder.get(convertView,R.id.btn_confirm_finish);
-//
-//    tv_sn.setText("调运单号："+sn);
-//    if("0".equals(status)){
-//      tv_status.setText("调运中");
-//    }else{
-//      tv_status.setText("已完成");
-//    }
-//
-//    tv_created_at.setText("开始时间："+start_time);
-//    if(end_time==null || "".equals(end_time)){
-//      tv_end_at.setVisibility(View.GONE);
-//    }else{
-//      tv_end_at.setVisibility(View.VISIBLE);
-//      tv_end_at.setText("结束时间："+end_time);
-//    }
-
+//    tv_update_time = (TextView)findViewById(R.id.tv_update_time);
+//    iv_header = (ImageView)findViewById(R.id.iv_header);
+//    tv_nickname = (TextView)findViewById(R.id.tv_nickname);
+//    tv_rank = (TextView)findViewById(R.id.tv_rank);
 
 //    int[] tabIcons = {R.drawable.tab_week_bcg, R.drawable.month_icon, R.drawable.quarter_icon};
 //
@@ -177,8 +162,8 @@ public class RankingListActivity extends SwipeBackActivity implements View.OnCli
       super(fm);
 
       WeekFragment weekFragment = new WeekFragment();
-      BikeCartFragment monthFragment = new BikeCartFragment();
-      EbikeCartFragment quarterFragment = new EbikeCartFragment();
+      MonthFragment monthFragment = new MonthFragment();
+      QuarterFragment quarterFragment = new QuarterFragment();
 
       fragmentList = new ArrayList<>();
       fragmentList.add(weekFragment);

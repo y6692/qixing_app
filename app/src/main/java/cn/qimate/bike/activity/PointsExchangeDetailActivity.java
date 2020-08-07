@@ -29,7 +29,6 @@ import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
-import cn.qimate.bike.adapter.BillAdapter;
 import cn.qimate.bike.base.BaseViewAdapter;
 import cn.qimate.bike.base.BaseViewHolder;
 import cn.qimate.bike.core.common.HttpHelper;
@@ -39,7 +38,6 @@ import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.model.BillBean;
 import cn.qimate.bike.model.GlobalConfig;
 import cn.qimate.bike.model.PointsExchangeDetailBean;
-import cn.qimate.bike.model.RankingListBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
@@ -47,7 +45,7 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
  * Created by Administrator1 on 2017/2/14.
  */
 
-public class MemberPointsDetailActivity extends SwipeBackActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
+public class PointsExchangeDetailActivity extends SwipeBackActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
         AdapterView.OnItemClickListener {
 
     private Context context = this;
@@ -85,7 +83,7 @@ public class MemberPointsDetailActivity extends SwipeBackActivity implements Vie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_member_points_detail);
+        setContentView(R.layout.activity_points_exchange_detail);
         datas = new ArrayList<>();
         initView();
     }
@@ -96,8 +94,6 @@ public class MemberPointsDetailActivity extends SwipeBackActivity implements Vie
 //        pvOptions = new OptionsPickerView(context,false);
 //        pvOptions.setTitle("交易类型");
 
-
-
         // list投资列表
         footerView = LayoutInflater.from(context).inflate(R.layout.footer_item, null);
         footerViewType01 = footerView.findViewById(R.id.footer_Layout_type01);// 点击加载更多
@@ -107,7 +103,7 @@ public class MemberPointsDetailActivity extends SwipeBackActivity implements Vie
         footerViewType05 = footerView.findViewById(R.id.footer_Layout_type05);// 暂无数据
         iv_type05 = footerView.findViewById(R.id.footer_Layout_iv_type05);
         tv_type05 = footerView.findViewById(R.id.footer_Layout_tv_type05);
-        iv_type05.setImageResource(R.drawable.no_points_icon);
+        iv_type05.setImageResource(R.drawable.no_points_exchange_icon);
 //        tv_type05.setText("您还未有账单…");
 
         footerLayout = footerView.findViewById(R.id.footer_Layout);
@@ -135,10 +131,6 @@ public class MemberPointsDetailActivity extends SwipeBackActivity implements Vie
         myAdapter = new MyAdapter(context);
         myAdapter.setDatas(datas);
         myList.setAdapter(myAdapter);
-
-        int user_points = getIntent().getIntExtra("user_points", 0);
-        TextView tv_user_points = (TextView)findViewById(R.id.tv_user_points);
-        tv_user_points.setText("可用积分："+user_points);
 
         ll_back.setOnClickListener(this);
 //        ll_bill.setOnClickListener(this);
@@ -210,7 +202,7 @@ public class MemberPointsDetailActivity extends SwipeBackActivity implements Vie
 //        params.put("origin", 2);
         params.put("page", showPage);
         params.put("per_page", GlobalConfig.PAGE_SIZE);
-        HttpHelper.get(context, Urls.points_records, params, new TextHttpResponseHandler() {
+        HttpHelper.get(context, Urls.points_exchange_records, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 setFooterType(1);
@@ -228,13 +220,13 @@ public class MemberPointsDetailActivity extends SwipeBackActivity implements Vie
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 try {
 
-                    Log.e("points_records===", "==="+responseString);
+                    Log.e("points_exchange===", "==="+responseString);
 
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
                     JSONArray array = new JSONArray(result.getData());
 
-                    Log.e("points_records===1", datas.size()+"==="+order_type+"==="+array.length());
+                    Log.e("points_exchange===1", datas.size()+"==="+order_type+"==="+array.length());
 
                     if (array.length() == 0 && showPage == 1) {
                         footerLayout.setVisibility(View.VISIBLE);
@@ -257,7 +249,7 @@ public class MemberPointsDetailActivity extends SwipeBackActivity implements Vie
 
                         PointsExchangeDetailBean bean = JSON.parseObject(array.getJSONObject(i).toString(), PointsExchangeDetailBean.class);
 
-                        Log.e("points_records===3", "==="+bean);
+                        Log.e("points_exchange===3", "==="+bean);
 
                         datas.add(bean);
                     }
@@ -358,7 +350,7 @@ public class MemberPointsDetailActivity extends SwipeBackActivity implements Vie
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (null == convertView) {
-                convertView = inflater.inflate(R.layout.item_member_points_detail, null);
+                convertView = inflater.inflate(R.layout.item_points_exchange_detail, null);
             }
 
             View v_divider = BaseViewHolder.get(convertView,R.id.v_divider);

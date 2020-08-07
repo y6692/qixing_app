@@ -32,8 +32,12 @@ public class UserBean {
     private String credit_scores_h5_url;  //信用分H5地址 需要拼接上 ?token=xxx
     private String history_order_h5_title;  //历史订单H5标题
     private String history_order_h5_url;    //历史订单H5地址 需要拼接上 ?token=xxx
+    private String ranks_h5_title;  //历史订单H5标题
+    private String ranks_h5_url;    //历史订单H5地址 需要拼接上 ?token=xxx
     private int unread_count; //未读消息数 为0时不显示红点 否则显示红点
     private int is_full;    //资料是否已补全 1已补全 0未补全
+    private int points;     //积分
+    private int signin_task;     //是否开启签到任务 1开启 0关闭
 
     public int getId() {
         return id;
@@ -251,6 +255,22 @@ public class UserBean {
         this.history_order_h5_url = history_order_h5_url;
     }
 
+    public String getRanks_h5_title() {
+        return ranks_h5_title;
+    }
+
+    public void setRanks_h5_title(String ranks_h5_title) {
+        this.ranks_h5_title = ranks_h5_title;
+    }
+
+    public String getRanks_h5_url() {
+        return ranks_h5_url;
+    }
+
+    public void setRanks_h5_url(String ranks_h5_url) {
+        this.ranks_h5_url = ranks_h5_url;
+    }
+
     public int getUnread_count() {
         return unread_count;
     }
@@ -265,5 +285,21 @@ public class UserBean {
 
     public void setIs_full(int is_full) {
         this.is_full = is_full;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public int getSignin_task() {
+        return signin_task;
+    }
+
+    public void setSignin_task(int signin_task) {
+        this.signin_task = signin_task;
     }
 }

@@ -29,7 +29,6 @@ import com.bumptech.glide.Glide;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -50,14 +49,13 @@ import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.GlobalConfig;
 import cn.qimate.bike.model.RankingListBean;
-import cn.qimate.bike.model.RankingUserBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.util.LogUtil;
 
 import static android.app.Activity.RESULT_OK;
 
 @SuppressLint("NewApi")
-public class WeekFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
+public class QuarterFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
         AdapterView.OnItemClickListener{
 
     Unbinder unbinder;
@@ -120,14 +118,8 @@ public class WeekFragment extends BaseFragment implements View.OnClickListener, 
 //    private String card_code;
     private String cars;
 
-    private TextView tv_update_time;
-    private ImageView iv_header;
-    private TextView tv_nickname;
-    private TextView tv_rank;
-    private TextView tv_message;
-
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_week, null);
+        v = inflater.inflate(R.layout.fragment_quarter, null);
         unbinder = ButterKnife.bind(this, v);
 
         return v;
@@ -221,12 +213,6 @@ public class WeekFragment extends BaseFragment implements View.OnClickListener, 
 //        dialog.setContentView(tagView);
 //        dialog.setCanceledOnTouchOutside(false);
 
-        tv_update_time = getActivity().findViewById(R.id.tv_update_time);
-        iv_header = getActivity().findViewById(R.id.iv_header);
-        tv_nickname = getActivity().findViewById(R.id.tv_nickname);
-        tv_rank = getActivity().findViewById(R.id.tv_rank);
-        tv_message = getActivity().findViewById(R.id.tv_message);
-
         footerView = LayoutInflater.from(context).inflate(R.layout.footer_item, null);
         footerViewType01 = footerView.findViewById(R.id.footer_Layout_type01);// 点击加载更多
         footerViewType02 = footerView.findViewById(R.id.footer_Layout_type02);// 正在加载，请您稍等
@@ -241,12 +227,15 @@ public class WeekFragment extends BaseFragment implements View.OnClickListener, 
         iv_type05.setImageResource(R.drawable.no_order_icon);
         tv_type05.setText("暂无数据");
 
-        swipeRefreshLayout = (SwipeRefreshLayout)getActivity().findViewById(R.id.Layout_swipeParentLayout);
-        listview = (ListView)getActivity().findViewById(R.id.Layout_swipeListView);
+        swipeRefreshLayout = (SwipeRefreshLayout)getActivity().findViewById(R.id.Layout_swipeParentLayout3);
+        listview = (ListView)getActivity().findViewById(R.id.Layout_swipeListView3);
 //        listview.addFooterView(footerView);
 
         swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(android.R.color.holo_green_dark), getResources().getColor(android.R.color.holo_green_light), getResources().getColor(android.R.color.holo_orange_light), getResources().getColor(android.R.color.holo_red_light));
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(android.R.color.holo_green_dark), getResources().getColor(android.R.color.holo_green_light),
+                getResources().getColor(android.R.color.holo_orange_light), getResources().getColor(android.R.color.holo_red_light));
+
+//        myList.setOnItemClickListener(this);
 
         myAdapter = new MyAdapter(context);
         myAdapter.setDatas(datas);
@@ -323,7 +312,7 @@ public class WeekFragment extends BaseFragment implements View.OnClickListener, 
             return;
         }
         RequestParams params = new RequestParams();
-        params.put("type", 1);    //榜单类型 1周榜 2月榜 3季榜
+        params.put("type", 3);    //榜单类型 1周榜 2月榜 3季榜
 //        params.put("page",showPage);    //当前页码
 //        params.put("per_page", GlobalConfig.PAGE_SIZE);
         HttpHelper.get(context, Urls.user_rank_cycling, params, new TextHttpResponseHandler() {
@@ -346,30 +335,9 @@ public class WeekFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 try {
-                    LogUtil.e("wf===1","==="+responseString);
+                    LogUtil.e("qf===1","==="+responseString);
 
-//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-
-//
-//                    JSONArray array = new JSONArray(result.getData());
                     JSONObject jsonObject = new JSONObject(responseString);
-
-
-                    LogUtil.e("wf===2", jsonObject + "===" + jsonObject.getString("user"));
-
-                    RankingUserBean bean = JSON.parseObject(jsonObject.getString("user"), RankingUserBean.class);
-
-                    tv_update_time.setText("更新："+jsonObject.getString("update_time"));
-                    String avatar = bean.getAvatar();
-                    if(avatar==null || "".equals(avatar)){
-                        iv_header.setImageResource(R.drawable.head_icon);
-                    }else{
-                        Glide.with(context).load(avatar).into(iv_header);
-                    }
-                    tv_nickname.setText(bean.getNickname());
-                    tv_rank.setText("NO."+bean.getRank());
-                    tv_message.setText(bean.getMessage());
-
 
                     JSONArray array = new JSONArray(jsonObject.getString("ranks"));
                     if (array.length() == 0 && showPage == 1) {
@@ -404,17 +372,6 @@ public class WeekFragment extends BaseFragment implements View.OnClickListener, 
                     }
 
                     myAdapter.notifyDataSetChanged();
-
-//                    Intent intent = new Intent("data.broadcast.action");
-//                    intent.putExtra("codenum", codenum);
-//                    intent.putExtra("count", Integer.parseInt(totalnum));
-//                    context.sendBroadcast(intent);
-
-//                    if (result.getFlag().equals("Success")) {
-//
-//                    } else {
-//                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
-//                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -442,10 +399,8 @@ public class WeekFragment extends BaseFragment implements View.OnClickListener, 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (null == convertView) {
-                convertView = inflater.inflate(R.layout.item_week_detail, null);
+                convertView = inflater.inflate(R.layout.item_quarter_detail, null);
             }
-
-            LogUtil.e("MyAdapter===","==="+convertView);
 
             ImageView iv_rank = BaseViewHolder.get(convertView, R.id.iv_rank);
             TextView tv_rank = BaseViewHolder.get(convertView, R.id.tv_rank);

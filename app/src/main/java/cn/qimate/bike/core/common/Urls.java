@@ -15,6 +15,8 @@ public class Urls {
     public static String host2 = HTTP + "test-mapi.7mate.cn/api";
 //	public static String host2 = HTTP + "dev-mapi.7mate.cn/api";
 
+
+
 //	public static String host = HTTP + "web1.7mate.cn";
 //	public static String host = HTTP + "test.7mate.cn";
 //	public static String host = HTTP + "uat.7mate.cn";
@@ -125,6 +127,24 @@ public class Urls {
 
 	//用户相关 - 学院列表
 	public static String colleges = host2 + "/user/school/colleges";
+
+	//会员积分体系
+	// 积分任务列表接口
+	public static String points_tasks = host2 + "/points/tasks";
+	// 积分兑换列表接口
+	public static String points_exchange_lists = host2 + "/points/exchange_lists";
+	// 积分兑换接口
+	public static String points_exchange = host2 + "/points/exchange";
+	// 积分兑换记录接口
+	public static String points_exchange_records = host2 + "/user/points_exchange_records";
+	// 积分明细接口
+	public static String points_records = host2 + "/user/points_records";
+	// 积分首页接口
+	public static String points_index = host2 + "/points/index";
+	// 签到接口
+	public static String signin = host2 + "/signin";
+	// 骑行次数排行榜
+	public static String user_rank_cycling = host2 + "/user_ranks/cycling";
 
 //	http://testnewmapi.7mate.cn/api/order/temp_lock
 //	http://testnewmapi.7mate.cn/api/depositprice

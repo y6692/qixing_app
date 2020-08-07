@@ -1,22 +1,40 @@
 package cn.qimate.bike.model;
 
 public class RankingListBean {
-	private String h5_title;	//h5标题
-	private String h5_url;	//h5地址
+	private String avatar;	//头像
+	private String nickname; //昵称
+	private int rank;	//排名
+	private int counts; //骑行次数
 
-	public String getH5_title() {
-		return h5_title;
+	public String getAvatar() {
+		return avatar;
 	}
 
-	public void setH5_title(String h5_title) {
-		this.h5_title = h5_title;
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 
-	public String getH5_url() {
-		return h5_url;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setH5_url(String h5_url) {
-		this.h5_url = h5_url;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+
+	public int getCounts() {
+		return counts;
+	}
+
+	public void setCounts(int counts) {
+		this.counts = counts;
 	}
 }

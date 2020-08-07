@@ -683,9 +683,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         Log.e("ma===onResume",  flag + "===" + access_token + "===" + type);
 
-        if("".equals(access_token)){
-            tab.setCurrentTab(0);
-        }
+//        if(!"".equals(access_token)){
+//            tab.setCurrentTab(0);
+//        }
 
         if(flag){
             purseFragment.user();

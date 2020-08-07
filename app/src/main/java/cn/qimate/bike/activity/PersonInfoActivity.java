@@ -152,6 +152,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
     private String phone = "";
     private int sex;
     private String school_name = "";
+    private String school_area = "";
     private int college_id;
     private String college_name = "";
     private String admission_time = "";
@@ -204,18 +205,19 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
         setContentView(R.layout.activity_person_info);
         context = this;
 
-        isAuth = getIntent().getBooleanExtra("isAuth", false);
-        avatar = getIntent().getStringExtra("avatar");
-        nickname = getIntent().getStringExtra("nickname");
-        phone = getIntent().getStringExtra("phone");
-        sex = getIntent().getIntExtra("sex", 0);
-        school_name = getIntent().getStringExtra("school_name");
-        college_id = getIntent().getIntExtra("college_id", 0);
-        college_name = getIntent().getStringExtra("college_name");
-        admission_time = getIntent().getStringExtra("admission_time");
-        is_full = getIntent().getIntExtra("is_full", 0);
+//        isAuth = getIntent().getBooleanExtra("isAuth", false);
+//        avatar = getIntent().getStringExtra("avatar");
+//        nickname = getIntent().getStringExtra("nickname");
+//        phone = getIntent().getStringExtra("phone");
+//        sex = getIntent().getIntExtra("sex", 0);
+//        school_name = getIntent().getStringExtra("school_name");
+//        school_area = getIntent().getStringExtra("school_area");
+//        college_id = getIntent().getIntExtra("college_id", 0);
+//        college_name = getIntent().getStringExtra("college_name");
+//        admission_time = getIntent().getStringExtra("admission_time");
+//        is_full = getIntent().getIntExtra("is_full", 0);
 
-        LogUtil.e("pia===onCreate", isAuth+"==="+avatar+"==="+nickname+"==="+phone+"==="+sex+"==="+school_name+"==="+college_id+"==="+college_name+"==="+admission_time);
+        LogUtil.e("pia===onCreate", isAuth+"==="+avatar+"==="+nickname+"==="+phone+"==="+sex+"==="+school_name+"==="+school_area+"==="+college_id+"==="+college_name+"==="+admission_time);
 
 //        schoolList = new ArrayList<>();
         initView();
@@ -275,35 +277,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
         collegeText = (TextView)findViewById(R.id.tv_college);
         admissionTimeText = (TextView)findViewById(R.id.tv_admission_time);
 
-        if(is_full==0){
-            ll_tip.setVisibility(View.VISIBLE);
-        }else{
-            ll_tip.setVisibility(View.GONE);
-        }
 
-        if(isAuth){
-            ll_info.setVisibility(View.VISIBLE);
-        }else{
-            ll_info.setVisibility(View.GONE);
-        }
-
-        if(avatar==null || "".equals(avatar)){
-            headerImageView.setImageResource(R.drawable.head_icon);
-        }else{
-//            Glide.with(context).load(avatar).crossFade().into(headerImageView);
-            Glide.with(context).load(avatar).into(headerImageView);
-        }
-
-        nameEdit.setText(nickname);
-        phoneNum.setText(phone);
-        if(sex==1){
-            sexText.setText("男");
-        }else if(sex==2){
-            sexText.setText("女");
-        }
-        schoolText.setText(school_name);
-        collegeText.setText(college_name);
-        admissionTimeText.setText(admission_time);
 
 //        Glide.with(this).load(R.drawable.head_icon).transform(new GlideRoundTransform(this,50)).into(headerImageView);
 
@@ -528,12 +502,108 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 //            stuNumEdit.setEnabled(true);
 //        }
 
+        initHttp();
         admission_time();
         getUpToken();
         colleges();
     }
 
 
+    public void initHttp() {
+        Log.e("pia===initHttp", "===");
+
+
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+        if (access_token != null && !"".equals(access_token)) {
+            HttpHelper.get(context, Urls.user, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    onStartCommon("正在加载");
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    onFailureCommon(throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Log.e("pia===initHttp1", "==="+responseString);
+
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                                UserBean bean = JSON.parseObject(result.getData(), UserBean.class);
+//                              myPurse.setText(bean.getMoney());
+//                              myIntegral.setText(bean.getPoints());
+
+
+                                int cert1_status = bean.getCert1_status();
+                                isAuth = cert1_status==3?true:false;
+
+//                                points = bean.getPoints();
+                                avatar = bean.getAvatar();
+                                nickname = bean.getNickname();
+                                phone = bean.getPhone();
+                                sex = bean.getSex();
+                                school_name = bean.getSchool_name();
+                                school_area = bean.getSchool_area();
+                                college_id = bean.getCollege_id();
+                                college_name = bean.getCollege_name();
+                                admission_time = bean.getAdmission_time();
+                                is_full = bean.getIs_full();
+
+
+                                if(is_full==0){
+                                    ll_tip.setVisibility(View.VISIBLE);
+                                }else{
+                                    ll_tip.setVisibility(View.GONE);
+                                }
+
+                                if(isAuth){
+                                    ll_info.setVisibility(View.VISIBLE);
+                                }else{
+                                    ll_info.setVisibility(View.GONE);
+                                }
+
+                                if(avatar==null || "".equals(avatar)){
+                                    headerImageView.setImageResource(R.drawable.head_icon);
+                                }else{
+//                                  Glide.with(context).load(avatar).crossFade().into(headerImageView);
+                                    Glide.with(context).load(avatar).into(headerImageView);
+                                }
+
+                                nameEdit.setText(nickname);
+                                phoneNum.setText(phone);
+                                if(sex==1){
+                                    sexText.setText("男");
+                                }else if(sex==2){
+                                    sexText.setText("女");
+                                }
+                                schoolText.setText(school_name+((school_area==null||"".equals(school_area))?"":("（"+school_area+"）")));
+                                collegeText.setText(college_name);
+                                admissionTimeText.setText(admission_time);
+
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (loadingDialog != null && loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+                        }
+                    });
+
+                }
+            });
+        } else {
+            Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context, LoginActivity.class);
+        }
+    }
 
 //    @Override
 //    public void onResize(int w, int h, int oldw, int oldh) {
@@ -703,26 +773,14 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
                     }
                 }
             }).start();
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    //获取资源文件中的图片
-    public byte[] getByte() {
-//        Resources res = getResources();
-//        Bitmap bm = BitmapFactory.decodeResource(res, R.drawable.bike3);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        bm.compress(Bitmap.CompressFormat.PNG, 80, baos);
-        LogUtil.e("getByte===1", upBitmap+"===");
-        upBitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
-//        upBitmap.compress(Bitmap.CompressFormat.PNG, 10, baos);
-        LogUtil.e("getByte===2", upBitmap+"==="+baos.toByteArray().length);
 
-//        QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
-
-        return baos.toByteArray();
-    }
 
     private void admission_time() {
 
@@ -1331,7 +1389,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
         BitmapFactory.decodeFile(urlpath, options);
         int height = options.outHeight;
         int width= options.outWidth;
-        int inSampleSize = 2; // 默认像素压缩比例，压缩为原图的1/2
+        int inSampleSize = 3; // 默认像素压缩比例，压缩为原图的1/2
 //        int minLen = Math.min(height, width); // 原图的最小边长
 //        if(minLen > 100) { // 如果原始图像的最小边长大于100dp（此处单位我认为是dp，而非px）
 //            float ratio = (float)minLen / 100.0f; // 计算像素压缩比例
@@ -1343,6 +1401,22 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 
 //        ByteArrayOutputStream bos=new ByteArrayOutputStream();
 //        upBitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos);//参数100表示不压缩
+    }
+
+    //获取资源文件中的图片
+    public byte[] getByte() {
+//        Resources res = getResources();
+//        Bitmap bm = BitmapFactory.decodeResource(res, R.drawable.bike3);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bm.compress(Bitmap.CompressFormat.PNG, 80, baos);
+        LogUtil.e("getByte===1", upBitmap+"===");
+        upBitmap.compress(Bitmap.CompressFormat.PNG, 50, baos);
+//        upBitmap.compress(Bitmap.CompressFormat.PNG, 10, baos);
+        LogUtil.e("getByte===2", upBitmap+"==="+baos.toByteArray().length);
+
+//        QiNiuInitialize.getSingleton().put(getByte(), null, upToken, upCompletionHandler, uploadOptions);
+
+        return baos.toByteArray();
     }
 
     private void setPicToView(Intent data) {
@@ -1366,9 +1440,9 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 
                     Log.e("setPicToView===", imageUri+"==="+urlpath+"==="+upBitmap);
 
-
-
                     uploadImage();
+
+                    Log.e("pia===setPicToView", "==="+urlpath);
 
 //            Glide.with(this).load(bitmap).transform(new GlideRoundTransform(context,50)).into(headerImageView);
 
@@ -1377,7 +1451,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 //            urlpath  = FileUtil.getFilePathByUri(context, data.getData());
 //            urlpath  = FileUtil.getFilePathByUri(context, extras);
 
-                    Log.e("pia===setPicToView", "==="+urlpath);
+
 
 //            compress(); //压缩图片
 //            headerImageView.setImageBitmap(upBitmap);
@@ -1430,6 +1504,8 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
         }
         Intent intent = new Intent("com.android.camera.action.CROP");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Log.e("pia=startPhotoZoom1", Build.VERSION.SDK_INT+"==="+uri);
+
             imageUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME));
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -1444,8 +1520,8 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
         // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 600);
-        intent.putExtra("outputY", 600);
+//        intent.putExtra("outputX", 600);
+//        intent.putExtra("outputY", 600);
         intent.putExtra("scale", true);
         intent.putExtra("scaleUpIfNeeded", true);// 去黑边
         intent.putExtra("circleCrop", true);
@@ -1500,7 +1576,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
     }
 
     private void submit_nickname(){
-        LogUtil.e("pia===submit", avatar+"==="+nickname+"==="+sex+"==="+college_id+"==="+admission_time);
+        LogUtil.e("pia===nickname", avatar+"==="+nickname+"==="+sex+"==="+college_id+"==="+admission_time);
 
         RequestParams params = new RequestParams();
 //        params.put("avatar", avatar);   //TODO  没有头像链接获取
@@ -1588,7 +1664,8 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 
                             Log.e("pia===submit1", "==="+responseString);
 
-                            Toast.makeText(context, result.getMessage(),Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(context, result.getMessage(),Toast.LENGTH_SHORT).show();
+                            ToastUtil.showMessageApp(context, result.getMessage());
 
                             if(result.getStatus_code()!=200){
                                 nameEdit.setText(nickname0);

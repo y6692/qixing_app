@@ -21,7 +21,7 @@
         <include
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            layout="@layout/layout_swipe_list" />
+            layout="@layout/layout_swipe_list3" />
     </LinearLayout>
 
 
