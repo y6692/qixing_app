@@ -574,7 +574,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                         }
                     }
 
-
                     String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
                     if("".equals(access_token)){
 //                      ToastUtil.showMessageApp(context, "请先登录");
