@@ -64,7 +64,6 @@ import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.nostra13.universalimageloader.core.ImageLoader;
-import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.ActionCenterActivity;
 import cn.qimate.bike.activity.AuthCenterActivity;
@@ -239,6 +238,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
                 headerImageView.setImageResource(R.drawable.head_icon);
 
+                iv_isRead.setVisibility(View.GONE);
                 ll_noLogin.setVisibility(View.VISIBLE);
                 ll_hasLogin.setVisibility(View.GONE);
             }else{
@@ -580,6 +580,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
                         headerImageView.setImageResource(R.drawable.head_icon);
 
+                        iv_isRead.setVisibility(View.GONE);
                         ll_noLogin.setVisibility(View.VISIBLE);
                         ll_hasLogin.setVisibility(View.GONE);
                     }
@@ -601,9 +602,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                     File imgUri = new File(GetImagePath.getPath(context, data.getData()));
 
-                                    Log.e("minef=REQUESTCODE_PICK2", imgUri+"==="+ BuildConfig.APPLICATION_ID);
+                                    Log.e("minef=REQUESTCODE_PICK2", imgUri+"==="+ context.getPackageName());
 
-                                    Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", imgUri);
+                                    Uri dataUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", imgUri);
 
                                     Log.e("minef=REQUESTCODE_PICK3", imgUri+"==="+dataUri);
 
@@ -694,7 +695,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 //                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //                        //通过FileProvider创建一个content类型的Uri
 //                        Uri inputUri = FileProvider.getUriForFile(context,
-//                                BuildConfig.APPLICATION_ID + ".provider",
+//                                context.getPackageName() + ".provider",
 //                                new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME));
 //                        startPhotoZoom(inputUri);//设置输入类型
 //                    } else {
@@ -999,7 +1000,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                             Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context,
-                                        BuildConfig.APPLICATION_ID + ".fileprovider",
+                                        context.getPackageName() + ".fileprovider",
                                         new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
                                 takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -1130,7 +1131,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                         }
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file));
 
                         }else {
                             takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
@@ -1150,7 +1151,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                     if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 //                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //                            pickIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(PersonAlterActivity.this,
-//                                    BuildConfig.APPLICATION_ID + ".provider",
+//                                    context.getPackageName() + ".provider",
 //                                    new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
 //                            pickIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 //                            pickIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

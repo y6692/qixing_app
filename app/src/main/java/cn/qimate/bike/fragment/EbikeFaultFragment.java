@@ -1581,7 +1581,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context,
-                                    BuildConfig.APPLICATION_ID + ".fileprovider",
+                                    context.getPackageName() + ".fileprovider",
                                     file));
 
                         }else {
@@ -1601,7 +1601,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 ////                        Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
 ////                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 ////                            pickIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(FeedbackActivity.this,
-////                                    BuildConfig.APPLICATION_ID + ".provider",
+////                                    context.getPackageName() + ".provider",
 ////                                    new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
 ////                            pickIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 ////                            pickIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -1665,7 +1665,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 //                            Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(FeedbackActivity.this,
-//                                        BuildConfig.APPLICATION_ID + ".provider",
+//                                        context.getPackageName() + ".provider",
 //                                        new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
 //                                takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 //                                takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -1689,7 +1689,7 @@ public class EbikeFaultFragment extends BaseFragment implements View.OnClickList
 
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                         takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context,
-                                                BuildConfig.APPLICATION_ID + ".fileprovider",
+                                                context.getPackageName() + ".fileprovider",
 //                                        "com.vondear.rxtools.fileprovider",
                                                 file));
 

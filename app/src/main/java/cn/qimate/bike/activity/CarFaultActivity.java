@@ -77,7 +77,6 @@ import butterknife.Unbinder;
 import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
-import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseViewHolder;
@@ -1954,7 +1953,7 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context,
-                                    BuildConfig.APPLICATION_ID + ".fileprovider",
+                                    context.getPackageName() + ".fileprovider",
                                     file));
 
                         }else {
@@ -2018,7 +2017,7 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
 //                            Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(FeedbackActivity.this,
-//                                        BuildConfig.APPLICATION_ID + ".provider",
+//                                        context.getPackageName() + ".provider",
 //                                        new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
 //                                takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 //                                takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -2042,7 +2041,7 @@ public class CarFaultActivity extends SwipeBackActivity implements View.OnClickL
 
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                         takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context,
-                                                BuildConfig.APPLICATION_ID + ".fileprovider",
+                                                context.getPackageName() + ".fileprovider",
 //                                        "com.vondear.rxtools.fileprovider",
                                                 file));
 

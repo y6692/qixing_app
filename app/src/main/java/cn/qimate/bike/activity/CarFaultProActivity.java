@@ -920,7 +920,7 @@ public class CarFaultProActivity extends SwipeBackActivity implements View.OnCli
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context,
-                                    BuildConfig.APPLICATION_ID + ".fileprovider",
+                                    context.getPackageName() + ".fileprovider",
                                     file));
 
                         }else {
@@ -984,7 +984,7 @@ public class CarFaultProActivity extends SwipeBackActivity implements View.OnCli
 //                            Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(FeedbackActivity.this,
-//                                        BuildConfig.APPLICATION_ID + ".provider",
+//                                        context.getPackageName() + ".provider",
 //                                        new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
 //                                takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 //                                takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -1008,7 +1008,7 @@ public class CarFaultProActivity extends SwipeBackActivity implements View.OnCli
 
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                         takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context,
-                                                BuildConfig.APPLICATION_ID + ".fileprovider",
+                                                context.getPackageName() + ".fileprovider",
 //                                        "com.vondear.rxtools.fileprovider",
                                                 file));
 

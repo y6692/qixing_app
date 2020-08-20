@@ -65,7 +65,6 @@ import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.nostra13.universalimageloader.core.ImageLoader;
-import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.core.common.BitmapUtils1;
@@ -1536,7 +1535,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(DepositFreeAuthActivity.this,
-                                    BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                                    context.getPackageName() + ".fileprovider", file));
 
                         }else {
                             takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
@@ -1621,7 +1620,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
 //                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //                                //步骤二：Android 7.0及以上获取文件 Uri
-//                                mUri = FileProvider.getUriForFile(RealNameAuthActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", file);
+//                                mUri = FileProvider.getUriForFile(RealNameAuthActivity.this, context.getPackageName() + ".fileprovider", file);
 //                            }
 
 //                            File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);
@@ -1633,7 +1632,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                         takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(DepositFreeAuthActivity.this,
-                                                BuildConfig.APPLICATION_ID + ".fileprovider",
+                                                context.getPackageName() + ".fileprovider",
 //                                        "com.vondear.rxtools.fileprovider",
                                                 file));
 

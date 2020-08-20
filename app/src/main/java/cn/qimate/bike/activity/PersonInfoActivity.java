@@ -60,7 +60,6 @@ import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 //import cn.qimate.bike.BuildConfig;
-import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.core.common.GetImagePath;
 import cn.qimate.bike.core.common.HttpHelper;
@@ -1146,7 +1145,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
                         }
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, getPackageName() + ".fileprovider", file));
 
                         }else {
                             takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
@@ -1214,9 +1213,9 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                     File imgUri = new File(GetImagePath.getPath(context, data.getData()));
 
-                                    Log.e("minef=REQUESTCODE_PICK2", imgUri+"==="+ BuildConfig.APPLICATION_ID);
+                                    Log.e("minef=REQUESTCODE_PICK2", imgUri+"==="+ getPackageName());
 
-                                    Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", imgUri);
+                                    Uri dataUri = FileProvider.getUriForFile(context, getPackageName() + ".fileprovider", imgUri);
 
                                     Log.e("minef=REQUESTCODE_PICK3", imgUri+"==="+dataUri);
 
@@ -1307,7 +1306,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 //                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //                        //通过FileProvider创建一个content类型的Uri
 //                        Uri inputUri = FileProvider.getUriForFile(context,
-//                                BuildConfig.APPLICATION_ID + ".provider",
+//                                context.getPackageName() + ".provider",
 //                                new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME));
 //                        startPhotoZoom(inputUri);//设置输入类型
 //                    } else {
@@ -1335,7 +1334,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 
 
                                 File imgUri = new File(GetImagePath.getPath(context, Uri.fromFile(temp)));
-                                Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", imgUri);
+                                Uri dataUri = FileProvider.getUriForFile(context, getPackageName() + ".fileprovider", imgUri);
 
                                 Log.e("REQUESTCODE_TAKE===1", imgUri+"==="+dataUri);
 

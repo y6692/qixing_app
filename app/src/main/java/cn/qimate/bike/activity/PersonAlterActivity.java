@@ -331,9 +331,9 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                                 if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                         File imgUri = new File(GetImagePath.getPath(context, data.getData()));
-                                        Uri dataUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", imgUri);
+                                        Uri dataUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", imgUri);
 
-//                                        Uri contentUri = FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID + ".provider", apkfile);
+//                                        Uri contentUri = FileProvider.getUriForFile(mContext, context.getPackageName() + ".provider", apkfile);
 
                                         startPhotoZoom(dataUri);
                                     } else {
@@ -356,7 +356,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 //通过FileProvider创建一个content类型的Uri
                                 Uri inputUri = FileProvider.getUriForFile(context,
-                                        BuildConfig.APPLICATION_ID + ".fileprovider",
+                                        context.getPackageName() + ".fileprovider",
                                         new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME));
                                 startPhotoZoom(inputUri);//设置输入类型
                             } else {
@@ -599,7 +599,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                         Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(PersonAlterActivity.this,
-//                                    BuildConfig.APPLICATION_ID + ".provider",
+//                                    context.getPackageName() + ".provider",
 //                                    new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
                             takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, RxFileTool.getUriForFile(context,
                                     new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
@@ -621,7 +621,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                     if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 //                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //                            pickIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(PersonAlterActivity.this,
-//                                    BuildConfig.APPLICATION_ID + ".provider",
+//                                    context.getPackageName() + ".provider",
 //                                    new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
 //                            pickIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 //                            pickIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -660,7 +660,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                                     Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                         takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(PersonAlterActivity.this,
-                                                BuildConfig.APPLICATION_ID + ".fileprovider",
+                                                context.getPackageName() + ".fileprovider",
                                                 new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
                                         takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                         takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);

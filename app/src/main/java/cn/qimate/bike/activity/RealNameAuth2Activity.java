@@ -900,7 +900,7 @@ public class RealNameAuth2Activity extends SwipeBackActivity implements View.OnC
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(RealNameAuth2Activity.this,
-                                    BuildConfig.APPLICATION_ID + ".fileprovider",
+                                    context.getPackageName() + ".fileprovider",
                                     file));
 
                         }else {
@@ -952,7 +952,7 @@ public class RealNameAuth2Activity extends SwipeBackActivity implements View.OnC
 
 //                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //                                //步骤二：Android 7.0及以上获取文件 Uri
-//                                mUri = FileProvider.getUriForFile(RealNameAuthActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", file);
+//                                mUri = FileProvider.getUriForFile(RealNameAuthActivity.this, context.getPackageName() + ".fileprovider", file);
 //                            }
 
 //                            File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);
@@ -964,7 +964,7 @@ public class RealNameAuth2Activity extends SwipeBackActivity implements View.OnC
 
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                         takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(RealNameAuth2Activity.this,
-                                                BuildConfig.APPLICATION_ID + ".fileprovider",
+                                                context.getPackageName() + ".fileprovider",
 //                                        "com.vondear.rxtools.fileprovider",
                                                 file));
 
