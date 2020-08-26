@@ -133,6 +133,7 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
 
                 if(can_cert1==1){
                     Intent intent = new Intent(context, DepositFreeAuthActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivityForResult(intent, 10);
 //                setResult(RESULT_OK, intent);
                 }else{
@@ -151,6 +152,7 @@ public class AuthCenterActivity extends SwipeBackActivity implements View.OnClic
 
                 if(can_cert2==1){
                     Intent intent = new Intent(context, RealNameAuthActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivityForResult(intent, 10);
                 }else{
                     ToastUtil.showMessageApp(context, "已认证通过");

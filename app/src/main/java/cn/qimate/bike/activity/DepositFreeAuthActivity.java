@@ -335,6 +335,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
             case R.id.ui_deposit_free_auth_school:
                 Intent intent = new Intent(context, SchoolSelectActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(intent, 10);
                 break;
 

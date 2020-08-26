@@ -75,6 +75,9 @@ public class ServiceCenterActivity extends SwipeBackActivity implements View.OnC
 
     private String bikeCode = "";
 
+    PopupWindow popupwindow;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -183,7 +186,9 @@ public class ServiceCenterActivity extends SwipeBackActivity implements View.OnC
             case R.id.mainUI_title_rightBtn:
 //                UIHelper.goToAct(context, MyCartActivity.class);
 
-                initmPopupWindowView();
+                if(popupwindow==null || (popupwindow!=null && !popupwindow.isShowing())){
+                    initmPopupWindowView();
+                }
 
                 break;
         }
@@ -210,7 +215,7 @@ public class ServiceCenterActivity extends SwipeBackActivity implements View.OnC
         // 打开弹窗
         UtilAnim.showToUp(pop_win_bg, iv_popup_window_back);
         // 创建PopupWindow宽度和高度
-        final PopupWindow popupwindow = new PopupWindow(customView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
+        popupwindow = new PopupWindow(customView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
 
         //设置动画效果 ,从上到下加载方式等，不设置自动的下拉，最好 [动画效果不好，不加实现下拉效果，不错]
         popupwindow.setAnimationStyle(R.style.PopupAnimation);

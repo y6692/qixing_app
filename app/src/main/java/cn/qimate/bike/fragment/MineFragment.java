@@ -419,8 +419,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
                 break;
 
-
-
             case R.id.personUI_myOrderLayout:
                 if (access_token == null || "".equals(access_token)) {
                     Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
@@ -470,6 +468,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 intent.putExtra("college_name", college_name);
                 intent.putExtra("admission_time", admission_time);
                 intent.putExtra("is_full", is_full);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(intent, 10);
 
                 break;

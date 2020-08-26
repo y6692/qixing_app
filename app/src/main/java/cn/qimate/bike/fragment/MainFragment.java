@@ -1677,7 +1677,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             Intent intent = new Intent();
                             intent.setClass(context, ActivityScanerCode.class);
-//                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
 
 
@@ -2482,6 +2482,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             if(null == bean.getOrder_sn() || bean.getOrder_state()>20){
                                 ToastUtil.showMessageApp(context, "当前无进行中的行程");
+                                closeLoadingDialog();
                                 car_authority();
                             }else{
                                 LogUtil.e("mf===cycling3_2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
@@ -6364,6 +6365,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 Intent intent = new Intent(context, SettlementPlatformActivity.class);
                 intent.putExtra("order_type", order_type);
                 intent.putExtra("order_id", order_id);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(intent, 11);
             }
 

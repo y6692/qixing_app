@@ -989,6 +989,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                 Intent intent = new Intent();
                 intent.setClass(context, RechargeActivity.class);
                 intent.putExtra("isRemain", true);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(intent, 1);
                 break;
         }

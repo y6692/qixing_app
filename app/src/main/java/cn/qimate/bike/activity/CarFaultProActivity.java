@@ -79,7 +79,6 @@ import butterknife.Unbinder;
 import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
-import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseViewHolder;
@@ -263,6 +262,7 @@ public class CarFaultProActivity extends SwipeBackActivity implements View.OnCli
                 intent.setClass(context, ActivityScanerCode2.class);
 //                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //                intent.putExtra("isChangeKey",false);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(intent, 101);
 
                 break;

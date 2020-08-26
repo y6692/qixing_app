@@ -43,7 +43,6 @@ import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.nostra13.universalimageloader.core.ImageLoader;
-import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseViewAdapter;
@@ -288,9 +287,9 @@ public class MemberPointsActivity extends SwipeBackActivity implements View.OnCl
         lv_pointsExchange = (MultiColumnListView)findViewById(R.id.lv_pointsExchange);
         iv_pointsExchange = (ImageView)findViewById(R.id.iv_pointsExchange);
 
-        if (datas_pointsExchange.isEmpty() || 0 == datas_pointsExchange.size()){
-            pointsExchange();
-        }
+//        if (datas_pointsExchange.isEmpty() || 0 == datas_pointsExchange.size()){
+//            pointsExchange();
+//        }
         pointsExchangeAdapter = new PointsExchangeAdapter(context);
         lv_pointsExchange.setAdapter(pointsExchangeAdapter);
         lv_pointsExchange.setOnItemClickListener(this);
@@ -492,7 +491,7 @@ public class MemberPointsActivity extends SwipeBackActivity implements View.OnCl
 //                    intent.putExtra("college_name", college_name);
 //                    intent.putExtra("admission_time", admission_time);
 //                    intent.putExtra("is_full", is_full);
-
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivityForResult(intent, 10);
 
                 }
@@ -667,6 +666,8 @@ public class MemberPointsActivity extends SwipeBackActivity implements View.OnCl
                             }else{
                                 lv_pointsExchange.setVisibility(View.VISIBLE);
                                 iv_pointsExchange.setVisibility(View.GONE);
+
+                                pointsExchange();
                             }
 
                         } catch (Exception e) {
@@ -725,7 +726,7 @@ public class MemberPointsActivity extends SwipeBackActivity implements View.OnCl
 
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-//                    JSONArray array = new JSONArray(result.getData());
+//                          JSONArray array = new JSONArray(result.getData());
                             JSONObject jsonObject = new JSONObject(result.getData());
 
 
@@ -1075,7 +1076,6 @@ public class MemberPointsActivity extends SwipeBackActivity implements View.OnCl
                             }
 
                             Log.e("points_exchange===2",array.length()+"==="+result.getData());
-
 
                             if(array.length()==0){
                                 lv_pointsExchange.setVisibility(View.GONE);
