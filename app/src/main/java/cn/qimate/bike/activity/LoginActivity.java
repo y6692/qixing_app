@@ -448,7 +448,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
 
                                 UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
-//                        UIHelper.goWebViewAct(context, bean.getH5_title(), Urls.agreement+"register");
+//                              UIHelper.goWebViewAct(context, bean.getH5_title(), Urls.agreement+"register");
 
                             } catch (Exception e) {
                                 e.printStackTrace();

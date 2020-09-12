@@ -262,7 +262,7 @@
                             android:gravity="center"
                             android:text="学生证、校园卡、录取通知均可"
                             android:textSize="12sp"
-                            android:textColor="#B2B2B2"/>
+                            android:textColor="#666666"/>
                     </RelativeLayout>
 
                     <RelativeLayout

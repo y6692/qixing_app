@@ -446,8 +446,7 @@ ViewTreeObserver.OnGlobalLayoutListener, ViewTreeObserver.OnTouchModeChangeListe
          * @param visibleItemCount the number of visible cells
          * @param totalItemCount the number of items in the list adaptor
          */
-        public void onScroll(PLA_AbsListView view, int firstVisibleItem, int visibleItemCount,
-                             int totalItemCount);
+        public void onScroll(PLA_AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount);
     }
 
     public PLA_AbsListView(Context context) {
@@ -461,8 +460,7 @@ ViewTreeObserver.OnGlobalLayoutListener, ViewTreeObserver.OnTouchModeChangeListe
         try {
             // initializeScrollbars(TypedArray)
             final Method initializeScrollbars =
-                    View.class.getDeclaredMethod("initializeScrollbars",
-                            TypedArray.class);
+                    View.class.getDeclaredMethod("initializeScrollbars", TypedArray.class);
             initializeScrollbars.invoke(this, a);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
