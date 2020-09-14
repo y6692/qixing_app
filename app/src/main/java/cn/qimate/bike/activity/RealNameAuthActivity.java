@@ -70,7 +70,6 @@ import cn.jock.pickerview.view.view.OptionsPickerView;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.nostra13.universalimageloader.core.ImageLoader;
-import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.core.common.BitmapUtils1;
 import cn.qimate.bike.core.common.DisplayUtil;
@@ -908,8 +907,8 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
         params.put("type", 2);
         params.put("user_name", realname);
         params.put("identity_number", identityNumber);
-        params.put("cert_photo", "".equals(imageurl)?image_url:imageurl);
-        params.put("holding_cert_photo", "".equals(imageurl2)?image_url2:imageurl2);
+//        params.put("cert_photo", "".equals(imageurl)?image_url:imageurl);
+//        params.put("holding_cert_photo", "".equals(imageurl2)?image_url2:imageurl2);
 
 
         HttpHelper.post(context, Urls.cert, params, new TextHttpResponseHandler() {     //TODO  1
@@ -1059,7 +1058,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                 }
 
                                 try {
-                                    if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                                         if (imageUri != null) {
 //                                        urlpath = getRealFilePath(context, data.getData());
                                             urlpath  = FileUtil.getFilePathByUri(context, data.getData());
@@ -1130,9 +1129,9 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                                 loadingDialog.show();
                             }
 
-                            Log.e("REQUESTCODE_TAKE===0", android.os.Environment.getExternalStorageState()+"==="+urlpath);
+                            Log.e("REQUESTCODE_TAKE===0", Environment.getExternalStorageState()+"==="+urlpath);
 
-                            if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
 
 //                            if (imageUri != null) {
 //                                Log.e("REQUESTCODE_TAKE===", data+"===");
@@ -1480,7 +1479,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             return;
                         }
                     }
-                    if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                         Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, RxFileTool.getUriForFile(context,
@@ -1519,13 +1518,13 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                     break;
                 // 相册选择图片
                 case R.id.pickPhotoBtn:
-                    if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                         Intent intent;
                         if (Build.VERSION.SDK_INT < 19) {
                             intent = new Intent(Intent.ACTION_GET_CONTENT);
                             intent.setType("image/*");
                         } else {
-                            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         }
                         startActivityForResult(intent, REQUESTCODE_PICK);
                     }else {
@@ -1579,7 +1578,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             // Permission Granted
                             if (permissions[0].equals(Manifest.permission.CAMERA)) {
 
-                                if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+                                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
                                     Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
 

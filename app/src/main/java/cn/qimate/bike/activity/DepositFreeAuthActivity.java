@@ -905,7 +905,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
         params.put("school_id", school_id);
         params.put("admission_time", time);
         params.put("cert_photo", "".equals(imageurl)?image_url:imageurl);
-        params.put("holding_cert_photo", "".equals(imageurl2)?image_url2:imageurl2);
+//        params.put("holding_cert_photo", "".equals(imageurl2)?image_url2:imageurl2);
 
 
         HttpHelper.post(context, Urls.cert, params, new TextHttpResponseHandler() {     //TODO

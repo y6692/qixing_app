@@ -125,65 +125,75 @@
                     </LinearLayout>
 
 
-
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="42dp">
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="上传证件"
-                            android:textSize="24sp"
-                            android:textColor="@color/tx_black"/>
+                            android:layout_marginTop="42dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="上传证件"
+                                android:textSize="24sp"
+                                android:textColor="@color/tx_black"/>
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="18dp">
+
+                            <ImageView
+                                android:id="@+id/ui_realNameAuth_uploadImage"
+                                android:layout_width="150dp"
+                                android:layout_height="95dp"
+                                android:paddingRight="10dp"
+                                android:src="@drawable/identity_card_pic1" />
+
+                            <ImageView
+                                android:id="@+id/ui_realNameAuth_uploadImage2"
+                                android:layout_width="150dp"
+                                android:layout_height="95dp"
+                                android:paddingLeft="10dp"
+                                android:layout_alignParentRight="true"
+                                android:src="@drawable/identity_card_pic2"/>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="7dp">
+
+                            <TextView
+                                android:layout_width="140dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textSize="@dimen/sp14"
+                                android:textColor="#333333"
+                                android:text="身份证照片"/>
+
+                            <TextView
+                                android:layout_width="140dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:gravity="center"
+                                android:textSize="@dimen/sp14"
+                                android:textColor="#333333"
+                                android:text="手持身份证照片"/>
+
+                        </RelativeLayout>
+
+
+
                     </LinearLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp">
-
-                        <ImageView
-                            android:id="@+id/ui_realNameAuth_uploadImage"
-                            android:layout_width="150dp"
-                            android:layout_height="95dp"
-                            android:paddingRight="10dp"
-                            android:src="@drawable/identity_card_pic1" />
-
-                        <ImageView
-                            android:id="@+id/ui_realNameAuth_uploadImage2"
-                            android:layout_width="150dp"
-                            android:layout_height="95dp"
-                            android:paddingLeft="10dp"
-                            android:layout_alignParentRight="true"
-                            android:src="@drawable/identity_card_pic2"/>
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="7dp">
-
-                        <TextView
-                            android:layout_width="140dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:textSize="@dimen/sp14"
-                            android:textColor="#333333"
-                            android:text="身份证照片"/>
-
-                        <TextView
-                            android:layout_width="140dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:gravity="center"
-                            android:textSize="@dimen/sp14"
-                            android:textColor="#333333"
-                            android:text="手持身份证照片"/>
-
-                    </RelativeLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -197,7 +207,6 @@
                             android:textSize="12sp"
                             android:textColor="@color/tx_black"/>
                     </LinearLayout>
-
 
                     <RelativeLayout
                         android:id="@+id/rl_recharge"
