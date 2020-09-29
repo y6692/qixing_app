@@ -101,7 +101,6 @@ android {
                     outputFileName = "7MA_debug.apk"
                 }
             }
-
         }
     }
 
