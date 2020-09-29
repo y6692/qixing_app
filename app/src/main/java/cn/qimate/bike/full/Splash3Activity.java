@@ -349,7 +349,7 @@ public class Splash3Activity extends Base2Activity implements View.OnClickListen
 
 				@Override
 				public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-					Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+//					Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
 
 					Log.e("agreement===fail", throwable.toString()+"==="+responseString);
 
@@ -412,7 +412,7 @@ public class Splash3Activity extends Base2Activity implements View.OnClickListen
 
 				@Override
 				public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-					Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+//					Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
 
 					Log.e("agreement===fail", throwable.toString()+"==="+responseString);
 

@@ -798,7 +798,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
 
                     Log.e("admission_time===fail", throwable.toString()+"==="+responseString);
 

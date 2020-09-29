@@ -195,7 +195,7 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
 
                     Log.e("agreement===fail", throwable.toString()+"==="+responseString);
 

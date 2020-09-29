@@ -90,12 +90,19 @@ android {
             }
         }
 
-//        debug {
-//            debuggable true
-//            signingConfig signingConfigs.release
-//            minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//        }
+        debug {
+            debuggable true
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "7MA_debug.apk"
+                }
+            }
+
+        }
     }
 
 

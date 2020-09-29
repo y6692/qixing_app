@@ -467,7 +467,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
 
                     Log.e("admission_time===fail", throwable.toString()+"==="+responseString);
 
@@ -568,7 +568,7 @@ public class DepositFreeAuthActivity extends SwipeBackActivity implements View.O
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
 
                     Log.e("agreement===fail", throwable.toString()+"==="+responseString);
 
