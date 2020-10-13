@@ -870,6 +870,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                             intent.putExtra("order_type", 4);
                             intent.putExtra("order_amount", order_amount);
                             intent.putExtra("order_id", order_id);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivityForResult(intent, 10);
 
 

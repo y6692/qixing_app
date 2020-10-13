@@ -18,7 +18,7 @@ public class OrderBean {
 	private int temporary_lock;	//0未临时上锁 1临时上锁中 3临时上锁完毕
 	private int order_refresh_interval;	//当前行程刷新频率 单位：毫秒
 	private int temp_lock_refresh_interval;	//临时上锁中刷新频率 单位：毫秒
-
+	private int allow_temporary_lock;   //是否允许临时上锁 1允许 0不允许
 
 
 	public int getOrder_id() {
@@ -147,5 +147,13 @@ public class OrderBean {
 
 	public void setTemp_lock_refresh_interval(int temp_lock_refresh_interval) {
 		this.temp_lock_refresh_interval = temp_lock_refresh_interval;
+	}
+
+	public int getAllow_temporary_lock() {
+		return allow_temporary_lock;
+	}
+
+	public void setAllow_temporary_lock(int allow_temporary_lock) {
+		this.allow_temporary_lock = allow_temporary_lock;
 	}
 }

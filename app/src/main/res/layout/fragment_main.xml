@@ -472,6 +472,7 @@
 
                         >
 
+
                         <LinearLayout
                             android:id="@+id/ll_biking_openAgain_auto"
                             android:layout_width="0dp"

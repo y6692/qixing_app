@@ -398,6 +398,7 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
                             intent.putExtra("order_type", 2);
                             intent.putExtra("order_amount", order_amount);
                             intent.putExtra("order_id", order_id);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             context.startActivity(intent);
 
 

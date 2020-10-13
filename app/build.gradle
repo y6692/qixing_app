@@ -25,8 +25,8 @@ android {
         applicationId "cn.qimate.bike"
         minSdkVersion 18
         targetSdkVersion 28
-        versionCode 2014
-        versionName "2.0.14"
+        versionCode 2015
+        versionName "2.0.15"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
 
@@ -74,31 +74,82 @@ android {
 
 
     buildTypes {
-        release {
-            debuggable true
-            signingConfig signingConfigs.config
-            // true - 打开混淆
-            minifyEnabled false
-//            // true - 打开资源压缩
-//            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-            android.applicationVariants.all { variant ->
-                variant.outputs.all {
-                    outputFileName = "7MA_${releaseTime()}.apk"
-                }
-            }
-        }
-
+//        release {
+//            debuggable true
+//            signingConfig signingConfigs.config
+//            // true - 打开混淆
+//            minifyEnabled false
+////            // true - 打开资源压缩
+////            shrinkResources true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//
+//            android.applicationVariants.all { variant ->
+//                variant.outputs.all {
+//                    outputFileName = "7MA_${releaseTime()}.apk"
+//                }
+//            }
+//        }
+//
         debug {
             debuggable true
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.config
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
                     outputFileName = "7MA_debug.apk"
+                }
+            }
+        }
+
+
+//        debug {
+////            applicationIdSuffix '.debug'
+////            signingConfig signingConfigs.debug
+////            android.applicationVariants.all { variant ->
+////                variant.outputs.all {
+////                    outputFileName = "7MAlock_debug.apk"
+////                }
+////            }
+//
+////            debuggable true
+//            signingConfig signingConfigs.config
+////            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//
+////            android.applicationVariants.all { variant ->
+////                variant.outputs.all {
+////                    outputFileName = "7MA_debug.apk"
+////                }
+////            }
+//
+////            buildConfigField "boolean", "LOG_DEBUG", "true"
+//////            versionNameSuffix "-debug"
+////            minifyEnabled false
+////            zipAlignEnabled false
+////            shrinkResources false
+//
+//
+//
+//        }
+
+        release {
+            debuggable true
+            signingConfig signingConfigs.config
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+
+                    if (variant.buildType.name.equals('release')) {
+                        outputFileName = "7MA_${releaseTime()}_${variant.buildType.name}.apk"
+                    } else if (variant.buildType.name.equals('debug')) {
+                        outputFileName = "7MA_debug.apk"
+                    }
+
+
                 }
             }
         }

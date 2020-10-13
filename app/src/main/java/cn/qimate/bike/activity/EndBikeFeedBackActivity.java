@@ -84,7 +84,6 @@ import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.nostra13.universalimageloader.core.DisplayImageOptions;
 import cn.nostra13.universalimageloader.core.ImageLoader;
 import cn.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
-import cn.qimate.bike.BuildConfig;
 import cn.qimate.bike.R;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragment;

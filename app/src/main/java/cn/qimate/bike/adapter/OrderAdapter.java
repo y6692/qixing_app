@@ -79,6 +79,7 @@ public class OrderAdapter extends BaseViewAdapter<BillBean>{
                     Intent intent = new Intent(context, SettlementPlatformActivity.class);
                     intent.putExtra("order_type", 1);
                     intent.putExtra("order_id", order_id);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     context.startActivity(intent);
                 }
             });

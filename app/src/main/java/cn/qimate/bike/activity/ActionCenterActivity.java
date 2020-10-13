@@ -124,6 +124,7 @@ public class ActionCenterActivity extends SwipeBackActivity implements View.OnCl
         intent.putExtra("link",Urls.activityDetail+"&id="+myAdapter.getDatas().get(position).getId());
         intent.putExtra("imageUrl",Urls.host+myAdapter.getDatas().get(position).getAc_thumb());
         intent.putExtra("shareTitle",myAdapter.getDatas().get(position).getTitle());
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
     }
 

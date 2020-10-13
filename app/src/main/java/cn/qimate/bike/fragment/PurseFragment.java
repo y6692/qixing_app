@@ -629,6 +629,7 @@ public class PurseFragment extends BaseFragment implements View.OnClickListener,
 
                 Intent  intent = new Intent(context, RechargeActivity.class);
                 intent.putExtra("isRemain", false);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
 
                 break;

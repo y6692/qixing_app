@@ -264,6 +264,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private String continued_price = "";
     private String continued_time = "";
     private String credit_score_desc = "";
+    private int allow_temporary_lock;
+
     // 输入法
     private Dialog dialog;
     private EditText bikeNumEdit;
@@ -1694,6 +1696,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             continued_price = bean.getContinued_price();
                             continued_time = bean.getContinued_time();
                             credit_score_desc = bean.getCredit_score_desc();
+                            allow_temporary_lock = bean.getAllow_temporary_lock();
 
 
                             String lock_secretkey = bean.getLock_secretkey();
@@ -1731,6 +1734,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             rIntent.putExtra("continued_price", continued_price);
                             rIntent.putExtra("continued_time", continued_time);
                             rIntent.putExtra("credit_score_desc", credit_score_desc);
+                            rIntent.putExtra("allow_temporary_lock", allow_temporary_lock);
                             rIntent.putExtra("isMac",false);
 
 
@@ -1812,91 +1816,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     }
 
 
-    void macLoop(){
-
-        try {
-
-            boolean is = macList.contains(m_nowMac);
-
-            if(n<5){
-                n++;
-
-                Log.e("macLoop===", is+"==="+n);
-
-                if(is){
-                    Intent rIntent = new Intent();
-                    rIntent.putExtra("codenum", codenum);
-                    rIntent.putExtra("m_nowMac", m_nowMac);
-                    rIntent.putExtra("carmodel_id", carmodel_id);
-                    rIntent.putExtra("type", type);
-                    rIntent.putExtra("lock_no", lock_no);
-                    rIntent.putExtra("bleid", bleid);
-                    rIntent.putExtra("deviceuuid", deviceuuid);
-                    rIntent.putExtra("electricity", electricity);
-                    rIntent.putExtra("mileage", mileage);
-                    rIntent.putExtra("carmodel_name", carmodel_name);
-                    rIntent.putExtra("each_free_time", each_free_time);
-                    rIntent.putExtra("first_price", first_price);
-                    rIntent.putExtra("first_time", first_time);
-                    rIntent.putExtra("continued_price", continued_price);
-                    rIntent.putExtra("continued_time", continued_time);
-                    rIntent.putExtra("isMac",true);
-
-
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-
-                    BleManager.getInstance().cancelScan();
-
-                    setResult(RESULT_OK, rIntent);
-                    scrollToFinishActivity();
-                }else{
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.e("macLoop===1", "==="+n);
-
-                            macLoop();
-
-                        }
-                    }, 1 * 1000);
-                }
-
-            }else{
-                Intent rIntent = new Intent();
-                rIntent.putExtra("codenum", codenum);
-                rIntent.putExtra("m_nowMac", m_nowMac);
-                rIntent.putExtra("carmodel_id", carmodel_id);
-                rIntent.putExtra("type", type);
-                rIntent.putExtra("lock_no", lock_no);
-                rIntent.putExtra("bleid", bleid);
-                rIntent.putExtra("deviceuuid", deviceuuid);
-                rIntent.putExtra("electricity", electricity);
-                rIntent.putExtra("mileage", mileage);
-                rIntent.putExtra("carmodel_name", carmodel_name);
-                rIntent.putExtra("each_free_time", each_free_time);
-                rIntent.putExtra("first_price", first_price);
-                rIntent.putExtra("first_time", first_time);
-                rIntent.putExtra("continued_price", continued_price);
-                rIntent.putExtra("continued_time", continued_time);
-                rIntent.putExtra("isMac",is);
-
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-
-                BleManager.getInstance().cancelScan();
-
-                setResult(RESULT_OK, rIntent);
-                scrollToFinishActivity();
-            }
-
-
-        }catch (Exception e){
-
-        }
-    }
 
 
 

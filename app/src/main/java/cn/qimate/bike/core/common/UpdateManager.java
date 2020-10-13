@@ -244,6 +244,7 @@ public class UpdateManager {
 						}else if(type==2){
 							Intent intent = new Intent(context, EndBikeFeedBackActivity.class);
 							intent.putExtra("bikeCode", bikeCode);
+							intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 							context.startActivity(intent);
 						}
 

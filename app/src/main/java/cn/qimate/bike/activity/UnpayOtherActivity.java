@@ -185,7 +185,7 @@ public class UnpayOtherActivity extends SwipeBackActivity implements View.OnClic
                 intent.putExtra("order_id", order_id);
                 intent.putExtra("order_type", order_type);
                 intent.putExtra("order_amount", order_amount);
-
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 context.startActivity(intent);      //TODO
 
 //                order();

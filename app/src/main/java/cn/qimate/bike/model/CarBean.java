@@ -34,6 +34,7 @@ public class CarBean {
     private String continued_time; //后续时间 单位：分钟
     private String continued_price; //后续价格
     private String credit_score_desc = ""; //
+    private int allow_temporary_lock;   //是否允许临时上锁 1允许 0不允许
 
 
     public int getId() {
@@ -251,5 +252,13 @@ public class CarBean {
 
     public void setCredit_score_desc(String credit_score_desc) {
         this.credit_score_desc = credit_score_desc;
+    }
+
+    public int getAllow_temporary_lock() {
+        return allow_temporary_lock;
+    }
+
+    public void setAllow_temporary_lock(int allow_temporary_lock) {
+        this.allow_temporary_lock = allow_temporary_lock;
     }
 }

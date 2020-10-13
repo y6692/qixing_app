@@ -120,6 +120,7 @@ public class HistoryRoadActivity extends SwipeBackActivity implements View.OnCli
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(context,HistoryRoadDetailActivity.class);
         intent.putExtra("oid",myAdapter.getDatas().get(position).getOid());
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
     }
 
@@ -162,7 +163,7 @@ public class HistoryRoadActivity extends SwipeBackActivity implements View.OnCli
                 scrollToFinishActivity();
                 break;
             case R.id.mainUI_title_rightBtn:
-                Intent intent = new Intent(context,HistoryRoadFiltateActivity.class);
+                Intent intent = new Intent(context, HistoryRoadFiltateActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(intent,0);
                 break;
