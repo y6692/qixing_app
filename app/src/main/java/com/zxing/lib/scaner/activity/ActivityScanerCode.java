@@ -1669,8 +1669,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     @Override
                     public void run() {
 
-//                        "<p style=\"color: #666666; font-size: 16px;\">1\u5c0f\u65f6\u5185\u514d\u8d39\uff0c\u8d85\u8fc71\u5c0f\u65f6<span style=\"color: #FF0000;\">\uffe5<span style=\"font-size: 24px;\">1.00<\/span><\/span>\/30\u5206\u949f<\/p>"
-
                         try {
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 

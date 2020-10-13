@@ -848,7 +848,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 
         customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("临时锁车已禁用，请至蓝色围栏还车，未锁导致车辆丢失责任自负。")        //TODO
+        customBuilder.setType(2).setTitle("温馨提示").setMessage("临时锁车已禁用，请至蓝色围栏还车，未锁导致车辆丢失责任自负。")        //TODO
                 .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();

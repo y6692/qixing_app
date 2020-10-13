@@ -90,49 +90,49 @@ android {
 //            }
 //        }
 //
-        debug {
-            debuggable true
-            signingConfig signingConfigs.config
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-            android.applicationVariants.all { variant ->
-                variant.outputs.all {
-                    outputFileName = "7MA_debug.apk"
-                }
-            }
-        }
-
-
 //        debug {
-////            applicationIdSuffix '.debug'
-////            signingConfig signingConfigs.debug
-////            android.applicationVariants.all { variant ->
-////                variant.outputs.all {
-////                    outputFileName = "7MAlock_debug.apk"
-////                }
-////            }
-//
-////            debuggable true
+//            debuggable true
 //            signingConfig signingConfigs.config
-////            minifyEnabled false
+//            minifyEnabled false
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 //
-////            android.applicationVariants.all { variant ->
-////                variant.outputs.all {
-////                    outputFileName = "7MA_debug.apk"
-////                }
-////            }
-//
-////            buildConfigField "boolean", "LOG_DEBUG", "true"
-//////            versionNameSuffix "-debug"
-////            minifyEnabled false
-////            zipAlignEnabled false
-////            shrinkResources false
-//
-//
-//
+//            android.applicationVariants.all { variant ->
+//                variant.outputs.all {
+//                    outputFileName = "7MA_debug.apk"
+//                }
+//            }
 //        }
+
+
+        debug {
+//            applicationIdSuffix '.debug'
+//            signingConfig signingConfigs.debug
+//            android.applicationVariants.all { variant ->
+//                variant.outputs.all {
+//                    outputFileName = "7MAlock_debug.apk"
+//                }
+//            }
+
+//            debuggable true
+            signingConfig signingConfigs.config
+//            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+//            android.applicationVariants.all { variant ->
+//                variant.outputs.all {
+//                    outputFileName = "7MA_debug.apk"
+//                }
+//            }
+
+//            buildConfigField "boolean", "LOG_DEBUG", "true"
+////            versionNameSuffix "-debug"
+//            minifyEnabled false
+//            zipAlignEnabled false
+//            shrinkResources false
+
+
+
+        }
 
         release {
             debuggable true
