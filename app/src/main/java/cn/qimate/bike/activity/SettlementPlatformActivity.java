@@ -523,19 +523,18 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                             }
 
                             if(null != bean.getOrder_sn()){
-                                Log.e("ura===order_detail2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+                                Log.e("ura===order_detail2", order_type + "===" + bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
 
                                 order_id = bean.getOrder_id();
 
                                 tv_order_amount.setText("¥"+bean.getOrder_amount());
 
                                 if("0.00".equals(bean.getOrder_amount()) || "0".equals(bean.getOrder_amount())){
-                                    Toast.makeText(context,"已为您取消本次订单，谢谢使用",Toast.LENGTH_SHORT).show();
                                     end();
+                                    Toast.makeText(context,"已为您取消本次订单，谢谢使用",Toast.LENGTH_SHORT).show();
+
                                 }else if(Double.parseDouble(bean.getOrder_amount())<=balance){
                                     pay();
-                                }else{
-
                                 }
 
                             }

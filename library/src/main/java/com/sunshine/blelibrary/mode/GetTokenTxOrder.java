@@ -31,7 +31,7 @@ public class GetTokenTxOrder extends TxOrder {
         builder.append(formatByte2HexStr((byte) type));
         builder.append(formatByte2HexStr((byte) code));
 
-        Log.e("2generateString===1", "==="+builder);
+//        Log.e("2generateString===1", "==="+builder);
 
         // 拼凑数据
         for (int i = 0; i < size(); i++) {
@@ -39,19 +39,19 @@ public class GetTokenTxOrder extends TxOrder {
             builder.append(formatByte2HexStr(value));//拼凑数据
         }
 
-        Log.e("2generateString===2", "==="+builder);
+//        Log.e("2generateString===2", "==="+builder);
 
         // 如果数据总位数不够，在数据后面补0
         for (int i = builder.length()/2; i < 16; i++) {
             builder.append(formatByte2HexStr((byte) random.nextInt(127)));
         }
-        Log.e("2generateString===3", "==="+builder);
+//        Log.e("2generateString===3", "==="+builder);
         // 生成字符串形式的指令
         String orderStr = builder.toString();
 
         orderStr = "0601010172142946094B6C3122301976";
 
-        Log.e("2generateString===end", getType()+"==="+typeValue+"==="+getDatas().size()+"==="+getDatas());
+//        Log.e("2generateString===end", getType()+"==="+typeValue+"==="+getDatas().size()+"==="+getDatas());
 
         return orderStr;
     }

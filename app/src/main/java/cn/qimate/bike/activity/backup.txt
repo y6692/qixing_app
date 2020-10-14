@@ -16,6 +16,36 @@
 //        cert2 充值认证
 //        car_bad 上报故障
 
+//                                View view = View.inflate(context, R.layout.marker_info_layout, null);
+//                                iv_marker = view.findViewById(R.id.iv);
+//                                iv_marker.setImageResource(R.drawable.marker1);
+//                                tv_car_count = view.findViewById(R.id.tv_car_count);
+//                                tv_car_count.setText((car_count>99?99:car_count)+"辆");
+//                                centerMarkerOption = new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.fromView(view));
+//
+//                                if(centerMarker!=null){
+//                                    centerMarker.remove();
+//                                }
+//
+//                                centerMarker = aMap.addMarker(centerMarkerOption);
+
+//                                    order_id = new JSONObject(bean.getOrder()).getInt("order_id");
+
+//                                    LogUtil.e("mf===car_authority3", ebikeInfoThread+"==="+order_id);
+
+//                                    if (ebikeInfoThread == null) {
+//                                        cycling();
+//                                        cyclingThread();
+//                                    }else{
+//                                        cycling2();
+//                                    }
+
+//                                    if (ebikeInfoThread == null) {
+//                                        cycling();
+//                                    }else{
+//                                        cycling2();
+//                                    }
+
 void macLoop(){
 
         try {

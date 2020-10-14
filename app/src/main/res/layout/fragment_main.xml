@@ -395,14 +395,16 @@
                         android:layout_marginRight="14dp"
                         android:orientation="horizontal"
                         android:gravity="center"
-                        android:background="@drawable/btn_bcg_biking"
+
                         >
+
+<!--                        android:background="@drawable/btn_bcg_biking"-->
 
                         <TextView
                             android:id="@+id/tv_againBtn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="再次开锁"
+                            android:text=""
                             android:textSize="@dimen/sp14"
                             android:textColor="#FD555B"
                             />
@@ -482,14 +484,16 @@
                             android:layout_marginRight="14dp"
                             android:orientation="horizontal"
                             android:gravity="center"
-                            android:background="@drawable/btn_bcg_biking2"
+
                             >
+
+<!--                            android:background="@drawable/btn_bcg_biking2"-->
 
                             <TextView
                                 android:id="@+id/tv_againBtn_auto"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="临时上锁"
+                                android:text=""
                                 android:textSize="@dimen/sp14"
                                 android:textColor="@color/white"
                                 />
