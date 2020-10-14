@@ -4861,15 +4861,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                     if("再次开锁".equals(tvAgain)){
                                         car_notification(4, 2, 0, type+"===tbtble_connect_f==="+resultCode);
                                     }else{
-                                        car_notification(2, 2, 0, type+"===tbtble_connect_f===\""+resultCode);
+                                        car_notification(2, 2, 0, type+"===tbtble_connect_f==="+resultCode);
                                     }
 
 
                                 }else{
                                     if(isEndBtn){
-                                        car_notification(3, 2, 0, type+"===tbtble_connect_f===\""+resultCode);
+                                        car_notification(3, 2, 0, type+"===tbtble_connect_f==="+resultCode);
                                     }else{
-                                        car_notification(1, 2, 0, type+"===tbtble_connect_f===\""+resultCode);
+                                        car_notification(1, 2, 0, type+"===tbtble_connect_f==="+resultCode);
                                     }
                                 }
 

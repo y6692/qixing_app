@@ -6,13 +6,22 @@
         <!--<item name="colorPrimary">@color/colorPrimary</item>-->
         <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
         <!--<item name="colorAccent">@color/colorAccent</item>-->
-        <!--<item name="android:windowFullscreen">true</item>-->
+        <item name="android:windowFullscreen">true</item>
         <!--<item name="android:windowBackground">@drawable/start</item>-->
         <!--<item name="android:windowIsTranslucent">false</item>-->
 
         <!--<item name="android:windowIsTranslucent">true</item>-->
         <item name="android:windowIsTranslucent">false</item>
 
+    </style>
+
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
+        <!--<item name="android:background">@drawable/start</item>-->
+
+        <item name="android:windowTranslucentNavigation" tools:targetApi="kitkat">true</item>
+        <!--<item name="android:windowIsTranslucent">true</item>-->
+        <item name="android:windowBackground">@drawable/start</item>
     </style>
 
     <style name="AppTheme3" parent="Theme.AppCompat.Light.NoActionBar">
@@ -34,14 +43,7 @@
 
     <!---->
 
-    <style name="SplashTheme" parent="AppTheme">
-        <item name="android:windowFullscreen">true</item>
-        <!--<item name="android:background">@drawable/start</item>-->
 
-        <item name="android:windowTranslucentNavigation" tools:targetApi="kitkat">true</item>
-        <!--<item name="android:windowIsTranslucent">true</item>-->
-        <item name="android:windowBackground">@drawable/start</item>
-    </style>
 
     <style name="UpdateDialogStyle" parent="@android:style/Theme.DeviceDefault.Light.Dialog.NoActionBar.MinWidth">
         <item name="android:background">@android:color/white</item>
