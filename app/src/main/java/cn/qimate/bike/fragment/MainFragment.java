@@ -1248,7 +1248,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     @Override
                     public void run() {
                         try {
-                            LogUtil.e("mf===car_authority1", "==="+responseString);
+//                            LogUtil.e("mf===car_authority1", "==="+responseString);
 
                             ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
