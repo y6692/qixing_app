@@ -407,6 +407,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme3"
             >
 
 

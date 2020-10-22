@@ -567,9 +567,16 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
             startActivity(intent);
         }
 
+        closeLoadingDialog();
         scrollToFinishActivity();
     }
 
+    void closeLoadingDialog(){
+        if (loadingDialog != null && loadingDialog.isShowing()){
+            loadingDialog.dismiss();
+        }
+
+    }
 
     private void pay(){
         RequestParams params = new RequestParams();

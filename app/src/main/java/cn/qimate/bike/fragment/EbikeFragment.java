@@ -912,7 +912,7 @@ public class EbikeFragment extends BaseFragment implements View.OnClickListener,
 //                                                    }
                                                 }
 
-                                                Log.e("main_eb===schoolRange5", isHidden+"==="+pOptions.size()+"==="+pOptions+"==="+isContainsList.size()+"==="+isContainsList);
+                                                Log.e("main_eb===schoolRange5", isHidden+"==="+listPoint.size()+"==="+pOptions.size()+"==="+pOptions+"==="+isContainsList.size()+"==="+isContainsList);
 
 //                                                closeLoadingDialog2();
                                             }catch (Exception e){

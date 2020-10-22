@@ -63,6 +63,10 @@ public class Urls {
 	public static String car_authority = host2 + "/user/car_authority";
 	//车辆信息接口
 	public static String car = host2 + "/car/";
+
+	//车辆相关 - 【已完成】开锁、上锁指令结果
+	public static String cmd_query = host2 + "/cmd/query/";
+
 	//车辆位置接口
 	public static String location = host2 + "/car/";
 	//下单权限接口

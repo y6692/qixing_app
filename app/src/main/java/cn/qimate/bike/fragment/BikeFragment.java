@@ -766,6 +766,14 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                                         list.add(latLng);
 
                                                         listPoint.add(latLng);
+
+//                                                        View view = View.inflate(context, R.layout.marker_info_layout, null);
+//                                                        centerMarkerOption = new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromView(view));
+//                                                        centerMarker = aMap.addMarker(centerMarkerOption);
+
+//                                                        aMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromView(view)));
+
+//                                                        aMap.addMarker(new MarkerOptions().position(latLng));
                                                     }
 
 //                                                    Log.e("main_b===schoolRange3", "==="+list.size());
@@ -798,7 +806,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 //                                                    }
                                                 }
 
-//                                                Log.e("main_b===schoolRange5", isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
+                                                Log.e("main_b===schoolRange5", listPoint.size()+"==="+isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
 
 //                                                closeLoadingDialog2();
                                             }catch (Exception e){

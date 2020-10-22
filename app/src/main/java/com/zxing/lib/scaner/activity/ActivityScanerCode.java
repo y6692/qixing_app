@@ -1700,7 +1700,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             String lock_secretkey = bean.getLock_secretkey();
                             String lock_password = bean.getLock_password();
 
-                            if("9".equals(type) || "10".equals(type)){
+                            if("9".equals(type) || "10".equals(type) || "12".equals(type)){
                                 Config.key = hexStringToByteArray(lock_secretkey);
                                 Config.password = hexStringToByteArray(lock_password);
                             }else if("2".equals(type) || "3".equals(type)){
