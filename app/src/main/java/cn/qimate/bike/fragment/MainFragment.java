@@ -2749,6 +2749,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                 car_authority();
                             }else{
+                                closeLoadingDialog();
+
                                 Intent intent = new Intent(context, EndBikeFeedBackActivity.class);
                                 intent.putExtra("bikeCode", codenum);
                                 intent.putExtra("carmodel_id", carmodel_id);
