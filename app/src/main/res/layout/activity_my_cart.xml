@@ -13,31 +13,29 @@
     <include
       layout="@layout/ui_main_title"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="30dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="我的套餐卡"
-            android:textSize="30sp"
-            android:textColor="@color/tx_black"/>
-    </LinearLayout>
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        android:layout_marginLeft="30dp">-->
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="我的套餐卡"-->
+<!--            android:textSize="30sp"-->
+<!--            android:textColor="@color/tx_black"/>-->
+<!--    </LinearLayout>-->
 
     <RelativeLayout
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:layout_below="@id/mainUI_titleLayout">
 
         <LinearLayout
             android:id="@+id/ll_2"
             android:layout_width="match_parent"
-            android:layout_height="31dp"
-            android:layout_marginTop="7dp"
+            android:layout_height="44dp"
             android:background="@drawable/block_bcg"
             android:orientation="vertical">
 
@@ -70,24 +68,25 @@
                     android:layout_height="match_parent"
                     app:tabIndicatorFullWidth="false"
                     app:tabGravity="fill"
-                    app:tabIndicatorColor="#F95A64"
+                    app:tabIndicatorColor="#EA5359"
+                    app:tabIndicatorHeight="3dp"
                     app:tabMode="fixed"
-                    app:tabSelectedTextColor="#333333"
+                    app:tabSelectedTextColor="#EA5359"
                     app:tabTextAppearance="@style/TabLayoutTextStyle2"
-                    app:tabTextColor="#333333"
+                    app:tabTextColor="#665E5E"
                     />
 
             </RelativeLayout>
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/ll_3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="3dp"
             android:layout_below="@id/ll_2"
-            android:background="#F1F1F1"
+            android:paddingTop="0dp"
+            android:background="#ffffff"
             android:orientation="vertical">
 
             <android.support.v4.view.ViewPager
@@ -95,7 +94,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-        </LinearLayout>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:src="@drawable/head_border"
+                android:scaleType="fitXY"
+                />
+
+        </RelativeLayout>
 
 
 

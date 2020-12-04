@@ -1,7 +1,6 @@
 package cn.qimate.bike.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -23,14 +22,13 @@ import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.BillBean;
-import cn.qimate.bike.model.OrderBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 /**
  * Created by yuanyi on 2019/12/9.
  */
-public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnClickListener{
+public class MyCartDetailActivity extends SwipeBackActivity implements View.OnClickListener{
 
     private Context context;
     private LoadingDialog loadingDialog;
@@ -62,7 +60,7 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_order_detail);
+        setContentView(R.layout.activity_my_cart_detail);
         context = this;
 
         initView();
@@ -75,33 +73,33 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
         loadingDialog.setCanceledOnTouchOutside(false);
 
         backImg = (LinearLayout) findViewById(R.id.ll_backBtn);
-        iv_bike = (ImageView)findViewById(R.id.my_order_detail_iv_bike);
-        tv_car_type = (TextView)findViewById(R.id.my_order_detail_tv_car_type);
-        tv_car_number = (TextView)findViewById(R.id.my_order_detail_tv_car_number);
-        tv_order_amount = (TextView)findViewById(R.id.my_order_detail_tv_order_amount);
-        tv_order_sn = (TextView)findViewById(R.id.my_order_detail_tv_order_sn);
-        tv_payment_name = (TextView)findViewById(R.id.my_order_detail_tv_payment_name);
-        tv_payment_time = (TextView)findViewById(R.id.my_order_detail_tv_payment_time);
-        tv_car_start_time = (TextView)findViewById(R.id.my_order_detail_tv_car_start_time);
-        tv_car_end_time = (TextView)findViewById(R.id.my_order_detail_tv_car_end_time);
-        tv_price = (TextView)findViewById(R.id.my_order_detail_tv_price);
-        tv_continued_price= (TextView)findViewById(R.id.my_order_detail_tv_continued_price);
-        tv_credit_score_desc= (TextView)findViewById(R.id.my_order_detail_tv_credit_score_desc);
-        tv_credit_score_desc2= (TextView)findViewById(R.id.my_order_detail_tv_credit_score_desc2);
-        tv_each_free_time= (TextView)findViewById(R.id.my_order_detail_tv_each_free_time);
-        tv_cycling_time = (TextView)findViewById(R.id.my_order_detail_tv_cycling_time);
-
-        rl_each_free_time= (RelativeLayout) findViewById(R.id.my_order_detail_rl_each_free_time);
-
-        rl_payment_name = (RelativeLayout)findViewById(R.id.my_order_detail_rl_payment_name);
-        rl_payment_time = (RelativeLayout)findViewById(R.id.my_order_detail_rl_payment_time);
-
-        backImg.setOnClickListener(this);
-//        submitBtn.setOnClickListener(this);
-
-        order_id = getIntent().getIntExtra("order_id", 1);
-
-        order_detail();
+//        iv_bike = (ImageView)findViewById(R.id.my_order_detail_iv_bike);
+//        tv_car_type = (TextView)findViewById(R.id.my_order_detail_tv_car_type);
+//        tv_car_number = (TextView)findViewById(R.id.my_order_detail_tv_car_number);
+//        tv_order_amount = (TextView)findViewById(R.id.my_order_detail_tv_order_amount);
+//        tv_order_sn = (TextView)findViewById(R.id.my_order_detail_tv_order_sn);
+//        tv_payment_name = (TextView)findViewById(R.id.my_order_detail_tv_payment_name);
+//        tv_payment_time = (TextView)findViewById(R.id.my_order_detail_tv_payment_time);
+//        tv_car_start_time = (TextView)findViewById(R.id.my_order_detail_tv_car_start_time);
+//        tv_car_end_time = (TextView)findViewById(R.id.my_order_detail_tv_car_end_time);
+//        tv_price = (TextView)findViewById(R.id.my_order_detail_tv_price);
+//        tv_continued_price= (TextView)findViewById(R.id.my_order_detail_tv_continued_price);
+//        tv_credit_score_desc= (TextView)findViewById(R.id.my_order_detail_tv_credit_score_desc);
+//        tv_credit_score_desc2= (TextView)findViewById(R.id.my_order_detail_tv_credit_score_desc2);
+//        tv_each_free_time= (TextView)findViewById(R.id.my_order_detail_tv_each_free_time);
+//        tv_cycling_time = (TextView)findViewById(R.id.my_order_detail_tv_cycling_time);
+//
+//        rl_each_free_time= (RelativeLayout) findViewById(R.id.my_order_detail_rl_each_free_time);
+//
+//        rl_payment_name = (RelativeLayout)findViewById(R.id.my_order_detail_rl_payment_name);
+//        rl_payment_time = (RelativeLayout)findViewById(R.id.my_order_detail_rl_payment_time);
+//
+//        backImg.setOnClickListener(this);
+////        submitBtn.setOnClickListener(this);
+//
+//        order_id = getIntent().getIntExtra("order_id", 1);
+//
+//        order_detail();
     }
 
     private void order_detail() {
@@ -206,9 +204,9 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         switch (v.getId()){
             case R.id.ll_backBtn:
-                Intent intent = new Intent(context, MainActivity.class);
-//              intent.putExtra("flag", true);
-                startActivity(intent);
+//                Intent intent = new Intent(context, MainActivity.class);
+////              intent.putExtra("flag", true);
+//                startActivity(intent);
 
                 scrollToFinishActivity();
                 break;
@@ -279,9 +277,9 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
-            Intent intent = new Intent(context, MainActivity.class);
-//            intent.putExtra("flag", true);
-            startActivity(intent);
+//            Intent intent = new Intent(context, MainActivity.class);
+////            intent.putExtra("flag", true);
+//            startActivity(intent);
 
             scrollToFinishActivity();
             return true;

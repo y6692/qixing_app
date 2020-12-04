@@ -281,8 +281,9 @@ public class RechargeActivity extends SwipeBackActivity implements View.OnClickL
                             intent.putExtra("order_amount", order_amount);
                             intent.putExtra("order_id", order_id);
                             intent.putExtra("isRemain", isRemain);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             context.startActivity(intent);
+                            finishMine();
 
 //                            Intent rIntent = new Intent();
 //                          rIntent.putExtra("codenum", codenum);

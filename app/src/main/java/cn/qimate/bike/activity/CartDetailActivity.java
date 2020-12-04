@@ -1,11 +1,13 @@
 package cn.qimate.bike.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -20,17 +22,19 @@ import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.SharedPreferencesUrls;
+import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
+import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.BillBean;
-import cn.qimate.bike.model.OrderBean;
+import cn.qimate.bike.model.H5Bean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 /**
  * Created by yuanyi on 2019/12/9.
  */
-public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnClickListener{
+public class CartDetailActivity extends SwipeBackActivity implements View.OnClickListener{
 
     private Context context;
     private LoadingDialog loadingDialog;
@@ -59,10 +63,17 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
 
     private int order_id;
 
+    CheckBox cb;
+    TextView tv1, tv2, tv_serviceProtocol, tv_submitBtn;
+    LinearLayout ll_submitBtn;
+
+    CustomDialog.Builder customBuilder;
+    private CustomDialog customDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_order_detail);
+        setContentView(R.layout.activity_cart_detail);
         context = this;
 
         initView();
@@ -74,34 +85,39 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
+        customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setType(3).setTitle("温馨提示").setMessage("您将退出登录")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+//                        logout();
+                        dialog.cancel();
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+//        customDialog = customBuilder.create();
+
         backImg = (LinearLayout) findViewById(R.id.ll_backBtn);
-        iv_bike = (ImageView)findViewById(R.id.my_order_detail_iv_bike);
-        tv_car_type = (TextView)findViewById(R.id.my_order_detail_tv_car_type);
-        tv_car_number = (TextView)findViewById(R.id.my_order_detail_tv_car_number);
-        tv_order_amount = (TextView)findViewById(R.id.my_order_detail_tv_order_amount);
-        tv_order_sn = (TextView)findViewById(R.id.my_order_detail_tv_order_sn);
-        tv_payment_name = (TextView)findViewById(R.id.my_order_detail_tv_payment_name);
-        tv_payment_time = (TextView)findViewById(R.id.my_order_detail_tv_payment_time);
-        tv_car_start_time = (TextView)findViewById(R.id.my_order_detail_tv_car_start_time);
-        tv_car_end_time = (TextView)findViewById(R.id.my_order_detail_tv_car_end_time);
-        tv_price = (TextView)findViewById(R.id.my_order_detail_tv_price);
-        tv_continued_price= (TextView)findViewById(R.id.my_order_detail_tv_continued_price);
-        tv_credit_score_desc= (TextView)findViewById(R.id.my_order_detail_tv_credit_score_desc);
-        tv_credit_score_desc2= (TextView)findViewById(R.id.my_order_detail_tv_credit_score_desc2);
-        tv_each_free_time= (TextView)findViewById(R.id.my_order_detail_tv_each_free_time);
-        tv_cycling_time = (TextView)findViewById(R.id.my_order_detail_tv_cycling_time);
+        cb = (CheckBox) findViewById(R.id.cb);
+        tv1 = (TextView)findViewById(R.id.tv1);
+        tv2 = (TextView)findViewById(R.id.tv2);
+        tv_serviceProtocol = (TextView)findViewById(R.id.tv_serviceProtocol);
+        tv_submitBtn = (TextView)findViewById(R.id.tv_submitBtn);
+        ll_submitBtn = (LinearLayout) findViewById(R.id.ll_submitBtn);
 
-        rl_each_free_time= (RelativeLayout) findViewById(R.id.my_order_detail_rl_each_free_time);
-
-        rl_payment_name = (RelativeLayout)findViewById(R.id.my_order_detail_rl_payment_name);
-        rl_payment_time = (RelativeLayout)findViewById(R.id.my_order_detail_rl_payment_time);
 
         backImg.setOnClickListener(this);
-//        submitBtn.setOnClickListener(this);
-
-        order_id = getIntent().getIntExtra("order_id", 1);
-
-        order_detail();
+        cb.setOnClickListener(this);
+        tv1.setOnClickListener(this);
+        tv2.setOnClickListener(this);
+        tv_serviceProtocol.setOnClickListener(this);
+        ll_submitBtn.setOnClickListener(this);
+//
+//        order_id = getIntent().getIntExtra("order_id", 1);
+//
+//        order_detail();
     }
 
     private void order_detail() {
@@ -206,24 +222,119 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         switch (v.getId()){
             case R.id.ll_backBtn:
-                Intent intent = new Intent(context, MainActivity.class);
-//              intent.putExtra("flag", true);
-                startActivity(intent);
+//                Intent intent = new Intent(context, MainActivity.class);
+////              intent.putExtra("flag", true);
+//                startActivity(intent);
 
                 scrollToFinishActivity();
                 break;
 
-            case R.id.unpay_other_submitBtn:
+            case R.id.cb:
+            case R.id.tv1:
+            case R.id.tv2:
+//                Intent intent = new Intent(context, MainActivity.class);
+////              intent.putExtra("flag", true);
+//                startActivity(intent);
+
+                Log.e("cb===", "==="+cb.isChecked());
+
+                if(cb.isChecked()){
+                    ll_submitBtn.setBackgroundResource(R.drawable.btn_bcg2);
+                    tv_submitBtn.setTextColor(0xffffffff);
+                }else{
+                    ll_submitBtn.setBackgroundResource(R.drawable.btn_bcg3);
+                    tv_submitBtn.setTextColor(0xffEA5359);
+                }
+
+                break;
+
+            case R.id.tv_serviceProtocol:
+                agreement();
+                break;
+
+            case R.id.ll_submitBtn:
                 if (access_token == null || "".equals(access_token)){
                     Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                if(cb.isChecked()){
+                    customBuilder.setTitle("温馨提示").setMessage("确定吗");
+                    customDialog = customBuilder.create();
+                    customDialog.show();
+                }else{
+                    customBuilder.setTitle("温馨提示").setMessage("请勾选");
+                    customDialog = customBuilder.create();
+                    customDialog.show();
+                }
+
 
                 Log.e("rid===", "===");
 
 //                userRecharge(uid, access_token);
                 break;
         }
+    }
+
+    private void agreement() {
+
+        Log.e("agreement===0", "===");
+
+        try{
+//          协议名 register注册协议 recharge充值协议 cycling_card骑行卡协议 insurance保险协议
+            HttpHelper.get(context, Urls.agreement+"cycling_card", new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                  Toast.makeText(context, "fail=="+responseString, Toast.LENGTH_LONG).show();
+
+                    Log.e("agreement===fail", throwable.toString()+"==="+responseString);
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+
+//                        Toast.makeText(context, "=="+responseString, Toast.LENGTH_LONG).show();
+
+                        Log.e("agreement===", "==="+responseString);
+
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                        H5Bean bean = JSON.parseObject(result.getData(), H5Bean.class);
+
+                        UIHelper.goWebViewAct(context, bean.getH5_title(), bean.getH5_url());
+//                        UIHelper.goWebViewAct(context, bean.getH5_title(), Urls.agreement+"register");
+
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    }
+                }
+
+
+            });
+        }catch (Exception e){
+            Toast.makeText(context, "==="+e, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 //    private void userRecharge(final String uid, final String access_token){
@@ -279,9 +390,9 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
-            Intent intent = new Intent(context, MainActivity.class);
-//            intent.putExtra("flag", true);
-            startActivity(intent);
+//            Intent intent = new Intent(context, MainActivity.class);
+////            intent.putExtra("flag", true);
+//            startActivity(intent);
 
             scrollToFinishActivity();
             return true;

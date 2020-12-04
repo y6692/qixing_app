@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -43,6 +44,7 @@ import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.nostra13.universalimageloader.core.ImageLoader;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.CartDetailActivity;
 import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.activity.SettlementPlatformActivity;
 import cn.qimate.bike.base.BaseFragment;
@@ -302,6 +304,8 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
             final ImageView iv_down = BaseViewHolder.get(convertView,R.id.item_down);
             LinearLayout ll_payBtn = BaseViewHolder.get(convertView,R.id.ll_payBtn);
             RelativeLayout rl_desc = BaseViewHolder.get(convertView,R.id.item_rl_desc);
+            LinearLayout ll_img = BaseViewHolder.get(convertView,R.id.item_ll_img);
+            RelativeLayout ll_bg = BaseViewHolder.get(convertView,R.id.item_bg);
             final PayCartBean bean = getDatas().get(position);
 
             name.setText(bean.getName());
@@ -311,9 +315,25 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
             tv_original_price.setText("¥"+bean.getOriginal_price());
             tv_desc.setText(bean.getDesc());
 
-            RoundImageView iv_img = BaseViewHolder.get(convertView, R.id.item_iv_img);
-            ImageLoader.getInstance().displayImage(bean.getImage(), iv_img);
+//            RoundImageView iv_img = BaseViewHolder.get(convertView, R.id.item_iv_img);
+//            ImageLoader.getInstance().displayImage(bean.getImage(), iv_img);
 
+//            ImageLoader.getInstance().displayImage(bean.getImage(), ll_img);
+
+
+            GradientDrawable drawable = (GradientDrawable)ll_bg.getBackground();
+//            if(bean.getLinear_gradient()!=null){
+//
+//                drawable.mutate();
+//
+//                if(bean.getLinear_gradient().length==1){
+//                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[0]), Color.parseColor(bean.getLinear_gradient()[0])});
+//                }else{
+//                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[1]), Color.parseColor(bean.getLinear_gradient()[0])});
+//                }
+//            }
+
+            drawable.setColors(new int[]{Color.parseColor("#BDBDBD"), Color.parseColor("#ffffff")});
 
             tv_original_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
@@ -329,7 +349,14 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
 
 //                    order(bean.getCode());
 
-                    order(card_code);
+//                    order(card_code);
+
+                    Intent intent = new Intent(context, CartDetailActivity.class);
+//                    intent.putExtra("order_type", 2);
+//                    intent.putExtra("order_amount", order_amount);
+//                    intent.putExtra("order_id", order_id);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    context.startActivity(intent);
 
                 }
             });

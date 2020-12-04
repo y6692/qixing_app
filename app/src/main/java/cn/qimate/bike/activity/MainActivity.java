@@ -680,6 +680,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 
         boolean flag = getIntent().getBooleanExtra("flag", false);
+        int tabId = getIntent().getIntExtra("tabId", 0);
 
         Log.e("ma===onResume",  flag + "===" + access_token + "===" + type);
 
@@ -690,6 +691,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if(flag){
             purseFragment.user();
             mineFragment.initHttp();
+
+            tab.setCurrentTab(tabId);
         }
 
 //        mainFragment.sho
@@ -1502,7 +1505,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
+
                         AppManager.getAppManager().AppExit(context);
+
+//                        finish();
+//                        System.exit(0);
                     }
                 });
                 customBuilder.create().show();

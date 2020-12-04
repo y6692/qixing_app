@@ -54,8 +54,9 @@ public class MyCartActivity extends SwipeBackActivity implements View.OnClickLis
   private void init(){
 
     ll_back = (LinearLayout) findViewById(R.id.ll_backBtn);
-//    title = (TextView) findViewById(R.id.mainUI_title_titleText);
-//    title.setText("购买骑行套餐");
+    title = (TextView) findViewById(R.id.mainUI_title_titleText);
+    title.setText("我的套餐卡");
+//    title.setTextColor(0xEA5359);
 //    rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
 //    rightBtn.setText("我的套餐卡");
 
@@ -100,7 +101,7 @@ public class MyCartActivity extends SwipeBackActivity implements View.OnClickLis
   }
 
   class MyPagerAdapter extends FragmentPagerAdapter {
-    private String[] titles = new String[]{"单车套餐卡", "助力车套餐卡"};
+    private String[] titles = new String[]{"单车", "助力车"};
     private List<Fragment> fragmentList;
 
     public MyPagerAdapter(FragmentManager fm) {

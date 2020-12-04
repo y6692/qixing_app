@@ -459,6 +459,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private Handler m_myHandler2 = new Handler();
 
     private boolean isOrder = false;
+    private boolean isAgainClick = false;
     private boolean isEndClick = false;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -585,7 +586,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         String h5_title = activity.getIntent().getStringExtra("h5_title");
         String action_content = activity.getIntent().getStringExtra("action_content");
 
-        LogUtil.e("mf===onResume", h5_title+"==="+action_content+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+type);
+        LogUtil.e("mf===onActivityCreated", h5_title+"==="+action_content+"==="+SharedPreferencesUrls.getInstance().getString("access_token", "")+"==="+type);
 
         if(h5_title!=null && !"".equals(h5_title)){
             UIHelper.goWebViewAct(context, h5_title, action_content);
@@ -630,7 +631,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     public void onResume() {
         super.onResume();
 
-        closeLoadingDialog2();
+//        closeLoadingDialog2();
 
         boolean flag = activity.getIntent().getBooleanExtra("flag", false);
 
@@ -831,13 +832,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         customBuilder.setType(2).setTitle("温馨提示").setMessage("关锁后将自动还车，如有延迟，可尝试手动还车")
                 .setPositiveButton("手动还车", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+
                         btnLog("A1");
 
                         LogUtil.e("手动还车===", isAgain+"==="+isEndBtn);
 
                         cycling4();
 
-                        dialog.cancel();
+
                     }
                 }).setNegativeButton("联系客服", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -2032,8 +2035,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                         ll_ebike.setVisibility(View.GONE);
 
                                         if("10".equals(type) || "12".equals(type)){
-
-
                                             ll_oprate.setVisibility(View.GONE);
                                             ll_oprate_auto.setVisibility(View.VISIBLE);
                                         }else{
@@ -2655,58 +2656,67 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 //        loadingDialog.setTitle("正在还车中，请勿离开");
 //        loadingDialog.show();
 
-        HttpHelper.get(context, Urls.cycling, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
+        try{
+            HttpHelper.get(context, Urls.cycling, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
 //                onStartCommon("正在还车中，请勿离开");
-                onStartCommon("正在唤醒车锁");
+                    onStartCommon("正在唤醒车锁");
 
 
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                onFailureCommon("mf===cycling5", throwable.toString());
-            }
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    onFailureCommon("mf===cycling5", throwable.toString());
+                    isAgainClick = false;
+                }
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, final String responseString) {
 
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
+                    m_myHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
 
-                        try {
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                            try {
+                                ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
-                            LogUtil.e("mf===cycling5_1", responseString + "===" + result.data);
+                                LogUtil.e("mf===cycling5_1", responseString + "===" + result.data);
 
-                            OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
+                                OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
 
-                            if(null == bean.getOrder_sn() || bean.getOrder_state()>20){
-                                ToastUtil.showMessageApp(context, "当前行程已结束");
-                                end2();
-                                car_authority();
-                            }else{
-                                if(carmodel_id==2){
-                                    carInfo_open();
+                                if(null == bean.getOrder_sn() || bean.getOrder_state()>20){
+                                    ToastUtil.showMessageApp(context, "当前行程已结束");
+                                    end2();
+                                    car_authority();
+
+//                                    isAgainClick = false;
                                 }else{
-                                    car_can_unlock();
+                                    if(carmodel_id==2){
+                                        carInfo_open();
+                                    }else{
+                                        car_can_unlock();
+                                    }
                                 }
-                            }
 
-                        } catch (Exception e) {
-                            closeLoadingDialog();
-                            LogUtil.e("mf===cycling5===e", "==="+e);
+                            } catch (Exception e) {
+                                closeLoadingDialog();
+                                LogUtil.e("mf===cycling5===e", "==="+e);
 
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                            }
+
+
+
                         }
+                    });
+                }
+            });
+        }catch (Exception e){
+            LogUtil.e("mf===cycling4_e", "==="+e);
+            isAgainClick = false;
+        }
 
-
-
-                    }
-                });
-            }
-        });
 
     }
 
@@ -2749,11 +2759,15 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                                 car_authority();
                             }else{
+                                closeLoadingDialog();
+
                                 Intent intent = new Intent(context, EndBikeFeedBackActivity.class);
                                 intent.putExtra("bikeCode", codenum);
                                 intent.putExtra("carmodel_id", carmodel_id);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                 context.startActivity(intent);
+
+
                             }
 
                         } catch (Exception e) {
@@ -4264,111 +4278,117 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                 LogUtil.e("ll_rent===onClick", "==="+isOrder);
 
-                if(!isOrder){
-                    isOrder = true;
-                    LogUtil.e("ll_rent===", loadingDialog.isShowing()+"==="+type+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    return;
+                }
 
-                    isOpenLock = false;
-                    isConnect = false;
-                    isLookPsdBtn = false;
-                    isEndBtn = false;
-                    isAgain = false;
+                LogUtil.e("ll_rent===", loadingDialog.isShowing()+"==="+type+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
-                    if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                        ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-                    }
-                    //蓝牙锁
-                    if (mBluetoothAdapter == null) {
-                        BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
-                        mBluetoothAdapter = bluetoothManager.getAdapter();
-                    }
+                isOpenLock = false;
+                isConnect = false;
+                isLookPsdBtn = false;
+                isEndBtn = false;
+                isAgain = false;
 
-                    if (mBluetoothAdapter == null) {
-                        ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                        return;
-                    }
+                if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                    ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+                }
+                //蓝牙锁
+                if (mBluetoothAdapter == null) {
+                    BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
+                    mBluetoothAdapter = bluetoothManager.getAdapter();
+                }
 
-                    if (!mBluetoothAdapter.isEnabled()) {
-                        flagm = 1;
-                        isPermission = false;
-                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(enableBtIntent, 188);
-                    } else {
-                        isStop = false;
-                        isOpen = false;
-                        isFinish = false;
-                        n = 0;
-                        cn = 0;
-                        force_backcar = 0;
-                        isTwo = false;
-                        first3 = true;
-                        flagm = 0;
-                        isFrist1 = true;
-                        stopScan = false;
-                        clickCount = 0;
-                        tz = 0;
-                        transtype = "";
-                        major = 0;
-                        minor = 0;
-                        isGPS_Lo = false;
-                        scan = false;
-                        isTemp = false;
-                        backType = "";
-                        open = 0;
-                        isBleInit = false;
-                        loopTime = 1 * 1000;
+                if (mBluetoothAdapter == null) {
+                    ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                    return;
+                }
 
-                        order_type = 0;
-                        isWaitEbikeInfo = true;
-                        ebikeInfoThread = null;
-                        oid = "";
+                if (!mBluetoothAdapter.isEnabled()) {
+                    flagm = 1;
+                    isPermission = false;
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBtIntent, 188);
+                } else {
+                    isStop = false;
+                    isOpen = false;
+                    isFinish = false;
+                    n = 0;
+                    cn = 0;
+                    force_backcar = 0;
+                    isTwo = false;
+                    first3 = true;
+                    flagm = 0;
+                    isFrist1 = true;
+                    stopScan = false;
+                    clickCount = 0;
+                    tz = 0;
+                    transtype = "";
+                    major = 0;
+                    minor = 0;
+                    isGPS_Lo = false;
+                    scan = false;
+                    isTemp = false;
+                    backType = "";
+                    open = 0;
+                    isBleInit = false;
+                    loopTime = 1 * 1000;
 
-                        if ("2".equals(type) || "3".equals(type) || "9".equals(type) || "10".equals(type) || "12".equals(type)){
+                    order_type = 0;
+                    isWaitEbikeInfo = true;
+                    ebikeInfoThread = null;
+                    oid = "";
+
+                    if ("2".equals(type) || "3".equals(type) || "9".equals(type) || "10".equals(type) || "12".equals(type)){
 
 //                      closeBroadcast();
 //                      activity.registerReceiver(broadcastReceiver, Config.initFilter());
 //                      GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
 
-                            bleInit();
+                        bleInit();
 
-                        }else if("4".equals(type) || "8".equals(type)){
+                    }else if("4".equals(type) || "8".equals(type)){
 
 //                        BLEService.bluetoothAdapter = mBluetoothAdapter;
 //                        bleService.view = context;
 //                        bleService.showValue = true;
-                        }else if ("5".equals(type)  || "6".equals(type)) {
-                            LogUtil.e("ll_rent===5", "==="+isLookPsdBtn);
+                    }else if ("5".equals(type)  || "6".equals(type)) {
+                        LogUtil.e("ll_rent===5", "==="+isLookPsdBtn);
 
 //                          ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
 //                          ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
-                        }else if ("7".equals(type)) {
-                        }
+                    }else if ("7".equals(type)) {
+                    }
 
-                        SharedPreferencesUrls.getInstance().putString("tempStat", "0");
-                        if (carmodel_id==2) {
-                            tv_againBtn.setText("临时上锁");
+                    SharedPreferencesUrls.getInstance().putString("tempStat", "0");
+                    if (carmodel_id==2) {
+                        tv_againBtn.setText("临时上锁");
 
-                            if(allow_temporary_lock==0){
-                                ll_biking_openAgain.setBackgroundResource(R.drawable.btn_bcg_biking3);
-                                tv_againBtn.setTextColor(Color.parseColor("#FFFFFF"));
-                            }else{
-                                ll_biking_openAgain.setBackgroundResource(R.drawable.btn_bcg_biking);
-                                tv_againBtn.setTextColor(Color.parseColor("#FD555B"));
-                            }
-
+                        if(allow_temporary_lock==0){
+                            ll_biking_openAgain.setBackgroundResource(R.drawable.btn_bcg_biking3);
+                            tv_againBtn.setTextColor(Color.parseColor("#FFFFFF"));
                         }else{
-                            tv_againBtn.setText("再次开锁");
-
                             ll_biking_openAgain.setBackgroundResource(R.drawable.btn_bcg_biking);
                             tv_againBtn.setTextColor(Color.parseColor("#FD555B"));
                         }
 
-                        refreshLayout.setVisibility(View.VISIBLE);
+                    }else{
+                        tv_againBtn.setText("再次开锁");
 
-
-                        order();
+                        ll_biking_openAgain.setBackgroundResource(R.drawable.btn_bcg_biking);
+                        tv_againBtn.setTextColor(Color.parseColor("#FD555B"));
                     }
+
+                    refreshLayout.setVisibility(View.VISIBLE);
+
+
+                    order();
                 }
+
+
+//                if(!isOrder){
+//                    isOrder = true;
+//                }
 
 
 
@@ -4376,6 +4396,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
             case R.id.ll_biking_openAgain:
             case R.id.ll_biking_openAgain_auto:
+
+//                if(!isAgainClick){
+//                    isAgainClick = true;
+//                }else{
+//                    return;
+//                }
+
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    return;
+                }
 
                 String tvAgain = getTvAgain();
 
@@ -4397,6 +4427,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     if(allow_temporary_lock==0){
 //                        ToastUtil.showMessageApp(context, "临时锁车已禁用，请至蓝色围栏还车，未锁导致车辆丢失责任自负。");
                         customDialog5.show();
+
+                        isAgainClick = false;
                     }else{
                         btnLog("A2");
 //                      car_can_lock();
@@ -4414,12 +4446,19 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 break;
 
             case R.id.ll_biking_endBtn:
-                btnLog("A1");
 
-                if(!isEndClick){
-                    isEndClick = true;
-                    cycling4();
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    return;
                 }
+
+                btnLog("A1");
+                cycling4();
+
+
+//                if(!isEndClick){
+//                    isEndClick = true;
+//
+//                }
 
                 break;
 
@@ -5627,6 +5666,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         RelativeLayout pop_win_bg = (RelativeLayout) customView.findViewById(R.id.pop_rent_bg);
         ImageView iv_popup_window_back = (ImageView) customView.findViewById(R.id.popupWindow_rent_back);
         ImageView iv_rent_cancelBtn = (ImageView) customView.findViewById(R.id.iv_rent_cancelBtn);
+        ImageView ib = (ImageView) customView.findViewById(R.id.ib);
         TextView tv_codenum = (TextView) customView.findViewById(R.id.tv_codenum);
         TextView tv_carmodel_name = (TextView) customView.findViewById(R.id.tv_carmodel_name);
         TextView tv_each_free_time = (TextView) customView.findViewById(R.id.tv_each_free_time);
@@ -5641,46 +5681,59 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         LinearLayout ll_change_car = (LinearLayout) customView.findViewById(R.id.ll_change_car);
         LinearLayout ll_rent = (LinearLayout) customView.findViewById(R.id.ll_rent);
 
-        tv_credit_score_desc.setText(credit_score_desc);
+
 
         if(carmodel_id==2){
             ll_ebike.setVisibility(View.VISIBLE);
 
             tv_electricity.setText(electricity);
             tv_mileage.setText(mileage);
+
+            ib.setImageResource(R.drawable.pop_ebike_good);
         }else{
             ll_ebike.setVisibility(View.GONE);
+
+            ib.setImageResource(R.drawable.pop_bike_good);
         }
 
         tv_codenum.setText(codenum);
         tv_carmodel_name.setText(carmodel_name);
-        tv_first_price.setText(first_price+"元");
-        tv_first_time.setText("/"+first_time+"分钟");
-        tv_continued_price.setText(continued_price+"元");
-        tv_continued_time.setText("/"+continued_time+"分钟");
+        tv_first_price.setText(first_price+"");
+        tv_first_time.setText(first_time+"");
+        tv_continued_price.setText(continued_price+"");
+        tv_continued_time.setText(continued_time+"");
+//        tv_first_price.setText(first_price+"元");
+//        tv_first_time.setText("/"+first_time+"分钟");
+//        tv_continued_price.setText(continued_price+"元");
+//        tv_continued_time.setText("/"+continued_time+"分钟");
 
-        if("0".equals(each_free_time)){
-            tv_each_free_time.setVisibility(View.GONE);
-        }else{
-            tv_each_free_time.setVisibility(View.VISIBLE);
-            tv_each_free_time.setText(each_free_time+"分钟免费");
-        }
 
-        LogUtil.e("initmPopupRent===", credit_score_desc+"===");
 
-        if("".equals(credit_score_desc)){
-            tv_credit_score_desc.setVisibility(View.GONE);
-            tv_first_price.setTextColor(0xFF666666);
-            tv_first_time.setTextColor(0xFF666666);
-            tv_continued_price.setTextColor(0xFF666666);
-            tv_continued_time.setTextColor(0xFF666666);
-        }else{
-            tv_credit_score_desc.setVisibility(View.VISIBLE);
-            tv_first_price.setTextColor(0xFFFD555B);
-            tv_first_time.setTextColor(0xFFFD555B);
-            tv_continued_price.setTextColor(0xFFFD555B);
-            tv_continued_time.setTextColor(0xFFFD555B);
-        }
+//        if("0".equals(each_free_time)){
+//            tv_each_free_time.setVisibility(View.GONE);
+//        }else{
+//            tv_each_free_time.setVisibility(View.VISIBLE);
+//            tv_each_free_time.setText(each_free_time+"分钟免费");
+//        }
+//
+//        LogUtil.e("initmPopupRent===", each_free_time+"==="+credit_score_desc);
+
+//        tv_credit_score_desc.setText(credit_score_desc);
+        tv_credit_score_desc.setText("11<信用<12");
+//
+//        if("".equals(credit_score_desc)){
+//            tv_credit_score_desc.setVisibility(View.GONE);
+////            tv_first_price.setTextColor(0xFF666666);
+////            tv_first_time.setTextColor(0xFF666666);
+////            tv_continued_price.setTextColor(0xFF666666);
+////            tv_continued_time.setTextColor(0xFF666666);
+//        }else{
+//            tv_credit_score_desc.setVisibility(View.VISIBLE);
+////            tv_first_price.setTextColor(0xFFFD555B);
+////            tv_first_time.setTextColor(0xFFFD555B);
+////            tv_continued_price.setTextColor(0xFFFD555B);
+////            tv_continued_time.setTextColor(0xFFFD555B);
+//        }
 
 //        tv_price.setText(Html.fromHtml(price));
 //        tv_price.setText(Html.fromHtml(price, null, new HtmlTagHandler("font")));
@@ -5909,7 +5962,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             boolean flag = false;
                             if(!isContainsList2.contains(true)){
-                                flag = minPoint(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()));
+                                flag = minPoint(Double.parseDouble(bean.getLatitude()), Double.parseDouble(bean.getLongitude()));   //锁与电子围栏，含有30米补偿
                             }else{
                                 flag = true;
                             }
@@ -5917,7 +5970,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             LogUtil.e("mf===car4", flag + "===" + isContainsList2.contains(true)  + "===" + type + "===" + bean.getLatitude()+"==="+bean.getLongitude());
 
                             if(!flag && "12".equals(type)){
-                                flag = minPoint(referLatitude, referLongitude);    //30米补偿
+                                flag = minPoint(referLatitude, referLongitude);    //手机与电子围栏，含有30米补偿
                             }
 
                             LogUtil.e("mf===car5", flag + "===" + isContainsList2.contains(true)  + "===" + type + "===" + bean.getLatitude()+"==="+bean.getLongitude());
@@ -9567,11 +9620,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             closeLoadingDialog();
                         }
 
-
-
                     }
-
-
 
                 }
             });

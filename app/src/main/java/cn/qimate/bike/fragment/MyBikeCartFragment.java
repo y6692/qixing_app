@@ -42,6 +42,7 @@ import butterknife.Unbinder;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.MyCartDetailActivity;
 import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.base.BaseViewAdapter;
@@ -249,8 +250,8 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
 //                dialog.getWindow().setAttributes(params1);
 //                dialog.show();
 
-//                Intent intent = new Intent(context, PayMontCartActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(context, MyCartDetailActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -291,52 +292,54 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
                 convertView = inflater.inflate(R.layout.item_my_bike_cart, null);
             }
 
-            LinearLayout ll_bg = BaseViewHolder.get(convertView,R.id.item_bg);
-            TextView name = BaseViewHolder.get(convertView,R.id.item_name);
-            TextView remaining = BaseViewHolder.get(convertView,R.id.item_remaining);
-            TextView valid = BaseViewHolder.get(convertView,R.id.item_valid);
-            final TextView desc = BaseViewHolder.get(convertView,R.id.item_desc);
-            final ImageView iv_down = BaseViewHolder.get(convertView,R.id.item_down);
-            RelativeLayout rl_desc = BaseViewHolder.get(convertView,R.id.item_rl_desc);
-
-            final MyCartBean bean = getDatas().get(position);
-
-            Log.e("mbcf===MyAdapter", bean.getName()+"==="+bean.getLinear_gradient().length+"==="+bean.getLinear_gradient()[0]);
+            RelativeLayout ll_bg = BaseViewHolder.get(convertView,R.id.item_bg);
+//            TextView name = BaseViewHolder.get(convertView,R.id.item_name);
+//            TextView remaining = BaseViewHolder.get(convertView,R.id.item_remaining);
+//            TextView valid = BaseViewHolder.get(convertView,R.id.item_valid);
+//            final TextView desc = BaseViewHolder.get(convertView,R.id.item_desc);
+//            final ImageView iv_down = BaseViewHolder.get(convertView,R.id.item_down);
+//            RelativeLayout rl_desc = BaseViewHolder.get(convertView,R.id.item_rl_desc);
+//
+//            final MyCartBean bean = getDatas().get(position);
+//
+//            Log.e("mbcf===MyAdapter", bean.getName()+"==="+bean.getLinear_gradient().length+"==="+bean.getLinear_gradient()[0]);    //#BDBDBD
 
             GradientDrawable drawable = (GradientDrawable)ll_bg.getBackground();
-            if(bean.getLinear_gradient()!=null){
+//            if(bean.getLinear_gradient()!=null){
+//
+//                drawable.mutate();
+//
+//                if(bean.getLinear_gradient().length==1){
+//                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[0]), Color.parseColor(bean.getLinear_gradient()[0])});
+//                }else{
+//                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[1]), Color.parseColor(bean.getLinear_gradient()[0])});
+//                }
+//            }
 
-                drawable.mutate();
+            drawable.setColors(new int[]{Color.parseColor("#BDBDBD"), Color.parseColor("#ffffff")});
 
-                if(bean.getLinear_gradient().length==1){
-                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[0]), Color.parseColor(bean.getLinear_gradient()[0])});
-                }else{
-                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[1]), Color.parseColor(bean.getLinear_gradient()[0])});
-                }
-            }
-
-            name.setText(bean.getName());
-            remaining.setText(bean.getRemaining());
-            valid.setText(bean.getStatus());
-            desc.setText(bean.getDesc());
-
-            rl_desc.setOnClickListener(new View.OnClickListener() {
-                boolean flag = false;
-                @Override
-                public void onClick(View view) {
-                    Log.e("mcf===onClick", "===");
-
-                    if(flag){
-                        flag = false;
-                        iv_down.setImageResource(R.drawable.down_icon);
-                        desc.setMaxLines(1);
-                    }else{
-                        flag = true;
-                        iv_down.setImageResource(R.drawable.up_icon);
-                        desc.setMaxLines(20);
-                    }
-                }
-            });
+//            name.setText(bean.getName());
+//            remaining.setText(bean.getRemaining());
+//            valid.setText(bean.getStatus());
+//            desc.setText(bean.getDesc());
+//
+//            rl_desc.setOnClickListener(new View.OnClickListener() {
+//                boolean flag = false;
+//                @Override
+//                public void onClick(View view) {
+//                    Log.e("mcf===onClick", "===");
+//
+//                    if(flag){
+//                        flag = false;
+//                        iv_down.setImageResource(R.drawable.down_icon);
+//                        desc.setMaxLines(1);
+//                    }else{
+//                        flag = true;
+//                        iv_down.setImageResource(R.drawable.up_icon);
+//                        desc.setMaxLines(20);
+//                    }
+//                }
+//            });
 
 //            if("即将超时".equals(bean.getStatus_name())){
 //                num.setTextColor(getResources().getColor(R.color.red));

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -299,6 +300,7 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
             final ImageView iv_down = BaseViewHolder.get(convertView,R.id.item_down);
             LinearLayout ll_payBtn = BaseViewHolder.get(convertView,R.id.ll_payBtn);
             RelativeLayout rl_desc = BaseViewHolder.get(convertView,R.id.item_rl_desc);
+            RelativeLayout ll_bg = BaseViewHolder.get(convertView,R.id.item_bg);
             final PayCartBean bean = getDatas().get(position);
 
             name.setText(bean.getName());
@@ -307,11 +309,26 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
             tv_price.setText(price);
             tv_original_price.setText("¥"+bean.getOriginal_price());
             tv_desc.setText(bean.getDesc());
-
-            RoundImageView iv_img = BaseViewHolder.get(convertView, R.id.item_iv_img);
-            ImageLoader.getInstance().displayImage(bean.getImage(), iv_img);
-
             tv_original_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+
+            GradientDrawable drawable = (GradientDrawable)ll_bg.getBackground();
+//            if(bean.getLinear_gradient()!=null){
+//
+//                drawable.mutate();
+//
+//                if(bean.getLinear_gradient().length==1){
+//                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[0]), Color.parseColor(bean.getLinear_gradient()[0])});
+//                }else{
+//                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[1]), Color.parseColor(bean.getLinear_gradient()[0])});
+//                }
+//            }
+
+            drawable.setColors(new int[]{Color.parseColor("#BDBDBD"), Color.parseColor("#ffffff")});
+
+//            RoundImageView iv_img = BaseViewHolder.get(convertView, R.id.item_iv_img);
+//            ImageLoader.getInstance().displayImage(bean.getImage(), iv_img);
+
+
 
             ll_payBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -54,6 +54,7 @@ public class PayCartActivity extends SwipeBackActivity implements View.OnClickLi
   private TextView rightBtn;
   private ImageView iv_question;
 
+  LinearLayout ll_tab;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +67,23 @@ public class PayCartActivity extends SwipeBackActivity implements View.OnClickLi
   private void init(){
 
     ll_back = (LinearLayout) findViewById(R.id.ll_backBtn);
-//    title = (TextView) findViewById(R.id.mainUI_title_titleText);
-//    title.setText("购买骑行套餐");
+    title = (TextView) findViewById(R.id.mainUI_title_titleText);
+
     rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
-    rightBtn.setText("我的套餐卡");
+    rightBtn.setText("我的");
 
     iv_question = (ImageView)findViewById(R.id.iv_question);
 
+    ll_tab = (LinearLayout) findViewById(R.id.ll_tab);
     tab = (TabLayout) findViewById(R.id.tab);
     vp = (ViewPager)findViewById(R.id.vp);
+
+    ll_tab.setVisibility(View.GONE);   //TODO
+    title.setVisibility(View.VISIBLE);
+    title.setText("套餐卡");
+
+    ll_tab.setVisibility(View.VISIBLE);   //TODO
+    title.setVisibility(View.GONE);
 
     myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
     vp.setAdapter(myPagerAdapter);
@@ -183,7 +192,7 @@ public class PayCartActivity extends SwipeBackActivity implements View.OnClickLi
   }
 
   class MyPagerAdapter extends FragmentPagerAdapter {
-    private String[] titles = new String[]{"单车套餐卡", "助力车套餐卡"};
+    private String[] titles = new String[]{"单车", "助力车"};
     private List<Fragment> fragmentList;
 
     public MyPagerAdapter(FragmentManager fm) {

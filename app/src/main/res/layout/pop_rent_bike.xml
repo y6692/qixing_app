@@ -18,267 +18,421 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/pop_rent_bcg"
         android:layout_alignParentBottom="true">
 
+<!--        <LinearLayout-->
+<!--            android:layout_width="55dp"-->
+<!--            android:layout_height="24dp"-->
+<!--            android:layout_marginLeft="55dp"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:background="@drawable/pop_head_bg"-->
+<!--            >-->
+<!--            -->
+<!--            -->
+
+<!--        </LinearLayout>-->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="28dp"
-            android:layout_marginTop="22dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_centerInParent="true"
-                android:textSize="@dimen/sp20"
-                android:textColor="@color/tx_black"
-                android:textStyle="bold"
-                android:text="确认租车"/>
+            android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/iv_rent_cancelBtn"
-                android:layout_width="15dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="22dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/x"/>
+                android:layout_width="55dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="55dp"
+                android:src="@drawable/pop_head_bg"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="17dp"
+                android:layout_marginTop="24dp"
+                android:orientation="vertical"
+                android:background="@color/white">
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/ib"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="65dp"
+                android:src="@drawable/pop_ebike_good"
+                />
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:gravity="center_vertical"
-            >
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="#333333"
-                    android:text="车辆编号："/>
-
-                <TextView
-                    android:id="@+id/tv_codenum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="#666666"
-                    android:text=""/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/tv_carmodel_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="#333333"
-                    android:text="单车"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_ebike"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:gravity="center_vertical"
-            >
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="#333333"
-                    android:text="电量："/>
-
-                <TextView
-                    android:id="@+id/tv_electricity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="#666666"
-                    android:text=""/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="#333333"
-                    android:text="续航："/>
-
-                <TextView
-                    android:id="@+id/tv_mileage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="#666666"
-                    android:text=""/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:gravity="center_vertical"
-            >
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="#333333"
-                    android:text="起步价："/>
-
-                <TextView
-                    android:id="@+id/tv_first_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="#666666"
-                    android:text=""/>
-
-                <TextView
-                    android:id="@+id/tv_first_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="#666666"
-                    android:text=""/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="#333333"
-                    android:text="续租价："/>
-
-                <TextView
-                    android:id="@+id/tv_continued_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="#666666"
-                    android:text=""/>
-
-                <TextView
-                    android:id="@+id/tv_continued_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="#666666"
-                    android:text=""/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:orientation="horizontal"
-            >
-
-            <TextView
-                android:id="@+id/tv_each_free_time"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_marginRight="7dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:background="@drawable/btn_bcg_free"
-                android:text="1小时免费"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:gravity="center"/>
-
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/tv_credit_score_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:background="@drawable/btn_bcg_credit"
-                android:text=""
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:gravity="center"/>
-
-        </LinearLayout>
-
 
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            >
+            android:orientation="vertical"
+            android:background="@color/white">
 
-            <ImageView
-            android:layout_width="23dp"
-            android:layout_height="20dp"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/warn_icon"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textSize="@dimen/sp14"
-                android:textColor="#424242"
-                android:text="请在运营区还车"
-                android:gravity="center"/>
 
-            <!--<ImageView-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_rent_cancelBtn"
+                    android:layout_width="11.5dp"
+                    android:layout_height="11.5dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/x"/>
+
+            </RelativeLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:layout_marginLeft="30dp"
+                android:gravity="center_vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/tv_carmodel_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="25dp"
+                        android:textSize="@dimen/sp20"
+                        android:textColor="#EA5359"
+                        android:text="单车"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="31dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textColor="#665E5E"
+                        android:text="车辆编号："/>
+
+                    <TextView
+                        android:id="@+id/tv_codenum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp20"
+                        android:textColor="#EA5359"
+                        android:text="123"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_ebike"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="30dp"
+                android:gravity="center_vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textColor="#665E5E"
+                        android:text="电量："/>
+
+                    <TextView
+                        android:id="@+id/tv_electricity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp16"
+                        android:textColor="#EA5359"
+                        android:text=""/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="31dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textColor="#665E5E"
+                        android:text="续航："/>
+
+                    <TextView
+                        android:id="@+id/tv_mileage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp16"
+                        android:textColor="#EA5359"
+                        android:text=""/>
+
+                </LinearLayout>
+
+
+
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="30dp"
+                android:gravity="center_vertical"
+                >
+
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textColor="#665E5E"
+                        android:text="起步价："/>
+
+                    <TextView
+                        android:id="@+id/tv_first_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp16"
+                        android:textColor="#EA5359"
+                        android:text="123"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textColor="#665E5E"
+                        android:text="元/"/>
+
+                    <TextView
+                        android:id="@+id/tv_first_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp16"
+                        android:textColor="#EA5359"
+                        android:text="456"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textColor="#665E5E"
+                        android:text="分钟"/>
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="31dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textColor="#665E5E"
+                        android:text="续租价："/>
+
+                    <TextView
+                        android:id="@+id/tv_continued_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp16"
+                        android:textColor="#EA5359"
+                        android:text=""/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textColor="#665E5E"
+                        android:text="元/"/>
+
+                    <TextView
+                        android:id="@+id/tv_continued_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp16"
+                        android:textColor="#EA5359"
+                        android:text=""/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textColor="#665E5E"
+                        android:text="分钟"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="30dp"
+                android:gravity="center_vertical"
+                >
+
+                <TextView
+                    android:id="@+id/tv_each_free_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:background="@drawable/btn_bcg_free"
+                    android:text="1小时免费"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:visibility="visible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="15dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:background="@drawable/btn_bcg_times"
+                    android:text="今日剩余5次免费"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:visibility="visible"
+                    android:id="@+id/tv_credit_score_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="15dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:background="@drawable/btn_bcg_credit"
+                    android:text="11=信用分=12"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:gravity="center"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    >
+
+
+
+<!--                    <cn.qimate.bike.core.widget.MarqueTextView-->
+<!--                        android:visibility="visible"-->
+<!--                        android:id="@+id/tv_credit_score_desc"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="15dp"-->
+<!--                        android:paddingLeft="5dp"-->
+<!--                        android:paddingRight="5dp"-->
+<!--                        android:background="@drawable/btn_bcg_credit"-->
+<!--                        android:textSize="11sp"-->
+<!--                        android:textColor="@color/white"-->
+<!--                        android:singleLine="true"-->
+<!--                        android:ellipsize="marquee"-->
+<!--                        android:marqueeRepeatLimit="marquee_forever"-->
+<!--                        android:text=""/>-->
+
+
+
+                </LinearLayout>
+
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:layout_marginLeft="31dp">-->
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:textSize="13sp"-->
+<!--                        android:textColor="#665E5E"-->
+<!--                        android:text="今日剩余免费次数："/>-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/tv_free"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:textSize="@dimen/sp16"-->
+<!--                        android:textColor="#EA5359"-->
+<!--                        android:text=""/>-->
+
+<!--                </LinearLayout>-->
+
+
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9.5dp"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                >
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/warn_icon"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="#665E5E"
+                    android:text="请在停车点还车"
+                    android:gravity="center"/>
+
+                <!--<ImageView-->
                 <!--android:layout_width="29dp"-->
                 <!--android:layout_height="29dp"-->
                 <!--android:layout_marginLeft="6dp"-->
                 <!--android:layout_marginRight="6dp"-->
                 <!--android:src="@drawable/park_icon"/>-->
 
-            <!--<TextView-->
+                <!--<TextView-->
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="match_parent"-->
                 <!--android:textSize="@dimen/sp14"-->
@@ -286,84 +440,86 @@
                 <!--android:text="点还车"-->
                 <!--android:gravity="center"/>-->
 
-        </LinearLayout>
+            </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            >
-
-
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp12"
-                android:textColor="#B2B2B2"
-                android:text="违规还车将收取调度费 ，点击P点可进入导航"/>
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
-            android:layout_marginBottom="34dp"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            >
-
-            <LinearLayout
-                android:id="@+id/ll_change_car"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="29dp"
-                android:layout_marginRight="9dp"
+                android:layout_marginTop="7dp"
                 android:orientation="horizontal"
-                android:gravity="center"
-                android:background="@drawable/btn_bcg_change_car"
+                android:gravity="center_horizontal"
                 >
 
+
                 <TextView
-                    android:id="@+id/tv_nextBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="换辆车"
-                    android:textSize="@dimen/sp16"
-                    android:textColor="#FD555B"
-                    />
+                    android:textSize="@dimen/sp10"
+                    android:textColor="#B3665E5E"
+                    android:text="违规还车将收取调度费 ，点击P点可进入导航"/>
 
             </LinearLayout>
 
 
             <LinearLayout
-                android:id="@+id/ll_rent"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="9dp"
-                android:layout_marginRight="29dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="25dp"
                 android:orientation="horizontal"
-                android:gravity="center"
-                android:background="@drawable/btn_bcg_rent"
+                android:gravity="center_horizontal"
                 >
 
-                <TextView
-                    android:id="@+id/tv_nextBtn2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="同意并开始用车"
-                    android:textSize="@dimen/sp16"
-                    android:textColor="@color/white"
-                    />
+                <LinearLayout
+                    android:id="@+id/ll_change_car"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="30dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/btn_bcg_change_car"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_nextBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="换辆车"
+                        android:textSize="@dimen/sp14"
+                        android:textColor="#FD555B"
+                        />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/ll_rent"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="30dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/btn_bcg_rent"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_nextBtn2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="同意并开始用车"
+                        android:textSize="@dimen/sp14"
+                        android:textColor="@color/white"
+                        />
+
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
+
+
 
 
 

@@ -10,11 +10,127 @@
     >
 
 
-    <include
-      layout="@layout/ui_main_title"/>
+<!--    <include-->
+<!--      layout="@layout/ui_main_title"/>-->
+
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:orientation="vertical"
+        android:id="@+id/mainUI_title_mainLayout">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp40">
+
+            <LinearLayout
+                android:id="@+id/ll_backBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/mainUI_title_backBtn"
+                    android:layout_width="10.6dp"
+                    android:layout_height="19.7dp"
+                    android:layout_marginLeft="17dp"
+                    android:src="@drawable/back_image2"/>
+
+                <TextView
+                    android:visibility="gone"
+                    android:layout_marginLeft="-10dp"
+                    android:id="@+id/tv_left"
+                    android:textSize="@dimen/sp16"
+                    android:text="返回"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/mainUI_title_titleText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text=""
+                android:textColor="#EA5359"
+                android:textSize="17sp"
+                android:layout_centerInParent="true"
+                android:gravity="center"/>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/ll_tab"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/block_bcg"
+                android:orientation="vertical"
+                android:layout_centerInParent="true">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <!--android:background="@drawable/block_bcg2"-->
+                    <!--app:tabBackground="@drawable/background_tab2"-->
+
+                    <!--<com.flyco.tablayout.CommonTabLayout-->
+                    <!--android:id="@+id/tab2"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="45dp"-->
+                    <!--android:background="#ffffff"-->
+                    <!--app:tl_indicator_color="#F95A64"-->
+                    <!--app:tl_indicator_height="2dp"-->
+                    <!--app:tl_indicator_width="92dp"-->
+                    <!--app:tl_textSelectColor="#FD555B"-->
+                    <!--app:tl_textUnselectColor="#666666"-->
+                    <!--app:tl_textsize="18sp"-->
+                    <!--app:tl_underline_color="#DDDDDD"-->
+                    <!--app:tl_underline_height="0dp"/>-->
+
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/tab"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:tabIndicatorFullWidth="false"
+                        app:tabGravity="fill"
+                        app:tabIndicatorColor="#EA5359"
+                        app:tabIndicatorHeight="3dp"
+                        app:tabMode="fixed"
+                        app:tabSelectedTextColor="#EA5359"
+                        app:tabTextAppearance="@style/TabLayoutTextStyle2"
+                        app:tabTextColor="#665E5E"
+                        />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/mainUI_title_rightBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text=""
+                android:textColor="#EA5359"
+                android:textSize="@dimen/sp16"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:paddingRight="16dp"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="30dp"
@@ -35,6 +151,10 @@
             android:layout_marginLeft="10dp"
             android:src="@drawable/question"
             />
+
+
+
+
     </LinearLayout>
 
     <RelativeLayout
@@ -43,61 +163,13 @@
 
         android:layout_below="@id/mainUI_titleLayout">
 
-        <LinearLayout
-            android:id="@+id/ll_2"
-            android:layout_width="match_parent"
-            android:layout_height="31dp"
-            android:layout_marginTop="7dp"
-            android:background="@drawable/block_bcg"
-            android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <!--android:background="@drawable/block_bcg2"-->
-                <!--app:tabBackground="@drawable/background_tab2"-->
-
-                <!--<com.flyco.tablayout.CommonTabLayout-->
-                    <!--android:id="@+id/tab2"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="45dp"-->
-                    <!--android:background="#ffffff"-->
-                    <!--app:tl_indicator_color="#F95A64"-->
-                    <!--app:tl_indicator_height="2dp"-->
-                    <!--app:tl_indicator_width="92dp"-->
-                    <!--app:tl_textSelectColor="#FD555B"-->
-                    <!--app:tl_textUnselectColor="#666666"-->
-                    <!--app:tl_textsize="18sp"-->
-                    <!--app:tl_underline_color="#DDDDDD"-->
-                    <!--app:tl_underline_height="0dp"/>-->
-
-                <android.support.design.widget.TabLayout
-                    android:id="@+id/tab"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:tabIndicatorFullWidth="false"
-                    app:tabGravity="fill"
-                    app:tabIndicatorColor="#F95A64"
-                    app:tabMode="fixed"
-                    app:tabSelectedTextColor="#333333"
-                    app:tabTextAppearance="@style/TabLayoutTextStyle2"
-                    app:tabTextColor="#333333"
-                    />
-
-            </RelativeLayout>
-
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="5dp"
-            android:layout_below="@id/ll_2"
-            android:background="#F1F1F1"
             android:orientation="vertical">
 
             <android.support.v4.view.ViewPager
@@ -107,7 +179,12 @@
 
         </LinearLayout>
 
-
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:src="@drawable/head_border"
+            android:scaleType="fitXY"
+            />
 
     </RelativeLayout>
 

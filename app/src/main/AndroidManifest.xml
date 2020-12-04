@@ -127,7 +127,7 @@
 
         <activity
             android:name=".activity.MainActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
@@ -488,6 +488,22 @@
 
         </activity>
 
+        <activity
+            android:name=".activity.CartDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+        </activity>
+
+
+        <activity
+            android:name=".activity.MyCartDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+
+        </activity>
 
 
 <!--        android:windowSoftInputMode="adjustPan|stateHidden"-->

@@ -3,6 +3,7 @@ package cn.qimate.bike.core.common;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 
 import java.util.Stack;
 
@@ -116,6 +117,8 @@ public class AppManager {
      * 结束所有Activity
      */
 	public void finishAllActivity() {
+		Log.e("finishAllActivity===", "==="+activityStack);
+
 		for (Activity activity : activityStack) {
 			if (activity != null) {
 				activity.finish();
@@ -129,7 +132,9 @@ public class AppManager {
      */
 	@SuppressLint("NewApi")
 	public void AppExit(Context context) {
-		System.exit(0);//正常退出App
 		finishAllActivity();
+
+		System.exit(0);//正常退出App
+
 	}
 }

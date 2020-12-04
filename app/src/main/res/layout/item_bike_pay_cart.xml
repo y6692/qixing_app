@@ -1,58 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#F1F1F1"
     android:orientation="vertical">
 
-    <LinearLayout
+
+    <cn.qimate.bike.view.RoundImageView
+        android:id="@+id/item_iv_img"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:textSize="@dimen/sp15"
+        android:textColor="@color/white"
+        android:text="九折\n优惠券"
+        android:gravity="center"
+        android:scaleType="fitXY"
+        >
+
+
+
+    </cn.qimate.bike.view.RoundImageView>
+
+
+    <RelativeLayout
+        android:id="@+id/item_bg"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:orientation="vertical"
-        android:background="@color/white">
+        android:background="@drawable/bcg_my_cart">
+
+        <ImageView
+            android:layout_width="172dp"
+            android:layout_height="120dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/pay_cart_bike_icon"/>
 
         <LinearLayout
+            android:id="@+id/item_ll_img"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:orientation="horizontal"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25.5dp"
+            android:orientation="vertical"
             >
 
-            <cn.qimate.bike.view.RoundImageView
-                android:id="@+id/item_iv_img"
-                android:layout_width="85dp"
-                android:layout_height="50dp"
-                android:textSize="@dimen/sp15"
-                android:textColor="@color/white"
-                android:text="九折\n优惠券"
-                android:gravity="center"
-                />
+<!--            <cn.qimate.bike.view.RoundImageView-->
+<!--                android:id="@+id/item_iv_img2"-->
+<!--                android:layout_width="85dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:textSize="@dimen/sp15"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:text="九折\n优惠券"-->
+<!--                android:gravity="center"-->
+<!--                />-->
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="16dp"
-                android:orientation="vertical"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal"
                 android:gravity="center_vertical"
                 >
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    >
+
+                    <TextView
+                        android:id="@+id/item_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/sp18"
+                        android:textColor="#ffffff"
+                        android:text="单车"
+                        android:gravity="bottom"/>
+
+                    <TextView
+                        android:id="@+id/tv_"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginBottom="2dp"
+                        android:textSize="@dimen/sp10"
+                        android:textColor="#ffffff"
+                        android:text="天数卡"
+                        android:gravity="bottom"/>
+                </LinearLayout>
+
+
                 <TextView
-                    android:id="@+id/item_name"
+                    android:id="@+id/item_name2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/sp18"
-                    android:textColor="#333333"
-                    android:textStyle="bold"
+                    android:textColor="#ffffff"
                     android:text="单车30天骑行卡"/>
 
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="23dp"
+                android:orientation="horizontal">
+
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     >
@@ -60,8 +125,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/sp16"
-                        android:textColor="#FF0000"
+                        android:textSize="24sp"
+                        android:textColor="#ffffff"
                         android:textStyle="bold"
                         android:text="¥"/>
 
@@ -69,54 +134,65 @@
                         android:id="@+id/tv_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/sp20"
-                        android:textColor="#FF0000"
+                        android:textSize="24sp"
+                        android:textColor="#ffffff"
                         android:textStyle="bold"
                         android:text="19.9"/>
 
                     <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_marginLeft="13dp"-->
-                        <!--android:textSize="@dimen/sp12"-->
-                        <!--android:textColor="#666666"-->
-                        <!--android:text="¥"/>-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="13dp"-->
+                    <!--android:textSize="@dimen/sp12"-->
+                    <!--android:textColor="#666666"-->
+                    <!--android:text="¥"/>-->
 
                     <TextView
                         android:id="@+id/tv_original_price"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="13dp"
-                        android:textSize="@dimen/sp14"
-                        android:textColor="#666666"
-                        android:text="29.9"/>
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="24.5dp"
+                        android:layout_marginBottom="2dp"
+                        android:textSize="15sp"
+                        android:textColor="#99ffffff"
+                        android:text="29.9"
+                        android:gravity="bottom"/>
 
                 </LinearLayout>
 
+
+
+                <LinearLayout
+                    android:id="@+id/ll_payBtn"
+                    android:layout_width="75dp"
+                    android:layout_height="30dp"
+
+                    android:background="@drawable/btn_bcg_use"
+                    android:gravity="center"
+                    android:layout_gravity="right"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:text="购买"
+                        android:textSize="20sp"
+                        android:textColor="#E93641"
+                        />
+                </LinearLayout>
+
+
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ll_payBtn"
-                android:layout_width="60dp"
-                android:layout_height="30dp"
-                android:orientation="horizontal"
-                android:background="@drawable/btn_bcg_use"
-                android:gravity="center"
-                >
-                <TextView
-                    android:id="@+id/tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="购买"
-                    android:textSize="14sp"
-                    android:textColor="@color/white"
-                    />
-            </LinearLayout>
+
 
         </LinearLayout>
 
 
         <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/item_rl_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -149,9 +225,9 @@
 
         </RelativeLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 
 
-</LinearLayout>
+</RelativeLayout>

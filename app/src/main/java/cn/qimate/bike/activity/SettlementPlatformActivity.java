@@ -108,6 +108,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
     private int payment_id = 1;
     private int order_id;
     private int order_type = 1;
+    private static String order_amount2 = "";
     private static int order_id2;
     private static int order_type2 = 1;
     private double balance;
@@ -126,11 +127,28 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
         isToPay = false;
 
+
+
+
+
         IntentFilter filter = new IntentFilter("data.broadcast.rechargeAction");
         registerReceiver(broadcastReceiver, filter);
         initView();
 
+        order_id = getIntent().getIntExtra("order_id", 0);
+        order_type = getIntent().getIntExtra("order_type", 1);
+        order_amount = getIntent().getStringExtra("order_amount");
+        isRemain = getIntent().getBooleanExtra("isRemain", false);
+
+        if(order_amount==null){
+            tv_order_amount.setText("");
+        }else{
+            tv_order_amount.setText("¥"+order_amount);
+        }
+
         Log.e("spa===onCreate", isRemain+"==="+isToPay+"==="+isPause+"==="+order_id+"==="+order_type);
+
+
     }
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -208,27 +226,20 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 //            api.handleIntent(getIntent(), SettlementPlatformActivity.this);
 //        }
 
+
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        order_id = getIntent().getIntExtra("order_id", 0);
-        order_type = getIntent().getIntExtra("order_type", 1);
-        order_amount = getIntent().getStringExtra("order_amount");
-        isRemain = getIntent().getBooleanExtra("isRemain", false);
-
-        if(order_amount==null){
-            tv_order_amount.setText("");
-        }else{
-            tv_order_amount.setText("¥"+order_amount);
-        }
 
 
 
 
-        Log.e("spa===onResume", payment_id+"==="+isRemain+"==="+isToPay+"==="+isPause+"==="+order_id+"==="+order_type);
+
+        Log.e("spa===onResume", payment_id+"==="+isRemain+"==="+isToPay+"==="+isPause+"==="+order_id+"==="+order_type+"==="+order_amount);
 
 //        if(payment_id==0){
 //            iv_balance.setImageResource(R.drawable.pay_type_normal);
@@ -296,7 +307,10 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                             balance = Double.parseDouble(bean.getBalance());
                             tv_balance.setText("当前余额¥"+balance);
 
-                            if(order_type==1){
+                            Log.e("spfa===user2", isRemain + "===" + balance);
+
+
+                            if(order_type==1 && !isRemain){
                                 cycling();
                             }
 
@@ -523,17 +537,18 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                             }
 
                             if(null != bean.getOrder_sn()){
-                                Log.e("ura===order_detail2", order_type + "===" + bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+                                Log.e("ura===order_detail2", order_type + "===" + bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id()+"===" +bean.getOrder_amount()+"===" +balance);
 
                                 order_id = bean.getOrder_id();
+                                order_amount = bean.getOrder_amount();
 
-                                tv_order_amount.setText("¥"+bean.getOrder_amount());
+                                tv_order_amount.setText("¥"+order_amount);
 
-                                if("0.00".equals(bean.getOrder_amount()) || "0".equals(bean.getOrder_amount())){
+                                if("0.00".equals(order_amount) || "0".equals(order_amount)){
                                     end();
                                     Toast.makeText(context,"已为您取消本次订单，谢谢使用",Toast.LENGTH_SHORT).show();
 
-                                }else if(Double.parseDouble(bean.getOrder_amount())<=balance){
+                                }else if(Double.parseDouble(order_amount)<=balance){
                                     pay();
                                 }
 
@@ -568,7 +583,8 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         }
 
         closeLoadingDialog();
-        scrollToFinishActivity();
+        finishMine();
+//        scrollToFinishActivity();
     }
 
     void closeLoadingDialog(){
@@ -584,7 +600,7 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
         params.put("order_id", order_id);      //订单ID
         params.put("order_type", order_type);     //订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单
 
-        Log.e("spa===pay", order_amount+"==="+payment_id+"==="+order_id+"==="+order_type);
+        Log.e("spa===pay", order_amount+"==="+balance+"==="+payment_id+"==="+order_id+"==="+order_type);
 
         HttpHelper.post(context, Urls.pay, params, new TextHttpResponseHandler() {
             @Override
@@ -688,9 +704,11 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                                     Map<String, String> result = null;
 
                                     try {
-                                        Log.e("pay===2", jsonObject.getString("payinfo")+"===");
+
 
                                         String payinfo = jsonObject.getString("payinfo");
+
+                                        Log.e("pay===2", payinfo+"===");
 
 //                                      payinfo = "partner=\"2088621211667181\"&seller_id=\"publicbicycles@163.com\"&out_trade_no=\"M201912111949196915\"&subject=\"\u652f\u4ed8M201912111949196915\"&body=\"\u652f\u4ed8\u67d2\u739b\u6708\u5361\u8ba2\u5355\"&total_fee=\"45.90\"&notify_url=\"http://app.7mate.cn/App/AlipayMonth/callback.html\"&service=\"mobile.securitypay.pay\"&payment_type=\"1\"&_input_charset=\"utf-8\"&it_b_pay=\"30m\"&return_url=\"m.alipay.com\"&sign=\"dbnW7cObywGWjTz09urH8TEHedJ73vNCnDinmnV24lSap302ePopAD3DG28LZMCSwjjRJq5ANTfsE8CwbLmsFcYQoj9MXFjLL3buM16eppmCQr1SP3xEY9r2eLbTnN%2FQypapYP890qW9l3weqoaJWyaVbI%2BvEJSvvbjyJt8ZLsI%3D\"&sign_type=\"RSA\"";
 
@@ -704,8 +722,8 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                                         result = alipay.payV2(payinfo, true);
                                         Log.e("msp", result.toString());
 
-//
-                                    } catch (JSONException e) {
+                                    } catch (Exception e) {
+                                        Log.e("pay===e", "==="+e);
                                         e.printStackTrace();
                                     }
                                     Message msg = new Message();
@@ -753,6 +771,8 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                     String resultInfo = payResult.getResult();// 同步返回需要验证的信息
                     String resultStatus = payResult.getResultStatus();
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
+
+                    Log.e("mHandler===3", resultInfo+"==="+resultStatus);
 
                     query_order();
 
@@ -846,10 +866,15 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                                     scrollToFinishActivity();
                                 }else{
                                     if(isRemain){
+                                        order_amount = order_amount2;
                                         order_type = order_type2;
                                         order_id = order_id2;
 
-                                        Log.e("spa===query_order2", order_type+ "===" +order_id);
+                                        tv_order_amount.setText("¥"+order_amount);
+
+                                        payment_id = 1;
+
+                                        Log.e("spa===query_order2", order_amount2+ "===" +order_type+ "===" +order_id+ "===" +payment_id);
 
 //                                        iv_balance.setImageResource(R.drawable.pay_type_normal);
 //                                        iv_wechat.setImageResource(R.drawable.pay_type_normal);
@@ -864,10 +889,16 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
                                             startActivity(intent);
                                             scrollToFinishActivity();
                                         }else{
+
+
                                             Intent intent = new Intent(context, MainActivity.class);
                                             intent.putExtra("flag", true);
+                                            intent.putExtra("tabId", 1);
+//                                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                             startActivity(intent);
-                                            scrollToFinishActivity();
+                                            finishMine();
+
+
                                         }
 
                                     }
@@ -981,8 +1012,11 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 //                intent.putExtra("order_type", order_type);
 //                intent.putExtra("order_id", order_id);
 
+                order_amount2 = order_amount;
                 order_type2 = order_type;
                 order_id2 = order_id;
+
+                Log.e("spf===tv_recharge", "==="+order_amount2);
 
                 isToPay = false;
 

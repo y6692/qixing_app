@@ -597,7 +597,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
 //        if(referLatitude==0.0 || referLongitude==0.0) return;
 
-//        Log.e("main_b===schoolRange", isHidden+"==="+referLatitude+"==="+referLongitude+"==="+jsonArray);
+        Log.e("main_b===schoolRange", isHidden+"==="+referLatitude+"==="+referLongitude+"==="+jsonArray);
 
 
         if(jsonArray != null){
@@ -714,7 +714,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
 
-//                    Log.e("main_b===schoolRange0", "==="+responseString);
+                    Log.e("main_b===schoolRange0", "==="+responseString);
 
                     final ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 
