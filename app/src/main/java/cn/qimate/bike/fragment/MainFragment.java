@@ -4266,111 +4266,117 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                 LogUtil.e("ll_rent===onClick", "==="+isOrder);
 
-                if(!isOrder){
-                    isOrder = true;
-                    LogUtil.e("ll_rent===", loadingDialog.isShowing()+"==="+type+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    return;
+                }
 
-                    isOpenLock = false;
-                    isConnect = false;
-                    isLookPsdBtn = false;
-                    isEndBtn = false;
-                    isAgain = false;
+                isOrder = true;
+                LogUtil.e("ll_rent===", loadingDialog.isShowing()+"==="+type+"==="+access_token+"==="+SharedPreferencesUrls.getInstance().getString("iscert",""));
 
-                    if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                        ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-                    }
-                    //蓝牙锁
-                    if (mBluetoothAdapter == null) {
-                        BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
-                        mBluetoothAdapter = bluetoothManager.getAdapter();
-                    }
+                isOpenLock = false;
+                isConnect = false;
+                isLookPsdBtn = false;
+                isEndBtn = false;
+                isAgain = false;
 
-                    if (mBluetoothAdapter == null) {
-                        ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                        return;
-                    }
+                if (!activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                    ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+                }
+                //蓝牙锁
+                if (mBluetoothAdapter == null) {
+                    BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
+                    mBluetoothAdapter = bluetoothManager.getAdapter();
+                }
 
-                    if (!mBluetoothAdapter.isEnabled()) {
-                        flagm = 1;
-                        isPermission = false;
-                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(enableBtIntent, 188);
-                    } else {
-                        isStop = false;
-                        isOpen = false;
-                        isFinish = false;
-                        n = 0;
-                        cn = 0;
-                        force_backcar = 0;
-                        isTwo = false;
-                        first3 = true;
-                        flagm = 0;
-                        isFrist1 = true;
-                        stopScan = false;
-                        clickCount = 0;
-                        tz = 0;
-                        transtype = "";
-                        major = 0;
-                        minor = 0;
-                        isGPS_Lo = false;
-                        scan = false;
-                        isTemp = false;
-                        backType = "";
-                        open = 0;
-                        isBleInit = false;
-                        loopTime = 1 * 1000;
+                if (mBluetoothAdapter == null) {
+                    ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                    return;
+                }
 
-                        order_type = 0;
-                        isWaitEbikeInfo = true;
-                        ebikeInfoThread = null;
-                        oid = "";
+                if (!mBluetoothAdapter.isEnabled()) {
+                    flagm = 1;
+                    isPermission = false;
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBtIntent, 188);
+                } else {
+                    isStop = false;
+                    isOpen = false;
+                    isFinish = false;
+                    n = 0;
+                    cn = 0;
+                    force_backcar = 0;
+                    isTwo = false;
+                    first3 = true;
+                    flagm = 0;
+                    isFrist1 = true;
+                    stopScan = false;
+                    clickCount = 0;
+                    tz = 0;
+                    transtype = "";
+                    major = 0;
+                    minor = 0;
+                    isGPS_Lo = false;
+                    scan = false;
+                    isTemp = false;
+                    backType = "";
+                    open = 0;
+                    isBleInit = false;
+                    loopTime = 1 * 1000;
 
-                        if ("2".equals(type) || "3".equals(type) || "9".equals(type) || "10".equals(type) || "12".equals(type)){
+                    order_type = 0;
+                    isWaitEbikeInfo = true;
+                    ebikeInfoThread = null;
+                    oid = "";
+
+                    if ("2".equals(type) || "3".equals(type) || "9".equals(type) || "10".equals(type) || "12".equals(type)){
 
 //                      closeBroadcast();
 //                      activity.registerReceiver(broadcastReceiver, Config.initFilter());
 //                      GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
 
-                            bleInit();
+                        bleInit();
 
-                        }else if("4".equals(type) || "8".equals(type)){
+                    }else if("4".equals(type) || "8".equals(type)){
 
 //                        BLEService.bluetoothAdapter = mBluetoothAdapter;
 //                        bleService.view = context;
 //                        bleService.showValue = true;
-                        }else if ("5".equals(type)  || "6".equals(type)) {
-                            LogUtil.e("ll_rent===5", "==="+isLookPsdBtn);
+                    }else if ("5".equals(type)  || "6".equals(type)) {
+                        LogUtil.e("ll_rent===5", "==="+isLookPsdBtn);
 
 //                          ClientManager.getClient().registerConnectStatusListener(m_nowMac, mConnectStatusListener);
 //                          ClientManager.getClient().notifyClose(m_nowMac, mCloseListener);
-                        }else if ("7".equals(type)) {
-                        }
+                    }else if ("7".equals(type)) {
+                    }
 
-                        SharedPreferencesUrls.getInstance().putString("tempStat", "0");
-                        if (carmodel_id==2) {
-                            tv_againBtn.setText("临时上锁");
+                    SharedPreferencesUrls.getInstance().putString("tempStat", "0");
+                    if (carmodel_id==2) {
+                        tv_againBtn.setText("临时上锁");
 
-                            if(allow_temporary_lock==0){
-                                ll_biking_openAgain.setBackgroundResource(R.drawable.btn_bcg_biking3);
-                                tv_againBtn.setTextColor(Color.parseColor("#FFFFFF"));
-                            }else{
-                                ll_biking_openAgain.setBackgroundResource(R.drawable.btn_bcg_biking);
-                                tv_againBtn.setTextColor(Color.parseColor("#FD555B"));
-                            }
-
+                        if(allow_temporary_lock==0){
+                            ll_biking_openAgain.setBackgroundResource(R.drawable.btn_bcg_biking3);
+                            tv_againBtn.setTextColor(Color.parseColor("#FFFFFF"));
                         }else{
-                            tv_againBtn.setText("再次开锁");
-
                             ll_biking_openAgain.setBackgroundResource(R.drawable.btn_bcg_biking);
                             tv_againBtn.setTextColor(Color.parseColor("#FD555B"));
                         }
 
-                        refreshLayout.setVisibility(View.VISIBLE);
+                    }else{
+                        tv_againBtn.setText("再次开锁");
 
-
-                        order();
+                        ll_biking_openAgain.setBackgroundResource(R.drawable.btn_bcg_biking);
+                        tv_againBtn.setTextColor(Color.parseColor("#FD555B"));
                     }
+
+                    refreshLayout.setVisibility(View.VISIBLE);
+
+
+                    order();
                 }
+
+//                if(!isOrder){
+//
+//                }
 
 
 
@@ -4378,6 +4384,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
             case R.id.ll_biking_openAgain:
             case R.id.ll_biking_openAgain_auto:
+
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    return;
+                }
 
                 String tvAgain = getTvAgain();
 
@@ -4416,12 +4426,20 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 break;
 
             case R.id.ll_biking_endBtn:
-                btnLog("A1");
 
-                if(!isEndClick){
-                    isEndClick = true;
-                    cycling4();
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    return;
                 }
+
+                btnLog("A1");
+                cycling4();
+
+//                btnLog("A1");
+//
+//                if(!isEndClick){
+//                    isEndClick = true;
+//                    cycling4();
+//                }
 
                 break;
 
