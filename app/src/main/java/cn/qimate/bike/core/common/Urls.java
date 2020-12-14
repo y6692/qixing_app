@@ -11,8 +11,8 @@ public class Urls {
 //	https://newmapi.7mate.cn/
 	public static String HTTP = "https://";
 	public static String host = HTTP + "app.7mate.cn";
-//	public static String host2 = HTTP + "newmapi.7mate.cn/api";	    //https://newmapi.7mate.cn/api
-    public static String host2 = HTTP + "test-mapi.7mate.cn/api";
+	public static String host2 = HTTP + "newmapi.7mate.cn/api";	    //https://newmapi.7mate.cn/api
+//    public static String host2 = HTTP + "test-mapi.7mate.cn/api";
 //	public static String host2 = HTTP + "dev-mapi.7mate.cn/api";
 
 //	public static String host = HTTP + "web1.7mate.cn";
@@ -55,10 +55,20 @@ public class Urls {
 	public static String parking_ranges = host2 + "/parking_ranges";
 	//充值价格列表
 	public static String recharge_prices = host2 + "/recharge_prices";
-	//套餐卡列表接口
-	public static String cycling_cards = host2 + "/cycling_cards";
-	//我的套餐卡接口
-	public static String my_cycling_cards = host2 + "/user/cycling_cards";
+
+	//套餐卡购买页列表
+	public static String cycling_cards = host2 + "/cycling_card/lists";
+	//套餐卡购买页详情
+	public static String cycling_cards_detail = host2 + "/cycling_card/";
+	//用户套餐卡列表
+	public static String my_cycling_cards = host2 + "/user/cycling_card/lists";
+	//用户套餐卡详情
+	public static String my_cycling_cards_detail = host2 + "/user/cycling_card/";
+
+//	//套餐卡列表接口
+//	public static String cycling_cards = host2 + "/cycling_cards";
+//	//我的套餐卡接口
+//	public static String my_cycling_cards = host2 + "/user/cycling_cards";
 	//我的套餐卡接口
 	public static String car_authority = host2 + "/user/car_authority";
 	//车辆信息接口

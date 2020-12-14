@@ -73,7 +73,7 @@
             android:id="@+id/negativeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="40dp"
             android:background="@drawable/btn_bcg_cancel"
             android:text="取消"
             android:textSize="@dimen/sp16"
@@ -83,14 +83,13 @@
             />
         <Button
             android:id="@+id/positiveButton"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
             android:background="@drawable/btn_bcg_confirm"
             android:text="确定"
             android:textSize="@dimen/sp16"
             android:textColor="@color/white"
-            android:layout_centerInParent="true"
+            android:gravity="center"
             android:stateListAnimator="@null"
             />
 

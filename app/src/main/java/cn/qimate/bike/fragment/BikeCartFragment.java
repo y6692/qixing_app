@@ -125,6 +125,8 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
 //    private String card_code;
     private String price;
 
+    public String data;
+
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_bike_cart, null);
         unbinder = ButterKnife.bind(this, v);
@@ -138,9 +140,13 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
         context = getActivity();
         datas = new ArrayList<>();
 
+        Log.e("cf===Created", "===");
+
         initView();
 
-        initHttp();
+        Log.e("cf===Created2", "===");
+
+//        initHttp();
 
 //        new Thread(new Runnable() {
 //            @Override
@@ -230,6 +236,9 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
         iv_type05.setImageResource(R.drawable.no_card_icon);
         tv_type05.setText("暂无套餐卡");
 
+        footerLayout.setVisibility(View.VISIBLE);
+        setFooterType(4);
+
         swipeRefreshLayout = (SwipeRefreshLayout)getActivity().findViewById(R.id.Layout_swipeParentLayout);
         listview = (ListView)getActivity().findViewById(R.id.Layout_swipeListView);
         listview.addFooterView(footerView);
@@ -238,7 +247,33 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(android.R.color.holo_green_dark), getResources().getColor(android.R.color.holo_green_light),
                 getResources().getColor(android.R.color.holo_orange_light), getResources().getColor(android.R.color.holo_red_light));
 
-//        myList.setOnItemClickListener(this);
+        JSONArray array = null;
+        try {
+            array = new JSONArray(data);
+
+            if (array.length() == 0) {
+//                footerViewType05.setVisibility(View.VISIBLE);
+
+                footerLayout.setVisibility(View.VISIBLE);
+                setFooterType(4);
+
+            }else{
+                footerLayout.setVisibility(View.GONE);
+//                footerViewType05.setVisibility(View.GONE);
+            }
+
+            for (int i = 0; i < array.length();i++){
+                PayCartBean bean = JSON.parseObject(array.getJSONObject(i).toString(), PayCartBean.class);
+
+                datas.add(bean);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        myAdapter.notifyDataSetChanged();
+
+
 
         myAdapter = new MyAdapter(context);
         myAdapter.setDatas(datas);
@@ -297,9 +332,12 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
             if (null == convertView) {
                 convertView = inflater.inflate(R.layout.item_bike_pay_cart, null);
             }
-            TextView name = BaseViewHolder.get(convertView,R.id.item_name);
-            TextView tv_price = BaseViewHolder.get(convertView,R.id.tv_price);
-            TextView tv_original_price = BaseViewHolder.get(convertView,R.id.tv_original_price);
+
+            TextView tv_name = BaseViewHolder.get(convertView,R.id.item_name);
+            TextView tv_carmodel_name = BaseViewHolder.get(convertView,R.id.item_carmodel_name);
+            TextView tv_type_name = BaseViewHolder.get(convertView,R.id.item_type_name);
+            TextView tv_price = BaseViewHolder.get(convertView,R.id.item_price);
+            TextView tv_original_price = BaseViewHolder.get(convertView,R.id.item_original_price);
             final TextView tv_desc = BaseViewHolder.get(convertView,R.id.tv_desc);
             final ImageView iv_down = BaseViewHolder.get(convertView,R.id.item_down);
             LinearLayout ll_payBtn = BaseViewHolder.get(convertView,R.id.ll_payBtn);
@@ -308,12 +346,17 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
             RelativeLayout ll_bg = BaseViewHolder.get(convertView,R.id.item_bg);
             final PayCartBean bean = getDatas().get(position);
 
-            name.setText(bean.getName());
+            tv_name.setText(bean.getName());
+            tv_carmodel_name.setText(bean.getCarmodel_name());
+            tv_type_name.setText(bean.getType_name());
             final String card_code = bean.getCode();
             String price = bean.getPrice();
+            String original_price = bean.getPrice();
             tv_price.setText(price);
-            tv_original_price.setText("¥"+bean.getOriginal_price());
+            tv_original_price.setText("¥"+original_price);
             tv_desc.setText(bean.getDesc());
+
+
 
 //            RoundImageView iv_img = BaseViewHolder.get(convertView, R.id.item_iv_img);
 //            ImageLoader.getInstance().displayImage(bean.getImage(), iv_img);
@@ -322,18 +365,18 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
 
 
             GradientDrawable drawable = (GradientDrawable)ll_bg.getBackground();
-//            if(bean.getLinear_gradient()!=null){
-//
-//                drawable.mutate();
-//
-//                if(bean.getLinear_gradient().length==1){
-//                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[0]), Color.parseColor(bean.getLinear_gradient()[0])});
-//                }else{
-//                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[1]), Color.parseColor(bean.getLinear_gradient()[0])});
-//                }
-//            }
+            if(bean.getLinear_gradient()!=null){
 
-            drawable.setColors(new int[]{Color.parseColor("#BDBDBD"), Color.parseColor("#ffffff")});
+                drawable.mutate();
+
+                if(bean.getLinear_gradient().length==1){
+                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[0]), Color.parseColor(bean.getLinear_gradient()[0])});
+                }else{
+                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[1]), Color.parseColor(bean.getLinear_gradient()[0])});
+                }
+            }
+
+//            drawable.setColors(new int[]{Color.parseColor("#BDBDBD"), Color.parseColor("#ffffff")});
 
             tv_original_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
@@ -352,10 +395,7 @@ public class BikeCartFragment extends BaseFragment implements View.OnClickListen
 //                    order(card_code);
 
                     Intent intent = new Intent(context, CartDetailActivity.class);
-//                    intent.putExtra("order_type", 2);
-//                    intent.putExtra("order_amount", order_amount);
-//                    intent.putExtra("order_id", order_id);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    intent.putExtra("card_code", card_code);
                     context.startActivity(intent);
 
                 }

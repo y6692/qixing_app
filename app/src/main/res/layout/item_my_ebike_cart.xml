@@ -1,113 +1,261 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/item_bg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:orientation="vertical"
-        android:background="@drawable/bcg_my_cart2">
 
-        <LinearLayout
+    <cn.qimate.bike.view.RoundImageView
+        android:id="@+id/item_iv_img"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:textSize="@dimen/sp15"
+        android:textColor="@color/white"
+        android:text="九折\n优惠券"
+        android:gravity="center"
+        android:scaleType="fitXY"
+        >
+
+
+
+    </cn.qimate.bike.view.RoundImageView>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+
+        <RelativeLayout
+            android:id="@+id/item_bg"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:layout_height="120dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:orientation="vertical"
+            android:background="@drawable/bcg_my_cart">
+
+            <ImageView
+                android:layout_width="172dp"
+                android:layout_height="120dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/pay_cart_bike_icon"/>
+
 
 
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/item_ll_img"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="22dp"
+                android:layout_marginLeft="25dp"
                 android:orientation="vertical"
-                android:gravity="center_vertical"
                 >
 
-                <TextView
-                    android:id="@+id/item_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp20"
-                    android:textColor="@color/white"
-                    android:text="校园共享单车骑行卡"/>
+
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginRight="23.5dp"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     >
 
-                    <TextView
-                        android:id="@+id/item_remaining"
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        >
+
+                        <TextView
+                            android:id="@+id/item_carmodel_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textSize="@dimen/sp18"
+                            android:textColor="#ffffff"
+                            android:text="单车"
+                            android:gravity="bottom"/>
+
+                        <TextView
+                            android:visibility="gone"
+                            android:id="@+id/tv_"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginBottom="2dp"
+                            android:textSize="@dimen/sp10"
+                            android:textColor="#ffffff"
+                            android:text="天数卡"
+                            android:gravity="bottom"/>
+                    </LinearLayout>
+
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/sp16"
-                        android:textColor="#FFFFFF"
-                        android:text="剩余20天无限次免费骑行"/>
+                        android:orientation="horizontal"
+                        >
+
+                        <TextView
+                            android:id="@+id/item_remaining_free"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textSize="25sp"
+                            android:textColor="#ffffff"
+                            android:text="剩余25天"
+                            android:gravity="bottom"/>
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="17dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="25.5dp"
+                    android:orientation="horizontal"
+                    android:gravity="right"
+                    >
 
-            <LinearLayout
-                android:id="@+id/mainUI_scanCode_lock"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="17dp"
-                android:orientation="vertical"
-                >
-                <TextView
-                    android:id="@+id/item_valid"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/item_upper_daily_limit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="15sp"
+                        android:textColor="#ffffff"
+                        android:text="已达今日上限"
+                        android:gravity="bottom"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="14dp"
-                    android:text="收到后"
-                    android:textSize="12sp"
-                    android:textColor="@color/white"
-                    android:layout_gravity="right"
-                    />
+                    android:layout_marginTop="2dp"
+                    android:layout_marginRight="25.5dp"
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="95dp"
-                    android:layout_height="85dp"
-                    android:background="@drawable/my_ebike_cart"
-                    android:text="九折\n优惠券"
-                    android:gravity="center"
-                    />
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="24sp"
+                            android:textColor="#ffffff"
+                            android:textStyle="bold"
+                            android:text="¥"/>
+
+                        <TextView
+                            android:id="@+id/tv_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textSize="24sp"
+                            android:textColor="#ffffff"
+                            android:textStyle="bold"
+                            android:text="19.9"
+                            android:gravity="bottom"/>
+
+                        <TextView
+                            android:id="@+id/tv_original_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="24.5dp"
+                            android:layout_marginBottom="2dp"
+                            android:textSize="15sp"
+                            android:textColor="#99ffffff"
+                            android:text="29.9"
+                            android:gravity="bottom"/>
+
+                    </LinearLayout>
+
+
+
+                    <TextView
+                        android:id="@+id/item_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="@dimen/sp18"
+                        android:textColor="#ffffff"
+                        android:text="单车30天骑行卡"
+                        android:gravity="bottom"/>
+
+                    <TextView
+                        android:id="@+id/tv_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/sp10"
+                        android:textColor="#ffffff"
+                        android:text="查看详情"
+                        android:gravity="bottom"/>
+
+                    <ImageView
+                        android:layout_width="6dp"
+                        android:layout_height="10dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginBottom="2dp"
+                        android:src="@drawable/detail_icon"
+                        android:layout_gravity="bottom"/>
+
+
+                </LinearLayout>
+
+
+
             </LinearLayout>
 
-        </LinearLayout>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/item_state"
+            android:layout_width="69.5dp"
+            android:layout_height="69.5dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginRight="9.5dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/cart_unuse_icon"/>
 
 
         <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/item_rl_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="7dp"
-            android:layout_marginLeft="22dp"
+            android:layout_marginTop="17dp"
+            android:layout_marginBottom="13dp"
+            android:layout_marginLeft="30dp"
             android:gravity="center"
             >
             <TextView
-                android:id="@+id/item_desc"
+                android:id="@+id/tv_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="68dp"
-                android:text="单次骑行前1小时免费单次骑行前1小时免费1231231231231231313"
+                android:text="xxxxxxxxxxxxxxxx"
                 android:textSize="12sp"
-                android:textColor="#FFFFFF"
+                android:textColor="#7D7D7D"
                 android:maxLines="1"
                 android:ellipsize="end"
                 />
@@ -117,16 +265,147 @@
                 android:layout_width="13dp"
                 android:layout_height="7dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="14dp"
-                android:src="@drawable/down_icon"
+                android:layout_marginRight="30dp"
+                android:src="@drawable/down_icon2"
                 android:layout_centerVertical="true"
                 />
 
         </RelativeLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 
 
-</LinearLayout>
+</RelativeLayout>
+
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="wrap_content"-->
+    <!--    android:background="@color/white"-->
+    <!--    android:orientation="vertical">-->
+
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/item_bg"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="16dp"-->
+    <!--        android:layout_marginLeft="30dp"-->
+    <!--        android:layout_marginRight="30dp"-->
+    <!--        android:orientation="vertical"-->
+    <!--        android:background="@drawable/bcg_my_cart">-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:orientation="horizontal"-->
+    <!--            >-->
+
+    <!--            <LinearLayout-->
+    <!--                android:layout_width="0dp"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_weight="1"-->
+    <!--                android:layout_marginTop="15dp"-->
+    <!--                android:layout_marginLeft="22dp"-->
+    <!--                android:orientation="vertical"-->
+    <!--                android:gravity="center_vertical"-->
+    <!--                >-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/item_name"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:textSize="@dimen/sp20"-->
+    <!--                    android:textColor="@color/white"-->
+    <!--                    android:text="校园共享单车骑行卡"/>-->
+
+    <!--                <LinearLayout-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginTop="8dp"-->
+    <!--                    android:orientation="horizontal"-->
+    <!--                    android:gravity="center_vertical"-->
+    <!--                    >-->
+
+    <!--                    <TextView-->
+    <!--                        android:id="@+id/item_remaining"-->
+    <!--                        android:layout_width="wrap_content"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:textSize="@dimen/sp16"-->
+    <!--                        android:textColor="#FFFFFF"-->
+    <!--                        android:text="剩余20天无限次免费骑行"/>-->
+
+    <!--                </LinearLayout>-->
+
+    <!--            </LinearLayout>-->
+
+    <!--            <LinearLayout-->
+    <!--                android:id="@+id/mainUI_scanCode_lock"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_marginTop="17dp"-->
+    <!--                android:orientation="vertical"-->
+    <!--                >-->
+    <!--                <TextView-->
+    <!--                    android:id="@+id/item_valid"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginRight="14dp"-->
+    <!--                    android:text="收到后"-->
+    <!--                    android:textSize="12sp"-->
+    <!--                    android:textColor="@color/white"-->
+    <!--                    android:layout_gravity="right"-->
+    <!--                    />-->
+
+    <!--                <ImageView-->
+    <!--                    android:layout_width="91dp"-->
+    <!--                    android:layout_height="73dp"-->
+    <!--                    android:layout_marginTop="6dp"-->
+    <!--                    android:background="@drawable/my_bike_cart"-->
+    <!--                    android:text="九折\n优惠券"-->
+    <!--                    android:gravity="center"-->
+    <!--                    />-->
+    <!--            </LinearLayout>-->
+
+    <!--        </LinearLayout>-->
+
+
+    <!--        <RelativeLayout-->
+    <!--            android:id="@+id/item_rl_desc"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginTop="1dp"-->
+    <!--            android:layout_marginBottom="7dp"-->
+    <!--            android:layout_marginLeft="22dp"-->
+    <!--            android:gravity="center"-->
+    <!--            >-->
+    <!--            <TextView-->
+    <!--                android:id="@+id/item_desc"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_marginRight="68dp"-->
+    <!--                android:text="单次骑行前1小时免费单次骑行前1小时免费1231231231231231313"-->
+    <!--                android:textSize="12sp"-->
+    <!--                android:textColor="#FFFFFF"-->
+    <!--                android:maxLines="1"-->
+    <!--                android:ellipsize="end"-->
+    <!--                />-->
+
+    <!--            <ImageView-->
+    <!--                android:id="@+id/item_down"-->
+    <!--                android:layout_width="13dp"-->
+    <!--                android:layout_height="7dp"-->
+    <!--                android:layout_alignParentRight="true"-->
+    <!--                android:layout_marginRight="14dp"-->
+    <!--                android:src="@drawable/down_icon"-->
+    <!--                android:layout_centerVertical="true"-->
+    <!--                />-->
+
+    <!--        </RelativeLayout>-->
+
+    <!--    </LinearLayout>-->
+
+
+
+
+    <!--</LinearLayout>-->

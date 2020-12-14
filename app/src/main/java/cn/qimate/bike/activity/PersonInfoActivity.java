@@ -111,7 +111,7 @@ public class PersonInfoActivity extends SwipeBackActivity implements View.OnClic
     private Bitmap upBitmap;
 
 
-    private LoadingDialog loadingDialog;
+//    private LoadingDialog loadingDialog;
     private LinearLayout ll_back;
     private TextView title;
 //    private TextView rightBtn;

@@ -120,13 +120,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginLeft="31dp">
+                    android:layout_marginLeft="30dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="13sp"
                         android:textColor="#665E5E"
-                        android:text="车辆编号："/>
+                        android:text="车编号："/>
 
                     <TextView
                         android:id="@+id/tv_codenum"
@@ -134,7 +134,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/sp20"
                         android:textColor="#EA5359"
-                        android:text="123"/>
+                        android:text="12345678"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -173,7 +173,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginLeft="31dp">
+                    android:layout_marginLeft="30dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -256,7 +256,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginLeft="31dp">
+                    android:layout_marginLeft="30dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -311,6 +311,7 @@
                     android:id="@+id/tv_each_free_time"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
+                    android:layout_marginRight="15dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:background="@drawable/btn_bcg_free"
@@ -321,9 +322,10 @@
 
                 <TextView
                     android:visibility="visible"
+                    android:id="@+id/tv_today_free_times"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:background="@drawable/btn_bcg_times"
@@ -337,7 +339,6 @@
                     android:id="@+id/tv_credit_score_desc"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
-                    android:layout_marginLeft="15dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:background="@drawable/btn_bcg_credit"

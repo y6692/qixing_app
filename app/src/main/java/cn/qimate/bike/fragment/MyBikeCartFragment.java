@@ -118,6 +118,7 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
     String codenum="";
     String totalnum="";
 
+    public String data;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_my_bike_cart, null);
@@ -134,7 +135,7 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
 
         initView();
 
-        initHttp();
+//        initHttp();
 
 //        new Thread(new Runnable() {
 //            @Override
@@ -217,6 +218,8 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
         footerViewType04 = footerView.findViewById(R.id.footer_Layout_type04);// 刷新失败，请重试
         footerViewType05 = footerView.findViewById(R.id.footer_Layout_type05);// 暂无数据
         footerLayout = footerView.findViewById(R.id.footer_Layout);
+        footerViewType01.setVisibility(View.GONE);
+
         iv_type05 = footerView.findViewById(R.id.footer_Layout_iv_type05);
         tv_type05 = footerView.findViewById(R.id.footer_Layout_tv_type05);
         iv_type05.setImageResource(R.drawable.no_card_icon);
@@ -231,7 +234,31 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(android.R.color.holo_green_dark), getResources().getColor(android.R.color.holo_green_light),
                 getResources().getColor(android.R.color.holo_orange_light), getResources().getColor(android.R.color.holo_red_light));
 
-//        myList.setOnItemClickListener(this);
+        JSONArray array = null;
+        try {
+            array = new JSONArray(data);
+
+            Log.e("mbcf===initView", "==="+array);    //#BDBDBD
+
+
+            if (array.length() == 0) {
+//                footerViewType05.setVisibility(View.VISIBLE);
+
+                footerLayout.setVisibility(View.VISIBLE);
+                setFooterType(4);
+            }else{
+                footerViewType05.setVisibility(View.GONE);
+            }
+
+            for (int i = 0; i < array.length();i++){
+                MyCartBean bean = JSON.parseObject(array.getJSONObject(i).toString(), MyCartBean.class);
+
+                datas.add(bean);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         myAdapter = new MyAdapter(context);
         myAdapter.setDatas(datas);
@@ -241,7 +268,7 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long vid) {
 //                curPosition = position;
 //                WindowManager.LayoutParams params1 = dialog.getWindow().getAttributes();
 //                params1.width = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -250,7 +277,13 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
 //                dialog.getWindow().setAttributes(params1);
 //                dialog.show();
 
+                int id = myAdapter.getDatas().get(position).getId();
+
+                Log.e("mbcf===MyAdapter", "==="+id);    //#BDBDBD
+
+
                 Intent intent = new Intent(context, MyCartDetailActivity.class);
+                intent.putExtra("id", id);
                 startActivity(intent);
             }
         });
@@ -293,33 +326,70 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
             }
 
             RelativeLayout ll_bg = BaseViewHolder.get(convertView,R.id.item_bg);
-//            TextView name = BaseViewHolder.get(convertView,R.id.item_name);
-//            TextView remaining = BaseViewHolder.get(convertView,R.id.item_remaining);
-//            TextView valid = BaseViewHolder.get(convertView,R.id.item_valid);
-//            final TextView desc = BaseViewHolder.get(convertView,R.id.item_desc);
-//            final ImageView iv_down = BaseViewHolder.get(convertView,R.id.item_down);
-//            RelativeLayout rl_desc = BaseViewHolder.get(convertView,R.id.item_rl_desc);
-//
-//            final MyCartBean bean = getDatas().get(position);
-//
-//            Log.e("mbcf===MyAdapter", bean.getName()+"==="+bean.getLinear_gradient().length+"==="+bean.getLinear_gradient()[0]);    //#BDBDBD
+            ImageView iv_state = BaseViewHolder.get(convertView,R.id.item_state);
+            TextView carmodel_name = BaseViewHolder.get(convertView,R.id.item_carmodel_name);
+            TextView name = BaseViewHolder.get(convertView,R.id.item_name);
+            TextView remaining_free = BaseViewHolder.get(convertView,R.id.item_remaining_free);
+            TextView upper_daily_limit = BaseViewHolder.get(convertView,R.id.item_upper_daily_limit);
+
+            final MyCartBean bean = getDatas().get(position);
+
+            Log.e("mbcf===MyAdapter", bean.getName()+"==="+bean.getState()+"==="+bean.getRemaining_free_days()+"==="+bean.getRemaining_free_times()+"==="+bean.getLinear_gradient()[0]);    //#BDBDBD
 
             GradientDrawable drawable = (GradientDrawable)ll_bg.getBackground();
-//            if(bean.getLinear_gradient()!=null){
-//
-//                drawable.mutate();
-//
-//                if(bean.getLinear_gradient().length==1){
-//                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[0]), Color.parseColor(bean.getLinear_gradient()[0])});
-//                }else{
-//                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[1]), Color.parseColor(bean.getLinear_gradient()[0])});
-//                }
-//            }
+            if(bean.getLinear_gradient()!=null){
 
-            drawable.setColors(new int[]{Color.parseColor("#BDBDBD"), Color.parseColor("#ffffff")});
+                drawable.mutate();
 
-//            name.setText(bean.getName());
-//            remaining.setText(bean.getRemaining());
+                if(bean.getLinear_gradient().length==1){
+                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[0]), Color.parseColor(bean.getLinear_gradient()[0])});
+                }else{
+                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[1]), Color.parseColor(bean.getLinear_gradient()[0])});
+                }
+            }
+
+//            drawable.setColors(new int[]{Color.parseColor("#BDBDBD"), Color.parseColor("#ffffff")});
+
+            carmodel_name.setText(bean.getCarmodel_name());
+            name.setText(bean.getName());
+            int type = bean.getType();
+            if(type==1){
+                remaining_free.setText("剩余"+bean.getRemaining_free_days()+"天");
+            }else{
+                remaining_free.setText("剩余"+bean.getRemaining_free_times()+"次");
+            }
+
+            if(bean.getUpper_daily_limit()==1){
+                upper_daily_limit.setVisibility(View.VISIBLE);
+            }else{
+                upper_daily_limit.setVisibility(View.GONE);
+            }
+
+            int state = bean.getState();    //状态 0待使用 1使用中 2已过期 3已用完
+            if(state==0 || state==1){
+                iv_state.setVisibility(View.GONE);
+
+                if(type==1){
+                    if(state==0){
+                        remaining_free.setVisibility(View.GONE);
+                    }else{
+                        remaining_free.setVisibility(View.VISIBLE);
+                    }
+                }else{
+                    remaining_free.setVisibility(View.VISIBLE);
+                }
+
+
+            }else if(state==2){
+                remaining_free.setVisibility(View.GONE);
+                iv_state.setVisibility(View.VISIBLE);
+                iv_state.setImageResource(R.drawable.cart_expire_icon);
+            }else if(state==3){
+                remaining_free.setVisibility(View.GONE);
+                iv_state.setVisibility(View.VISIBLE);
+                iv_state.setImageResource(R.drawable.cart_used_icon);
+            }
+
 //            valid.setText(bean.getStatus());
 //            desc.setText(bean.getDesc());
 //
@@ -354,88 +424,88 @@ public class MyBikeCartFragment extends BaseFragment implements View.OnClickList
     }
 
     private void initHttp(){
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (access_token == null || "".equals(access_token)){
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
-            return;
-        }
-        RequestParams params = new RequestParams();
-        params.put("type", 1);
-        params.put("page", showPage);
-        params.put("per_page", GlobalConfig.PAGE_SIZE);
-
-        HttpHelper.get(context, Urls.my_cycling_cards, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setFooterType(1);
-                    }
-                });
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        UIHelper.ToastError(context, throwable.toString());
-                        swipeRefreshLayout.setRefreshing(false);
-                        isRefresh = false;
-                        setFooterType(3);
-                        setFooterVisibility();
-                    }
-                });
-
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
-                m_myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Log.e("my_cycling_cards===1","==="+responseString);
-
-                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-
-                            JSONArray array = new JSONArray(result.getData());
-                            if (array.length() == 0 && showPage == 1) {
-                                footerLayout.setVisibility(View.VISIBLE);
-                                setFooterType(4);
-                                return;
-                            } else if (array.length() < GlobalConfig.PAGE_SIZE && showPage == 1) {
-                                footerLayout.setVisibility(View.GONE);
-                                setFooterType(5);
-                            } else if (array.length() < GlobalConfig.PAGE_SIZE) {
-                                footerLayout.setVisibility(View.VISIBLE);
-                                setFooterType(2);
-                            } else if (array.length() >= 10) {
-                                footerLayout.setVisibility(View.VISIBLE);
-                                setFooterType(0);
-                            }
-
-
-                            for (int i = 0; i < array.length();i++){
-                                MyCartBean bean = JSON.parseObject(array.getJSONObject(i).toString(), MyCartBean.class);
-                                datas.add(bean);
-                            }
-
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            swipeRefreshLayout.setRefreshing(false);
-                            isRefresh = false;
-                            setFooterVisibility();
-                        }
-                    }
-                });
-
-            }
-        });
+//        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+//        if (access_token == null || "".equals(access_token)){
+//            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        RequestParams params = new RequestParams();
+//        params.put("type", 1);
+//        params.put("page", showPage);
+//        params.put("per_page", GlobalConfig.PAGE_SIZE);
+//
+//        HttpHelper.get(context, Urls.my_cycling_cards, params, new TextHttpResponseHandler() {
+//            @Override
+//            public void onStart() {
+//                m_myHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        setFooterType(1);
+//                    }
+//                });
+//
+//            }
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, final Throwable throwable) {
+//                m_myHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        UIHelper.ToastError(context, throwable.toString());
+//                        swipeRefreshLayout.setRefreshing(false);
+//                        isRefresh = false;
+//                        setFooterType(3);
+//                        setFooterVisibility();
+//                    }
+//                });
+//
+//            }
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+//                m_myHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            Log.e("my_cycling_cards===1","==="+responseString);
+//
+//                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//
+//                            JSONArray array = new JSONArray(result.getData());
+//                            if (array.length() == 0 && showPage == 1) {
+//                                footerLayout.setVisibility(View.VISIBLE);
+//                                setFooterType(4);
+//                                return;
+//                            } else if (array.length() < GlobalConfig.PAGE_SIZE && showPage == 1) {
+//                                footerLayout.setVisibility(View.GONE);
+//                                setFooterType(5);
+//                            } else if (array.length() < GlobalConfig.PAGE_SIZE) {
+//                                footerLayout.setVisibility(View.VISIBLE);
+//                                setFooterType(2);
+//                            } else if (array.length() >= 10) {
+//                                footerLayout.setVisibility(View.VISIBLE);
+//                                setFooterType(0);
+//                            }
+//
+//
+//                            for (int i = 0; i < array.length();i++){
+//                                MyCartBean bean = JSON.parseObject(array.getJSONObject(i).toString(), MyCartBean.class);
+//                                datas.add(bean);
+//                            }
+//
+//
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        } finally {
+//                            swipeRefreshLayout.setRefreshing(false);
+//                            isRefresh = false;
+//                            setFooterVisibility();
+//                        }
+//                    }
+//                });
+//
+//            }
+//        });
     }
 
     private void initHttp2(){

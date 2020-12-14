@@ -283,6 +283,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
     private String carmodel_name;
     private String each_free_time;
+    private int today_free_times;
     private String first_price;
     private String first_time;
     private String continued_price;
@@ -5670,6 +5671,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         TextView tv_codenum = (TextView) customView.findViewById(R.id.tv_codenum);
         TextView tv_carmodel_name = (TextView) customView.findViewById(R.id.tv_carmodel_name);
         TextView tv_each_free_time = (TextView) customView.findViewById(R.id.tv_each_free_time);
+        TextView tv_today_free_times = (TextView) customView.findViewById(R.id.tv_today_free_times);
         TextView tv_credit_score_desc = (TextView) customView.findViewById(R.id.tv_credit_score_desc);
         TextView tv_first_price = (TextView) customView.findViewById(R.id.tv_first_price);
         TextView tv_first_time = (TextView) customView.findViewById(R.id.tv_first_time);
@@ -5709,31 +5711,41 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
 
 
-//        if("0".equals(each_free_time)){
-//            tv_each_free_time.setVisibility(View.GONE);
-//        }else{
-//            tv_each_free_time.setVisibility(View.VISIBLE);
-//            tv_each_free_time.setText(each_free_time+"分钟免费");
-//        }
-//
-//        LogUtil.e("initmPopupRent===", each_free_time+"==="+credit_score_desc);
+        if("0".equals(each_free_time)){
+            tv_each_free_time.setVisibility(View.GONE);
+        }else{
+            tv_each_free_time.setVisibility(View.VISIBLE);
+            tv_each_free_time.setText(each_free_time+"分钟免费");
+        }
 
-//        tv_credit_score_desc.setText(credit_score_desc);
-        tv_credit_score_desc.setText("11<信用<12");
-//
-//        if("".equals(credit_score_desc)){
-//            tv_credit_score_desc.setVisibility(View.GONE);
-////            tv_first_price.setTextColor(0xFF666666);
-////            tv_first_time.setTextColor(0xFF666666);
-////            tv_continued_price.setTextColor(0xFF666666);
-////            tv_continued_time.setTextColor(0xFF666666);
-//        }else{
-//            tv_credit_score_desc.setVisibility(View.VISIBLE);
-////            tv_first_price.setTextColor(0xFFFD555B);
-////            tv_first_time.setTextColor(0xFFFD555B);
-////            tv_continued_price.setTextColor(0xFFFD555B);
-////            tv_continued_time.setTextColor(0xFFFD555B);
-//        }
+//        today_free_times = 5;
+
+        if(today_free_times>0){
+            tv_today_free_times.setVisibility(View.VISIBLE);
+            tv_today_free_times.setText("今日剩余"+today_free_times+"次免费");
+        }else{
+            tv_today_free_times.setVisibility(View.GONE);
+
+        }
+
+        LogUtil.e("initmPopupRent===", each_free_time+"==="+today_free_times+"==="+credit_score_desc);
+
+        tv_credit_score_desc.setText(credit_score_desc);
+//        tv_credit_score_desc.setText("11<信用<12");
+
+        if("".equals(credit_score_desc)){
+            tv_credit_score_desc.setVisibility(View.GONE);
+//            tv_first_price.setTextColor(0xFF666666);
+//            tv_first_time.setTextColor(0xFF666666);
+//            tv_continued_price.setTextColor(0xFF666666);
+//            tv_continued_time.setTextColor(0xFF666666);
+        }else{
+            tv_credit_score_desc.setVisibility(View.VISIBLE);
+//            tv_first_price.setTextColor(0xFFFD555B);
+//            tv_first_time.setTextColor(0xFFFD555B);
+//            tv_continued_price.setTextColor(0xFFFD555B);
+//            tv_continued_time.setTextColor(0xFFFD555B);
+        }
 
 //        tv_price.setText(Html.fromHtml(price));
 //        tv_price.setText(Html.fromHtml(price, null, new HtmlTagHandler("font")));
@@ -11674,6 +11686,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             mileage = data.getStringExtra("mileage");
                             carmodel_name = data.getStringExtra("carmodel_name");
                             each_free_time = data.getStringExtra("each_free_time");
+                            today_free_times = data.getIntExtra("today_free_times", 0);
                             first_price = data.getStringExtra("first_price");
                             first_time = data.getStringExtra("first_time");
                             continued_price = data.getStringExtra("continued_price");
@@ -11682,7 +11695,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                             allow_temporary_lock = data.getIntExtra("allow_temporary_lock", 0);
                             isMac = data.getBooleanExtra("isMac", false);
 
-                            LogUtil.e("mf===requestCode1", isMac+"==="+codenum+"==="+carmodel_id+"==="+type+"==="+bleid +"==="+deviceuuid+"==="+carmodel_name+"==="+each_free_time);
+                            LogUtil.e("mf===requestCode1", isMac+"==="+codenum+"==="+carmodel_id+"==="+type+"==="+bleid +"==="+deviceuuid+"==="+carmodel_name+"==="+each_free_time+"==="+today_free_times);
 
                             initmPopupRentWindowView();
 

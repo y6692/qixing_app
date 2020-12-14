@@ -17,7 +17,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="237dp"
-            android:background="@drawable/pay_cart_bg"
+            android:background="@drawable/my_cart_bg"
             android:orientation="vertical">
 
             <LinearLayout
@@ -32,7 +32,7 @@
 
                     <LinearLayout
                         android:id="@+id/ll_backBtn"
-                        android:layout_width="wrap_content"
+                        android:layout_width="50dp"
                         android:layout_height="match_parent"
                         android:clickable="true"
                         android:gravity="center_vertical">
@@ -79,10 +79,11 @@
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_img"
                 android:layout_width="306dp"
                 android:layout_height="126.5dp"
                 android:orientation="vertical"
-                android:background="@drawable/pay_cart_icon"
+                android:background="@drawable/my_cart_use_icon"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 >
@@ -95,6 +96,7 @@
 <!--                    android:src="@drawable/pay_cart_icon"/>-->
 
                 <ImageView
+                    android:visibility="gone"
                     android:id="@+id/iv_discount"
                     android:layout_width="60dp"
                     android:layout_height="25dp"
@@ -107,8 +109,8 @@
                     android:id="@+id/item_ll_img"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="42dp"
-                    android:layout_marginRight="43dp"
+                    android:layout_marginLeft="43dp"
+                    android:layout_marginRight="41.5dp"
                     android:orientation="vertical"
                     >
 
@@ -131,23 +133,22 @@
                         >
 
                         <TextView
-                            android:id="@+id/item_name"
+                            android:id="@+id/tv_carmodel_name"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="@dimen/sp18"
                             android:textColor="#ffffff"
-                            android:text="30天骑行卡"/>
+                            android:text=""/>
 
 
                         <TextView
-                            android:id="@+id/item_name2"
+                            android:id="@+id/tv_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-
-                            android:textSize="11sp"
+                            android:textSize="18sp"
                             android:textColor="#ffffff"
-                            android:text="单车30天骑行卡"/>
+                            android:text=""/>
 
                     </LinearLayout>
 
@@ -166,33 +167,33 @@
                             android:gravity="center_vertical"
                             >
 
+<!--                            <TextView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:textSize="22sp"-->
+<!--                                android:textColor="#ffffff"-->
+<!--                                android:textStyle="bold"-->
+<!--                                android:text="¥"/>-->
+
                             <TextView
+                                android:id="@+id/tv_remaining_free"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="22sp"
                                 android:textColor="#ffffff"
                                 android:textStyle="bold"
-                                android:text="¥"/>
+                                android:text=""/>
 
-                            <TextView
-                                android:id="@+id/tv_price"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="22sp"
-                                android:textColor="#ffffff"
-                                android:textStyle="bold"
-                                android:text="19.9"/>
-
-                            <TextView
-                                android:id="@+id/tv_original_price"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="26.5dp"
-                                android:layout_marginBottom="1dp"
-                                android:textSize="12sp"
-                                android:textColor="#99ffffff"
-                                android:text="29.9"
-                                android:gravity="bottom"/>
+<!--                            <TextView-->
+<!--                                android:id="@+id/tv_original_price"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:layout_marginLeft="26.5dp"-->
+<!--                                android:layout_marginBottom="1dp"-->
+<!--                                android:textSize="12sp"-->
+<!--                                android:textColor="#99ffffff"-->
+<!--                                android:text="29.9"-->
+<!--                                android:gravity="bottom"/>-->
 
                         </LinearLayout>
 
@@ -242,25 +243,26 @@
                 >
 
                 <TextView
-                    android:id="@+id/item_name3"
+                    android:id="@+id/tv_remaining_free2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/sp18"
                     android:textColor="#ffffff"
-                    android:text="30天骑行卡"/>
+                    android:text=""/>
 
 
                 <TextView
-                    android:id="@+id/item_name4"
+                    android:id="@+id/tv_remaining_free_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:textColor="#7fffffff"
-                    android:text="免费骑行次数"/>
+                    android:text="剩余骑行次数"/>
 
             </LinearLayout>
             
             <View
+                android:id="@+id/view_split"
                 android:layout_width="1dp"
                 android:layout_height="21dp"
                 android:layout_gravity="center"
@@ -268,6 +270,7 @@
 
 
             <LinearLayout
+                android:id="@+id/ll_daily_free_times"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -283,14 +286,15 @@
                     >
 
                     <TextView
-                        android:id="@+id/item_name5"
+                        android:id="@+id/tv_daily_free_times"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/sp18"
                         android:textColor="#ffffff"
-                        android:text="不限次"/>
+                        android:text="次"/>
 
                     <TextView
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
@@ -306,12 +310,11 @@
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:textColor="#7fffffff"
-                    android:text="每天骑行次数"/>
+                    android:text="每天免费次数"/>
 
             </LinearLayout>
 
             <View
-                android:visibility="gone"
                 android:layout_width="1dp"
                 android:layout_height="21dp"
                 android:layout_gravity="center"
@@ -319,7 +322,6 @@
 
 
             <LinearLayout
-                android:visibility="gone"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -335,14 +337,15 @@
                     >
 
                     <TextView
-                        android:id="@+id/item_name7"
+                        android:id="@+id/tv_each_free_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/sp18"
                         android:textColor="#ffffff"
-                        android:text="不限次"/>
+                        android:text="分钟"/>
 
                     <TextView
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
@@ -358,7 +361,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:textColor="#7fffffff"
-                    android:text="每天骑行次数"/>
+                    android:text="每次免费时长"/>
 
             </LinearLayout>
 
@@ -369,6 +372,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginTop="12.5dp"
+            android:layout_marginBottom="12.5dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:background="@drawable/block_bcg3_3"
@@ -400,12 +404,13 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="24dp"
-                        android:layout_marginLeft="21.5dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginRight="11.5dp"
                         android:orientation="vertical">
 
                         <RelativeLayout
+                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="30dp"
                             android:orientation="horizontal"
@@ -464,7 +469,6 @@
                             android:id="@+id/my_order_detail_rl_payment_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="19.5dp"
                             android:orientation="horizontal"
                             android:layout_alignParentLeft="true"
                             android:gravity="center_vertical"
@@ -479,10 +483,10 @@
                                 />
 
                             <TextView
-                                android:id="@+id/my_order_detail_tv_payment_name"
+                                android:id="@+id/tv_carmodel_name2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="单车"
+                                android:text=""
                                 android:textColor="#332F2F"
                                 android:textSize="@dimen/sp14"
                                 />
@@ -498,34 +502,7 @@
                             >
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:text="适用学校："
-                                android:textColor="#332F2F"
-                                android:textSize="@dimen/sp14"
-                                android:gravity="top"
-                                />
-
-                            <TextView
-                                android:id="@+id/tv_1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="常州大学(武进校区)、江苏理工学院、常州大学(西太湖校区)"
-                                android:textColor="#332F2F"
-                                android:textSize="@dimen/sp14"
-                                />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="19.5dp"
-                            android:orientation="horizontal"
-                            android:layout_alignParentLeft="true"
-                            android:gravity="center_vertical"
-                            >
-
-                            <TextView
+                                android:visibility="gone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:text="使用介绍："
@@ -535,10 +512,10 @@
                                 />
 
                             <TextView
-                                android:id="@+id/tv_2"
+                                android:id="@+id/tv_desc"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="每天前3次的前10分钟免费骑行，超时部分正常计费套餐卡使用后不可退换"
+                                android:text=""
                                 android:textColor="#332F2F"
                                 android:textSize="@dimen/sp14"
                                 />

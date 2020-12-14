@@ -12,7 +12,7 @@
 
         <LinearLayout
             android:id="@+id/ll_backBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:clickable="true"
             android:gravity="center_vertical">

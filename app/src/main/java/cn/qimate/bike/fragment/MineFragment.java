@@ -483,6 +483,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
                 Log.e("personUI_rankingListL", ranks_h5_title+"==="+ranks_h5_url);
 
+//                ranks_h5_url = "http://h5.7mate.cn/ranks/cycling";
+
                 UIHelper.goWebViewAct(context, ranks_h5_title, ranks_h5_url+"?client=android&token="+access_token.split(" ")[1]);
                 break;
 

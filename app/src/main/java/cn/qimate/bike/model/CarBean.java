@@ -29,6 +29,7 @@ public class CarBean {
     private String mileage;   //续航里程
 
     private String each_free_time;    //每次免费时长 单位：分钟 为0不免费
+    private int today_free_times;    //今日免费次数 -1无免费次数上限 0今日没有免费次数 大于0时显示标签 今日剩余xx次免费
     private String first_time;   //起步时间 单位：分钟
     private String first_price;    //起步价格
     private String continued_time; //后续时间 单位：分钟
@@ -212,6 +213,14 @@ public class CarBean {
 
     public void setEach_free_time(String each_free_time) {
         this.each_free_time = each_free_time;
+    }
+
+    public int getToday_free_times() {
+        return today_free_times;
+    }
+
+    public void setToday_free_times(int today_free_times) {
+        this.today_free_times = today_free_times;
     }
 
     public String getFirst_time() {

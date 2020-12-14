@@ -259,6 +259,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private String mileage = "";
     private String carmodel_name = "";
     private String each_free_time = "";
+    private int today_free_times;
     private String first_price = "";
     private String first_time = "";
     private String continued_price = "";
@@ -1689,6 +1690,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             mileage = bean.getMileage();
                             carmodel_name = bean.getCarmodel_name();
                             each_free_time = bean.getEach_free_time();
+                            today_free_times = bean.getToday_free_times();
                             first_price = bean.getFirst_price();
                             first_time = bean.getFirst_time();
                             continued_price = bean.getContinued_price();
@@ -1727,6 +1729,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             rIntent.putExtra("mileage", mileage);
                             rIntent.putExtra("carmodel_name", carmodel_name);
                             rIntent.putExtra("each_free_time", each_free_time);
+                            rIntent.putExtra("today_free_times", today_free_times);
                             rIntent.putExtra("first_price", first_price);
                             rIntent.putExtra("first_time", first_time);
                             rIntent.putExtra("continued_price", continued_price);
