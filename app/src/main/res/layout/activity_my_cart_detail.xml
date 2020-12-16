@@ -402,6 +402,7 @@
 <!--                        />-->
 
                     <LinearLayout
+
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="20dp"
@@ -466,6 +467,7 @@
                         </RelativeLayout>
 
                         <LinearLayout
+                            android:visibility="gone"
                             android:id="@+id/my_order_detail_rl_payment_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -495,7 +497,6 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="19.5dp"
                             android:orientation="horizontal"
                             android:layout_alignParentLeft="true"
                             android:gravity="center_vertical"

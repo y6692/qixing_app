@@ -213,6 +213,7 @@ public class CartDetailActivity extends SwipeBackActivity implements View.OnClic
                             Log.e("order===1", responseString + "===" + result.data);
 
                             JSONObject jsonObject = new JSONObject(result.getData());
+//                            JSONObject jsonObject = new JSONObject("");
 
                             order_id = jsonObject.getInt("order_id");
                             String order_amount = jsonObject.getString("order_amount");
@@ -229,6 +230,7 @@ public class CartDetailActivity extends SwipeBackActivity implements View.OnClic
                             finish();
 
                         } catch (Exception e) {
+                            Log.e("order===e", "===" + e );
 //                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
                         }
 
