@@ -58,6 +58,7 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
     private RelativeLayout rl_payment_time;
 
     private int order_id;
+    private boolean isOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,7 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
 //        submitBtn.setOnClickListener(this);
 
         order_id = getIntent().getIntExtra("order_id", 1);
+        isOrder = getIntent().getBooleanExtra("isOrder", false);
 
         order_detail();
     }
@@ -138,7 +140,28 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
                             if(null != bean.getOrder_sn()){
                                 Log.e("oda===order_detail2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getCar_type());
 
-                                tv_car_type.setText(bean.getCar_type()==1?"单车":"助力车");
+                                String car_type = "";
+
+
+                                if(bean.getIs_over_area()==0){
+                                    if(bean.getCar_type()==1){
+                                        car_type = "单车";
+                                        tv_car_type.setTextColor(0xFF3A3A3A);
+                                    }else{
+                                        car_type = "助力车";
+                                        tv_car_type.setTextColor(0xFF3A3A3A);
+                                    }
+                                }else{
+                                    if(bean.getCar_type()==1){
+                                        car_type = "单车(超区)";
+                                        tv_car_type.setTextColor(0xFFFF0000);
+                                    }else{
+                                        car_type = "助力车(超区)";
+                                        tv_car_type.setTextColor(0xFFFF0000);
+                                    }
+                                }
+
+                                tv_car_type.setText(car_type);
                                 tv_car_number.setText(""+bean.getCar_number());
                                 tv_order_amount.setText(""+bean.getOrder_amount());
                                 tv_order_sn.setText(""+bean.getOrder_sn());
@@ -206,9 +229,12 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         switch (v.getId()){
             case R.id.ll_backBtn:
-                Intent intent = new Intent(context, MainActivity.class);
+                if(!isOrder){
+                    Intent intent = new Intent(context, MainActivity.class);
 //              intent.putExtra("flag", true);
-                startActivity(intent);
+                    startActivity(intent);
+                }
+
 
                 scrollToFinishActivity();
                 break;
@@ -279,9 +305,12 @@ public class MyOrderDetailActivity extends SwipeBackActivity implements View.OnC
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
-            Intent intent = new Intent(context, MainActivity.class);
+            if(!isOrder){
+                Intent intent = new Intent(context, MainActivity.class);
 //            intent.putExtra("flag", true);
-            startActivity(intent);
+                startActivity(intent);
+            }
+
 
             scrollToFinishActivity();
             return true;

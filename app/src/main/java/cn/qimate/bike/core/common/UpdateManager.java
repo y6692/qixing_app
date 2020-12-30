@@ -10,8 +10,12 @@ import java.net.URL;
 import java.text.DecimalFormat;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.alibaba.fastjson.JSON;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.vondear.rxtools.RxAppTool;
 
 import android.app.Activity;
@@ -53,6 +57,7 @@ import cn.qimate.bike.activity.EndBikeFeedBackActivity;
 import cn.qimate.bike.activity.FeedbackActivity;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.model.BannerBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.util.ToastUtil;
 
@@ -120,6 +125,8 @@ public class UpdateManager {
 	CustomDialog.Builder customBuilder;
 	private CustomDialog customDialog;
 
+	private ConnectLinstener mListener;
+
 	public int getType() {
 		return type;
 	}
@@ -166,6 +173,17 @@ public class UpdateManager {
 		return updateManager;
 	}
 
+	public void setOnConnectLinstener(ConnectLinstener linstener) {
+		this.mListener = linstener;
+	}
+
+	/**
+	 * 数据接收回调接口
+	 */
+	public interface ConnectLinstener {
+		void onReceiveData();
+	}
+
 	/**
 	 * 检查App更新
 	 *
@@ -205,7 +223,7 @@ public class UpdateManager {
 
 					mUpdate = JSON.parseObject(result.getData(), Update.class);
 
-					Log.e("checkAppUpdate===1_2", "==="+mUpdate.getVersion());
+					Log.e("checkAppUpdate===1_2", type+"==="+isShowMsg+"==="+mUpdate.getVersion());
 
 					if (mUpdate.getVersion() != null) {
 
@@ -235,6 +253,10 @@ public class UpdateManager {
 								customDialog.show();
 							}else if(isShowMsg==2){
 								Toast.makeText(context,"当前已是最新版本",Toast.LENGTH_SHORT).show();
+
+								Log.e("checkAppUpdate===1_3", type+"==="+isShowMsg+"==="+mUpdate.getVersion());
+
+								mListener.onReceiveData();
 							}
 
 						}else if(type==1){
@@ -279,6 +301,101 @@ public class UpdateManager {
 			}
 		});
 	}
+
+//	private void initHttp() {
+//		Log.e("ma===banner", "===");
+//
+//		HttpHelper.get2(context, Urls.banner + 2, new TextHttpResponseHandler() {
+//			@Override
+//			public void onStart() {
+////                onStartCommon("正在加载");
+//			}
+//			@Override
+//			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//				Log.e("ma===banner=fail", "===" + throwable.toString());
+//				onFailureCommon("ma===banner", throwable.toString());
+//			}
+//
+//			@Override
+//			public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+//				m_myHandler.post(new Runnable() {
+//					@Override
+//					public void run() {
+//						try {
+//							Log.e("ma===banner0", responseString + "===");
+//
+//							ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+//
+//							JSONArray ja_banners = new JSONArray(new JSONObject(result.getData()).getString("banners"));
+//
+//							Log.e("ma===banner1", ja_banners.length() + "===" + result.data);
+//
+//							for (int i = 0; i < 1; i++) {
+//								BannerBean bean = JSON.parseObject(ja_banners.get(i).toString(), BannerBean.class);
+//
+//								Log.e("ma===banner2", bean.getImage_url()+"===");
+//
+//								imageUrl = bean.getImage_url();
+//								h5_title = bean.getH5_title();
+//
+//								action_content = bean.getAction_content();
+//								action_type = bean.getAction_type();
+//								if("h5".equals(action_type)){
+//									if(action_content.contains("?")){
+//										if(access_token.contains(" ")){
+//											action_content += "&client=android&token="+access_token.split(" ")[1];
+//										}else{
+//											action_content += "&client=android&token="+access_token;
+//										}
+//									}else{
+//										if(access_token.contains(" ")){
+//											action_content += "?client=android&token="+access_token.split(" ")[1];
+//										}else{
+//											action_content += "?client=android&token="+access_token;
+//										}
+//									}
+//								}
+//
+//								Log.e("ma===banner3", action_content+"===");
+//
+//								if (imageUrl != null && !"".equals(imageUrl)){
+//									WindowManager windowManager = getWindowManager();
+//									Display display = windowManager.getDefaultDisplay();
+//
+//									Log.e("display===", "==="+display.getWidth());
+//
+//									WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
+//									lp.width = (int) (display.getWidth() * 1);
+//									lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//									advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+//									advDialog.getWindow().setAttributes(lp);
+//									advDialog.show();
+//									// 加载图片
+//									if(imageUrl.endsWith(".gif")){
+//										Glide.with(context).load(imageUrl).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(advImageView);
+//									}else{
+//										Glide.with(context).load(imageUrl).into(advImageView);
+//									}
+//								}
+//							}
+//
+////                            mBanner.setBannerTitles(imageTitle);
+////                            mBanner.setImages(imagePath).setOnBannerListener(MainActivity.this).start();
+//
+//						} catch (Exception e) {
+////                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+//
+//						}
+//
+//						if (loadingDialog != null && loadingDialog.isShowing()) {
+//							loadingDialog.dismiss();
+//						}
+//
+//					}
+//				});
+//			}
+//		});
+//	}
 
 	/**
 	 * 获取当前客户端版本信息
@@ -364,6 +481,8 @@ public class UpdateManager {
 //		WindowManager.LayoutParams lp = noticeDialog.getWindow().getAttributes();
 		noticeDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
 		noticeDialog.show();
+
+		noticeDialog.setCancelable(false);
 
 		Log.e("showNoticeDialog===2", "===");
 	}

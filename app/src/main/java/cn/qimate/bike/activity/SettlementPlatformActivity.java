@@ -568,6 +568,8 @@ public class SettlementPlatformActivity extends SwipeBackActivity implements Vie
 
 
     private void end(){
+        Log.e("spa===end", order_id+"==="+order_type);
+
         if(order_type>=3){
             Intent intent = new Intent(context, MainActivity.class);
             intent.putExtra("flag", true);

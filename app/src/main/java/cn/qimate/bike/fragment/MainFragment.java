@@ -269,6 +269,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private XiaoanBleApiClient apiClient;
 
 
+    public String message;
     public String codenum = "";
     private String m_nowMac = "";
     private int carmodel_id;
@@ -374,6 +375,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     private TextView advAgainBtn;
     private TextView advCloseBtn;
     private ImageView advCloseBtn2;
+
+    Dialog noticeDialog;
+    ImageView noticeCloseBtn;
+    TextView tv_message;
 
     private AMapNavi mAMapNavi;
     private RouteOverLay routeOverLay;
@@ -839,7 +844,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                         LogUtil.e("手动还车===", isAgain+"==="+isEndBtn);
 
-                        cycling4();
+                        end_can_action();
+//                        cycling4();
 
 
                     }
@@ -875,6 +881,20 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
         customDialog6 = customBuilder.create();
         customDialog6.setCancelable(false);
         customDialog6.setCanceledOnTouchOutside(false);
+
+        noticeDialog = new Dialog(BaseApplication.context, R.style.Theme_AppCompat_Dialog);
+        View noticeDialogView = LayoutInflater.from(BaseApplication.context).inflate(R.layout.ui_message_view, null);
+        noticeDialog.setContentView(noticeDialogView);
+        noticeDialog.setCanceledOnTouchOutside(false);
+
+        noticeDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+        noticeDialog.setCancelable(false);
+
+        noticeCloseBtn = (ImageView)noticeDialogView.findViewById(R.id.ui_notice_closeBtn);
+        tv_message = (TextView)noticeDialogView.findViewById(R.id.tv_message);
+        noticeCloseBtn.setOnClickListener(this);
+
+
 
         loadingDialogWithHelp = new LoadingDialogWithHelp(context);
         loadingDialogWithHelp.setCancelable(false);
@@ -2510,6 +2530,186 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
     }
 
 
+
+    private void close_again_can_action() {
+        LogUtil.e("mf===close_again_can_action", "==="+access_token);
+
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+
+        if (access_token == null || "".equals(access_token)){
+            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context, LoginActivity.class);
+            return;
+        }
+
+        HttpHelper.get(context, Urls.can_action, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon("mf===close_again_can_action===f", throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            LogUtil.e("mf===close_again_can_action_1", responseString + "===" + result.data);
+
+                            if(result.getStatus_code()==200){
+                                carInfo_close();
+                            }else{
+                                closeLoadingDialog();
+                                ToastUtil.showMessageApp(context, result.getMessage());
+                            }
+
+                        } catch (Exception e) {
+                            closeLoadingDialog();
+                            LogUtil.e("mf===close_again_can_action===e", "==="+e);
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                        }
+
+
+                    }
+                });
+            }
+        });
+
+    }
+
+    private void open_again_can_action() {
+        LogUtil.e("mf===open_again_can_action", "==="+access_token);
+
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+
+        if (access_token == null || "".equals(access_token)){
+            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context, LoginActivity.class);
+            return;
+        }
+
+        HttpHelper.get(context, Urls.can_action, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon("mf===open_again_can_action===f", throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            LogUtil.e("mf===open_again_can_action_1", responseString + "===" + result.data);
+
+                            if(result.getStatus_code()==200){
+                                cycling5();
+                            }else{
+                                closeLoadingDialog();
+                                ToastUtil.showMessageApp(context, result.getMessage());
+                            }
+
+                        } catch (Exception e) {
+                            closeLoadingDialog();
+                            LogUtil.e("mf===open_again_can_action===e", "==="+e);
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                        }
+
+
+                    }
+                });
+            }
+        });
+
+    }
+
+    private void end_can_action() {
+        LogUtil.e("mf===end_can_action", "==="+access_token);
+
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+
+        if (access_token == null || "".equals(access_token)){
+            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+            UIHelper.goToAct(context, LoginActivity.class);
+            return;
+        }
+
+        HttpHelper.get(context, Urls.can_action, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                onStartCommon("正在加载");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onFailureCommon("mf===end_can_action===f", throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseString) {
+
+                m_myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+
+                            LogUtil.e("mf===end_can_action_1", responseString + "===" + result.data);
+
+                            if(result.getStatus_code()==200){
+                                cycling4();
+                            }else{
+                                closeLoadingDialog();
+                                ToastUtil.showMessageApp(context, result.getMessage());
+                            }
+
+//                            OrderBean bean = JSON.parseObject(result.getData(), OrderBean.class);
+//
+//                            if(null == bean.getOrder_sn() || bean.getOrder_state()>20){
+//                                ToastUtil.showMessageApp(context, "当前无进行中的行程");
+//                                closeLoadingDialog();
+//                                car_authority();
+//                            }else{
+//                                LogUtil.e("mf===can_action_2", bean.getOrder_sn()+"===" + bean.getCar_number()+"===" + bean.getLock_id());
+//
+//                                closeLoadingDialog();
+//
+//                                Intent intent = new Intent(context, EndBikeFeedBackActivity.class);
+//                                intent.putExtra("type", type);
+//                                intent.putExtra("bikeCode", codenum);
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                                startActivity(intent);
+//                            }
+
+                        } catch (Exception e) {
+                            closeLoadingDialog();
+                            LogUtil.e("mf===end_can_action===e", "==="+e);
+//                            memberEvent(context.getClass().getName()+"_"+e.getStackTrace()[0].getLineNumber()+"_"+e.getMessage());
+                        }
+
+
+                    }
+                });
+            }
+        });
+
+    }
 
     private void cycling3() {
         LogUtil.e("mf===cycling3", "==="+access_token);
@@ -4432,8 +4632,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                         isAgainClick = false;
                     }else{
                         btnLog("A2");
+
+                        close_again_can_action();
+
 //                      car_can_lock();
-                        carInfo_close();
+//                        carInfo_close();
                     }
 
 
@@ -4441,7 +4644,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     btnLog("A3");
 //                    car_can_unlock();
 
-                    cycling5();
+                    open_again_can_action();
+//                    cycling5();
                 }
 
                 break;
@@ -4453,12 +4657,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                 }
 
                 btnLog("A1");
-                cycling4();
+
+                end_can_action();
+//                cycling4();
 
 
 //                if(!isEndClick){
 //                    isEndClick = true;
-//
 //                }
 
                 break;
@@ -4501,6 +4706,19 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                     isLog = false;
                     sv_test.setVisibility(View.GONE);
                 }
+
+                break;
+
+
+            case R.id.ui_notice_closeBtn:
+                Log.e("onClick===notice", noticeDialog+"==="+noticeDialog.isShowing());
+
+                if (noticeDialog != null && noticeDialog.isShowing()) {
+                    noticeDialog.dismiss();
+                }
+
+//                previewing = true;
+//                initCamera(surfaceHolder);
 
                 break;
 
@@ -11675,6 +11893,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                     case 1:
                         if (resultCode == RESULT_OK) {
+                            message= data.getStringExtra("message");
                             codenum = data.getStringExtra("codenum");
                             m_nowMac = data.getStringExtra("m_nowMac");
                             carmodel_id = data.getIntExtra("carmodel_id", 1);
@@ -11697,7 +11916,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
 
                             LogUtil.e("mf===requestCode1", isMac+"==="+codenum+"==="+carmodel_id+"==="+type+"==="+bleid +"==="+deviceuuid+"==="+carmodel_name+"==="+each_free_time+"==="+today_free_times);
 
-                            initmPopupRentWindowView();
+                            if(message==null || "".equals(message)){
+                                initmPopupRentWindowView();
+                            }else{
+                                tv_message.setText(message);
+                                noticeDialog.show();
+                            }
+
 
                         } else {
                             Toast.makeText(context, "扫描取消啦!", Toast.LENGTH_SHORT).show();
@@ -11743,11 +11968,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener, 
                                 if("再次开锁".equals(tvAgain)){
                                     openAgain();
                                 }else{
-                                    closeAgain();
+                                    if("10".equals(type) || "12".equals(type)){
+                                        car_authority_auto();
+                                    }else{
+                                        closeAgain();
+                                    }
                                 }
                             }else{
                                 if(isEndBtn){
-                                    cycling4();
+                                    end_can_action();
+//                                    cycling4();
                                 }else{
                                     isStop = false;
                                     isOpen = false;

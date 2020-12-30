@@ -169,39 +169,67 @@
                     android:textSize="@dimen/sp16" />
             </LinearLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="22dp"
                 android:layout_marginTop="8dp"
                 android:gravity="left|center_vertical"
                 android:orientation="horizontal"
                 >
-                <TextView
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="订单价格"
+                        android:textColor="#666666"
+                        android:textSize="@dimen/sp16" />
+                    <TextView
+                        android:id="@+id/item_order_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp15"
+                        android:textColor="#FF1700"
+                        android:textSize="@dimen/sp16" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="订单价格"
-                    android:textColor="#666666"
-                    android:textSize="@dimen/sp16" />
-                <TextView
-                    android:id="@+id/item_order_amount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp15"
-                    android:textColor="#FF1700"
-                    android:textSize="@dimen/sp16" />
-            </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="16dp"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="6dp"
+                        android:gravity="center"
+                        android:text="订单详情"
+                        android:textColor="#999999"
+                        android:textSize="@dimen/sp12" />
+
+                    <ImageView
+                        android:layout_width="8dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/yjt"
+                        />
+                </LinearLayout>
+
+
+
+            </RelativeLayout>
 
 
         </LinearLayout>
 
 
-        <ImageView
-            android:layout_width="8dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="35dp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/yjt"
-            />
+
 
     </RelativeLayout>
 

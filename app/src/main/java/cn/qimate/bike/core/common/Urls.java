@@ -11,8 +11,8 @@ public class Urls {
 //	https://newmapi.7mate.cn/
 	public static String HTTP = "https://";
 	public static String host = HTTP + "app.7mate.cn";
-//	public static String host2 = HTTP + "newmapi.7mate.cn/api";	    //https://newmapi.7mate.cn/api
-    public static String host2 = HTTP + "test-mapi.7mate.cn/api";
+	public static String host2 = HTTP + "newmapi.7mate.cn/api";	    //https://newmapi.7mate.cn/api
+//    public static String host2 = HTTP + "test-mapi.7mate.cn/api";
 //	public static String host2 = HTTP + "dev-mapi.7mate.cn/api";
 
 
@@ -88,6 +88,10 @@ public class Urls {
 	public static String car_notification = host2 + "/order/car_notification";
 	//当前骑行订单接口
 	public static String cycling = host2 + "/order/cycling";
+
+	//订单相关 - 当前订单可否操作
+	public static String can_action = host2 + "/order/can_action";
+
 	//当前其他订单（调度单、赔偿单）接口
 	public static String other = host2 + "/order/other";
 	//上锁接口

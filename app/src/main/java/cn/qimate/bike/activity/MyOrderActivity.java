@@ -180,6 +180,7 @@ public class MyOrderActivity extends SwipeBackActivity implements View.OnClickLi
 
         Intent intent = new Intent(context, MyOrderDetailActivity.class);
         intent.putExtra("order_id", order_id);
+        intent.putExtra("isOrder", true);
         startActivity(intent);
     }
 

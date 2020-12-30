@@ -241,13 +241,9 @@ public class Splash2Activity extends Base2Activity implements View.OnClickListen
 
 //				isStop = true;
 
-
-//
 //				UIHelper.goWebViewAct(context, h5_title, action_content);
 
 				break;
-
-
 
 			default:
 				break;

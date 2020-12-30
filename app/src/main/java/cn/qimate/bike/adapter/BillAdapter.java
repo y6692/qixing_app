@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import cn.qimate.bike.R;
@@ -36,6 +37,7 @@ public class BillAdapter extends BaseViewAdapter<BillBean>{
         TextView payment_time = BaseViewHolder.get(convertView,R.id.item_payment_time);
         TextView payment_name = BaseViewHolder.get(convertView,R.id.item_payment_name);
         TextView order_amount = BaseViewHolder.get(convertView,R.id.item_order_amount);
+        ImageView order_state = BaseViewHolder.get(convertView,R.id.item_order_state);
         BillBean bean = getDatas().get(position);
 
         Log.e("BillAdapter===", bean.getOrder_type()+"==="+bean.getCar_type()+"==="+bean.getOrder_amount());
@@ -48,6 +50,12 @@ public class BillAdapter extends BaseViewAdapter<BillBean>{
         payment_time.setText(bean.getPayment_time());
         payment_name.setText(bean.getPayment_name());
         order_amount.setText(bean.getOrder_amount());
+
+        if(bean.getOrder_state()==40 && bean.getIs_over_area()==1){
+            order_state.setVisibility(View.VISIBLE);
+        }else{
+            order_state.setVisibility(View.GONE);
+        }
 
         return convertView;
     }

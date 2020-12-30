@@ -19,6 +19,7 @@ public class BillBean {
 	private String cycling_time = "";	//骑行时间
 	private String each_free_time = "";	//每次免费时长
 	private int order_type;	//订单类型 1骑行订单 2套餐卡订单 3充值订单 4认证充值订单 5调度费订单 6赔偿费订单
+	private int is_over_area;	//是否超区 1是 0否
 
 	public int getOrder_id() {
 		return order_id;
@@ -162,5 +163,13 @@ public class BillBean {
 
 	public void setOrder_type(int order_type) {
 		this.order_type = order_type;
+	}
+
+	public int getIs_over_area() {
+		return is_over_area;
+	}
+
+	public void setIs_over_area(int is_over_area) {
+		this.is_over_area = is_over_area;
 	}
 }

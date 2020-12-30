@@ -164,7 +164,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.sofi.blelocker.library.Constants.STATUS_CONNECTED;
 
 @SuppressLint("NewApi")
-public class MainActivity extends BaseActivity implements View.OnClickListener, OnBannerListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, OnBannerListener, UpdateManager.ConnectLinstener {
 
     private Activity mActivity = this;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -272,7 +272,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //        filter.addAction(Intent.ACTION_USER_PRESENT);
 //        registerReceiver(mScreenReceiver, filter);
 
-        m_myHandler.sendEmptyMessage(4);
+
 
         Log.e("main===onCreate", "===");
 
@@ -391,16 +391,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         closeBtn.setOnClickListener(this);
         confirmBtn.setOnClickListener(this);
 
-        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
-			agreement();
-		}else{
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    m_myHandler.sendEmptyMessage(5);
-                }
-            }).start();
-		}
+
+
+        m_myHandler.sendEmptyMessage(4);
 
 //        exImage_1.setOnClickListener(myOnClickLister);
 //        exImage_2.setOnClickListener(myOnClickLister);
@@ -1082,6 +1075,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
+    @Override
+    public void onReceiveData() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
+                    agreement();
+                }else{
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                }
+//            }).start();
+//
+                    m_myHandler.sendEmptyMessage(5);
+                }
+            }
+        });
+    }
+
 
     private BluetoothStateListener mBluetoothStateListener = new BluetoothStateListener() {
         @Override
@@ -1626,7 +1640,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             switch (mes.what) {
 
                 case 4:
-                    getNetTime();
+//                    getNetTime();
+
+                    UpdateManager updateManager = UpdateManager.getUpdateManager();
+
+                    updateManager.setOnConnectLinstener(MainActivity.this);
+
+                    updateManager.checkAppUpdate(MainActivity.this, context, 2, null);
 
                     break;
 

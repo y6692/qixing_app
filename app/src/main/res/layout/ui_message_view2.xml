@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+
+
+    <LinearLayout
+        android:layout_width="255dp"
+        android:layout_height="305dp"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/message_bg3">
+
+        <LinearLayout
+            android:id="@+id/ll_scan_positiveButton2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="71dp"
+            android:orientation="horizontal"
+            android:gravity="bottom|center_horizontal"
+            android:layout_alignParentBottom="true"
+            >
+
+
+            <TextView
+                android:id="@+id/tv_message"
+                android:layout_width="124dp"
+                android:layout_height="wrap_content"
+                android:text="您已回到运营区，已恢复供电，谢谢!"
+                android:textColor="#333333"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                />
+
+        </LinearLayout>
+
+<!--        <ImageView-->
+<!--            android:id="@+id/ui_adv_image"-->
+<!--            android:layout_width="255dp"-->
+<!--            android:layout_height="305dp"-->
+<!--            android:adjustViewBounds="true"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:src="@drawable/message_bg2"-->
+<!--            />-->
+
+        <!--<View-->
+            <!--android:layout_width="@dimen/line_height"-->
+            <!--android:layout_height="@dimen/dp20"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:background="@color/white"/>-->
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/ui_adv_closeBtn"
+        android:layout_width="@dimen/dp30"
+        android:layout_height="@dimen/dp30"
+        android:layout_marginTop="52dp"
+        android:src="@drawable/close_icon"
+        android:background="@null"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerInside"/>
+</LinearLayout>

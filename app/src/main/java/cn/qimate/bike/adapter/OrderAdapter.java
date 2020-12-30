@@ -57,6 +57,10 @@ public class OrderAdapter extends BaseViewAdapter<BillBean>{
 //        order_state.setText(bean.getOrder_state()==0?"已取消":bean.getOrder_state()==10?"已下单":bean.getOrder_state()==20?"进行中":bean.getOrder_state()==30?"待支付":"已完成");
         order_state.setImageResource(bean.getOrder_state()==0?R.drawable.order_state0:bean.getOrder_state()==10?R.drawable.order_state1:bean.getOrder_state()==20?R.drawable.order_state2:bean.getOrder_state()==30?R.drawable.order_state3:R.drawable.order_state4);
 
+        if(bean.getOrder_state()==40 && bean.getIs_over_area()==1){
+            order_state.setImageResource(R.drawable.order_state5);
+        }
+
         car_number.setText(bean.getCar_number());
         payment_time.setText(bean.getCreated_at());
         car_type.setText(bean.getCar_type()==1?"单车":"助力车");
@@ -69,23 +73,23 @@ public class OrderAdapter extends BaseViewAdapter<BillBean>{
             iv_bike.setImageResource(R.drawable.ebike_icon2);
         }
 
-        if(bean.getOrder_state()==30){
-            rl_pay.setVisibility(View.VISIBLE);
-
-            payBtn.setOnClickListener(new View.OnClickListener(){
-
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, SettlementPlatformActivity.class);
-                    intent.putExtra("order_type", 1);
-                    intent.putExtra("order_id", order_id);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    context.startActivity(intent);
-                }
-            });
-        }else{
-            rl_pay.setVisibility(View.GONE);
-        }
+//        if(bean.getOrder_state()==30){
+//            rl_pay.setVisibility(View.VISIBLE);
+//
+//            payBtn.setOnClickListener(new View.OnClickListener(){
+//
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(context, SettlementPlatformActivity.class);
+//                    intent.putExtra("order_type", 1);
+//                    intent.putExtra("order_id", order_id);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                    context.startActivity(intent);
+//                }
+//            });
+//        }else{
+//            rl_pay.setVisibility(View.GONE);
+//        }
 
         return convertView;
     }

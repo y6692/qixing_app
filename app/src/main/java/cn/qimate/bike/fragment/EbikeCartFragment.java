@@ -365,7 +365,7 @@ public class EbikeCartFragment extends BaseFragment implements View.OnClickListe
                 if(bean.getLinear_gradient().length==1){
                     drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[0]), Color.parseColor(bean.getLinear_gradient()[0])});
                 }else{
-                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[1]), Color.parseColor(bean.getLinear_gradient()[0])});
+                    drawable.setColors(new int[]{Color.parseColor(bean.getLinear_gradient()[0]), Color.parseColor(bean.getLinear_gradient()[1])});
                 }
             }
 

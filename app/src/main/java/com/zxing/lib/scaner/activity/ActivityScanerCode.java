@@ -330,6 +330,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
     private boolean isPermission = false;
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1123,9 +1125,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         cancelBtn2.setOnClickListener(this);
         ll_positiveButton2.setOnClickListener(this);
 
-
         advCloseBtn = (TextView)advDialogView.findViewById(R.id.ui_adv_closeBtn0);
         advCloseBtn.setOnClickListener(this);
+
+
+
+
 
         bikeNumEdit = (EditText) findViewById(R.id.pop_circlesMenu_bikeNumEdit);
         positiveButton = (Button) dialogView.findViewById(R.id.pop_circlesMenu_positiveButton);
@@ -1249,13 +1254,24 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 break;
 
             case R.id.ui_adv_closeBtn:
-                Log.e("onClick===", advDialog+"==="+advDialog.isShowing());
+                Log.e("onClick===adv", advDialog+"==="+advDialog.isShowing());
 
                 if (advDialog != null && advDialog.isShowing()) {
                     advDialog.dismiss();
                 }
 
                 break;
+//            case R.id.ui_notice_closeBtn:
+//                Log.e("onClick===notice", noticeDialog+"==="+noticeDialog.isShowing());
+//
+//                if (noticeDialog != null && noticeDialog.isShowing()) {
+//                    noticeDialog.dismiss();
+//                }
+//
+//                previewing = true;
+//                initCamera(surfaceHolder);
+//
+//                break;
             case R.id.scan_cancelBtn:
                 Log.e("onClick===customDialog", customDialog+"==="+customDialog.isShowing());
 
@@ -1594,6 +1610,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                                 int code = jsonObject.getInt("code");
 
+//                                code = 3;
+
                                 if(code==0){
                                     car(tokencode);
 //                                    customDialog2.show();
@@ -1615,6 +1633,27 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                         loadingDialog.dismiss();
                                     }
 
+                                }else if(code==3){
+//                                    noticeDialog.show();
+
+                                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                                        loadingDialog.dismiss();
+                                    }
+
+                                    previewing = false;
+
+
+                                    Intent rIntent = new Intent();
+                                    rIntent.putExtra("message", result.getMessage());
+
+                                    setResult(RESULT_OK, rIntent);
+                                    scrollToFinishActivity();
+
+//                                    closeBtnBikeNum();
+                                }else{
+                                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                                        loadingDialog.dismiss();
+                                    }
                                 }
                             }else{
                                 Log.e("order_authority===3",  "====" + result.getMessage());
@@ -1625,7 +1664,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     loadingDialog.dismiss();
                                 }
 
-                                closeBtnBikeNum();
 
                             }
 
@@ -1718,6 +1756,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 //                            }
 
                             Intent rIntent = new Intent();
+                            rIntent.putExtra("ismessage", false);
                             rIntent.putExtra("codenum", codenum);
                             rIntent.putExtra("m_nowMac", m_nowMac);
                             rIntent.putExtra("carmodel_id", carmodel_id);
