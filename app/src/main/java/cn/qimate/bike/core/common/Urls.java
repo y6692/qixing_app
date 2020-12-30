@@ -15,7 +15,6 @@ public class Urls {
 //    public static String host2 = HTTP + "test-mapi.7mate.cn/api";
 //	public static String host2 = HTTP + "dev-mapi.7mate.cn/api";
 
-
 //	public static String host = HTTP + "web1.7mate.cn";
 //	public static String host = HTTP + "test.7mate.cn";
 //	public static String host = HTTP + "uat.7mate.cn";
