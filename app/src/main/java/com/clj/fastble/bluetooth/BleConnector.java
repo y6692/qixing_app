@@ -27,6 +27,8 @@ import com.clj.fastble.exception.TimeoutException;
 
 import java.util.UUID;
 
+import cn.qimate.bike.util.LogUtil;
+
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class BleConnector {
@@ -283,6 +285,10 @@ public class BleConnector {
         }
 
         boolean success1 = gatt.setCharacteristicNotification(characteristic, enable);
+
+        LogUtil.e("setCharacteristicNotification===", "==="+success1);
+
+//        return success1;
         if (!success1) {
             notifyMsgInit();
             if (bleNotifyCallback != null)
@@ -296,11 +302,16 @@ public class BleConnector {
         } else {
             descriptor = characteristic.getDescriptor(formUUID(UUID_CLIENT_CHARACTERISTIC_CONFIG_DESCRIPTOR));
         }
+
+        LogUtil.e("setCharacteristicNotification===1", "==="+descriptor);
+
         if (descriptor == null) {
             notifyMsgInit();
             if (bleNotifyCallback != null)
                 bleNotifyCallback.onNotifyFailure(new OtherException("descriptor equals null"));
             return false;
+
+//            return true;
         } else {
             descriptor.setValue(enable ? BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE :
                     BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE);

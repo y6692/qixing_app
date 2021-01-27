@@ -89,7 +89,6 @@ import com.amap.api.navi.model.AMapLaneInfo;
 import com.amap.api.navi.model.AMapModelCross;
 import com.amap.api.navi.model.AMapNaviCameraInfo;
 import com.amap.api.navi.model.AMapNaviCross;
-import com.amap.api.navi.model.AMapNaviInfo;
 import com.amap.api.navi.model.AMapNaviLocation;
 import com.amap.api.navi.model.AMapNaviPath;
 import com.amap.api.navi.model.AMapNaviRouteNotifyData;
@@ -100,7 +99,6 @@ import com.amap.api.navi.model.AimLessModeStat;
 import com.amap.api.navi.model.NaviInfo;
 import com.amap.api.navi.model.NaviLatLng;
 import com.amap.api.navi.view.RouteOverLay;
-import com.autonavi.tbt.TrafficFacilityInfo;
 import com.bumptech.glide.Glide;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
@@ -1066,8 +1064,6 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                                             .strokeColor(Color.argb(255, 0, 135, 255))
                                                             .fillColor(Color.argb(77, 0, 173, 255)));
 
-//                                                    aMap.setOnP
-
                                                     if(isHidden) return;
 
                                                     LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")), Double.parseDouble(jsonObject.getString("longitude")));
@@ -1088,28 +1084,28 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
                                                 Log.e("main_b===parking_r4", type+"==="+unauthorized_code+"==="+isContainsList.size()+"==="+isContainsList.contains(true)+"==="+pOptions.size()+"==="+pOptions);
 
 
-                                                View view = View.inflate(context, R.layout.marker_info_layout, null);
-                                                iv_marker = view.findViewById(R.id.iv);
-                                                if(unauthorized_code==6){
-                                                    if("10".equals(type)){
-                                                        iv_marker.setImageResource(R.drawable.marker3);
-                                                    }else{
-                                                        iv_marker.setImageResource(R.drawable.marker2);
-                                                    }
-                                                }else{
-                                                    iv_marker.setImageResource(R.drawable.marker1);
-                                                }
-                                                tv_car_count = view.findViewById(R.id.tv_car_count);
-                                                tv_car_count.setText((car_count>99?99:car_count)+"辆");
-                                                centerMarkerOption = new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.fromView(view));
-
-                                                if(centerMarker!=null){
-                                                    centerMarker.remove();
-                                                }
-
-                                                if(isHidden) return;
-                                                centerMarker = aMap.addMarker(centerMarkerOption);
-                                                centerMarker.setDraggable(true);
+//                                                View view = View.inflate(context, R.layout.marker_info_layout, null);
+//                                                iv_marker = view.findViewById(R.id.iv);
+//                                                if(unauthorized_code==6){
+//                                                    if("10".equals(type)){
+//                                                        iv_marker.setImageResource(R.drawable.marker3);
+//                                                    }else{
+//                                                        iv_marker.setImageResource(R.drawable.marker2);
+//                                                    }
+//                                                }else{
+//                                                    iv_marker.setImageResource(R.drawable.marker1);
+//                                                }
+//                                                tv_car_count = view.findViewById(R.id.tv_car_count);
+//                                                tv_car_count.setText((car_count>99?99:car_count)+"辆");
+//                                                centerMarkerOption = new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.fromView(view));
+//
+//                                                if(centerMarker!=null){
+//                                                    centerMarker.remove();
+//                                                }
+//
+//                                                if(isHidden) return;
+//                                                centerMarker = aMap.addMarker(centerMarkerOption);
+//                                                centerMarker.setDraggable(true);
 
                                             }
 
@@ -1365,7 +1361,7 @@ public class BikeFragment extends BaseFragment implements View.OnClickListener, 
 
             if (centerMarker != null) {
 //				animMarker();
-                m_myHandler.sendEmptyMessage(4);
+//                m_myHandler.sendEmptyMessage(4);
             }
         }
 

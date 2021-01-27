@@ -90,6 +90,10 @@ public class Urls {
 
 	//订单相关 - 当前订单可否操作
 	public static String can_action = host2 + "/order/can_action";
+	//车辆相关 - 获取车辆锁状态，number传 传二维码字符串或者车编号(url编码)
+	public static String lockStatus = host2 + "/car/";	//{number}/lockStatus
+	//车辆相关 - 车锁未关语音提醒，number传 传二维码字符串或者车编号(url编码)
+	public static String notLockVoice = host2 + "/car/notLockVoice/";	//{number}
 
 	//当前其他订单（调度单、赔偿单）接口
 	public static String other = host2 + "/order/other";

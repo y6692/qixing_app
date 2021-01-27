@@ -266,6 +266,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     private String continued_time = "";
     private String credit_score_desc = "";
     private int allow_temporary_lock;
+    private int back_car_mode;
 
     // 输入法
     private Dialog dialog;
@@ -1735,12 +1736,13 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             continued_time = bean.getContinued_time();
                             credit_score_desc = bean.getCredit_score_desc();
                             allow_temporary_lock = bean.getAllow_temporary_lock();
+                            back_car_mode = bean.getBack_car_mode();
 
 
                             String lock_secretkey = bean.getLock_secretkey();
                             String lock_password = bean.getLock_password();
 
-                            if("9".equals(type) || "10".equals(type) || "12".equals(type)){
+                            if("9".equals(type) || "10".equals(type) || "12".equals(type) || "13".equals(type)){
                                 Config.key = hexStringToByteArray(lock_secretkey);
                                 Config.password = hexStringToByteArray(lock_password);
                             }else if("2".equals(type) || "3".equals(type)){
@@ -1775,6 +1777,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             rIntent.putExtra("continued_time", continued_time);
                             rIntent.putExtra("credit_score_desc", credit_score_desc);
                             rIntent.putExtra("allow_temporary_lock", allow_temporary_lock);
+                            rIntent.putExtra("back_car_mode", back_car_mode);
                             rIntent.putExtra("isMac",false);
 
 
@@ -1855,7 +1858,22 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         return bytes;
     }
 
+    public static byte[] hexStringToByteArray2(String str) {
+        if(str == null || str.trim().equals("")) {
+            return new byte[0];
+        }
 
+        byte[] bytes = new byte[str.length() / 2];
+        for(int i = 0; i < str.length() / 2; i++) {
+            String subStr = str.substring(i * 2, i * 2 + 2);
+            bytes[i] = (byte) Integer.parseInt(subStr, 16);
+        }
+
+        Log.e("StringToByte===1", bytes+"==="+bytes[0]);
+
+
+        return bytes;
+    }
 
 
 

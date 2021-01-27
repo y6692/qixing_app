@@ -37,6 +37,8 @@ public class CarBean {
     private String credit_score_desc = ""; //
     private int allow_temporary_lock;   //是否允许临时上锁 1允许 0不允许
 
+    private int back_car_mode;   //还车模式 1自动还车+手动还车 2手动还车
+
 
     public int getId() {
         return id;
@@ -269,5 +271,13 @@ public class CarBean {
 
     public void setAllow_temporary_lock(int allow_temporary_lock) {
         this.allow_temporary_lock = allow_temporary_lock;
+    }
+
+    public int getBack_car_mode() {
+        return back_car_mode;
+    }
+
+    public void setBack_car_mode(int back_car_mode) {
+        this.back_car_mode = back_car_mode;
     }
 }

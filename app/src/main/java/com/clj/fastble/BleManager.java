@@ -398,6 +398,8 @@ public class BleManager {
                        String uuid_notify,
                        BleNotifyCallback callback) {
         notify(bleDevice, uuid_service, uuid_notify, false, callback);
+
+//        notify(bleDevice, uuid_service, uuid_notify, callback);
     }
 
     /**

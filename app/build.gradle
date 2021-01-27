@@ -25,8 +25,8 @@ android {
         applicationId "cn.qimate.bike"
         minSdkVersion 18
         targetSdkVersion 28
-        versionCode 2019
-        versionName "2.0.19"
+        versionCode 2020
+        versionName "2.0.20"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
 
@@ -190,6 +190,7 @@ repositories {
 dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -234,7 +235,7 @@ dependencies {
     //    implementation 'com.kymjs.rxvolley:okhttp:1.0.7'
     //    implementation files('libs/ma.sdk-1.2.0.jar')
     //    implementation files('libs/alisdk-ut-4.jar')
-    implementation files('libs/AMap_Location_V4.6.0_20190423.jar')
+
     //    implementation files('libs/Android_Map3D_SDK_V6.9.0_20190530.jar')
     implementation(name: 'XiaoanBleSdk_V1.0.3', ext: 'aar')
     implementation('com.github.hotchemi:permissionsdispatcher:3.3.1') {
@@ -248,7 +249,12 @@ dependencies {
     //    implementation 'com.github.bumptech.glide:glide:4.8.0'
     //    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     //    implementation project(':verification-view')
-    implementation files('libs/AMap3DMap_7.1.0_AMapNavi_7.1.0_20191030.jar')
+//    implementation files('libs/AMap3DMap_7.1.0_AMapNavi_7.1.0_20191030.jar')
+//    implementation files('libs/AMap3DMap_7.8.0_AMapNavi_7.8.0_20210104.jar')
+//    implementation files('libs/AMap_Location_V4.6.0_20190423.jar')
+
+    implementation 'com.amap.api:navi-3dmap:latest.integration'
+    implementation 'com.amap.api:location:latest.integration'
 
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
     //    implementation files('libs/alipaySdk-20180601.jar')
