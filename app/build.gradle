@@ -273,17 +273,17 @@ dependencies {
     implementation files('libs/glide-3.7.0.jar')
 }
 
-afterEvaluate {
-    tasks.matching {
-        it.name.startsWith('dex')
-    }.each { dx ->
-        if (dx.additionalParameters == null) {
-            dx.additionalParameters = []
-        }
-        dx.additionalParameters += '--multi-dex'
-        // 设置multidex.keep文件中class为第一个dex文件中包含的class，如果没有下一项设置此项无作用
-        dx.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
-        //此项添加后第一个classes.dex文件只能包含-main-dex-list列表中class
-        dx.additionalParameters += '--minimal-main-dex'
-    }
-}
+//afterEvaluate {
+//    tasks.matching {
+//        it.name.startsWith('dex')
+//    }.each { dx ->
+//        if (dx.additionalParameters == null) {
+//            dx.additionalParameters = []
+//        }
+//        dx.additionalParameters += '--multi-dex'
+//        // 设置multidex.keep文件中class为第一个dex文件中包含的class，如果没有下一项设置此项无作用
+//        dx.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
+//        //此项添加后第一个classes.dex文件只能包含-main-dex-list列表中class
+//        dx.additionalParameters += '--minimal-main-dex'
+//    }
+//}

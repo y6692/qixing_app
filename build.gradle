@@ -2,11 +2,17 @@
 buildscript {
     repositories {
 //        flatDir { dirs 'proguard' }//1.依赖库类目录
+
+        flatDir {
+            dirs 'libs'
+        }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
         jcenter()
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
+        classpath 'com.android.tools.build:gradle:4.1.0'
         classpath 'com.novoda:bintray-release:0.7.0'
 //        classpath 'proguard.io:proguard:4.11'//2.依赖的库类
         // NOTE: Do not place your application dependencies here; they belong
@@ -21,7 +27,9 @@ allprojects {
             dirs 'libs'
         }
         maven { url "https://jitpack.io"}
-        maven { url "https://maven.google.com"}
+//        maven { url "https://maven.google.com"}
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
         jcenter()
         google()
     }
